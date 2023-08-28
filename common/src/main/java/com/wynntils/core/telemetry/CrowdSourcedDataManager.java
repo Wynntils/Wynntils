@@ -10,8 +10,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.storage.StorageManager;
-import com.wynntils.core.telemetry.type.CrowdSourceDataGameVersion;
-import com.wynntils.core.telemetry.type.CrowdSourceDataType;
+import com.wynntils.core.telemetry.type.CrowdSourcedDataGameVersion;
+import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.telemetry.LootrunLocationDataCollector;
 import java.lang.reflect.ParameterizedType;
@@ -20,53 +20,53 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CrowdSourceDataManager extends Manager {
-    private static final CrowdSourceDataGameVersion CURRENT_GAME_VERSION =
-            CrowdSourceDataGameVersion.VERSION_203_HOTFIX_4;
+public class CrowdSourcedDataManager extends Manager {
+    private static final CrowdSourcedDataGameVersion CURRENT_GAME_VERSION =
+            CrowdSourcedDataGameVersion.VERSION_203_HOTFIX_4;
 
     @Persisted
-    private final Storage<CrowdSourceData> collectedData = new Storage<>(new CrowdSourceData());
+    private final Storage<CrowdSourcedData> collectedData = new Storage<>(new CrowdSourcedData());
 
-    private final Map<CrowdSourceDataType, CrowdSourceDataCollector<?>> collectors = new HashMap<>();
+    private final Map<CrowdSourcedDataType, CrowdSourcedDataCollector<?>> collectors = new HashMap<>();
 
     // We only indirectly depend on StorageManager, this manager has storages
-    public CrowdSourceDataManager(StorageManager storageManager) {
+    public CrowdSourcedDataManager(StorageManager storageManager) {
         super(List.of(storageManager));
 
         registerCollectors();
     }
 
-    public <T> void putData(CrowdSourceDataType crowdSourceDataType, T telemetryData) {
+    public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T telemetryData) {
         TelemetryFeature.ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(
                         TelemetryFeature.class)
                 .telemetryTypeEnabledMap
                 .get()
-                .getOrDefault(crowdSourceDataType, TelemetryFeature.ConfirmedBoolean.FALSE);
+                .getOrDefault(crowdSourcedDataType, TelemetryFeature.ConfirmedBoolean.FALSE);
         if (collectionEnabledForType != TelemetryFeature.ConfirmedBoolean.TRUE) return;
 
-        collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourceDataType, telemetryData);
+        collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, telemetryData);
         collectedData.touched();
     }
 
-    public <T> Set<T> getData(CrowdSourceDataType crowdSourceDataType) {
+    public <T> Set<T> getData(CrowdSourcedDataType crowdSourcedDataType) {
         return (Set<T>) collectedData
                 .get()
-                .getData(CURRENT_GAME_VERSION, crowdSourceDataType, crowdSourceDataType.getDataClass());
+                .getData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedDataType.getDataClass());
     }
 
     private void registerCollectors() {
-        registerCollector(CrowdSourceDataType.LOOTRUN_TASK_LOCATIONS, new LootrunLocationDataCollector());
+        registerCollector(CrowdSourcedDataType.LOOTRUN_TASK_LOCATIONS, new LootrunLocationDataCollector());
     }
 
-    private void registerCollector(CrowdSourceDataType crowdSourceDataType, CrowdSourceDataCollector<?> collector) {
+    private void registerCollector(CrowdSourcedDataType crowdSourcedDataType, CrowdSourcedDataCollector<?> collector) {
         Class<?> collectorTypeClass = (Class<?>)
                 ((ParameterizedType) collector.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        if (!collectorTypeClass.equals(crowdSourceDataType.getDataClass())) {
+        if (!collectorTypeClass.equals(crowdSourcedDataType.getDataClass())) {
             throw new IllegalStateException(
                     "The provided collector does not collect the provided crowd sourced data type.");
         }
 
         WynntilsMod.registerEventListener(collector);
-        collectors.put(crowdSourceDataType, collector);
+        collectors.put(crowdSourcedDataType, collector);
     }
 }

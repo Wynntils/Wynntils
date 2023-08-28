@@ -10,12 +10,12 @@ package com.wynntils.core.telemetry.type;
  * This enum is only updated whenever relevant changes are made to the game.
  * We may also change this enum if the mod received relevant data collection changes.
  */
-public enum CrowdSourceDataGameVersion {
+public enum CrowdSourcedDataGameVersion {
     VERSION_203_HOTFIX_4("2.0.3 Hotfix 4");
 
     private final String readableVersion;
 
-    CrowdSourceDataGameVersion(String readableVersion) {
+    CrowdSourcedDataGameVersion(String readableVersion) {
         this.readableVersion = readableVersion;
     }
 

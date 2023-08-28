@@ -5,7 +5,7 @@
 package com.wynntils.core.telemetry;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.telemetry.type.CrowdSourceDataType;
+import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
 
 /**
  * A class that collects a single type of crowd source data.
@@ -17,10 +17,10 @@ import com.wynntils.core.telemetry.type.CrowdSourceDataType;
  * related to the data collection, you should do that in the corresponding model.
  * @param <T> The class of the data that this collector collects.
  */
-public abstract class CrowdSourceDataCollector<T> {
+public abstract class CrowdSourcedDataCollector<T> {
     protected final void collect(T data) {
-        Managers.CrowdSourceData.putData(getTelemetryType(), data);
+        Managers.CrowdSourcedData.putData(getTelemetryType(), data);
     }
 
-    protected abstract CrowdSourceDataType getTelemetryType();
+    protected abstract CrowdSourcedDataType getTelemetryType();
 }

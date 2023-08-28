@@ -5,9 +5,9 @@
 package com.wynntils.telemetry;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.telemetry.CrowdSourceDataCollector;
+import com.wynntils.core.telemetry.CrowdSourcedDataCollector;
 import com.wynntils.core.telemetry.datatype.LootrunTaskLocation;
-import com.wynntils.core.telemetry.type.CrowdSourceDataType;
+import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.particle.event.ParticleVerifiedEvent;
 import com.wynntils.models.particle.type.ParticleType;
@@ -15,7 +15,7 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class LootrunLocationDataCollector extends CrowdSourceDataCollector<LootrunTaskLocation> {
+public class LootrunLocationDataCollector extends CrowdSourcedDataCollector<LootrunTaskLocation> {
     @SubscribeEvent
     public void onLootrunParticle(ParticleVerifiedEvent event) {
         if (event.getParticle().particleType() != ParticleType.LOOTRUN_TASK) return;
@@ -30,7 +30,7 @@ public class LootrunLocationDataCollector extends CrowdSourceDataCollector<Lootr
     }
 
     @Override
-    protected CrowdSourceDataType getTelemetryType() {
-        return CrowdSourceDataType.LOOTRUN_TASK_LOCATIONS;
+    protected CrowdSourcedDataType getTelemetryType() {
+        return CrowdSourcedDataType.LOOTRUN_TASK_LOCATIONS;
     }
 }

@@ -20,7 +20,7 @@ import com.wynntils.core.persisted.PersistedManager;
 import com.wynntils.core.persisted.config.ConfigManager;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.persisted.upfixers.UpfixerManager;
-import com.wynntils.core.telemetry.CrowdSourceDataManager;
+import com.wynntils.core.telemetry.CrowdSourcedDataManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
@@ -44,5 +44,5 @@ public final class Managers {
     public static final ConfigManager Config = new ConfigManager(Upfixer, Json, Feature, Overlay);
     public static final NetManager Net = new NetManager(Url);
     public static final StorageManager Storage = new StorageManager(Json, Feature);
-    public static final CrowdSourceDataManager CrowdSourceData = new CrowdSourceDataManager(Storage);
+    public static final CrowdSourcedDataManager CrowdSourcedData = new CrowdSourcedDataManager(Storage);
 }

@@ -15,7 +15,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
-import com.wynntils.core.telemetry.type.CrowdSourceDataType;
+import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
@@ -39,7 +39,7 @@ public class TelemetryFeature extends Feature {
     //        Crash report telemetry and this type of telemetry is really different
     //        and should be in different places.
     @Persisted
-    public final HiddenConfig<Map<CrowdSourceDataType, ConfirmedBoolean>> telemetryTypeEnabledMap =
+    public final HiddenConfig<Map<CrowdSourcedDataType, ConfirmedBoolean>> telemetryTypeEnabledMap =
             new HiddenConfig<>(new TreeMap<>());
 
     @SubscribeEvent
