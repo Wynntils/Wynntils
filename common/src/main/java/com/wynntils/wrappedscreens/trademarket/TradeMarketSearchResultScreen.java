@@ -153,7 +153,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
             return true;
         }
 
-        return false;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

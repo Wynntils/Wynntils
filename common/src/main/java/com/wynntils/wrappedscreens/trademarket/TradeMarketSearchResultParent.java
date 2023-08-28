@@ -4,7 +4,6 @@
  */
 package com.wynntils.wrappedscreens.trademarket;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenParent;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
@@ -122,7 +121,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     }
 
     public void clickOnItem(ItemStack itemStack) {
-        // FIXME: confirm items cant update on current page
+        // When writing this, items only update on page change,
+        // so if we don't switch pages, we can just click on the item
         Int2ObjectMap.FastEntrySet<ItemStack> currentPageEntries =
                 itemMap.getOrDefault(currentPage, new Int2ObjectOpenHashMap<>()).int2ObjectEntrySet();
         for (Int2ObjectMap.Entry<ItemStack> entry : currentPageEntries) {
@@ -140,6 +140,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         }
 
         // Go backwards until we find the item, items on other pages could have changed
+        // FIXME: Go forwards as well
         requestedPage = 0;
         requestedItem = itemStack;
         pageLoadingMode = PageLoadingMode.SINGLE_ITEM;
@@ -172,30 +173,31 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
         // If we have the item count we expect on the page, we can load the next page
         // If we have found an empty item, we count them and check if we have the expected amount
-        Int2ObjectOpenHashMap<ItemStack> currentPage =
+        Int2ObjectOpenHashMap<ItemStack> currentItems =
                 itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
+
+        // Remove the item if it was already there,
+        // if it is not an empty item, we add it back
+        currentItems.remove(slot);
 
         boolean emptyItem = isEmptyItem(itemStack);
         if (!emptyItem) {
-            ItemStack oldItem = currentPage.put(slot, itemStack);
-
-            if (oldItem != null && !oldItem.equals(itemStack)) {
-                WynntilsMod.warn("Item mismatch at slot " + slot + " on page " + this.currentPage + ". Expected: "
-                        + oldItem + ", got: " + itemStack);
-            }
+            // Update item in slot, when changing pages,
+            // items can change
+            ItemStack oldItem = currentItems.put(slot, itemStack);
         }
 
         pageItemCount++;
 
-        if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
-            switch (pageLoadingMode) {
-                case ALL_ITEMS -> pageLoadedWhileLoadingItems(currentPage);
-                case SINGLE_ITEM -> pageLoadedWhileSelectingItem(currentPage, slot, itemStack);
-            }
+        switch (pageLoadingMode) {
+            case ALL_ITEMS -> pageLoadedWhileLoadingItems(currentItems);
+            case SINGLE_ITEM -> pageLoadedWhileSelectingItem(currentItems, slot, itemStack);
         }
     }
 
     private void pageLoadedWhileLoadingItems(Int2ObjectOpenHashMap<ItemStack> currentItems) {
+        if (pageItemCount != EXPECTED_ITEMS_PER_PAGE) return;
+
         // If we have air items on the page, we reached the end
         if (currentItems.size() < EXPECTED_ITEMS_PER_PAGE) {
             pageLoadingMode = PageLoadingMode.NONE;
@@ -226,8 +228,18 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
                     wrappedScreenInfo.containerMenu().getItems());
 
+            pageLoadingMode = PageLoadingMode.NONE;
+            requestedPage = -1;
+
             return;
         } else if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
+            if (currentPage == requestedPage) {
+                pageLoadingMode = PageLoadingMode.NONE;
+                requestedPage = -1;
+                wrappedScreen.setCurrentState(Component.literal("Couldn't click on item"));
+                return;
+            }
+
             // We couldn't find the item on the page, go to the next one
             goToNextPage();
         }
