@@ -22,6 +22,7 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
@@ -33,7 +34,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
@@ -66,6 +69,7 @@ public class ProfessionModel extends Model {
     private Pair<Long, MaterialItem> lastHarvestItemGain = Pair.of(0L, null);
     private HarvestInfo lastHarvest;
 
+    private TimedSet<Position> gatheredNodes = new TimedSet<>(10, TimeUnit.SECONDS, true);
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
@@ -90,6 +94,17 @@ public class ProfessionModel extends Model {
         Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
 
         if (matcher.matches()) {
+            Vec3 entityPosition = event.getEntity().position();
+
+            if (gatheredNodes.stream()
+                    .anyMatch(position ->
+                            PosUtils.isSame(position, event.getEntity().position()))) {
+                // We already recorded this XP gain, ignore it.
+                return;
+            }
+
+            gatheredNodes.put(entityPosition);
+
             updatePercentage(
                     ProfessionType.fromString(matcher.group("name")),
                     Float.parseFloat(matcher.group("current")),
