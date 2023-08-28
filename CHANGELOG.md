@@ -1,9 +1,21 @@
+## [0.0.3-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.348...v0.0.3-alpha.349) (2023-08-28)
+
+
+### Bug Fixes
+
+* Guild contribution message appearing in housing ([#2054](https://github.com/Wynntils/Artemis/issues/2054)) ([8dc709b](https://github.com/Wynntils/Artemis/commit/8dc709bfac9e19f9c9b4b5531db16043e65c0a28))
+
 ## [0.0.3-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.347...v0.0.3-alpha.348) (2023-08-28)
 
 
 ### Bug Fixes
 
 * Fix profession xp being recorded twice when harvesting ([#2055](https://github.com/Wynntils/Artemis/issues/2055)) ([f58a34f](https://github.com/Wynntils/Artemis/commit/f58a34f2563d93b26d326226d68ae22e355e423d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.348 [skip ci] ([06631eb](https://github.com/Wynntils/Artemis/commit/06631ebb9ce1eab837e830bc7b0fcbb078fc376a))
 
 ## [0.0.3-alpha.347](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.346...v0.0.3-alpha.347) (2023-08-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.345 [skip ci] ([c63e154](https://github.com/Wynntils/Artemis/commit/c63e154163b95454602eaf7541982b28f69ef46e))
-
-## [0.0.3-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.343...v0.0.3-alpha.344) (2023-08-26)
-
-
-### Bug Fixes
-
-* War message getting recruit prefix ([#2046](https://github.com/Wynntils/Artemis/issues/2046)) ([fa023be](https://github.com/Wynntils/Artemis/commit/fa023bec303e9720dec2bea41e3064f0266589af))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.344 [skip ci] ([447d427](https://github.com/Wynntils/Artemis/commit/447d427f939203a22fa713aaed6391af7996d7db))
 
