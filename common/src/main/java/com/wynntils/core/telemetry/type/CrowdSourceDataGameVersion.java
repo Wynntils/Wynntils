@@ -5,16 +5,17 @@
 package com.wynntils.core.telemetry.type;
 
 /**
- * This enum represents the game version that the telemetry is being sent from.
- * Not every version may have a telemetry version, and telemetry versions may be skipped.
+ * This enum represents the game version that the data is being sent from.
+ * Not every version may have a version, and versions may be skipped.
  * This enum is only updated whenever relevant changes are made to the game.
+ * We may also change this enum if the mod received relevant data collection changes.
  */
-public enum TelemetryGameVersion {
+public enum CrowdSourceDataGameVersion {
     VERSION_203_HOTFIX_4("2.0.3 Hotfix 4");
 
     private final String readableVersion;
 
-    TelemetryGameVersion(String readableVersion) {
+    CrowdSourceDataGameVersion(String readableVersion) {
         this.readableVersion = readableVersion;
     }
 

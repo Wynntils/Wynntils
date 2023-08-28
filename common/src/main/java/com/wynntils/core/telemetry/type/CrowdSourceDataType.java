@@ -7,15 +7,15 @@ package com.wynntils.core.telemetry.type;
 import com.wynntils.core.telemetry.datatype.LootrunTaskLocation;
 
 /**
- * This enum represents the type of telemetry that is being collected.
+ * This enum represents the type of crowd sources data that is being collected.
  * Each data class has to implement {@link Comparable}.
  */
-public enum TelemetryType {
+public enum CrowdSourceDataType {
     LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class);
 
     private final Class<?> dataClass;
 
-    TelemetryType(Class<?> dataClass) {
+    CrowdSourceDataType(Class<?> dataClass) {
         this.dataClass = dataClass;
     }
 

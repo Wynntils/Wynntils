@@ -5,10 +5,10 @@
 package com.wynntils.core.telemetry;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.telemetry.type.TelemetryType;
+import com.wynntils.core.telemetry.type.CrowdSourceDataType;
 
 /**
- * A class that collects a single type of telemetry data.
+ * A class that collects a single type of crowd source data.
  * This class is meant to collect data from (an) event(s), do the necessary processing
  * and then call {@link #collect(T)} with the processed data to store it.
  *
@@ -17,10 +17,10 @@ import com.wynntils.core.telemetry.type.TelemetryType;
  * related to the data collection, you should do that in the corresponding model.
  * @param <T> The class of the data that this collector collects.
  */
-public abstract class TelemetryCollector<T> {
+public abstract class CrowdSourceDataCollector<T> {
     protected final void collect(T data) {
-        Managers.Telemetry.putData(getTelemetryType(), data);
+        Managers.CrowdSourceData.putData(getTelemetryType(), data);
     }
 
-    protected abstract TelemetryType getTelemetryType();
+    protected abstract CrowdSourceDataType getTelemetryType();
 }
