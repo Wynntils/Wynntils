@@ -28,7 +28,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-// FIXME: Add a queue system for loading pages
 public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMarketSearchResultScreen> {
     // Patterns
     private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
@@ -43,14 +42,16 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private static final int NEXT_PAGE_SLOT = 35;
     private static final int BACK_TO_SEARCH_SLOT = 8;
 
+    // Screen
     private TradeMarketSearchResultScreen wrappedScreen;
 
+    // Query / actions
     private int requestedPage = -1;
     private ItemStack requestedItem;
+    private PageLoadingMode pageLoadingMode = PageLoadingMode.NONE;
+    private QueuedAction queuedAction;
 
     private int currentPage = 0;
-
-    private PageLoadingMode pageLoadingMode = PageLoadingMode.NONE;
 
     private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
     private int pageItemCount = 0;
@@ -113,8 +114,9 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     protected void reset() {
         requestedPage = -1;
         requestedItem = null;
-        currentPage = 0;
         pageLoadingMode = PageLoadingMode.NONE;
+        queuedAction = null;
+        currentPage = 0;
         itemMap = new HashMap<>();
         pageItemCount = 0;
         filteredItems = new ArrayList<>();
@@ -142,7 +144,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         }
 
         // Assume the item is before the current page
-        requestedPage = 0;
+        int pageToLoad = 0;
 
         // Check if the item is on a later page
         for (int i = currentPage + 1; i < itemMap.size(); i++) {
@@ -154,7 +156,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
                 if (ItemUtils.isItemEqual(itemStack, clickedItem)) {
                     // Item found on a later page, load the pages until the last one and click on it
                     foundItem = true;
-                    requestedPage = itemMap.size() - 1;
+                    pageToLoad = itemMap.size() - 1;
                     break;
                 }
             }
@@ -162,15 +164,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
             if (foundItem) break;
         }
 
-        requestedItem = clickedItem;
-        pageLoadingMode = PageLoadingMode.SINGLE_ITEM;
-
-        wrappedScreen.setCurrentState(Component.empty()
-                .append(Component.literal("Clicking on "))
-                .append(clickedItem.getHoverName())
-                .append(Component.literal("...")));
-
-        goToNextPage();
+        runOrQueueAction(new QueuedAction(PageLoadingMode.CLICK_ITEM, pageToLoad, clickedItem));
     }
 
     public void goBackToSearch() {
@@ -183,7 +177,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     }
 
     public void loadNextPageBatch() {
-        loadItemsUntilPage(itemMap.size() + PAGE_BATCH_SIZE, true);
+        runOrQueueAction(new QueuedAction(PageLoadingMode.LOAD_ITEMS, itemMap.size() - 1 + PAGE_BATCH_SIZE, null));
     }
 
     public void updateDisplayItems(ItemSearchQuery searchQuery) {
@@ -230,8 +224,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         pageItemCount++;
 
         switch (pageLoadingMode) {
-            case ALL_ITEMS -> pageLoadedWhileLoadingItems(currentItems);
-            case SINGLE_ITEM -> pageLoadedWhileSelectingItem(currentItems, slot, itemStack);
+            case LOAD_ITEMS -> pageLoadedWhileLoadingItems(currentItems);
+            case CLICK_ITEM -> pageLoadedWhileSelectingItem(currentItems, slot, itemStack);
         }
     }
 
@@ -243,16 +237,22 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
         // If we have air items on the page, we reached the end
         if (currentItems.size() < EXPECTED_ITEMS_PER_PAGE) {
+            wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+
             pageLoadingMode = PageLoadingMode.NONE;
             requestedPage = -1;
-            wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+            runQueuedAction();
+
             return;
         }
 
         if (this.currentPage == requestedPage) {
+            wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
+
             pageLoadingMode = PageLoadingMode.NONE;
             requestedPage = -1;
-            wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
+            runQueuedAction();
+
             return;
         }
 
@@ -261,6 +261,11 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
     private void pageLoadedWhileSelectingItem(
             Int2ObjectOpenHashMap<ItemStack> currentItems, int slot, ItemStack itemStack) {
+        wrappedScreen.setCurrentState(Component.empty()
+                .append(Component.literal("Clicking on "))
+                .append(requestedItem.getHoverName())
+                .append(Component.literal("...")));
+
         // If we found the item, click on it
         if (ItemUtils.isItemEqual(itemStack, requestedItem)) {
             // Loaded the item, click on it
@@ -273,13 +278,17 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
             pageLoadingMode = PageLoadingMode.NONE;
             requestedPage = -1;
+            runQueuedAction();
 
             return;
         } else if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
             if (currentPage == requestedPage) {
+                wrappedScreen.setCurrentState(Component.literal("Couldn't click on item"));
+
                 pageLoadingMode = PageLoadingMode.NONE;
                 requestedPage = -1;
-                wrappedScreen.setCurrentState(Component.literal("Couldn't click on item"));
+                runQueuedAction();
+
                 return;
             }
 
@@ -310,8 +319,28 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
                 wrappedScreenInfo.containerMenu().getItems());
     }
 
+    private void runQueuedAction() {
+        if (queuedAction == null) return;
+
+        runOrQueueAction(queuedAction);
+        queuedAction = null;
+    }
+
+    private void runOrQueueAction(QueuedAction action) {
+        if (pageLoadingMode == PageLoadingMode.NONE) {
+            pageLoadingMode = action.pageLoadingMode();
+            requestedPage = action.requestedPage();
+            requestedItem = action.requestedItemStack();
+
+            goToNextPage();
+        } else if (queuedAction == null) {
+            queuedAction = action;
+        }
+        // We only allow one queued action, ignore this call
+    }
+
     private void loadItemsUntilPage(int page, boolean forcePageLoad) {
-        pageLoadingMode = PageLoadingMode.ALL_ITEMS;
+        pageLoadingMode = PageLoadingMode.LOAD_ITEMS;
 
         // 0 based indexing
         requestedPage = page - 1;
@@ -326,9 +355,11 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         return itemStack.getItem() == Items.SNOW && (loreTag == null || loreTag.isEmpty());
     }
 
+    public record QueuedAction(PageLoadingMode pageLoadingMode, int requestedPage, ItemStack requestedItemStack) {}
+
     public enum PageLoadingMode {
-        ALL_ITEMS,
-        SINGLE_ITEM,
+        LOAD_ITEMS,
+        CLICK_ITEM,
         NONE
     }
 }
