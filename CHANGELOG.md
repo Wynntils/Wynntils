@@ -1,9 +1,21 @@
+## [0.0.3-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.347...v0.0.3-alpha.348) (2023-08-28)
+
+
+### Bug Fixes
+
+* Fix profession xp being recorded twice when harvesting ([#2055](https://github.com/Wynntils/Artemis/issues/2055)) ([f58a34f](https://github.com/Wynntils/Artemis/commit/f58a34f2563d93b26d326226d68ae22e355e423d))
+
 ## [0.0.3-alpha.347](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.346...v0.0.3-alpha.347) (2023-08-28)
 
 
 ### Bug Fixes
 
 * Adapt profession handling to 2.0.3 hotfix [#5](https://github.com/Wynntils/Artemis/issues/5) ([#2053](https://github.com/Wynntils/Artemis/issues/2053)) ([3e4c129](https://github.com/Wynntils/Artemis/commit/3e4c129b3b299847d9093df57c6d35a3fef3affb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.347 [skip ci] ([e0a0fe6](https://github.com/Wynntils/Artemis/commit/e0a0fe67a1c09f2bbdc22b93b4eb95c902fbed03))
 
 ## [0.0.3-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.345...v0.0.3-alpha.346) (2023-08-27)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.344 [skip ci] ([447d427](https://github.com/Wynntils/Artemis/commit/447d427f939203a22fa713aaed6391af7996d7db))
-
-## [0.0.3-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.342...v0.0.3-alpha.343) (2023-08-26)
-
-
-### Bug Fixes
-
-* Reset search query on container close ([#2043](https://github.com/Wynntils/Artemis/issues/2043)) ([de622ba](https://github.com/Wynntils/Artemis/commit/de622badecf9a894024f8cbc7a9660c23ab46556))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.343 [skip ci] ([9ef7b6e](https://github.com/Wynntils/Artemis/commit/9ef7b6ed2eb444dde5f08fd556c8c93b8d6df1e2))
 
