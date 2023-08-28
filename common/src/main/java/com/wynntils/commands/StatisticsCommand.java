@@ -39,11 +39,6 @@ public class StatisticsCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Show and reset statistics";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("show").executes(this::showStatistics))

@@ -60,11 +60,6 @@ public class WynntilsCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Provides various Wynntils functionality";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("clearcaches")
