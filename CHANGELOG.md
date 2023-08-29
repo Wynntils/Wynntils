@@ -1,9 +1,21 @@
+## [0.0.3-alpha.350](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.349...v0.0.3-alpha.350) (2023-08-29)
+
+
+### Bug Fixes
+
+* Party finder regex works with nicknames ([#2058](https://github.com/Wynntils/Artemis/issues/2058)) ([d8096e0](https://github.com/Wynntils/Artemis/commit/d8096e0a85df773e044cdef7c8b680cc45281260))
+
 ## [0.0.3-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.348...v0.0.3-alpha.349) (2023-08-28)
 
 
 ### Bug Fixes
 
 * Guild contribution message appearing in housing ([#2054](https://github.com/Wynntils/Artemis/issues/2054)) ([8dc709b](https://github.com/Wynntils/Artemis/commit/8dc709bfac9e19f9c9b4b5531db16043e65c0a28))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.349 [skip ci] ([47b8064](https://github.com/Wynntils/Artemis/commit/47b8064547d2c0c41e5467db0883d5709d54cdf6))
 
 ## [0.0.3-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.347...v0.0.3-alpha.348) (2023-08-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.346 [skip ci] ([960b6a8](https://github.com/Wynntils/Artemis/commit/960b6a8089422a6d606ace950816c4a87459a87a))
-
-## [0.0.3-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.344...v0.0.3-alpha.345) (2023-08-27)
-
-
-### New Features
-
-* New guild contribution message ([#2044](https://github.com/Wynntils/Artemis/issues/2044)) ([a6e528b](https://github.com/Wynntils/Artemis/commit/a6e528b584c45f3f142609068eeed7ad17ea86df))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.345 [skip ci] ([c63e154](https://github.com/Wynntils/Artemis/commit/c63e154163b95454602eaf7541982b28f69ef46e))
 
