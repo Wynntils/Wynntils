@@ -81,6 +81,15 @@ allprojects {
         withSourcesJar()
     }
 
+    dependencies{
+        testImplementation platform('org.junit:junit-bom:5.9.1')
+        testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
     spotless {
         java {
             // define the steps to apply to Java source code
