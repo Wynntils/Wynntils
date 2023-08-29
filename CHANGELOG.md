@@ -1,9 +1,21 @@
+## [0.0.3-alpha.353](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.352...v0.0.3-alpha.353) (2023-08-29)
+
+
+### New Features
+
+* better help ui for filters ([#2061](https://github.com/Wynntils/Artemis/issues/2061)) ([88d8a30](https://github.com/Wynntils/Artemis/commit/88d8a30c17e56fe4c0f4ce88c807cd794567b6d8))
+
 ## [0.0.3-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.351...v0.0.3-alpha.352) (2023-08-29)
 
 
 ### Bug Fixes
 
 * Mana bar skull texture does not render properly ([#2059](https://github.com/Wynntils/Artemis/issues/2059)) ([ddd6635](https://github.com/Wynntils/Artemis/commit/ddd66357d88c4197247f3bf46cdd944d0e00a5ff))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.352 [skip ci] ([0ccbe65](https://github.com/Wynntils/Artemis/commit/0ccbe654568574ea22161e571436a7894aea8eed))
 
 ## [0.0.3-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.350...v0.0.3-alpha.351) (2023-08-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.349 [skip ci] ([47b8064](https://github.com/Wynntils/Artemis/commit/47b8064547d2c0c41e5467db0883d5709d54cdf6))
-
-## [0.0.3-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.347...v0.0.3-alpha.348) (2023-08-28)
-
-
-### Bug Fixes
-
-* Fix profession xp being recorded twice when harvesting ([#2055](https://github.com/Wynntils/Artemis/issues/2055)) ([f58a34f](https://github.com/Wynntils/Artemis/commit/f58a34f2563d93b26d326226d68ae22e355e423d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.348 [skip ci] ([06631eb](https://github.com/Wynntils/Artemis/commit/06631ebb9ce1eab837e830bc7b0fcbb078fc376a))
 
