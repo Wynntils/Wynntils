@@ -14,13 +14,13 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -114,14 +114,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         if (tooltipLines.isEmpty()) return;
 
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
+        this.renderTooltip(poseStack, tooltipLines, Optional.empty(), mouseX, mouseY);
     }
 
     @Override
