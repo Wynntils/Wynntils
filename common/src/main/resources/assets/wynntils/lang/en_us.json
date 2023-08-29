@@ -1913,7 +1913,7 @@
   "service.wynntils.itemFilter.invalidFilter": "%s: invalid filter for type: %s",
   "service.wynntils.itemFilter.level.description": "Level of the item",
   "service.wynntils.itemFilter.level.name": "Level",
-  "service.wynntils.itemFilter.profession.description": "List of profession related to the item",
+  "service.wynntils.itemFilter.profession.description": "List of professions related to the item",
   "service.wynntils.itemFilter.profession.name": "Profession",
   "service.wynntils.itemFilter.unknownStat": "%s: unknown stat",
   "service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded": "Lootrun \"%s\" could not be loaded.",
