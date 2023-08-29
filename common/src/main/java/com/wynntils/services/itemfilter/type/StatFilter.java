@@ -8,12 +8,13 @@ import java.util.List;
 
 /**
  * A filter type to be used for filtering {@link ItemStatProvider} values.
- * @param <T>
+ * Create these with {@link StatFilterFactory}.
+ * @param <T> The type of value this filter works on
  */
-public interface StatFilter<T> {
-    boolean matches(T value);
+public abstract class StatFilter<T> {
+    protected abstract boolean matches(T value);
 
-    default boolean matches(List<T> values) {
+    public boolean matches(List<T> values) {
         return values.stream().anyMatch(this::matches);
     }
 }

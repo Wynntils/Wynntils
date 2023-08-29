@@ -43,7 +43,7 @@ public abstract class ItemStatProvider<T> implements Translatable {
 
     @Override
     public String getTranslation(String keySuffix, Object... formatValues) {
-        return I18n.get("service.wynntils.itemFilter." + getTranslationKey() + "." + keySuffix, formatValues);
+        return I18n.get("service.wynntils.itemFilter.stat." + getTranslationKey() + "." + keySuffix, formatValues);
     }
 
     @Override
