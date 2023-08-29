@@ -17,6 +17,7 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -168,6 +169,14 @@ public class ContainerSearchFeature extends Feature {
         matchItems(lastSearchQuery, chestMenu);
 
         tryAutoSearch(abstractContainerScreen);
+    }
+
+    @SubscribeEvent
+    public void onInventoryMouseClick(InventoryMouseClickedEvent event) {
+        if (lastItemSearchHelperWidget.mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
+            event.setCanceled(true);
+            return;
+        }
     }
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {

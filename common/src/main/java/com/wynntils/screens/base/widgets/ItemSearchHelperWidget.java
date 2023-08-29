@@ -46,6 +46,8 @@ public class ItemSearchHelperWidget extends BasicTexturedButton implements Toolt
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
+
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             page = MathUtils.clamp(page - 1, 0, tooltipPages.size() - 1);
             return true;
