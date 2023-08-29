@@ -1,9 +1,21 @@
+## [0.0.3-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.350...v0.0.3-alpha.351) (2023-08-29)
+
+
+### New Features
+
+* Refactor the item filter system by separating stat providers and stat filters ([#2056](https://github.com/Wynntils/Artemis/issues/2056)) ([3a04d18](https://github.com/Wynntils/Artemis/commit/3a04d18e7c94c0b64ab6318bac72392bd4fddd0f))
+
 ## [0.0.3-alpha.350](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.349...v0.0.3-alpha.350) (2023-08-29)
 
 
 ### Bug Fixes
 
 * Party finder regex works with nicknames ([#2058](https://github.com/Wynntils/Artemis/issues/2058)) ([d8096e0](https://github.com/Wynntils/Artemis/commit/d8096e0a85df773e044cdef7c8b680cc45281260))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.350 [skip ci] ([d8f4f7c](https://github.com/Wynntils/Artemis/commit/d8f4f7cef862e68b505dfdeba91ef0344cd3f651))
 
 ## [0.0.3-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.348...v0.0.3-alpha.349) (2023-08-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.347 [skip ci] ([e0a0fe6](https://github.com/Wynntils/Artemis/commit/e0a0fe67a1c09f2bbdc22b93b4eb95c902fbed03))
-
-## [0.0.3-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.345...v0.0.3-alpha.346) (2023-08-27)
-
-
-### Bug Fixes
-
-* Add proper handling of Elemental Defence in gear stats ([#2048](https://github.com/Wynntils/Artemis/issues/2048)) ([0f8411f](https://github.com/Wynntils/Artemis/commit/0f8411f05e879f5523f91a1fc39a6cd3d60bb06b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.346 [skip ci] ([960b6a8](https://github.com/Wynntils/Artemis/commit/960b6a8089422a6d606ace950816c4a87459a87a))
 
