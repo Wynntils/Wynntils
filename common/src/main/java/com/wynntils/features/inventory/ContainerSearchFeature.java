@@ -173,6 +173,8 @@ public class ContainerSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryMouseClick(InventoryMouseClickedEvent event) {
+        if (lastItemSearchHelperWidget == null) return;
+
         if (lastItemSearchHelperWidget.mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
             event.setCanceled(true);
             return;

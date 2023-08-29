@@ -49,12 +49,12 @@ public class ItemSearchHelperWidget extends BasicTexturedButton implements Toolt
         if (!isMouseOver(mouseX, mouseY)) return false;
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            page = MathUtils.clamp(page - 1, 0, tooltipPages.size() - 1);
+            page = MathUtils.overflowInRange(page, -1, 0, tooltipPages.size() - 1);
             return true;
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            page = MathUtils.clamp(page + 1, 0, tooltipPages.size() - 1);
+            page = MathUtils.overflowInRange(page, +1, 0, tooltipPages.size() - 1);
             return true;
         }
 
