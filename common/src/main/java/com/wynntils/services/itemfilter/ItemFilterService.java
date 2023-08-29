@@ -42,6 +42,10 @@ public class ItemFilterService extends Service {
         return itemStatProviders;
     }
 
+    public List<? extends StatFilterFactory<? extends StatFilter<?>>> getStatFilters() {
+        return statFilters.stream().map(Pair::value).toList();
+    }
+
     public ItemSearchQuery createSearchQuery(String queryString) {
         List<StatProviderAndFilterPair<?>> filters = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();

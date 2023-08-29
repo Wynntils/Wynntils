@@ -9,9 +9,7 @@ import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public final class RangedStatFilter implements StatFilter<Integer> {
-    public static final RangedStatFilter ANY = new RangedStatFilter(Integer.MIN_VALUE, Integer.MAX_VALUE);
-
+public final class RangedStatFilter extends StatFilter<Integer> {
     private int min;
     private int max;
 
@@ -25,7 +23,7 @@ public final class RangedStatFilter implements StatFilter<Integer> {
         return value >= min && value <= max;
     }
 
-    public static final class RangedStatFilterFactory implements StatFilterFactory<RangedStatFilter> {
+    public static final class RangedStatFilterFactory extends StatFilterFactory<RangedStatFilter> {
         private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("\\d+");
         private static final Pattern RANGE_PATTERN = Pattern.compile("\\d+-\\d+");
         private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">(=)?\\d+");

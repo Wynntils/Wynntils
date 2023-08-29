@@ -9,7 +9,7 @@ import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.utils.StringUtils;
 import java.util.Optional;
 
-public final class StringStatFilter implements StatFilter<String> {
+public final class StringStatFilter extends StatFilter<String> {
     private String searchLiteral;
     private boolean strict;
 
@@ -23,7 +23,7 @@ public final class StringStatFilter implements StatFilter<String> {
         return strict ? value.equalsIgnoreCase(searchLiteral) : StringUtils.containsIgnoreCase(value, searchLiteral);
     }
 
-    public static class StringStatFilterFactory implements StatFilterFactory<StringStatFilter> {
+    public static class StringStatFilterFactory extends StatFilterFactory<StringStatFilter> {
         private static final String STRICT_FILTER_CHAR = "\"";
 
         @Override
