@@ -5,7 +5,6 @@
 package com.wynntils.screens.base.widgets;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
@@ -18,7 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ItemSearchHelperWidget extends BasicTexturedButton implements TooltipProvider {
+public class ItemSearchHelperWidget extends BasicTexturedButton {
     private static final int ELEMENTS_PER_PAGE = 4;
 
     private final List<List<Component>> tooltipPages = new ArrayList<>();
@@ -26,15 +25,8 @@ public class ItemSearchHelperWidget extends BasicTexturedButton implements Toolt
     private int page = 0;
 
     public ItemSearchHelperWidget(
-            int x,
-            int y,
-            int width,
-            int height,
-            Texture texture,
-            Consumer<Integer> onClick,
-            boolean renderTooltipAboveMouse,
-            boolean scaleTexture) {
-        super(x, y, width, height, texture, onClick, List.of(), renderTooltipAboveMouse, scaleTexture);
+            int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, boolean scaleTexture) {
+        super(x, y, width, height, texture, onClick, List.of(), scaleTexture);
 
         generateTooltipPages();
     }

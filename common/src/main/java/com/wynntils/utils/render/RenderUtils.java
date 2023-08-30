@@ -646,22 +646,6 @@ public final class RenderUtils {
         poseStack.popPose();
     }
 
-    public static void drawTooltipAt(
-            PoseStack poseStack,
-            double renderX,
-            double renderY,
-            double renderZ,
-            List<Component> componentLines,
-            Font font,
-            boolean firstLineHasPlusHeight) {
-        poseStack.pushPose();
-
-        poseStack.translate(renderX, renderY, renderZ);
-        drawTooltip(poseStack, componentLines, font, firstLineHasPlusHeight);
-
-        poseStack.popPose();
-    }
-
     /**
      * drawProgressBar
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
