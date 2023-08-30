@@ -16,8 +16,10 @@ import net.minecraft.world.item.ItemStack;
 
 public final class ArchetypeAbilitiesAnnotator implements ItemAnnotator {
     // Test suite: https://regexr.com/7h12h
+    // Test method at: test/com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotatorTest$testArchetypeName
     private static final Pattern ARCHETYPE_NAME = Pattern.compile("^§([a-r0-9])§l[A-Za-z ]+ Archetype$");
     // Test suite: https://regexr.com/7h133
+    // Test method at: test/com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotatorTest$testArchetypePattern
     private static final Pattern ARCHETYPE_PATTERN = Pattern.compile("^§a✔ §7Unlocked Abilities: §f(\\d+)§7/(\\d+)$");
 
     @Override
