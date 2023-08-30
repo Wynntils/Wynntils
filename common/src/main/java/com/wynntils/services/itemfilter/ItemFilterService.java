@@ -6,15 +6,19 @@ package com.wynntils.services.itemfilter;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemfilter.filters.LevelItemFilter;
-import com.wynntils.services.itemfilter.filters.ProfessionItemFilter;
-import com.wynntils.services.itemfilter.type.ItemFilter;
-import com.wynntils.services.itemfilter.type.ItemFilterInstance;
+import com.wynntils.services.itemfilter.filters.RangedStatFilter;
+import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
+import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StatFilter;
+import com.wynntils.services.itemfilter.type.StatFilterFactory;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,37 +28,26 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterService extends Service {
-    private final List<ItemFilter> filters = new ArrayList<>();
+    private final List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
+    private final List<Pair<Class<?>, StatFilterFactory<? extends StatFilter<?>>>> statFilters = new ArrayList<>();
 
     public ItemFilterService() {
         super(List.of());
-        registerAllFilters();
+
+        registerStatProviders();
+        registerStatFilters();
     }
 
-    /**
-     * Returns a filter for the given alias, or an error string if the alias does not match any filter.
-     * @param alias an alias of the filter
-     * @return the filter, or an error string if the alias does not match any filter
-     */
-    public ErrorOr<? extends ItemFilter> getFilter(String alias) {
-        Optional<ItemFilter> filterOpt = filters.stream()
-                .filter(filter ->
-                        filter.getName().equals(alias) || filter.getAliases().contains(alias))
-                .findFirst();
-
-        if (filterOpt.isPresent()) {
-            return ErrorOr.of(filterOpt.get());
-        } else {
-            return ErrorOr.error(I18n.get("service.wynntils.itemFilter.unknownFilter", alias));
-        }
+    public List<ItemStatProvider<?>> getItemStatProviders() {
+        return itemStatProviders;
     }
 
-    public List<ItemFilter> getFilters() {
-        return filters;
+    public List<? extends StatFilterFactory<? extends StatFilter<?>>> getStatFilters() {
+        return statFilters.stream().map(Pair::value).toList();
     }
 
     public ItemSearchQuery createSearchQuery(String queryString) {
-        List<ItemFilterInstance> itemFilters = new ArrayList<>();
+        List<StatProviderAndFilterPair<?>> filters = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();
         List<Integer> validFilterCharIndices = new ArrayList<>();
         List<String> errors = new ArrayList<>();
@@ -76,14 +69,15 @@ public class ItemFilterService extends Service {
             if (token.contains(":")) {
                 String filterString = token.split(":")[0];
                 String inputString = token.substring(token.indexOf(':') + 1);
-                ErrorOr<? extends ItemFilter> filterOrError = Services.ItemFilter.getFilter(filterString);
+
+                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(filterString);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
-                if (filterOrError.hasError()) {
+                if (itemStatProviderOrError.hasError()) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + token.length())
                             .boxed()
                             .toList());
-                    errors.add(filterOrError.getError());
+                    errors.add(itemStatProviderOrError.getError());
                     continue;
                 }
 
@@ -93,27 +87,27 @@ public class ItemFilterService extends Service {
                                 .boxed()
                                 .toList());
 
-                // ...and try to create an instance for this filter only if the inputString is not empty,
-                // because filtering with an empty value is pointless and we don't want to show the error
-                // the ItemFilter might return because of that.
-                // We still want to highlight the filter keyword though, that's why we handle the empty input here.
+                // Highlight the filter string, even if we don't have an input string yet
                 if (inputString.isEmpty()) continue;
 
-                ErrorOr<? extends ItemFilterInstance> filterInstanceOrError =
-                        filterOrError.getValue().createInstance(inputString);
+                ItemStatProvider<?> itemStatProvider = itemStatProviderOrError.getValue();
+                ErrorOr<StatFilter<?>> statFilter = getStatFilter(itemStatProvider.getType(), inputString);
 
                 // If the inputString is invalid, mark the value as ignored and continue to the next token
-                if (filterInstanceOrError.hasError()) {
+                if (statFilter.hasError()) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(
                                     tokenStartIndex + filterString.length() + 1, tokenStartIndex + token.length())
                             .boxed()
                             .toList());
-                    errors.add(filterInstanceOrError.getError());
+                    errors.add(statFilter.getError());
                     continue;
                 }
 
+                StatProviderAndFilterPair<?> statProviderAndFilterPair =
+                        StatProviderAndFilterPair.fromPair(itemStatProvider, statFilter.getValue());
+
                 // The inputString is valid, add the filter to the list
-                itemFilters.add(filterInstanceOrError.getValue());
+                filters.add(statProviderAndFilterPair);
             } else if (!token.isEmpty()) {
                 // The token is not a filter, add it to the list of plain text tokens
                 plainTextTokens.add(token);
@@ -121,7 +115,7 @@ public class ItemFilterService extends Service {
         }
 
         return new ItemSearchQuery(
-                queryString, itemFilters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
+                queryString, filters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
     }
 
     /**
@@ -151,6 +145,46 @@ public class ItemFilterService extends Service {
     }
 
     /**
+     * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
+     * @param name an alias of the stat provider
+     * @return the item stat provider, or an error string if the alias does not match any stat providers.
+     */
+    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name) {
+        Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
+                .filter(filter ->
+                        filter.getName().equals(name) || filter.getAliases().contains(name))
+                .findFirst();
+
+        if (itemStatProviderOpt.isPresent()) {
+            return ErrorOr.of(itemStatProviderOpt.get());
+        } else {
+            return ErrorOr.error(I18n.get("service.wynntils.itemFilter.unknownStat", name));
+        }
+    }
+
+    /**
+     * Returns a stat filter for the given value, or an error string if the value does not match any stat filters.
+     *
+     * @param type
+     * @param value the value to parse
+     * @return the stat filter, or an error string if the value does not match any stat filters.
+     */
+    private <T> ErrorOr<StatFilter<?>> getStatFilter(Class<T> type, String value) {
+        Optional<? extends StatFilter<?>> statFilterFactoryOpt = statFilters.stream()
+                .filter(filter -> filter.key().equals(type))
+                .map(filter -> filter.value().create(value))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
+
+        if (statFilterFactoryOpt.isPresent()) {
+            return ErrorOr.of(statFilterFactoryOpt.get());
+        } else {
+            return ErrorOr.error(I18n.get("service.wynntils.itemFilter.invalidFilter", value, type.getSimpleName()));
+        }
+    }
+
+    /**
      * Checks if the given item matches all filters. Tokens that are not filters in the search query are ignored. If no
      * filters are present, this method always returns true.
      *
@@ -158,7 +192,7 @@ public class ItemFilterService extends Service {
      * @return true if the item matches all filters, false otherwise
      */
     private boolean filterMatches(ItemSearchQuery searchQuery, WynnItem wynnItem) {
-        return searchQuery.itemFilters().stream().allMatch(o -> o.matches(wynnItem));
+        return searchQuery.filters().stream().allMatch(o -> o.matches(wynnItem));
     }
 
     /**
@@ -175,12 +209,25 @@ public class ItemFilterService extends Service {
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
-    private void registerAllFilters() {
-        registerFilter(new LevelItemFilter());
-        registerFilter(new ProfessionItemFilter());
+    private void registerStatProviders() {
+        // Order is irrelevant, keep it alphabetical
+        registerStatProvider(new LevelStatProvider());
+        registerStatProvider(new ProfessionStatProvider());
     }
 
-    private void registerFilter(ItemFilter itemFilter) {
-        filters.add(itemFilter);
+    private void registerStatProvider(ItemStatProvider<?> statProvider) {
+        itemStatProviders.add(statProvider);
+    }
+
+    private void registerStatFilters() {
+        // Order matters here, the first filter that parses the type will be used.
+        registerStatFilter(Integer.class, new RangedStatFilter.RangedStatFilterFactory());
+
+        // String is the fallback type, so it should be registered last
+        registerStatFilter(String.class, new StringStatFilter.StringStatFilterFactory());
+    }
+
+    private <T> void registerStatFilter(Class<T> clazz, StatFilterFactory<? extends StatFilter<T>> statFilterFactory) {
+        statFilters.add(Pair.of(clazz, statFilterFactory));
     }
 }
