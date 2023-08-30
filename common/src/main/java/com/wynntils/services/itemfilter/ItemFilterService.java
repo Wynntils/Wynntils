@@ -8,6 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.services.itemfilter.filters.AnyIntegerStatFilter;
+import com.wynntils.services.itemfilter.filters.AnyStringStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilter;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
@@ -220,7 +222,11 @@ public class ItemFilterService extends Service {
     }
 
     private void registerStatFilters() {
-        // Order matters here, the first filter that parses the type will be used.
+        // The order is not strictly relevant,
+        // but it is used when displaying the filter helper in the GUI
+
+        registerStatFilter(Integer.class, new AnyIntegerStatFilter.AnyIntegerStatFilterFactory());
+        registerStatFilter(String.class, new AnyStringStatFilter.AnyStringStatFilterFactory());
         registerStatFilter(Integer.class, new RangedStatFilter.RangedStatFilterFactory());
 
         // String is the fallback type, so it should be registered last
