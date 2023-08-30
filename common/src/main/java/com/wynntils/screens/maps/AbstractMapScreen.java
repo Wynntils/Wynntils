@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.LabelPoi;
@@ -34,6 +35,7 @@ import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -102,6 +104,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
+    }
+
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        for (GuiEventListener child : children) {
+            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                this.renderComponentTooltip(poseStack, tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                return;
+            }
+        }
     }
 
     @Override

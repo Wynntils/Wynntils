@@ -416,14 +416,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         if (this.hovered != null) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX - translationX,
-                    mouseY - translationY,
-                    0,
-                    this.hovered.tooltipList(),
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            this.renderComponentTooltip(poseStack, this.hovered.tooltipList(), (int) (mouseX - translationX), (int)
+                    (mouseY - translationY));
         }
     }
 
