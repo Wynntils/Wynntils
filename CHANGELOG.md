@@ -1,9 +1,21 @@
+## [0.0.3-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.353...v0.0.3-alpha.354) (2023-08-30)
+
+
+### Bug Fixes
+
+* The great tooltip rendering cleanup, fix tooltip rendering glitches ([#2065](https://github.com/Wynntils/Artemis/issues/2065)) ([ba4dfec](https://github.com/Wynntils/Artemis/commit/ba4dfec296254c0ccc8155941478f1072ea5bb18))
+
 ## [0.0.3-alpha.353](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.352...v0.0.3-alpha.353) (2023-08-29)
 
 
 ### New Features
 
 * better help ui for filters ([#2061](https://github.com/Wynntils/Artemis/issues/2061)) ([88d8a30](https://github.com/Wynntils/Artemis/commit/88d8a30c17e56fe4c0f4ce88c807cd794567b6d8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.353 [skip ci] ([8aada15](https://github.com/Wynntils/Artemis/commit/8aada1508e6cb452667e0bc8b42b559d6088a264))
 
 ## [0.0.3-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.351...v0.0.3-alpha.352) (2023-08-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.350 [skip ci] ([d8f4f7c](https://github.com/Wynntils/Artemis/commit/d8f4f7cef862e68b505dfdeba91ef0344cd3f651))
-
-## [0.0.3-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.348...v0.0.3-alpha.349) (2023-08-28)
-
-
-### Bug Fixes
-
-* Guild contribution message appearing in housing ([#2054](https://github.com/Wynntils/Artemis/issues/2054)) ([8dc709b](https://github.com/Wynntils/Artemis/commit/8dc709bfac9e19f9c9b4b5531db16043e65c0a28))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.349 [skip ci] ([47b8064](https://github.com/Wynntils/Artemis/commit/47b8064547d2c0c41e5467db0883d5709d54cdf6))
 
