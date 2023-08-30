@@ -34,10 +34,12 @@ public class GuildRankReplacementFeature extends Feature {
     public final Config<RankType> rankType = new Config<>(RankType.NAME);
 
     // Test suite: https://regexr.com/7f8kh
+    // Test method at: test/java/TestRegexs$testGuildMessagePattern
     private static final Pattern GUILD_MESSAGE_PATTERN =
             Pattern.compile("§3\\[(?:§b)?★{0,5}(?:§3)?(?:§o)?.{1,16}(?:§r)?(?:§3)?\\]§b");
 
     // Test suite: https://regexr.com/7e66m
+    // Test method at: test/java/TestRegexs$testRecruitUsernamePattern
     private static final Pattern RECRUIT_USERNAME_PATTERN = Pattern.compile("§3\\[(.{1,16})");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

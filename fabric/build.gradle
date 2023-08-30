@@ -77,6 +77,11 @@ dependencies {
     modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 
     testImplementation("net.fabricmc:fabric-loader-junit:${fabric_loader_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {

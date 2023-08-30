@@ -36,6 +36,7 @@ public class BulkBuyFeature extends Feature {
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     // Test suite: https://regexr.com/7esio
+    // Test method at: fabric/test/java/TestRegexs$testPricePattern
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
     private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");

@@ -67,7 +67,6 @@ allprojects {
     repositories {
         maven { url "https://maven.parchmentmc.org/" }
         maven { url "https://jitpack.io" }
-        mavenCentral()
     }
 
     tasks.withType(JavaCompile).configureEach {
@@ -79,15 +78,6 @@ allprojects {
             languageVersion.set(JavaLanguageVersion.of(java_version))
         }
         withSourcesJar()
-    }
-
-    dependencies{
-        testImplementation platform('org.junit:junit-bom:5.9.1')
-        testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
-    }
-
-    test {
-        useJUnitPlatform()
     }
 
     spotless {
@@ -105,6 +95,17 @@ allprojects {
                     throw new AssertionError("Do not use wildcard imports. 'spotlessApply' cannot resolve this issue.")
                 }
             }
+            custom "Mark all regexr without test class", {
+                if (it =~ /\/\/ ?Test ?suite: ?https:\/\/regexr.com\/[0-9a-z]{0,6} ?\n[\t ]*+(?!\/\/ Test method at:)/) {
+                    System.out.println("Missing test method corresponding to test suite")
+                    it.eachMatch(/\/\/ ?Test ?suite: ?https:\/\/regexr.com\/[0-9a-z]{0,6} ?\n[\t ]*+(?!\/\/ Test method at:)/){
+                        System.out.println(it)
+                    }
+                }
+            }
+            //            custom "Ensure Regexes are unit tested"{
+            //                //placeholder
+            //            }
             custom "Refuse IntelliJ annotations", {
                 if (it =~ /\nimport org\.jetbrains\.annotations\./) {
                     throw new AssertionError("Do not use IntelliJ annotations. 'spotlessApply' cannot resolve this issue.")
