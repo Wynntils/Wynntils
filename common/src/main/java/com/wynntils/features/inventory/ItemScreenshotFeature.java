@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -23,7 +24,6 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
@@ -39,6 +39,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -47,10 +48,15 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemScreenshotFeature extends Feature {
+    // The 4, 4 offset is intentional, otherwise the tooltip will be rendered outside of the screen
+    private static final ClientTooltipPositioner NO_POSITIONER =
+            (Screen screen, int mouseX, int mouseY, int width, int height) -> new Vector2i(4, 4);
+
     @RegisterKeyBind
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
@@ -107,6 +113,10 @@ public class ItemScreenshotFeature extends Feature {
         float scaleh = (float) screen.height / height;
         float scalew = (float) screen.width / width;
 
+        // Create tooltip renderer
+        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
+                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
+
         // draw tooltip to framebuffer, create image
         McUtils.mc().getMainRenderTarget().unbindWrite();
 
@@ -117,7 +127,7 @@ public class ItemScreenshotFeature extends Feature {
         fb.bindWrite(false);
         poseStack.pushPose();
         poseStack.scale(scalew, scaleh, 1);
-        RenderUtils.drawTooltip(poseStack, tooltip, font, true);
+        screen.renderTooltip(poseStack, deferredTooltipRendering, 0, 0);
         poseStack.popPose();
         fb.unbindWrite();
         McUtils.mc().getMainRenderTarget().bindWrite(true);
