@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class DungeonKeyAnnotator implements ItemAnnotator {
     private static final Pattern DUNGEON_KEY_PATTERN =
-            Pattern.compile("(?:§[46])*(?:Broken )?(?:Corrupted )?([^§]+) Key");
+            Pattern.compile("^(?:§[46])*(?:Broken )?(?:Corrupted )?(.+) Key$");
 
     private static final Pattern LORE_PATTERN = Pattern.compile("§7(Grants access to the|Use this item at the)");
 

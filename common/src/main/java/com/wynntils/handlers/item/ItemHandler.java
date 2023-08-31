@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
@@ -210,13 +211,13 @@ public class ItemHandler extends Handler {
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
         long startTime = System.currentTimeMillis();
 
-        name.replaceAll("ÀÀÀ", " ");
+        StyledText simplified = simplifyName(name);
 
         ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(itemStack, name);
+                annotation = annotator.getAnnotation(itemStack, simplified);
                 if (annotation != null) {
                     break;
                 }
@@ -248,6 +249,27 @@ public class ItemHandler extends Handler {
         logProfilingData(startTime, annotation);
 
         return annotation;
+    }
+
+    private StyledText simplifyName(StyledText name) {
+        String str = name.getString();
+
+        final Pattern[] PATTERNS = {
+            Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)§6 for .+ Each$"),
+            Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)$"),
+            Pattern.compile("^§7§l[^ ]+x (.+)$")
+        };
+
+        for (Pattern p : PATTERNS) {
+            Matcher m = p.matcher(str);
+
+            if (m.matches()) {
+                str = m.group(1);
+                break;
+            }
+        }
+
+        return StyledText.fromString(str);
     }
 
     private void annotate(ItemStack itemStack) {
