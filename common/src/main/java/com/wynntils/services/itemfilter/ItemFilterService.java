@@ -14,6 +14,8 @@ import com.wynntils.services.itemfilter.filters.RangedStatFilter;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
+import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
@@ -215,6 +217,8 @@ public class ItemFilterService extends Service {
         // Order is irrelevant, keep it alphabetical
         registerStatProvider(new LevelStatProvider());
         registerStatProvider(new ProfessionStatProvider());
+        registerStatProvider(new QualityStatProvider());
+        registerStatProvider(new RarityStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
