@@ -14,12 +14,12 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
@@ -103,17 +103,16 @@ public class ContainerSearchFeature extends Feature {
 
     // This might not be needed in 1.20
     @SubscribeEvent
-    public void onScreenRender(ScreenRenderEvent event) {
-        if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+    public void onContainerRender(ContainerRenderEvent event) {
         if (lastItemSearchHelperWidget == null) return;
 
         if (lastItemSearchHelperWidget.isHovered()) {
-            screen.renderTooltip(
-                    event.getPoseStack(),
-                    lastItemSearchHelperWidget.getTooltipLines(),
-                    Optional.empty(),
-                    event.getMouseX(),
-                    event.getMouseY());
+            event.getScreen()
+                    .renderComponentTooltip(
+                            event.getPoseStack(),
+                            lastItemSearchHelperWidget.getTooltipLines(),
+                            event.getMouseX(),
+                            event.getMouseY());
         }
     }
 
