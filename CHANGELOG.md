@@ -1,9 +1,21 @@
+## [0.0.3-alpha.357](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.356...v0.0.3-alpha.357) (2023-08-31)
+
+
+### New Features
+
+* Rarity and quality filters ([#2069](https://github.com/Wynntils/Artemis/issues/2069)) ([f43f9aa](https://github.com/Wynntils/Artemis/commit/f43f9aa124a3b61c93f516e675476e11f1f15597))
+
 ## [0.0.3-alpha.356](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.355...v0.0.3-alpha.356) (2023-08-31)
 
 
 ### Bug Fixes
 
 * more tooltips fixes ([#2067](https://github.com/Wynntils/Artemis/issues/2067)) ([c97f3eb](https://github.com/Wynntils/Artemis/commit/c97f3eb9c6988ec7975097b006820febf4007680))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.356 [skip ci] ([a12d78d](https://github.com/Wynntils/Artemis/commit/a12d78dafc8a75056d30a16b2635d19bee979779))
 
 ## [0.0.3-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.354...v0.0.3-alpha.355) (2023-08-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.353 [skip ci] ([8aada15](https://github.com/Wynntils/Artemis/commit/8aada1508e6cb452667e0bc8b42b559d6088a264))
-
-## [0.0.3-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.351...v0.0.3-alpha.352) (2023-08-29)
-
-
-### Bug Fixes
-
-* Mana bar skull texture does not render properly ([#2059](https://github.com/Wynntils/Artemis/issues/2059)) ([ddd6635](https://github.com/Wynntils/Artemis/commit/ddd66357d88c4197247f3bf46cdd944d0e00a5ff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.352 [skip ci] ([0ccbe65](https://github.com/Wynntils/Artemis/commit/0ccbe654568574ea22161e571436a7894aea8eed))
 
