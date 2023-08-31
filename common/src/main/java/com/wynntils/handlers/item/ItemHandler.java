@@ -269,6 +269,11 @@ public class ItemHandler extends Handler {
             }
         }
 
+        // Sometimes the text before the item name is already white, so the server omits this prefix
+        if (!str.startsWith("§") && !str.equals(name.getString())) {
+            str = "§f" + str;
+        }
+
         return StyledText.fromString(str);
     }
 
