@@ -24,6 +24,6 @@ public class QualityStatProvider extends ItemStatProvider<Integer> {
 
     @Override
     public List<String> getAliases() {
-        return List.of("qual");
+        return List.of("tier");
     }
 }

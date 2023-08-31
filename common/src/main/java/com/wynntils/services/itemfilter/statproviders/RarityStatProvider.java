@@ -24,6 +24,6 @@ public class RarityStatProvider extends ItemStatProvider<String> {
 
     @Override
     public List<String> getAliases() {
-        return List.of("rar");
+        return List.of();
     }
 }
