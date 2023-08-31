@@ -1,9 +1,21 @@
+## [0.0.3-alpha.356](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.355...v0.0.3-alpha.356) (2023-08-31)
+
+
+### Bug Fixes
+
+* more tooltips fixes ([#2067](https://github.com/Wynntils/Artemis/issues/2067)) ([c97f3eb](https://github.com/Wynntils/Artemis/commit/c97f3eb9c6988ec7975097b006820febf4007680))
+
 ## [0.0.3-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.354...v0.0.3-alpha.355) (2023-08-30)
 
 
 ### New Features
 
 * add any filter ([#2063](https://github.com/Wynntils/Artemis/issues/2063)) ([6fdae30](https://github.com/Wynntils/Artemis/commit/6fdae3040623984af34dc3701f7c909a6cfacc07))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.355 [skip ci] ([db134b7](https://github.com/Wynntils/Artemis/commit/db134b7117e9fdc4dee3736af84309ae8d4ef136))
 
 ## [0.0.3-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.353...v0.0.3-alpha.354) (2023-08-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.352 [skip ci] ([0ccbe65](https://github.com/Wynntils/Artemis/commit/0ccbe654568574ea22161e571436a7894aea8eed))
-
-## [0.0.3-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.350...v0.0.3-alpha.351) (2023-08-29)
-
-
-### New Features
-
-* Refactor the item filter system by separating stat providers and stat filters ([#2056](https://github.com/Wynntils/Artemis/issues/2056)) ([3a04d18](https://github.com/Wynntils/Artemis/commit/3a04d18e7c94c0b64ab6318bac72392bd4fddd0f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.351 [skip ci] ([07be0bd](https://github.com/Wynntils/Artemis/commit/07be0bd8d9f8e321676d7eecde254eae9e4fb7af))
 
