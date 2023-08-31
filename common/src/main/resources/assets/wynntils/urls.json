@@ -84,8 +84,12 @@
     "url": "https://athena.wynntils.com/cache/get/serverList"
   },
   {
-    "id": "dataAthenaTerritoryList",
-    "url": "https://athena.wynntils.com/cache/get/territoryList"
+    "id": "dataAthenaGuildList",
+    "url": "https://athena.wynntils.com/cache/get/guildList"
+  },
+  {
+    "id": "dataWynncraftTerritoryList",
+    "url": "https://api.wynncraft.com/public_api.php?action=territoryList"
   },
   {
     "id": "dataStaticCombatLocations",
