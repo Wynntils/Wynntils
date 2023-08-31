@@ -71,7 +71,7 @@ public class ItemFilterService extends Service {
             lastToken = token;
 
             if (token.contains(":")) {
-                String filterString = token.split(":")[0];
+                String filterString = token.substring(0, token.indexOf(':'));
                 String inputString = token.substring(token.indexOf(':') + 1);
 
                 ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(filterString);
