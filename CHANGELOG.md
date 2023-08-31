@@ -1,9 +1,26 @@
+## [0.0.3-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.358...v0.0.3-alpha.359) (2023-08-31)
+
+
+### Bug Fixes
+
+* fix crash if search query stars with : ([#2074](https://github.com/Wynntils/Artemis/issues/2074)) ([3229a9a](https://github.com/Wynntils/Artemis/commit/3229a9a066a35f99a381056fe561463dbb1ddcad))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2073](https://github.com/Wynntils/Artemis/issues/2073)) ([6cbc998](https://github.com/Wynntils/Artemis/commit/6cbc9982fb368ef6f464ff1d4d5ca124107bbd11))
+
 ## [0.0.3-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.357...v0.0.3-alpha.358) (2023-08-31)
 
 
 ### New Features
 
 * Migrate to Wynncraft territory API, fix territories having incorrect color in advancement mode ([#2070](https://github.com/Wynntils/Artemis/issues/2070)) ([e41375d](https://github.com/Wynntils/Artemis/commit/e41375defe61e30a299e8441c9824155c0b692bc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.358 [skip ci] ([2b869e2](https://github.com/Wynntils/Artemis/commit/2b869e24dfc78979900606e17dd6cb6f06ca930d))
 
 ## [0.0.3-alpha.357](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.356...v0.0.3-alpha.357) (2023-08-31)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.355 [skip ci] ([db134b7](https://github.com/Wynntils/Artemis/commit/db134b7117e9fdc4dee3736af84309ae8d4ef136))
-
-## [0.0.3-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.353...v0.0.3-alpha.354) (2023-08-30)
-
-
-### Bug Fixes
-
-* The great tooltip rendering cleanup, fix tooltip rendering glitches ([#2065](https://github.com/Wynntils/Artemis/issues/2065)) ([ba4dfec](https://github.com/Wynntils/Artemis/commit/ba4dfec296254c0ccc8155941478f1072ea5bb18))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.354 [skip ci] ([600849b](https://github.com/Wynntils/Artemis/commit/600849be5fb93182d3d519f64de7157bea03d1b9))
 
