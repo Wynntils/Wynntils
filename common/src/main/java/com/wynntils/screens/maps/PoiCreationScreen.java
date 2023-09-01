@@ -477,6 +477,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderIcon(PoseStack poseStack) {

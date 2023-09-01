@@ -4,11 +4,11 @@
  */
 package com.wynntils.screens.maps.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.SeaskipperDepartureBoardScreen;
-import com.wynntils.utils.mc.TooltipUtils;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -51,14 +51,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                     List.of(Component.translatable("screens.wynntils.seaskipperMapGui.travelToDestination")
                             .withStyle(ChatFormatting.GRAY));
 
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY - TooltipUtils.getToolTipHeight(TooltipUtils.componentToClientTooltipComponent(tooltip)),
-                    0,
-                    tooltip,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 }
