@@ -255,7 +255,7 @@ public class ItemHandler extends Handler {
         String str = name.getString();
 
         final Pattern[] PATTERNS = {
-            Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)§6 for .+ Each$"),
+            Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
             Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)$"),
             Pattern.compile("^§7§l[^ ]+x (.+)$")
         };
