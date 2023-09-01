@@ -1,3 +1,10 @@
+## [0.0.3-alpha.360](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.359...v0.0.3-alpha.360) (2023-09-01)
+
+
+### Bug Fixes
+
+* fix emerald count overlaying container filter helper tooltip ([#2071](https://github.com/Wynntils/Artemis/issues/2071)) ([b75befc](https://github.com/Wynntils/Artemis/commit/b75befc818a18a96fbc33298777e826760329108))
+
 ## [0.0.3-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.358...v0.0.3-alpha.359) (2023-08-31)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2073](https://github.com/Wynntils/Artemis/issues/2073)) ([6cbc998](https://github.com/Wynntils/Artemis/commit/6cbc9982fb368ef6f464ff1d4d5ca124107bbd11))
+* **release:** v0.0.3-alpha.359 [skip ci] ([d8b5777](https://github.com/Wynntils/Artemis/commit/d8b5777199201598584a87f7888f7eda670ed9fd))
 
 ## [0.0.3-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.357...v0.0.3-alpha.358) (2023-08-31)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.356 [skip ci] ([a12d78d](https://github.com/Wynntils/Artemis/commit/a12d78dafc8a75056d30a16b2635d19bee979779))
-
-## [0.0.3-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.354...v0.0.3-alpha.355) (2023-08-30)
-
-
-### New Features
-
-* add any filter ([#2063](https://github.com/Wynntils/Artemis/issues/2063)) ([6fdae30](https://github.com/Wynntils/Artemis/commit/6fdae3040623984af34dc3701f7c909a6cfacc07))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.355 [skip ci] ([db134b7](https://github.com/Wynntils/Artemis/commit/db134b7117e9fdc4dee3736af84309ae8d4ef136))
 
