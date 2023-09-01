@@ -21,7 +21,6 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
@@ -223,14 +222,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
         if (tooltipLines.isEmpty()) return;
 
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
+        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
     }
 
     private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
