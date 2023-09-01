@@ -29,7 +29,30 @@ public final class HorseAnnotator implements ItemAnnotator {
         if (!matcher.matches()) return null;
 
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 0, HORSE_TIER_PATTERN);
-        if (!tierMatcher.matches()) return null;
+
+        // The lore may be missing if the item is on the trade market
+        if (!tierMatcher.matches()) {
+            int tier;
+
+            switch (matcher.group(1)) {
+                case "Brown":
+                    tier = 1;
+                    break;
+                case "Black":
+                    tier = 2;
+                    break;
+                case "Chestnut":
+                    tier = 3;
+                    break;
+                case "White":
+                    tier = 4;
+                    break;
+                default:
+                    return null;
+            }
+
+            return new HorseItem(tier, CappedValue.EMPTY, CappedValue.EMPTY, null);
+        }
         int tier = Integer.parseInt(tierMatcher.group(1));
 
         Matcher levelMatcher = LoreUtils.matchLoreLine(itemStack, 1, HORSE_LEVEL_PATTERN);
