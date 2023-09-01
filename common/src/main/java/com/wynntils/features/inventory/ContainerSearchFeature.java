@@ -41,6 +41,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -102,7 +103,8 @@ public class ContainerSearchFeature extends Feature {
     }
 
     // This might not be needed in 1.20
-    @SubscribeEvent
+    // Render the tooltip last
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onContainerRender(ContainerRenderEvent event) {
         if (lastItemSearchHelperWidget == null) return;
 
