@@ -28,7 +28,6 @@ public final class ContainerModel extends Model {
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
-
     // Test suite: https://regexr.com/7jh1e
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
@@ -113,7 +112,8 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isGuildMemberListScreen(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle()).matches(SearchableContainerType.MEMBER_LIST.getTitlePattern());
+        return StyledText.fromComponent(screen.getTitle())
+                .matches(SearchableContainerType.MEMBER_LIST.getTitlePattern());
     }
 
     public boolean isTradeMarketScreen(Screen screen) {
