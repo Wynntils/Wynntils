@@ -4,23 +4,39 @@
  */
 package com.wynntils.models.players;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildModel extends Model {
+    private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
+            .create();
+
     // Test suite: https://regexr.com/7hob9
     private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("§3([a-zA-Z ]*?)§b \\[[a-zA-Z]{3,4}]");
 
@@ -40,11 +56,15 @@ public class GuildModel extends Model {
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(
             "^§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
+    private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
+
     private String guildName = "";
     private GuildRank guildRank;
 
     public GuildModel(CharacterModel characterModel) {
         super(List.of(characterModel));
+
+        loadGuildList();
     }
 
     // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
@@ -102,5 +122,22 @@ public class GuildModel extends Model {
 
     public GuildRank getGuildRank() {
         return guildRank;
+    }
+
+    public Optional<GuildProfile> getGuildProfile(String name) {
+        return Optional.ofNullable(guildProfileMap.get(name));
+    }
+
+    private void loadGuildList() {
+        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_GUILD_LIST);
+        dl.handleJsonArray(json -> {
+            Type type = new TypeToken<List<GuildProfile>>() {}.getType();
+            List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
+
+            Map<String, GuildProfile> profileMap =
+                    guildProfiles.stream().collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
+
+            guildProfileMap = profileMap;
+        });
     }
 }

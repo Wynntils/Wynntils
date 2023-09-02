@@ -4,17 +4,16 @@
  */
 package com.wynntils.screens.characterselector.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.mc.TooltipUtils;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 
 public class PlayButton extends WynntilsButton {
@@ -56,19 +55,7 @@ public class PlayButton extends WynntilsButton {
                 Texture.PLAY_BUTTON.height());
 
         if (isHovered) {
-            poseStack.pushPose();
-            List<ClientTooltipComponent> clientTooltipComponents =
-                    TooltipUtils.componentToClientTooltipComponent(TOOLTIP);
-            poseStack.translate(
-                    mouseX
-                            - TooltipUtils.getToolTipWidth(
-                                    clientTooltipComponents,
-                                    FontRenderer.getInstance().getFont()),
-                    mouseY - TooltipUtils.getToolTipHeight(clientTooltipComponents),
-                    100);
-            RenderUtils.drawTooltip(
-                    poseStack, TOOLTIP, FontRenderer.getInstance().getFont(), true);
-            poseStack.popPose();
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(TOOLTIP, Component::getVisualOrderText));
         }
     }
 }
