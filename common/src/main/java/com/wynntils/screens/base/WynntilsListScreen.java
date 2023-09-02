@@ -20,7 +20,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -114,7 +113,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         if (tooltipLines.isEmpty()) return;
 
-        this.renderTooltip(poseStack, tooltipLines, Optional.empty(), mouseX, mouseY);
+        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
     }
 
     @Override

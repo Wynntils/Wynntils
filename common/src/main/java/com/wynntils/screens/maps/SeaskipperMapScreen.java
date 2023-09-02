@@ -174,6 +174,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         renderMapButtons(poseStack, mouseX, mouseY, partialTick);
 
         renderHoveredSeaskipperDestination(poseStack);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {

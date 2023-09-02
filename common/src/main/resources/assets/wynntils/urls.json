@@ -84,8 +84,12 @@
     "url": "https://athena.wynntils.com/cache/get/serverList"
   },
   {
-    "id": "dataAthenaTerritoryList",
-    "url": "https://athena.wynntils.com/cache/get/territoryList"
+    "id": "dataAthenaGuildList",
+    "url": "https://athena.wynntils.com/cache/get/guildList"
+  },
+  {
+    "id": "dataWynncraftTerritoryList",
+    "url": "https://api.wynncraft.com/public_api.php?action=territoryList"
   },
   {
     "id": "dataStaticCombatLocations",
@@ -129,7 +133,7 @@
   },
   {
     "id": "dataStaticMajorIds",
-    "md5": "370a3208e21274ba247c64db3d597162",
+    "md5": "38bb5299f66016271f5bf3a1f49ec0ae",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json"
   },
   {

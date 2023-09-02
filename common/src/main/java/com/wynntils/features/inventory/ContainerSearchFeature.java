@@ -14,12 +14,12 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
@@ -41,6 +41,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -102,18 +103,18 @@ public class ContainerSearchFeature extends Feature {
     }
 
     // This might not be needed in 1.20
-    @SubscribeEvent
-    public void onScreenRender(ScreenRenderEvent event) {
-        if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+    // Render the tooltip last
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onContainerRender(ContainerRenderEvent event) {
         if (lastItemSearchHelperWidget == null) return;
 
         if (lastItemSearchHelperWidget.isHovered()) {
-            screen.renderTooltip(
-                    event.getPoseStack(),
-                    lastItemSearchHelperWidget.getTooltipLines(),
-                    Optional.empty(),
-                    event.getMouseX(),
-                    event.getMouseY());
+            event.getScreen()
+                    .renderComponentTooltip(
+                            event.getPoseStack(),
+                            lastItemSearchHelperWidget.getTooltipLines(),
+                            event.getMouseX(),
+                            event.getMouseY());
         }
     }
 
@@ -272,7 +273,6 @@ public class ContainerSearchFeature extends Feature {
                 Texture.INFO.height() / 3,
                 Texture.INFO,
                 a -> {},
-                false,
                 true);
 
         screen.addRenderableWidget(lastItemSearchHelperWidget);

@@ -8,10 +8,14 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.services.itemfilter.filters.AnyIntegerStatFilter;
+import com.wynntils.services.itemfilter.filters.AnyStringStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilter;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
+import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
@@ -67,7 +71,7 @@ public class ItemFilterService extends Service {
             lastToken = token;
 
             if (token.contains(":")) {
-                String filterString = token.split(":")[0];
+                String filterString = token.substring(0, token.indexOf(':'));
                 String inputString = token.substring(token.indexOf(':') + 1);
 
                 ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(filterString);
@@ -213,6 +217,8 @@ public class ItemFilterService extends Service {
         // Order is irrelevant, keep it alphabetical
         registerStatProvider(new LevelStatProvider());
         registerStatProvider(new ProfessionStatProvider());
+        registerStatProvider(new QualityStatProvider());
+        registerStatProvider(new RarityStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
@@ -220,7 +226,11 @@ public class ItemFilterService extends Service {
     }
 
     private void registerStatFilters() {
-        // Order matters here, the first filter that parses the type will be used.
+        // The order is not strictly relevant,
+        // but it is used when displaying the filter helper in the GUI
+
+        registerStatFilter(Integer.class, new AnyIntegerStatFilter.AnyIntegerStatFilterFactory());
+        registerStatFilter(String.class, new AnyStringStatFilter.AnyStringStatFilterFactory());
         registerStatFilter(Integer.class, new RangedStatFilter.RangedStatFilterFactory());
 
         // String is the fallback type, so it should be registered last

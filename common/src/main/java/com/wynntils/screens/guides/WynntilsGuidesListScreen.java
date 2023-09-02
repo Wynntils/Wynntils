@@ -7,7 +7,6 @@ package com.wynntils.screens.guides;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -21,8 +20,6 @@ import com.wynntils.screens.guides.widgets.ImportButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,22 +135,6 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         poseStack.popPose();
 
         renderTooltip(poseStack, mouseX, mouseY);
-    }
-
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
-
-        List<Component> tooltipLines = tooltipWidget.getTooltipLines();
-        if (tooltipLines.isEmpty()) return;
-
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
     }
 
     @Override
