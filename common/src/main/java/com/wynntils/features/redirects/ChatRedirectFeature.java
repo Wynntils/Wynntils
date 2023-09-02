@@ -510,8 +510,8 @@ public class ChatRedirectFeature extends Feature {
                 Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{5}(?<name>[\\w ]{1,20})§[0-9a-f] has just logged in!$");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{5}(?<name>[\\\\w ]{1,20})§[0-9a-f] has just logged in!$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>["
+                + RANK_STRING + "]) §#[0-9a-f]{5}(?<name>[\\\\w ]{1,20})§[0-9a-f] has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -541,7 +541,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class MageTeleportationFailRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cSorry, you can't teleport\\.\\.\\. Try moving away from blocks.$");
+                Pattern.compile("^§cSorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -699,7 +699,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class ScrollTeleportationMobFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§cThere are aggressive mobs nearby\\.\\.\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
