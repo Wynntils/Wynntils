@@ -12,10 +12,17 @@ import com.wynntils.services.itemfilter.filters.AnyIntegerStatFilter;
 import com.wynntils.services.itemfilter.filters.AnyStringStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilter;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
+import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
+import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
+import com.wynntils.services.itemfilter.statproviders.ItemTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
+import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
@@ -218,11 +225,20 @@ public class ItemFilterService extends Service {
 
         // Constant Item Stats
         registerStatProvider(new LevelStatProvider());
+        registerStatProvider(new RarityStatProvider());
+        registerStatProvider(new ItemTypeStatProvider());
+        registerStatProvider(new GearTypeStatProvider());
+        registerStatProvider(new CountedItemStatProvider());
+        registerStatProvider(new DurabilityStatProvider());
+        registerStatProvider(new TierStatProvider());
+        registerStatProvider(new UsesStatProvider());
 
-        // Item Type
+        // Dynamic Item Stats
+        registerStatProvider(new EmeraldValueStatProvider());
+
+        // Profession Stats
         registerStatProvider(new ProfessionStatProvider());
         registerStatProvider(new QualityStatProvider());
-        registerStatProvider(new RarityStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
