@@ -21,7 +21,7 @@ import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
 import com.wynntils.services.itemfilter.statproviders.PowderSlotsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
-import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
@@ -244,7 +244,7 @@ public class ItemFilterService extends Service {
 
         // Profession Stats
         registerStatProvider(new ProfessionStatProvider());
-        registerStatProvider(new QualityStatProvider());
+        registerStatProvider(new QualityTierStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
