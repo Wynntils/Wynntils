@@ -41,11 +41,6 @@ public class LocateCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Search Wynntils database for locations";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("service")

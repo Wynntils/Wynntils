@@ -46,11 +46,6 @@ public class QuestCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "List, show and track quests";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("list")

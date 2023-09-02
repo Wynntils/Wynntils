@@ -32,11 +32,6 @@ public class FeatureCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "List and manage Wynntils features";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("list").executes(this::listFeatures))
