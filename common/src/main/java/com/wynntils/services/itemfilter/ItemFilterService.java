@@ -15,9 +15,12 @@ import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
+import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ItemTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
+import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
+import com.wynntils.services.itemfilter.statproviders.PowderSlotsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
@@ -232,6 +235,9 @@ public class ItemFilterService extends Service {
         registerStatProvider(new DurabilityStatProvider());
         registerStatProvider(new TierStatProvider());
         registerStatProvider(new UsesStatProvider());
+        registerStatProvider(new GearRestrictionStatProvider());
+        registerStatProvider(new MajorIdStatProvider());
+        registerStatProvider(new PowderSlotsStatProvider());
 
         // Dynamic Item Stats
         registerStatProvider(new EmeraldValueStatProvider());
