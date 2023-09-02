@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 public enum PlayerRank {
     NONE("", "", ChatFormatting.DARK_GRAY, ChatFormatting.DARK_GRAY),
     // normal ranks
-    VIP("VIP", "\uE023", ChatFormatting.DARK_GREEN, ChatFormatting.DARK_GREEN),
+    VIP("VIP", "\uE023", ChatFormatting.DARK_GREEN, ChatFormatting.GREEN),
     VIP_PLUS("VIP+", "\uE024", ChatFormatting.BLUE, ChatFormatting.DARK_AQUA),
     HERO("HERO", "\uE01B", ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE),
     CHAMPION("CHAMPION", "\uE017", ChatFormatting.YELLOW, ChatFormatting.GOLD),
