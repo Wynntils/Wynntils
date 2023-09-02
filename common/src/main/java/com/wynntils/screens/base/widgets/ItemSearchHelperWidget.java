@@ -89,7 +89,7 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
         List<ItemStatProvider<?>> itemStatProviders = Services.ItemFilter.getItemStatProviders();
         for (ItemStatProvider<?> itemStatProvider : itemStatProviders) {
             currentTooltip.add(Component.empty());
-            currentTooltip.add(Component.literal(itemStatProvider.getTranslatedName() + ": ")
+            currentTooltip.add(Component.literal(itemStatProvider.getName() + ": ")
                     .withStyle(ChatFormatting.YELLOW)
                     .append(Component.literal("(" + itemStatProvider.getType().getSimpleName() + ")")
                             .withStyle(ChatFormatting.GRAY)));

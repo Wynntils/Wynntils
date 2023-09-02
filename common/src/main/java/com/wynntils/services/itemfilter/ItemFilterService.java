@@ -8,19 +8,29 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemfilter.filters.AnyIntegerStatFilter;
-import com.wynntils.services.itemfilter.filters.AnyStringStatFilter;
-import com.wynntils.services.itemfilter.filters.RangedStatFilter;
+import com.wynntils.services.itemfilter.filters.AnyStatFilters;
+import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
+import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
+import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
+import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
+import com.wynntils.services.itemfilter.statproviders.ItemTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
+import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
+import com.wynntils.services.itemfilter.statproviders.PowderSlotsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
-import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
+import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -214,11 +224,27 @@ public class ItemFilterService extends Service {
     }
 
     private void registerStatProviders() {
-        // Order is irrelevant, keep it alphabetical
+        // Keep some kind of order here, because it is used when displaying the filter helper in the GUI
+
+        // Constant Item Stats
         registerStatProvider(new LevelStatProvider());
-        registerStatProvider(new ProfessionStatProvider());
-        registerStatProvider(new QualityStatProvider());
         registerStatProvider(new RarityStatProvider());
+        registerStatProvider(new ItemTypeStatProvider());
+        registerStatProvider(new GearTypeStatProvider());
+        registerStatProvider(new CountedItemStatProvider());
+        registerStatProvider(new DurabilityStatProvider());
+        registerStatProvider(new TierStatProvider());
+        registerStatProvider(new UsesStatProvider());
+        registerStatProvider(new GearRestrictionStatProvider());
+        registerStatProvider(new MajorIdStatProvider());
+        registerStatProvider(new PowderSlotsStatProvider());
+
+        // Dynamic Item Stats
+        registerStatProvider(new EmeraldValueStatProvider());
+
+        // Profession Stats
+        registerStatProvider(new ProfessionStatProvider());
+        registerStatProvider(new QualityTierStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
@@ -229,9 +255,15 @@ public class ItemFilterService extends Service {
         // The order is not strictly relevant,
         // but it is used when displaying the filter helper in the GUI
 
-        registerStatFilter(Integer.class, new AnyIntegerStatFilter.AnyIntegerStatFilterFactory());
-        registerStatFilter(String.class, new AnyStringStatFilter.AnyStringStatFilterFactory());
-        registerStatFilter(Integer.class, new RangedStatFilter.RangedStatFilterFactory());
+        registerStatFilter(Integer.class, new AnyStatFilters.AnyIntegerStatFilter.AnyIntegerStatFilterFactory());
+        registerStatFilter(String.class, new AnyStatFilters.AnyStringStatFilter.AnyStringStatFilterFactory());
+        registerStatFilter(
+                CappedValue.class, new AnyStatFilters.AnyCappedValueStatFilter.AnyCappedValueStatFilterFactory());
+        registerStatFilter(
+                Integer.class, new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory());
+        registerStatFilter(
+                CappedValue.class,
+                new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory());
 
         // String is the fallback type, so it should be registered last
         registerStatFilter(String.class, new StringStatFilter.StringStatFilterFactory());
