@@ -7,6 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +28,6 @@ public final class ContainerModel extends Model {
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
-    // Test suite: https://regexr.com/7jgvf
-    private static final Pattern GUILD_MEMBER_LIST_PATTERN = Pattern.compile("[a-zA-Z ]+: Members");
 
     // Test suite: https://regexr.com/7jh1e
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
@@ -114,7 +113,7 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isGuildMemberListScreen(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle()).matches(GUILD_MEMBER_LIST_PATTERN);
+        return StyledText.fromComponent(screen.getTitle()).matches(SearchableContainerType.MEMBER_LIST.getTitlePattern());
     }
 
     public boolean isTradeMarketScreen(Screen screen) {
