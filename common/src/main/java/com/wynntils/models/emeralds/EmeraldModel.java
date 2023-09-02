@@ -68,7 +68,7 @@ public final class EmeraldModel extends Model {
         // Rescan inventory after merging items
         List<ItemStack> items = McUtils.inventoryMenu().getItems();
         for (ItemStack item : items) {
-            adjustBalance(null, item, true);
+            adjustBalance(item, true);
         }
 
         containerEmeralds = 0;
@@ -76,7 +76,7 @@ public final class EmeraldModel extends Model {
         // Rescan container after merging items
         items = McUtils.containerMenu().getItems();
         for (ItemStack item : items) {
-            adjustBalance(null, item, false);
+            adjustBalance(item, false);
         }
     }
 
@@ -101,27 +101,18 @@ public final class EmeraldModel extends Model {
         containerEmeralds = 0;
     }
 
-    private void adjustBalance(ItemStack oldItemStack, ItemStack newItemStack, boolean isInventory) {
+    private void adjustBalance(ItemStack newItemStack, boolean isInventory) {
         int adjustValue = 0;
-        Optional<EmeraldValuedItemProperty> oldItemValueOpt =
-                Models.Item.asWynnItemPropery(oldItemStack, EmeraldValuedItemProperty.class);
-        if (oldItemValueOpt.isPresent()) {
-            adjustValue -= oldItemValueOpt.get().getEmeraldValue();
-        }
-
         Optional<EmeraldValuedItemProperty> newItemValueOpt =
                 Models.Item.asWynnItemPropery(newItemStack, EmeraldValuedItemProperty.class);
         if (newItemValueOpt.isPresent()) {
             adjustValue += newItemValueOpt.get().getEmeraldValue();
         }
 
-        // We most likely replaced the same item, so we don't need to adjust
-        if (adjustValue == 0) return;
-
         if (isInventory) {
-            inventoryEmeralds = Math.max(0, inventoryEmeralds + adjustValue);
+            inventoryEmeralds += adjustValue;
         } else {
-            containerEmeralds = Math.max(0, containerEmeralds + adjustValue);
+            containerEmeralds += adjustValue;
         }
     }
 
