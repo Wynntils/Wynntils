@@ -16,14 +16,4 @@ public class RarityStatProvider extends ItemStatProvider<String> {
 
         return List.of(gearTierItemProperty.getGearTier().getName());
     }
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return List.of();
-    }
 }

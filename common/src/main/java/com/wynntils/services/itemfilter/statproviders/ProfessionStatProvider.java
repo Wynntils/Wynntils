@@ -21,11 +21,6 @@ public class ProfessionStatProvider extends ItemStatProvider<String> {
     }
 
     @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
     public List<String> getAliases() {
         return List.of("prof");
     }

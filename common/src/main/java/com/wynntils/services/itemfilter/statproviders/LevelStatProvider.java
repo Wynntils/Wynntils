@@ -18,11 +18,6 @@ public class LevelStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
-    public Class<Integer> getType() {
-        return Integer.class;
-    }
-
-    @Override
     public List<String> getAliases() {
         return List.of("lvl");
     }

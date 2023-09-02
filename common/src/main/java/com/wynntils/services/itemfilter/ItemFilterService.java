@@ -214,8 +214,12 @@ public class ItemFilterService extends Service {
     }
 
     private void registerStatProviders() {
-        // Order is irrelevant, keep it alphabetical
+        // Keep some kind of order here, because it is used when displaying the filter helper in the GUI
+
+        // Constant Item Stats
         registerStatProvider(new LevelStatProvider());
+
+        // Item Type
         registerStatProvider(new ProfessionStatProvider());
         registerStatProvider(new QualityStatProvider());
         registerStatProvider(new RarityStatProvider());

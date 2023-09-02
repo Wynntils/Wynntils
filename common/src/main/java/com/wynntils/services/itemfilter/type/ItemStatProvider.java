@@ -7,17 +7,16 @@ package com.wynntils.services.itemfilter.type;
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.persisted.Translatable;
 import com.wynntils.models.items.WynnItem;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class ItemStatProvider<T> implements Translatable {
     protected final String name;
-    protected final String translationKey;
 
     protected ItemStatProvider() {
         String name = this.getClass().getSimpleName().replace("StatProvider", "");
-        this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
-        this.translationKey = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     /**
@@ -29,16 +28,20 @@ public abstract class ItemStatProvider<T> implements Translatable {
      */
     public abstract List<T> getValue(WynnItem wynnItem);
 
-    public abstract Class<T> getType();
+    public final Class<T> getType() {
+        return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
 
-    public abstract List<String> getAliases();
+    public List<String> getAliases() {
+        return List.of();
+    }
 
     public String getName() {
         return name;
     }
 
     protected String getTranslationKey() {
-        return translationKey;
+        return name;
     }
 
     @Override
