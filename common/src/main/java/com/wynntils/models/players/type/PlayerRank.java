@@ -7,8 +7,6 @@ package com.wynntils.models.players.type;
 import net.minecraft.ChatFormatting;
 
 public enum PlayerRank {
-    // some of these colors are not perfect, we are limited by the colors available
-    // inaccuracies are noted in the comments
     NONE("", "", ChatFormatting.DARK_GRAY, ChatFormatting.DARK_GRAY),
     // normal ranks
     VIP("VIP", "\uE023", ChatFormatting.DARK_GREEN, ChatFormatting.DARK_GREEN),
@@ -32,21 +30,21 @@ public enum PlayerRank {
     OWNER("Owner", "\uE021", ChatFormatting.DARK_RED, ChatFormatting.DARK_RED),
     WEB("Web", "\uE025", ChatFormatting.RED, ChatFormatting.DARK_RED);
 
+    private final String name;
     private final String tag;
-    private final String newTag;
     private final ChatFormatting textColor;
-    private final ChatFormatting backgroundColor;
+    private final ChatFormatting accentColor;
 
-    PlayerRank(String tag, String newTag, ChatFormatting textColor, ChatFormatting backgroundColor) {
+    PlayerRank(String name, String tag, ChatFormatting textColor, ChatFormatting accentColor) {
+        this.name = name;
         this.tag = tag;
-        this.newTag = newTag;
         this.textColor = textColor;
-        this.backgroundColor = backgroundColor;
+        this.accentColor = accentColor;
     }
 
     public static PlayerRank fromString(String rankString) {
         for (PlayerRank rank : values()) {
-            if (rank.tag.equals(rankString) || rank.newTag.equals(rankString)) {
+            if (rank.name.equals(rankString) || rank.tag.equals(rankString)) {
                 return rank;
             }
         }
@@ -54,19 +52,19 @@ public enum PlayerRank {
         return NONE;
     }
 
-    public String getTag() {
-        return tag;
+    public String getName() {
+        return name;
     }
 
-    public String getNewTag() {
-        return newTag;
+    public String getTag() {
+        return tag;
     }
 
     public ChatFormatting getTextColor() {
         return textColor;
     }
 
-    public ChatFormatting getBackgroundColor() {
-        return backgroundColor;
+    public ChatFormatting getAccentColor() {
+        return accentColor;
     }
 }

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -507,9 +506,8 @@ public class ChatRedirectFeature extends Feature {
 
     private class LoginRedirector extends SimpleRedirector {
         // Test suite: https://regexr.com/7jhti
-        private static final String RANK_STRING = Arrays.stream(PlayerRank.values())
-                .map(PlayerRank::getNewTag)
-                .collect(Collectors.joining(""));
+        private static final String RANK_STRING =
+                Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{5}(?<name>[\\w ]{1,20})§[0-9a-f] has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
@@ -536,7 +534,8 @@ public class ChatRedirectFeature extends Feature {
             String playerName = matcher.group("name");
             PlayerRank rank = PlayerRank.fromString(rankString);
 
-            return StyledText.fromString(ChatFormatting.GREEN + "→ " + ChatFormatting.RESET + rank.getNewTag() + " " + rank.getTextColor() + playerName);
+            return StyledText.fromString(ChatFormatting.GREEN + "→ " + ChatFormatting.RESET + rank.getTag() + " "
+                    + rank.getTextColor() + playerName);
         }
     }
 
@@ -600,7 +599,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class PotionAlreadyActiveRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§cYou already have that potion active\\.\\.\\.$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou already have that potion active\\.\\.\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
