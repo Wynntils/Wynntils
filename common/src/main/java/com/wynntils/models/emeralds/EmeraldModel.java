@@ -8,7 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.ItemModel;
@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -56,39 +55,28 @@ public final class EmeraldModel extends Model {
 
         inventoryEmeralds = 0;
         containerEmeralds = 0;
-
-        // Rescan inventory at login
-        Inventory inventory = McUtils.inventory();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            adjustBalance(null, inventory.getItem(i), true);
-        }
     }
 
     @SubscribeEvent
-    public void onSetSlot(SetSlotEvent.Post event) {
-        boolean isInventory = event.getContainer() == McUtils.inventory();
-        if (pouchContainerId != -1 && !isInventory) return;
+    public void onTick(TickEvent event) {
+        recountEmeralds();
+    }
 
-        // FIXME: This is a hack to always have up-to-date emerald counts
-        //        When Wynncraft fixes emerald stacking,
-        //        this can be simplified greatly (by using old and new stacks)
-        //        However, this is really fast so maybe we can keep it (pending profiling)
-        if (isInventory) {
-            inventoryEmeralds = 0;
+    private void recountEmeralds() {
+        inventoryEmeralds = 0;
 
-            // Rescan inventory after merging items
-            List<ItemStack> items = McUtils.inventoryMenu().getItems();
-            for (ItemStack item : items) {
-                adjustBalance(null, item, true);
-            }
-        } else if (event.getContainer() == McUtils.containerMenu()) {
-            containerEmeralds = 0;
+        // Rescan inventory after merging items
+        List<ItemStack> items = McUtils.inventoryMenu().getItems();
+        for (ItemStack item : items) {
+            adjustBalance(null, item, true);
+        }
 
-            // Rescan container after merging items
-            List<ItemStack> items = McUtils.containerMenu().getItems();
-            for (ItemStack item : items) {
-                adjustBalance(null, item, false);
-            }
+        containerEmeralds = 0;
+
+        // Rescan container after merging items
+        items = McUtils.containerMenu().getItems();
+        for (ItemStack item : items) {
+            adjustBalance(null, item, false);
         }
     }
 
