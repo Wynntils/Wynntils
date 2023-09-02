@@ -511,7 +511,7 @@ public class ChatRedirectFeature extends Feature {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{5}(?<name>[\\w ]{1,20})§[0-9a-f] has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[\" + RANK_STRING + \"]) §#[0-9a-f]{5}(?<name>[\\\\w ]{1,20})§[0-9a-f] has just logged in!$");
+                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{5}(?<name>[\\\\w ]{1,20})§[0-9a-f] has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
