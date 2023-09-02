@@ -1,9 +1,21 @@
+## [0.0.3-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.362...v0.0.3-alpha.363) (2023-09-02)
+
+
+### New Features
+
+* add new item filter stats and filters ([#2077](https://github.com/Wynntils/Artemis/issues/2077)) ([7f11cbf](https://github.com/Wynntils/Artemis/commit/7f11cbf21f6efc755c3ada125c6206f58a71092d))
+
 ## [0.0.3-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.361...v0.0.3-alpha.362) (2023-09-02)
 
 
 ### Bug Fixes
 
 * unescaped any char in pattern ([#2075](https://github.com/Wynntils/Artemis/issues/2075)) ([6014930](https://github.com/Wynntils/Artemis/commit/60149309393032cf1cb8b089fb44c9319bd3ad84))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.362 [skip ci] ([50bbee8](https://github.com/Wynntils/Artemis/commit/50bbee894c690c6287a14a21d98be7c225cb9810))
 
 ## [0.0.3-alpha.361](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.360...v0.0.3-alpha.361) (2023-09-02)
 
@@ -41,16 +53,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2073](https://github.com/Wynntils/Artemis/issues/2073)) ([6cbc998](https://github.com/Wynntils/Artemis/commit/6cbc9982fb368ef6f464ff1d4d5ca124107bbd11))
 * **release:** v0.0.3-alpha.359 [skip ci] ([d8b5777](https://github.com/Wynntils/Artemis/commit/d8b5777199201598584a87f7888f7eda670ed9fd))
-
-## [0.0.3-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.357...v0.0.3-alpha.358) (2023-08-31)
-
-
-### New Features
-
-* Migrate to Wynncraft territory API, fix territories having incorrect color in advancement mode ([#2070](https://github.com/Wynntils/Artemis/issues/2070)) ([e41375d](https://github.com/Wynntils/Artemis/commit/e41375defe61e30a299e8441c9824155c0b692bc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.358 [skip ci] ([2b869e2](https://github.com/Wynntils/Artemis/commit/2b869e24dfc78979900606e17dd6cb6f06ca930d))
 
