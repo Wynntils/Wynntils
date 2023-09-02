@@ -503,10 +503,11 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class LoginRedirector extends SimpleRedirector {
+        // Test suite: https://regexr.com/7jhti
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§.\\[(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)(§.)+\\|?(§.)*\\] §.(?<name>.*)§. has just logged in!$");
+                "^(?<rank>[\uE017\uE01B\uE024\uE023]) §#(?:fe600|344aa|a99ee|4aa33)(?<name>[\\w ]{1,20})§[6d3a] has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)(§.)+\\|?(§.)*\\] §7(?<name>.*)§8 has just logged in!$");
+                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[\uE017\uE01B\uE024\uE023]) §#(?:fe600|344aa|a99ee|4aa33)(?<name>[\\w ]{1,20})§[6d3a] has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
