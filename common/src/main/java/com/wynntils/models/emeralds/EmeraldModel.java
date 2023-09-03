@@ -151,7 +151,7 @@ public final class EmeraldModel extends Model {
     }
 
     public int getAmountInContainer() {
-        return containerEmeralds;
+        return containerEmeralds - inventoryEmeralds;
     }
 
     public String convertEmeraldPrice(String inputStr) {
