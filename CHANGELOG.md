@@ -1,9 +1,21 @@
+## [0.0.3-alpha.366](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.365...v0.0.3-alpha.366) (2023-09-03)
+
+
+### Bug Fixes
+
+* Sync player ranks and related features to 2.0.3 ([#2078](https://github.com/Wynntils/Artemis/issues/2078)) ([348a21c](https://github.com/Wynntils/Artemis/commit/348a21c3e7aa176a72e3033fe057f017a4995451))
+
 ## [0.0.3-alpha.365](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.364...v0.0.3-alpha.365) (2023-09-03)
 
 
 ### Bug Fixes
 
 * CME on laggy connections when kicking offline ([#2084](https://github.com/Wynntils/Artemis/issues/2084)) ([993ffdb](https://github.com/Wynntils/Artemis/commit/993ffdbc09b0a9c049eeb059189b6ad62c3716d2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.365 [skip ci] ([b9a9d6f](https://github.com/Wynntils/Artemis/commit/b9a9d6f1970838c45e13d1d6b307bf3bdbac84c4))
 
 ## [0.0.3-alpha.364](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.363...v0.0.3-alpha.364) (2023-09-03)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.362 [skip ci] ([50bbee8](https://github.com/Wynntils/Artemis/commit/50bbee894c690c6287a14a21d98be7c225cb9810))
-
-## [0.0.3-alpha.361](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.360...v0.0.3-alpha.361) (2023-09-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.361 [skip ci] ([d19fcbe](https://github.com/Wynntils/Artemis/commit/d19fcbec55c7357c6d999da244f549f5944c7cd0))
-
-
-### Code Refactoring
-
-* Commands implement translatable for descriptions ([#2052](https://github.com/Wynntils/Artemis/issues/2052)) ([2ebb108](https://github.com/Wynntils/Artemis/commit/2ebb108e58eba67e332b69ed7cb865a2b55c6a28))
 
