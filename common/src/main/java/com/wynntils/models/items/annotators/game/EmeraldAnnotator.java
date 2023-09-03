@@ -25,6 +25,6 @@ public final class EmeraldAnnotator implements ItemAnnotator {
         Matcher matcher = name.getMatcher(EMERALD_PATTERN);
         if (!matcher.matches()) return null;
 
-        return new EmeraldItem(itemStack.getCount(), unit);
+        return new EmeraldItem(itemStack::getCount, unit);
     }
 }
