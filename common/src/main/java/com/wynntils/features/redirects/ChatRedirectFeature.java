@@ -509,9 +509,9 @@ public class ChatRedirectFeature extends Feature {
         private static final String RANK_STRING =
                 Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{8}(?<name>[\\w ]{1,20})§. has just logged in!$");
+                "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{6,8}(?<name>[\\w ]{1,20})§. has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>["
-                + RANK_STRING + "]) §#[0-9a-f]{8}(?<name>[\\w ]{1,20})§[0-9a-f] has just logged in!$");
+                + RANK_STRING + "]) §#[0-9a-f]{6,8}(?<name>[\\w ]{1,20})§. has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
