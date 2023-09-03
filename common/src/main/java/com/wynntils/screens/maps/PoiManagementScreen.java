@@ -35,6 +35,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -53,15 +54,20 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     private Button filterAllButton;
     private Button undoDeleteButton;
+    private boolean draggingScroll = false;
+    private double lastMouseY = 0;
+    private double mouseDrag = 0;
     private float backgroundHeight;
     private float backgroundWidth;
     private float backgroundX;
     private float backgroundY;
     private float dividedHeight;
     private float dividedWidth;
-    private float scrollButtonheight;
+    private float scrollButtonHeight;
+    private float scrollButtonRenderY;
     private int bottomDisplayedIndex;
     private int maxPoisToDisplay;
+    private int scrollOffset = 0;
     private int topDisplayedIndex = 0;
     private List<CustomPoi> waypoints;
     private List<Texture> usedIcons = new ArrayList<>();
@@ -103,7 +109,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         backgroundHeight = dividedHeight * 50;
 
         // If keeping this texture, move to ui_components
-        scrollButtonheight = (dividedWidth / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+        scrollButtonHeight = (dividedWidth / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
 
         int importExportButtonWidth = (int) (dividedWidth * 6);
 
@@ -152,10 +158,11 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                     topDisplayedIndex = 0;
                     populatePois();
                 },
-                this,
-                searchInput);
+                this);
 
         this.addRenderableWidget(searchInput);
+
+        setFocusedTextInput(searchInput);
 
         filterAllButton = this.addRenderableWidget(
                 new Button.Builder(Component.literal("*").withStyle(ChatFormatting.GREEN), (button) -> iconFilters.clear())
@@ -186,6 +193,18 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         if (renderGrid) {
             RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
+        }
+
+        if (draggingScroll) {
+            mouseDrag += mouseY - lastMouseY;
+            lastMouseY = mouseY;
+
+            if (Math.abs(mouseDrag) > dividedHeight) {
+                boolean positive = mouseDrag > 0;
+
+                mouseDrag += (positive ? -1 : 1) * dividedHeight;
+                setScrollOffset(positive ? -1 : 1);
+            }
         }
 
         FontRenderer.getInstance()
@@ -273,7 +292,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 (int) (dividedWidth * 14),
                 (int) (dividedHeight * HEADER_HEIGHT),
                 0,
-                (int) (dividedWidth * 36),
+                (int) (dividedWidth * 38),
                 1);
     }
 
@@ -294,42 +313,66 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private void renderScrollButton(PoseStack poseStack) {
+        scrollButtonRenderY = MathUtils.map(
+                scrollOffset,
+                0,
+                waypoints.size() - maxPoisToDisplay,
+                (int) (dividedHeight * 10),
+                (int) (dividedHeight * 51));
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SCROLL_BUTTON.resource(),
                 (int) (dividedWidth * 53),
-                (int) (dividedHeight * 10),
+                scrollButtonRenderY,
                 0,
                 dividedWidth,
-                scrollButtonheight,
+                scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
+    }
 
-//        RenderUtils.drawScalingTexturedRect(
-//                poseStack,
-//                Texture.SCROLL_BUTTON.resource(),
-//                (int) (dividedWidth * 53),
-//                MathUtils.map(
-//                        scrollOffset,
-//                        0,
-//                        classInfoList.size() - CHARACTER_INFO_PER_PAGE,
-//                        Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
-//                        Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.92f),
-//                0,
-//                Texture.SCROLL_BUTTON.width(),
-//                Texture.SCROLL_BUTTON.height(),
-//                Texture.SCROLL_BUTTON.width(),
-//                Texture.SCROLL_BUTTON.height());
+    private void setScrollOffset(int delta) {
+        scrollOffset =
+                MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, waypoints.size() - maxPoisToDisplay));
+
+        populatePois();
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (delta < 0.0 && bottomDisplayedIndex < waypoints.size() - 1) {
-            nextPage();
-        } else if (delta > 0.0 && topDisplayedIndex > 0) {
-            previousPage();
+        setScrollOffset((int) delta);
+
+        return true;
+    }
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY) && child != searchInput) {
+                child.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
         }
 
+        if (!draggingScroll) {
+            float scrollButtonRenderX = dividedWidth * 53;
+
+            if (mouseX >= scrollButtonRenderX
+                    && mouseX <= scrollButtonRenderX + Texture.SCROLL_BUTTON.width()
+                    && mouseY >= scrollButtonRenderY
+                    && mouseY <= scrollButtonRenderY + Texture.SCROLL_BUTTON.height()) {
+                draggingScroll = true;
+                lastMouseY = mouseY;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        draggingScroll = false;
         return true;
     }
 
@@ -357,12 +400,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 break;
             }
 
-            bottomDisplayedIndex = (topDisplayedIndex + i);
+            bottomDisplayedIndex = (topDisplayedIndex + i) + scrollOffset;
 
             CustomPoi poi = waypoints.get(bottomDisplayedIndex);
 
             PoiManagerWidget poiWidget =
-                    new PoiManagerWidget((int) (dividedWidth * 14), row, this.width, 20, poi, this, GRID_DIVISIONS);
+                    new PoiManagerWidget((int) (dividedWidth * 14), row, (int) (dividedWidth * 38), 20, poi, this, dividedWidth);
 
             row += 20;
 
@@ -467,18 +510,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .withStyle(ChatFormatting.GREEN));
     }
 
-    private void nextPage() {
-        topDisplayedIndex++;
-        bottomDisplayedIndex++;
-        populatePois();
-    }
-
-    private void previousPage() {
-        topDisplayedIndex--;
-        bottomDisplayedIndex--;
-        populatePois();
-    }
-
     public void setLastDeletedPoi(CustomPoi deletedPoi, int deletedPoiIndex) {
         deletedPois.add(deletedPoi);
         deletedIndexes.add(deletedPoiIndex);
@@ -500,6 +531,18 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
 
         populatePois();
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override

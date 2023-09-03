@@ -51,14 +51,13 @@ public class PoiManagerWidget extends AbstractWidget {
             int height,
             CustomPoi poi,
             PoiManagementScreen managementScreen,
-            float gridDivisions) {
+            float dividedWidth) {
         super(x, y, width, height, Component.literal(poi.getName()));
         this.x = x;
         this.y = y;
         this.poi = poi;
         this.managementScreen = managementScreen;
-
-        dividedWidth = width / gridDivisions;
+        this.dividedWidth = dividedWidth;
 
         int manageButtonsWidth = (int) (dividedWidth * 4);
 
