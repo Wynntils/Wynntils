@@ -1,9 +1,22 @@
+## [0.0.3-alpha.364](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.363...v0.0.3-alpha.364) (2023-09-03)
+
+
+### Bug Fixes
+
+* CustomColor now properly handles hex string conversion (to/from), add unit tests ([#2083](https://github.com/Wynntils/Artemis/issues/2083)) ([79beba8](https://github.com/Wynntils/Artemis/commit/79beba88ef43f82355d29800cc4c5667610633b9))
+* fix inventory emerald count being wrong, container not being counted ([#2082](https://github.com/Wynntils/Artemis/issues/2082)) ([54f75c5](https://github.com/Wynntils/Artemis/commit/54f75c528f6196b59b4389762084f73e2fe25524))
+
 ## [0.0.3-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.362...v0.0.3-alpha.363) (2023-09-02)
 
 
 ### New Features
 
 * add new item filter stats and filters ([#2077](https://github.com/Wynntils/Artemis/issues/2077)) ([7f11cbf](https://github.com/Wynntils/Artemis/commit/7f11cbf21f6efc755c3ada125c6206f58a71092d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.363 [skip ci] ([14ddcbe](https://github.com/Wynntils/Artemis/commit/14ddcbef67caf0472a8af098b96024370bec9ab4))
 
 ## [0.0.3-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.361...v0.0.3-alpha.362) (2023-09-02)
 
@@ -40,17 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.360 [skip ci] ([0330247](https://github.com/Wynntils/Artemis/commit/0330247a7dd37aeee78dd944e084bf8031a9d0f6))
-
-## [0.0.3-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.358...v0.0.3-alpha.359) (2023-08-31)
-
-
-### Bug Fixes
-
-* fix crash if search query stars with : ([#2074](https://github.com/Wynntils/Artemis/issues/2074)) ([3229a9a](https://github.com/Wynntils/Artemis/commit/3229a9a066a35f99a381056fe561463dbb1ddcad))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2073](https://github.com/Wynntils/Artemis/issues/2073)) ([6cbc998](https://github.com/Wynntils/Artemis/commit/6cbc9982fb368ef6f464ff1d4d5ca124107bbd11))
-* **release:** v0.0.3-alpha.359 [skip ci] ([d8b5777](https://github.com/Wynntils/Artemis/commit/d8b5777199201598584a87f7888f7eda670ed9fd))
 
