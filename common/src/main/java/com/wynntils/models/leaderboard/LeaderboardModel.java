@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.leaderboard.type.LeaderboardBadge;
 import com.wynntils.models.leaderboard.type.LeaderboardEntry;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -28,8 +29,8 @@ public class LeaderboardModel extends Model {
         updateLeaderboard();
     }
 
-    public LeaderboardEntry getEntry(UUID id) {
-        return leaderboard.get(id);
+    public List<LeaderboardBadge> getBadges(UUID id) {
+        return leaderboard.get(id).getBadges();
     }
 
     // Somewhat arbitrary

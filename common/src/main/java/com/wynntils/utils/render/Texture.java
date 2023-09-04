@@ -199,7 +199,11 @@ public enum Texture {
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
-    VIGNETTE("ui_components/vignette.png", 512, 512);
+    VIGNETTE("ui_components/vignette.png", 512, 512),
+    // endregion
+
+    // region World
+    LEADERBOARD_BADGES("world/leaderboard_badges.png", 256, 256);
     // endregion
 
     private final ResourceLocation resource;

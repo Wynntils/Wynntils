@@ -16,11 +16,13 @@ import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.leaderboard.type.LeaderboardBadge;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ItemUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
+    private static final float BADGE_SCALE = 1;
     private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
     @Persisted
@@ -49,6 +52,9 @@ public class CustomNametagRendererFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> hideNametagBackground = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> showProfessionBadges = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showGearOnHover = new Config<>(true);
@@ -88,6 +94,8 @@ public class CustomNametagRendererFeature extends Feature {
         if (!nametags.isEmpty()) {
             event.setCanceled(true);
             drawNametags(event, nametags);
+        } else {
+            drawBadges(event, 0);
         }
     }
 
@@ -197,6 +205,34 @@ public class CustomNametagRendererFeature extends Feature {
                     event.getFont(),
                     nametag.nametagScale(),
                     yOffset);
+        }
+
+        drawBadges(event, yOffset);
+    }
+
+    private void drawBadges(PlayerNametagRenderEvent event, float yOffset) {
+        yOffset += LeaderboardBadge.HEIGHT * BADGE_SCALE;
+
+        for (LeaderboardBadge badge :
+                Models.Leaderboard.getBadges(event.getEntity().getUUID())) {
+            RenderUtils.renderProfessionBadge(
+                    event.getPoseStack(),
+                    event.getEntityRenderDispatcher(),
+                    event.getEntity(),
+                    Texture.LEADERBOARD_BADGES.resource(),
+                    0, // (float) event.getEntity().getX(),
+                    (float) event.getEntity().getBbHeight() + 0.25F,
+                    0, // (float) event.getEntity().getZ(),
+                    LeaderboardBadge.WIDTH * BADGE_SCALE,
+                    LeaderboardBadge.HEIGHT * BADGE_SCALE,
+                    badge.uOffset(),
+                    badge.vOffset(),
+                    LeaderboardBadge.WIDTH,
+                    LeaderboardBadge.HEIGHT,
+                    Texture.LEADERBOARD_BADGES.width(),
+                    Texture.LEADERBOARD_BADGES.height(),
+                    0F,
+                    yOffset + 15);
         }
     }
 

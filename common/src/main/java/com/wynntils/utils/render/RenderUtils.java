@@ -881,6 +881,70 @@ public final class RenderUtils {
         }
     }
 
+    public static void renderProfessionBadge(
+            PoseStack matrixStack,
+            EntityRenderDispatcher dispatcher,
+            Entity entity,
+            ResourceLocation tex,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight,
+            float horizontalShift,
+            float verticalShift) {
+        double d = dispatcher.distanceToSqr(entity);
+        if (d <= 4096.0) {
+            matrixStack.pushPose();
+
+            matrixStack.translate(x, y, z);
+            matrixStack.mulPose(dispatcher.cameraOrientation());
+            matrixStack.scale(-0.025F, -0.025F, 0.025F);
+
+            Matrix4f matrix = matrixStack.last().pose();
+
+            float halfWidth = width / 2;
+            float halfHeight = height / 2;
+            float uScale = 1F / textureWidth;
+            float vScale = 1F / textureHeight;
+
+            RenderSystem.enableDepthTest();
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, tex);
+
+            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+            bufferBuilder
+                    .vertex(matrix, -halfWidth - horizontalShift, -halfHeight - verticalShift, 0)
+                    .uv(uOffset * uScale, vOffset * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, -halfWidth - horizontalShift, halfHeight - verticalShift, 0)
+                    .uv(uOffset * uScale, (v + vOffset) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, halfWidth - horizontalShift, halfHeight - verticalShift, 0)
+                    .uv((u + uOffset) * uScale, (v + vOffset) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, halfWidth - horizontalShift, -halfHeight - verticalShift, 0)
+                    .uv((u + uOffset) * uScale, vOffset * vScale)
+                    .endVertex();
+            BufferUploader.drawWithShader(bufferBuilder.end());
+
+            RenderSystem.disableDepthTest();
+
+            matrixStack.popPose();
+        }
+    }
+
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
