@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public record LeaderboardEntry(String name, int timePlayed, Map<String, Integer> ranks) {
+public record LeaderboardProfile(String name, int timePlayed, Map<String, Integer> ranks) {
     public List<LeaderboardBadge> getBadges() {
         List<LeaderboardBadge> list = new ArrayList<>();
 

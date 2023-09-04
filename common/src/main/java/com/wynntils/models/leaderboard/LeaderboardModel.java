@@ -11,7 +11,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.leaderboard.type.LeaderboardBadge;
-import com.wynntils.models.leaderboard.type.LeaderboardEntry;
+import com.wynntils.models.leaderboard.type.LeaderboardProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import java.util.UUID;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LeaderboardModel extends Model {
-    private Map<UUID, LeaderboardEntry> leaderboard = new HashMap<>();
+    private Map<UUID, LeaderboardProfile> leaderboard = new HashMap<>();
 
     public LeaderboardModel() {
         super(List.of());
@@ -31,11 +31,11 @@ public class LeaderboardModel extends Model {
     }
 
     public List<LeaderboardBadge> getBadges(UUID id) {
-        Optional<LeaderboardEntry> entry = Optional.ofNullable(leaderboard.get(id));
+        Optional<LeaderboardProfile> profile = Optional.ofNullable(leaderboard.get(id));
 
-        if (entry.isEmpty()) return List.of();
+        if (profile.isEmpty()) return List.of();
 
-        return entry.get().getBadges();
+        return profile.get().getBadges();
     }
 
     // Somewhat arbitrary
@@ -49,13 +49,13 @@ public class LeaderboardModel extends Model {
     private void updateLeaderboard() {
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_LEADERBOARD);
         dl.handleJsonObject(json -> {
-            Map<UUID, LeaderboardEntry> map = new HashMap<>();
+            Map<UUID, LeaderboardProfile> map = new HashMap<>();
 
             for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
                 UUID id = UUID.fromString(entry.getKey());
-                LeaderboardEntry leaderboardEntry = WynntilsMod.GSON.fromJson(entry.getValue(), LeaderboardEntry.class);
+                LeaderboardProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), LeaderboardProfile.class);
 
-                map.put(id, leaderboardEntry);
+                map.put(id, profile);
             }
 
             leaderboard = map;
