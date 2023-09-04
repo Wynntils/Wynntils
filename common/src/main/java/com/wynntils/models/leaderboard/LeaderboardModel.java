@@ -17,6 +17,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -30,7 +31,11 @@ public class LeaderboardModel extends Model {
     }
 
     public List<LeaderboardBadge> getBadges(UUID id) {
-        return leaderboard.get(id).getBadges();
+        Optional<LeaderboardEntry> entry = Optional.ofNullable(leaderboard.get(id));
+
+        if (entry.isEmpty()) return List.of();
+
+        return entry.get().getBadges();
     }
 
     // Somewhat arbitrary
