@@ -7,6 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class ContainerModel extends Model {
+    // Test suite: https://regexr.com/7jh15
     public static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
@@ -26,11 +28,15 @@ public final class ContainerModel extends Model {
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
+    // Test suite: https://regexr.com/7jh1e
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
     // Test suite: https://regexr.com/7hcl7
     private static final Pattern PERSONAL_STORAGE_PATTERN =
             Pattern.compile("^§0\\[Pg\\. (\\d+)\\] §8[a-zA-Z0-9_ ]+'s?§0 (.*)$");
+
+    // Test suite: https://regexr.com/7jh0s
+    private static final Pattern TRADE_MARKET_FILTER_TITLE = Pattern.compile("\\[Pg\\. \\d] Filter Items");
 
     private static final String BANK_NAME = "Bank";
     private static final String BLOCK_BANK_NAME = "Block Bank";
@@ -41,21 +47,21 @@ public final class ContainerModel extends Model {
 
     private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
+    private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
+    private static final Pair<Integer, Integer> GUILD_MEMBER_LIST_PREVIOUS_NEXT_SLOTS = new Pair<>(10, 28);
+    private static final Pair<Integer, Integer> LOBBY_PREVIOUS_NEXT_SLOTS = new Pair<>(36, 44);
+    private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
     private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
-    private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
-    private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
-    private static final Pair<Integer, Integer> LOBBY_PREVIOUS_NEXT_SLOTS = new Pair<>(36, 44);
-    private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
+    private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
-    private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
-    private static final Pattern TRADE_MARKET_FILTER_TITLE = Pattern.compile("\\[Pg\\. \\d] Filter Items");
-    private static final StyledText TRADE_MARKET_SEARCH_TITLE = StyledText.fromString("Search Results");
+    private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
+    private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
-    private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
-    private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
+    private static final StyledText TRADE_MARKET_SEARCH_TITLE = StyledText.fromString("Search Results");
+    private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
 
@@ -103,6 +109,11 @@ public final class ContainerModel extends Model {
 
     public boolean isGuildBankScreen(Screen screen) {
         return StyledText.fromComponent(screen.getTitle()).matches(GUILD_BANK_PATTERN);
+    }
+
+    public boolean isGuildMemberListScreen(Screen screen) {
+        return StyledText.fromComponent(screen.getTitle())
+                .matches(SearchableContainerType.MEMBER_LIST.getTitlePattern());
     }
 
     public boolean isTradeMarketScreen(Screen screen) {
@@ -223,6 +234,10 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isGuildBankScreen(gui)) {
             return GUILD_BANK_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isGuildMemberListScreen(gui)) {
+            return GUILD_MEMBER_LIST_PREVIOUS_NEXT_SLOTS;
         }
 
         if (Models.Container.isTradeMarketScreen(gui)) {
