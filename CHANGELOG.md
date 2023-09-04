@@ -1,9 +1,21 @@
+## [0.0.3-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.366...v0.0.3-alpha.367) (2023-09-04)
+
+
+### New Features
+
+* Scrolling in guild member list ([#2076](https://github.com/Wynntils/Artemis/issues/2076)) ([d1c418c](https://github.com/Wynntils/Artemis/commit/d1c418c7c48853a811d5322051ff2868dd3ceace))
+
 ## [0.0.3-alpha.366](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.365...v0.0.3-alpha.366) (2023-09-03)
 
 
 ### Bug Fixes
 
 * Sync player ranks and related features to 2.0.3 ([#2078](https://github.com/Wynntils/Artemis/issues/2078)) ([348a21c](https://github.com/Wynntils/Artemis/commit/348a21c3e7aa176a72e3033fe057f017a4995451))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.366 [skip ci] ([5237871](https://github.com/Wynntils/Artemis/commit/5237871e9902ca648c1306f8ba5895bbad6b8a72))
 
 ## [0.0.3-alpha.365](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.364...v0.0.3-alpha.365) (2023-09-03)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.363 [skip ci] ([14ddcbe](https://github.com/Wynntils/Artemis/commit/14ddcbef67caf0472a8af098b96024370bec9ab4))
-
-## [0.0.3-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.361...v0.0.3-alpha.362) (2023-09-02)
-
-
-### Bug Fixes
-
-* unescaped any char in pattern ([#2075](https://github.com/Wynntils/Artemis/issues/2075)) ([6014930](https://github.com/Wynntils/Artemis/commit/60149309393032cf1cb8b089fb44c9319bd3ad84))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.362 [skip ci] ([50bbee8](https://github.com/Wynntils/Artemis/commit/50bbee894c690c6287a14a21d98be7c225cb9810))
 
