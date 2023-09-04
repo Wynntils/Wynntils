@@ -7,6 +7,7 @@ package com.wynntils.services.itemfilter.filters;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.services.itemfilter.type.StatValue;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -68,7 +69,16 @@ public final class RangedStatFilters {
 
         @Override
         protected boolean matches(StatValue value) {
-            return value.value() >= min && value.value() <= max;
+            if (value.statActualValue() != null) {
+                return value.statActualValue().value() >= min
+                        && value.statActualValue().value() <= max;
+            }
+
+            return MathUtils.rangesIntersect(
+                    min,
+                    max,
+                    value.possibleValues().range().low(),
+                    value.possibleValues().range().high());
         }
 
         public static class RangedStatValueStatFilterFactory

@@ -22,6 +22,11 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
 
     @Override
     protected boolean matches(StatValue value) {
+        // If the item is not revealed, we can't filter percentage
+        if (value.percentage() == -1) {
+            return false;
+        }
+
         return value.percentage() >= min && value.percentage() <= max;
     }
 

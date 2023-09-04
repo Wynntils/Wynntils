@@ -4,4 +4,7 @@
  */
 package com.wynntils.services.itemfilter.type;
 
-public record StatValue(float percentage, int value, int stars) {}
+import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
+
+public record StatValue(float percentage, StatPossibleValues possibleValues, StatActualValue statActualValue) {}

@@ -38,20 +38,28 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     public List<StatValue> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
-        Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
-        if (gearInstanceOpt.isEmpty()) return List.of();
-
         GearInfo gearInfo = gearItem.getGearInfo();
-
-        StatActualValue actualValue = gearInstanceOpt.get().getActualValue(statType);
         StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
-        if (actualValue == null || possibleValues == null) {
+        if (possibleValues == null) {
             return List.of();
         }
 
-        float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
+        Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
 
-        return List.of(new StatValue(percentage, actualValue.value(), actualValue.stars()));
+        if (gearInstanceOpt.isEmpty()) {
+            // Item guide item
+            return List.of(new StatValue(-1, possibleValues, null));
+        }
+
+        StatActualValue actualValue = gearInstanceOpt.get().getActualValue(statType);
+
+        // The item is revealed, no actual stats yet
+        if (actualValue == null) {
+            return List.of(new StatValue(-1, possibleValues, null));
+        }
+
+        float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
+        return List.of(new StatValue(percentage, possibleValues, actualValue));
     }
 }
