@@ -8,9 +8,12 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
+import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
@@ -30,6 +33,7 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
@@ -239,12 +243,16 @@ public class ItemFilterService extends Service {
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
 
-        // Dynamic Item Stats
-        registerStatProvider(new EmeraldValueStatProvider());
-
         // Profession Stats
         registerStatProvider(new ProfessionStatProvider());
         registerStatProvider(new QualityTierStatProvider());
+
+        // Dynamic Item Stats
+        for (StatType statType : Models.Stat.getAllStatTypes()) {
+            registerStatProvider(new ActualStatProvider(statType));
+        }
+
+        registerStatProvider(new EmeraldValueStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
@@ -259,11 +267,16 @@ public class ItemFilterService extends Service {
         registerStatFilter(String.class, new AnyStatFilters.AnyStringStatFilter.AnyStringStatFilterFactory());
         registerStatFilter(
                 CappedValue.class, new AnyStatFilters.AnyCappedValueStatFilter.AnyCappedValueStatFilterFactory());
+        registerStatFilter(StatValue.class, new AnyStatFilters.AnyStatValueStatFilter.AnyStatValueStatFilterFactory());
         registerStatFilter(
                 Integer.class, new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory());
         registerStatFilter(
                 CappedValue.class,
                 new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory());
+        registerStatFilter(
+                StatValue.class, new RangedStatFilters.RangedStatValueStatFilter.RangedStatValueStatFilterFactory());
+
+        registerStatFilter(StatValue.class, new PercentageStatFilter.PercentageStatFilterFactory());
 
         // String is the fallback type, so it should be registered last
         registerStatFilter(String.class, new StringStatFilter.StringStatFilterFactory());
