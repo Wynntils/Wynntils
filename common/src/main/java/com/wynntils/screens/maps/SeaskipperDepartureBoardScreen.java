@@ -153,6 +153,8 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 Texture.DESTINATION_LIST.height());
 
         renderWidgets(poseStack, mouseX, mouseY, partialTick);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderDestinations(

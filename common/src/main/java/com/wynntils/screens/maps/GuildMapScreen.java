@@ -200,6 +200,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderMapButtons(poseStack, mouseX, mouseY, partialTick);
 
         renderHoveredTerritoryInfo(poseStack);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override

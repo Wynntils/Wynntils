@@ -124,4 +124,19 @@ public final class MathUtils {
     public static float signedArea(Vector2f p0, Vector2f p1, Vector2f p2) {
         return (p1.x() - p0.x()) * (p2.y() - p0.y()) - (p2.x() - p0.x()) * (p1.y() - p0.y());
     }
+
+    public static int overflowInRange(int value, int add, int min, int max) {
+        if (value + add < min) {
+            return max - (min - (value + add)) + 1;
+        }
+        if (value + add > max) {
+            return min + (value + add - max) - 1;
+        }
+
+        return value + add;
+    }
+
+    public static boolean rangesIntersect(int aMin, int aMax, int bMin, int bMax) {
+        return aMin <= bMax && bMin <= aMax;
+    }
 }

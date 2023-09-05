@@ -5,16 +5,15 @@
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.TooltipUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 
-public class BasicTexturedButton extends WynntilsButton {
+public class BasicTexturedButton extends WynntilsButton implements TooltipProvider {
     private final Texture texture;
 
     private final Consumer<Integer> onClick;
@@ -25,7 +24,7 @@ public class BasicTexturedButton extends WynntilsButton {
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
-        this(x, y, width, height, texture, onClick, tooltip, true, false);
+        this(x, y, width, height, texture, onClick, tooltip, false);
     }
 
     public BasicTexturedButton(
@@ -36,12 +35,10 @@ public class BasicTexturedButton extends WynntilsButton {
             Texture texture,
             Consumer<Integer> onClick,
             List<Component> tooltip,
-            boolean renderTooltipAboveMouse,
             boolean scaleTexture) {
         super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
-        this.renderTooltipAboveMouse = renderTooltipAboveMouse;
         this.scaleTexture = scaleTexture;
         this.setTooltip(tooltip);
     }
@@ -62,21 +59,6 @@ public class BasicTexturedButton extends WynntilsButton {
         } else {
             RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
         }
-
-        if (this.isHovered) {
-            int renderY = renderTooltipAboveMouse
-                    ? mouseY - TooltipUtils.getToolTipHeight(TooltipUtils.componentToClientTooltipComponent(tooltip))
-                    : mouseY;
-
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    renderY,
-                    0,
-                    tooltip,
-                    FontRenderer.getInstance().getFont(),
-                    true);
-        }
     }
 
     @Override
@@ -90,6 +72,11 @@ public class BasicTexturedButton extends WynntilsButton {
 
     @Override
     public void onPress() {}
+
+    @Override
+    public List<Component> getTooltipLines() {
+        return tooltip;
+    }
 
     public void setTooltip(List<Component> newTooltip) {
         tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);

@@ -4,13 +4,12 @@
  */
 package com.wynntils.screens.gearviewer.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.network.chat.Component;
@@ -38,14 +37,9 @@ public class ViewPlayerStatsButton extends WynntilsButton {
         super.renderWidget(poseStack, mouseX, mouseY, partialTick);
 
         if (isHovered) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    0,
-                    VIEW_STATS_TOOLTIP,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            McUtils.mc()
+                    .screen
+                    .setTooltipForNextRenderPass(Lists.transform(VIEW_STATS_TOOLTIP, Component::getVisualOrderText));
         }
     }
 }

@@ -26,6 +26,7 @@ import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -416,14 +417,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         if (this.hovered != null) {
-            RenderUtils.drawTooltipAt(
+            this.renderComponentTooltip(
                     poseStack,
-                    mouseX - translationX,
-                    mouseY - translationY,
-                    0,
-                    this.hovered.tooltipList(),
-                    FontRenderer.getInstance().getFont(),
-                    true);
+                    ComponentUtils.wrapTooltips(this.hovered.tooltipList(), 250),
+                    (int) (mouseX - translationX),
+                    (int) (mouseY - translationY));
         }
     }
 

@@ -39,11 +39,6 @@ public class StatisticsCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Show and reset statistics";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("show").executes(this::showStatistics))
@@ -129,12 +124,12 @@ public class StatisticsCommand extends Command {
     private int resetStatistics(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("commands.wynntils.statistics.warnReset")
+                        Component.translatable("command.wynntils.statistics.warnReset")
                                 .withStyle(ChatFormatting.AQUA),
                         false);
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("commands.wynntils.statistics.clickHere")
+                        Component.translatable("command.wynntils.statistics.clickHere")
                                 .withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(
