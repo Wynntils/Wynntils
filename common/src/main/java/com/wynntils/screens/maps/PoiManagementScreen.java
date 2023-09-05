@@ -61,6 +61,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private float backgroundWidth;
     private float backgroundX;
     private float backgroundY;
+    private float currentTextureScale = 1f;
     private float dividedHeight;
     private float dividedWidth;
     private float scrollButtonHeight;
@@ -107,6 +108,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         backgroundWidth = dividedWidth * 43;
         backgroundY = dividedHeight * 7;
         backgroundHeight = dividedHeight * 50;
+        currentTextureScale = (float) this.height / Texture.SCROLL_BUTTON.height();
 
         // If keeping this texture, move to ui_components
         scrollButtonHeight = (dividedWidth / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
@@ -193,18 +195,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         if (renderGrid) {
             RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
-        }
-
-        if (draggingScroll) {
-            mouseDrag += mouseY - lastMouseY;
-            lastMouseY = mouseY;
-
-            if (Math.abs(mouseDrag) > dividedHeight) {
-                boolean positive = mouseDrag > 0;
-
-                mouseDrag += (positive ? -1 : 1) * dividedHeight;
-                setScrollOffset(positive ? -1 : 1);
-            }
         }
 
         FontRenderer.getInstance()
@@ -347,6 +337,18 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!draggingScroll) return false;
+
+        int newValue = (int) MathUtils.map(
+                (float) mouseY, (int) (dividedHeight * 10), (int) (dividedHeight * 53), 0, Math.max(0, waypoints.size() - maxPoisToDisplay));
+
+        setScrollOffset(-newValue + scrollOffset);
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             if (child.isMouseOver(mouseX, mouseY) && child != searchInput) {
@@ -356,12 +358,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
 
         if (!draggingScroll) {
-            float scrollButtonRenderX = dividedWidth * 53;
+            float scrollButtonRenderX = (int) dividedWidth * 53;
 
             if (mouseX >= scrollButtonRenderX
-                    && mouseX <= scrollButtonRenderX + Texture.SCROLL_BUTTON.width()
+                    && mouseX <= scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale
                     && mouseY >= scrollButtonRenderY
-                    && mouseY <= scrollButtonRenderY + Texture.SCROLL_BUTTON.height()) {
+                    && mouseY <= scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale) {
                 draggingScroll = true;
                 lastMouseY = mouseY;
             }
