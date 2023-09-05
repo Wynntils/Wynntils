@@ -1,9 +1,21 @@
+## [0.0.3-alpha.369](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.368...v0.0.3-alpha.369) (2023-09-05)
+
+
+### Bug Fixes
+
+* Assert that we got the correct arguments for network calls ([#2081](https://github.com/Wynntils/Artemis/issues/2081)) ([658cc2e](https://github.com/Wynntils/Artemis/commit/658cc2edfcd0b371edbd69498da2d9f9933b381f))
+
 ## [0.0.3-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.367...v0.0.3-alpha.368) (2023-09-05)
 
 
 ### New Features
 
 * add stat filters ([#2086](https://github.com/Wynntils/Artemis/issues/2086)) ([73d2100](https://github.com/Wynntils/Artemis/commit/73d21001fc62f4672206bf35740ba7c61b4f7732))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.368 [skip ci] ([8fb6974](https://github.com/Wynntils/Artemis/commit/8fb6974b7a62af506a4af1533d56b3309e647269))
 
 ## [0.0.3-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.366...v0.0.3-alpha.367) (2023-09-04)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.365 [skip ci] ([b9a9d6f](https://github.com/Wynntils/Artemis/commit/b9a9d6f1970838c45e13d1d6b307bf3bdbac84c4))
-
-## [0.0.3-alpha.364](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.363...v0.0.3-alpha.364) (2023-09-03)
-
-
-### Bug Fixes
-
-* CustomColor now properly handles hex string conversion (to/from), add unit tests ([#2083](https://github.com/Wynntils/Artemis/issues/2083)) ([79beba8](https://github.com/Wynntils/Artemis/commit/79beba88ef43f82355d29800cc4c5667610633b9))
-* fix inventory emerald count being wrong, container not being counted ([#2082](https://github.com/Wynntils/Artemis/issues/2082)) ([54f75c5](https://github.com/Wynntils/Artemis/commit/54f75c528f6196b59b4389762084f73e2fe25524))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.364 [skip ci] ([bd0ae0e](https://github.com/Wynntils/Artemis/commit/bd0ae0ee956d3bc3f09848577d6d6d39d900f824))
 
