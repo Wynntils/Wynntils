@@ -17,6 +17,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.SharedConstants;
@@ -133,6 +134,9 @@ public final class NetManager extends Manager {
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
+            assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())))
+                    : "Arguments mismatch for " + urlId + ", expected: " + urlInfo.arguments() + " got: "
+                            + arguments.keySet();
 
             JsonObject jsonArgs = new JsonObject();
             arguments.forEach(jsonArgs::addProperty);
