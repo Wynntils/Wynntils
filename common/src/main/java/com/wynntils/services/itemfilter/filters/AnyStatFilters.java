@@ -6,6 +6,7 @@ package com.wynntils.services.itemfilter.filters;
 
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
+import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
 
@@ -50,6 +51,21 @@ public class AnyStatFilters {
             @Override
             protected AnyCappedValueStatFilter getAnyStatFilter() {
                 return new AnyCappedValueStatFilter();
+            }
+        }
+    }
+
+    public static final class AnyStatValueStatFilter extends StatFilter<StatValue> {
+        @Override
+        public boolean matches(StatValue value) {
+            return true;
+        }
+
+        public static final class AnyStatValueStatFilterFactory
+                extends AbstractAnyStatFilterFactory<AnyStatValueStatFilter> {
+            @Override
+            protected AnyStatValueStatFilter getAnyStatFilter() {
+                return new AnyStatValueStatFilter();
             }
         }
     }
