@@ -1,9 +1,21 @@
+## [0.0.3-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.367...v0.0.3-alpha.368) (2023-09-05)
+
+
+### New Features
+
+* add stat filters ([#2086](https://github.com/Wynntils/Artemis/issues/2086)) ([73d2100](https://github.com/Wynntils/Artemis/commit/73d21001fc62f4672206bf35740ba7c61b4f7732))
+
 ## [0.0.3-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.366...v0.0.3-alpha.367) (2023-09-04)
 
 
 ### New Features
 
 * Scrolling in guild member list ([#2076](https://github.com/Wynntils/Artemis/issues/2076)) ([d1c418c](https://github.com/Wynntils/Artemis/commit/d1c418c7c48853a811d5322051ff2868dd3ceace))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.367 [skip ci] ([64f0d4f](https://github.com/Wynntils/Artemis/commit/64f0d4ffc92a9d931136013ac80488353d90e723))
 
 ## [0.0.3-alpha.366](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.365...v0.0.3-alpha.366) (2023-09-03)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.364 [skip ci] ([bd0ae0e](https://github.com/Wynntils/Artemis/commit/bd0ae0ee956d3bc3f09848577d6d6d39d900f824))
-
-## [0.0.3-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.362...v0.0.3-alpha.363) (2023-09-02)
-
-
-### New Features
-
-* add new item filter stats and filters ([#2077](https://github.com/Wynntils/Artemis/issues/2077)) ([7f11cbf](https://github.com/Wynntils/Artemis/commit/7f11cbf21f6efc755c3ada125c6206f58a71092d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.363 [skip ci] ([14ddcbe](https://github.com/Wynntils/Artemis/commit/14ddcbef67caf0472a8af098b96024370bec9ab4))
 
