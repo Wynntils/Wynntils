@@ -135,4 +135,8 @@ public final class MathUtils {
 
         return value + add;
     }
+
+    public static boolean rangesIntersect(int aMin, int aMax, int bMin, int bMax) {
+        return aMin <= bMax && bMin <= aMax;
+    }
 }
