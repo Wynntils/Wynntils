@@ -7,4 +7,4 @@ package com.wynntils.services.itemfilter.type;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 
-public record StatValue(float percentage, StatPossibleValues possibleValues, StatActualValue statActualValue) {}
+public record StatValue(StatPossibleValues possibleValues, StatActualValue statActualValue) {}
