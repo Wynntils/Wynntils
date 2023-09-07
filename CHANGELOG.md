@@ -1,9 +1,26 @@
+## [0.0.3-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.369...v0.0.3-alpha.370) (2023-09-07)
+
+
+### New Features
+
+* make stat filters work on ingredients ([#2088](https://github.com/Wynntils/Artemis/issues/2088)) ([8ec6c74](https://github.com/Wynntils/Artemis/commit/8ec6c74289fd74b14f9c9ab32d6718b1d6eac21c))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2089](https://github.com/Wynntils/Artemis/issues/2089)) ([02cc788](https://github.com/Wynntils/Artemis/commit/02cc7880618bd23590c99f30ce91fa298c87316a))
+
 ## [0.0.3-alpha.369](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.368...v0.0.3-alpha.369) (2023-09-05)
 
 
 ### Bug Fixes
 
 * Assert that we got the correct arguments for network calls ([#2081](https://github.com/Wynntils/Artemis/issues/2081)) ([658cc2e](https://github.com/Wynntils/Artemis/commit/658cc2edfcd0b371edbd69498da2d9f9933b381f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.369 [skip ci] ([15176ff](https://github.com/Wynntils/Artemis/commit/15176ffd03ab40d2918575328450e67439c8bd95))
 
 ## [0.0.3-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.367...v0.0.3-alpha.368) (2023-09-05)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.366 [skip ci] ([5237871](https://github.com/Wynntils/Artemis/commit/5237871e9902ca648c1306f8ba5895bbad6b8a72))
-
-## [0.0.3-alpha.365](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.364...v0.0.3-alpha.365) (2023-09-03)
-
-
-### Bug Fixes
-
-* CME on laggy connections when kicking offline ([#2084](https://github.com/Wynntils/Artemis/issues/2084)) ([993ffdb](https://github.com/Wynntils/Artemis/commit/993ffdbc09b0a9c049eeb059189b6ad62c3716d2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.365 [skip ci] ([b9a9d6f](https://github.com/Wynntils/Artemis/commit/b9a9d6f1970838c45e13d1d6b307bf3bdbac84c4))
 
