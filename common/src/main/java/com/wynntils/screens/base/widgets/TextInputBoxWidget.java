@@ -18,7 +18,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
-
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyboardHandler;
