@@ -8,10 +8,11 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.core.persisted.Translatable;
 import com.wynntils.models.items.WynnItem;
 import java.lang.reflect.ParameterizedType;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
-public abstract class ItemStatProvider<T> implements Translatable {
+public abstract class ItemStatProvider<T> implements Translatable, Comparator<WynnItem> {
     protected final String name;
 
     protected ItemStatProvider() {

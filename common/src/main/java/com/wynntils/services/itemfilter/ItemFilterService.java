@@ -38,14 +38,18 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterService extends Service {
+    private static final String SORT_KEY = "sort";
+
     private final List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
     private final List<Pair<Class<?>, StatFilterFactory<? extends StatFilter<?>>>> statFilters = new ArrayList<>();
 
@@ -66,6 +70,7 @@ public class ItemFilterService extends Service {
 
     public ItemSearchQuery createSearchQuery(String queryString) {
         List<StatProviderAndFilterPair<?>> filters = new ArrayList<>();
+        List<ItemStatProvider<?>> sortStatProviders = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();
         List<Integer> validFilterCharIndices = new ArrayList<>();
         List<String> errors = new ArrayList<>();
@@ -85,10 +90,23 @@ public class ItemFilterService extends Service {
             lastToken = token;
 
             if (token.contains(":")) {
-                String filterString = token.substring(0, token.indexOf(':'));
+                String keyString = token.substring(0, token.indexOf(':'));
                 String inputString = token.substring(token.indexOf(':') + 1);
 
-                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(filterString);
+                // Handle the special case of the sort key
+                if (keyString.equalsIgnoreCase(SORT_KEY)) {
+                    ErrorOr<List<ItemStatProvider<?>>> statSortListOrError = getStatSortOrder(inputString);
+
+                    if (statSortListOrError.hasError()) {
+                        errors.add(statSortListOrError.getError());
+                        continue;
+                    }
+
+                    sortStatProviders.addAll(statSortListOrError.getValue());
+                    continue;
+                }
+
+                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(keyString);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
@@ -101,7 +119,7 @@ public class ItemFilterService extends Service {
 
                 // The filter exists, highlight the keyword...
                 validFilterCharIndices.addAll(
-                        IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + filterString.length())
+                        IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + keyString.length())
                                 .boxed()
                                 .toList());
 
@@ -114,7 +132,7 @@ public class ItemFilterService extends Service {
                 // If the inputString is invalid, mark the value as ignored and continue to the next token
                 if (statFilter.hasError()) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(
-                                    tokenStartIndex + filterString.length() + 1, tokenStartIndex + token.length())
+                                    tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())
                             .boxed()
                             .toList());
                     errors.add(statFilter.getError());
@@ -133,7 +151,13 @@ public class ItemFilterService extends Service {
         }
 
         return new ItemSearchQuery(
-                queryString, filters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
+                queryString,
+                filters,
+                sortStatProviders,
+                ignoredCharIndices,
+                validFilterCharIndices,
+                errors,
+                plainTextTokens);
     }
 
     /**
@@ -160,6 +184,40 @@ public class ItemFilterService extends Service {
                 && itemNameMatches(
                         searchQuery,
                         StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+    }
+
+    /**
+     * Filters and sorts the given list of items according to the given search query.
+     * @param searchQuery the search query
+     * @param originalList the list of items to filter and sort
+     * @return the filtered and sorted list of items
+     */
+    public List<ItemStack> filterAndSort(ItemSearchQuery searchQuery, List<ItemStack> originalList) {
+        Stream<ItemStack> filteredList = originalList.stream().filter(itemStack -> matches(searchQuery, itemStack));
+
+        filteredList.sorted((itemStack1, itemStack2) -> {
+            Optional<WynnItem> wynnItem1Opt = Models.Item.getWynnItem(itemStack1);
+            Optional<WynnItem> wynnItem2Opt = Models.Item.getWynnItem(itemStack2);
+
+            if (wynnItem1Opt.isEmpty() || wynnItem2Opt.isEmpty()) {
+                return 0;
+            }
+
+            WynnItem wynnItem1 = wynnItem1Opt.get();
+            WynnItem wynnItem2 = wynnItem2Opt.get();
+
+            for (ItemStatProvider<?> itemStatProvider : searchQuery.sortStatProviders()) {
+                int compare = itemStatProvider.compare(wynnItem1, wynnItem2);
+
+                if (compare != 0) {
+                    return compare;
+                }
+            }
+
+            return 0;
+        });
+
+        return filteredList.toList();
     }
 
     /**
@@ -225,6 +283,23 @@ public class ItemFilterService extends Service {
                 || itemName.toLowerCase(Locale.ROOT)
                         .contains(
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
+    }
+
+    private ErrorOr<List<ItemStatProvider<?>>> getStatSortOrder(String inputString) {
+        Stream<ErrorOr<ItemStatProvider<?>>> errorsOrProviders =
+                Arrays.stream(inputString.split(" ")).map(String::trim).map(this::getItemStatProvider);
+
+        Optional<ErrorOr<ItemStatProvider<?>>> firstError =
+                errorsOrProviders.filter(ErrorOr::hasError).findFirst();
+
+        if (firstError.isPresent()) {
+            return ErrorOr.error(firstError.get().getError());
+        }
+
+        List<? extends ItemStatProvider<?>> providers =
+                errorsOrProviders.map(ErrorOr::getValue).toList();
+
+        return ErrorOr.of((List<ItemStatProvider<?>>) providers);
     }
 
     private void registerStatProviders() {
