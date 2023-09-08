@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -35,12 +35,7 @@ public class BombCommand extends Command {
 
     @Override
     public List<String> getAliases() {
-        return List.of("bombbell");
-    }
-
-    @Override
-    public String getDescription() {
-        return "List previously announced bombs";
+        return List.of("bombbell", "bombs");
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
 
@@ -20,7 +20,7 @@ public class TradeMarketPriceConversionFeature extends Feature {
     private static final Pattern PRICE_PATTERN =
             Pattern.compile("^§6Type the price in emeralds or type 'cancel' to cancel:$");
     private static final Pattern TRADE_MARKET_PATTERN = Pattern.compile("^What would you like to sell\\?$");
-    private static final Pattern CANCELLED_PATTERN = Pattern.compile("^You moved and your chat input was canceled.$");
+    private static final Pattern CANCELLED_PATTERN = Pattern.compile("^You moved and your chat input was canceled\\.$");
 
     private boolean shouldConvert = false;
 

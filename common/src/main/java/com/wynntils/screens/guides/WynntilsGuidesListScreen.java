@@ -1,13 +1,12 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -21,8 +20,6 @@ import com.wynntils.screens.guides.widgets.ImportButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,37 +50,37 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
-                Texture.BACK_ARROW.width() / 2,
-                Texture.BACK_ARROW.height(),
+                Texture.BACK_ARROW_OFFSET.width() / 2,
+                Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ImportButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11,
-                (int) (Texture.ADD_BUTTON.width() / 1.5f),
-                (int) (Texture.ADD_BUTTON.height() / 2.0f / 1.5f),
+                (int) (Texture.ADD_ICON.width() / 1.5f),
+                (int) (Texture.ADD_ICON.height() / 1.5f),
                 this::importFavorites));
         this.addRenderableWidget(new ExportButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
-                5 + (int) (Texture.ADD_BUTTON.height() / 1.5f),
-                (int) (Texture.MAP_SHARE_BUTTON.width() / 1.5f),
-                (int) (Texture.MAP_SHARE_BUTTON.height() / 1.5f),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
+                11 + (int) (Texture.ADD_ICON.height() / 1.5f),
+                (int) (Texture.SHARE_ICON.width() / 1.5f),
+                (int) (Texture.SHARE_ICON.height() / 1.5f),
                 this::exportFavorites));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
     }
@@ -140,32 +137,16 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         poseStack.popPose();
 
-        renderTooltip(poseStack, mouseX, mouseY);
-    }
-
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
-
-        List<Component> tooltipLines = tooltipWidget.getTooltipLines();
-        if (tooltipLines.isEmpty()) return;
-
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
     protected GuidesButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new GuidesButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i));
     }

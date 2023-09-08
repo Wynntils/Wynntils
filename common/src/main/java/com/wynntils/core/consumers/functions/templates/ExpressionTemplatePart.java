@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.templates;
 
@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser
 import com.wynntils.utils.type.ErrorOr;
 
 public class ExpressionTemplatePart extends TemplatePart {
-    private final String expressionString;
+    private final ErrorOr<Expression> expression;
 
     public ExpressionTemplatePart(String part) {
         super(part);
@@ -18,18 +18,16 @@ public class ExpressionTemplatePart extends TemplatePart {
             throw new IllegalArgumentException("Expression was not wrapped in curly braces.");
         }
 
-        this.expressionString = this.part.substring(1, this.part.length() - 1);
+        this.expression = ExpressionParser.tryParse(this.part.substring(1, this.part.length() - 1));
     }
 
     @Override
     public String getValue() {
-        ErrorOr<Expression> parse = ExpressionParser.tryParse(this.expressionString);
-
-        if (parse.hasError()) {
-            return parse.getError();
+        if (expression.hasError()) {
+            return expression.getError();
         }
 
-        ErrorOr<String> calculatedValue = parse.getValue().calculateFormattedString();
+        ErrorOr<String> calculatedValue = expression.getValue().calculateFormattedString();
 
         if (calculatedValue.hasError()) {
             return calculatedValue.getError();
@@ -40,6 +38,6 @@ public class ExpressionTemplatePart extends TemplatePart {
 
     @Override
     public String toString() {
-        return "ExpressionTemplatePart{" + "expressionString='" + expressionString + "'}";
+        return "ExpressionTemplatePart{" + "expressionString='" + expression + "'}";
     }
 }

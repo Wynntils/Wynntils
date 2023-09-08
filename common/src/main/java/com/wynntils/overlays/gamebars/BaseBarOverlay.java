@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
 
@@ -47,7 +47,7 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
         super(position, size);
-        this.textColor.updateConfig(textColor);
+        this.textColor.store(textColor);
     }
 
     protected float textureHeight() {

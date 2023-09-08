@@ -34,8 +34,8 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     // Hades Protocol
-    include(forgeRuntimeLibrary("com.wynntils.hades:hades:${hades_version}"))
-    include(forgeRuntimeLibrary("com.wynntils:antiope:${antiope_version}"))
+    include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
+    include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
     implementation(include("com.github.llamalad7.mixinextras:mixinextras-forge:${mixinextras_version}"))

@@ -1,10 +1,9 @@
 /*
  * Copyright © Wynntils 2021-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -13,17 +12,21 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storageable;
-import net.minecraft.client.resources.language.I18n;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
  * should never be a dependency for anything else.
  */
-public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
+public abstract class Feature extends AbstractConfigurable implements Storageable, Comparable<Feature> {
     private Category category = Category.UNCATEGORIZED;
 
     @Persisted(i18nKey = "feature.wynntils.userFeature.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
+
+    @Override
+    public String getTypeName() {
+        return "Feature";
+    }
 
     public Category getCategory() {
         return category;
@@ -33,33 +36,17 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         this.category = category;
     }
 
-    /** Gets the name of a feature */
-    @Override
-    public String getTranslatedName() {
-        return getTranslation("name");
-    }
-
     public String getTranslatedDescription() {
         return getTranslation("description");
-    }
-
-    @Override
-    public String getTranslation(String keySuffix) {
-        return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
     }
 
     public String getShortName() {
         return this.getClass().getSimpleName();
     }
 
-    private String getNameCamelCase() {
-        String name = this.getClass().getSimpleName().replace("Feature", "");
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-    }
-
     @Override
     public String getStorageJsonName() {
-        return "feature." + getNameCamelCase();
+        return "feature." + getTranslationKeyName();
     }
 
     /** Used to react to config option updates */
@@ -89,7 +76,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     public void setUserEnabled(boolean newState) {
-        this.userEnabled.updateConfig(newState);
+        this.userEnabled.store(newState);
         tryUserToggle();
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -36,11 +36,6 @@ public class StatisticsCommand extends Command {
     @Override
     public List<String> getAliases() {
         return List.of("stats");
-    }
-
-    @Override
-    public String getDescription() {
-        return "Show and reset statistics";
     }
 
     @Override
@@ -129,12 +124,12 @@ public class StatisticsCommand extends Command {
     private int resetStatistics(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.statistics.warnReset")
+                        () -> Component.translatable("command.wynntils.statistics.warnReset")
                                 .withStyle(ChatFormatting.AQUA),
                         false);
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.statistics.clickHere")
+                        () -> Component.translatable("command.wynntils.statistics.clickHere")
                                 .withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(

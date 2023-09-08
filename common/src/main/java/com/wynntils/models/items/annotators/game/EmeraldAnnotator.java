@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
@@ -25,6 +25,6 @@ public final class EmeraldAnnotator implements ItemAnnotator {
         Matcher matcher = name.getMatcher(EMERALD_PATTERN);
         if (!matcher.matches()) return null;
 
-        return new EmeraldItem(itemStack.getCount(), unit);
+        return new EmeraldItem(itemStack::getCount, unit);
     }
 }

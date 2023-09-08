@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
 
@@ -87,13 +87,15 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
+        return GearInstance.create(
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
+        return GearInstance.create(
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {

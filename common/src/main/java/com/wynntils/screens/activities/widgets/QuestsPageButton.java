@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
 
@@ -24,13 +24,13 @@ public class QuestsPageButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.QUESTS_BUTTON.resource(),
+                Texture.QUESTS_SCROLL_ICON.resource(),
                 this.getX(),
                 this.getY(),
                 this.width,
                 this.height,
-                Texture.QUESTS_BUTTON.width(),
-                Texture.QUESTS_BUTTON.height());
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height());
     }
 
     @Override

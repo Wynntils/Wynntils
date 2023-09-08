@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2021-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
 
@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerLabelRenderEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -50,6 +51,58 @@ public abstract class AbstractContainerScreenMixin {
                 mouseY,
                 partialTicks,
                 this.hoveredSlot));
+    }
+
+    @WrapOperation(
+            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                            ordinal = 0))
+    private int renderContainerLabel(
+            GuiGraphics instance,
+            Font font,
+            Component text,
+            int x,
+            int y,
+            int color,
+            boolean dropShadow,
+            Operation<Integer> original) {
+        ContainerLabelRenderEvent.ContainerLabel event = new ContainerLabelRenderEvent.ContainerLabel(
+                (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) return 0;
+
+        return original.call(instance, font, event.getContainerLabel(), x, y, event.getColor(), dropShadow);
+    }
+
+    @WrapOperation(
+            method = "renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                            ordinal = 1))
+    private int renderInventoryLabel(
+            GuiGraphics instance,
+            Font font,
+            Component text,
+            int x,
+            int y,
+            int color,
+            boolean dropShadow,
+            Operation<Integer> original) {
+        ContainerLabelRenderEvent.InventoryLabel event = new ContainerLabelRenderEvent.InventoryLabel(
+                (AbstractContainerScreen<?>) (Object) this, instance, color, x, y, text);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) return 0;
+
+        return original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
     }
 
     @Inject(

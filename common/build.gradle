@@ -6,8 +6,8 @@ dependencies {
     // This dependency is provided by forge naturally and by fabric in its build.gradle
     compileOnly "net.minecraftforge:eventbus:${forge_eventbus_version}"
 
-    implementation("com.wynntils.hades:hades:${hades_version}")
-    implementation("com.wynntils:antiope:${antiope_version}")
+    implementation("com.github.wynntils:hades:v${hades_version}")
+    implementation("com.github.wynntils:antiope:v${antiope_version}")
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
 }

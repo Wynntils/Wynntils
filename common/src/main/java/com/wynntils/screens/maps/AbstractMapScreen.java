@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.LabelPoi;
@@ -35,6 +36,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -42,10 +44,6 @@ import org.lwjgl.glfw.GLFW;
 public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
-
-    // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    private static final float MIN_ZOOM = 0.1f;
-    private static final float MAX_ZOOM = 3f;
     private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
 
     protected boolean holdingMapKey = false;
@@ -107,6 +105,16 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
+    }
+
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        for (GuiEventListener child : children) {
+            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                guiGraphics.renderComponentTooltip(
+                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                return;
+            }
+        }
     }
 
     @Override
@@ -221,11 +229,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
-            setZoom(currentZoom + 0.02f);
+            setZoom(currentZoom + currentZoom * 0.05f);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
-            setZoom(currentZoom - 0.02f);
+            setZoom(currentZoom - currentZoom * 0.05f);
             return true;
         }
 
@@ -351,7 +359,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void setZoom(float zoomTargetDelta) {
-        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
+        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM);
     }
 
     protected void updateMapCenter(float newX, float newZ) {

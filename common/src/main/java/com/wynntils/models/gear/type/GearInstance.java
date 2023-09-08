@@ -1,12 +1,13 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -16,10 +17,19 @@ import java.util.Optional;
 
 // FIXME: GearInstance is missing Powder Specials...
 public record GearInstance(
-        List<StatActualValue> identifications, List<Powder> powders, int rerolls, Optional<Float> overallQuality) {
+        List<StatActualValue> identifications,
+        List<Powder> powders,
+        int rerolls,
+        Optional<Float> overallQuality,
+        Optional<ShinyStat> shinyStat) {
     public static GearInstance create(
-            GearInfo gearInfo, List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
-        return new GearInstance(identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications));
+            GearInfo gearInfo,
+            List<StatActualValue> identifications,
+            List<Powder> powders,
+            int rerolls,
+            Optional<ShinyStat> shinyStat) {
+        return new GearInstance(
+                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStat);
     }
 
     private static Optional<Float> calculateOverallQuality(GearInfo gearInfo, List<StatActualValue> identifications) {

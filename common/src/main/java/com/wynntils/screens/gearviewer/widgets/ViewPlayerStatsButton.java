@@ -1,16 +1,14 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.gearviewer.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,16 +37,9 @@ public class ViewPlayerStatsButton extends WynntilsButton {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered) {
-            PoseStack poseStack = guiGraphics.pose();
-
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    0,
-                    VIEW_STATS_TOOLTIP,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            McUtils.mc()
+                    .screen
+                    .setTooltipForNextRenderPass(Lists.transform(VIEW_STATS_TOOLTIP, Component::getVisualOrderText));
         }
     }
 }

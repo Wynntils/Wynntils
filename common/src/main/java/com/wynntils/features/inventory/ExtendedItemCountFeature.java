@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
@@ -16,7 +16,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
-import com.wynntils.models.items.properties.UsesItemPropery;
+import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -56,7 +56,7 @@ public class ExtendedItemCountFeature extends Feature {
                 && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));
-        } else if (wynnItem instanceof UsesItemPropery usesItem && usesItem.hasCount()) {
+        } else if (wynnItem instanceof UsesItemProperty usesItem && usesItem.hasCount()) {
             event.setCountString(
                     String.valueOf(usesItem.getCount() * event.getItemStack().getCount()));
             event.setCountColor(usesItem.getCountColor().asInt());

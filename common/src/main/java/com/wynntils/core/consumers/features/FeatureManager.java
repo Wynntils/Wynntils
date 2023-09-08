@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2021-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
 
@@ -61,7 +61,8 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
-import com.wynntils.features.inventory.CustomBankPagesFeature;
+import com.wynntils.features.inventory.CustomBankPageNamesFeature;
+import com.wynntils.features.inventory.CustomBankQuickJumpsFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
@@ -77,7 +78,6 @@ import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
-import com.wynntils.features.map.GatheringNodeCooldownFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
@@ -89,7 +89,6 @@ import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
-import com.wynntils.features.overlays.GatheringCooldownOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
@@ -139,6 +138,7 @@ import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
+import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
@@ -233,7 +233,8 @@ public final class FeatureManager extends Manager {
 
         // region inventory
         registerFeature(new ContainerSearchFeature());
-        registerFeature(new CustomBankPagesFeature());
+        registerFeature(new CustomBankPageNamesFeature());
+        registerFeature(new CustomBankQuickJumpsFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
@@ -252,7 +253,6 @@ public final class FeatureManager extends Manager {
 
         // region map
         registerFeature(new BeaconBeamFeature());
-        registerFeature(new GatheringNodeCooldownFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
@@ -267,7 +267,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomPlayerListOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
-        registerFeature(new GatheringCooldownOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
@@ -335,6 +334,7 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
@@ -404,7 +404,7 @@ public final class FeatureManager extends Manager {
 
         // Determine if feature should be enabled & set default enabled value for user features
         boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-        feature.userEnabled.updateConfig(!startDisabled);
+        feature.userEnabled.store(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);

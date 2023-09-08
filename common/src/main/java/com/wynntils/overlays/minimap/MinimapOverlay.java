@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
 
@@ -91,6 +91,11 @@ public class MinimapOverlay extends Overlay {
                         HorizontalAlignment.LEFT,
                         OverlayPosition.AnchorSection.TOP_LEFT),
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
+    }
+
+    public void scale(float multiplier) {
+        scale.setValue(MathUtils.clamp(scale.get() * multiplier, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM));
+        scale.touched();
     }
 
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`

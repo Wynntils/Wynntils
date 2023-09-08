@@ -23,4 +23,4 @@ jobs:
           cache: "gradle"
       - name: 'Qodana Scan'
         id: qodana
-        uses: JetBrains/qodana-action@v2022.3.4
+        uses: JetBrains/qodana-action@v2023.2.1

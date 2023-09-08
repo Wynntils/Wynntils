@@ -1,21 +1,22 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.templates.parser;
 
 import com.wynntils.core.consumers.functions.templates.ExpressionTemplatePart;
 import com.wynntils.core.consumers.functions.templates.LiteralTemplatePart;
+import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.TemplatePart;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class TemplateParser {
-    public static String doFormat(String templateString) {
+    public static Template getTemplateFromString(String templateString) {
         List<TemplatePart> parts = parseTemplate(templateString);
 
-        return parts.stream().map(TemplatePart::getValue).collect(Collectors.joining());
+        return new Template(Collections.unmodifiableList(parts));
     }
 
     private static List<TemplatePart> parseTemplate(String templateString) {

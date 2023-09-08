@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
@@ -17,7 +17,7 @@ public class ApplyButton extends GeneralSettingsButton {
     public ApplyButton(WynntilsBookSettingsScreen screen) {
         super(
                 55,
-                Texture.SETTING_BACKGROUND.height() - 30,
+                Texture.CONFIG_BOOK_BACKGROUND.height() - 30,
                 35,
                 14,
                 Component.translatable("screens.wynntils.settingsScreen.apply"),

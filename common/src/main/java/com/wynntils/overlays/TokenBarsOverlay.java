@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
@@ -59,8 +59,8 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
 
         private TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
-            horizontalAlignmentOverride.updateConfig(HorizontalAlignment.RIGHT);
-            verticalAlignmentOverride.updateConfig(VerticalAlignment.TOP);
+            horizontalAlignmentOverride.store(HorizontalAlignment.RIGHT);
+            verticalAlignmentOverride.store(VerticalAlignment.TOP);
         }
 
         @Override

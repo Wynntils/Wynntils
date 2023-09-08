@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
 
@@ -15,9 +15,6 @@ public interface Configurable extends PersistedOwner {
     /** Registers the configurable's config options. Called by ConfigManager when loaded */
     void addConfigOptions(List<Config<?>> options);
 
-    /** Removes a configurable's config options. Used by ConfigManager with Overlay groups */
-    void removeConfigOptions(List<Config<?>> options);
-
     /** Returns all configurable options registered that should be visible to the user */
     List<Config<?>> getVisibleConfigOptions();
 
@@ -26,6 +23,4 @@ public interface Configurable extends PersistedOwner {
 
     /** Returns the config option matching the given name, if it exists */
     Optional<Config<?>> getConfigOptionFromString(String name);
-
-    String getConfigJsonName();
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
 
@@ -23,7 +23,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -105,34 +105,23 @@ public class ItemCompareFeature extends Feature {
 
         poseStack.translate(0, 0, 300);
 
-        int toBeRenderedWidth = Screen.getTooltipFromItem(McUtils.mc(), itemToCompare).stream()
+        int toBeRenderedWidth = abstractContainerScreen.getTooltipFromItem(McUtils.mc(), itemToCompare).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
 
-        int hoveredWidth = Screen.getTooltipFromItem(McUtils.mc(), hoveredItemStack).stream()
+        int hoveredWidth = abstractContainerScreen.getTooltipFromItem(McUtils.mc(), hoveredItemStack).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
 
+        GuiGraphics guiGraphics = event.getGuiGraphics();
         if (mouseX + toBeRenderedWidth + hoveredWidth > abstractContainerScreen.width) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX - toBeRenderedWidth - 10,
-                    mouseY,
-                    0,
-                    Screen.getTooltipFromItem(McUtils.mc(), itemToCompare),
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            guiGraphics.renderTooltip(
+                    FontRenderer.getInstance().getFont(), itemToCompare, mouseX - toBeRenderedWidth - 10, mouseY);
         } else {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX + hoveredWidth + 10,
-                    mouseY,
-                    0,
-                    Screen.getTooltipFromItem(McUtils.mc(), itemToCompare),
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            guiGraphics.renderTooltip(
+                    FontRenderer.getInstance().getFont(), itemToCompare, mouseX + hoveredWidth + 10, mouseY);
         }
 
         poseStack.popPose();

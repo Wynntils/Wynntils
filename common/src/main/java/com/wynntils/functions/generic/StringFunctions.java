@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
@@ -56,7 +56,7 @@ public class StringFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("str");
         }
     }
@@ -94,7 +94,7 @@ public class StringFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("eq_str");
         }
     }
@@ -116,7 +116,7 @@ public class StringFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("contains_str");
         }
     }
@@ -138,7 +138,7 @@ public class StringFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("parse_int");
         }
     }
@@ -195,7 +195,7 @@ public class StringFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("cap_str", "str_cap");
         }
     }

@@ -1,20 +1,20 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
-import com.wynntils.models.items.properties.UsesItemPropery;
+import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class CraftedConsumableItem extends GameItem
-        implements UsesItemPropery, GearTierItemProperty, LeveledItemProperty {
+        implements UsesItemProperty, GearTierItemProperty, LeveledItemProperty {
     private final String name;
     private final int level;
     private final List<StatActualValue> identifications;

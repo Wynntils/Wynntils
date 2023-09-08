@@ -1,14 +1,18 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.items.properties.QualityTierItemProperty;
 import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.models.profession.type.ProfessionType;
+import java.util.List;
 
-public class MaterialItem extends GameItem implements QualityTierItemProperty, LeveledItemProperty {
+public class MaterialItem extends GameItem
+        implements QualityTierItemProperty, LeveledItemProperty, ProfessionItemProperty {
     private final MaterialProfile materialProfile;
 
     public MaterialItem(MaterialProfile ingredientProfile) {
@@ -32,5 +36,10 @@ public class MaterialItem extends GameItem implements QualityTierItemProperty, L
     @Override
     public String toString() {
         return "MaterialItem{" + "materialProfile=" + materialProfile + '}';
+    }
+
+    @Override
+    public List<ProfessionType> getProfessionTypes() {
+        return List.of(materialProfile.getResourceType().getMaterialType().getProfessionType());
     }
 }

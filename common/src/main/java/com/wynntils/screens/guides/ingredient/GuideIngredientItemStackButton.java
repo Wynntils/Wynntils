@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
 
@@ -58,14 +58,14 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
         if (Services.Favorites.isFavorite(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
-                    Texture.FAVORITE.resource(),
+                    Texture.FAVORITE_ICON.resource(),
                     getX() + 12,
                     getY() - 4,
                     200,
                     9,
                     9,
-                    Texture.FAVORITE.width(),
-                    Texture.FAVORITE.height());
+                    Texture.FAVORITE_ICON.width(),
+                    Texture.FAVORITE_ICON.height());
         }
     }
 

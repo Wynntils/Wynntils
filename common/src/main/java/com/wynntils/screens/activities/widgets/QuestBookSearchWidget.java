@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
 
@@ -22,20 +22,21 @@ public class QuestBookSearchWidget extends SearchWidget {
     protected void renderBackground(PoseStack poseStack) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.QUEST_BOOK_SEARCH.resource(),
+                Texture.CONTENT_BOOK_SEARCH.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
-                Texture.QUEST_BOOK_SEARCH.width(),
-                Texture.QUEST_BOOK_SEARCH.height());
+                Texture.CONTENT_BOOK_SEARCH.width(),
+                Texture.CONTENT_BOOK_SEARCH.height());
     }
 
     @Override
     protected void renderText(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -51,6 +52,7 @@ public class QuestBookSearchWidget extends SearchWidget {
         super.renderText(
                 poseStack,
                 renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,

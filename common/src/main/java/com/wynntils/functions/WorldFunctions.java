@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
@@ -34,7 +34,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("world");
         }
     }
@@ -61,7 +61,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("world_uptime", "uptime");
         }
     }
@@ -80,7 +80,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_count");
         }
     }
@@ -102,7 +102,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_dep");
         }
     }
@@ -124,7 +124,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token");
         }
     }
@@ -146,7 +146,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_type");
         }
     }
@@ -259,7 +259,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("territory");
         }
     }
@@ -280,7 +280,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("territory_owner");
         }
 
@@ -288,19 +288,6 @@ public class WorldFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
-        }
-    }
-
-    public static class GatheringCooldownFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int cooldownLength = Models.Profession.getGatherCooldownTime();
-            long gatherCooldownEndTimestamp = Models.WorldState.getServerJoinTimestamp() + cooldownLength * 1000L;
-            int gatherCooldownSeconds = (int) ((gatherCooldownEndTimestamp - System.currentTimeMillis()) / 1000);
-
-            if (gatherCooldownSeconds > cooldownLength || gatherCooldownSeconds < 0) return 0;
-
-            return gatherCooldownSeconds;
         }
     }
 }

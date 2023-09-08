@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
 
@@ -27,7 +27,8 @@ public enum UrlId {
     API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),
     API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
     DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
-    DATA_ATHENA_TERRITORY_LIST("dataAthenaTerritoryList"),
+    DATA_ATHENA_GUILD_LIST("dataAthenaGuildList"),
+    DATA_WYNNCRAFT_TERRITORY_LIST("dataWynncraftTerritoryList"),
     DATA_STATIC_ABILITIES("dataStaticAbilities"),
     DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),

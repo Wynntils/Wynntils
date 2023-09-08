@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
 
@@ -13,18 +13,20 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.FeatureManager;
-import com.wynntils.core.consumers.features.Translatable;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
+import com.wynntils.core.persisted.PersistedOwner;
+import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.UpfixerManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -42,11 +44,8 @@ public final class ConfigManager extends Manager {
     private JsonObject configObject;
 
     public ConfigManager(
-            ConfigUpfixerManager configUpfixerManager,
-            JsonManager jsonManager,
-            FeatureManager feature,
-            OverlayManager overlay) {
-        super(List.of(configUpfixerManager, jsonManager, feature, overlay));
+            UpfixerManager upfixerManager, JsonManager jsonManager, FeatureManager feature, OverlayManager overlay) {
+        super(List.of(upfixerManager, jsonManager, feature, overlay));
 
         userConfig = new File(CONFIG_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
     }
@@ -59,7 +58,9 @@ public final class ConfigManager extends Manager {
         Managers.Feature.getFeatures().forEach(this::registerFeature);
 
         // Now, we have to apply upfixers, before any config loading happens
-        if (Managers.ConfigUpfixer.runUpfixers(configObject, CONFIGS)) {
+        // FIXME: Solve generics type issue
+        Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
+        if (Managers.Upfixer.runUpfixers(configObject, workaround)) {
             Managers.Json.savePreciousJson(userConfig, configObject);
         }
 
@@ -87,9 +88,11 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    private <P extends Configurable & Translatable> void registerConfigOptions(P configurable) {
-        List<Config<?>> configs = getConfigOptions(configurable);
+    private void registerConfigOptions(Configurable configurable) {
+        // Hook this in here for the time being
+        Managers.Persisted.registerOwner(configurable);
 
+        List<Config<?>> configs = getConfigOptions(configurable);
         configurable.addConfigOptions(configs);
         CONFIGS.addAll(configs);
     }
@@ -131,6 +134,9 @@ public final class ConfigManager extends Manager {
                 }
             }
 
+            // Hook this in here for the time being
+            holder.getOverlays().forEach(Managers.Persisted::registerOwner);
+
             holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
         }
 
@@ -170,20 +176,22 @@ public final class ConfigManager extends Manager {
     }
 
     public void saveConfig() {
+        // Requesting to save before we have read the old config? Just skip it
+        if (configObject == null) return;
+
         // create json object, with entry for each option of each container
         JsonObject configJson = new JsonObject();
         for (Config<?> config : getConfigList()) {
             if (!config.valueChanged()) continue; // only save options that have been set by the user
-            Object value = config.getValue();
+            Object value = config.get();
 
             JsonElement configElement = Managers.Json.GSON.toJsonTree(value);
             configJson.add(config.getJsonName(), configElement);
         }
 
         // Also save upfixer data
-        configJson.add(
-                Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME,
-                configObject.get(Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME));
+        String upfixerJsonMemberName = Managers.Upfixer.UPFIXER_JSON_MEMBER_NAME;
+        configJson.add(upfixerJsonMemberName, configObject.get(upfixerJsonMemberName));
 
         // Save overlay groups
         JsonObject overlayGroups = new JsonObject();
@@ -216,9 +224,7 @@ public final class ConfigManager extends Manager {
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, configJson);
     }
 
-    private <P extends Configurable & Translatable> List<Config<?>> getConfigOptions(P owner) {
-        Managers.Persisted.verifyAnnotations(owner);
-
+    private List<Config<?>> getConfigOptions(PersistedOwner owner) {
         List<Config<?>> options = new ArrayList<>();
         options.addAll(Managers.Persisted.getPersisted(owner, Config.class).stream()
                 .map(p -> processConfig(owner, p.a(), p.b()))
@@ -226,16 +232,13 @@ public final class ConfigManager extends Manager {
         return options;
     }
 
-    private static <P extends Configurable & Translatable> Config<?> processConfig(
-            P owner, Field configField, Persisted configInfo) {
+    private static Config<?> processConfig(PersistedOwner owner, Field configField, Persisted configInfo) {
         Config<?> configObj;
         try {
             configObj = (Config<?>) FieldUtils.readField(configField, owner, true);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Cannot read Config field: " + configField, e);
         }
-
-        configObj.createConfigHolder(owner, configField, configInfo);
 
         if (WynntilsMod.isDevelopmentEnvironment()) {
             if (configObj.isVisible()) {
@@ -258,5 +261,10 @@ public final class ConfigManager extends Manager {
 
     public Stream<Config<?>> getConfigs() {
         return getConfigList().stream();
+    }
+
+    public Stream<Config<?>> getConfigsForOwner(PersistedOwner owner) {
+        return getConfigs()
+                .filter(config -> Managers.Persisted.getMetadata(config).owner() == owner);
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement;
 
@@ -24,7 +24,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -361,16 +360,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
      * This should be called when a friend joins/leaves the world or when the refresh button is pressed
      */
     public void reloadSuggestedPlayersWidgets() {
-        // Add friends that are online in the same world as user
-        List<String> onlineUsers =
-                new ArrayList<>(McUtils.mc().level.getScoreboard().getTeamNames());
-        // Remove non-friends as we do not want to suggest them
-        onlineUsers.removeIf(user -> !Models.Friends.getFriends().stream()
-                .map(s -> s.toLowerCase(Locale.ROOT))
-                .toList()
-                .contains(user.toLowerCase(Locale.ROOT)));
-
-        List<String> suggestedPlayers = new ArrayList<>(onlineUsers);
+        List<String> suggestedPlayers =
+                new ArrayList<>(Models.Friends.getOnlineFriends().keySet());
         suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
         suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
 

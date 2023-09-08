@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
 
@@ -76,7 +76,7 @@ public class GammabrightFeature extends Feature {
     }
 
     private void toggleGammaBright() {
-        gammabrightEnabled.updateConfig(!gammabrightEnabled.get());
+        gammabrightEnabled.store(!gammabrightEnabled.get());
         applyGammabright();
 
         gammabrightEnabled.touched();

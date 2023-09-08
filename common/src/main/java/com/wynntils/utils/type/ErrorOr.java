@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
 
@@ -39,5 +39,10 @@ public final class ErrorOr<T> {
 
     public boolean hasError() {
         return error != null;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorOr{" + "value=" + value + ", error='" + error + '\'' + '}';
     }
 }

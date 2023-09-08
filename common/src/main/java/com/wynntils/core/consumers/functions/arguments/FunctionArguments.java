@@ -1,12 +1,13 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.arguments;
 
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.NamedValue;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -119,8 +120,8 @@ public final class FunctionArguments {
             }
         }
 
-        public FunctionArguments buildWithDefaults() {
-            return new FunctionArguments(this.arguments);
+        public List<Object> getDefaults() {
+            return this.arguments.stream().map(Argument::getDefaultValue).collect(Collectors.toList());
         }
     }
 
@@ -132,6 +133,7 @@ public final class FunctionArguments {
                 Double.class,
                 Number.class,
                 CappedValue.class,
+                NamedValue.class,
                 Location.class);
 
         private final String name;
@@ -152,10 +154,6 @@ public final class FunctionArguments {
 
         @SuppressWarnings("unchecked")
         protected void setValue(Object value) {
-            if (this.value != null) {
-                throw new IllegalStateException("Tried setting argument value twice.");
-            }
-
             this.value = (T) value;
         }
 
@@ -197,6 +195,10 @@ public final class FunctionArguments {
 
         public CappedValue getCappedValue() {
             return (CappedValue) this.getValue();
+        }
+
+        public NamedValue getNamedValue() {
+            return (NamedValue) this.getValue();
         }
 
         public Location getLocation() {
