@@ -213,7 +213,8 @@ public class CustomNametagRendererFeature extends Feature {
     private void drawBadges(PlayerNametagRenderEvent event, float height) {
         if (!showProfessionBadges.get()) return;
 
-        List<LeaderboardBadge> list = Models.Leaderboard.getBadges(event.getEntity().getUUID());
+        List<LeaderboardBadge> list =
+                Models.Leaderboard.getBadges(event.getEntity().getUUID());
 
         float totalWidth = LeaderboardBadge.WIDTH * list.size() + BADGE_MARGIN * (list.size() - 1);
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
