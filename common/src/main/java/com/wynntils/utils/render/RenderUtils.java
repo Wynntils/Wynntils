@@ -886,9 +886,6 @@ public final class RenderUtils {
             EntityRenderDispatcher dispatcher,
             Entity entity,
             ResourceLocation tex,
-            float x,
-            float y,
-            float z,
             float width,
             float height,
             int uOffset,
@@ -897,13 +894,14 @@ public final class RenderUtils {
             int v,
             int textureWidth,
             int textureHeight,
+            float customOffset,
             float horizontalShift,
             float verticalShift) {
         double d = dispatcher.distanceToSqr(entity);
         if (d <= 4096.0) {
             matrixStack.pushPose();
 
-            matrixStack.translate(x, y, z);
+            matrixStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
             matrixStack.mulPose(dispatcher.cameraOrientation());
             matrixStack.scale(-0.025F, -0.025F, 0.025F);
 
@@ -922,21 +920,22 @@ public final class RenderUtils {
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
             bufferBuilder
-                    .vertex(matrix, -halfWidth - horizontalShift, -halfHeight - verticalShift, 0)
+                    .vertex(matrix, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
                     .uv(uOffset * uScale, vOffset * vScale)
                     .endVertex();
             bufferBuilder
-                    .vertex(matrix, -halfWidth - horizontalShift, halfHeight - verticalShift, 0)
+                    .vertex(matrix, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
                     .uv(uOffset * uScale, (v + vOffset) * vScale)
                     .endVertex();
             bufferBuilder
-                    .vertex(matrix, halfWidth - horizontalShift, halfHeight - verticalShift, 0)
+                    .vertex(matrix, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
                     .uv((u + uOffset) * uScale, (v + vOffset) * vScale)
                     .endVertex();
             bufferBuilder
-                    .vertex(matrix, halfWidth - horizontalShift, -halfHeight - verticalShift, 0)
+                    .vertex(matrix, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
                     .uv((u + uOffset) * uScale, vOffset * vScale)
                     .endVertex();
+
             BufferUploader.drawWithShader(bufferBuilder.end());
 
             RenderSystem.disableDepthTest();

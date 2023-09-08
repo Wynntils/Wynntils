@@ -41,7 +41,7 @@ public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
-    private static final float BADGE_SCALE = 1;
+    private static final float BADGE_MARGIN = 2;
     private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
     @Persisted
@@ -210,29 +210,35 @@ public class CustomNametagRendererFeature extends Feature {
         drawBadges(event, yOffset);
     }
 
-    private void drawBadges(PlayerNametagRenderEvent event, float yOffset) {
-        yOffset += LeaderboardBadge.HEIGHT * BADGE_SCALE;
+    private void drawBadges(PlayerNametagRenderEvent event, float height) {
+        if (!showProfessionBadges.get()) return;
 
-        for (LeaderboardBadge badge :
-                Models.Leaderboard.getBadges(event.getEntity().getUUID())) {
+        List<LeaderboardBadge> list = Models.Leaderboard.getBadges(event.getEntity().getUUID());
+
+        float totalWidth = LeaderboardBadge.WIDTH * list.size() + BADGE_MARGIN * (list.size() - 1);
+        float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
+        float yOffset = 15F;
+        if (height == 0) yOffset += 10F;
+
+        for (LeaderboardBadge badge : list) {
             RenderUtils.renderProfessionBadge(
                     event.getPoseStack(),
                     event.getEntityRenderDispatcher(),
                     event.getEntity(),
                     Texture.LEADERBOARD_BADGES.resource(),
-                    0,
-                    (float) event.getEntity().getBbHeight() + 0.25F,
-                    0,
-                    LeaderboardBadge.WIDTH * BADGE_SCALE,
-                    LeaderboardBadge.HEIGHT * BADGE_SCALE,
+                    LeaderboardBadge.WIDTH,
+                    LeaderboardBadge.HEIGHT,
                     badge.uOffset(),
                     badge.vOffset(),
                     LeaderboardBadge.WIDTH,
                     LeaderboardBadge.HEIGHT,
                     Texture.LEADERBOARD_BADGES.width(),
                     Texture.LEADERBOARD_BADGES.height(),
-                    0F,
-                    yOffset + 15);
+                    height,
+                    xOffset,
+                    yOffset);
+
+            xOffset += LeaderboardBadge.WIDTH + BADGE_MARGIN;
         }
     }
 
