@@ -2,40 +2,31 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.leaderboard;
+package com.wynntils.services.leaderboard;
 
 import com.google.gson.JsonElement;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.leaderboard.type.LeaderboardBadge;
-import com.wynntils.models.leaderboard.type.LeaderboardProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.services.leaderboard.type.LeaderboardBadge;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class LeaderboardModel extends Model {
-    private Map<UUID, LeaderboardProfile> leaderboard = new HashMap<>();
+public class LeaderboardService extends Service {
+    private Map<UUID, List<LeaderboardBadge>> leaderboard = new HashMap<>();
 
-    public LeaderboardModel() {
+    public LeaderboardService() {
         super(List.of());
 
         updateLeaderboard();
-    }
-
-    public List<LeaderboardBadge> getBadges(UUID id) {
-        Optional<LeaderboardProfile> profile = Optional.ofNullable(leaderboard.get(id));
-
-        if (profile.isEmpty()) return List.of();
-
-        return profile.get().getBadges();
     }
 
     // Somewhat arbitrary
@@ -46,16 +37,33 @@ public class LeaderboardModel extends Model {
         updateLeaderboard();
     }
 
+    public List<LeaderboardBadge> getBadges(UUID id) {
+        List<LeaderboardBadge> list = leaderboard.get(id);
+        if (list == null) return List.of();
+        return list;
+    }
+
     private void updateLeaderboard() {
         Download dl = Managers.Net.download(UrlId.DATA_ATHENA_LEADERBOARD);
         dl.handleJsonObject(json -> {
-            Map<UUID, LeaderboardProfile> map = new HashMap<>();
+            Map<UUID, List<LeaderboardBadge>> map = new HashMap<>();
 
             for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
                 UUID id = UUID.fromString(entry.getKey());
-                LeaderboardProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), LeaderboardProfile.class);
+                List<LeaderboardBadge> list = new ArrayList<>();
 
-                map.put(id, profile);
+                Set<Map.Entry<String, JsonElement>> ranks = entry.getValue()
+                        .getAsJsonObject()
+                        .get("ranks")
+                        .getAsJsonObject()
+                        .entrySet();
+
+                for (Map.Entry<String, JsonElement> rank : ranks) {
+                    list.add(
+                            LeaderboardBadge.from(rank.getKey(), rank.getValue().getAsInt()));
+                }
+
+                map.put(id, list);
             }
 
             leaderboard = map;

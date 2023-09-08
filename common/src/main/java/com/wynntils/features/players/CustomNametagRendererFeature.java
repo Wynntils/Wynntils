@@ -5,6 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -16,10 +17,10 @@ import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.leaderboard.type.LeaderboardBadge;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -214,7 +215,7 @@ public class CustomNametagRendererFeature extends Feature {
         if (!showProfessionBadges.get()) return;
 
         List<LeaderboardBadge> list =
-                Models.Leaderboard.getBadges(event.getEntity().getUUID());
+                Services.Leaderboard.getBadges(event.getEntity().getUUID());
 
         float totalWidth = LeaderboardBadge.WIDTH * list.size() + BADGE_MARGIN * (list.size() - 1);
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
