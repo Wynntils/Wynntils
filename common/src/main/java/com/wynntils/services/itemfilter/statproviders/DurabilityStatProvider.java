@@ -6,11 +6,11 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
-import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.CappedValueStatProvider;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
-public class DurabilityStatProvider extends ItemStatProvider<CappedValue> {
+public class DurabilityStatProvider extends CappedValueStatProvider {
     @Override
     public List<CappedValue> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof DurableItemProperty durableItemProperty)) return List.of();

@@ -6,10 +6,10 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
-import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.IntegerStatProvider;
 import java.util.List;
 
-public class EmeraldValueStatProvider extends ItemStatProvider<Integer> {
+public class EmeraldValueStatProvider extends IntegerStatProvider {
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof EmeraldValuedItemProperty emeraldValuedItemProperty)) return List.of();

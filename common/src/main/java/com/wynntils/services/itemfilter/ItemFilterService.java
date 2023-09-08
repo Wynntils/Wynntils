@@ -192,10 +192,10 @@ public class ItemFilterService extends Service {
      * @param originalList the list of items to filter and sort
      * @return the filtered and sorted list of items
      */
-    public List<ItemStack> filterAndSort(ItemSearchQuery searchQuery, List<ItemStack> originalList) {
-        Stream<ItemStack> filteredList = originalList.stream().filter(itemStack -> matches(searchQuery, itemStack));
+    public <T extends ItemStack> List<T> filterAndSort(ItemSearchQuery searchQuery, List<T> originalList) {
+        Stream<T> filteredList = originalList.stream().filter(itemStack -> matches(searchQuery, itemStack));
 
-        filteredList.sorted((itemStack1, itemStack2) -> {
+        filteredList = filteredList.sorted((itemStack1, itemStack2) -> {
             Optional<WynnItem> wynnItem1Opt = Models.Item.getWynnItem(itemStack1);
             Optional<WynnItem> wynnItem2Opt = Models.Item.getWynnItem(itemStack2);
 
@@ -286,18 +286,20 @@ public class ItemFilterService extends Service {
     }
 
     private ErrorOr<List<ItemStatProvider<?>>> getStatSortOrder(String inputString) {
-        Stream<ErrorOr<ItemStatProvider<?>>> errorsOrProviders =
-                Arrays.stream(inputString.split(" ")).map(String::trim).map(this::getItemStatProvider);
+        List<ErrorOr<ItemStatProvider<?>>> errorsOrProviders = Arrays.stream(inputString.split(" "))
+                .map(String::trim)
+                .map(this::getItemStatProvider)
+                .toList();
 
         Optional<ErrorOr<ItemStatProvider<?>>> firstError =
-                errorsOrProviders.filter(ErrorOr::hasError).findFirst();
+                errorsOrProviders.stream().filter(ErrorOr::hasError).findFirst();
 
         if (firstError.isPresent()) {
             return ErrorOr.error(firstError.get().getError());
         }
 
         List<? extends ItemStatProvider<?>> providers =
-                errorsOrProviders.map(ErrorOr::getValue).toList();
+                errorsOrProviders.stream().map(ErrorOr::getValue).toList();
 
         return ErrorOr.of((List<ItemStatProvider<?>>) providers);
     }

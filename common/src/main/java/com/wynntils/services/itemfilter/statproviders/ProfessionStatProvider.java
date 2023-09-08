@@ -7,10 +7,10 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StringStatProvider;
 import java.util.List;
 
-public class ProfessionStatProvider extends ItemStatProvider<String> {
+public class ProfessionStatProvider extends StringStatProvider {
     @Override
     public List<String> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof ProfessionItemProperty professionItemProperty)) return List.of();

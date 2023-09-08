@@ -5,10 +5,10 @@
 package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StringStatProvider;
 import java.util.List;
 
-public class ItemTypeStatProvider extends ItemStatProvider<String> {
+public class ItemTypeStatProvider extends StringStatProvider {
     @Override
     public List<String> getValue(WynnItem wynnItem) {
         return List.of(wynnItem.getClass().getSimpleName().replace("Item", ""));

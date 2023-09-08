@@ -29,7 +29,7 @@ public abstract class ItemStatProvider<T> implements Translatable, Comparator<Wy
      */
     public abstract List<T> getValue(WynnItem wynnItem);
 
-    public final Class<T> getType() {
+    public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
