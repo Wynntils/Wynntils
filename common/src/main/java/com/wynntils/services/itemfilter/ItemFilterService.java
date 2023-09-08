@@ -98,10 +98,18 @@ public class ItemFilterService extends Service {
                     ErrorOr<List<ItemStatProvider<?>>> statSortListOrError = getStatSortOrder(inputString);
 
                     if (statSortListOrError.hasError()) {
+                        ignoredCharIndices.addAll(
+                                IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + token.length())
+                                        .boxed()
+                                        .toList());
                         errors.add(statSortListOrError.getError());
                         continue;
                     }
 
+                    validFilterCharIndices.addAll(
+                            IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + keyString.length())
+                                    .boxed()
+                                    .toList());
                     sortStatProviders.addAll(statSortListOrError.getValue());
                     continue;
                 }
