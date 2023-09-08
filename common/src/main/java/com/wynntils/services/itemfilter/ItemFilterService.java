@@ -286,8 +286,9 @@ public class ItemFilterService extends Service {
     }
 
     private ErrorOr<List<ItemStatProvider<?>>> getStatSortOrder(String inputString) {
-        List<ErrorOr<ItemStatProvider<?>>> errorsOrProviders = Arrays.stream(inputString.split(" "))
+        List<ErrorOr<ItemStatProvider<?>>> errorsOrProviders = Arrays.stream(inputString.split(","))
                 .map(String::trim)
+                .filter(s -> !s.isBlank())
                 .map(this::getItemStatProvider)
                 .toList();
 

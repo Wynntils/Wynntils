@@ -99,6 +99,6 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
         if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;
         if (itemValues1.isEmpty() && itemValues2.isEmpty()) return 0;
 
-        return itemValues1.get(0).compareTo(itemValues2.get(0));
+        return -itemValues1.get(0).compareTo(itemValues2.get(0));
     }
 }
