@@ -32,10 +32,13 @@ import net.minecraft.network.chat.Component;
 
 public class PoiManagerWidget extends AbstractWidget {
     private final CustomPoi poi;
+    private final boolean selected;
+    private final boolean selectionMode;
     private final Button editButton;
     private final Button deleteButton;
     private final Button upButton;
     private final Button downButton;
+    private final Button selectButton;
     private final float dividedWidth;
     private final int x;
     private final int y;
@@ -51,13 +54,17 @@ public class PoiManagerWidget extends AbstractWidget {
             int height,
             CustomPoi poi,
             PoiManagementScreen managementScreen,
-            float dividedWidth) {
+            float dividedWidth,
+            boolean selectionMode,
+            boolean selected) {
         super(x, y, width, height, Component.literal(poi.getName()));
         this.x = x;
         this.y = y;
         this.poi = poi;
         this.managementScreen = managementScreen;
         this.dividedWidth = dividedWidth;
+        this.selectionMode = selectionMode;
+        this.selected = selected;
 
         int manageButtonsWidth = (int) (dividedWidth * 4);
 
@@ -71,14 +78,14 @@ public class PoiManagerWidget extends AbstractWidget {
             color = CommonColors.GRAY;
         }
 
-        this.editButton = new Button.Builder(
+        editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
                         (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
                 .pos(x + (int) (dividedWidth * 28), y)
                 .size(manageButtonsWidth, 20)
                 .build();
 
-        this.deleteButton = new Button.Builder(
+        deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
                             HiddenConfig<List<CustomPoi>> customPois =
                                     Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
@@ -87,19 +94,29 @@ public class PoiManagerWidget extends AbstractWidget {
                             customPois.get().remove(poi);
                             customPois.touched();
                             managementScreen.populatePois();
+                            managementScreen.createIconFilterButtons();
                         })
                 .pos(x + (int) (dividedWidth * 32), y)
                 .size(manageButtonsWidth, 20)
                 .build();
 
-        this.upButton = new Button.Builder(Component.literal("ʌ"), (button) -> updateIndex(-1))
+        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> updateIndex(-1))
                 .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth, y)
                 .size(10, 20)
                 .build();
 
-        this.downButton = new Button.Builder(Component.literal("v"), (button) -> updateIndex(1))
+        downButton = new Button.Builder(Component.literal("v"), (button) -> updateIndex(1))
                 .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth + 10, y)
                 .size(10, 20)
+                .build();
+
+        Component selectButtonText = selected
+                ? Component.translatable("screens.wynntils.poiManagementGui.deselect")
+                : Component.translatable("screens.wynntils.poiManagementGui.select");
+
+        selectButton = new Button.Builder(selectButtonText, (button) -> managementScreen.selectPoi(poi))
+                .pos(x + (int) (dividedWidth * 28), y)
+                .size(manageButtonsWidth * 2 + 20, 20)
                 .build();
 
         if (pois.indexOf(poi) == 0) {
@@ -165,10 +182,24 @@ public class PoiManagerWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        editButton.render(poseStack, mouseX, mouseY, partialTick);
-        deleteButton.render(poseStack, mouseX, mouseY, partialTick);
-        upButton.render(poseStack, mouseX, mouseY, partialTick);
-        downButton.render(poseStack, mouseX, mouseY, partialTick);
+        if (selectionMode) {
+            selectButton.render(poseStack, mouseX, mouseY, partialTick);
+
+            RenderUtils.drawRectBorders(
+                    poseStack,
+                    selected ? CommonColors.ORANGE : CommonColors.WHITE,
+                    x,
+                    y + 1,
+                    x + width,
+                    y + height - 1,
+                    0,
+                    1f);
+        } else {
+            editButton.render(poseStack, mouseX, mouseY, partialTick);
+            deleteButton.render(poseStack, mouseX, mouseY, partialTick);
+            upButton.render(poseStack, mouseX, mouseY, partialTick);
+            downButton.render(poseStack, mouseX, mouseY, partialTick);
+        }
     }
 
     private void renderIcon(PoseStack poseStack) {
@@ -198,10 +229,23 @@ public class PoiManagerWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return editButton.mouseClicked(mouseX, mouseY, button)
-                || deleteButton.mouseClicked(mouseX, mouseY, button)
-                || upButton.mouseClicked(mouseX, mouseY, button)
-                || downButton.mouseClicked(mouseX, mouseY, button);
+        boolean clickedButton;
+
+        if (selectionMode) {
+            clickedButton = selectButton.mouseClicked(mouseX, mouseY, button);
+        } else {
+            clickedButton = editButton.mouseClicked(mouseX, mouseY, button)
+                    || deleteButton.mouseClicked(mouseX, mouseY, button)
+                    || upButton.mouseClicked(mouseX, mouseY, button)
+                    || downButton.mouseClicked(mouseX, mouseY, button);
+        }
+
+        if (clickedButton) {
+            return clickedButton;
+        } else {
+            managementScreen.selectPoi(poi);
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
     }
 
     @Override
