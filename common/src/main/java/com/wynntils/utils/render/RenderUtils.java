@@ -882,7 +882,7 @@ public final class RenderUtils {
     }
 
     public static void renderProfessionBadge(
-            PoseStack matrixStack,
+            PoseStack poseStack,
             EntityRenderDispatcher dispatcher,
             Entity entity,
             ResourceLocation tex,
@@ -899,13 +899,13 @@ public final class RenderUtils {
             float verticalShift) {
         double d = dispatcher.distanceToSqr(entity);
         if (d <= 4096.0) {
-            matrixStack.pushPose();
+            poseStack.pushPose();
 
-            matrixStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
-            matrixStack.mulPose(dispatcher.cameraOrientation());
-            matrixStack.scale(-0.025F, -0.025F, 0.025F);
+            poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
+            poseStack.mulPose(dispatcher.cameraOrientation());
+            poseStack.scale(-0.025F, -0.025F, 0.025F);
 
-            Matrix4f matrix = matrixStack.last().pose();
+            Matrix4f matrix = poseStack.last().pose();
 
             float halfWidth = width / 2;
             float halfHeight = height / 2;
@@ -940,7 +940,7 @@ public final class RenderUtils {
 
             RenderSystem.disableDepthTest();
 
-            matrixStack.popPose();
+            poseStack.popPose();
         }
     }
 
