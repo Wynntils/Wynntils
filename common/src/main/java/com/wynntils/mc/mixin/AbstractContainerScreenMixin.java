@@ -7,7 +7,6 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerLabelRenderEvent;
@@ -104,56 +103,6 @@ public abstract class AbstractContainerScreenMixin {
         if (event.isCanceled()) return 0;
 
         return original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
-    }
-
-    @WrapOperation(
-            method = "renderLabels(Lcom/mojang/blaze3d/vertex/PoseStack;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/Font;draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/network/chat/Component;FFI)I",
-                            ordinal = 0))
-    private int renderContainerLabel(
-            Font instance,
-            PoseStack poseStack,
-            Component text,
-            float x,
-            float y,
-            int color,
-            Operation<Integer> original) {
-        ContainerLabelRenderEvent.ContainerLabel event = new ContainerLabelRenderEvent.ContainerLabel(
-                (AbstractContainerScreen<?>) (Object) this, poseStack, color, x, y, text);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) return 0;
-
-        return original.call(instance, poseStack, event.getContainerLabel(), x, y, event.getColor());
-    }
-
-    @WrapOperation(
-            method = "renderLabels(Lcom/mojang/blaze3d/vertex/PoseStack;II)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/Font;draw(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/network/chat/Component;FFI)I",
-                            ordinal = 1))
-    private int renderInventoryLabel(
-            Font instance,
-            PoseStack poseStack,
-            Component text,
-            float x,
-            float y,
-            int color,
-            Operation<Integer> original) {
-        ContainerLabelRenderEvent.InventoryLabel event = new ContainerLabelRenderEvent.InventoryLabel(
-                (AbstractContainerScreen<?>) (Object) this, poseStack, color, x, y, text);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) return 0;
-
-        return original.call(instance, poseStack, event.getInventoryLabel(), x, y, event.getColor());
     }
 
     @Inject(
