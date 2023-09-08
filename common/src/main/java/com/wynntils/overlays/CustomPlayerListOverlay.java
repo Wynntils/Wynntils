@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
@@ -61,7 +61,7 @@ public class CustomPlayerListOverlay extends Overlay {
                         HorizontalAlignment.CENTER,
                         OverlayPosition.AnchorSection.TOP_MIDDLE),
                 TOTAL_WIDTH,
-                Texture.PLAYER_INFO_OVERLAY.height());
+                Texture.PLAYER_LIST_OVERLAY.height());
     }
 
     @SubscribeEvent
@@ -133,18 +133,18 @@ public class CustomPlayerListOverlay extends Overlay {
     private void renderRoll(PoseStack poseStack, float xPos) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.PLAYER_INFO_OVERLAY.resource(),
+                Texture.PLAYER_LIST_OVERLAY.resource(),
                 xPos,
                 getRenderY(),
                 0,
                 ROLL_WIDTH,
-                Texture.PLAYER_INFO_OVERLAY.height(),
+                Texture.PLAYER_LIST_OVERLAY.height(),
                 0,
                 0,
                 ROLL_WIDTH,
-                Texture.PLAYER_INFO_OVERLAY.height(),
-                Texture.PLAYER_INFO_OVERLAY.width(),
-                Texture.PLAYER_INFO_OVERLAY.height());
+                Texture.PLAYER_LIST_OVERLAY.height(),
+                Texture.PLAYER_LIST_OVERLAY.width(),
+                Texture.PLAYER_LIST_OVERLAY.height());
     }
 
     private void renderPlayerNames(PoseStack poseStack, float categoryStart, List<StyledText> players) {
@@ -183,18 +183,18 @@ public class CustomPlayerListOverlay extends Overlay {
     private void renderBackground(PoseStack poseStack) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.PLAYER_INFO_OVERLAY.resource(),
+                Texture.PLAYER_LIST_OVERLAY.resource(),
                 getRenderX() + ROLL_WIDTH,
                 getRenderY(),
                 0,
-                Texture.PLAYER_INFO_OVERLAY.width() - ROLL_WIDTH,
-                Texture.PLAYER_INFO_OVERLAY.height(),
+                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH,
+                Texture.PLAYER_LIST_OVERLAY.height(),
                 ROLL_WIDTH,
                 0,
-                Texture.PLAYER_INFO_OVERLAY.width() - ROLL_WIDTH,
-                Texture.PLAYER_INFO_OVERLAY.height(),
-                Texture.PLAYER_INFO_OVERLAY.width(),
-                Texture.PLAYER_INFO_OVERLAY.height());
+                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH,
+                Texture.PLAYER_LIST_OVERLAY.height(),
+                Texture.PLAYER_LIST_OVERLAY.width(),
+                Texture.PLAYER_LIST_OVERLAY.height());
     }
 
     @Override

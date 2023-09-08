@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -60,11 +60,6 @@ public class WynntilsCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Provides various Wynntils functionality";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("clearcaches")
@@ -92,7 +87,7 @@ public class WynntilsCommand extends Command {
         Managers.Overlay.resetProfiling();
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.debug.profile.cleared")
+                        () -> Component.translatable("command.wynntils.debug.profile.cleared")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -142,12 +137,12 @@ public class WynntilsCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.debug.profile.total", totalTime, totalCount)
+                        () -> Component.translatable("command.wynntils.debug.profile.total", totalTime, totalCount)
                                 .withStyle(ChatFormatting.AQUA),
                         false);
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.debug.profile.avg", average)
+                        () -> Component.translatable("command.wynntils.debug.profile.avg", average)
                                 .withStyle(ChatFormatting.AQUA),
                         false);
     }
@@ -155,7 +150,7 @@ public class WynntilsCommand extends Command {
     private int reauth(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.reauth.tryReauth")
+                        () -> Component.translatable("command.wynntils.reauth.tryReauth")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -171,12 +166,12 @@ public class WynntilsCommand extends Command {
     private int clearCaches(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.clearCaches.warn")
+                        () -> Component.translatable("command.wynntils.clearCaches.warn")
                                 .withStyle(ChatFormatting.DARK_RED),
                         false);
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.clearCaches.clickHere")
+                        () -> Component.translatable("command.wynntils.clearCaches.clickHere")
                                 .withStyle(ChatFormatting.BLUE)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(
@@ -189,7 +184,7 @@ public class WynntilsCommand extends Command {
     private int doClearCaches(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.clearCaches.deleting")
+                        () -> Component.translatable("command.wynntils.clearCaches.deleting")
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
@@ -208,7 +203,7 @@ public class WynntilsCommand extends Command {
     private int reloadCaches(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        () -> Component.translatable("commands.wynntils.reloadCaches.reloading")
+                        () -> Component.translatable("command.wynntils.reloadCaches.reloading")
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 

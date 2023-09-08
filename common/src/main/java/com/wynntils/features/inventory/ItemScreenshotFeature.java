@@ -1,12 +1,13 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -23,7 +24,6 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
@@ -37,8 +37,11 @@ import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -47,10 +50,16 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemScreenshotFeature extends Feature {
+    // The 4, 4 offset is intentional, otherwise the tooltip will be rendered outside of the screen
+    private static final ClientTooltipPositioner NO_POSITIONER =
+            (int screenWidth, int screenHeight, int mouseX, int mouseY, int tooltipWidth, int tooltipHeight) ->
+                    new Vector2i(4, 4);
+
     @RegisterKeyBind
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
@@ -107,18 +116,28 @@ public class ItemScreenshotFeature extends Feature {
         float scaleh = (float) screen.height / height;
         float scalew = (float) screen.width / width;
 
+        // Create tooltip renderer
+        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
+                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
+
         // draw tooltip to framebuffer, create image
         McUtils.mc().getMainRenderTarget().unbindWrite();
 
-        PoseStack poseStack = new PoseStack();
+        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), MultiBufferSource.immediate(new BufferBuilder(256)));
         RenderTarget fb = new MainTarget(width * 2, height * 2);
         fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2, false);
         fb.bindWrite(false);
-        poseStack.pushPose();
-        poseStack.scale(scalew, scaleh, 1);
-        RenderUtils.drawTooltip(poseStack, tooltip, font, true);
-        poseStack.popPose();
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().scale(scalew, scaleh, 1);
+        guiGraphics.renderTooltip(
+                FontRenderer.getInstance().getFont(),
+                deferredTooltipRendering.tooltip(),
+                deferredTooltipRendering.positioner(),
+                0,
+                0);
+        guiGraphics.pose().popPose();
+        guiGraphics.flush();
         fb.unbindWrite();
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 

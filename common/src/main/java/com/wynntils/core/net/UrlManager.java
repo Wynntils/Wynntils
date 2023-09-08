@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
 
@@ -63,7 +63,9 @@ public final class UrlManager extends Manager {
 
     public String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
         // Verify that arguments match with what is specified
-        assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
+        assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())))
+                : "Arguments mismatch for " + urlInfo.url + ", expected: " + urlInfo.arguments() + " got: "
+                        + arguments.keySet();
 
         // Replace %{argKey} with arg value in URL string
         return arguments.keySet().stream()

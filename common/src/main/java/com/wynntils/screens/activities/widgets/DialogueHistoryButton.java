@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
 
@@ -24,13 +24,13 @@ public class DialogueHistoryButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.DIALOGUE_BUTTON.resource(),
+                Texture.DIALOGUE_ICON.resource(),
                 this.getX(),
                 this.getY(),
                 this.width,
                 this.height,
-                Texture.DIALOGUE_BUTTON.width(),
-                Texture.DIALOGUE_BUTTON.height());
+                Texture.DIALOGUE_ICON.width(),
+                Texture.DIALOGUE_ICON.height());
     }
 
     @Override

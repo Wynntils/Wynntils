@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
@@ -28,7 +28,7 @@ public class TowerAuraTimerOverlay extends TextOverlay {
                 new OverlaySize(150, 30),
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
-        fontScale.updateConfig(2f);
+        fontScale.store(2f);
     }
 
     @Override

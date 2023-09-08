@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
 
@@ -19,8 +19,6 @@ public final class RenderedStringUtils {
         StyledText[] stringArray = s.split(" ");
         StringBuilder result = new StringBuilder();
         int length = 0;
-
-        // FIXME: codes should not count toward the word length
 
         for (StyledText string : stringArray) {
             StyledText[] lines = string.split("\\\\n");

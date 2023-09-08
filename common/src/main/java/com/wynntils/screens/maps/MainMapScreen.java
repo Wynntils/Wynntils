@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
@@ -77,7 +77,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_HELP_BUTTON,
+                Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
                         Component.literal("[>] ")
@@ -122,7 +122,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_MANAGER_BUTTON,
+                Texture.WAYPOINT_MANAGER_ICON,
                 (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
@@ -139,7 +139,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_SHARE_BUTTON,
+                Texture.SHARE_ICON,
                 this::shareLocationOrCompass,
                 List.of(
                         Component.literal("[>] ")
@@ -166,7 +166,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_WAYPOINT_FOCUS_BUTTON,
+                Texture.WAYPOINT_FOCUS_ICON,
                 (b) -> {
                     if (KeyboardUtils.isShiftDown()) {
                         centerMapAroundPlayer();
@@ -204,7 +204,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_ADD_BUTTON,
+                Texture.ADD_ICON,
                 (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
@@ -276,6 +276,8 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderCoordinates(poseStack, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
@@ -433,6 +435,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
         double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
         Location compassLocation = Location.containing(gameX, 0, gameZ);
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
 
         McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);

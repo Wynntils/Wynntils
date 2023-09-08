@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
@@ -108,13 +108,13 @@ public class ItemFavoriteFeature extends Feature {
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {
         RenderUtils.drawScalingTexturedRect(
                 event.getPoseStack(),
-                Texture.FAVORITE.resource(),
+                Texture.FAVORITE_ICON.resource(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
                 400,
                 9,
                 9,
-                Texture.FAVORITE.width(),
-                Texture.FAVORITE.height());
+                Texture.FAVORITE_ICON.width(),
+                Texture.FAVORITE_ICON.height());
     }
 }

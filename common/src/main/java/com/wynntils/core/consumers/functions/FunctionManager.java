@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions;
 
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.consumers.functions.expressions.Expression;
 import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser;
+import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
@@ -32,6 +33,7 @@ import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
+import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.type.ErrorOr;
@@ -39,8 +41,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -51,6 +55,9 @@ import net.minecraft.network.chat.MutableComponent;
 public final class FunctionManager extends Manager {
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
+
+    // We do not clear this cache, as it is not expected to grow too large
+    private final Map<String, Template> calculatedTemplateCache = new HashMap<>();
 
     public FunctionManager() {
         super(List.of());
@@ -85,7 +92,7 @@ public final class FunctionManager extends Manager {
 
     private boolean hasName(Function<?> function, String name) {
         if (function.getName().equalsIgnoreCase(name)) return true;
-        for (String alias : function.getAliases()) {
+        for (String alias : function.getAliasList()) {
             if (alias.equalsIgnoreCase(name)) return true;
         }
         return false;
@@ -121,14 +128,33 @@ public final class FunctionManager extends Manager {
                 ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : Component.literal("");
 
-        ErrorOr<FunctionArguments> errorOrArguments =
+        ErrorOr<List<Expression>> errorOrArgumentExpressions =
                 ArgumentParser.parseArguments(function.getArgumentsBuilder(), rawArguments);
 
-        if (errorOrArguments.hasError()) {
-            return header.append(Component.literal(errorOrArguments.getError()).withStyle(ChatFormatting.RED));
+        if (errorOrArgumentExpressions.hasError()) {
+            return header.append(
+                    Component.literal(errorOrArgumentExpressions.getError()).withStyle(ChatFormatting.RED));
         }
 
-        Optional<Object> value = getFunctionValueSafely(function, errorOrArguments.getValue());
+        List<ErrorOr<Object>> errorsOrargumentObjects = errorOrArgumentExpressions.getValue().stream()
+                .map(Expression::calculate)
+                .toList();
+
+        Optional<ErrorOr<Object>> argumentError =
+                errorsOrargumentObjects.stream().filter(ErrorOr::hasError).findFirst();
+        if (argumentError.isPresent()) {
+            return header.append(
+                    Component.literal(argumentError.get().getError()).withStyle(ChatFormatting.RED));
+        }
+
+        ErrorOr<FunctionArguments> errorOrArgument = function.getArgumentsBuilder()
+                .buildWithValues(
+                        errorsOrargumentObjects.stream().map(ErrorOr::getValue).toList());
+        if (errorOrArgument.hasError()) {
+            return header.append(Component.literal(errorOrArgument.getError()).withStyle(ChatFormatting.RED));
+        }
+
+        Optional<Object> value = getFunctionValueSafely(function, errorOrArgument.getValue());
         if (value.isEmpty()) {
             return header.append(Component.literal("??"));
         }
@@ -211,7 +237,8 @@ public final class FunctionManager extends Manager {
     // region Template formatting
 
     private String doFormat(String templateString) {
-        return TemplateParser.doFormat(templateString);
+        calculatedTemplateCache.computeIfAbsent(templateString, TemplateParser::getTemplateFromString);
+        return calculatedTemplateCache.get(templateString).getString();
     }
 
     public StyledText[] doFormatLines(String templateString) {
@@ -355,6 +382,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
 
+        registerFunction(new NamedFunctions.NameFunction());
+        registerFunction(new NamedFunctions.NamedValueFunction());
+        registerFunction(new NamedFunctions.ValueFunction());
+
         registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
@@ -375,7 +406,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
-        registerFunction(new WorldFunctions.GatheringCooldownFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemFunction());
@@ -436,6 +466,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
+        registerFunction(new InventoryFunctions.AllShinyStatsFunction());
+        registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
         registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
         registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
         registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
@@ -445,6 +478,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemNameFunction());
+        registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
         registerFunction(new InventoryFunctions.HeldItemTypeFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
@@ -468,10 +502,13 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LastDryStreakFunction());
         registerFunction(new LootrunFunctions.LastMythicFunction());
         registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunChallengesFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
+        registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
+        registerFunction(new LootrunFunctions.LootrunTimeFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());

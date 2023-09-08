@@ -1,15 +1,14 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,23 +67,14 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
                         + Managers.Overlay.getOverlayParent(hovered.getOverlay())
                                 .getTranslatedName()));
 
-                RenderUtils.drawTooltipAt(
-                        poseStack,
-                        mouseX,
-                        mouseY,
-                        100,
-                        helpModified,
-                        FontRenderer.getInstance().getFont(),
-                        false);
+                McUtils.mc()
+                        .screen
+                        .setTooltipForNextRenderPass(Lists.transform(helpModified, Component::getVisualOrderText));
             } else {
-                RenderUtils.drawTooltipAt(
-                        poseStack,
-                        mouseX,
-                        mouseY,
-                        100,
-                        HELP_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false);
+                McUtils.mc()
+                        .screen
+                        .setTooltipForNextRenderPass(
+                                Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText));
             }
         }
     }

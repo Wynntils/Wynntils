@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
@@ -16,7 +16,7 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
     protected TextInputBoxSettingsWidget(Config<T> config, TextboxScreen textboxScreen, int width) {
         super(0, 6, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
         this.config = config;
-        setTextBoxInput(config.getValue().toString());
+        setTextBoxInput(config.get().toString());
     }
 
     public TextInputBoxSettingsWidget(Config<T> config, TextboxScreen textboxScreen) {
@@ -27,7 +27,7 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
     protected void onUpdate(String text) {
         T parsedValue = config.tryParseStringValue(text);
         if (parsedValue != null) {
-            if (!parsedValue.equals(config.getValue())) {
+            if (!parsedValue.equals(config.get())) {
                 config.setValue(parsedValue);
             }
 

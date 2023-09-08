@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
 
@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
@@ -47,6 +48,10 @@ public final class InventoryUtils {
         ACCESSORY_SLOTS.forEach(
                 slot -> accessories.add(player.getInventory().items.get(slot)));
         return accessories;
+    }
+
+    public static ItemStack getItemInHand() {
+        return McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
     }
 
     public enum MouseClickType {

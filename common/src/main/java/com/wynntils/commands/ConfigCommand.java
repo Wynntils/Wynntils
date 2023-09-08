@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -47,7 +47,7 @@ public class ConfigCommand extends Command {
 
                         return foundFeature
                                 .map(feature -> Managers.Overlay.getFeatureOverlays(feature).stream()
-                                        .map(Overlay::getConfigJsonName)
+                                        .map(Overlay::getJsonName)
                                         .iterator())
                                 .orElse(Collections.emptyIterator());
                     },
@@ -88,7 +88,7 @@ public class ConfigCommand extends Command {
 
                         Feature feature = featureOptional.get();
                         Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
-                                .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
+                                .filter(overlay -> overlay.getJsonName().equals(overlayName))
                                 .findFirst();
 
                         return overlayOptional
@@ -164,11 +164,6 @@ public class ConfigCommand extends Command {
     @Override
     public String getCommandName() {
         return "config";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Read and manipulate Wynntils settings";
     }
 
     @Override
@@ -558,7 +553,7 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        T oldValue = config.getValue();
+        T oldValue = config.get();
         String oldValueString = config.getValueString();
 
         if (Objects.equals(oldValue, parsedValue)) {
@@ -696,7 +691,7 @@ public class ConfigCommand extends Command {
         }
 
         Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
-                .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
+                .filter(overlay -> overlay.getJsonName().equals(overlayName))
                 .findFirst();
 
         if (overlayOptional.isEmpty()) {

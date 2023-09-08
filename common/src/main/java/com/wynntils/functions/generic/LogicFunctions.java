@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
@@ -26,7 +26,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("eq");
         }
     }
@@ -47,7 +47,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("neq");
         }
     }
@@ -112,7 +112,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("lt");
         }
     }
@@ -132,8 +132,8 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
-            return List.of("lte");
+        protected List<String> getAliases() {
+            return List.of("lte", "less_than_equals", "leq");
         }
     }
 
@@ -152,7 +152,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mt", "more_than", "gt");
         }
     }
@@ -172,8 +172,8 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
-            return List.of("mte", "more_than_equals", "gte");
+        protected List<String> getAliases() {
+            return List.of("mte", "more_than_equals", "greater_than_equals", "gte", "geq");
         }
     }
 }

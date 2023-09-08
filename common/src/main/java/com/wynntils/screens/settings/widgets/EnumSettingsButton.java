@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
@@ -46,7 +46,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
             return false;
         }
 
-        E value = config.getValue();
+        E value = config.get();
         int nextIndex = (enumConstants.indexOf(value) + addToIndex + enumConstants.size()) % enumConstants.size();
         E nextValue = enumConstants.get(nextIndex);
         config.setValue(nextValue);

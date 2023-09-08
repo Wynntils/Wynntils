@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
@@ -23,7 +23,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             // FIXME: These aliases are a bit backwards, let's clean it up in the future
             return List.of("capped_memory");
         }
@@ -54,7 +54,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("stopwatch_is_zero");
         }
     }
@@ -101,7 +101,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("memorymax", "memmax");
         }
     }
@@ -113,7 +113,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("memoryused", "memused");
         }
     }
@@ -125,7 +125,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("memorypct", "mempct");
         }
     }

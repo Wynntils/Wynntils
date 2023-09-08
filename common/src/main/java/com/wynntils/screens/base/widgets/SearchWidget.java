@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
@@ -22,9 +22,10 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
-    private static final Component DEFAULT_TEXT =
+    protected static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
-    private static final float VERTICAL_OFFSET = 6.5f;
+
+    protected static final float VERTICAL_OFFSET = 6.5f;
 
     public SearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
@@ -36,6 +37,7 @@ public class SearchWidget extends TextInputBoxWidget {
     protected void doRenderWidget(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -50,6 +52,7 @@ public class SearchWidget extends TextInputBoxWidget {
         renderText(
                 poseStack,
                 renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -63,6 +66,7 @@ public class SearchWidget extends TextInputBoxWidget {
     protected void renderText(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,

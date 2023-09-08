@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -16,11 +16,6 @@ public class TerritoryCommand extends Command {
     @Override
     public String getCommandName() {
         return "territory";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Alias of /compass territory";
     }
 
     @Override

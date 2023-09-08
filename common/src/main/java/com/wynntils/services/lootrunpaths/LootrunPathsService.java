@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
 
@@ -186,10 +186,10 @@ public final class LootrunPathsService extends Service {
 
             BlockPos start = PosUtils.newBlockPos(startingPoint);
             McUtils.sendMessageToClient(Component.translatable(
-                            "feature.wynntils.lootrunUtils.lootrunStart", start.getX(), start.getY(), start.getZ())
+                            "service.wynntils.lootrunPaths.lootrunStart", start.getX(), start.getY(), start.getZ())
                     .withStyle(ChatFormatting.GREEN));
         } else {
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded", fileName));
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded", fileName));
         }
     }
 

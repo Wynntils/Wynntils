@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -43,11 +43,6 @@ public class QuestCommand extends Command {
     @Override
     public String getCommandName() {
         return "quest";
-    }
-
-    @Override
-    public String getDescription() {
-        return "List, show and track quests";
     }
 
     @Override

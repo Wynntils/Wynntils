@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
 
@@ -49,6 +49,12 @@ public final class PlayerModel extends Model {
     // Returns true if the player is on the same server and is not a npc
     public boolean isLocalPlayer(Player player) {
         return !isNpc(player) && !(isPlayerGhost(player));
+    }
+
+    public boolean isLocalPlayer(String name) {
+        // Wynn uses TeamNames for player names that are online
+        return !isNpc(StyledText.fromString(name))
+                && McUtils.mc().level.getScoreboard().getTeamNames().contains(name);
     }
 
     public boolean isNpc(Player player) {

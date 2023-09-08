@@ -31,7 +31,7 @@
       "description": "The best Wynncraft mod you'll probably find!",
       "environment": "*",
       "icon": "assets/wynntils/icon.png",
-      "license": "AGPL-3.0-only",
+      "license": "LGPL-3.0-only",
       "name": "Wynntils"
     },
     "version": "${version}"

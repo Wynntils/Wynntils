@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
@@ -22,7 +22,7 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
 
         PoseStack poseStack = guiGraphics.pose();
 
-        CustomColor value = config.getValue();
+        CustomColor value = config.get();
         RenderUtils.drawRect(poseStack, value, width + 5, 6, 0, height, height);
     }
 }

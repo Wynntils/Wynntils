@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
 
@@ -296,13 +296,13 @@ public class WorldWaypointDistanceFeature extends Feature {
         switch (unknownConfig.getFieldName()) {
             case "topBoundingDistance", "bottomBoundingDistance" -> {
                 Config<Float> config = (Config<Float>) unknownConfig;
-                if (config.getValue() > window.getGuiScaledHeight() * 0.4f) {
+                if (config.get() > window.getGuiScaledHeight() * 0.4f) {
                     config.setValue(window.getGuiScaledHeight() * 0.4f);
                 }
             }
             case "horizontalBoundingDistance" -> {
                 Config<Float> config = (Config<Float>) unknownConfig;
-                if (config.getValue() > window.getGuiScaledWidth() * 0.4f) {
+                if (config.get() > window.getGuiScaledWidth() * 0.4f) {
                     config.setValue(window.getGuiScaledWidth() * 0.4f);
                 }
             }

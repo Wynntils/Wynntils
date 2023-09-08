@@ -1,14 +1,15 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -44,28 +45,21 @@ public class ClassSelectionDeleteButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.REMOVE_BUTTON.resource(),
+                Texture.REMOVE_ICON_OFFSET.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
                 0,
-                characterSelectorScreen.getSelected() == null ? Texture.REMOVE_BUTTON.height() / 2 : 0,
-                Texture.REMOVE_BUTTON.width(),
-                Texture.REMOVE_BUTTON.height() / 2,
-                Texture.REMOVE_BUTTON.width(),
-                Texture.REMOVE_BUTTON.height());
+                characterSelectorScreen.getSelected() == null ? Texture.REMOVE_ICON_OFFSET.height() / 2 : 0,
+                Texture.REMOVE_ICON_OFFSET.width(),
+                Texture.REMOVE_ICON_OFFSET.height() / 2,
+                Texture.REMOVE_ICON_OFFSET.width(),
+                Texture.REMOVE_ICON_OFFSET.height());
 
         if (isHovered && characterSelectorScreen.getSelected() != null) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    TOOLTIP,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(TOOLTIP, Component::getVisualOrderText));
         }
     }
 }

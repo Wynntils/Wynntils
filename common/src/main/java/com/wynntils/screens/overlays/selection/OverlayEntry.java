@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
 
@@ -116,9 +116,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         // right click
         if (button == 1) {
-            Managers.Config.getConfigs()
-                    .filter(config -> config.getParent() == overlay
-                            && config.getFieldName().equals("userEnabled"))
+            Managers.Config.getConfigsForOwner(overlay)
+                    .filter(config -> config.getFieldName().equals("userEnabled"))
                     .findFirst()
                     .ifPresent(config -> ((Config<Boolean>) config).setValue(!Managers.Overlay.isEnabled(overlay)));
             Managers.Config.saveConfig();

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
@@ -479,6 +479,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderIcon(PoseStack poseStack) {

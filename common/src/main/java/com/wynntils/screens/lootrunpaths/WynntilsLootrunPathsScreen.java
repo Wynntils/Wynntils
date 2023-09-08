@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.lootrunpaths;
 
@@ -20,7 +20,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -64,38 +63,38 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
         TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
-                Texture.BACK_ARROW.width() / 2,
-                Texture.BACK_ARROW.height(),
+                Texture.BACK_ARROW_OFFSET.width() / 2,
+                Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11,
-                (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
-                (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "lootrun",
                 () -> TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
     }
 
     @Override
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof LootrunPathButton lootrunPathButton) {
             List<Component> tooltipLines;
 
@@ -125,18 +124,11 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                                 .withStyle(ChatFormatting.RED));
             }
 
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    tooltipLines,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
             return;
         }
 
-        super.renderTooltip(poseStack, mouseX, mouseY);
+        super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -167,7 +159,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         poseStack.popPose();
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderDescription(PoseStack poseStack) {
@@ -250,9 +242,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description1")),
                             20,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
                             80,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             TextShadow.NONE);
@@ -262,9 +254,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description2")),
                             20,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
                             155,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             TextShadow.NONE);
@@ -275,9 +267,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     protected LootrunPathButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new LootrunPathButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
                 this);

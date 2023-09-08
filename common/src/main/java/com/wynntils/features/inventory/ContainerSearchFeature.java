@@ -1,11 +1,12 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -13,29 +14,35 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
+import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -60,6 +67,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInScrapMenu = new Config<>(true);
+
+    @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
@@ -70,13 +80,15 @@ public class ContainerSearchFeature extends Feature {
     private long guildBankLastSearch = 0;
 
     private SearchWidget lastSearchWidget;
+    private ItemSearchHelperWidget lastItemSearchHelperWidget;
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
+    private ItemSearchQuery lastSearchQuery;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-        if (!(screen.getMenu() instanceof ChestMenu chestMenu)) return;
+        if (!(screen.getMenu() instanceof ChestMenu)) return;
 
         StyledText title = StyledText.fromComponent(screen.getTitle());
 
@@ -88,8 +100,23 @@ public class ContainerSearchFeature extends Feature {
         if (searchableContainerType == null) return;
 
         currentSearchableContainerType = searchableContainerType;
+        addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
+    }
 
-        addSearchWidget(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
+    // This might not be needed in 1.20
+    // Render the tooltip last
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onContainerRender(ContainerRenderEvent event) {
+        if (lastItemSearchHelperWidget == null) return;
+
+        if (lastItemSearchHelperWidget.isHovered()) {
+            event.getGuiGraphics()
+                    .renderComponentTooltip(
+                            FontRenderer.getInstance().getFont(),
+                            lastItemSearchHelperWidget.getTooltipLines(),
+                            event.getMouseX(),
+                            event.getMouseY());
+        }
     }
 
     @SubscribeEvent
@@ -121,6 +148,8 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
+        lastSearchQuery = null;
+        lastItemSearchHelperWidget = null;
         currentSearchableContainerType = null;
         autoSearching = false;
         guildBankLastSearch = 0;
@@ -135,10 +164,23 @@ public class ContainerSearchFeature extends Feature {
                 || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
+        ScreenExtension screen = (ScreenExtension) abstractContainerScreen;
+        if (screen.getFocusedTextInput() != lastSearchWidget) return;
+
         autoSearching = true;
-        matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
+        matchItems(lastSearchQuery, chestMenu);
 
         tryAutoSearch(abstractContainerScreen);
+    }
+
+    @SubscribeEvent
+    public void onInventoryMouseClick(InventoryMouseClickedEvent event) {
+        if (lastItemSearchHelperWidget == null) return;
+
+        if (lastItemSearchHelperWidget.mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
+            event.setCanceled(true);
+            return;
+        }
     }
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
@@ -198,16 +240,23 @@ public class ContainerSearchFeature extends Feature {
             return SearchableContainerType.MEMBER_LIST;
         }
 
+        if (containerType == SearchableContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
+            return SearchableContainerType.SCRAP_MENU;
+        }
+
         return null;
     }
 
-    private void addSearchWidget(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
-        SearchWidget searchWidget = new SearchWidget(
-                renderX + screen.imageWidth - 100,
+    private void addWidgets(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
+        ItemSearchWidget searchWidget = new ItemSearchWidget(
+                renderX + screen.imageWidth - 175,
                 renderY - 20,
-                100,
+                175,
                 20,
-                s -> matchItems(s, screen.getMenu()),
+                query -> {
+                    lastSearchQuery = query;
+                    matchItems(lastSearchQuery, screen.getMenu());
+                },
                 (ScreenExtension) screen);
 
         if (lastSearchWidget != null) {
@@ -217,29 +266,33 @@ public class ContainerSearchFeature extends Feature {
         lastSearchWidget = searchWidget;
 
         screen.addRenderableWidget(lastSearchWidget);
+
+        lastItemSearchHelperWidget = new ItemSearchHelperWidget(
+                renderX + screen.imageWidth - 11,
+                renderY - 14,
+                Texture.INFO.width() / 3,
+                Texture.INFO.height() / 3,
+                Texture.INFO,
+                a -> {},
+                true);
+
+        screen.addRenderableWidget(lastItemSearchHelperWidget);
     }
 
-    private void matchItems(String searchStr, ChestMenu chestMenu) {
-        String search = searchStr.toLowerCase(Locale.ROOT);
+    private void matchItems(ItemSearchQuery searchQuery, ChestMenu chestMenu) {
+        if (searchQuery == null) return;
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
-            if ((currentSearchableContainerType == SearchableContainerType.GUILD_BANK
-                            || currentSearchableContainerType == SearchableContainerType.MEMBER_LIST)
-                    ? i % 9 < 2
-                    : i % 9 > 6) {
-                continue;
-            }
+            if (!currentSearchableContainerType.getBounds().getSlots().contains(i)) continue;
+
             ItemStack itemStack = container.getItem(i);
 
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
 
-            String name = StyledText.fromComponent(itemStack.getHoverName())
-                    .getStringWithoutFormatting()
-                    .toLowerCase(Locale.ROOT);
+            boolean filtered = !searchQuery.isEmpty() && Services.ItemFilter.matches(searchQuery, itemStack);
 
-            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;
@@ -252,7 +305,7 @@ public class ContainerSearchFeature extends Feature {
         if (lastSearchWidget != null
                 && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
                 && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
-            matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
+            matchItems(lastSearchQuery, chestMenu);
         }
     }
 }

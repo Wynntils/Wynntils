@@ -1,14 +1,15 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ClassSelectionAddButton extends WynntilsButton {
 
     public ClassSelectionAddButton(
             int x, int y, int width, int height, CharacterSelectorScreen characterSelectorScreen) {
-        super(x, y, width, height, Component.literal("Class Selection Delete Button"));
+        super(x, y, width, height, Component.literal("Class Selection Add Button"));
         this.characterSelectorScreen = characterSelectorScreen;
     }
 
@@ -48,28 +49,27 @@ public class ClassSelectionAddButton extends WynntilsButton {
 
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.ADD_BUTTON.resource(),
+                Texture.ADD_ICON_OFFSET.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
                 0,
-                characterSelectorScreen.getFirstNewCharacterSlot() == -1 ? Texture.ADD_BUTTON.height() / 2 : 0,
-                Texture.ADD_BUTTON.width(),
-                Texture.ADD_BUTTON.height() / 2,
-                Texture.ADD_BUTTON.width(),
-                Texture.ADD_BUTTON.height());
+                characterSelectorScreen.getFirstNewCharacterSlot() == -1 ? Texture.ADD_ICON_OFFSET.height() / 2 : 0,
+                Texture.ADD_ICON_OFFSET.width(),
+                Texture.ADD_ICON_OFFSET.height() / 2,
+                Texture.ADD_ICON_OFFSET.width(),
+                Texture.ADD_ICON_OFFSET.height());
 
         if (isHovered) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    characterSelectorScreen.getFirstNewCharacterSlot() == -1 ? TOOLTIP_CANNOT_ADD : TOOLTIP_CAN_ADD,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            McUtils.mc()
+                    .screen
+                    .setTooltipForNextRenderPass(Lists.transform(
+                            characterSelectorScreen.getFirstNewCharacterSlot() == -1
+                                    ? TOOLTIP_CANNOT_ADD
+                                    : TOOLTIP_CAN_ADD,
+                            Component::getVisualOrderText));
         }
     }
 }

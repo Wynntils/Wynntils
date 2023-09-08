@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
@@ -39,9 +39,9 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
 
         Texture sortTexture =
                 switch (sortableActivityScreen.getActivitySortOrder()) {
-                    case LEVEL -> Texture.SORT_LEVEL;
-                    case DISTANCE -> Texture.SORT_DISTANCE;
-                    case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;
+                    case LEVEL -> Texture.SORT_LEVEL_OFFSET;
+                    case DISTANCE -> Texture.SORT_DISTANCE_OFFSET;
+                    case ALPHABETIC -> Texture.SORT_ALPHABETICALLY_OFFSET;
                 };
 
         float renderX = this.getX();

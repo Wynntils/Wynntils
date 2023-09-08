@@ -1,12 +1,11 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
 
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.resources.language.I18n;
 
 public abstract class DynamicOverlay extends Overlay {
     private final int id;
@@ -48,14 +47,12 @@ public abstract class DynamicOverlay extends Overlay {
 
     @Override
     public String getTranslatedName() {
-        return I18n.get(
-                "feature.wynntils." + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase() + ".name",
-                id);
+        return getTranslation("name", id);
     }
 
     @Override
-    public String getConfigJsonName() {
-        return super.getConfigJsonName() + id;
+    public String getJsonName() {
+        return super.getJsonName() + id;
     }
 
     @Override

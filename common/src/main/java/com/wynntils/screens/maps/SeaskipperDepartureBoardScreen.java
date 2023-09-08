@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
@@ -156,6 +156,8 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 Texture.DESTINATION_LIST.height());
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderDestinations(

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector;
 
@@ -70,14 +70,14 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw notebook background
         poseStack.translate(
-                (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f,
-                (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f,
+                (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f,
+                (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f,
                 0);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.CHANGELOG_BACKGROUND, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, 0, 0);
 
         // Draw logo
-        int centerX = Texture.CHANGELOG_BACKGROUND.width() / 2 + 15;
+        int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
         String logoString = Services.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
         FontRenderer.getInstance()
                 .renderText(
@@ -132,11 +132,11 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
-        ResourceLocation resource = Texture.RELOAD_BUTTON.resource();
+        ResourceLocation resource = Texture.RELOAD_ICON_OFFSET.resource();
 
-        int fullWidth = Texture.RELOAD_BUTTON.width();
+        int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
         int width = fullWidth / 2;
-        int height = Texture.RELOAD_BUTTON.height();
+        int height = Texture.RELOAD_ICON_OFFSET.height();
         int uOffset = state ? width : 0;
 
         RenderUtils.drawTexturedRect(
