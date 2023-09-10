@@ -11,8 +11,13 @@ public record LeaderboardBadge(int uOffset, int vOffset) {
     public static final int HEIGHT = 17;
 
     public static LeaderboardBadge from(String profession, int standing) {
-        ProfessionType type = ProfessionType.valueOf(profession);
-        int uOffset = type.ordinal() * LeaderboardBadge.WIDTH;
+        int uOffset;
+        if (profession.equals("OVERALL")) {
+            uOffset = 12 * LeaderboardBadge.WIDTH;
+        } else {
+            ProfessionType type = ProfessionType.valueOf(profession);
+            uOffset = type.ordinal() * LeaderboardBadge.WIDTH;
+        }
 
         int color = 2; // just in case Athena gives a number not between 1 and 9
 
