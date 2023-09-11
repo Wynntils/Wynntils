@@ -26,7 +26,7 @@ public class LeaderboardService extends Service {
     public LeaderboardService() {
         super(List.of());
 
-        updateLeaderboard();
+        reloadData();
     }
 
     @SubscribeEvent
