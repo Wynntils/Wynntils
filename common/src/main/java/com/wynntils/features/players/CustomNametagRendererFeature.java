@@ -220,7 +220,9 @@ public class CustomNametagRendererFeature extends Feature {
         float totalWidth = LeaderboardBadge.WIDTH * badges.size() + BADGE_MARGIN * (badges.size() - 1);
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
         float yOffset = 15F;
-        if (height == 0) yOffset += 10F;
+        if (height == 0) {
+                yOffset += 10F;
+        }
 
         for (LeaderboardBadge badge : badges) {
             RenderUtils.renderProfessionBadge(
