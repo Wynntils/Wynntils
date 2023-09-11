@@ -183,6 +183,10 @@ public enum Texture {
     UNIVERSAL_BAR("overlays/bars/universal_bar.png", 81, 16),
     // endregion
 
+    // region Players
+    LEADERBOARD_BADGES("players/leaderboard_badges.png", 256, 256),
+    // endregion
+
     // region Seaskipper
     BOAT_BUTTON("seaskipper/boat_button.png", 39, 76),
     DESTINATION_BUTTON("seaskipper/destination_button.png", 66, 40),
@@ -199,11 +203,7 @@ public enum Texture {
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
-    VIGNETTE("ui_components/vignette.png", 512, 512),
-    // endregion
-
-    // region World
-    LEADERBOARD_BADGES("world/leaderboard_badges.png", 256, 256);
+    VIGNETTE("ui_components/vignette.png", 512, 512);
     // endregion
 
     private final ResourceLocation resource;
