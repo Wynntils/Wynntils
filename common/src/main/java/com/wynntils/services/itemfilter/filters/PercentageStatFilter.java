@@ -34,10 +34,10 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
     }
 
     public static class PercentageStatFilterFactory extends StatFilterFactory<PercentageStatFilter> {
-        private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("([\\d\\.]+)%");
-        private static final Pattern RANGE_PATTERN = Pattern.compile("([\\d\\.]+)-([\\d\\.]+)%");
-        private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">=?([\\d\\.]+)%");
-        private static final Pattern LESS_THAN_PATTERN = Pattern.compile("<=?([\\d\\.]+)%");
+        private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("([-+]?[\\d\\.]+)%");
+        private static final Pattern RANGE_PATTERN = Pattern.compile("([-+]?[\\d\\.]+)-([-+]?[\\d\\.]+)%");
+        private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">=?([-+]?[\\d\\.]+)%");
+        private static final Pattern LESS_THAN_PATTERN = Pattern.compile("<=?([-+]?[\\d\\.]+)%");
 
         @Override
         public Optional<PercentageStatFilter> create(String inputString) {
