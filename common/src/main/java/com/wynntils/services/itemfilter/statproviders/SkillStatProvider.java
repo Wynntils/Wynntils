@@ -7,11 +7,11 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.services.itemfilter.type.IntegerStatProvider;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 
-public class SkillStatProvider extends IntegerStatProvider {
+public class SkillStatProvider extends ItemStatProvider<Integer> {
     private final Skill skill;
 
     public SkillStatProvider(Skill skill) {
