@@ -71,6 +71,11 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     @Override
     public void onPress() {}
 
+    @Override
+    public List<Component> getTooltipLines() {
+        return tooltip;
+    }
+
     public void setTooltip(List<Component> newTooltip) {
         tooltip = newTooltip;
     }

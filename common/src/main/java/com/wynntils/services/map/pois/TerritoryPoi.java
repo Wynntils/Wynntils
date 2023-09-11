@@ -7,6 +7,7 @@ package com.wynntils.services.map.pois;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -88,13 +89,16 @@ public class TerritoryPoi implements Poi {
                 && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
             color = territoryInfo.getResourceColor();
-        } else if (!isTerritoryInfoUsable() || territoryInfo.getGuildName().equals(territoryProfile.getGuild())) {
+        } else if (isTerritoryInfoUsable()) {
             // We know the guild name with it's color
-            color = territoryProfile.getGuildColor();
+            // Get the guild profile from the model, most likely it's already cached
+            color = Models.Guild.getGuildProfile(territoryInfo.getGuildName())
+                    .map(GuildProfile::color)
+                    .orElse(CustomColor.colorForStringHash(territoryInfo.getGuildName()));
         } else {
-            // We don't know the holding guild's color
-            // FIXME: Will be fixed when Athena API is added
-            color = CommonColors.WHITE;
+            color = Models.Guild.getGuildProfile(territoryProfile.getGuild())
+                    .map(GuildProfile::color)
+                    .orElse(CustomColor.colorForStringHash(territoryProfile.getGuild()));
         }
 
         BufferedRenderUtils.drawRect(

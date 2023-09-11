@@ -273,6 +273,8 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderCoordinates(poseStack, mouseX, mouseY);
 
         renderMapButtons(poseStack, mouseX, mouseY, partialTick);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {

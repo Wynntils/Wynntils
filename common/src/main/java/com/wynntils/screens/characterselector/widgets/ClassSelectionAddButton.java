@@ -4,11 +4,12 @@
  */
 package com.wynntils.screens.characterselector.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -59,14 +60,13 @@ public class ClassSelectionAddButton extends WynntilsButton {
                 Texture.ADD_ICON_OFFSET.height());
 
         if (isHovered) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    characterSelectorScreen.getFirstNewCharacterSlot() == -1 ? TOOLTIP_CANNOT_ADD : TOOLTIP_CAN_ADD,
-                    FontRenderer.getInstance().getFont(),
-                    true);
+            McUtils.mc()
+                    .screen
+                    .setTooltipForNextRenderPass(Lists.transform(
+                            characterSelectorScreen.getFirstNewCharacterSlot() == -1
+                                    ? TOOLTIP_CANNOT_ADD
+                                    : TOOLTIP_CAN_ADD,
+                            Component::getVisualOrderText));
         }
     }
 }
