@@ -214,15 +214,15 @@ public class CustomNametagRendererFeature extends Feature {
     private void drawBadges(PlayerNametagRenderEvent event, float height) {
         if (!showProfessionBadges.get()) return;
 
-        List<LeaderboardBadge> list =
+        List<LeaderboardBadge> badges =
                 Services.Leaderboard.getBadges(event.getEntity().getUUID());
 
-        float totalWidth = LeaderboardBadge.WIDTH * list.size() + BADGE_MARGIN * (list.size() - 1);
+        float totalWidth = LeaderboardBadge.WIDTH * badges.size() + BADGE_MARGIN * (badges.size() - 1);
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
         float yOffset = 15F;
         if (height == 0) yOffset += 10F;
 
-        for (LeaderboardBadge badge : list) {
+        for (LeaderboardBadge badge : badges) {
             RenderUtils.renderProfessionBadge(
                     event.getPoseStack(),
                     event.getEntityRenderDispatcher(),
