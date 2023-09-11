@@ -1,9 +1,21 @@
+## [0.0.3-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.371...v0.0.3-alpha.372) (2023-09-11)
+
+
+### New Features
+
+* reintroduce profession badges from legacy ([#2093](https://github.com/Wynntils/Artemis/issues/2093)) ([d606dc6](https://github.com/Wynntils/Artemis/commit/d606dc6ee93162ada59aa4c4fdc64e357909c4fa))
+
 ## [0.0.3-alpha.371](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.370...v0.0.3-alpha.371) (2023-09-11)
 
 
 ### Bug Fixes
 
 * Fix descriptions of text-based settings not displaying ([#2092](https://github.com/Wynntils/Artemis/issues/2092)) ([1d05492](https://github.com/Wynntils/Artemis/commit/1d0549280257e57a4f903ebc223a7a75f0d39a68))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.371 [skip ci] ([d873cf0](https://github.com/Wynntils/Artemis/commit/d873cf00bad5241862bb6e5bbfd8a88dae336070))
 
 ## [0.0.3-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.369...v0.0.3-alpha.370) (2023-09-07)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.368 [skip ci] ([8fb6974](https://github.com/Wynntils/Artemis/commit/8fb6974b7a62af506a4af1533d56b3309e647269))
-
-## [0.0.3-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.366...v0.0.3-alpha.367) (2023-09-04)
-
-
-### New Features
-
-* Scrolling in guild member list ([#2076](https://github.com/Wynntils/Artemis/issues/2076)) ([d1c418c](https://github.com/Wynntils/Artemis/commit/d1c418c7c48853a811d5322051ff2868dd3ceace))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.367 [skip ci] ([64f0d4f](https://github.com/Wynntils/Artemis/commit/64f0d4ffc92a9d931136013ac80488353d90e723))
 
