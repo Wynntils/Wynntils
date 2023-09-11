@@ -1954,6 +1954,7 @@
   "service.wynntils.itemFilter.filter.string.name": "String",
   "service.wynntils.itemFilter.filter.string.usage": "\"profession: wood\" would match both woodcutting and woodworking. Using \"\" enables strict matching.",
   "service.wynntils.itemFilter.invalidFilter": "%s: invalid filter for type: %s",
+  "service.wynntils.itemFilter.sortingNotSupported": "Sorting is not supported for this container",
   "service.wynntils.itemFilter.stat.actual.description": "%s stat of the item",
   "service.wynntils.itemFilter.stat.countedItem.description": "Count of an item (e.g. health potion), this is not the same as the amount of items in a stack.",
   "service.wynntils.itemFilter.stat.durability.description": "Durability of the item",

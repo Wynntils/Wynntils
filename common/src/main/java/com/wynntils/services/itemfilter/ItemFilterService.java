@@ -43,14 +43,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterService extends Service {
     private static final String SORT_KEY = "sort";
     private static final String SORT_REVERSE_KEY = "^";
+    private static final String SORT_LIST_SEPARATOR = ",";
 
     private final List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
     private final List<Pair<Class<?>, StatFilterFactory<? extends StatFilter<?>>>> statFilters = new ArrayList<>();
@@ -70,12 +71,11 @@ public class ItemFilterService extends Service {
         return statFilters.stream().map(Pair::value).toList();
     }
 
-    public ItemSearchQuery createSearchQuery(String queryString) {
+    public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
         List<StatProviderAndFilterPair<?>> filters = new ArrayList<>();
         List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
 
-        List<Integer> ignoredCharIndices = new ArrayList<>();
-        List<Integer> validFilterCharIndices = new ArrayList<>();
+        List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges = new ArrayList<>();
 
         List<String> errors = new ArrayList<>();
 
@@ -99,22 +99,54 @@ public class ItemFilterService extends Service {
 
                 // Handle the special case of the sort key
                 if (keyString.equalsIgnoreCase(SORT_KEY)) {
+                    if (!supportsSorting) {
+                        colorRanges.add(Pair.of(
+                                ChatFormatting.RED, Pair.of(tokenStartIndex, tokenStartIndex + token.length())));
+                        errors.add(I18n.get("service.wynntils.itemFilter.sortingNotSupported"));
+                        continue;
+                    }
+
                     ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
                             getStatSortOrder(inputString);
 
                     if (statSortListOrError.hasError()) {
-                        ignoredCharIndices.addAll(
-                                IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + token.length())
-                                        .boxed()
-                                        .toList());
+                        colorRanges.add(Pair.of(
+                                ChatFormatting.RED, Pair.of(tokenStartIndex, tokenStartIndex + token.length())));
                         errors.add(statSortListOrError.getError());
                         continue;
                     }
 
-                    validFilterCharIndices.addAll(
-                            IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + keyString.length())
-                                    .boxed()
-                                    .toList());
+                    // Highlight the keyword
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.LIGHT_PURPLE,
+                            Pair.of(tokenStartIndex, tokenStartIndex + keyString.length())));
+
+                    // Highlight the value
+                    char[] inputStringCharArray = inputString.toCharArray();
+
+                    // Highlight the reverse key and the list separator
+                    for (int i = 0; i < inputStringCharArray.length; i++) {
+                        char c = inputStringCharArray[i];
+                        String stringValue = String.valueOf(c);
+                        if (stringValue.equals(SORT_REVERSE_KEY)) {
+                            colorRanges.add(Pair.of(
+                                    ChatFormatting.GOLD,
+                                    Pair.of(
+                                            tokenStartIndex + keyString.length() + i + 1,
+                                            tokenStartIndex + keyString.length() + i + 2)));
+                        } else if (stringValue.equals(",")) {
+                            colorRanges.add(Pair.of(
+                                    ChatFormatting.GOLD,
+                                    Pair.of(
+                                            tokenStartIndex + keyString.length() + i + 1,
+                                            tokenStartIndex + keyString.length() + i + 2)));
+                        }
+                    }
+
+                    // The filtered stats are yellow, unless highlighted before
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.YELLOW,
+                            Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
 
                     sortStatProviders.addAll(statSortListOrError.getValue());
 
@@ -125,18 +157,15 @@ public class ItemFilterService extends Service {
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
-                    ignoredCharIndices.addAll(IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + token.length())
-                            .boxed()
-                            .toList());
+                    colorRanges.add(
+                            Pair.of(ChatFormatting.RED, Pair.of(tokenStartIndex, tokenStartIndex + token.length())));
                     errors.add(itemStatProviderOrError.getError());
                     continue;
                 }
 
                 // The filter exists, highlight the keyword...
-                validFilterCharIndices.addAll(
-                        IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + keyString.length())
-                                .boxed()
-                                .toList());
+                colorRanges.add(
+                        Pair.of(ChatFormatting.YELLOW, Pair.of(tokenStartIndex, tokenStartIndex + keyString.length())));
 
                 // Highlight the filter string, even if we don't have an input string yet
                 if (inputString.isEmpty()) continue;
@@ -146,13 +175,17 @@ public class ItemFilterService extends Service {
 
                 // If the inputString is invalid, mark the value as ignored and continue to the next token
                 if (statFilter.hasError()) {
-                    ignoredCharIndices.addAll(IntStream.rangeClosed(
-                                    tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())
-                            .boxed()
-                            .toList());
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.RED,
+                            Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
                     errors.add(statFilter.getError());
                     continue;
                 }
+
+                // Highlight the value
+                colorRanges.add(Pair.of(
+                        ChatFormatting.GOLD,
+                        Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
 
                 StatProviderAndFilterPair<?> statProviderAndFilterPair =
                         StatProviderAndFilterPair.fromPair(itemStatProvider, statFilter.getValue());
@@ -165,14 +198,7 @@ public class ItemFilterService extends Service {
             }
         }
 
-        return new ItemSearchQuery(
-                queryString,
-                filters,
-                sortStatProviders,
-                ignoredCharIndices,
-                validFilterCharIndices,
-                errors,
-                plainTextTokens);
+        return new ItemSearchQuery(queryString, filters, sortStatProviders, colorRanges, errors, plainTextTokens);
     }
 
     /**
@@ -320,7 +346,8 @@ public class ItemFilterService extends Service {
     }
 
     private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
-        List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(","))
+        List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(
+                        inputString.split(SORT_LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .map(s -> {
