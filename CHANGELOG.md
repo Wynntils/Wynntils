@@ -1,9 +1,21 @@
+## [0.0.3-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.372...v0.0.3-alpha.373) (2023-09-11)
+
+
+### Bug Fixes
+
+* fix filters not accepting negative numbers ([#2097](https://github.com/Wynntils/Artemis/issues/2097)) ([812f6e2](https://github.com/Wynntils/Artemis/commit/812f6e2c0759916acc5fc698ae78af4f172bdddd))
+
 ## [0.0.3-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.371...v0.0.3-alpha.372) (2023-09-11)
 
 
 ### New Features
 
 * reintroduce profession badges from legacy ([#2093](https://github.com/Wynntils/Artemis/issues/2093)) ([d606dc6](https://github.com/Wynntils/Artemis/commit/d606dc6ee93162ada59aa4c4fdc64e357909c4fa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.372 [skip ci] ([2512583](https://github.com/Wynntils/Artemis/commit/25125831f4dd8cb8c2c693b9a8d362f906b6aa2a))
 
 ## [0.0.3-alpha.371](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.370...v0.0.3-alpha.371) (2023-09-11)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.369 [skip ci] ([15176ff](https://github.com/Wynntils/Artemis/commit/15176ffd03ab40d2918575328450e67439c8bd95))
-
-## [0.0.3-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.367...v0.0.3-alpha.368) (2023-09-05)
-
-
-### New Features
-
-* add stat filters ([#2086](https://github.com/Wynntils/Artemis/issues/2086)) ([73d2100](https://github.com/Wynntils/Artemis/commit/73d21001fc62f4672206bf35740ba7c61b4f7732))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.368 [skip ci] ([8fb6974](https://github.com/Wynntils/Artemis/commit/8fb6974b7a62af506a4af1533d56b3309e647269))
 
