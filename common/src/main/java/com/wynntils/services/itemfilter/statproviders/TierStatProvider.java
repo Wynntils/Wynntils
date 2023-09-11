@@ -6,10 +6,10 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
-import com.wynntils.services.itemfilter.type.IntegerStatProvider;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
-public class TierStatProvider extends IntegerStatProvider {
+public class TierStatProvider extends ItemStatProvider<Integer> {
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof NumberedTierItemProperty numberedTierItemProperty)) return List.of();

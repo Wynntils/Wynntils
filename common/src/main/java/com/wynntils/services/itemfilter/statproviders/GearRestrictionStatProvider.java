@@ -6,10 +6,10 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.services.itemfilter.type.StringStatProvider;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
-public class GearRestrictionStatProvider extends StringStatProvider {
+public class GearRestrictionStatProvider extends ItemStatProvider<String> {
     @Override
     public List<String> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
