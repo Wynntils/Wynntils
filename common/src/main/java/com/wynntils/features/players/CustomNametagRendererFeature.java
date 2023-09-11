@@ -221,7 +221,7 @@ public class CustomNametagRendererFeature extends Feature {
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
         float yOffset = 15F;
         if (height == 0) {
-                yOffset += 10F;
+            yOffset += 10F;
         }
 
         for (LeaderboardBadge badge : badges) {
