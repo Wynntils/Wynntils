@@ -183,6 +183,10 @@ public enum Texture {
     UNIVERSAL_BAR("overlays/bars/universal_bar.png", 81, 16),
     // endregion
 
+    // region Players
+    LEADERBOARD_BADGES("players/leaderboard_badges.png", 256, 256),
+    // endregion
+
     // region Seaskipper
     BOAT_BUTTON("seaskipper/boat_button.png", 39, 76),
     DESTINATION_BUTTON("seaskipper/destination_button.png", 66, 40),

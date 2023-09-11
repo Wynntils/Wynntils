@@ -5,6 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -19,8 +20,10 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ItemUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
+    private static final float BADGE_MARGIN = 2;
     private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
     @Persisted
@@ -49,6 +53,9 @@ public class CustomNametagRendererFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> hideNametagBackground = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> showProfessionBadges = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showGearOnHover = new Config<>(true);
@@ -88,6 +95,8 @@ public class CustomNametagRendererFeature extends Feature {
         if (!nametags.isEmpty()) {
             event.setCanceled(true);
             drawNametags(event, nametags);
+        } else {
+            drawBadges(event, 0);
         }
     }
 
@@ -197,6 +206,43 @@ public class CustomNametagRendererFeature extends Feature {
                     event.getFont(),
                     nametag.nametagScale(),
                     yOffset);
+        }
+
+        drawBadges(event, yOffset);
+    }
+
+    private void drawBadges(PlayerNametagRenderEvent event, float height) {
+        if (!showProfessionBadges.get()) return;
+
+        List<LeaderboardBadge> badges =
+                Services.Leaderboard.getBadges(event.getEntity().getUUID());
+
+        float totalWidth = LeaderboardBadge.WIDTH * badges.size() + BADGE_MARGIN * (badges.size() - 1);
+        float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
+        float yOffset = 15F;
+        if (height == 0) {
+            yOffset += 10F;
+        }
+
+        for (LeaderboardBadge badge : badges) {
+            RenderUtils.renderProfessionBadge(
+                    event.getPoseStack(),
+                    event.getEntityRenderDispatcher(),
+                    event.getEntity(),
+                    Texture.LEADERBOARD_BADGES.resource(),
+                    LeaderboardBadge.WIDTH,
+                    LeaderboardBadge.HEIGHT,
+                    badge.uOffset(),
+                    badge.vOffset(),
+                    LeaderboardBadge.WIDTH,
+                    LeaderboardBadge.HEIGHT,
+                    Texture.LEADERBOARD_BADGES.width(),
+                    Texture.LEADERBOARD_BADGES.height(),
+                    height,
+                    xOffset,
+                    yOffset);
+
+            xOffset += LeaderboardBadge.WIDTH + BADGE_MARGIN;
         }
     }
 
