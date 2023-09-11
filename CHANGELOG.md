@@ -1,3 +1,10 @@
+## [0.0.3-alpha.371](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.370...v0.0.3-alpha.371) (2023-09-11)
+
+
+### Bug Fixes
+
+* Fix descriptions of text-based settings not displaying ([#2092](https://github.com/Wynntils/Artemis/issues/2092)) ([1d05492](https://github.com/Wynntils/Artemis/commit/1d0549280257e57a4f903ebc223a7a75f0d39a68))
+
 ## [0.0.3-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.369...v0.0.3-alpha.370) (2023-09-07)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2089](https://github.com/Wynntils/Artemis/issues/2089)) ([02cc788](https://github.com/Wynntils/Artemis/commit/02cc7880618bd23590c99f30ce91fa298c87316a))
+* **release:** v0.0.3-alpha.370 [skip ci] ([c106a09](https://github.com/Wynntils/Artemis/commit/c106a0959c2335c3e85e181c3a57eab3406159dd))
 
 ## [0.0.3-alpha.369](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.368...v0.0.3-alpha.369) (2023-09-05)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.367 [skip ci] ([64f0d4f](https://github.com/Wynntils/Artemis/commit/64f0d4ffc92a9d931136013ac80488353d90e723))
-
-## [0.0.3-alpha.366](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.365...v0.0.3-alpha.366) (2023-09-03)
-
-
-### Bug Fixes
-
-* Sync player ranks and related features to 2.0.3 ([#2078](https://github.com/Wynntils/Artemis/issues/2078)) ([348a21c](https://github.com/Wynntils/Artemis/commit/348a21c3e7aa176a72e3033fe057f017a4995451))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.366 [skip ci] ([5237871](https://github.com/Wynntils/Artemis/commit/5237871e9902ca648c1306f8ba5895bbad6b8a72))
 
