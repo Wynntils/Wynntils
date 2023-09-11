@@ -12,7 +12,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -24,9 +23,8 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
 
     private int page = 0;
 
-    public ItemSearchHelperWidget(
-            int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, boolean scaleTexture) {
-        super(x, y, width, height, texture, onClick, List.of(), scaleTexture);
+    public ItemSearchHelperWidget(int x, int y, int width, int height, Texture texture, boolean scaleTexture) {
+        super(x, y, width, height, texture, (b) -> {}, List.of(), scaleTexture);
 
         generateTooltipPages();
     }

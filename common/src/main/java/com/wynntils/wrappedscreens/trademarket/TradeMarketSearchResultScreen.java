@@ -22,6 +22,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -90,7 +91,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 (int) (Texture.INFO.width() / 2f),
                 (int) (Texture.INFO.height() / 2f),
                 Texture.INFO,
-                a -> {},
                 true);
         this.addRenderableWidget(helperButton);
 
@@ -101,7 +101,8 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 Texture.ARROW_LEFT_ICON.height(),
                 Texture.ARROW_LEFT_ICON,
                 (button) -> parent.goBackToSearch(),
-                List.of(Component.translatable("screens.wynntils.tradeMarketSearchResult.backToSearch")));
+                List.of(Component.translatable("screens.wynntils.tradeMarketSearchResult.backToSearch")
+                        .withStyle(ChatFormatting.BOLD)));
         this.addRenderableWidget(backButton);
 
         WynntilsButton loadMoreButton = new BasicTexturedButton(
@@ -112,7 +113,8 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 Texture.SMALL_ADD_ICON,
                 (button) -> parent.loadNextPageBatch(),
                 List.of(Component.translatable(
-                        "screens.wynntils.tradeMarketSearchResult.loadNextBatch", parent.getPageLoadBatchSize())));
+                                "screens.wynntils.tradeMarketSearchResult.loadNextBatch", parent.getPageLoadBatchSize())
+                        .withStyle(ChatFormatting.BOLD)));
         this.addRenderableWidget(loadMoreButton);
     }
 
@@ -205,6 +207,15 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         if (hoveredSlot != null) {
             parent.clickOnItem(hoveredSlot.getItem());
             return true;
+        }
+
+        // Item helper widget needs special handling because it is overlaid on the search box
+        for (GuiEventListener child : children()) {
+            if (child instanceof ItemSearchHelperWidget) {
+                if (child.mouseClicked(mouseX, mouseY, button)) {
+                    return true;
+                }
+            }
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
