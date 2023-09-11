@@ -29,7 +29,6 @@ public class LeaderboardService extends Service {
         updateLeaderboard();
     }
 
-    // Somewhat arbitrary
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.HUB && event.getNewState() != WorldState.CONNECTING) return;
@@ -37,10 +36,13 @@ public class LeaderboardService extends Service {
         updateLeaderboard();
     }
 
+    @Override
+    public void reloadData() {
+        updateLeaderboard();
+    }
+
     public List<LeaderboardBadge> getBadges(UUID id) {
-        List<LeaderboardBadge> list = leaderboard.get(id);
-        if (list == null) return List.of();
-        return list;
+        return leaderboard.getOrDefault(id, List.of());
     }
 
     private void updateLeaderboard() {
