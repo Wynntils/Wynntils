@@ -1,9 +1,21 @@
+## [0.0.3-alpha.374](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.373...v0.0.3-alpha.374) (2023-09-12)
+
+
+### New Features
+
+* Add sorting to filters ([#2090](https://github.com/Wynntils/Artemis/issues/2090)) ([6bf6376](https://github.com/Wynntils/Artemis/commit/6bf6376890079b033c47f92659210e086f97fb24))
+
 ## [0.0.3-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.372...v0.0.3-alpha.373) (2023-09-11)
 
 
 ### Bug Fixes
 
 * fix filters not accepting negative numbers ([#2097](https://github.com/Wynntils/Artemis/issues/2097)) ([812f6e2](https://github.com/Wynntils/Artemis/commit/812f6e2c0759916acc5fc698ae78af4f172bdddd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.373 [skip ci] ([39c322d](https://github.com/Wynntils/Artemis/commit/39c322d64c90c69e0a6f83c23183c36a89f7a142))
 
 ## [0.0.3-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.371...v0.0.3-alpha.372) (2023-09-11)
 
@@ -41,16 +53,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2089](https://github.com/Wynntils/Artemis/issues/2089)) ([02cc788](https://github.com/Wynntils/Artemis/commit/02cc7880618bd23590c99f30ce91fa298c87316a))
 * **release:** v0.0.3-alpha.370 [skip ci] ([c106a09](https://github.com/Wynntils/Artemis/commit/c106a0959c2335c3e85e181c3a57eab3406159dd))
-
-## [0.0.3-alpha.369](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.368...v0.0.3-alpha.369) (2023-09-05)
-
-
-### Bug Fixes
-
-* Assert that we got the correct arguments for network calls ([#2081](https://github.com/Wynntils/Artemis/issues/2081)) ([658cc2e](https://github.com/Wynntils/Artemis/commit/658cc2edfcd0b371edbd69498da2d9f9933b381f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.369 [skip ci] ([15176ff](https://github.com/Wynntils/Artemis/commit/15176ffd03ab40d2918575328450e67439c8bd95))
 
