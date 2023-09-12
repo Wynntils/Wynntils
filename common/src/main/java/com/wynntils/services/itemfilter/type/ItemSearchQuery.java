@@ -4,13 +4,15 @@
  */
 package com.wynntils.services.itemfilter.type;
 
+import com.wynntils.utils.type.Pair;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 
 public record ItemSearchQuery(
         String queryString,
         List<StatProviderAndFilterPair<?>> filters,
-        List<Integer> ignoredCharIndices,
-        List<Integer> validFilterCharIndices,
+        List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders,
+        List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges,
         List<String> errors,
         List<String> plainTextTokens) {
     /**
