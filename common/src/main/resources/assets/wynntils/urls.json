@@ -88,6 +88,10 @@
     "url": "https://athena.wynntils.com/cache/get/guildList"
   },
   {
+    "id": "dataAthenaLeaderboard",
+    "url": "https://athena.wynntils.com/cache/get/leaderboard"
+  },
+  {
     "id": "dataWynncraftTerritoryList",
     "url": "https://api.wynncraft.com/public_api.php?action=territoryList"
   },
