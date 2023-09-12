@@ -8,10 +8,11 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.core.persisted.Translatable;
 import com.wynntils.models.items.WynnItem;
 import java.lang.reflect.ParameterizedType;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
-public abstract class ItemStatProvider<T> implements Translatable {
+public abstract class ItemStatProvider<T extends Comparable<T>> implements Translatable, Comparator<WynnItem> {
     protected final String name;
 
     protected ItemStatProvider() {
@@ -28,7 +29,7 @@ public abstract class ItemStatProvider<T> implements Translatable {
      */
     public abstract List<T> getValue(WynnItem wynnItem);
 
-    public final Class<T> getType() {
+    public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
@@ -56,5 +57,17 @@ public abstract class ItemStatProvider<T> implements Translatable {
 
     public String getDescription() {
         return getTranslation("description");
+    }
+
+    @Override
+    public int compare(WynnItem wynnItem1, WynnItem wynnItem2) {
+        List<T> itemValues1 = this.getValue(wynnItem1);
+        List<T> itemValues2 = this.getValue(wynnItem2);
+
+        if (itemValues1.isEmpty() && !itemValues2.isEmpty()) return 1;
+        if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;
+        if (itemValues1.isEmpty() && itemValues2.isEmpty()) return 0;
+
+        return -itemValues1.get(0).compareTo(itemValues2.get(0));
     }
 }
