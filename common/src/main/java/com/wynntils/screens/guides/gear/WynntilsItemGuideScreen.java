@@ -97,9 +97,7 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
     }
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
-        elements.addAll(getAllGearItems().stream()
-                .filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
-                .toList());
+        elements.addAll(Services.ItemFilter.filterAndSort(searchQuery, getAllGearItems()));
     }
 
     private List<GuideGearItemStack> getAllGearItems() {
