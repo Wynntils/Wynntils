@@ -1,9 +1,21 @@
+## [0.0.3-alpha.375](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.374...v0.0.3-alpha.375) (2023-09-16)
+
+
+### Bug Fixes
+
+* Arrow Shield Model NPE when arrows not spawned ([#2101](https://github.com/Wynntils/Artemis/issues/2101)) ([d2e1767](https://github.com/Wynntils/Artemis/commit/d2e176726d9dbd91308c39a68811d660e2720f84))
+
 ## [0.0.3-alpha.374](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.373...v0.0.3-alpha.374) (2023-09-12)
 
 
 ### New Features
 
 * Add sorting to filters ([#2090](https://github.com/Wynntils/Artemis/issues/2090)) ([6bf6376](https://github.com/Wynntils/Artemis/commit/6bf6376890079b033c47f92659210e086f97fb24))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.374 [skip ci] ([98407ae](https://github.com/Wynntils/Artemis/commit/98407aeac84591726729f6fe51cdb80b99b46f8a))
 
 ## [0.0.3-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.372...v0.0.3-alpha.373) (2023-09-11)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.371 [skip ci] ([d873cf0](https://github.com/Wynntils/Artemis/commit/d873cf00bad5241862bb6e5bbfd8a88dae336070))
-
-## [0.0.3-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.369...v0.0.3-alpha.370) (2023-09-07)
-
-
-### New Features
-
-* make stat filters work on ingredients ([#2088](https://github.com/Wynntils/Artemis/issues/2088)) ([8ec6c74](https://github.com/Wynntils/Artemis/commit/8ec6c74289fd74b14f9c9ab32d6718b1d6eac21c))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2089](https://github.com/Wynntils/Artemis/issues/2089)) ([02cc788](https://github.com/Wynntils/Artemis/commit/02cc7880618bd23590c99f30ce91fa298c87316a))
-* **release:** v0.0.3-alpha.370 [skip ci] ([c106a09](https://github.com/Wynntils/Artemis/commit/c106a0959c2335c3e85e181c3a57eab3406159dd))
 
