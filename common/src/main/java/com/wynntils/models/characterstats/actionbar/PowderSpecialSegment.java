@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PowderSpecialSegment implements ActionBarSegment {
+    // https://regexr.com/7k9a5
     private static final Pattern POWDER_SPECIAL_PATTERN = Pattern.compile("§0 *§.([✤✦❉✹❋]) (\\d+)% *");
 
     private float powderSpecialCharge = 0;

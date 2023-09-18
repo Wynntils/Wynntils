@@ -11,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ManaSegment implements ActionBarSegment {
-    private static final Pattern MANA_PATTERN = Pattern.compile("§b✺ ([0-9]+)/([0-9]+)");
+    // https://regexr.com/7k9ab
+    private static final Pattern MANA_PATTERN = Pattern.compile("(?:§.  §.|§b {0,2})✺ (\\d+)/(\\d+)");
 
     private CappedValue mana = CappedValue.EMPTY;
     private boolean hidden;
