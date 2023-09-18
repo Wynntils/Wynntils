@@ -4,7 +4,6 @@
  */
 package com.wynntils.handlers.actionbar;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -16,12 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    //StyledText{'§c❤ 14930/14930§0      §7❉ 48%      §b✺ 175/175'}
-    //StyledText{'§c❤ 14930/14930§0      §b❉ 100%      ✺ 175/175'}
+    // StyledText{'§c❤ 14930/14930§0      §7❉ 48%      §b✺ 175/175'}
+    // StyledText{'§c❤ 14930/14930§0      §b❉ 100%      ✺ 175/175'}
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
 
     private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
@@ -58,8 +56,7 @@ public final class ActionBarHandler extends Handler {
 
         // Create map of position -> matching part of the content
         Map<ActionBarPosition, StyledText> positionMatches = new HashMap<>();
-        Arrays.stream(ActionBarPosition.values())
-                .forEach(pos -> positionMatches.put(pos, segments[pos.ordinal()]));
+        Arrays.stream(ActionBarPosition.values()).forEach(pos -> positionMatches.put(pos, segments[pos.ordinal()]));
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
