@@ -1,9 +1,21 @@
+## [0.0.3-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.377...v0.0.3-alpha.378) (2023-09-19)
+
+
+### New Features
+
+* Add skill, overall and health stat providers ([#2098](https://github.com/Wynntils/Artemis/issues/2098)) ([b253e8a](https://github.com/Wynntils/Artemis/commit/b253e8ad671984790dd1ebeb7366f791ffbeaeb6))
+
 ## [0.0.3-alpha.377](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.376...v0.0.3-alpha.377) (2023-09-19)
 
 
 ### Bug Fixes
 
 * Chat message filters for 2.0.3 ([#2105](https://github.com/Wynntils/Artemis/issues/2105)) ([4b42ea2](https://github.com/Wynntils/Artemis/commit/4b42ea2073f069450cdfedd9f8288599d91e4235))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.377 [skip ci] ([95f9ad0](https://github.com/Wynntils/Artemis/commit/95f9ad073eebc34c2de4fdd3716308a8e05de1c5))
 
 ## [0.0.3-alpha.376](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.375...v0.0.3-alpha.376) (2023-09-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.374 [skip ci] ([98407ae](https://github.com/Wynntils/Artemis/commit/98407aeac84591726729f6fe51cdb80b99b46f8a))
-
-## [0.0.3-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.372...v0.0.3-alpha.373) (2023-09-11)
-
-
-### Bug Fixes
-
-* fix filters not accepting negative numbers ([#2097](https://github.com/Wynntils/Artemis/issues/2097)) ([812f6e2](https://github.com/Wynntils/Artemis/commit/812f6e2c0759916acc5fc698ae78af4f172bdddd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.373 [skip ci] ([39c322d](https://github.com/Wynntils/Artemis/commit/39c322d64c90c69e0a6f83c23183c36a89f7a142))
 
