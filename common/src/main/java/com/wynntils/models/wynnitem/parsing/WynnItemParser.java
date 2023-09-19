@@ -33,6 +33,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
+    public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)$");
+
     // Test suite: https://regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
             "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|/[35]s)?(?:§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
@@ -64,6 +66,7 @@ public final class WynnItemParser {
         List<StatActualValue> identifications = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
+        int health = 0;
         int level = 0;
         int tierCount = 0;
         int durabilityMax = 0;
@@ -121,6 +124,12 @@ public final class WynnItemParser {
                 // If we have a crafted gear, we also have a durability max
                 String durabilityMaxString = tierMatcher.group(4);
                 durabilityMax = durabilityMaxString != null ? Integer.parseInt(durabilityMaxString) : 0;
+                continue;
+            }
+
+            Matcher healthMatcher = normalizedCoded.getMatcher(HEALTH_PATTERN);
+            if (healthMatcher.matches()) {
+                health = Integer.parseInt(healthMatcher.group(1));
                 continue;
             }
 
@@ -212,6 +221,7 @@ public final class WynnItemParser {
         return new WynnItemParseResult(
                 tier,
                 itemType,
+                health,
                 level,
                 identifications,
                 effects,
@@ -268,7 +278,7 @@ public final class WynnItemParser {
 
         // Shiny stats are not available from internal roll lore (on other players)
         return new WynnItemParseResult(
-                gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
+                gearInfo.tier(), "", 0, 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

@@ -67,12 +67,12 @@ public final class GuildMapScreen extends AbstractMapScreen {
         // Buttons have to be added in reverse order (right to left) so they don't overlap
 
         this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
+                        - 8),
+                10,
                 16,
                 Texture.HELP_ICON,
                 (b) -> {},
@@ -86,11 +86,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         this.addRenderableWidget(
                 hybridModeButton = new BasicTexturedButton(
-                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
+                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
                         (int) (this.renderHeight
                                 - this.renderedBorderYOffset
                                 - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                                - 6),
+                                - 8),
                         16,
                         16,
                         Texture.OVERLAY_EXTRA_ICON,
@@ -101,11 +101,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         getHybridModeTooltip()));
 
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
+                        - 8),
                 16,
                 16,
                 Texture.DEFENSE_FILTER_ICON,
@@ -145,9 +145,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
-                16,
+                        - 7),
+                14,
+                14,
                 Texture.ADD_ICON,
                 (b) -> resourceMode = !resourceMode,
                 List.of(
