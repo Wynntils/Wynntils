@@ -91,8 +91,21 @@ public class InventoryEmeraldCountFeature extends Feature {
             int y = containerScreen.topPos;
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
-                case TEXTURE -> renderTexturedCount(
-                        event.getPoseStack(), textureX, y, topEmeralds, showZerosInEmeraldCount.get());
+                case TEXTURE -> {
+                    int sizeY = (int) (Arrays.stream(getEmeraldAmounts(topEmeralds))
+                                            .filter(emeraldAmount -> !Objects.equals(emeraldAmount, "0")
+                                                    || showZerosInEmeraldCount.get())
+                                            .count()
+                                    * TEXTURE_SIZE
+                            + 2);
+                    int bottomY = containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
+                    renderTexturedCount(
+                            event.getPoseStack(),
+                            textureX,
+                            y - Math.max(sizeY - bottomY, 0),
+                            topEmeralds,
+                            showZerosInEmeraldCount.get());
+                }
             }
         }
 
@@ -105,7 +118,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                     case TEXTURE -> renderTexturedCount(
                             event.getPoseStack(),
                             textureX,
-                            y - 28 * 3 - 2,
+                            y - TEXTURE_SIZE * 3 - 2,
                             bottomEmeralds,
                             showZerosInEmeraldCount.get());
                 }
@@ -147,17 +160,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
-        String[] emeraldAmounts = new String[4];
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
-            emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
-            emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
-            emeraldAmounts[3] = StringUtils.formatAmount(emeralds / 262144d);
-        } else {
-            emeraldAmounts = Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
-                    .mapToObj(String::valueOf)
-                    .toArray(String[]::new);
-        }
+        String[] emeraldAmounts = getEmeraldAmounts(emeralds);
 
         int renderedCount = 0;
 
@@ -224,6 +227,21 @@ public class InventoryEmeraldCountFeature extends Feature {
         }
 
         poseStack.popPose();
+    }
+
+    private static String[] getEmeraldAmounts(int emeralds) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            String[] emeraldAmounts = new String[4];
+            emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
+            emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
+            emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
+            emeraldAmounts[3] = StringUtils.formatAmount(emeralds / 262144d);
+            return emeraldAmounts;
+        } else {
+            return Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
+                    .mapToObj(String::valueOf)
+                    .toArray(String[]::new);
+        }
     }
 
     public enum EmeraldCountType {
