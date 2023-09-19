@@ -1,9 +1,21 @@
+## [0.0.3-alpha.377](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.376...v0.0.3-alpha.377) (2023-09-19)
+
+
+### Bug Fixes
+
+* Chat message filters for 2.0.3 ([#2105](https://github.com/Wynntils/Artemis/issues/2105)) ([4b42ea2](https://github.com/Wynntils/Artemis/commit/4b42ea2073f069450cdfedd9f8288599d91e4235))
+
 ## [0.0.3-alpha.376](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.375...v0.0.3-alpha.376) (2023-09-19)
 
 
 ### Bug Fixes
 
 * Map icon bar alignment ([#2106](https://github.com/Wynntils/Artemis/issues/2106)) ([1f4565f](https://github.com/Wynntils/Artemis/commit/1f4565f2a6e26b27bc0f8cfb9a9e4c51f43e44e6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.376 [skip ci] ([2703898](https://github.com/Wynntils/Artemis/commit/2703898fef9c1d19197968b33e369894edfce65e))
 
 ## [0.0.3-alpha.375](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.374...v0.0.3-alpha.375) (2023-09-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.373 [skip ci] ([39c322d](https://github.com/Wynntils/Artemis/commit/39c322d64c90c69e0a6f83c23183c36a89f7a142))
-
-## [0.0.3-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.371...v0.0.3-alpha.372) (2023-09-11)
-
-
-### New Features
-
-* reintroduce profession badges from legacy ([#2093](https://github.com/Wynntils/Artemis/issues/2093)) ([d606dc6](https://github.com/Wynntils/Artemis/commit/d606dc6ee93162ada59aa4c4fdc64e357909c4fa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.372 [skip ci] ([2512583](https://github.com/Wynntils/Artemis/commit/25125831f4dd8cb8c2c693b9a8d362f906b6aa2a))
 
