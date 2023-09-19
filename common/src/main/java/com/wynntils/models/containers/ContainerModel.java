@@ -182,6 +182,13 @@ public final class ContainerModel extends Model {
         return screen instanceof ContainerScreen && lootChestMatcher(screen).matches();
     }
 
+    public boolean isEmeraldPouch(Screen screen) {
+        return screen instanceof ContainerScreen
+                && StyledText.fromComponent(screen.getTitle())
+                        .getStringWithoutFormatting()
+                        .equals("EmeraldÀÀÀÀPouchÀ");
+    }
+
     public boolean isLootChest(String title) {
         return title.startsWith("Loot Chest");
     }
