@@ -255,8 +255,6 @@ public class ItemHandler extends Handler {
     }
 
     private StyledText simplifyName(StyledText name) {
-        String str = name.getString();
-
         final Pattern[] PATTERNS = {
             // Item on the create buy order menu or create sell offer menu
             Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
@@ -267,20 +265,21 @@ public class ItemHandler extends Handler {
         };
 
         for (Pattern p : PATTERNS) {
-            Matcher m = p.matcher(str);
+            Matcher m = p.matcher(name.getString());
 
             if (m.matches()) {
-                str = m.group(1);
-                break;
+                String str = m.group(1);
+
+                // Sometimes the text before the item name is already white, so the server omits this prefix
+                if (!str.startsWith("§")) {
+                    str = "§f" + str;
+                }
+
+                return StyledText.fromString(str);
             }
         }
 
-        // Sometimes the text before the item name is already white, so the server omits this prefix
-        if (!str.startsWith("§") && !str.equals(name.getString())) {
-            str = "§f" + str;
-        }
-
-        return StyledText.fromString(str);
+        return name;
     }
 
     private void annotate(ItemStack itemStack) {
