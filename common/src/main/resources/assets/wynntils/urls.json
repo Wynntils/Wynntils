@@ -88,6 +88,10 @@
     "url": "https://athena.wynntils.com/cache/get/guildList"
   },
   {
+    "id": "dataAthenaLeaderboard",
+    "url": "https://athena.wynntils.com/cache/get/leaderboard"
+  },
+  {
     "id": "dataWynncraftTerritoryList",
     "url": "https://api.wynncraft.com/public_api.php?action=territoryList"
   },
@@ -108,7 +112,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "b2f2f994db124d3d2078fbcaf6178f8b",
+    "md5": "68c6605c2b6f9d41217b8ef4776d0a3a",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json"
   },
   {

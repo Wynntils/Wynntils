@@ -5,19 +5,27 @@
 package com.wynntils.core.consumers.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.wynntils.core.persisted.Translatable;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-public abstract class Command {
+public abstract class Command implements Translatable {
     public abstract String getCommandName();
 
     public List<String> getAliases() {
         return List.of();
     }
 
-    public abstract String getDescription();
+    public String getDescription() {
+        return getTranslation("description");
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Command";
+    }
 
     protected abstract LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base);

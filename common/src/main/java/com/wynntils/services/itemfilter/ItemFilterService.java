@@ -8,30 +8,51 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemfilter.filters.AnyIntegerStatFilter;
-import com.wynntils.services.itemfilter.filters.AnyStringStatFilter;
-import com.wynntils.services.itemfilter.filters.RangedStatFilter;
+import com.wynntils.models.stats.type.StatType;
+import com.wynntils.services.itemfilter.filters.AnyStatFilters;
+import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
+import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
+import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
+import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
+import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
+import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
+import com.wynntils.services.itemfilter.statproviders.ItemTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
+import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
+import com.wynntils.services.itemfilter.statproviders.PowderSlotsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
-import com.wynntils.services.itemfilter.statproviders.QualityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
+import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.services.itemfilter.type.StatValue;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterService extends Service {
+    private static final String SORT_KEY = "sort";
+    private static final String SORT_REVERSE_KEY = "^";
+    private static final String SORT_LIST_SEPARATOR = ",";
+
     private final List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
     private final List<Pair<Class<?>, StatFilterFactory<? extends StatFilter<?>>>> statFilters = new ArrayList<>();
 
@@ -50,10 +71,12 @@ public class ItemFilterService extends Service {
         return statFilters.stream().map(Pair::value).toList();
     }
 
-    public ItemSearchQuery createSearchQuery(String queryString) {
+    public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
         List<StatProviderAndFilterPair<?>> filters = new ArrayList<>();
-        List<Integer> ignoredCharIndices = new ArrayList<>();
-        List<Integer> validFilterCharIndices = new ArrayList<>();
+        List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
+
+        List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges = new ArrayList<>();
+
         List<String> errors = new ArrayList<>();
 
         List<String> plainTextTokens = new ArrayList<>();
@@ -71,25 +94,78 @@ public class ItemFilterService extends Service {
             lastToken = token;
 
             if (token.contains(":")) {
-                String filterString = token.substring(0, token.indexOf(':'));
+                String keyString = token.substring(0, token.indexOf(':'));
                 String inputString = token.substring(token.indexOf(':') + 1);
 
-                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(filterString);
+                // Handle the special case of the sort key
+                if (keyString.equalsIgnoreCase(SORT_KEY)) {
+                    if (!supportsSorting) {
+                        colorRanges.add(Pair.of(
+                                ChatFormatting.RED, Pair.of(tokenStartIndex, tokenStartIndex + token.length())));
+                        errors.add(I18n.get("service.wynntils.itemFilter.sortingNotSupported"));
+                        continue;
+                    }
+
+                    ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
+                            getStatSortOrder(inputString);
+
+                    if (statSortListOrError.hasError()) {
+                        colorRanges.add(Pair.of(
+                                ChatFormatting.RED, Pair.of(tokenStartIndex, tokenStartIndex + token.length())));
+                        errors.add(statSortListOrError.getError());
+                        continue;
+                    }
+
+                    // Highlight the keyword
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.LIGHT_PURPLE,
+                            Pair.of(tokenStartIndex, tokenStartIndex + keyString.length())));
+
+                    // Highlight the value
+                    char[] inputStringCharArray = inputString.toCharArray();
+
+                    // Highlight the reverse key and the list separator
+                    for (int i = 0; i < inputStringCharArray.length; i++) {
+                        char c = inputStringCharArray[i];
+                        String stringValue = String.valueOf(c);
+                        if (stringValue.equals(SORT_REVERSE_KEY)) {
+                            colorRanges.add(Pair.of(
+                                    ChatFormatting.GOLD,
+                                    Pair.of(
+                                            tokenStartIndex + keyString.length() + i + 1,
+                                            tokenStartIndex + keyString.length() + i + 2)));
+                        } else if (stringValue.equals(",")) {
+                            colorRanges.add(Pair.of(
+                                    ChatFormatting.GOLD,
+                                    Pair.of(
+                                            tokenStartIndex + keyString.length() + i + 1,
+                                            tokenStartIndex + keyString.length() + i + 2)));
+                        }
+                    }
+
+                    // The filtered stats are yellow, unless highlighted before
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.YELLOW,
+                            Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
+
+                    sortStatProviders.addAll(statSortListOrError.getValue());
+
+                    continue;
+                }
+
+                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(keyString);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
-                    ignoredCharIndices.addAll(IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + token.length())
-                            .boxed()
-                            .toList());
+                    colorRanges.add(
+                            Pair.of(ChatFormatting.RED, Pair.of(tokenStartIndex, tokenStartIndex + token.length())));
                     errors.add(itemStatProviderOrError.getError());
                     continue;
                 }
 
                 // The filter exists, highlight the keyword...
-                validFilterCharIndices.addAll(
-                        IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + filterString.length())
-                                .boxed()
-                                .toList());
+                colorRanges.add(
+                        Pair.of(ChatFormatting.YELLOW, Pair.of(tokenStartIndex, tokenStartIndex + keyString.length())));
 
                 // Highlight the filter string, even if we don't have an input string yet
                 if (inputString.isEmpty()) continue;
@@ -99,13 +175,17 @@ public class ItemFilterService extends Service {
 
                 // If the inputString is invalid, mark the value as ignored and continue to the next token
                 if (statFilter.hasError()) {
-                    ignoredCharIndices.addAll(IntStream.rangeClosed(
-                                    tokenStartIndex + filterString.length() + 1, tokenStartIndex + token.length())
-                            .boxed()
-                            .toList());
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.RED,
+                            Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
                     errors.add(statFilter.getError());
                     continue;
                 }
+
+                // Highlight the value
+                colorRanges.add(Pair.of(
+                        ChatFormatting.GOLD,
+                        Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
 
                 StatProviderAndFilterPair<?> statProviderAndFilterPair =
                         StatProviderAndFilterPair.fromPair(itemStatProvider, statFilter.getValue());
@@ -118,8 +198,7 @@ public class ItemFilterService extends Service {
             }
         }
 
-        return new ItemSearchQuery(
-                queryString, filters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
+        return new ItemSearchQuery(queryString, filters, sortStatProviders, colorRanges, errors, plainTextTokens);
     }
 
     /**
@@ -146,6 +225,59 @@ public class ItemFilterService extends Service {
                 && itemNameMatches(
                         searchQuery,
                         StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+    }
+
+    /**
+     * Filters and sorts the given list of items according to the given search query.
+     * @param searchQuery the search query
+     * @param originalList the list of items to filter and sort
+     * @return the filtered and sorted list of items
+     */
+    public <T extends ItemStack> List<T> filterAndSort(ItemSearchQuery searchQuery, List<T> originalList) {
+        Stream<T> filteredList = originalList.stream().filter(itemStack -> matches(searchQuery, itemStack));
+
+        // Sorted stat providers must be filtered as "any" filters
+        filteredList = filteredList.filter(itemStack -> {
+            Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+
+            WynnItem wynnItem = wynnItemOpt.get();
+
+            for (Pair<SortDirection, ItemStatProvider<?>> pair : searchQuery.sortStatProviders()) {
+                ItemStatProvider<?> statProvider = pair.value();
+                if (statProvider.getValue(wynnItem).isEmpty()) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        filteredList = filteredList.sorted((itemStack1, itemStack2) -> {
+            Optional<WynnItem> wynnItem1Opt = Models.Item.getWynnItem(itemStack1);
+            Optional<WynnItem> wynnItem2Opt = Models.Item.getWynnItem(itemStack2);
+
+            if (wynnItem1Opt.isEmpty() || wynnItem2Opt.isEmpty()) {
+                return 0;
+            }
+
+            WynnItem wynnItem1 = wynnItem1Opt.get();
+            WynnItem wynnItem2 = wynnItem2Opt.get();
+
+            for (Pair<SortDirection, ItemStatProvider<?>> providerPair : searchQuery.sortStatProviders()) {
+                int compare = providerPair.value().compare(wynnItem1, wynnItem2);
+
+                if (compare != 0) {
+                    return switch (providerPair.key()) {
+                        case ASCENDING -> -compare;
+                        case DESCENDING -> compare;
+                    };
+                }
+            }
+
+            return 0;
+        });
+
+        return filteredList.toList();
     }
 
     /**
@@ -213,12 +345,67 @@ public class ItemFilterService extends Service {
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
+    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
+        List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(
+                        inputString.split(SORT_LIST_SEPARATOR))
+                .map(String::trim)
+                .filter(s -> !s.isBlank())
+                .map(s -> {
+                    if (s.startsWith(SORT_REVERSE_KEY)) {
+                        return Pair.of(SortDirection.ASCENDING, s.substring(1));
+                    }
+
+                    return Pair.of(SortDirection.DESCENDING, s);
+                })
+                .toList();
+
+        List<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> errorsOrProviders = providerNamesWithDirection.stream()
+                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value())))
+                .toList();
+
+        Optional<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> firstError = errorsOrProviders.stream()
+                .filter(pair -> pair.value().hasError())
+                .findFirst();
+
+        if (firstError.isPresent()) {
+            return ErrorOr.error(firstError.get().value().getError());
+        }
+
+        List<Pair<SortDirection, ItemStatProvider<?>>> providers = new ArrayList<>();
+
+        for (Pair<SortDirection, ErrorOr<ItemStatProvider<?>>> pair : errorsOrProviders) {
+            providers.add(Pair.of(pair.key(), pair.value().getValue()));
+        }
+
+        return ErrorOr.of(providers);
+    }
+
     private void registerStatProviders() {
-        // Order is irrelevant, keep it alphabetical
+        // Keep some kind of order here, because it is used when displaying the filter helper in the GUI
+
+        // Constant Item Stats
         registerStatProvider(new LevelStatProvider());
-        registerStatProvider(new ProfessionStatProvider());
-        registerStatProvider(new QualityStatProvider());
         registerStatProvider(new RarityStatProvider());
+        registerStatProvider(new ItemTypeStatProvider());
+        registerStatProvider(new GearTypeStatProvider());
+        registerStatProvider(new CountedItemStatProvider());
+        registerStatProvider(new DurabilityStatProvider());
+        registerStatProvider(new TierStatProvider());
+        registerStatProvider(new UsesStatProvider());
+        registerStatProvider(new GearRestrictionStatProvider());
+        registerStatProvider(new MajorIdStatProvider());
+        registerStatProvider(new PowderSlotsStatProvider());
+
+        // Profession Stats
+        registerStatProvider(new ProfessionStatProvider());
+        registerStatProvider(new QualityTierStatProvider());
+
+        // Dynamic Item Stats
+        for (StatType statType : Models.Stat.getAllStatTypes()) {
+            registerStatProvider(new ActualStatProvider(statType));
+        }
+
+        registerStatProvider(new EmeraldValueStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
@@ -229,9 +416,20 @@ public class ItemFilterService extends Service {
         // The order is not strictly relevant,
         // but it is used when displaying the filter helper in the GUI
 
-        registerStatFilter(Integer.class, new AnyIntegerStatFilter.AnyIntegerStatFilterFactory());
-        registerStatFilter(String.class, new AnyStringStatFilter.AnyStringStatFilterFactory());
-        registerStatFilter(Integer.class, new RangedStatFilter.RangedStatFilterFactory());
+        registerStatFilter(Integer.class, new AnyStatFilters.AnyIntegerStatFilter.AnyIntegerStatFilterFactory());
+        registerStatFilter(String.class, new AnyStatFilters.AnyStringStatFilter.AnyStringStatFilterFactory());
+        registerStatFilter(
+                CappedValue.class, new AnyStatFilters.AnyCappedValueStatFilter.AnyCappedValueStatFilterFactory());
+        registerStatFilter(StatValue.class, new AnyStatFilters.AnyStatValueStatFilter.AnyStatValueStatFilterFactory());
+        registerStatFilter(
+                Integer.class, new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory());
+        registerStatFilter(
+                CappedValue.class,
+                new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory());
+        registerStatFilter(
+                StatValue.class, new RangedStatFilters.RangedStatValueStatFilter.RangedStatValueStatFilterFactory());
+
+        registerStatFilter(StatValue.class, new PercentageStatFilter.PercentageStatFilterFactory());
 
         // String is the fallback type, so it should be registered last
         registerStatFilter(String.class, new StringStatFilter.StringStatFilterFactory());

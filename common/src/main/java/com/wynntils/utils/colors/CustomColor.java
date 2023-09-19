@@ -25,7 +25,7 @@ import net.minecraft.ChatFormatting;
 public class CustomColor {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);
 
-    private static final Pattern HEX_PATTERN = Pattern.compile("#?([0-9a-fA-F]{6})");
+    private static final Pattern HEX_PATTERN = Pattern.compile("#?([0-9a-fA-F]{6})([0-9a-fA-F]{2})?");
     private static final Pattern STRING_PATTERN = Pattern.compile("rgba\\((\\d+),(\\d+),(\\d+),(\\d+)\\)");
     private static final Map<String, CustomColor> REGISTERED_HASHED_COLORS = new HashMap<>();
 
@@ -116,7 +116,7 @@ public class CustomColor {
         };
     }
 
-    /** "#rrggbb" or "rrggbb" */
+    /** "#rrggbb(aa)" or "rrggbb(aa)" */
     public static CustomColor fromHexString(String hex) {
         Matcher hexMatcher = HEX_PATTERN.matcher(hex.trim());
 
@@ -124,7 +124,12 @@ public class CustomColor {
         if (!hexMatcher.matches()) return CustomColor.NONE;
 
         // parse hex
-        return fromInt(Integer.parseInt(hexMatcher.group(1), 16)).withAlpha(255);
+        if (hexMatcher.group(2) == null) {
+            return fromInt(Integer.parseInt(hexMatcher.group(1), 16)).withAlpha(255);
+        } else {
+            return fromInt(Integer.parseInt(hexMatcher.group(1), 16))
+                    .withAlpha(Integer.parseInt(hexMatcher.group(2), 16));
+        }
     }
 
     /** "rgba(r,g,b,a)" format as defined in toString() */
@@ -188,14 +193,19 @@ public class CustomColor {
         return new float[] {r / 255f, g / 255f, b / 255f};
     }
 
-    /** #rrggbb format */
+    /** #rrggbb(aa) format */
     public String toHexString() {
-        String hex = Integer.toHexString(this.asInt());
-        // whether alpha portion is 1 digit or 2
-        hex = (hex.length() > 7) ? hex.substring(2) : hex.substring(1);
-        hex = "#" + hex;
+        String colorHex = String.format("%06x", (0xFFFFFF & (r << 16) | (g << 8) | b));
 
-        return hex;
+        // Only append alpha if it's not 255
+        if (a != 255) {
+            String alphaHex = String.format("%02x", (0xFF & a));
+            colorHex += alphaHex;
+        }
+
+        colorHex = "#" + colorHex;
+
+        return colorHex;
     }
 
     @Override

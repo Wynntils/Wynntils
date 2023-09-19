@@ -252,6 +252,7 @@ public class ContainerSearchFeature extends Feature {
                 renderY - 20,
                 175,
                 20,
+                false,
                 query -> {
                     lastSearchQuery = query;
                     matchItems(lastSearchQuery, screen.getMenu());

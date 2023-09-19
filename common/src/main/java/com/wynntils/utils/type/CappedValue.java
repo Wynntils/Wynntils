@@ -4,7 +4,9 @@
  */
 package com.wynntils.utils.type;
 
-public record CappedValue(int current, int max) {
+import com.google.common.collect.ComparisonChain;
+
+public record CappedValue(int current, int max) implements Comparable<CappedValue> {
     public static final CappedValue EMPTY = new CappedValue(0, 0);
 
     public CappedValue withCurrent(int newCurrent) {
@@ -43,5 +45,13 @@ public record CappedValue(int current, int max) {
     @Override
     public String toString() {
         return current + "/" + max;
+    }
+
+    @Override
+    public int compareTo(CappedValue other) {
+        return ComparisonChain.start()
+                .compare(current, other.current)
+                .compare(max, other.max)
+                .result();
     }
 }
