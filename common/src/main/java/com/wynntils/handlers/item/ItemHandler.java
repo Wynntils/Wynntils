@@ -258,8 +258,11 @@ public class ItemHandler extends Handler {
         String str = name.getString();
 
         final Pattern[] PATTERNS = {
+            // Item on the create buy order menu or create sell offer menu
             Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
+            // Items on the trade overview menu
             Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)$"),
+            // Item on the view existing sell offer menu (on the right side)
             Pattern.compile("^§7§l[^ ]+x (.+)$")
         };
 
