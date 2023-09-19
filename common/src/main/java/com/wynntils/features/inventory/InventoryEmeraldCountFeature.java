@@ -74,9 +74,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             topEmeralds = Models.Emerald.getAmountInInventory();
         } else {
             topEmeralds = 0;
-            if (showContainerEmeraldCount.get() && !Models.Container.isEmeraldPouch(McUtils.mc().screen)) {
-                topEmeralds += Models.Emerald.getAmountInContainer();
-            }
+            if (showContainerEmeraldCount.get()) topEmeralds += Models.Emerald.getAmountInContainer();
             if (combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
                 topEmeralds += Models.Emerald.getAmountInInventory();
             }
