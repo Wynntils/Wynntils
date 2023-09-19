@@ -1960,7 +1960,7 @@
   "service.wynntils.itemFilter.stat.emeraldValue.description": "Emerald value of the item",
   "service.wynntils.itemFilter.stat.gearRestriction.description": "Gear restriction of the item",
   "service.wynntils.itemFilter.stat.gearType.description": "Gear type of the item (e.g. helmet)",
-  "service.wynntils.itemFilter.stat.health.description": "Health of the item",
+  "service.wynntils.itemFilter.stat.health.description": "The item's base health value",
   "service.wynntils.itemFilter.stat.itemType.description": "Item type of the item (e.g. craftedGear)",
   "service.wynntils.itemFilter.stat.level.description": "Level of the item",
   "service.wynntils.itemFilter.stat.majorId.description": "Major ID(s) of the item",
