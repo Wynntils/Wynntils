@@ -1,9 +1,21 @@
+## [0.0.3-alpha.376](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.375...v0.0.3-alpha.376) (2023-09-19)
+
+
+### Bug Fixes
+
+* Map icon bar alignment ([#2106](https://github.com/Wynntils/Artemis/issues/2106)) ([1f4565f](https://github.com/Wynntils/Artemis/commit/1f4565f2a6e26b27bc0f8cfb9a9e4c51f43e44e6))
+
 ## [0.0.3-alpha.375](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.374...v0.0.3-alpha.375) (2023-09-16)
 
 
 ### Bug Fixes
 
 * Arrow Shield Model NPE when arrows not spawned ([#2101](https://github.com/Wynntils/Artemis/issues/2101)) ([d2e1767](https://github.com/Wynntils/Artemis/commit/d2e176726d9dbd91308c39a68811d660e2720f84))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.375 [skip ci] ([811b4cb](https://github.com/Wynntils/Artemis/commit/811b4cb4804de8ea27e922b81b8d4a9f9ed24d5c))
 
 ## [0.0.3-alpha.374](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.373...v0.0.3-alpha.374) (2023-09-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.372 [skip ci] ([2512583](https://github.com/Wynntils/Artemis/commit/25125831f4dd8cb8c2c693b9a8d362f906b6aa2a))
-
-## [0.0.3-alpha.371](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.370...v0.0.3-alpha.371) (2023-09-11)
-
-
-### Bug Fixes
-
-* Fix descriptions of text-based settings not displaying ([#2092](https://github.com/Wynntils/Artemis/issues/2092)) ([1d05492](https://github.com/Wynntils/Artemis/commit/1d0549280257e57a4f903ebc223a7a75f0d39a68))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.371 [skip ci] ([d873cf0](https://github.com/Wynntils/Artemis/commit/d873cf00bad5241862bb6e5bbfd8a88dae336070))
 
