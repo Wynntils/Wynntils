@@ -16,7 +16,6 @@ public enum Texture {
     CHARACTER_LIST_BACKGROUND("character_selection/character_list_background.png", 118, 254),
     DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 52),
     PLAY_BUTTON("character_selection/play_button.png", 79, 76),
-    SCROLL_BUTTON("character_selection/scroll_button.png", 7, 17),
     XP_BAR("character_selection/xp_bar.png", 100, 12),
     // endregion
 
@@ -203,6 +202,7 @@ public enum Texture {
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
+    SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     VIGNETTE("ui_components/vignette.png", 512, 512),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256);
     // endregion
