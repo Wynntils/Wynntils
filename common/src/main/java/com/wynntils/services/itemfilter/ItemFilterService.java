@@ -7,6 +7,7 @@ package com.wynntils.services.itemfilter;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
@@ -19,13 +20,17 @@ import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
+import com.wynntils.services.itemfilter.statproviders.HealthStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ItemTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
+import com.wynntils.services.itemfilter.statproviders.OverallStatProvider;
 import com.wynntils.services.itemfilter.statproviders.PowderSlotsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
+import com.wynntils.services.itemfilter.statproviders.SkillReqStatProvider;
+import com.wynntils.services.itemfilter.statproviders.SkillStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
@@ -395,12 +400,18 @@ public class ItemFilterService extends Service {
         registerStatProvider(new GearRestrictionStatProvider());
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
+        registerStatProvider(new HealthStatProvider());
 
         // Profession Stats
         registerStatProvider(new ProfessionStatProvider());
         registerStatProvider(new QualityTierStatProvider());
 
         // Dynamic Item Stats
+        registerStatProvider(new OverallStatProvider());
+        for (Skill skill : Models.Element.getGearSkillOrder()) {
+            registerStatProvider(new SkillStatProvider(skill));
+            registerStatProvider(new SkillReqStatProvider(skill));
+        }
         for (StatType statType : Models.Stat.getAllStatTypes()) {
             registerStatProvider(new ActualStatProvider(statType));
         }
