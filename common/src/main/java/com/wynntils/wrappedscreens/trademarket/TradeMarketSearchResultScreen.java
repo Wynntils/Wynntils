@@ -52,7 +52,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private boolean holdingScrollbar = false;
 
     protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultParent parent) {
-        super(ChestMenu.sixRows(999, McUtils.inventory()), McUtils.inventory(), Component.literal("Wrapped Screen"));
+        super(
+                ChestMenu.sixRows(999, McUtils.inventory()),
+                McUtils.inventory(),
+                Component.literal("Trade Market Search Result Wrapped Screen"));
 
         // Make our screen display according to the number of items, at the correct y position
         this.imageHeight = 114 + this.getMenu().getRowCount() * 18;
@@ -77,7 +80,8 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         int renderX = (width - imageWidth) / 2;
         int renderY = (height - imageHeight) / 2 - 22;
 
-        itemSearchWidget = new ItemSearchWidget(renderX, renderY, 175, 20, q -> reloadElements(), (TextboxScreen) this);
+        itemSearchWidget =
+                new ItemSearchWidget(renderX, renderY, 175, 20, true, q -> reloadElements(), (TextboxScreen) this);
         this.addRenderableWidget(itemSearchWidget);
 
         // Copy over the old widget's text

@@ -52,6 +52,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private QueuedAction queuedAction;
 
     private int currentPage = 0;
+    private boolean allPagesLoaded = false;
 
     private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
     private int pageItemCount = 0;
@@ -116,6 +117,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         requestedItem = null;
         pageLoadingMode = PageLoadingMode.NONE;
         queuedAction = null;
+        allPagesLoaded = false;
         currentPage = 0;
         itemMap = new HashMap<>();
         pageItemCount = 0;
@@ -177,6 +179,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     }
 
     public void loadNextPageBatch() {
+        if (allPagesLoaded) return;
+
         runOrQueueAction(new QueuedAction(PageLoadingMode.LOAD_ITEMS, itemMap.size() - 1 + PAGE_BATCH_SIZE, null));
     }
 
@@ -187,8 +191,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
                 .map(map -> map.values().toArray(new ItemStack[0]))
                 .flatMap(Stream::of);
 
-        List<ItemStack> matchingItems = items.filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
-                .toList();
+        List<ItemStack> matchingItems = Services.ItemFilter.filterAndSort(searchQuery, items.toList());
 
         filteredItems.addAll(matchingItems);
     }
@@ -238,6 +241,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         // If we have air items on the page, we reached the end
         if (currentItems.size() < EXPECTED_ITEMS_PER_PAGE) {
             wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+
+            allPagesLoaded = true;
 
             pageLoadingMode = PageLoadingMode.NONE;
             requestedPage = -1;

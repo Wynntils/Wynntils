@@ -7,6 +7,7 @@ package com.wynntils.handlers.wrappedscreen;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -41,6 +42,14 @@ public class WrappedScreenHandler extends Handler {
         for (WrappedScreenParent parent : wrappedScreenParents) {
             if (!titleStyledText.matches(parent.getReplacedScreenTitlePattern())) continue;
 
+            // Post an event to allow consumers to allow opening the wrapped screen
+            WrappedScreenOpenEvent openEvent = new WrappedScreenOpenEvent(parent.getWrappedScreenClass());
+            WynntilsMod.postEvent(openEvent);
+
+            // If the event was not accepted, don't open the screen
+            if (!openEvent.shouldOpenScreen()) return;
+
+            // Set up and open the wrapped screen
             currentWrappedScreenParent = parent;
             WynntilsMod.registerEventListener(parent);
 
@@ -48,8 +57,8 @@ public class WrappedScreenHandler extends Handler {
                     abstractContainerScreen, McUtils.containerMenu(), McUtils.containerMenu().containerId));
 
             parent.setWrappedScreen(currentWrappedScreen);
-
             McUtils.mc().setScreen(currentWrappedScreen);
+
             return;
         }
     }

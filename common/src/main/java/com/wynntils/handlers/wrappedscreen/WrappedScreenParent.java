@@ -5,6 +5,7 @@
 package com.wynntils.handlers.wrappedscreen;
 
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
+import java.lang.reflect.ParameterizedType;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -32,4 +33,11 @@ public abstract class WrappedScreenParent<T extends Screen & WrappedScreen> {
      * Called when a wrapped screen is closed. This method should reset the state of this class.
      */
     protected abstract void reset();
+
+    /**
+     * @return The class of the wrapped screen.
+     */
+    protected Class<T> getWrappedScreenClass() {
+        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
 }
