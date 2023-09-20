@@ -1,4 +1,16 @@
+## [0.0.3-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.380...v0.0.3-alpha.381) (2023-09-20)
+
+
+### Bug Fixes
+
+* Avoid NPE in bomb tracking ([#2112](https://github.com/Wynntils/Artemis/issues/2112)) ([80f715e](https://github.com/Wynntils/Artemis/commit/80f715ebe578339ffcb6bf6c3685d3dd474c7c92))
+
 ## [0.0.3-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.379...v0.0.3-alpha.380) (2023-09-20)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.380 [skip ci] ([7f08f92](https://github.com/Wynntils/Artemis/commit/7f08f9278cab95a6686e16530591583cb2bd5891))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.377 [skip ci] ([95f9ad0](https://github.com/Wynntils/Artemis/commit/95f9ad073eebc34c2de4fdd3716308a8e05de1c5))
-
-## [0.0.3-alpha.376](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.375...v0.0.3-alpha.376) (2023-09-19)
-
-
-### Bug Fixes
-
-* Map icon bar alignment ([#2106](https://github.com/Wynntils/Artemis/issues/2106)) ([1f4565f](https://github.com/Wynntils/Artemis/commit/1f4565f2a6e26b27bc0f8cfb9a9e4c51f43e44e6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.376 [skip ci] ([2703898](https://github.com/Wynntils/Artemis/commit/2703898fef9c1d19197968b33e369894edfce65e))
 
