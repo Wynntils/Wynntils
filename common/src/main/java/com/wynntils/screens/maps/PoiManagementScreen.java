@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -715,7 +716,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .filter(texture -> allWaypoints.stream()
                         .map(CustomPoi::getIcon)
                         .anyMatch(customPoiTexture -> texture == customPoiTexture))
-                .collect(Collectors.toMap(Function.identity(), texture -> false));
+                .collect(Collectors.toMap(Function.identity(), texture -> false, (e1, e2) -> e1, LinkedHashMap::new));
 
         if (filteredIcons.size() < 2) {
             filterAllButton.visible = false;
