@@ -115,6 +115,11 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         McUtils.mc().setScreen(oldMapScreen);
     }
 
+    // TODO: Filtering interacting with selecting is still a bit iffy, specifically deleting all pois with filters active
+    // TODO: Improve sizes of widgets on different GUI scales and fit them better on the background
+    // TODO: Change size of background, make it even across the whole screen instead of dominant on right side
+    // TODO: Make reorder buttons work nicely when sorted and filtered etc
+    // TODO: Better filter icon system for when having lots of icons
     @Override
     protected void doInit() {
         dividedWidth = this.width / GRID_DIVISIONS;
@@ -812,38 +817,33 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private void deleteSelectedPois() {
-        HiddenConfig<List<CustomPoi>> customPoiConfig =
+        HiddenConfig<List<CustomPoi>> customPois =
                 Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        List<CustomPoi> allPois = customPoiConfig.get();
 
-        List<CustomPoi> newPois = allPois.stream()
-                .filter(customPoi -> !selectedWaypoints.contains(customPoi))
-                .toList();
+        for (CustomPoi poi : selectedWaypoints) {
+            customPois.get().remove(poi);
+            customPois.touched();
+        }
 
-        customPoiConfig.setValue(newPois);
+        McUtils.sendMessageToClient(
+                Component.translatable("screens.wynntils.poiManagementGui.deletedPois", selectedWaypoints.size())
+                        .withStyle(ChatFormatting.GREEN));
 
-        customPoiConfig.touched();
-
-        selectedWaypoints.clear();
-        selectionMode = false;
-
-        deselectAllButton.active = false;
-        deleteSelectedButton.active = false;
-
-        exportButton.setTooltip(
-                Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip")));
+        if (customPois.get().isEmpty()) {
+            selectAllButton.active = false;
+            nameSortButton.active = false;
+            xSortButton.visible = false;
+            ySortButton.visible = false;
+            zSortButton.visible = false;
+        }
 
         if (scrollOffset == Math.max(0, waypoints.size() - maxPoisToDisplay)) {
             setScrollOffset(1);
         }
 
-        populatePois();
+        toggleSelectAll(false);
 
         createIconFilterButtons();
-
-        McUtils.sendMessageToClient(
-                Component.translatable("screens.wynntils.poiManagementGui.deletedPois", allPois.size() - newPois.size())
-                        .withStyle(ChatFormatting.GREEN));
     }
 
     private void importFromClipboard() {
