@@ -163,6 +163,7 @@ public final class CharacterStatsModel extends Model {
 
     @SubscribeEvent
     public void onHeldItemChanged(ChangeCarriedItemEvent event) {
+        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
         powderSpecialSegment.replaced();
     }
 }
