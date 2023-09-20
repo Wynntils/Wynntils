@@ -124,8 +124,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
         maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
-        backgroundX = dividedWidth * 12;
-        backgroundWidth = dividedWidth * 43;
+        backgroundX = dividedWidth * 10;
+        backgroundWidth = dividedWidth * 44;
         backgroundY = dividedHeight * 7;
         backgroundHeight = dividedHeight * 50;
 
@@ -213,7 +213,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // region search bar
         searchInput = new TextInputBoxWidget(
-                (int) (dividedWidth * 14) - 5,
+                (int) (dividedWidth * 10) + 5,
                 (int) (dividedHeight * 3),
                 (int) (dividedWidth * 18),
                 20,
@@ -238,7 +238,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                             button.active = false;
                             populatePois();
                         })
-                .pos((int) (dividedWidth * 32) + 5, (int) (dividedHeight * 3))
+                .pos((int) (dividedWidth * 10) + (int) (dividedWidth * 18) + 8, (int) (dividedHeight * 3))
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.filterAll.tooltip")))
                 .build());
@@ -256,7 +256,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
                             toggleSortType(PoiSortType.NAME);
                         })
-                .pos((int) (dividedWidth * 24) + (nameTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
+                .pos((int) (dividedWidth * 22) + (nameTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
                 .size(12, 12)
                 .build());
 
@@ -266,7 +266,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
                             toggleSortType(PoiSortType.X);
                         })
-                .pos((int) (dividedWidth * 34) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
+                .pos((int) (dividedWidth * 32) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
                 .size(12, 12)
                 .build());
 
@@ -274,7 +274,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
                             toggleSortType(PoiSortType.Y);
                         })
-                .pos((int) (dividedWidth * 37) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
+                .pos((int) (dividedWidth * 35) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
                 .size(12, 12)
                 .build());
 
@@ -282,7 +282,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
                             toggleSortType(PoiSortType.Z);
                         })
-                .pos((int) (dividedWidth * 40) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
+                .pos((int) (dividedWidth * 38) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
                 .size(12, 12)
                 .build());
         // endregion
@@ -337,8 +337,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-//            searchInput.visible = false;
-
             return;
         } else if (waypoints.isEmpty()) {
             FontRenderer.getInstance()
@@ -358,7 +356,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .renderText(
                         poseStack,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.search")),
-                        (int) (dividedWidth * 14) - 5,
+                        (int) (dividedWidth * 10) + 5,
                         (int) dividedHeight,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -383,7 +381,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .renderText(
                         poseStack,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.icon")),
-                        (int) (dividedWidth * 15),
+                        (int) (dividedWidth * 13),
                         (int) (dividedHeight * HEADER_HEIGHT),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -394,7 +392,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .renderText(
                         poseStack,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.name")),
-                        (int) (dividedWidth * 24),
+                        (int) (dividedWidth * 22),
                         (int) (dividedHeight * HEADER_HEIGHT),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -405,7 +403,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .renderText(
                         poseStack,
                         StyledText.fromString("X"),
-                        (int) (dividedWidth * 34),
+                        (int) (dividedWidth * 32),
                         (int) (dividedHeight * HEADER_HEIGHT),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -416,7 +414,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .renderText(
                         poseStack,
                         StyledText.fromString("Y"),
-                        (int) (dividedWidth * 37),
+                        (int) (dividedWidth * 35),
                         (int) (dividedHeight * HEADER_HEIGHT),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -427,7 +425,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .renderText(
                         poseStack,
                         StyledText.fromString("Z"),
-                        (int) (dividedWidth * 40),
+                        (int) (dividedWidth * 38),
                         (int) (dividedHeight * HEADER_HEIGHT),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -437,7 +435,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.WHITE,
-                (int) (dividedWidth * 14),
+                (int) (dividedWidth * 12),
                 (int) (dividedHeight * HEADER_HEIGHT),
                 0,
                 (int) (dividedWidth * 38),
@@ -488,7 +486,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             exportButton.active = true;
         }
 
-        if (Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().isEmpty()) {
+        if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .customPois
+                .get()
+                .isEmpty()) {
             searchInput.visible = false;
         }
 
@@ -503,7 +504,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 case X_DESC -> waypoints.sort(
                         Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
                 case Y_ASC -> waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
+                        poi -> poi.getLocation().getY().orElse(null),
+                        Comparator.nullsFirst(Comparator.naturalOrder())));
                 case Y_DESC -> waypoints.sort(Comparator.comparing(
                         poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
                 case Z_ASC -> waypoints.sort(
@@ -525,7 +527,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             CustomPoi poi = waypoints.get(bottomDisplayedIndex);
 
             PoiManagerWidget poiWidget = new PoiManagerWidget(
-                    (int) (dividedWidth * 14),
+                    (int) (dividedWidth * 12),
                     row,
                     (int) (dividedWidth * 38),
                     20,
@@ -569,8 +571,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             deselectAllButton.active = add;
             deleteSelectedButton.active = add;
 
-            Component tooltip = add ? Component.translatable(
-                    "screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedWaypoints.size()) : Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip");
+            Component tooltip = add
+                    ? Component.translatable(
+                            "screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedWaypoints.size())
+                    : Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip");
 
             exportButton.setTooltip(Tooltip.create(tooltip));
         }
@@ -606,11 +610,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             filterAllButton.visible = true;
         }
 
+        int startingX = (int) (dividedWidth * 10) + 5 + (int) (dividedWidth * 18);
         int xOffset = 22;
 
         for (Texture icon : filteredIcons.keySet()) {
             BasicTexturedButton filterButton = new BasicTexturedButton(
-                    (int) (dividedWidth * 32) + xOffset + 5,
+                    startingX + xOffset + 5,
                     (int) (dividedHeight * 3 + 10 - icon.height() / 2f),
                     20,
                     20,
@@ -624,7 +629,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                     filteredIcons.getOrDefault(icon, false)
                             ? List.of(Component.translatable("screens.wynntils.poiManagementGui.filterExclude.tooltip"))
                             : List.of(
-                            Component.translatable("screens.wynntils.poiManagementGui.filterInclude.tooltip")));
+                                    Component.translatable("screens.wynntils.poiManagementGui.filterInclude.tooltip")));
 
             filterButtons.add(filterButton);
 
@@ -655,8 +660,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             }
         }
 
+        // TODO: Fix GUI scale 4 being offset by 26
         if (!draggingScroll) {
-            float scrollButtonRenderX = (int) dividedWidth * 53;
+            float scrollButtonRenderX = (int) dividedWidth * 52;
 
             if (mouseX >= scrollButtonRenderX
                     && mouseX <= scrollButtonRenderX + dividedWidth
@@ -689,7 +695,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         int newValue = (int) MathUtils.map(
                 (float) mouseY,
                 (int) (dividedHeight * 10),
-                (int) (dividedHeight * 53),
+                (int) (dividedHeight * 52),
                 0,
                 Math.max(0, waypoints.size() - maxPoisToDisplay));
 
@@ -706,7 +712,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SCROLL_BUTTON.resource(),
-                (int) (dividedWidth * 53),
+                (int) (dividedWidth * 52),
                 scrollButtonRenderY,
                 0,
                 dividedWidth,
@@ -835,8 +841,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private void deleteSelectedPois() {
-        HiddenConfig<List<CustomPoi>> customPois =
-                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
         for (CustomPoi poi : selectedWaypoints) {
             setLastDeletedPoi(poi, customPois.get().indexOf(poi));
