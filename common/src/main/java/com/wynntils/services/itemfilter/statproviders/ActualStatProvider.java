@@ -89,4 +89,16 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
 
         return List.of(new StatValue(possibleValues, actualValue));
     }
+
+    @Override
+    public int compare(WynnItem wynnItem1, WynnItem wynnItem2) {
+        List<StatValue> itemValues1 = this.getValue(wynnItem1);
+        List<StatValue> itemValues2 = this.getValue(wynnItem2);
+
+        if (itemValues1.isEmpty() && !itemValues2.isEmpty()) return 1;
+        if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;
+        if (itemValues1.isEmpty() && itemValues2.isEmpty()) return 0;
+
+        return -itemValues1.get(0).compareTo(itemValues2.get(0));
+    }
 }
