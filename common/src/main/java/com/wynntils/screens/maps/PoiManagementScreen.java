@@ -660,9 +660,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             }
         }
 
-        // TODO: Fix GUI scale 4 being offset by 26
         if (!draggingScroll) {
-            float scrollButtonRenderX = (int) dividedWidth * 52;
+            float scrollButtonRenderX = (int) (dividedWidth * 52);
 
             if (mouseX >= scrollButtonRenderX
                     && mouseX <= scrollButtonRenderX + dividedWidth
