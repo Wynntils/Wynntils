@@ -107,8 +107,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
                 .withStyle(ChatFormatting.AQUA)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND,
-                        "/wynntils feature disable PerCharacterGuildContributionFeature"))));
+                        ClickEvent.Action.RUN_COMMAND, "/wynntils feature disable " + this.getShortName()))));
 
         contributionMessage.append(
                 Component.literal(" to disable this functionality.").withStyle(ChatFormatting.DARK_AQUA));

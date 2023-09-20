@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.itemfilter.filters;
 
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.services.itemfilter.type.StatValue;
@@ -23,18 +24,20 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
     @Override
     protected boolean matches(StatValue value) {
         // If the item is not revealed, we can't filter percentage
-        if (value.percentage() == -1) {
+        if (value.statActualValue() == null) {
             return false;
         }
 
-        return value.percentage() >= min && value.percentage() <= max;
+        float percentage = StatCalculator.getPercentage(value.statActualValue(), value.possibleValues());
+
+        return percentage >= min && percentage <= max;
     }
 
     public static class PercentageStatFilterFactory extends StatFilterFactory<PercentageStatFilter> {
-        private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("([\\d\\.]+)%");
-        private static final Pattern RANGE_PATTERN = Pattern.compile("([\\d\\.]+)-([\\d\\.]+)%");
-        private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">=?([\\d\\.]+)%");
-        private static final Pattern LESS_THAN_PATTERN = Pattern.compile("<=?([\\d\\.]+)%");
+        private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("([-+]?[\\d\\.]+)%");
+        private static final Pattern RANGE_PATTERN = Pattern.compile("([-+]?[\\d\\.]+)-([-+]?[\\d\\.]+)%");
+        private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">=?([-+]?[\\d\\.]+)%");
+        private static final Pattern LESS_THAN_PATTERN = Pattern.compile("<=?([-+]?[\\d\\.]+)%");
 
         @Override
         public Optional<PercentageStatFilter> create(String inputString) {
