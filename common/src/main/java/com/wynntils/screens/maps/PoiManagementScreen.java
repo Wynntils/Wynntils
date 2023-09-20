@@ -115,7 +115,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         McUtils.mc().setScreen(oldMapScreen);
     }
 
-    // TODO: Filtering interacting with selecting is still a bit iffy, specifically deleting all pois with filters active
     // TODO: Improve sizes of widgets on different GUI scales and fit them better on the background
     // TODO: Change size of background, make it even across the whole screen instead of dominant on right side
     // TODO: Make reorder buttons work nicely when sorted and filtered etc
@@ -298,6 +297,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         if (waypoints.isEmpty()) {
             searchInput.visible = false;
+            nameSortButton.visible = false;
+            xSortButton.visible = false;
+            ySortButton.visible = false;
+            zSortButton.visible = false;
             exportButton.active = false;
         }
 
@@ -334,7 +337,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            searchInput.visible = false;
+//            searchInput.visible = false;
 
             return;
         } else if (waypoints.isEmpty()) {
@@ -468,16 +471,25 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .filter(poi -> searchMatches(poi.getName()))
                 .collect(Collectors.toList());
 
-        searchInput.visible = !waypoints.isEmpty();
-
-        if (!waypoints.isEmpty()) {
-            exportButton.active = true;
-        }
-
         if (filteredIcons.containsValue(true)) {
             waypoints = waypoints.stream()
                     .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), false))
                     .collect(Collectors.toList());
+        }
+
+        if (waypoints.isEmpty()) {
+            nameSortButton.visible = false;
+            xSortButton.visible = false;
+            ySortButton.visible = false;
+            zSortButton.visible = false;
+            exportButton.active = false;
+        } else {
+            searchInput.visible = true;
+            exportButton.active = true;
+        }
+
+        if (Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().isEmpty()) {
+            searchInput.visible = false;
         }
 
         if (sortOrder != null) {
@@ -491,9 +503,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 case X_DESC -> waypoints.sort(
                         Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
                 case Y_ASC -> waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.naturalOrder())));
+                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
                 case Y_DESC -> waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.reverseOrder())));
+                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
                 case Z_ASC -> waypoints.sort(
                         Comparator.comparing(poi -> poi.getLocation().getZ()));
                 case Z_DESC -> waypoints.sort(
@@ -583,6 +595,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         if (filteredIcons.size() < 2) {
             filterAllButton.visible = false;
+
+            filteredIcons.replaceAll((key, value) -> false);
+            topDisplayedIndex = 0;
+            scrollOffset = 0;
+
+            populatePois();
             return;
         } else {
             filterAllButton.visible = true;
@@ -821,6 +839,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
         for (CustomPoi poi : selectedWaypoints) {
+            setLastDeletedPoi(poi, customPois.get().indexOf(poi));
             customPois.get().remove(poi);
             customPois.touched();
         }
