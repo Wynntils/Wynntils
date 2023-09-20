@@ -1,9 +1,21 @@
+## [0.0.3-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.379...v0.0.3-alpha.380) (2023-09-20)
+
+
+### Code Refactoring
+
+* Badges micro-optimization ([#2111](https://github.com/Wynntils/Artemis/issues/2111)) ([816cb10](https://github.com/Wynntils/Artemis/commit/816cb10da8840770065650e791b0a15e86da5ed0))
+
 ## [0.0.3-alpha.379](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.378...v0.0.3-alpha.379) (2023-09-20)
 
 
 ### Bug Fixes
 
 * Feature names no longer end in "Feature" ([#2079](https://github.com/Wynntils/Artemis/issues/2079)) ([f2826a5](https://github.com/Wynntils/Artemis/commit/f2826a56473ff37e57355015dea6079ffa70d53f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.379 [skip ci] ([8b70db5](https://github.com/Wynntils/Artemis/commit/8b70db5f11e5f09bddfd7793818738e08eb6814f))
 
 ## [0.0.3-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.377...v0.0.3-alpha.378) (2023-09-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.376 [skip ci] ([2703898](https://github.com/Wynntils/Artemis/commit/2703898fef9c1d19197968b33e369894edfce65e))
-
-## [0.0.3-alpha.375](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.374...v0.0.3-alpha.375) (2023-09-16)
-
-
-### Bug Fixes
-
-* Arrow Shield Model NPE when arrows not spawned ([#2101](https://github.com/Wynntils/Artemis/issues/2101)) ([d2e1767](https://github.com/Wynntils/Artemis/commit/d2e176726d9dbd91308c39a68811d660e2720f84))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.375 [skip ci] ([811b4cb](https://github.com/Wynntils/Artemis/commit/811b4cb4804de8ea27e922b81b8d4a9f9ed24d5c))
 
