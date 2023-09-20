@@ -10,8 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CoordinatesSegment implements ActionBarSegment {
-    // https://regexr.com/7k9ak
-    private static final Pattern COORDINATES_PATTERN = Pattern.compile("§7 ?(-?\\d+)§f ?([NWSE]{1,2})§7 ?(-?\\d+)");
+    // https://regexr.com/7kfra
+    private static final Pattern COORDINATES_PATTERN = Pattern.compile("§7(-?\\d+)§f ([NWSE]{1,2})§7 (-?\\d+)");
 
     private final Runnable onSegmentCleared;
     private boolean hidden;
