@@ -320,6 +320,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 if (sortOrder == PoiSortOrder.NAME_ASC) {
                     sortOrder = PoiSortOrder.NAME_DESC;
                     nameSortButton.setMessage(Component.literal("ʌ"));
+                } else if (sortOrder == PoiSortOrder.NAME_DESC) {
+                    sortOrder = null;
+                    nameSortButton.setMessage(Component.literal(""));
                 } else {
                     sortOrder = PoiSortOrder.NAME_ASC;
                     nameSortButton.setMessage(Component.literal("v"));
@@ -331,6 +334,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 if (sortOrder == PoiSortOrder.X_ASC) {
                     sortOrder = PoiSortOrder.X_DESC;
                     xSortButton.setMessage(Component.literal("ʌ"));
+                } else if (sortOrder == PoiSortOrder.X_DESC) {
+                    sortOrder = null;
+                    xSortButton.setMessage(Component.literal(""));
                 } else {
                     sortOrder = PoiSortOrder.X_ASC;
                     xSortButton.setMessage(Component.literal("v"));
@@ -342,6 +348,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 if (sortOrder == PoiSortOrder.Y_ASC) {
                     sortOrder = PoiSortOrder.Y_DESC;
                     ySortButton.setMessage(Component.literal("ʌ"));
+                } else if (sortOrder == PoiSortOrder.Y_DESC) {
+                    sortOrder = null;
+                    ySortButton.setMessage(Component.literal(""));
                 } else {
                     sortOrder = PoiSortOrder.Y_ASC;
                     ySortButton.setMessage(Component.literal("v"));
@@ -353,6 +362,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 if (sortOrder == PoiSortOrder.Z_ASC) {
                     sortOrder = PoiSortOrder.Z_DESC;
                     zSortButton.setMessage(Component.literal("ʌ"));
+                } else if (sortOrder == PoiSortOrder.Z_DESC) {
+                    sortOrder = null;
+                    zSortButton.setMessage(Component.literal(""));
                 } else {
                     sortOrder = PoiSortOrder.Z_ASC;
                     zSortButton.setMessage(Component.literal("v"));
@@ -564,18 +576,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             if (child.isMouseOver(mouseX, mouseY) && child != searchInput) {
-                if (button == 1
-                        && (child == nameSortButton
-                                || child == xSortButton
-                                || child == ySortButton
-                                || child == zSortButton)) {
-                    previousSortButton.setMessage(Component.literal(""));
-                    previousSortButton = null;
-                    sortOrder = null;
-                    populatePois();
-                    return true;
-                }
-
                 child.mouseClicked(mouseX, mouseY, button);
                 return true;
             }
@@ -769,8 +769,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         deselectAllButton.active = false;
         deleteSelectedButton.active = false;
     }
-
-    public void changeSortOrder(PoiSortType sortType, boolean ascending) {}
 
     private void deleteSelectedPois() {
         HiddenConfig<List<CustomPoi>> customPoiConfig =
