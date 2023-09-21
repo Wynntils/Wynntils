@@ -52,8 +52,12 @@ public final class EnumUtils {
             // If we override toString, use that
             return enumValue.toString();
         } else {
-            return WordUtils.capitalizeFully(enumValue.name().replace("_", " "));
+            return toNiceString(enumValue.name());
         }
+    }
+
+    public static String toNiceString(String variantName) {
+        return WordUtils.capitalizeFully(variantName.replace("_", " "));
     }
 
     private static boolean overridesToString(Enum<?> enumValue) {

@@ -4,18 +4,19 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.dungeon.type.Dungeon;
 import com.wynntils.models.items.properties.TargetedItemProperty;
 
 public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
-    private final String dungeon;
+    private final Dungeon dungeon;
     private final boolean corrupted;
 
-    public DungeonKeyItem(String dungeon, boolean corrupted) {
+    public DungeonKeyItem(Dungeon dungeon, boolean corrupted) {
         this.dungeon = dungeon;
         this.corrupted = corrupted;
     }
 
-    public String getDungeon() {
+    public Dungeon getDungeon() {
         return dungeon;
     }
 
@@ -25,7 +26,7 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
 
     @Override
     public String getTarget() {
-        return dungeon;
+        return dungeon.getName();
     }
 
     @Override
