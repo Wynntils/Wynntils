@@ -217,6 +217,8 @@ public class CustomNametagRendererFeature extends Feature {
         List<LeaderboardBadge> badges =
                 Services.Leaderboard.getBadges(event.getEntity().getUUID());
 
+        if (badges.isEmpty()) return;
+
         float totalWidth = LeaderboardBadge.WIDTH * badges.size() + BADGE_MARGIN * (badges.size() - 1);
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
         float yOffset = 15F;
