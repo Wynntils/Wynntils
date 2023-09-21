@@ -48,7 +48,7 @@ import net.minecraft.network.chat.Component;
 
 public final class PoiManagementScreen extends WynntilsScreen implements TextboxScreen {
     private static final float GRID_DIVISIONS = 64.0f;
-    private static final int GRID_ROWS_PER_PAGE = 44;
+    private static final int GRID_ROWS_PER_PAGE = 43;
     private static final int HEADER_HEIGHT = 12;
     private static final int STARTING_WIDGET_ROW = 13;
 
@@ -65,12 +65,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private Button deselectAllButton;
     private Button exportButton;
     private Button filterAllButton;
-    private Button nameSortButton;
     private Button selectAllButton;
     private Button undoDeleteButton;
-    private Button xSortButton;
-    private Button ySortButton;
-    private Button zSortButton;
     private float backgroundHeight;
     private float backgroundWidth;
     private float backgroundX;
@@ -86,6 +82,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private List<CustomPoi> selectedWaypoints = new ArrayList<>();
     private List<CustomPoi> waypoints;
     private PoiSortButton activeSortButton;
+    private PoiSortButton nameSortButton;
+    private PoiSortButton xSortButton;
+    private PoiSortButton ySortButton;
+    private PoiSortButton zSortButton;
     private PoiSortOrder sortOrder;
     private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget searchInput;
@@ -116,7 +116,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         McUtils.mc().setScreen(oldMapScreen);
     }
 
-    // TODO: Improve sizes of widgets on different GUI scales and fit them better on the background
     // TODO: Make reorder buttons work nicely when sorted and filtered etc
     // TODO: Better filter icon system for when having lots of icons
     @Override
@@ -189,9 +188,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // region select buttons
         deselectAllButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.deselectAll"), (button) -> {
-                            toggleSelectAll(false);
-                        })
+                        Component.translatable("screens.wynntils.poiManagementGui.deselectAll"), (button) -> toggleSelectAll(false))
                 .pos((int) dividedWidth, (int) (dividedHeight * 58))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
@@ -201,9 +198,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         this.addRenderableWidget(deselectAllButton);
 
         selectAllButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.poiManagementGui.selectAll"), (button) -> {
-                            toggleSelectAll(true);
-                        })
+                        Component.translatable("screens.wynntils.poiManagementGui.selectAll"), (button) -> toggleSelectAll(true))
                 .pos((int) dividedWidth, (int) (dividedHeight * 58) - 25)
                 .size((int) (dividedWidth * 8), 20)
                 .build();
@@ -256,7 +251,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         int coordinateTitleWidth = (McUtils.mc().font.width("X")) + 1;
 
-        this.addRenderableWidget(new PoiSortButton(
+        nameSortButton = this.addRenderableWidget(new PoiSortButton(
                 (int) (dividedWidth * 22) - (nameTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 nameTitleWidth,
@@ -265,7 +260,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 this,
                 PoiSortType.NAME));
 
-        this.addRenderableWidget(new PoiSortButton(
+        xSortButton = this.addRenderableWidget(new PoiSortButton(
                 (int) (dividedWidth * 32) - (coordinateTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 coordinateTitleWidth,
@@ -274,7 +269,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 this,
                 PoiSortType.X));
 
-        this.addRenderableWidget(new PoiSortButton(
+        ySortButton = this.addRenderableWidget(new PoiSortButton(
                 (int) (dividedWidth * 35) - (coordinateTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 coordinateTitleWidth,
@@ -283,7 +278,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 this,
                 PoiSortType.Y));
 
-        this.addRenderableWidget(new PoiSortButton(
+        zSortButton = this.addRenderableWidget(new PoiSortButton(
                 (int) (dividedWidth * 38) - (coordinateTitleWidth / 2),
                 (int) (dividedHeight * HEADER_HEIGHT) - 10,
                 coordinateTitleWidth,
@@ -802,7 +797,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         if (customPois.get().isEmpty()) {
             selectAllButton.active = false;
-            nameSortButton.active = false;
+            nameSortButton.visible = false;
             xSortButton.visible = false;
             ySortButton.visible = false;
             zSortButton.visible = false;
