@@ -520,7 +520,8 @@ public class ChatRedirectFeature extends Feature {
                                     + (ingredientCount == 1 ? "Singular" : "Plural"))
                             .withStyle(ChatFormatting.LIGHT_PURPLE));
 
-            StyledText emeraldString = StyledText.fromString(ChatFormatting.GREEN + matcher.group(2) + ChatFormatting.LIGHT_PURPLE);
+            StyledText emeraldString =
+                    StyledText.fromString(ChatFormatting.GREEN + matcher.group(2) + ChatFormatting.LIGHT_PURPLE);
 
             return StyledText.fromComponent(Component.translatable(
                             "feature.wynntils.chatRedirect.ingredientPouch.notification",
