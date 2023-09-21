@@ -16,6 +16,7 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
+import com.wynntils.screens.maps.widgets.PoiSortButton;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -60,7 +61,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     private boolean draggingScroll = false;
     private boolean selectionMode = false;
-    private Button activeSortButton;
     private Button deleteSelectedButton;
     private Button deselectAllButton;
     private Button exportButton;
@@ -85,6 +85,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private int topDisplayedIndex = 0;
     private List<CustomPoi> selectedWaypoints = new ArrayList<>();
     private List<CustomPoi> waypoints;
+    private PoiSortButton activeSortButton;
     private PoiSortOrder sortOrder;
     private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget searchInput;
@@ -116,7 +117,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     // TODO: Improve sizes of widgets on different GUI scales and fit them better on the background
-    // TODO: Change size of background, make it even across the whole screen instead of dominant on right side
     // TODO: Make reorder buttons work nicely when sorted and filtered etc
     // TODO: Better filter icon system for when having lots of icons
     @Override
@@ -248,43 +248,49 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // region sort buttons
         int nameTitleWidth = (McUtils.mc()
-                .font
-                .width(StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.name"))
-                        .getString()));
+                        .font
+                        .width(StyledText.fromComponent(
+                                        Component.translatable("screens.wynntils.poiManagementGui.name"))
+                                .getString()))
+                + 1;
 
-        nameSortButton = this.addRenderableWidget(new Button.Builder(
-                        Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
-                            toggleSortType(PoiSortType.NAME);
-                        })
-                .pos((int) (dividedWidth * 22) + (nameTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
-                .size(12, 12)
-                .build());
+        int coordinateTitleWidth = (McUtils.mc().font.width("X")) + 1;
 
-        int coordinateTitleWidth = (McUtils.mc().font.width("X"));
+        this.addRenderableWidget(new PoiSortButton(
+                (int) (dividedWidth * 22) - (nameTitleWidth / 2),
+                (int) (dividedHeight * HEADER_HEIGHT) - 10,
+                nameTitleWidth,
+                10,
+                Component.translatable("screens.wynntils.poiManagementGui.name"),
+                this,
+                PoiSortType.NAME));
 
-        xSortButton = this.addRenderableWidget(new Button.Builder(
-                        Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
-                            toggleSortType(PoiSortType.X);
-                        })
-                .pos((int) (dividedWidth * 32) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
-                .size(12, 12)
-                .build());
+        this.addRenderableWidget(new PoiSortButton(
+                (int) (dividedWidth * 32) - (coordinateTitleWidth / 2),
+                (int) (dividedHeight * HEADER_HEIGHT) - 10,
+                coordinateTitleWidth,
+                10,
+                Component.literal("X"),
+                this,
+                PoiSortType.X));
 
-        ySortButton = this.addRenderableWidget(new Button.Builder(
-                        Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
-                            toggleSortType(PoiSortType.Y);
-                        })
-                .pos((int) (dividedWidth * 35) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
-                .size(12, 12)
-                .build());
+        this.addRenderableWidget(new PoiSortButton(
+                (int) (dividedWidth * 35) - (coordinateTitleWidth / 2),
+                (int) (dividedHeight * HEADER_HEIGHT) - 10,
+                coordinateTitleWidth,
+                10,
+                Component.literal("Y"),
+                this,
+                PoiSortType.Y));
 
-        zSortButton = this.addRenderableWidget(new Button.Builder(
-                        Component.literal("").withStyle(ChatFormatting.GREEN), (button) -> {
-                            toggleSortType(PoiSortType.Z);
-                        })
-                .pos((int) (dividedWidth * 38) + (coordinateTitleWidth / 2), (int) (dividedHeight * HEADER_HEIGHT) - 12)
-                .size(12, 12)
-                .build());
+        this.addRenderableWidget(new PoiSortButton(
+                (int) (dividedWidth * 38) - (coordinateTitleWidth / 2),
+                (int) (dividedHeight * HEADER_HEIGHT) - 10,
+                coordinateTitleWidth,
+                10,
+                Component.literal("Z"),
+                this,
+                PoiSortType.Z));
         // endregion
 
         if (deletedIndexes.isEmpty()) {
@@ -382,50 +388,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         poseStack,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.icon")),
                         (int) (dividedWidth * 13),
-                        (int) (dividedHeight * HEADER_HEIGHT),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.name")),
-                        (int) (dividedWidth * 22),
-                        (int) (dividedHeight * HEADER_HEIGHT),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("X"),
-                        (int) (dividedWidth * 32),
-                        (int) (dividedHeight * HEADER_HEIGHT),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("Y"),
-                        (int) (dividedWidth * 35),
-                        (int) (dividedHeight * HEADER_HEIGHT),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("Z"),
-                        (int) (dividedWidth * 38),
                         (int) (dividedHeight * HEADER_HEIGHT),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -639,6 +601,63 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
     }
 
+    public void toggleSortType(PoiSortType sortType, PoiSortButton selectedButton) {
+        if (activeSortButton != null && activeSortButton != selectedButton) {
+            activeSortButton.setSelected(false);
+        }
+
+        activeSortButton = selectedButton;
+
+        boolean selected = true;
+
+        switch (sortType) {
+            case NAME -> {
+                if (sortOrder == PoiSortOrder.NAME_ASC) {
+                    sortOrder = PoiSortOrder.NAME_DESC;
+                } else if (sortOrder == PoiSortOrder.NAME_DESC) {
+                    sortOrder = null;
+                    selected = false;
+                } else {
+                    sortOrder = PoiSortOrder.NAME_ASC;
+                }
+            }
+            case X -> {
+                if (sortOrder == PoiSortOrder.X_ASC) {
+                    sortOrder = PoiSortOrder.X_DESC;
+                } else if (sortOrder == PoiSortOrder.X_DESC) {
+                    sortOrder = null;
+                    selected = false;
+                } else {
+                    sortOrder = PoiSortOrder.X_ASC;
+                }
+            }
+            case Y -> {
+                if (sortOrder == PoiSortOrder.Y_ASC) {
+                    sortOrder = PoiSortOrder.Y_DESC;
+                } else if (sortOrder == PoiSortOrder.Y_DESC) {
+                    sortOrder = null;
+                    selected = false;
+                } else {
+                    sortOrder = PoiSortOrder.Y_ASC;
+                }
+            }
+            case Z -> {
+                if (sortOrder == PoiSortOrder.Z_ASC) {
+                    sortOrder = PoiSortOrder.Z_DESC;
+                } else if (sortOrder == PoiSortOrder.Z_DESC) {
+                    sortOrder = null;
+                    selected = false;
+                } else {
+                    sortOrder = PoiSortOrder.Z_ASC;
+                }
+            }
+        }
+
+        selectedButton.setSelected(selected);
+
+        populatePois();
+    }
+
     public void setLastDeletedPoi(CustomPoi deletedPoi, int deletedPoiIndex) {
         deletedPois.add(deletedPoi);
         deletedIndexes.add(deletedPoiIndex);
@@ -722,77 +741,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     private void setScrollOffset(int delta) {
         scrollOffset = MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, waypoints.size() - maxPoisToDisplay));
-
-        populatePois();
-    }
-
-    private void toggleSortType(PoiSortType sortType) {
-        if (activeSortButton != null) {
-            activeSortButton.setMessage(Component.literal(""));
-        }
-
-        switch (sortType) {
-            case NAME -> {
-                activeSortButton = nameSortButton;
-
-                if (sortOrder == PoiSortOrder.NAME_ASC) {
-                    sortOrder = PoiSortOrder.NAME_DESC;
-                } else if (sortOrder == PoiSortOrder.NAME_DESC) {
-                    sortOrder = null;
-                    break;
-                } else {
-                    sortOrder = PoiSortOrder.NAME_ASC;
-                }
-
-                nameSortButton.setMessage(
-                        sortOrder == PoiSortOrder.NAME_ASC ? Component.literal("v") : Component.literal("ʌ"));
-            }
-            case X -> {
-                activeSortButton = xSortButton;
-
-                if (sortOrder == PoiSortOrder.X_ASC) {
-                    sortOrder = PoiSortOrder.X_DESC;
-                } else if (sortOrder == PoiSortOrder.X_DESC) {
-                    sortOrder = null;
-                    break;
-                } else {
-                    sortOrder = PoiSortOrder.X_ASC;
-                }
-
-                xSortButton.setMessage(
-                        sortOrder == PoiSortOrder.X_ASC ? Component.literal("v") : Component.literal("ʌ"));
-            }
-            case Y -> {
-                activeSortButton = ySortButton;
-
-                if (sortOrder == PoiSortOrder.Y_ASC) {
-                    sortOrder = PoiSortOrder.Y_DESC;
-                } else if (sortOrder == PoiSortOrder.Y_DESC) {
-                    sortOrder = null;
-                    break;
-                } else {
-                    sortOrder = PoiSortOrder.Y_ASC;
-                }
-
-                ySortButton.setMessage(
-                        sortOrder == PoiSortOrder.Y_ASC ? Component.literal("v") : Component.literal("ʌ"));
-            }
-            case Z -> {
-                activeSortButton = zSortButton;
-
-                if (sortOrder == PoiSortOrder.Z_ASC) {
-                    sortOrder = PoiSortOrder.Z_DESC;
-                } else if (sortOrder == PoiSortOrder.Z_DESC) {
-                    sortOrder = null;
-                    break;
-                } else {
-                    sortOrder = PoiSortOrder.Z_ASC;
-                }
-
-                zSortButton.setMessage(
-                        sortOrder == PoiSortOrder.Z_ASC ? Component.literal("v") : Component.literal("ʌ"));
-            }
-        }
 
         populatePois();
     }
@@ -965,6 +913,13 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         this.focusedTextInput = focusedTextInput;
     }
 
+    public enum PoiSortType {
+        NAME,
+        X,
+        Y,
+        Z
+    }
+
     private enum PoiSortOrder {
         NAME_ASC,
         NAME_DESC,
@@ -974,12 +929,5 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         Y_DESC,
         Z_ASC,
         Z_DESC
-    }
-
-    private enum PoiSortType {
-        NAME,
-        X,
-        Y,
-        Z
     }
 }
