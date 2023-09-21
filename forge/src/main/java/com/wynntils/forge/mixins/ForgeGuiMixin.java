@@ -46,9 +46,6 @@ public abstract class ForgeGuiMixin extends Gui {
                 new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
         MixinHelper.post(event);
 
-        // we have to reset shader texture
-        RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION);
-
         if (event.isCanceled()) {
             ci.cancel();
         }
@@ -66,9 +63,6 @@ public abstract class ForgeGuiMixin extends Gui {
         RenderEvent.Pre event =
                 new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
         MixinHelper.post(event);
-
-        // we have to reset shader texture
-        RenderSystem.setShaderTexture(0, GUI_ICONS_LOCATION);
 
         if (event.isCanceled()) {
             ci.cancel();

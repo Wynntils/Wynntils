@@ -226,7 +226,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         PoseStack poseStack = guiGraphics.pose();

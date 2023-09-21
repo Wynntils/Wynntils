@@ -195,7 +195,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
@@ -257,10 +257,10 @@ public final class PoiManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (delta < 0.0 && nextButton.active) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        if (deltaY < 0.0 && nextButton.active) {
             nextPage();
-        } else if (delta > 0.0 && previousButton.active) {
+        } else if (deltaY > 0.0 && previousButton.active) {
             previousPage();
         }
 

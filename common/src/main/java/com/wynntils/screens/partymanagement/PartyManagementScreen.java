@@ -138,7 +138,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
 
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         boolean inParty = Models.Party.isInParty();
 

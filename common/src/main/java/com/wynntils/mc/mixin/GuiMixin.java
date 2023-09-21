@@ -7,7 +7,6 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -112,9 +111,6 @@ public abstract class GuiMixin {
                 new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
         MixinHelper.post(event);
 
-        // we have to reset shader texture
-        RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
-
         // Return a non-zero value to cancel rendering
         if (event.isCanceled()) return 1;
 
@@ -166,9 +162,6 @@ public abstract class GuiMixin {
         RenderEvent.Pre event =
                 new RenderEvent.Pre(guiGraphics, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HEALTH_BAR);
         MixinHelper.post(event);
-
-        // we have to reset shader texture
-        RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 
         if (event.isCanceled()) {
             ci.cancel();

@@ -38,13 +38,7 @@ public class CosmeticsPreviewFeature extends Feature {
             RenderUtils.drawTexturedRect(poseStack, Texture.COSMETIC_VIEWER_BACKGROUND, posX - 15, posY - 75);
 
             InventoryScreen.renderEntityInInventoryFollowsMouse(
-                    event.getGuiGraphics(),
-                    posX + 20,
-                    posY,
-                    30,
-                    posX + 20 - event.getMouseX(),
-                    posY - 50 - event.getMouseY(),
-                    McUtils.player());
+                    event.getGuiGraphics(), posX + 26, posY + 8, posX + 75, posY + 78, 30, 1f, 0, 0, McUtils.player());
         }
     }
 }

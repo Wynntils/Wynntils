@@ -126,7 +126,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         int posY = (int) (this.height / 2f) + 32;
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                guiGraphics, posX, posY, 30, posX - mouseX, posY - 50 - mouseY, player);
+                guiGraphics, posX + 26, posY + 8, posX + 75, posY + 78, 30, 1f, 0, 0, player);
     }
 
     @Override

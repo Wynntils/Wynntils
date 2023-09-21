@@ -4,22 +4,23 @@
  */
 package com.wynntils.mc.event;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.Event;
 
 public class AdvancementUpdateEvent extends Event {
     private final boolean reset;
-    private final Map<ResourceLocation, Advancement.Builder> added;
+    private final List<AdvancementHolder> added;
     private final Set<ResourceLocation> removed;
     private final Map<ResourceLocation, AdvancementProgress> progress;
 
     public AdvancementUpdateEvent(
             boolean reset,
-            Map<ResourceLocation, Advancement.Builder> added,
+            List<AdvancementHolder> added,
             Set<ResourceLocation> removed,
             Map<ResourceLocation, AdvancementProgress> progress) {
         this.reset = reset;
@@ -32,7 +33,7 @@ public class AdvancementUpdateEvent extends Event {
         return reset;
     }
 
-    public Map<ResourceLocation, Advancement.Builder> getAdded() {
+    public List<AdvancementHolder> getAdded() {
         return added;
     }
 

@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.core.PositionImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
@@ -65,7 +64,7 @@ public final class LootrunPathFileParser {
                     positionJson = noteJson.getAsJsonObject("location");
                 }
 
-                Position position = new PositionImpl(
+                Position position = new Vec3(
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
                         positionJson.get("z").getAsDouble());

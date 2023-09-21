@@ -254,14 +254,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
 
         if (adjustedMouseX <= Texture.CONFIG_BOOK_BACKGROUND.width() / 2f) {
-            configurableListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, delta);
+            configurableListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY);
         } else if (configListScrollButton != null) {
-            configListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, delta);
+            configListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY);
         }
 
         return true;

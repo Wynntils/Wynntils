@@ -107,8 +107,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return overlayList.mouseScrolled(mouseX, mouseY, delta);
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        return overlayList.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     @Override

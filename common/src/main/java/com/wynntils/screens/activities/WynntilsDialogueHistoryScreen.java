@@ -190,8 +190,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setCurrentPage(getCurrentPage() + (delta > 0 ? -1 : 1));
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        setCurrentPage(getCurrentPage() + (deltaY > 0 ? -1 : 1));
 
         return true;
     }

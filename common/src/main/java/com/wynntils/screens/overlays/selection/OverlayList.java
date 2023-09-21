@@ -48,7 +48,6 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
         }
 
         this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
     }
 
     @Override

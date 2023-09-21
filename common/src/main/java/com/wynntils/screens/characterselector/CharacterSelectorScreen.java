@@ -151,7 +151,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             }
         }
 
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         PoseStack poseStack = guiGraphics.pose();
         RenderUtils.drawScalingTexturedRect(
@@ -177,7 +177,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics) {
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
         RenderUtils.drawScalingTexturedRect(
@@ -227,9 +227,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setScrollOffset((int) delta);
-
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        setScrollOffset((int) deltaY);
         return true;
     }
 
@@ -406,8 +405,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         McUtils.player().setSwimming(false);
 
         int scale = this.height / 4;
+
+        int renderX = (int) (this.width * 0.6f);
+        int renderY = (int) (this.height * 0.85f);
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                guiGraphics, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
+                guiGraphics, renderX + 26, renderY + 8, renderX + 75, renderY + 78, 30, scale, 0, 0, McUtils.player());
     }
 
     private void setScrollOffset(int delta) {

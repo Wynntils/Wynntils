@@ -179,10 +179,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Usually, mouse scroll wheel delta is always (-)1
-        if (Math.abs(delta) == 1) {
-            setCurrentPage(getCurrentPage() - (int) delta);
+        if (Math.abs(deltaY) == 1) {
+            setCurrentPage(getCurrentPage() - (int) deltaY);
             return true;
         }
 
@@ -190,7 +190,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Delta is divided by 10 to make it more precise
         // We subtract so scrolling down actually scrolls down
-        currentScroll -= delta / 10d;
+        currentScroll -= deltaY / 10d;
 
         if (Math.abs(currentScroll) < 1) return true;
 

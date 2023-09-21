@@ -169,7 +169,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor();
 
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         renderCoordinates(poseStack, mouseX, mouseY);
 

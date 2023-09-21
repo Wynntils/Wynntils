@@ -15,11 +15,11 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -103,15 +103,17 @@ public final class ResourcePackService extends Service {
 
         if (!file.exists()) return null;
 
-        Pack.ResourcesSupplier resourcesSupplier = string -> new FilePackResources(string, file, false);
-        Pack.Info info = Pack.readPackInfo("server", resourcesSupplier);
+        Pack.ResourcesSupplier resourcesSupplier = new FilePackResources.FileResourcesSupplier(file, false);
+        Pack.Info info = Pack.readPackInfo(
+                "server",
+                resourcesSupplier,
+                SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES));
         return new PreloadedPack(
                 "server",
                 true,
                 resourcesSupplier,
                 Component.literal("Wynntils Resource Pack"),
                 info,
-                info.compatibility(PackType.CLIENT_RESOURCES),
                 Pack.Position.TOP,
                 true,
                 PackSource.DEFAULT,
@@ -129,23 +131,13 @@ public final class ResourcePackService extends Service {
                 String id,
                 boolean required,
                 Pack.ResourcesSupplier resourcesSupplier,
-                Component title,
+                Component component,
                 Pack.Info info,
-                PackCompatibility compatibility,
                 Pack.Position defaultPosition,
                 boolean fixedPosition,
                 PackSource packSource,
                 String hash) {
-            super(
-                    id,
-                    required,
-                    resourcesSupplier,
-                    title,
-                    info,
-                    compatibility,
-                    defaultPosition,
-                    fixedPosition,
-                    packSource);
+            super(id, required, resourcesSupplier, component, info, defaultPosition, fixedPosition, packSource);
             this.hash = hash;
         }
 

@@ -35,7 +35,6 @@ public class DisconnectButton extends WynntilsButton {
         // This is replicating the behavior found in PauseScreen.onDisconnect()
         TitleScreen titleScreen = new TitleScreen();
         McUtils.mc().level.disconnect();
-        McUtils.mc().clearLevel();
         McUtils.mc().setScreen(titleScreen);
     }
 

@@ -117,10 +117,10 @@ public class ScrollButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Usually, mouse scroll wheel delta is always (-)1
-        if (Math.abs(delta) == 1) {
-            scroll((int) -delta);
+        if (Math.abs(deltaY) == 1) {
+            scroll((int) -deltaY);
             return true;
         }
 
@@ -128,7 +128,7 @@ public class ScrollButton extends WynntilsButton {
 
         // Delta is divided by 10 to make it more precise
         // We subtract so scrolling down actually scrolls down
-        currentUnusedScroll -= delta / 10d;
+        currentUnusedScroll -= deltaY / 10d;
 
         if (Math.abs(currentUnusedScroll) < 1) return true;
 

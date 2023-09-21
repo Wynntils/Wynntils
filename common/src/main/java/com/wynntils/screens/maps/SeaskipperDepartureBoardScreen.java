@@ -111,7 +111,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
-        renderGradientBackground(guiGraphics);
+        renderGradientBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -142,7 +142,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor();
 
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -327,7 +327,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Disallow zooming
         return true;
     }

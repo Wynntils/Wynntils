@@ -315,7 +315,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         int posX = Texture.CONTENT_BOOK_BACKGROUND.width() - 85;
         int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f) + 25;
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                guiGraphics, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
+                guiGraphics, posX + 26, posY + 8, posX + 75, posY + 78, 30, 1f, 0, 0, McUtils.player());
 
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getGuildDescription();

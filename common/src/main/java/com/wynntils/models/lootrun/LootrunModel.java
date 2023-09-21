@@ -166,7 +166,7 @@ public class LootrunModel extends Model {
 
         for (TaskLocation taskLocation : taskLocations.getOrDefault(currentLocation.get(), Set.of())) {
             if (PosUtils.closerThanIgnoringY(
-                    taskLocation.location().toPosition(), event.getParticle().position(), TASK_POSITION_ERROR)) {
+                    taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
                 possibleTaskLocations.add(taskLocation);
                 return;
             }

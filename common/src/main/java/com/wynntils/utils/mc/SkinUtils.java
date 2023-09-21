@@ -19,7 +19,7 @@ public final class SkinUtils {
     public static void setPlayerHeadSkin(ItemStack itemStack, String textureString) {
         // If this starts being done repeatedly for the same texture string, we should cache
         // the UUID.
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
         gameProfile.getProperties().put("textures", new Property("textures", textureString, ""));
 
         CompoundTag compoundTag = itemStack.getOrCreateTag();
@@ -30,13 +30,13 @@ public final class SkinUtils {
         ClientPacketListener connection = McUtils.mc().getConnection();
 
         if (connection == null) {
-            return DefaultPlayerSkin.getDefaultSkin(uuid);
+            return DefaultPlayerSkin.getDefaultTexture();
         }
         PlayerInfo playerInfo = connection.getPlayerInfo(uuid);
         if (playerInfo == null) {
-            return DefaultPlayerSkin.getDefaultSkin(uuid);
+            return DefaultPlayerSkin.getDefaultTexture();
         }
 
-        return playerInfo.getSkinLocation();
+        return playerInfo.getSkin().texture();
     }
 }

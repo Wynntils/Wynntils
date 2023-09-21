@@ -4,20 +4,21 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.world.scores.DisplaySlot;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ScoreboardSetDisplayObjectiveEvent extends Event {
-    private final int slot;
+    private final DisplaySlot slot;
     private final String objectiveName;
 
-    public ScoreboardSetDisplayObjectiveEvent(int slot, String objectiveName) {
+    public ScoreboardSetDisplayObjectiveEvent(DisplaySlot slot, String objectiveName) {
         this.slot = slot;
         this.objectiveName = objectiveName;
     }
 
-    public int getSlot() {
+    public DisplaySlot getSlot() {
         return slot;
     }
 
