@@ -5,7 +5,6 @@
 package com.wynntils.models.dungeon.type;
 
 import com.wynntils.utils.EnumUtils;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -58,9 +57,7 @@ public enum Dungeon {
     }
 
     public String getInitials() {
-        return Arrays.stream(name.split(" ", 2))
-                .map(s -> s.substring(0, 1))
-                .collect(Collectors.joining());
+        return Arrays.stream(name.split(" ", 2)).map(s -> s.substring(0, 1)).collect(Collectors.joining());
     }
 
     @Override
