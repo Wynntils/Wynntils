@@ -29,6 +29,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -116,7 +117,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         McUtils.mc().setScreen(oldMapScreen);
     }
 
-    // TODO: Make reorder buttons work nicely when sorted and filtered etc
     // TODO: Better filter icon system for when having lots of icons
     @Override
     protected void doInit() {
@@ -663,6 +663,18 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         if (scrollOffset == Math.max(0, waypoints.size() - maxPoisToDisplay)) {
             setScrollOffset(1);
         }
+    }
+
+    public void updatePoiPosition(CustomPoi poiToMove, int direction) {
+        CustomPoi poiToSwap = waypoints.get(waypoints.indexOf(poiToMove) + direction);
+
+        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+
+        Collections.swap(customPois.get(), customPois.get().indexOf(poiToMove), customPois.get().indexOf(poiToSwap));
+
+        customPois.touched();
+
+        populatePois();
     }
 
     @Override

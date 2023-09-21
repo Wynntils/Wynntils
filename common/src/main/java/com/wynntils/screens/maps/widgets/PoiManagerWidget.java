@@ -31,7 +31,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class PoiManagerWidget extends AbstractWidget {
-    private final CustomPoi poi;
     private final boolean selected;
     private final boolean selectionMode;
     private final Button editButton;
@@ -39,13 +38,11 @@ public class PoiManagerWidget extends AbstractWidget {
     private final Button upButton;
     private final Button downButton;
     private final Button selectButton;
+    private final CustomColor color;
+    private final CustomPoi poi;
     private final float dividedWidth;
-    private final int x;
-    private final int y;
     private final List<CustomPoi> pois;
     private final PoiManagementScreen managementScreen;
-
-    private CustomColor color;
 
     public PoiManagerWidget(
             int x,
@@ -58,8 +55,6 @@ public class PoiManagerWidget extends AbstractWidget {
             boolean selectionMode,
             boolean selected) {
         super(x, y, width, height, Component.literal(poi.getName()));
-        this.x = x;
-        this.y = y;
         this.poi = poi;
         this.managementScreen = managementScreen;
         this.dividedWidth = dividedWidth;
@@ -72,10 +67,10 @@ public class PoiManagerWidget extends AbstractWidget {
                 .customPois
                 .get();
 
-        color = CommonColors.WHITE;
-
         if (poi.getVisibility() == CustomPoi.Visibility.HIDDEN) {
             color = CommonColors.GRAY;
+        } else {
+            color = CommonColors.WHITE;
         }
 
         editButton = new Button.Builder(
@@ -100,12 +95,12 @@ public class PoiManagerWidget extends AbstractWidget {
                 .size(manageButtonsWidth, 20)
                 .build();
 
-        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> updateIndex(-1))
+        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> managementScreen.updatePoiPosition(poi, -1))
                 .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth, y)
                 .size(10, 20)
                 .build();
 
-        downButton = new Button.Builder(Component.literal("v"), (button) -> updateIndex(1))
+        downButton = new Button.Builder(Component.literal("v"), (button) -> managementScreen.updatePoiPosition(poi, 1))
                 .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth + 10, y)
                 .size(10, 20)
                 .build();
@@ -139,8 +134,8 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         StyledText.fromString(poiName),
-                        x + (int) (dividedWidth * 3),
-                        y + 10,
+                        getX() + (int) (dividedWidth * 3),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
@@ -150,8 +145,8 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
-                        x + (int) (dividedWidth * 20),
-                        y + 10,
+                        getX() + (int) (dividedWidth * 20),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -164,8 +159,8 @@ public class PoiManagerWidget extends AbstractWidget {
                         poseStack,
                         poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
                                 .orElse(StyledText.EMPTY),
-                        x + (int) (dividedWidth * 23),
-                        y + 10,
+                        getX() + (int) (dividedWidth * 23),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -175,8 +170,8 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
-                        x + (int) (dividedWidth * 26),
-                        y + 10,
+                        getX() + (int) (dividedWidth * 26),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -188,10 +183,10 @@ public class PoiManagerWidget extends AbstractWidget {
             RenderUtils.drawRectBorders(
                     poseStack,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
-                    x,
-                    y + 1,
-                    x + width,
-                    y + height - 1,
+                    getX(),
+                    getY() + 1,
+                    getX() + width,
+                    getY() + height - 1,
                     0,
                     1f);
         } else {
@@ -200,31 +195,6 @@ public class PoiManagerWidget extends AbstractWidget {
             upButton.render(poseStack, mouseX, mouseY, partialTick);
             downButton.render(poseStack, mouseX, mouseY, partialTick);
         }
-    }
-
-    private void renderIcon(PoseStack poseStack) {
-        float[] poiColor = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                poi.getIcon(),
-                x + dividedWidth - (poi.getIcon().width() / 2f),
-                y + 10 - (poi.getIcon().height() / 2f));
-
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-    }
-
-    private void updateIndex(int direction) {
-        int indexToSet = pois.indexOf(poi) + direction;
-        pois.remove(poi);
-        pois.add(indexToSet, poi);
-        managementScreen.populatePois();
-        Managers.Config.saveConfig();
     }
 
     @Override
@@ -246,6 +216,23 @@ public class PoiManagerWidget extends AbstractWidget {
             managementScreen.selectPoi(poi);
             return super.mouseClicked(mouseX, mouseY, button);
         }
+    }
+
+    private void renderIcon(PoseStack poseStack) {
+        float[] poiColor = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
+
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                poi.getIcon(),
+                getX() + dividedWidth - (poi.getIcon().width() / 2f),
+                getY() + 10 - (poi.getIcon().height() / 2f));
+
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     @Override
