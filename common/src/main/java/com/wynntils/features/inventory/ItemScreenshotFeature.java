@@ -174,7 +174,7 @@ public class ItemScreenshotFeature extends Feature {
                             .withStyle(ChatFormatting.UNDERLINE)
                             .withStyle(style -> style.withClickEvent(new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
-                                    "/wynntils config set ItemScreenshotFeature saveToDisk true")))));
+                                    "/wynntils config set ItemScreenshot saveToDisk true")))));
             return;
         }
 

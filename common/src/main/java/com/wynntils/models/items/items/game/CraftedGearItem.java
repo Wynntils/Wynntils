@@ -18,6 +18,7 @@ import java.util.List;
 public class CraftedGearItem extends GameItem
         implements GearTierItemProperty, GearTypeItemProperty, DurableItemProperty, LeveledItemProperty {
     private final GearType gearType;
+    private final int health;
     private final int level;
     // FIXME: Better types than strings...
     private final List<String> damages;
@@ -28,6 +29,7 @@ public class CraftedGearItem extends GameItem
 
     public CraftedGearItem(
             GearType gearType,
+            int health,
             int level,
             List<String> damages,
             List<String> requirements,
@@ -35,6 +37,7 @@ public class CraftedGearItem extends GameItem
             List<Powder> powders,
             CappedValue durability) {
         this.gearType = gearType;
+        this.health = health;
         this.level = level;
         this.damages = damages;
         this.requirements = requirements;
@@ -46,6 +49,10 @@ public class CraftedGearItem extends GameItem
     @Override
     public GearType getGearType() {
         return gearType;
+    }
+
+    public int getHealth() {
+        return health;
     }
 
     @Override
@@ -82,7 +89,8 @@ public class CraftedGearItem extends GameItem
     @Override
     public String toString() {
         return "CraftedGearItem{" + "gearType="
-                + gearType + ", level="
+                + gearType + ", health="
+                + health + ", level="
                 + level + ", damages="
                 + damages + ", requirements="
                 + requirements + ", identifications="
