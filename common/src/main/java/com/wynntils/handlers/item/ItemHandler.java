@@ -264,15 +264,23 @@ public class ItemHandler extends Handler {
             Pattern.compile("^§7§l[^ ]+x (.+)$")
         };
 
+        String full = name.getString();
+
         for (Pattern p : PATTERNS) {
-            Matcher m = p.matcher(name.getString());
+            Matcher m = p.matcher(full);
 
             if (m.matches()) {
                 String str = m.group(1);
 
-                // Sometimes the text before the item name is already white, so the server omits this prefix
+                // For the case where the text before the item name is the same color as the item name itself
                 if (!str.startsWith("§")) {
-                    str = "§f" + str;
+                    int index = full.indexOf(str);
+
+                    while (full.charAt(index) != '§') {
+                        index--;
+                    }
+
+                    str = full.substring(index, index + 2) + str;
                 }
 
                 return StyledText.fromString(str);
