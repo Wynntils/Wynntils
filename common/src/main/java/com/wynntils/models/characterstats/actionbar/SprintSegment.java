@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class SprintSegment implements ActionBarSegment {
     // https://regexr.com/7k9an
-    private static final Pattern SPRINT_PATTERN = Pattern.compile("§[246]\\[(§.*)§[246]] *");
+    private static final Pattern SPRINT_PATTERN = Pattern.compile("§[246]\\[(§.*)§[246]]");
     private static final int MAX_SPRINT = 13;
     private CappedValue sprint = CappedValue.EMPTY;
 
