@@ -1,9 +1,21 @@
+## [0.0.3-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.381...v0.0.3-alpha.382) (2023-09-21)
+
+
+### Bug Fixes
+
+* Login redirect not redirecting renamed players ([#2114](https://github.com/Wynntils/Artemis/issues/2114)) ([7ec2abb](https://github.com/Wynntils/Artemis/commit/7ec2abb7867306d3512a1c2505f6cb5aaf6795bf))
+
 ## [0.0.3-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.380...v0.0.3-alpha.381) (2023-09-20)
 
 
 ### Bug Fixes
 
 * Avoid NPE in bomb tracking ([#2112](https://github.com/Wynntils/Artemis/issues/2112)) ([80f715e](https://github.com/Wynntils/Artemis/commit/80f715ebe578339ffcb6bf6c3685d3dd474c7c92))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.381 [skip ci] ([0d86125](https://github.com/Wynntils/Artemis/commit/0d861257454b490db2f9c0e1b1cdbdaee220738e))
 
 ## [0.0.3-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.379...v0.0.3-alpha.380) (2023-09-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.378 [skip ci] ([024cfe7](https://github.com/Wynntils/Artemis/commit/024cfe79b06a724c35157b850d96e50d81f5030b))
-
-## [0.0.3-alpha.377](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.376...v0.0.3-alpha.377) (2023-09-19)
-
-
-### Bug Fixes
-
-* Chat message filters for 2.0.3 ([#2105](https://github.com/Wynntils/Artemis/issues/2105)) ([4b42ea2](https://github.com/Wynntils/Artemis/commit/4b42ea2073f069450cdfedd9f8288599d91e4235))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.377 [skip ci] ([95f9ad0](https://github.com/Wynntils/Artemis/commit/95f9ad073eebc34c2de4fdd3716308a8e05de1c5))
 
