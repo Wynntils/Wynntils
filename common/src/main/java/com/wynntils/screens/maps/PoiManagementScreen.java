@@ -666,6 +666,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     public void updatePoiPosition(CustomPoi poiToMove, int direction) {
+        if (waypoints.indexOf(poiToMove) + direction < 0 || waypoints.indexOf(poiToMove) + direction > waypoints.size()) return;
+
         CustomPoi poiToSwap = waypoints.get(waypoints.indexOf(poiToMove) + direction);
 
         HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
@@ -918,6 +920,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
+    }
+
+    public List<CustomPoi> getWaypoints() {
+        return waypoints;
     }
 
     public enum PoiSortType {

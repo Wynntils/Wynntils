@@ -41,7 +41,6 @@ public class PoiManagerWidget extends AbstractWidget {
     private final CustomColor color;
     private final CustomPoi poi;
     private final float dividedWidth;
-    private final List<CustomPoi> pois;
     private final PoiManagementScreen managementScreen;
 
     public PoiManagerWidget(
@@ -62,10 +61,6 @@ public class PoiManagerWidget extends AbstractWidget {
         this.selected = selected;
 
         int manageButtonsWidth = (int) (dividedWidth * 4);
-
-        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get();
 
         if (poi.getVisibility() == CustomPoi.Visibility.HIDDEN) {
             color = CommonColors.GRAY;
@@ -113,6 +108,8 @@ public class PoiManagerWidget extends AbstractWidget {
                 .pos(x + (int) (dividedWidth * 28), y)
                 .size(manageButtonsWidth * 2 + 20, 20)
                 .build();
+
+        List<CustomPoi> pois = managementScreen.getWaypoints();
 
         if (pois.indexOf(poi) == 0) {
             upButton.active = false;
