@@ -67,11 +67,9 @@ public class PoiSortButton extends WynntilsButton {
         if (!selected) {
             titleToRender = StyledText.fromComponent(title);
             ascending = true;
-        } else if (ascending) {
-            titleToRender = StyledText.fromComponent(title).append(" ʌ");
-            ascending = false;
         } else {
-            titleToRender = StyledText.fromComponent(title).append(" v");
+            titleToRender = StyledText.fromComponent(title).append(ascending ? " ʌ" : " v");
+            ascending = !ascending;
         }
     }
 }

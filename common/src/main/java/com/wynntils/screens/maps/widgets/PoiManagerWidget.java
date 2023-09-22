@@ -62,40 +62,30 @@ public class PoiManagerWidget extends AbstractWidget {
 
         int manageButtonsWidth = (int) (dividedWidth * 4);
 
-        if (poi.getVisibility() == CustomPoi.Visibility.HIDDEN) {
-            color = CommonColors.GRAY;
-        } else {
-            color = CommonColors.WHITE;
-        }
+        color = poi.getVisibility() == CustomPoi.Visibility.HIDDEN ? CommonColors.GRAY : CommonColors.WHITE;
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
                         (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(x + (int) (dividedWidth * 28), y)
+                .pos(x + width - 20 - (manageButtonsWidth * 2), y)
                 .size(manageButtonsWidth, 20)
                 .build();
 
         deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
-                            HiddenConfig<List<CustomPoi>> customPois =
-                                    Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-                            managementScreen.setLastDeletedPoi(
-                                    poi, customPois.get().indexOf(poi));
-                            customPois.get().remove(poi);
-                            customPois.touched();
-                            managementScreen.populatePois();
+                            managementScreen.deletePoi(poi);
                         })
-                .pos(x + (int) (dividedWidth * 32), y)
+                .pos(x + width - 20 - manageButtonsWidth, y)
                 .size(manageButtonsWidth, 20)
                 .build();
 
         upButton = new Button.Builder(Component.literal("ʌ"), (button) -> managementScreen.updatePoiPosition(poi, -1))
-                .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth, y)
+                .pos(x + width - 20, y)
                 .size(10, 20)
                 .build();
 
         downButton = new Button.Builder(Component.literal("v"), (button) -> managementScreen.updatePoiPosition(poi, 1))
-                .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth + 10, y)
+                .pos(x + width - 10, y)
                 .size(10, 20)
                 .build();
 
@@ -104,7 +94,7 @@ public class PoiManagerWidget extends AbstractWidget {
                 : Component.translatable("screens.wynntils.poiManagementGui.select");
 
         selectButton = new Button.Builder(selectButtonText, (button) -> managementScreen.selectPoi(poi))
-                .pos(x + (int) (dividedWidth * 28), y)
+                .pos(x + width - (manageButtonsWidth * 2 + 20), y)
                 .size(manageButtonsWidth * 2 + 20, 20)
                 .build();
 
