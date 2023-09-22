@@ -1,9 +1,21 @@
+## [0.0.3-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.382...v0.0.3-alpha.383) (2023-09-22)
+
+
+### Bug Fixes
+
+* Fix emerald pouch's emerald displays overlapping ([#2109](https://github.com/Wynntils/Artemis/issues/2109)) ([66aa8ee](https://github.com/Wynntils/Artemis/commit/66aa8ee74c890a191038915d81e6044b011ed412))
+
 ## [0.0.3-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.381...v0.0.3-alpha.382) (2023-09-21)
 
 
 ### Bug Fixes
 
 * Login redirect not redirecting renamed players ([#2114](https://github.com/Wynntils/Artemis/issues/2114)) ([7ec2abb](https://github.com/Wynntils/Artemis/commit/7ec2abb7867306d3512a1c2505f6cb5aaf6795bf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.382 [skip ci] ([90f85b3](https://github.com/Wynntils/Artemis/commit/90f85b3916fa16cd1cb798dd104879de7e8932f2))
 
 ## [0.0.3-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.380...v0.0.3-alpha.381) (2023-09-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.379 [skip ci] ([8b70db5](https://github.com/Wynntils/Artemis/commit/8b70db5f11e5f09bddfd7793818738e08eb6814f))
-
-## [0.0.3-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.377...v0.0.3-alpha.378) (2023-09-19)
-
-
-### New Features
-
-* Add skill, overall and health stat providers ([#2098](https://github.com/Wynntils/Artemis/issues/2098)) ([b253e8a](https://github.com/Wynntils/Artemis/commit/b253e8ad671984790dd1ebeb7366f791ffbeaeb6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.378 [skip ci] ([024cfe7](https://github.com/Wynntils/Artemis/commit/024cfe79b06a724c35157b850d96e50d81f5030b))
 
