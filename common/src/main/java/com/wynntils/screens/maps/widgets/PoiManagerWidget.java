@@ -84,7 +84,6 @@ public class PoiManagerWidget extends AbstractWidget {
                             customPois.get().remove(poi);
                             customPois.touched();
                             managementScreen.populatePois();
-                            managementScreen.createIconFilterButtons();
                         })
                 .pos(x + (int) (dividedWidth * 32), y)
                 .size(manageButtonsWidth, 20)
