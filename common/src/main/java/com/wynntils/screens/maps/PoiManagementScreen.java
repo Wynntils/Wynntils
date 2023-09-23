@@ -713,8 +713,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         List<CustomPoi> sortedPois = waypoints;
 
         switch (sortOrder) {
-            case NAME_ASC -> sortedPois.sort(
-                    Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
+            case NAME_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
             case NAME_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
                     .reversed());
             case X_ASC -> sortedPois.sort(
@@ -722,8 +721,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             case X_DESC -> sortedPois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
             case Y_ASC -> sortedPois.sort(Comparator.comparing(
-                    poi -> poi.getLocation().getY().orElse(null),
-                    Comparator.nullsFirst(Comparator.naturalOrder())));
+                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
             case Y_DESC -> sortedPois.sort(Comparator.comparing(
                     poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
             case Z_ASC -> sortedPois.sort(
