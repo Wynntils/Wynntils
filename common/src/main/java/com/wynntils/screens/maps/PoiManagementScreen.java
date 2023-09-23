@@ -350,6 +350,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         //        RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
+        if (filterMode) {
+            return;
+        }
+
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
                 .get()
@@ -367,20 +371,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                             TextShadow.NORMAL);
 
             return;
-        } else if (waypoints.isEmpty()) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.poiManagementGui.noFilteredPois")),
-                            (int) (dividedWidth * 32),
-                            (int) (dividedHeight * 32),
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        } else if (filterMode) {
-            return;
         }
 
         FontRenderer.getInstance()
@@ -394,25 +384,39 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.icon")),
-                        (int) (dividedWidth * 13),
-                        (int) (dividedHeight * HEADER_HEIGHT),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
+        if (waypoints.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.poiManagementGui.noFilteredPois")),
+                            (int) (dividedWidth * 32),
+                            (int) (dividedHeight * 32),
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        } else {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.icon")),
+                            (int) (dividedWidth * 13),
+                            (int) (dividedHeight * HEADER_HEIGHT),
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
 
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.WHITE,
-                (int) (dividedWidth * 12),
-                (int) (dividedHeight * HEADER_HEIGHT),
-                0,
-                (int) (dividedWidth * 38),
-                1);
+            RenderUtils.drawRect(
+                    poseStack,
+                    CommonColors.WHITE,
+                    (int) (dividedWidth * 12),
+                    (int) (dividedHeight * HEADER_HEIGHT),
+                    0,
+                    (int) (dividedWidth * 38),
+                    1);
+        }
     }
 
     @Override
@@ -971,6 +975,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         customPoiConfig.touched();
 
         if (!customPoiConfig.get().isEmpty()) {
+            searchInput.visible = true;
             filterButton.visible = true;
         }
 
