@@ -1,9 +1,21 @@
+## [0.0.3-alpha.384](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.383...v0.0.3-alpha.384) (2023-09-23)
+
+
+### Bug Fixes
+
+* Action bar does not match 100% curse ([#2104](https://github.com/Wynntils/Artemis/issues/2104)) ([6f59865](https://github.com/Wynntils/Artemis/commit/6f598651878bbd942c2280e1e6b9becc232888b8))
+
 ## [0.0.3-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.382...v0.0.3-alpha.383) (2023-09-22)
 
 
 ### Bug Fixes
 
 * Fix emerald pouch's emerald displays overlapping ([#2109](https://github.com/Wynntils/Artemis/issues/2109)) ([66aa8ee](https://github.com/Wynntils/Artemis/commit/66aa8ee74c890a191038915d81e6044b011ed412))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.383 [skip ci] ([5df6f52](https://github.com/Wynntils/Artemis/commit/5df6f52de11ff3e71b3ef30b18a0e01a4b6956b1))
 
 ## [0.0.3-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.381...v0.0.3-alpha.382) (2023-09-21)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Badges micro-optimization ([#2111](https://github.com/Wynntils/Artemis/issues/2111)) ([816cb10](https://github.com/Wynntils/Artemis/commit/816cb10da8840770065650e791b0a15e86da5ed0))
-
-## [0.0.3-alpha.379](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.378...v0.0.3-alpha.379) (2023-09-20)
-
-
-### Bug Fixes
-
-* Feature names no longer end in "Feature" ([#2079](https://github.com/Wynntils/Artemis/issues/2079)) ([f2826a5](https://github.com/Wynntils/Artemis/commit/f2826a56473ff37e57355015dea6079ffa70d53f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.379 [skip ci] ([8b70db5](https://github.com/Wynntils/Artemis/commit/8b70db5f11e5f09bddfd7793818738e08eb6814f))
 
