@@ -553,7 +553,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     public void updatePoiPosition(CustomPoi poiToMove, int direction) {
-        if (waypoints.indexOf(poiToMove) + direction < 0 || waypoints.indexOf(poiToMove) + direction > waypoints.size() - 1) {
+        int poiToMoveIndex = waypoints.indexOf(poiToMove);
+
+        if (poiToMoveIndex == -1 || poiToMoveIndex + direction < 0 || poiToMoveIndex + direction > waypoints.size() - 1) {
             return;
         }
 
@@ -801,6 +803,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                         texture -> false,
                         (existing, replacement) -> existing,
                         () -> new EnumMap<>(Texture.class)));
+
+        usedIcons = new ArrayList<>(filteredIcons.keySet());
+
+        filterButton.visible = filteredIcons.size() > 1;
     }
 
     private void toggleIconFilter(boolean enabled) {
@@ -818,6 +824,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         exportButton.visible = !enabled;
         deleteSelectedButton.visible = !enabled;
         undoDeleteButton.visible = !enabled;
+        upButton.visible = selectionMode && !enabled;
+        downButton.visible = selectionMode && !enabled;
 
         scrollOffset = 0;
 
@@ -985,19 +993,23 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private void undoDelete() {
-        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get()
-                .add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
+        HiddenConfig<List<CustomPoi>> allPois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .customPois;
+
+        if (!allPois.get().contains(deletedPois.get(deletedPois.size() - 1))) {
+            allPois.get().add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
+
+            allPois.touched();
+
+            scrollOffset = Math.max(scrollOffset - 1, 0);
+
+            populatePois();
+        }
 
         deletedIndexes.remove(deletedIndexes.size() - 1);
         deletedPois.remove(deletedPois.size() - 1);
 
         undoDeleteButton.active = !deletedIndexes.isEmpty();
-
-        scrollOffset = Math.max(scrollOffset - 1, 0);
-
-        populatePois();
     }
 
     @Override
