@@ -175,11 +175,9 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.entries()) {
             for (ClientboundPlayerInfoUpdatePacket.Action action : packet.actions()) {
                 if (action == ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME) {
-                    GameProfile profile = entry.profile();
-                    if (profile == null) continue;
                     if (entry.displayName() == null) continue;
                     MixinHelper.post(
-                            new PlayerInfoEvent.PlayerDisplayNameChangeEvent(profile.getId(), entry.displayName()));
+                            new PlayerInfoEvent.PlayerDisplayNameChangeEvent(entry.profileId(), entry.displayName()));
                 }
             }
         }
