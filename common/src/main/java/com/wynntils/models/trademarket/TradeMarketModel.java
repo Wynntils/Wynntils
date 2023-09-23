@@ -6,7 +6,6 @@ package com.wynntils.models.trademarket;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
