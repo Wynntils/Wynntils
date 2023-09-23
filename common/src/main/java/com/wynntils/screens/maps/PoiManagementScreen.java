@@ -202,10 +202,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         // endregion
 
         // region up/down buttons
-        upButton = new Button.Builder(
-                Component.literal("ʌ"),
-                (button) -> updateSelectedPoiPositions(-1))
-                        .pos((width / 2) - 22, (int) (dividedHeight * 58))
+        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> updateSelectedPoiPositions(-1))
+                .pos((width / 2) - 22, (int) (dividedHeight * 58))
                 .size(20, 20)
                 .build();
 
@@ -213,9 +211,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         this.addRenderableWidget(upButton);
 
-        downButton = new Button.Builder(
-                Component.literal("v"),
-                (button) -> updateSelectedPoiPositions(1))
+        downButton = new Button.Builder(Component.literal("v"), (button) -> updateSelectedPoiPositions(1))
                 .pos((width / 2) + 2, (int) (dividedHeight * 58))
                 .size(20, 20)
                 .build();
@@ -264,7 +260,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                     scrollOffset = 0;
                     populatePois();
                 },
-                this);
+                this,
+                searchInput);
 
         this.addRenderableWidget(searchInput);
 
@@ -481,50 +478,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         activeSortButton = selectedButton;
 
-        boolean selected = true;
-
-        switch (sortType) {
-            case NAME -> {
-                if (sortOrder == PoiSortOrder.NAME_ASC) {
-                    sortOrder = PoiSortOrder.NAME_DESC;
-                } else if (sortOrder == PoiSortOrder.NAME_DESC) {
-                    sortOrder = null;
-                    selected = false;
-                } else {
-                    sortOrder = PoiSortOrder.NAME_ASC;
-                }
-            }
-            case X -> {
-                if (sortOrder == PoiSortOrder.X_ASC) {
-                    sortOrder = PoiSortOrder.X_DESC;
-                } else if (sortOrder == PoiSortOrder.X_DESC) {
-                    sortOrder = null;
-                    selected = false;
-                } else {
-                    sortOrder = PoiSortOrder.X_ASC;
-                }
-            }
-            case Y -> {
-                if (sortOrder == PoiSortOrder.Y_ASC) {
-                    sortOrder = PoiSortOrder.Y_DESC;
-                } else if (sortOrder == PoiSortOrder.Y_DESC) {
-                    sortOrder = null;
-                    selected = false;
-                } else {
-                    sortOrder = PoiSortOrder.Y_ASC;
-                }
-            }
-            case Z -> {
-                if (sortOrder == PoiSortOrder.Z_ASC) {
-                    sortOrder = PoiSortOrder.Z_DESC;
-                } else if (sortOrder == PoiSortOrder.Z_DESC) {
-                    sortOrder = null;
-                    selected = false;
-                } else {
-                    sortOrder = PoiSortOrder.Z_ASC;
-                }
-            }
-        }
+        boolean selected = toggleSortOrder(sortType);
 
         selectedButton.setSelected(selected);
 
@@ -555,7 +509,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     public void updatePoiPosition(CustomPoi poiToMove, int direction) {
         int poiToMoveIndex = waypoints.indexOf(poiToMove);
 
-        if (poiToMoveIndex == -1 || poiToMoveIndex + direction < 0 || poiToMoveIndex + direction > waypoints.size() - 1) {
+        if (poiToMoveIndex == -1
+                || poiToMoveIndex + direction < 0
+                || poiToMoveIndex + direction > waypoints.size() - 1) {
             return;
         }
 
@@ -587,10 +543,11 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        // FIXME: Search bar cursor dissapears after interacting with it but still remains focused
+        // should be unfocused
         for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY) && child != searchInput) {
-                child.mouseClicked(mouseX, mouseY, button);
-                return true;
+            if (child.isMouseOver(mouseX, mouseY)) {
+                return child.mouseClicked(mouseX, mouseY, button);
             }
         }
 
@@ -605,6 +562,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             }
         }
 
+        // Returning super.doMouseClicked(mouseX, mouseY, button) causes ConcurrentModificationException
         return true;
     }
 
@@ -706,9 +664,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         ySortButton.visible = !waypoints.isEmpty();
         zSortButton.visible = !waypoints.isEmpty();
         exportButton.active = !waypoints.isEmpty();
-        selectAllButton.active = selectedWaypoints.size() < Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().size();
+        selectAllButton.active = !waypoints.isEmpty();
         deselectAllButton.active = !selectedWaypoints.isEmpty();
-        searchInput.visible = !waypoints.isEmpty();
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -719,25 +676,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
 
         if (sortOrder != null) {
-            switch (sortOrder) {
-                case NAME_ASC -> waypoints.sort(
-                        Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
-                case NAME_DESC -> waypoints.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
-                        .reversed());
-                case X_ASC -> waypoints.sort(
-                        Comparator.comparing(poi -> poi.getLocation().getX()));
-                case X_DESC -> waypoints.sort(
-                        Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
-                case Y_ASC -> waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null),
-                        Comparator.nullsFirst(Comparator.naturalOrder())));
-                case Y_DESC -> waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
-                case Z_ASC -> waypoints.sort(
-                        Comparator.comparing(poi -> poi.getLocation().getZ()));
-                case Z_DESC -> waypoints.sort(
-                        Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
-            }
+            waypoints = sortPois();
         }
 
         int row = (int) ((int) (dividedHeight * HEADER_HEIGHT) + (dividedHeight / 2f));
@@ -770,6 +709,32 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
     }
 
+    private List<CustomPoi> sortPois() {
+        List<CustomPoi> sortedPois = waypoints;
+
+        switch (sortOrder) {
+            case NAME_ASC -> sortedPois.sort(
+                    Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
+            case NAME_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
+                    .reversed());
+            case X_ASC -> sortedPois.sort(
+                    Comparator.comparing(poi -> poi.getLocation().getX()));
+            case X_DESC -> sortedPois.sort(
+                    Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
+            case Y_ASC -> sortedPois.sort(Comparator.comparing(
+                    poi -> poi.getLocation().getY().orElse(null),
+                    Comparator.nullsFirst(Comparator.naturalOrder())));
+            case Y_DESC -> sortedPois.sort(Comparator.comparing(
+                    poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
+            case Z_ASC -> sortedPois.sort(
+                    Comparator.comparing(poi -> poi.getLocation().getZ()));
+            case Z_DESC -> sortedPois.sort(
+                    Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+        }
+
+        return sortedPois;
+    }
+
     private void toggleSelectAll(boolean select) {
         selectionMode = select;
 
@@ -782,7 +747,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         if (select) {
             selectedWaypoints = waypoints;
 
-            tooltip = Component.translatable("screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedWaypoints.size());
+            tooltip = Component.translatable(
+                    "screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedWaypoints.size());
         } else {
             selectedWaypoints.clear();
 
@@ -792,6 +758,49 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         exportButton.setTooltip(Tooltip.create(tooltip));
 
         populatePois();
+    }
+
+    private boolean toggleSortOrder(PoiSortType sortType) {
+        PoiSortOrder newOrder = null;
+        boolean selected = true;
+
+        switch (sortType) {
+            case NAME -> {
+                if (sortOrder == null) {
+                    newOrder = PoiSortOrder.NAME_ASC;
+                } else if (sortOrder == PoiSortOrder.NAME_ASC) {
+                    newOrder = PoiSortOrder.NAME_DESC;
+                }
+            }
+            case X -> {
+                if (sortOrder == null) {
+                    newOrder = PoiSortOrder.X_ASC;
+                } else if (sortOrder == PoiSortOrder.X_ASC) {
+                    newOrder = PoiSortOrder.X_DESC;
+                }
+            }
+            case Y -> {
+                if (sortOrder == null) {
+                    newOrder = PoiSortOrder.Y_ASC;
+                } else if (sortOrder == PoiSortOrder.Y_ASC) {
+                    newOrder = PoiSortOrder.Y_DESC;
+                }
+            }
+            case Z -> {
+                if (sortOrder == null) {
+                    newOrder = PoiSortOrder.Z_ASC;
+                } else if (sortOrder == PoiSortOrder.Z_ASC) {
+                    newOrder = PoiSortOrder.Z_DESC;
+                }
+            }
+            default -> {
+                selected = false;
+            }
+        }
+
+        sortOrder = newOrder;
+
+        return selected;
     }
 
     private void updateAllUsedIcons() {
@@ -894,7 +903,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private void updateSelectedPoiPositions(int direction) {
-        List<CustomPoi> orderedWaypoints = waypoints.stream().filter(waypoint -> selectedWaypoints.contains(waypoint)).collect(Collectors.toList());;
+        List<CustomPoi> orderedWaypoints = waypoints.stream()
+                .filter(waypoint -> selectedWaypoints.contains(waypoint))
+                .collect(Collectors.toList());
+        ;
 
         if (direction == 1) {
             Collections.reverse(orderedWaypoints);
@@ -993,8 +1005,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private void undoDelete() {
-        HiddenConfig<List<CustomPoi>> allPois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois;
+        HiddenConfig<List<CustomPoi>> allPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
 
         if (!allPois.get().contains(deletedPois.get(deletedPois.size() - 1))) {
             allPois.get().add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
