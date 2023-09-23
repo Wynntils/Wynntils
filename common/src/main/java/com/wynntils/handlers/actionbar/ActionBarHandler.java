@@ -12,6 +12,7 @@ import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,9 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    // example: "§c❤ 218/218§0    §7502§f S§7 -1580    §b✺ 1/119"
-    private static final Pattern ACTIONBAR_PATTERN = Pattern.compile("(?<LEFT>§[^§]+)(?<CENTER>.*)(?<RIGHT>§[^§]+)");
+    // https://regexr.com/7kfrm
+    private static final Pattern ACTIONBAR_PATTERN =
+            Pattern.compile("(?<LEFT>.+[^ ]) {4,}(?<CENTER>.+[^ ]) {4,}(?<RIGHT>.+)");
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
 
     private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
@@ -61,7 +63,7 @@ public final class ActionBarHandler extends Handler {
         }
 
         // Create map of position -> matching part of the content
-        Map<ActionBarPosition, StyledText> positionMatches = new HashMap<>();
+        Map<ActionBarPosition, StyledText> positionMatches = new EnumMap<>(ActionBarPosition.class);
         Arrays.stream(ActionBarPosition.values())
                 .forEach(pos -> positionMatches.put(pos, StyledText.fromString(matcher.group(pos.name()))));
 
