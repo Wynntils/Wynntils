@@ -319,7 +319,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), horseTierRomanNumerals.get());
+            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
                     .withTextShadow(horseTierShadow.get());

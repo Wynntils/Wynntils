@@ -84,7 +84,7 @@ public class HorseFunctions {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return -1;
 
-            return horse.get().getTier();
+            return horse.get().getTier().getNumeral();
         }
 
         @Override
