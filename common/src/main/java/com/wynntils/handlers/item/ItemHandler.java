@@ -15,6 +15,7 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +38,14 @@ public class ItemHandler extends Handler {
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
     private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
     private final List<Pattern> knownMarkerNames = new ArrayList<>();
+    private final List<Pattern> simplifiablePatterns = new ArrayList<>();
 
     public void registerKnownMarkerNames(List<Pattern> markerPatterns) {
         knownMarkerNames.addAll(markerPatterns);
+    }
+
+    public void addSimplifiablePatterns(Pattern... patterns) {
+        Collections.addAll(simplifiablePatterns, patterns);
     }
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
@@ -255,18 +261,9 @@ public class ItemHandler extends Handler {
     }
 
     private StyledText simplifyName(StyledText name) {
-        final Pattern[] PATTERNS = {
-            // Item on the create buy order menu or create sell offer menu
-            Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
-            // Items on the trade overview menu
-            Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)$"),
-            // Item on the view existing sell offer menu (on the right side)
-            Pattern.compile("^§7§l[^ ]+x (.+)$")
-        };
-
         String full = name.getString();
 
-        for (Pattern p : PATTERNS) {
+        for (Pattern p : simplifiablePatterns) {
             Matcher m = p.matcher(full);
 
             if (m.matches()) {
