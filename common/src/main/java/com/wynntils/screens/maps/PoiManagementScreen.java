@@ -798,7 +798,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         sortOrder = newOrder;
 
-        return selected;
+        return newOrder != null && selected;
     }
 
     private void updateAllUsedIcons() {
