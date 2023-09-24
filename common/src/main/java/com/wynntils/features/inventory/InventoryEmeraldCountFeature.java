@@ -26,8 +26,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
-import java.util.Objects;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -86,28 +84,36 @@ public class InventoryEmeraldCountFeature extends Feature {
                 ? containerScreen.leftPos + 2
                 : screen.width - containerScreen.leftPos - 2;
 
+        int bottomEmeralds = Models.Emerald.getAmountInInventory();
+        boolean displayBottom = !isInventory
+                && !combineInventoryAndContainer.get()
+                && showInventoryEmeraldCount.get()
+                && bottomEmeralds != 0;
         if (topEmeralds != 0) {
             int y = containerScreen.topPos;
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
-                case TEXTURE -> renderTexturedCount(
-                        event.getGuiGraphics(), textureX, y, topEmeralds, showZerosInEmeraldCount.get());
+                case TEXTURE -> {
+                    int adjustedY;
+                    if (displayBottom) {
+                        int displayedTextures = getFilteredEmeraldAmounts(topEmeralds).length;
+                        int sizeY = displayedTextures * TEXTURE_SIZE + 2;
+                        int bottomY = containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
+                        adjustedY = y - Math.max(sizeY - bottomY, 0);
+                    } else {
+                        adjustedY = y;
+                    }
+                    renderTexturedCount(event.getPoseStack(), textureX, adjustedY, topEmeralds);
+                }
             }
         }
 
-        if (!isInventory && !combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
-            int bottomEmeralds = Models.Emerald.getAmountInInventory();
-            if (bottomEmeralds != 0) {
-                int y = containerScreen.topPos + containerScreen.imageHeight;
-                switch (emeraldCountType.get()) {
-                    case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
-                    case TEXTURE -> renderTexturedCount(
-                            event.getGuiGraphics(),
-                            textureX,
-                            y - 28 * 3 - 2,
-                            bottomEmeralds,
-                            showZerosInEmeraldCount.get());
-                }
+        if (displayBottom) {
+            int y = containerScreen.topPos + containerScreen.imageHeight;
+            switch (emeraldCountType.get()) {
+                case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
+                case TEXTURE -> renderTexturedCount(
+                        event.getPoseStack(), textureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
             }
         }
     }
@@ -142,29 +148,16 @@ public class InventoryEmeraldCountFeature extends Feature {
         poseStack.popPose();
     }
 
-    private void renderTexturedCount(GuiGraphics guiGraphics, int x, int y, int emeralds, boolean appendZeros) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    private void renderTexturedCount(PoseStack poseStack, int x, int y, int emeralds) {
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
-        String[] emeraldAmounts = new String[4];
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
-            emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
-            emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
-            emeraldAmounts[3] = StringUtils.formatAmount(emeralds / 262144d);
-        } else {
-            emeraldAmounts = Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
-                    .mapToObj(String::valueOf)
-                    .toArray(String[]::new);
-        }
+        String[] emeraldAmounts = getFilteredEmeraldAmounts(emeralds);
 
         int renderedCount = 0;
 
         for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
             String emeraldAmount = emeraldAmounts[i];
-            if (Objects.equals(emeraldAmount, "0") && !appendZeros) continue;
 
             final int renderX = -TEXTURE_SIZE;
             final int renderY = renderedCount * TEXTURE_SIZE;
@@ -183,15 +176,25 @@ public class InventoryEmeraldCountFeature extends Feature {
                     Texture.EMERALD_COUNT_BACKGROUND.width(),
                     Texture.EMERALD_COUNT_BACKGROUND.height());
 
-            guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+            McUtils.mc()
+                    .getItemRenderer()
+                    .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
 
             if (EmeraldUnits.values()[i].getSymbol().equals("stx")) { // Make stx not look like normal LE
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
             } else {
                 // This needs to be separate since Z levels are determined by order here
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
             }
 
             poseStack.pushPose();
@@ -215,6 +218,24 @@ public class InventoryEmeraldCountFeature extends Feature {
         }
 
         poseStack.popPose();
+    }
+
+    private String[] getFilteredEmeraldAmounts(int emeralds) {
+        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            String[] emeraldAmounts = new String[4];
+            emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
+            emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
+            emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
+            emeraldAmounts[3] = StringUtils.formatAmount(emeralds / 262144d);
+            return Arrays.stream(emeraldAmounts)
+                    .filter(emeraldAmount -> !emeraldAmount.equals("0") || showZerosInEmeraldCount.get())
+                    .toArray(String[]::new);
+        } else {
+            return Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
+                    .filter(emeraldAmount -> emeraldAmount != 0 || showZerosInEmeraldCount.get())
+                    .mapToObj(String::valueOf)
+                    .toArray(String[]::new);
+        }
     }
 
     public enum EmeraldCountType {

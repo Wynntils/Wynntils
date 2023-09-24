@@ -10,6 +10,7 @@ import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class RangedStatFilters {
@@ -91,26 +92,36 @@ public final class RangedStatFilters {
     }
 
     private abstract static class RangedStatFilterFactory<T> extends StatFilterFactory<T> {
-        private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("\\d+");
-        private static final Pattern RANGE_PATTERN = Pattern.compile("\\d+-\\d+");
-        private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">(=)?\\d+");
-        private static final Pattern LESS_THAN_PATTERN = Pattern.compile("<(=)?\\d+");
+        private static final Pattern SINGLE_VALUE_PATTERN = Pattern.compile("[-+]?\\d+");
+        private static final Pattern RANGE_PATTERN = Pattern.compile("([-+]?\\d+)-([-+]?\\d+)");
+        private static final Pattern GREATER_THAN_PATTERN = Pattern.compile(">(=)?[-+]?\\d+");
+        private static final Pattern LESS_THAN_PATTERN = Pattern.compile("<(=)?[-+]?\\d+");
 
         @Override
         public Optional<T> create(String inputString) {
-            if (SINGLE_VALUE_PATTERN.matcher(inputString).matches()) {
+            Matcher matcher = SINGLE_VALUE_PATTERN.matcher(inputString);
+
+            if (matcher.matches()) {
                 int value = Integer.parseInt(inputString);
                 return Optional.of(getRangedStatFilter(value, value));
-            } else if (RANGE_PATTERN.matcher(inputString).matches()) {
-                String[] split = inputString.split("-");
-                int min = Integer.parseInt(split[0]);
-                int max = Integer.parseInt(split[1]);
+            }
+
+            matcher = RANGE_PATTERN.matcher(inputString);
+            if (matcher.matches()) {
+                int min = Integer.parseInt(matcher.group(1));
+                int max = Integer.parseInt(matcher.group(2));
                 return Optional.of(getRangedStatFilter(min, max));
-            } else if (GREATER_THAN_PATTERN.matcher(inputString).matches()) {
+            }
+
+            matcher = GREATER_THAN_PATTERN.matcher(inputString);
+            if (matcher.matches()) {
                 boolean equal = inputString.charAt(1) == '=';
                 int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
                 return Optional.of(getRangedStatFilter(equal ? value : value + 1, Integer.MAX_VALUE));
-            } else if (LESS_THAN_PATTERN.matcher(inputString).matches()) {
+            }
+
+            matcher = LESS_THAN_PATTERN.matcher(inputString);
+            if (matcher.matches()) {
                 boolean equal = inputString.charAt(1) == '=';
                 int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
                 return Optional.of(getRangedStatFilter(Integer.MIN_VALUE, equal ? value : value - 1));

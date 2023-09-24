@@ -70,12 +70,12 @@ public final class MainMapScreen extends AbstractMapScreen {
         super.doInit();
 
         this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
+                        - 8),
+                10,
                 16,
                 Texture.HELP_ICON,
                 (b) -> {},
@@ -119,8 +119,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
+                        - 8),
+                12,
                 16,
                 Texture.WAYPOINT_MANAGER_ICON,
                 (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
@@ -132,13 +132,13 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
+                        - 7),
                 16,
-                16,
+                14,
                 Texture.SHARE_ICON,
                 this::shareLocationOrCompass,
                 List.of(
@@ -163,8 +163,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
+                        - 8),
+                12,
                 16,
                 Texture.WAYPOINT_FOCUS_ICON,
                 (b) -> {
@@ -201,9 +201,9 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
-                16,
+                        - 7),
+                14,
+                14,
                 Texture.ADD_ICON,
                 (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
                 List.of(

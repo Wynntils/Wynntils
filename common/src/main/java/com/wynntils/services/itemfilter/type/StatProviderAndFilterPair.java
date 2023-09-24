@@ -7,7 +7,7 @@ package com.wynntils.services.itemfilter.type;
 import com.wynntils.models.items.WynnItem;
 import java.util.List;
 
-public record StatProviderAndFilterPair<T>(ItemStatProvider<T> statProvider, StatFilter<T> statFilter) {
+public record StatProviderAndFilterPair<T>(ItemStatProvider statProvider, StatFilter<T> statFilter) {
     public static StatProviderAndFilterPair<Object> fromPair(ItemStatProvider itemStatProvider, StatFilter value) {
         return new StatProviderAndFilterPair<>(itemStatProvider, value);
     }
