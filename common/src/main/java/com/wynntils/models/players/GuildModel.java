@@ -17,6 +17,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.players.type.GuildRank;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
@@ -126,6 +127,10 @@ public class GuildModel extends Model {
 
     public Optional<GuildProfile> getGuildProfile(String name) {
         return Optional.ofNullable(guildProfileMap.get(name));
+    }
+
+    public CustomColor getColor(String guildName) {
+        return getGuildProfile(guildName).map(GuildProfile::color).orElse(CustomColor.colorForStringHash(guildName));
     }
 
     private void loadGuildList() {
