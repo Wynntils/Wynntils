@@ -60,7 +60,7 @@ public class ChatCoordinatesFeature extends Feature {
                     LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
             while (matcher.find()) {
-                Optional<Location> location = LocationUtils.parseFromString(matcher.group());
+                Optional<Location> location = LocationUtils.parseFromString(matcher.group(1));
 
                 if (location.isEmpty()) {
                     continue;
@@ -68,12 +68,8 @@ public class ChatCoordinatesFeature extends Feature {
 
                 String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
-                int matchStart = matcher.group().charAt(0) == ' ' ? matcher.start() + 1 : matcher.start();
-                int matchEnd =
-                        matcher.group().charAt(matcher.group().length() - 1) == ' ' ? matcher.end() - 1 : matcher.end();
-
-                String firstPart = match.substring(0, matchStart);
-                String lastPart = match.substring(matchEnd);
+                String firstPart = match.substring(0, matcher.start(1));
+                String lastPart = match.substring(matcher.end(1));
 
                 PartStyle partStyle = partToReplace.getPartStyle();
 
