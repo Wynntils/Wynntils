@@ -1,9 +1,21 @@
+## [0.0.3-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.385...v0.0.3-alpha.386) (2023-09-24)
+
+
+### Code Refactoring
+
+* Use translatable for redirect messages ([#2107](https://github.com/Wynntils/Artemis/issues/2107)) ([1450233](https://github.com/Wynntils/Artemis/commit/145023327aaeb3d9daf40a1f966353c56388a114))
+
 ## [0.0.3-alpha.385](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.384...v0.0.3-alpha.385) (2023-09-24)
 
 
 ### Bug Fixes
 
 * Spell cast indicator not appearing ([#2117](https://github.com/Wynntils/Artemis/issues/2117)) ([1d55872](https://github.com/Wynntils/Artemis/commit/1d55872401e4401daf39b8e0208f93d3258db948))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.385 [skip ci] ([dc3912f](https://github.com/Wynntils/Artemis/commit/dc3912f6a5df0124eef3cb08c4b85a43c4e0970b))
 
 
 ### Code Refactoring
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.382 [skip ci] ([90f85b3](https://github.com/Wynntils/Artemis/commit/90f85b3916fa16cd1cb798dd104879de7e8932f2))
-
-## [0.0.3-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.380...v0.0.3-alpha.381) (2023-09-20)
-
-
-### Bug Fixes
-
-* Avoid NPE in bomb tracking ([#2112](https://github.com/Wynntils/Artemis/issues/2112)) ([80f715e](https://github.com/Wynntils/Artemis/commit/80f715ebe578339ffcb6bf6c3685d3dd474c7c92))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.381 [skip ci] ([0d86125](https://github.com/Wynntils/Artemis/commit/0d861257454b490db2f9c0e1b1cdbdaee220738e))
 
