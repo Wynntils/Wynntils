@@ -31,14 +31,26 @@ public class CosmeticsPreviewFeature extends Feature {
         if (title.equals(WEAPON_COSMETICS_TITLE)
                 || title.equals(HELMET_COSMETICS_TITLE)
                 || title.equals(GUILD_GEAR_MENU_TITLE)) {
-            int posX = screen.leftPos + screen.imageWidth + 20;
-            int posY = screen.topPos + screen.imageHeight / 2;
+            int renderX = screen.leftPos + screen.imageWidth + 5;
+            int renderY = screen.topPos + screen.imageHeight / 2 - 75;
+
+            int renderWidth = Texture.COSMETIC_VIEWER_BACKGROUND.width();
+            int renderHeight = Texture.COSMETIC_VIEWER_BACKGROUND.height();
 
             PoseStack poseStack = new PoseStack();
-            RenderUtils.drawTexturedRect(poseStack, Texture.COSMETIC_VIEWER_BACKGROUND, posX - 15, posY - 75);
+            RenderUtils.drawTexturedRect(poseStack, Texture.COSMETIC_VIEWER_BACKGROUND, renderX, renderY);
 
             InventoryScreen.renderEntityInInventoryFollowsMouse(
-                    event.getGuiGraphics(), posX + 26, posY + 8, posX + 75, posY + 78, 30, 1f, 0, 0, McUtils.player());
+                    event.getGuiGraphics(),
+                    renderX,
+                    renderY,
+                    renderX + renderWidth,
+                    renderY + renderHeight,
+                    27,
+                    0.4f,
+                    renderX + renderWidth / 2,
+                    renderY + renderHeight / 2,
+                    McUtils.player());
         }
     }
 }

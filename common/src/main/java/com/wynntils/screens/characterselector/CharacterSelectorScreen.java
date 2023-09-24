@@ -169,7 +169,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
         renderScrollButton(poseStack);
 
-        renderPlayer(guiGraphics);
+        renderPlayer(guiGraphics, mouseX, mouseY);
 
         if (selected == null) return;
 
@@ -398,18 +398,31 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         }
     }
 
-    private void renderPlayer(GuiGraphics guiGraphics) {
+    private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();
         McUtils.player().setSwimming(false);
 
-        int scale = this.height / 4;
+        int scale = (int) (this.height / 4.5f);
 
-        int renderX = (int) (this.width * 0.6f);
-        int renderY = (int) (this.height * 0.85f);
+        int renderX = (int) (this.width * 0.5f);
+        int renderY = (int) (this.height * 0.4f);
+
+        final int renderWidth = (int) (this.width * 0.128f);
+        final int renderHeight = (int) (this.height * 0.5f);
+
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                guiGraphics, renderX + 26, renderY + 8, renderX + 75, renderY + 78, 30, scale, 0, 0, McUtils.player());
+                guiGraphics,
+                renderX,
+                renderY,
+                renderX + renderWidth,
+                renderY + renderHeight,
+                scale,
+                0,
+                renderX + renderWidth / 2,
+                renderY + renderHeight / 2,
+                McUtils.player());
     }
 
     private void setScrollOffset(int delta) {
