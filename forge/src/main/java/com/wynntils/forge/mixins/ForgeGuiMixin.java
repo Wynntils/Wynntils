@@ -4,7 +4,6 @@
  */
 package com.wynntils.forge.mixins;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderEvent;
 import net.minecraft.client.Minecraft;

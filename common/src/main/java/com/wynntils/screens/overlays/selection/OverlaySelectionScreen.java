@@ -66,12 +66,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+
         PoseStack poseStack = guiGraphics.pose();
 
         poseStack.pushPose();
-
-        int backgroundColor = CommonColors.DARK_GRAY.withAlpha(200).asInt();
-        guiGraphics.fillGradient(0, 0, this.width, this.height, backgroundColor, backgroundColor);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Texture.OVERLAY_SELECTION_GUI.resource());
@@ -96,8 +95,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         poseStack.popPose();
 
         overlayList.render(guiGraphics, mouseX, mouseY, partialTick);
-
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
