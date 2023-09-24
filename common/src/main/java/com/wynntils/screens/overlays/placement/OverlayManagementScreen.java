@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -230,7 +231,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             }
         }
 
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick); // This renders widgets
+        // Render widgets
+        for (Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
     }
 
     private CustomColor getOverlayColor(Overlay overlay) {
