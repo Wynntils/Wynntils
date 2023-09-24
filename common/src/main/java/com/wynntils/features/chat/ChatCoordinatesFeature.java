@@ -68,8 +68,12 @@ public class ChatCoordinatesFeature extends Feature {
 
                 String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
-                String firstPart = match.substring(0, matcher.start());
-                String lastPart = match.substring(matcher.end());
+                int matchStart = matcher.group().charAt(0) == ' ' ? matcher.start() + 1 : matcher.start();
+                int matchEnd =
+                        matcher.group().charAt(matcher.group().length() - 1) == ' ' ? matcher.end() - 1 : matcher.end();
+
+                String firstPart = match.substring(0, matchStart);
+                String lastPart = match.substring(matchEnd);
 
                 PartStyle partStyle = partToReplace.getPartStyle();
 
