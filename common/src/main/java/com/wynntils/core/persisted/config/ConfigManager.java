@@ -47,7 +47,7 @@ public final class ConfigManager extends Manager {
             UpfixerManager upfixerManager, JsonManager jsonManager, FeatureManager feature, OverlayManager overlay) {
         super(List.of(upfixerManager, jsonManager, feature, overlay));
 
-        userConfig = new File(CONFIG_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
+        userConfig = new File(CONFIG_DIR, McUtils.mc().getUser().getUuid().replaceAll("-", "") + FILE_SUFFIX);
     }
 
     public void init() {
