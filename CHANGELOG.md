@@ -1,4 +1,16 @@
+## [0.0.3-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.386...v0.0.3-alpha.387) (2023-09-24)
+
+
+### Bug Fixes
+
+* In preparation for 1.20.2, always use undashed UUIDs in config files ([#2119](https://github.com/Wynntils/Artemis/issues/2119)) ([9d8a24c](https://github.com/Wynntils/Artemis/commit/9d8a24c347fdee8cc35c270b016da4f89bfd9547))
+
 ## [0.0.3-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.385...v0.0.3-alpha.386) (2023-09-24)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.386 [skip ci] ([5c68066](https://github.com/Wynntils/Artemis/commit/5c680662d95b263c0697754aca71591c667eeb69))
 
 
 ### Code Refactoring
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.383 [skip ci] ([5df6f52](https://github.com/Wynntils/Artemis/commit/5df6f52de11ff3e71b3ef30b18a0e01a4b6956b1))
-
-## [0.0.3-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.381...v0.0.3-alpha.382) (2023-09-21)
-
-
-### Bug Fixes
-
-* Login redirect not redirecting renamed players ([#2114](https://github.com/Wynntils/Artemis/issues/2114)) ([7ec2abb](https://github.com/Wynntils/Artemis/commit/7ec2abb7867306d3512a1c2505f6cb5aaf6795bf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.382 [skip ci] ([90f85b3](https://github.com/Wynntils/Artemis/commit/90f85b3916fa16cd1cb798dd104879de7e8932f2))
 
