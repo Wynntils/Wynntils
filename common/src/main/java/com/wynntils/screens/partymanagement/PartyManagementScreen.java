@@ -138,7 +138,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
 
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         boolean inParty = Models.Party.isInParty();
 
@@ -150,8 +150,6 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
-
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         // uncomment when changing gui elements
         // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
