@@ -833,7 +833,6 @@ public final class RenderUtils {
                 Texture.VIGNETTE.height());
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.enableBlend();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
