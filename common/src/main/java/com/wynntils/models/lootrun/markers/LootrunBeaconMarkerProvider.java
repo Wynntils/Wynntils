@@ -26,11 +26,12 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
     private List<MarkerPoi> pois = new ArrayList<>();
 
     public void reloadTaskMarkers() {
-        taskMarkers.clear();
+        // Update markers
+        List<MarkerInfo> newTaskMarkers = new ArrayList<>();
 
         for (Map.Entry<BeaconColor, TaskPrediction> entry :
                 Models.Lootrun.getBeacons().entrySet()) {
-            taskMarkers.add(new MarkerInfo(
+            newTaskMarkers.add(new MarkerInfo(
                     EnumUtils.toNiceString(entry.getKey()) + " Beacon",
                     new StaticLocationSupplier(entry.getValue().taskLocation().location()),
                     entry.getValue().taskLocation().taskType().getTexture(),
@@ -38,11 +39,15 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
                     CommonColors.WHITE,
                     entry.getKey().getColor()));
         }
+        taskMarkers = newTaskMarkers;
 
-        pois.clear();
+        // Update POIs
+        List<MarkerPoi> newPois = new ArrayList<>();
+
         for (MarkerInfo entry : taskMarkers) {
-            pois.add(new MarkerPoi(PoiLocation.fromLocation(entry.location()), entry.name(), entry.texture()));
+            newPois.add(new MarkerPoi(PoiLocation.fromLocation(entry.location()), entry.name(), entry.texture()));
         }
+        pois = newPois;
     }
 
     @Override
