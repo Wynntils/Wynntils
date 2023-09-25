@@ -156,7 +156,6 @@ public class WynntilsCommand extends Command {
         Services.Hades.tryDisconnect();
         Services.WynntilsAccount.reauth();
         Models.Player.reset();
-        Models.Territory.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
         return 1;
