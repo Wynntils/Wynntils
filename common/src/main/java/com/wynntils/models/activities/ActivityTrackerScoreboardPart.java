@@ -42,9 +42,18 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
         List<StyledText> taskLines = content.subList(1, content.size());
 
         for (StyledText line : taskLines) {
+            // If a comma is at the start of a line, we don't need the space from the previous line
+            if (line.getString(PartStyle.StyleType.NONE).startsWith(",")) {
+                nextTask.deleteCharAt(nextTask.length() - 1);
+            }
+            System.out.println(line.getString());
             nextTask.append(line.getString()
                     .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                     .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()));
+
+            if (!line.getString().endsWith(" ")) {
+                nextTask.append(" ");
+            }
         }
 
         String type = matcher.group(1);
