@@ -23,11 +23,10 @@ public class ShinyModel extends Model {
 
     public Optional<ShinyStat> getShinyStat(ItemStack itemStack) {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-
         if (gearItemOpt.isEmpty()) return Optional.empty();
 
         Optional<GearInstance> gearInstanceOpt = gearItemOpt.get().getGearInstance();
-        if (gearItemOpt.isEmpty()) return Optional.empty();
+        if (gearInstanceOpt.isEmpty()) return Optional.empty();
 
         return gearInstanceOpt.get().shinyStat();
     }

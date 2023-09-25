@@ -52,19 +52,14 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private double mouseDrag = 0;
     private ClassInfoButton selected = null;
 
-    private CharacterSelectorScreen() {
+    private CharacterSelectorScreen(AbstractContainerScreen<?> classSelectionScreen) {
         super(Component.translatable("screens.wynntils.characterSelection.name"));
 
-        if (McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            actualClassSelectionScreen = abstractContainerScreen;
-        } else {
-            throw new IllegalStateException(
-                    "Tried to open custom character selection screen when normal character selection screen is not open");
-        }
+        actualClassSelectionScreen = classSelectionScreen;
     }
 
-    public static Screen create() {
-        return new CharacterSelectorScreen();
+    public static Screen create(AbstractContainerScreen<?> classSelectionScreen) {
+        return new CharacterSelectorScreen(classSelectionScreen);
     }
 
     @Override

@@ -108,6 +108,9 @@ public class DiscordRichPresenceFeature extends Feature {
             return;
         }
 
+        // Player is not on world, skip territory check
+        if (McUtils.player() == null) return;
+
         Position position = McUtils.player().position();
         if (position != null) {
             TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
