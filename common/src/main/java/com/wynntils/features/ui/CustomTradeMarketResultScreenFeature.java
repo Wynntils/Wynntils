@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
@@ -16,7 +17,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultScreen;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,8 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CustomTradeMarketResultScreenFeature extends Feature {
-    private static final Pattern TRADE_MARKET_FILTER_SCREEN_TITLE_PATTERN =
-            Pattern.compile("\\[Pg. \\d+\\] Filter Items");
     private static final String SEARCH_ITEM_TITLE = "§a§lSearch";
 
     @Persisted
@@ -66,8 +64,7 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
         if (shiftBehaviorConfig.get() == ShiftBehavior.NONE) return;
         if (McUtils.mc().screen == null) return;
 
-        if (!StyledText.fromComponent(McUtils.mc().screen.getTitle())
-                .matches(TRADE_MARKET_FILTER_SCREEN_TITLE_PATTERN)) {
+        if (Models.TradeMarket.isFilterScreen(McUtils.mc().screen.getTitle())) {
             return;
         }
 

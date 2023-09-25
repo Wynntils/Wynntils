@@ -5,6 +5,7 @@
 package com.wynntils.wrappedscreens.trademarket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.screens.base.TextboxScreen;
@@ -74,20 +75,26 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     protected void doInit() {
         super.doInit();
 
-        ItemSearchWidget oldWidget = itemSearchWidget;
-
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (width - imageWidth) / 2;
         int renderY = (height - imageHeight) / 2 - 22;
 
-        itemSearchWidget =
-                new ItemSearchWidget(renderX, renderY, 175, 20, true, q -> reloadElements(), (TextboxScreen) this);
+        itemSearchWidget = new ItemSearchWidget(
+                renderX,
+                renderY,
+                175,
+                20,
+                true,
+                (query) -> {
+                    saveSearchFilter(query);
+                    reloadElements();
+                },
+                (TextboxScreen) this);
         this.addRenderableWidget(itemSearchWidget);
 
-        // Copy over the old widget's text
-        if (oldWidget != null) {
-            itemSearchWidget.setTextBoxInput(oldWidget.getTextBoxInput());
-        }
+        // Set the last search filter, if we opened a new screen
+        // On reloads, this should not change anything
+        itemSearchWidget.setTextBoxInput(Models.TradeMarket.getLastSearchFilter());
 
         WynntilsButton helperButton = new ItemSearchHelperWidget(
                 renderX + 160,
@@ -299,5 +306,9 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private void reloadElements() {
         parent.updateDisplayItems(itemSearchWidget.getSearchQuery());
         scrollOffset = 0;
+    }
+
+    private void saveSearchFilter(ItemSearchQuery query) {
+        Models.TradeMarket.setLastSearchFilter(query.queryString());
     }
 }

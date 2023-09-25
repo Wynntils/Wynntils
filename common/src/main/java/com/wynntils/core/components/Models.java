@@ -50,6 +50,7 @@ import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.token.TokenModel;
+import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
@@ -77,6 +78,7 @@ public final class Models {
     public static final ServerListModel ServerList = new ServerListModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
+    public static final TradeMarketModel TradeMarket = new TradeMarketModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
