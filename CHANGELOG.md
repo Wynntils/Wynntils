@@ -1,9 +1,21 @@
+## [0.0.3-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.387...v0.0.3-alpha.388) (2023-09-25)
+
+
+### Bug Fixes
+
+* remove territory api lookup failure checks ([#2123](https://github.com/Wynntils/Artemis/issues/2123)) ([0dc0506](https://github.com/Wynntils/Artemis/commit/0dc0506a6aad0691a8e2147bff81a1d9e846a027))
+
 ## [0.0.3-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.386...v0.0.3-alpha.387) (2023-09-24)
 
 
 ### Bug Fixes
 
 * In preparation for 1.20.2, always use undashed UUIDs in config files ([#2119](https://github.com/Wynntils/Artemis/issues/2119)) ([9d8a24c](https://github.com/Wynntils/Artemis/commit/9d8a24c347fdee8cc35c270b016da4f89bfd9547))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.387 [skip ci] ([42a9a58](https://github.com/Wynntils/Artemis/commit/42a9a58cd8c509d08879ef201f83f614d7c23021))
 
 ## [0.0.3-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.385...v0.0.3-alpha.386) (2023-09-24)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.384 [skip ci] ([e00efee](https://github.com/Wynntils/Artemis/commit/e00efeef93c1d80c578a7458a6f9a9d5a6b284ae))
-
-## [0.0.3-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.382...v0.0.3-alpha.383) (2023-09-22)
-
-
-### Bug Fixes
-
-* Fix emerald pouch's emerald displays overlapping ([#2109](https://github.com/Wynntils/Artemis/issues/2109)) ([66aa8ee](https://github.com/Wynntils/Artemis/commit/66aa8ee74c890a191038915d81e6044b011ed412))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.383 [skip ci] ([5df6f52](https://github.com/Wynntils/Artemis/commit/5df6f52de11ff3e71b3ef30b18a0e01a4b6956b1))
 
