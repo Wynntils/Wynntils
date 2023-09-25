@@ -1,9 +1,21 @@
+## [0.0.3-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.388...v0.0.3-alpha.389) (2023-09-25)
+
+
+### Bug Fixes
+
+* Fix a batch of 11 bugs from the active Athena reports ([#2125](https://github.com/Wynntils/Artemis/issues/2125)) ([0c39deb](https://github.com/Wynntils/Artemis/commit/0c39deb281196860e0a831cf22d56dee16e9a3c3))
+
 ## [0.0.3-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.387...v0.0.3-alpha.388) (2023-09-25)
 
 
 ### Bug Fixes
 
 * remove territory api lookup failure checks ([#2123](https://github.com/Wynntils/Artemis/issues/2123)) ([0dc0506](https://github.com/Wynntils/Artemis/commit/0dc0506a6aad0691a8e2147bff81a1d9e846a027))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.388 [skip ci] ([0b53765](https://github.com/Wynntils/Artemis/commit/0b5376559e926f1eea8aa5d2990d3dc52b0606b3))
 
 ## [0.0.3-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.386...v0.0.3-alpha.387) (2023-09-24)
 
@@ -45,16 +57,4 @@
 ### Code Refactoring
 
 * Simplify guild color lookup ([#2110](https://github.com/Wynntils/Artemis/issues/2110)) ([3875402](https://github.com/Wynntils/Artemis/commit/38754023c99f1445d7c67d025b5dcd097e6c7a79))
-
-## [0.0.3-alpha.384](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.383...v0.0.3-alpha.384) (2023-09-23)
-
-
-### Bug Fixes
-
-* Action bar does not match 100% curse ([#2104](https://github.com/Wynntils/Artemis/issues/2104)) ([6f59865](https://github.com/Wynntils/Artemis/commit/6f598651878bbd942c2280e1e6b9becc232888b8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.384 [skip ci] ([e00efee](https://github.com/Wynntils/Artemis/commit/e00efeef93c1d80c578a7458a6f9a9d5a6b284ae))
 
