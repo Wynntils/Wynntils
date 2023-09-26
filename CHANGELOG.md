@@ -1,9 +1,21 @@
+## [0.0.3-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.389...v0.0.3-alpha.390) (2023-09-26)
+
+
+### Miscellaneous Chores
+
+* Update to Loom 1.3 (and other dependency updates) ([#2122](https://github.com/Wynntils/Artemis/issues/2122)) ([f4bea87](https://github.com/Wynntils/Artemis/commit/f4bea8764f98178841f59387f40616d720d12f7d))
+
 ## [0.0.3-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.388...v0.0.3-alpha.389) (2023-09-25)
 
 
 ### Bug Fixes
 
 * Fix a batch of 11 bugs from the active Athena reports ([#2125](https://github.com/Wynntils/Artemis/issues/2125)) ([0c39deb](https://github.com/Wynntils/Artemis/commit/0c39deb281196860e0a831cf22d56dee16e9a3c3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.389 [skip ci] ([a7e607e](https://github.com/Wynntils/Artemis/commit/a7e607ea887bcb287a6e847256654387794b8db6))
 
 ## [0.0.3-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.387...v0.0.3-alpha.388) (2023-09-25)
 
@@ -40,21 +52,4 @@
 ### Code Refactoring
 
 * Use translatable for redirect messages ([#2107](https://github.com/Wynntils/Artemis/issues/2107)) ([1450233](https://github.com/Wynntils/Artemis/commit/145023327aaeb3d9daf40a1f966353c56388a114))
-
-## [0.0.3-alpha.385](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.384...v0.0.3-alpha.385) (2023-09-24)
-
-
-### Bug Fixes
-
-* Spell cast indicator not appearing ([#2117](https://github.com/Wynntils/Artemis/issues/2117)) ([1d55872](https://github.com/Wynntils/Artemis/commit/1d55872401e4401daf39b8e0208f93d3258db948))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.385 [skip ci] ([dc3912f](https://github.com/Wynntils/Artemis/commit/dc3912f6a5df0124eef3cb08c4b85a43c4e0970b))
-
-
-### Code Refactoring
-
-* Simplify guild color lookup ([#2110](https://github.com/Wynntils/Artemis/issues/2110)) ([3875402](https://github.com/Wynntils/Artemis/commit/38754023c99f1445d7c67d025b5dcd097e6c7a79))
 
