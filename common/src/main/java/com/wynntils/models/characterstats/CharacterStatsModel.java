@@ -7,6 +7,7 @@ package com.wynntils.models.characterstats;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.HealthSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
     private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
@@ -156,6 +158,12 @@ public final class CharacterStatsModel extends Model {
     }
 
     private void centerSegmentCleared() {
+        powderSpecialSegment.replaced();
+    }
+
+    @SubscribeEvent
+    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
+        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
         powderSpecialSegment.replaced();
     }
 }

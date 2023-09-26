@@ -67,7 +67,7 @@ public class ContentBookQueries {
                         "Content Book Query for " + activityType.getDisplayName())
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
-                    if (showUpdates) {
+                    if (showUpdates && stateMessageContainer != null) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
                                 StyledText.fromComponent(Component.literal(
