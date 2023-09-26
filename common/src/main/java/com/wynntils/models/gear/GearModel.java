@@ -114,7 +114,14 @@ public final class GearModel extends Model {
         }
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
-                gearType, result.level(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+                gearType,
+                result.health(),
+                result.level(),
+                List.of(),
+                List.of(),
+                result.identifications(),
+                result.powders(),
+                durability);
     }
 
     public UnknownGearItem parseUnknownGearItem(

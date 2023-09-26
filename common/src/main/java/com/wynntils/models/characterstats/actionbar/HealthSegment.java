@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HealthSegment implements ActionBarSegment {
-    private static final Pattern HEALTH_PATTERN = Pattern.compile("§c❤ ([0-9]+)/([0-9]+)");
+    private static final Pattern HEALTH_PATTERN = Pattern.compile("§c❤ (\\d+)/(\\d+)");
 
     private CappedValue health = CappedValue.EMPTY;
     private boolean hidden;

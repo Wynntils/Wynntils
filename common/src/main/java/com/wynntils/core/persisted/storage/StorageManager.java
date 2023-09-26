@@ -46,7 +46,7 @@ public final class StorageManager extends Manager {
 
     public StorageManager(JsonManager jsonManager, FeatureManager feature) {
         super(List.of(jsonManager, feature));
-        userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
+        userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid().replaceAll("-", "") + FILE_SUFFIX);
     }
 
     public void initComponents() {
