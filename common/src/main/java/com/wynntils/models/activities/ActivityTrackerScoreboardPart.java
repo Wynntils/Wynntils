@@ -18,7 +18,7 @@ import net.minecraft.ChatFormatting;
 
 public class ActivityTrackerScoreboardPart extends ScoreboardPart {
     private static final SegmentMatcher TRACKER_MATCHER = SegmentMatcher.fromPattern("Tracked (.*):");
-    private static final Pattern SPACER_PATTERN = Pattern.compile("[^a-zA-Z\\[\\-\\d].*");
+    private static final Pattern SPACER_PATTERN = Pattern.compile("[^a-zA-Z\\[\\d-].*");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
