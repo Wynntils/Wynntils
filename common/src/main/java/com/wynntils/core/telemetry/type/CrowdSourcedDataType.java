@@ -8,18 +8,17 @@ import com.wynntils.core.telemetry.datatype.LootrunTaskLocation;
 
 /**
  * This enum represents the type of crowd sourced data that is being collected.
- * Each data class has to implement {@link Comparable}.
  */
 public enum CrowdSourcedDataType {
     LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class);
 
-    private final Class<?> dataClass;
+    private final Class<? extends Comparable<?>> dataClass;
 
-    CrowdSourcedDataType(Class<?> dataClass) {
+    CrowdSourcedDataType(Class<? extends Comparable<?>> dataClass) {
         this.dataClass = dataClass;
     }
 
-    public Class<?> getDataClass() {
+    public Class<? extends Comparable<?>> getDataClass() {
         return dataClass;
     }
 }
