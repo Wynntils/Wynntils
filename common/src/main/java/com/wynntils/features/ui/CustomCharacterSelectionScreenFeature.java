@@ -16,6 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -30,8 +31,12 @@ public class CustomCharacterSelectionScreenFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
+        if (!(event.getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+
         if ((onlyOpenOnce.get() && openedInThisCharacterSelectionState)
-                || Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
+                || Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) {
+            return;
+        }
 
         if (!StyledText.fromComponent(event.getScreen().getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
@@ -39,7 +44,7 @@ public class CustomCharacterSelectionScreenFeature extends Feature {
 
         openedInThisCharacterSelectionState = true;
 
-        McUtils.mc().setScreen(CharacterSelectorScreen.create());
+        McUtils.mc().setScreen(CharacterSelectorScreen.create(abstractContainerScreen));
     }
 
     @SubscribeEvent
