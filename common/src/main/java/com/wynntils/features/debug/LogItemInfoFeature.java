@@ -74,7 +74,7 @@ public class LogItemInfoFeature extends Feature {
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "
-                + itemStack.getTag().toString().replace('§', '&') + "\nGlint: "
+                + itemStack.getOrCreateTag().toString().replace('§', '&') + "\nGlint: "
                 + itemStack.hasFoil();
     }
 }

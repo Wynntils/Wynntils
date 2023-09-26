@@ -8,6 +8,8 @@ import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.utils.StringUtils;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class StringStatFilter extends StatFilter<String> {
     private String searchLiteral;
@@ -24,12 +26,13 @@ public final class StringStatFilter extends StatFilter<String> {
     }
 
     public static class StringStatFilterFactory extends StatFilterFactory<StringStatFilter> {
-        private static final String STRICT_FILTER_CHAR = "\"";
+        private static final Pattern STRICT_FILTER_PATTERN = Pattern.compile("\"(.+)\"");
 
         @Override
         public Optional<StringStatFilter> create(String inputString) {
-            if (inputString.startsWith(STRICT_FILTER_CHAR) && inputString.endsWith(STRICT_FILTER_CHAR)) {
-                return Optional.of(new StringStatFilter(inputString.substring(1, inputString.length() - 1), true));
+            Matcher matcher = STRICT_FILTER_PATTERN.matcher(inputString);
+            if (matcher.matches()) {
+                return Optional.of(new StringStatFilter(matcher.group(1), true));
             }
 
             return Optional.of(new StringStatFilter(inputString, false));
