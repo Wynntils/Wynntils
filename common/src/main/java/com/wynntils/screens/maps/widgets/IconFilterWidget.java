@@ -6,7 +6,7 @@ package com.wynntils.screens.maps.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.screens.maps.IconFilterScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -16,27 +16,27 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class PoiFilterWidget extends AbstractWidget {
+public class IconFilterWidget extends AbstractWidget {
     private final boolean included;
     private final float iconRenderX;
     private final float iconRenderY;
     private final List<Component> tooltip;
-    private final PoiManagementScreen managementScreen;
+    private final IconFilterScreen filterScreen;
     private final Texture icon;
 
-    public PoiFilterWidget(
-            int x, int y, int width, int height, Texture icon, PoiManagementScreen managementScreen, boolean included) {
-        super(x, y, width, height, Component.literal("Poi Icon Widget"));
+    public IconFilterWidget(
+            int x, int y, int width, int height, Texture icon, IconFilterScreen filterScreen, boolean included) {
+        super(x, y, width, height, Component.literal("Icon Filter Widget"));
         this.icon = icon;
-        this.managementScreen = managementScreen;
+        this.filterScreen = filterScreen;
         this.included = included;
 
         iconRenderX = (x + width / 2f) - icon.width() / 2f;
         iconRenderY = (y + height / 2f) - icon.height() / 2f;
 
         tooltip = included
-                ? List.of(Component.translatable("screens.wynntils.poiManagementGui.filterExclude.tooltip"))
-                : List.of(Component.translatable("screens.wynntils.poiManagementGui.filterInclude.tooltip"));
+                ? List.of(Component.translatable("screens.wynntils.iconFilter.filterExclude.tooltip"))
+                : List.of(Component.translatable("screens.wynntils.iconFilter.filterInclude.tooltip"));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PoiFilterWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        managementScreen.toggleIcon(icon);
+        filterScreen.toggleIcon(icon);
 
         return super.mouseClicked(mouseX, mouseY, button);
     }
