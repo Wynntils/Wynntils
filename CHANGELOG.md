@@ -1,8 +1,16 @@
+## [0.0.3-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.390...v0.0.3-alpha.391) (2023-09-26)
+
+
+### Bug Fixes
+
+* Activity tracker overlay missing spaces ([#2124](https://github.com/Wynntils/Artemis/issues/2124)) ([4a145a8](https://github.com/Wynntils/Artemis/commit/4a145a8cbd4ac1d973ef9855c5624185426694e4))
+
 ## [0.0.3-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.389...v0.0.3-alpha.390) (2023-09-26)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.390 [skip ci] ([fa8a91d](https://github.com/Wynntils/Artemis/commit/fa8a91d58061ab63301ca88d8da74175c3c0b3db))
 * Update to Loom 1.3 (and other dependency updates) ([#2122](https://github.com/Wynntils/Artemis/issues/2122)) ([f4bea87](https://github.com/Wynntils/Artemis/commit/f4bea8764f98178841f59387f40616d720d12f7d))
 
 ## [0.0.3-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.388...v0.0.3-alpha.389) (2023-09-25)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.387 [skip ci] ([42a9a58](https://github.com/Wynntils/Artemis/commit/42a9a58cd8c509d08879ef201f83f614d7c23021))
-
-## [0.0.3-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.385...v0.0.3-alpha.386) (2023-09-24)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.386 [skip ci] ([5c68066](https://github.com/Wynntils/Artemis/commit/5c680662d95b263c0697754aca71591c667eeb69))
-
-
-### Code Refactoring
-
-* Use translatable for redirect messages ([#2107](https://github.com/Wynntils/Artemis/issues/2107)) ([1450233](https://github.com/Wynntils/Artemis/commit/145023327aaeb3d9daf40a1f966353c56388a114))
 
