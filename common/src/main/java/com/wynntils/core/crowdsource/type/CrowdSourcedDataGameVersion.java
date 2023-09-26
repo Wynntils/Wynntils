@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.telemetry.type;
+package com.wynntils.core.crowdsource.type;
 
 /**
  * This enum represents the game version that the data is being sent from.

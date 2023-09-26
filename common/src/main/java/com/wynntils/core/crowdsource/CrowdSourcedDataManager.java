@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.telemetry;
+package com.wynntils.core.crowdsource;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.storage.StorageManager;
-import com.wynntils.core.telemetry.type.CrowdSourcedDataGameVersion;
-import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.telemetry.LootrunLocationDataCollector;
 import java.lang.reflect.ParameterizedType;
@@ -36,15 +36,15 @@ public class CrowdSourcedDataManager extends Manager {
         registerCollectors();
     }
 
-    public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T telemetryData) {
+    public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T crowdSourcedData) {
         TelemetryFeature.ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(
                         TelemetryFeature.class)
-                .telemetryTypeEnabledMap
+                .crowdSourcedDataTypeEnabledMap
                 .get()
                 .getOrDefault(crowdSourcedDataType, TelemetryFeature.ConfirmedBoolean.FALSE);
         if (collectionEnabledForType != TelemetryFeature.ConfirmedBoolean.TRUE) return;
 
-        collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, telemetryData);
+        collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedData);
         collectedData.touched();
     }
 

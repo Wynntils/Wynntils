@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.telemetry;
+package com.wynntils.core.crowdsource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -11,8 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
-import com.wynntils.core.telemetry.type.CrowdSourcedDataGameVersion;
-import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;

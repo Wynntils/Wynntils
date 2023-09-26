@@ -5,9 +5,9 @@
 package com.wynntils.telemetry;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.telemetry.CrowdSourcedDataCollector;
-import com.wynntils.core.telemetry.datatype.LootrunTaskLocation;
-import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
+import com.wynntils.core.crowdsource.CrowdSourcedDataCollector;
+import com.wynntils.core.crowdsource.datatype.LootrunTaskLocation;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.particle.event.ParticleVerifiedEvent;
 import com.wynntils.models.particle.type.ParticleType;
@@ -30,7 +30,7 @@ public class LootrunLocationDataCollector extends CrowdSourcedDataCollector<Loot
     }
 
     @Override
-    protected CrowdSourcedDataType getTelemetryType() {
+    protected CrowdSourcedDataType getDataType() {
         return CrowdSourcedDataType.LOOTRUN_TASK_LOCATIONS;
     }
 }

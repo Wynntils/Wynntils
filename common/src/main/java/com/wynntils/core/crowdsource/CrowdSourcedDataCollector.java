@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.telemetry;
+package com.wynntils.core.crowdsource;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 
 /**
  * A class that collects a single type of crowd source data.
@@ -19,8 +19,8 @@ import com.wynntils.core.telemetry.type.CrowdSourcedDataType;
  */
 public abstract class CrowdSourcedDataCollector<T> {
     protected final void collect(T data) {
-        Managers.CrowdSourcedData.putData(getTelemetryType(), data);
+        Managers.CrowdSourcedData.putData(getDataType(), data);
     }
 
-    protected abstract CrowdSourcedDataType getTelemetryType();
+    protected abstract CrowdSourcedDataType getDataType();
 }

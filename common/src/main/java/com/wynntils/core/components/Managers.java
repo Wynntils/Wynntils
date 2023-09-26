@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
 import com.wynntils.core.consumers.overlays.OverlayManager;
+import com.wynntils.core.crowdsource.CrowdSourcedDataManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;
@@ -20,7 +21,6 @@ import com.wynntils.core.persisted.PersistedManager;
 import com.wynntils.core.persisted.config.ConfigManager;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.persisted.upfixers.UpfixerManager;
-import com.wynntils.core.telemetry.CrowdSourcedDataManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
