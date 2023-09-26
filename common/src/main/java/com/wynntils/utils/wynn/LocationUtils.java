@@ -15,7 +15,7 @@ public final class LocationUtils {
             "\\s*(?<x>[-+]?\\d{1,6})(?:\\.\\d+)?([^0-9.+-]{1,5}(?<y>[-+]?\\d{1,3})(?:\\.\\d+)?)?[^0-9.+-]{1,5}(?<z>[-+]?\\d{1,6})(?:\\.\\d+)?\\s*");
 
     private static final Pattern STRICT_COORDINATE_PATTERN = Pattern.compile(
-            "(?:^|\\s)([-+]?\\d{1,6}(?:[\\s,]{0,2}[-+]?\\d{1,3}(?:[\\s,]{0,2}[-+]?\\d{1,6})?)?)(?:\\s+|$)");
+            "(?:^|\\s|\\[)\\s*([-+]?\\d{1,6}(?:[\\s,]{0,2}[-+]?\\d{1,3}(?:[\\s,]{0,2}[-+]?\\d{1,6})?)?)\\s*(?:\\]|\\s+|$)");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
@@ -37,15 +37,15 @@ public final class LocationUtils {
     }
 
     public static void shareLocation(String target) {
-        String locationString = "My location is at " + (int) McUtils.player().position().x + ", "
+        String locationString = "My location is at [" + (int) McUtils.player().position().x + ", "
                 + (int) McUtils.player().position().y + ", "
-                + (int) McUtils.player().position().z;
+                + (int) McUtils.player().position().z + "]";
 
         LocationUtils.sendShareMessage(target, locationString);
     }
 
     public static void shareCompass(String target, Location compass) {
-        String locationString = "My compass is at " + compass.x + ", " + compass.y + ", " + compass.z;
+        String locationString = "My compass is at [" + compass.x + ", " + compass.y + ", " + compass.z + "]";
 
         LocationUtils.sendShareMessage(target, locationString);
     }

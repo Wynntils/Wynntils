@@ -71,6 +71,11 @@ public class ChatCoordinatesFeature extends Feature {
                 String firstPart = match.substring(0, matcher.start(1));
                 String lastPart = match.substring(matcher.end(1));
 
+                if (firstPart.endsWith("[") && lastPart.startsWith("]")) {
+                    firstPart = firstPart.substring(0, firstPart.length() - 1);
+                    lastPart = lastPart.substring(1);
+                }
+
                 PartStyle partStyle = partToReplace.getPartStyle();
 
                 StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
