@@ -37,8 +37,8 @@ dependencies {
     include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
     include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
-    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
-    implementation(include("com.github.llamalad7.mixinextras:mixinextras-forge:${mixinextras_version}"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
 }
 
 processResources {

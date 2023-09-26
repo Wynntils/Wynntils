@@ -69,7 +69,7 @@ dependencies {
     shadowImplementation("com.github.wynntils:hades:v${hades_version}") { transitive false }
     shadowImplementation("com.github.wynntils:antiope:v${antiope_version}") { transitive false }
 
-    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinextras_version}")))
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixinextras_version}")))
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
