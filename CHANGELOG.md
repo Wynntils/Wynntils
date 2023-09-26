@@ -1,9 +1,21 @@
+## [0.0.3-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.391...v0.0.3-alpha.392) (2023-09-26)
+
+
+### Bug Fixes
+
+* Chat Coordinates improvements ([#2120](https://github.com/Wynntils/Artemis/issues/2120)) ([bbb939a](https://github.com/Wynntils/Artemis/commit/bbb939af71409fb7c5d2a40d0ce9001917bcdbaf))
+
 ## [0.0.3-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.390...v0.0.3-alpha.391) (2023-09-26)
 
 
 ### Bug Fixes
 
 * Activity tracker overlay missing spaces ([#2124](https://github.com/Wynntils/Artemis/issues/2124)) ([4a145a8](https://github.com/Wynntils/Artemis/commit/4a145a8cbd4ac1d973ef9855c5624185426694e4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.391 [skip ci] ([88049b5](https://github.com/Wynntils/Artemis/commit/88049b5049a09e981a74c2b38d1aecf0792c9fd7))
 
 ## [0.0.3-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.389...v0.0.3-alpha.390) (2023-09-26)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.388 [skip ci] ([0b53765](https://github.com/Wynntils/Artemis/commit/0b5376559e926f1eea8aa5d2990d3dc52b0606b3))
-
-## [0.0.3-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.386...v0.0.3-alpha.387) (2023-09-24)
-
-
-### Bug Fixes
-
-* In preparation for 1.20.2, always use undashed UUIDs in config files ([#2119](https://github.com/Wynntils/Artemis/issues/2119)) ([9d8a24c](https://github.com/Wynntils/Artemis/commit/9d8a24c347fdee8cc35c270b016da4f89bfd9547))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.387 [skip ci] ([42a9a58](https://github.com/Wynntils/Artemis/commit/42a9a58cd8c509d08879ef201f83f614d7c23021))
 
