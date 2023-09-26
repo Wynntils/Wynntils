@@ -128,7 +128,7 @@ public class ChatMentionFeature extends Feature {
                     matcher = pattern.matcher(lastPart);
                 }
             }
-            
+
             return IterationDecision.CONTINUE;
         });
 
