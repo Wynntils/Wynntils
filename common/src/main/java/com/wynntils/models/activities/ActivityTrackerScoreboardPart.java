@@ -48,7 +48,9 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
             Matcher spacerMatcher = SPACER_PATTERN.matcher(unformatted);
             if (spacerMatcher.matches()) {
                 // There is a special character at the start of the line, we don't need the previous space
-                nextTask.deleteCharAt(nextTask.length() - 1);
+                if (nextTask.length() - 1 >= 0) {
+                    nextTask.deleteCharAt(nextTask.length() - 1);
+                }
             }
 
             nextTask.append(line.getString()
