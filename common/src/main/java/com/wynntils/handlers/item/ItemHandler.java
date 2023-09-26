@@ -269,6 +269,7 @@ public class ItemHandler extends Handler {
             if (m.matches()) {
                 String str = m.group(1);
 
+                // TODO: Replace this with a specialized method inside StyledText
                 // For the case where the text before the item name is the same color as the item name itself
                 if (!str.startsWith("§")) {
                     int index = full.indexOf(str);
@@ -277,7 +278,13 @@ public class ItemHandler extends Handler {
                         index--;
                     }
 
-                    str = full.substring(index, index + 2) + str;
+                    int length = 2;
+                    while (index >= 2 && full.charAt(index - 2) == '§') {
+                        index -= 2;
+                        length += 2;
+                    }
+
+                    str = full.substring(index, index + length) + str;
                 }
 
                 return StyledText.fromString(str);
