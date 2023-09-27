@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.models.dungeon.type.Dungeon;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
@@ -222,6 +223,7 @@ public class ItemTextOverlayFeature extends Feature {
     private final class DungeonKeyOverlay implements TextOverlayInfo {
         private static final CustomColor STANDARD_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
         private static final CustomColor CORRUPTED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.DARK_RED);
+        private static final CustomColor REMOVED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GRAY);
 
         private final DungeonKeyItem item;
 
@@ -231,9 +233,18 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            CustomColor textColor = item.isCorrupted() ? CORRUPTED_COLOR : STANDARD_COLOR;
+            Dungeon dungeon = item.getDungeon();
+            String text = dungeon.getInitials();
 
-            String text = item.getDungeon();
+            CustomColor textColor;
+            if (dungeon.isRemoved()) {
+                textColor = REMOVED_COLOR;
+            } else if (item.isCorrupted()) {
+                textColor = CORRUPTED_COLOR;
+            } else {
+                textColor = STANDARD_COLOR;
+            }
+
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow.get());
 
@@ -308,7 +319,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), horseTierRomanNumerals.get());
+            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
                     .withTextShadow(horseTierShadow.get());
