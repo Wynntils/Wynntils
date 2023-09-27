@@ -1,9 +1,21 @@
+## [0.0.3-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.393...v0.0.3-alpha.394) (2023-09-27)
+
+
+### Bug Fixes
+
+* Fix StyledText style inheritance rules (click/hover event, font, insertion inheritance) ([#2130](https://github.com/Wynntils/Artemis/issues/2130)) ([2f82db2](https://github.com/Wynntils/Artemis/commit/2f82db25b9f8c25bf634aceabfd598fae742c969))
+
 ## [0.0.3-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.392...v0.0.3-alpha.393) (2023-09-27)
 
 
 ### Bug Fixes
 
 * fix mod reload looping if a feature crashes ([#2132](https://github.com/Wynntils/Artemis/issues/2132)) ([9a771d6](https://github.com/Wynntils/Artemis/commit/9a771d65946a2ea540acd986a4e3616d39beba38))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.393 [skip ci] ([8df0a68](https://github.com/Wynntils/Artemis/commit/8df0a6806844a77c47ab972c840637a2f5006e74))
 
 ## [0.0.3-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.391...v0.0.3-alpha.392) (2023-09-26)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.3-alpha.390 [skip ci] ([fa8a91d](https://github.com/Wynntils/Artemis/commit/fa8a91d58061ab63301ca88d8da74175c3c0b3db))
 * Update to Loom 1.3 (and other dependency updates) ([#2122](https://github.com/Wynntils/Artemis/issues/2122)) ([f4bea87](https://github.com/Wynntils/Artemis/commit/f4bea8764f98178841f59387f40616d720d12f7d))
-
-## [0.0.3-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.388...v0.0.3-alpha.389) (2023-09-25)
-
-
-### Bug Fixes
-
-* Fix a batch of 11 bugs from the active Athena reports ([#2125](https://github.com/Wynntils/Artemis/issues/2125)) ([0c39deb](https://github.com/Wynntils/Artemis/commit/0c39deb281196860e0a831cf22d56dee16e9a3c3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.389 [skip ci] ([a7e607e](https://github.com/Wynntils/Artemis/commit/a7e607ea887bcb287a6e847256654387794b8db6))
 
