@@ -159,6 +159,7 @@ public final class WynntilsMod {
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
         if (initCompleted) return;
+        initCompleted = true;
 
         try {
             initFeatures();
@@ -241,8 +242,6 @@ public final class WynntilsMod {
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),
                 Managers.Function.getFunctions().size());
-
-        initCompleted = true;
     }
 
     private static void addCrashCallbacks() {
