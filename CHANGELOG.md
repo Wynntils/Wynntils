@@ -1,9 +1,21 @@
+## [0.0.3-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.394...v0.0.3-alpha.395) (2023-09-27)
+
+
+### Bug Fixes
+
+* add missing annotations to items on trade market ([#2057](https://github.com/Wynntils/Artemis/issues/2057)) ([f3fd6ed](https://github.com/Wynntils/Artemis/commit/f3fd6ed16beedb4375cc282a0da5cb96a9236b6e))
+
 ## [0.0.3-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.393...v0.0.3-alpha.394) (2023-09-27)
 
 
 ### Bug Fixes
 
 * Fix StyledText style inheritance rules (click/hover event, font, insertion inheritance) ([#2130](https://github.com/Wynntils/Artemis/issues/2130)) ([2f82db2](https://github.com/Wynntils/Artemis/commit/2f82db25b9f8c25bf634aceabfd598fae742c969))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.394 [skip ci] ([6f62f22](https://github.com/Wynntils/Artemis/commit/6f62f22f6dab169bd5a2afcedc69b3beb286707e))
 
 ## [0.0.3-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.392...v0.0.3-alpha.393) (2023-09-27)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.391 [skip ci] ([88049b5](https://github.com/Wynntils/Artemis/commit/88049b5049a09e981a74c2b38d1aecf0792c9fd7))
-
-## [0.0.3-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.389...v0.0.3-alpha.390) (2023-09-26)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.390 [skip ci] ([fa8a91d](https://github.com/Wynntils/Artemis/commit/fa8a91d58061ab63301ca88d8da74175c3c0b3db))
-* Update to Loom 1.3 (and other dependency updates) ([#2122](https://github.com/Wynntils/Artemis/issues/2122)) ([f4bea87](https://github.com/Wynntils/Artemis/commit/f4bea8764f98178841f59387f40616d720d12f7d))
 
