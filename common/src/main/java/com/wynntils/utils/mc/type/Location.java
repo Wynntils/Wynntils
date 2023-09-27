@@ -70,6 +70,10 @@ public class Location implements Comparable<Location> {
         return new Vec3(x, y, z);
     }
 
+    public Position toPosition() {
+        return new Vec3(x, y, z);
+    }
+
     public boolean equalsIgnoringY(Location other) {
         return this.x() == other.x() && this.z() == other.z();
     }
