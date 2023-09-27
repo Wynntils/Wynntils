@@ -522,4 +522,19 @@ public class TestStyledText {
                 styledText.getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_inheritesHoverEvents() {
+        final Component component = Component.empty()
+                .withStyle(style ->
+                        style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
+                .append(Component.literal("inherited hover effect"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertEquals(
+                component.getStyle().getHoverEvent(),
+                styledText.getComponent().getStyle().getHoverEvent(),
+                "StyledText.fromComponent() did not inherit the correct hover event.");
+    }
 }
