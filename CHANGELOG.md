@@ -1,9 +1,21 @@
+## [0.0.3-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.392...v0.0.3-alpha.393) (2023-09-27)
+
+
+### Bug Fixes
+
+* fix mod reload looping if a feature crashes ([#2132](https://github.com/Wynntils/Artemis/issues/2132)) ([9a771d6](https://github.com/Wynntils/Artemis/commit/9a771d65946a2ea540acd986a4e3616d39beba38))
+
 ## [0.0.3-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.391...v0.0.3-alpha.392) (2023-09-26)
 
 
 ### Bug Fixes
 
 * Chat Coordinates improvements ([#2120](https://github.com/Wynntils/Artemis/issues/2120)) ([bbb939a](https://github.com/Wynntils/Artemis/commit/bbb939af71409fb7c5d2a40d0ce9001917bcdbaf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.392 [skip ci] ([8fab742](https://github.com/Wynntils/Artemis/commit/8fab74226533c53123a592c3bd649d606b168e11))
 
 ## [0.0.3-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.390...v0.0.3-alpha.391) (2023-09-26)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.389 [skip ci] ([a7e607e](https://github.com/Wynntils/Artemis/commit/a7e607ea887bcb287a6e847256654387794b8db6))
-
-## [0.0.3-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.387...v0.0.3-alpha.388) (2023-09-25)
-
-
-### Bug Fixes
-
-* remove territory api lookup failure checks ([#2123](https://github.com/Wynntils/Artemis/issues/2123)) ([0dc0506](https://github.com/Wynntils/Artemis/commit/0dc0506a6aad0691a8e2147bff81a1d9e846a027))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.388 [skip ci] ([0b53765](https://github.com/Wynntils/Artemis/commit/0b5376559e926f1eea8aa5d2990d3dc52b0606b3))
 
