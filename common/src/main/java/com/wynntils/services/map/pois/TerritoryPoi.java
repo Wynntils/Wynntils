@@ -62,6 +62,9 @@ public class TerritoryPoi implements Poi {
 
         this.territoryInfo = territoryInfo;
         this.fakeTerritoryInfo = fakeTerritoryInfo;
+
+        // Fill the cache with a value so it is not null
+        this.territoryProfileCache = territoryProfileSupplier.get();
     }
 
     @Override

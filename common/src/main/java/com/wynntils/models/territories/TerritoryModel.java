@@ -56,7 +56,6 @@ public final class TerritoryModel extends Model {
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
     private final ScheduledFuture<?> timerFuture;
-    private int errorCount = 0;
 
     public TerritoryModel() {
         super(List.of());
@@ -105,10 +104,6 @@ public final class TerritoryModel extends Model {
                 .filter(profile -> profile.insideArea(position))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public void reset() {
-        errorCount = 0;
     }
 
     @SubscribeEvent
@@ -168,12 +163,7 @@ public final class TerritoryModel extends Model {
                             .collect(Collectors.toSet());
                 },
                 onError -> {
-                    errorCount++;
-                    if (errorCount >= MAX_ERRORS) {
-                        WynntilsMod.error(
-                                "Wynncraft territory lookup has repeating failures. Disabling future lookups.");
-                        timerFuture.cancel(false);
-                    }
+                    WynntilsMod.warn("Failed to update territory data.");
                 });
     }
 }

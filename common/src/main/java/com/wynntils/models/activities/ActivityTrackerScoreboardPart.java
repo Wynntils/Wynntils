@@ -13,10 +13,12 @@ import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public class ActivityTrackerScoreboardPart extends ScoreboardPart {
     private static final SegmentMatcher TRACKER_MATCHER = SegmentMatcher.fromPattern("Tracked (.*):");
+    private static final Pattern SPACER_PATTERN = Pattern.compile("[^a-zA-Z\\[\\d-].*");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -42,9 +44,22 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
         List<StyledText> taskLines = content.subList(1, content.size());
 
         for (StyledText line : taskLines) {
+            String unformatted = line.getString(PartStyle.StyleType.NONE);
+            Matcher spacerMatcher = SPACER_PATTERN.matcher(unformatted);
+            if (spacerMatcher.matches()) {
+                // There is a special character at the start of the line, we don't need the previous space
+                if (nextTask.length() - 1 >= 0) {
+                    nextTask.deleteCharAt(nextTask.length() - 1);
+                }
+            }
+
             nextTask.append(line.getString()
                     .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                     .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()));
+
+            if (!unformatted.endsWith(" ")) {
+                nextTask.append(" ");
+            }
         }
 
         String type = matcher.group(1);
