@@ -595,11 +595,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .filter(poi -> searchMatches(poi.getName()))
                 .collect(Collectors.toList());
 
-        if (filteredIcons.containsValue(true)) {
-            waypoints = waypoints.stream()
-                    .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), false))
-                    .collect(Collectors.toList());
-        }
+        waypoints = waypoints.stream()
+                .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), true))
+                .collect(Collectors.toList());
 
         nameSortButton.visible = !waypoints.isEmpty();
         xSortButton.visible = !waypoints.isEmpty();
@@ -749,7 +747,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .distinct()
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        texture -> filteredIcons.getOrDefault(texture, false),
+                        texture -> filteredIcons.getOrDefault(texture, true),
                         (existing, replacement) -> existing,
                         () -> new EnumMap<>(Texture.class)));
 

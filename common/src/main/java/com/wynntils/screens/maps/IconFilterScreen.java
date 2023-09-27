@@ -78,12 +78,14 @@ public final class IconFilterScreen extends WynntilsScreen {
         // region filter all button
         filterAllButton = new Button.Builder(
                         Component.translatable("screens.wynntils.iconFilter.filterAll"), (button) -> {
-                            icons.replaceAll((key, value) -> false);
+                            icons.replaceAll((key, value) -> true);
                             populateIcons();
                         })
                 .pos((int) backgroundX, (int) (dividedHeight * 3))
                 .size(filterButtonWidth, 20)
                 .build();
+
+        filterAllButton.active = icons.containsValue(false);
 
         this.addRenderableWidget(filterAllButton);
         // endregion
@@ -130,13 +132,9 @@ public final class IconFilterScreen extends WynntilsScreen {
     public void toggleIcon(Texture icon) {
         icons.put(icon, !icons.get(icon));
 
-        if (!icons.containsValue(false)) {
-            icons.replaceAll((key, value) -> false);
-        }
-
         previousScreen.setFilteredIcons(icons);
 
-        filterAllButton.active = icons.containsValue(true);
+        filterAllButton.active = icons.containsValue(false);
 
         populateIcons();
     }
