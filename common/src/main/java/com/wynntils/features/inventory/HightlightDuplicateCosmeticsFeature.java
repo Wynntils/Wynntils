@@ -19,8 +19,9 @@ import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ChestMenu;
@@ -47,10 +48,9 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     private static final int RETURN_SLOT = 18;
     private static final List<Integer> SELECTED_COSMETIC_SLOTS = List.of(1, 2, 3, 4, 5);
 
-    private final List<Component> selectedCosmetics = new ArrayList<>();
-
     private boolean onScrapMenu = false;
     private Component hoveredCosmetic;
+    private Set<Component> selectedCosmetics = new HashSet<>();
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
@@ -67,7 +67,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
-        selectedCosmetics.clear();
+        selectedCosmetics = new HashSet<>();
         onScrapMenu = false;
         hoveredCosmetic = null;
     }
@@ -79,12 +79,8 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (highlightCondition.get() == HighlightCondition.SELECTED) return;
 
         Slot hoveredSlot = event.getHoveredSlot();
-        Component finalItem = event.getScreen()
-                .getMenu()
-                .slots
-                .get(FINAL_SLOT)
-                .getItem()
-                .getHoverName();
+        Component finalItem =
+                event.getScreen().getMenu().slots.get(FINAL_SLOT).getItem().getHoverName();
 
         // If not hovering a cosmetic item
         if (hoveredSlot == null
@@ -108,21 +104,22 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
             boolean isHovered = hoverName.equals(hoveredCosmetic);
             HighlightCondition condition = highlightCondition.get();
 
-            if ((isSelected && condition != HighlightCondition.HOVER) || (isHovered && condition != HighlightCondition.SELECTED)) {
+            if ((isSelected && condition != HighlightCondition.HOVER)
+                    || (isHovered && condition != HighlightCondition.SELECTED)) {
                 CustomColor color = isSelected ? selectedHighlightColor.get() : hoveredHighlightColor.get();
                 RenderUtils.drawArc(e.getPoseStack(), color, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
             }
         }
-
     }
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
         if (!onScrapMenu) return;
 
+        selectedCosmetics = new HashSet<>();
+
         // Cosmetics have been scrapped and new cosmetic is being displayed, clear selected
         if (event.getItems().get(RETURN_SLOT).getHoverName().equals(RETURN_TEXT)) {
-            selectedCosmetics.clear();
             return;
         }
 
@@ -133,15 +130,13 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
             if (selectedCosmetic.equals(ADD_REWARD_TEXT)) {
                 // If the first slot does not have a cosmetic then none are selected
                 if (slot == 1) {
-                    selectedCosmetics.clear();
+                    selectedCosmetics = new HashSet<>();
                 }
 
                 break;
             }
 
-            if (!selectedCosmetics.contains(selectedCosmetic)) {
-                selectedCosmetics.add(selectedCosmetic);
-            }
+            selectedCosmetics.add(selectedCosmetic);
         }
     }
 
