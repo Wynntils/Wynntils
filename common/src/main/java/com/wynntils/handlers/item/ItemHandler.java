@@ -15,10 +15,12 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
@@ -36,9 +38,14 @@ public class ItemHandler extends Handler {
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
     private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
     private final List<Pattern> knownMarkerNames = new ArrayList<>();
+    private final List<Pattern> simplifiablePatterns = new ArrayList<>();
 
     public void registerKnownMarkerNames(List<Pattern> markerPatterns) {
         knownMarkerNames.addAll(markerPatterns);
+    }
+
+    public void addSimplifiablePatterns(Pattern... patterns) {
+        Collections.addAll(simplifiablePatterns, patterns);
     }
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
@@ -213,11 +220,13 @@ public class ItemHandler extends Handler {
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
         long startTime = System.currentTimeMillis();
 
+        StyledText simplified = simplifyName(name);
+
         ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(itemStack, name);
+                annotation = annotator.getAnnotation(itemStack, simplified);
                 if (annotation != null) {
                     break;
                 }
@@ -249,6 +258,40 @@ public class ItemHandler extends Handler {
         logProfilingData(startTime, annotation);
 
         return annotation;
+    }
+
+    private StyledText simplifyName(StyledText name) {
+        String full = name.getString();
+
+        for (Pattern p : simplifiablePatterns) {
+            Matcher m = p.matcher(full);
+
+            if (m.matches()) {
+                String str = m.group(1);
+
+                // TODO: Replace this with a specialized method inside StyledText
+                // For the case where the text before the item name is the same color as the item name itself
+                if (!str.startsWith("§")) {
+                    int index = full.indexOf(str);
+
+                    while (full.charAt(index) != '§') {
+                        index--;
+                    }
+
+                    int length = 2;
+                    while (index >= 2 && full.charAt(index - 2) == '§') {
+                        index -= 2;
+                        length += 2;
+                    }
+
+                    str = full.substring(index, index + length) + str;
+                }
+
+                return StyledText.fromString(str);
+            }
+        }
+
+        return name;
     }
 
     private void annotate(ItemStack itemStack) {

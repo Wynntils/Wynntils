@@ -386,7 +386,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             splitTexts.add(new StyledText(splitParts, clickEvents, hoverEvents));
         }
 
-        return splitTexts.toArray(new StyledText[0]);
+        return splitTexts.toArray(StyledText[]::new);
     }
 
     public StyledText substring(int beginIndex) {
