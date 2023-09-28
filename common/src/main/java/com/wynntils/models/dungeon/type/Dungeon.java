@@ -58,6 +58,7 @@ public enum Dungeon {
     public boolean isRemoved() {
         return removed;
     }
+
     public boolean isCorruptedRemoved() {
         return corruptedRemoved;
     }
