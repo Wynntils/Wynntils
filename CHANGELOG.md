@@ -1,9 +1,21 @@
+## [0.0.3-alpha.396](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.395...v0.0.3-alpha.396) (2023-09-28)
+
+
+### Code Refactoring
+
+* Always use generator style for toArray ([#2134](https://github.com/Wynntils/Artemis/issues/2134)) ([14cdc3f](https://github.com/Wynntils/Artemis/commit/14cdc3f635ea495600fad4cedee45f7db01eba56))
+
 ## [0.0.3-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.394...v0.0.3-alpha.395) (2023-09-27)
 
 
 ### Bug Fixes
 
 * add missing annotations to items on trade market ([#2057](https://github.com/Wynntils/Artemis/issues/2057)) ([f3fd6ed](https://github.com/Wynntils/Artemis/commit/f3fd6ed16beedb4375cc282a0da5cb96a9236b6e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.395 [skip ci] ([ca119ec](https://github.com/Wynntils/Artemis/commit/ca119ec3ad27833292919f5eaf7472b0afe8fd45))
 
 ## [0.0.3-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.393...v0.0.3-alpha.394) (2023-09-27)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.392 [skip ci] ([8fab742](https://github.com/Wynntils/Artemis/commit/8fab74226533c53123a592c3bd649d606b168e11))
-
-## [0.0.3-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.390...v0.0.3-alpha.391) (2023-09-26)
-
-
-### Bug Fixes
-
-* Activity tracker overlay missing spaces ([#2124](https://github.com/Wynntils/Artemis/issues/2124)) ([4a145a8](https://github.com/Wynntils/Artemis/commit/4a145a8cbd4ac1d973ef9855c5624185426694e4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.391 [skip ci] ([88049b5](https://github.com/Wynntils/Artemis/commit/88049b5049a09e981a74c2b38d1aecf0792c9fd7))
 
