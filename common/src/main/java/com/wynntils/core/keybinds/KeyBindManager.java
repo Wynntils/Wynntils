@@ -112,7 +112,7 @@ public final class KeyBindManager extends Manager {
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
             newKeyMappings.add(keyMapping);
 
-            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
+            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(KeyMapping[]::new));
         }
 
         // Bind keybind to its default key, however, this might get overwritten by options loading later
@@ -132,7 +132,7 @@ public final class KeyBindManager extends Manager {
             List<KeyMapping> newKeyMappings = Lists.newArrayList(keyMappings);
             newKeyMappings.remove(toRemove.getKeyMapping());
 
-            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(new KeyMapping[0]));
+            ((OptionsAccessor) options).setKeyBindMixins(newKeyMappings.toArray(KeyMapping[]::new));
         }
 
         // Unbind keybind
