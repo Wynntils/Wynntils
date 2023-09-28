@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -116,6 +117,11 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
         if (!onScrapMenu) return;
 
+        // Silverbull subscribers have the first 2 slots filled automatically
+        List<Integer> selectedSlots = Models.Character.silverbullSubscriber.get()
+                ? SELECTED_COSMETIC_SLOTS.subList(2, 5)
+                : SELECTED_COSMETIC_SLOTS;
+
         selectedCosmetics = new HashSet<>();
 
         // Cosmetics have been scrapped and new cosmetic is being displayed, clear selected
@@ -124,12 +130,12 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         }
 
         // Update the selected cosmetics
-        for (int slot : SELECTED_COSMETIC_SLOTS) {
+        for (int slot : selectedSlots) {
             Component selectedCosmetic = event.getItems().get(slot).getHoverName();
 
             if (selectedCosmetic.equals(ADD_REWARD_TEXT)) {
                 // If the first slot does not have a cosmetic then none are selected
-                if (slot == 1) {
+                if (slot == selectedSlots.get(0)) {
                     selectedCosmetics = new HashSet<>();
                 }
 
