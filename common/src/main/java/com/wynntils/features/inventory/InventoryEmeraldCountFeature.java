@@ -90,19 +90,16 @@ public class InventoryEmeraldCountFeature extends Feature {
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
                 case TEXTURE -> {
-                    int adjustedY;
-                    if (displayBottom) {
-                        int displayedTextures = Arrays.stream(getRenderableEmeraldAmounts(topEmeralds))
-                                .filter(s -> !s.equals("0"))
+                    if (displayBottom) { // ensure we don't overlap with bottom textures
+                        int topDisplayedTextureCount = Arrays.stream(getRenderableEmeraldAmounts(topEmeralds))
+                                .filter(s -> showZerosInEmeraldCount.get() || !s.equals("0"))
                                 .toArray()
                                 .length;
-                        int sizeY = displayedTextures * TEXTURE_SIZE + 2;
-                        int bottomY = containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
-                        adjustedY = y - Math.max(sizeY - bottomY, 0);
-                    } else {
-                        adjustedY = y;
+                        int textureVerticalSize = topDisplayedTextureCount * TEXTURE_SIZE + 2;
+                        int bottomStartY = containerScreen.topPos + containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
+                        y = Math.min(bottomStartY - textureVerticalSize, y);
                     }
-                    renderTexturedCount(event.getPoseStack(), textureX, adjustedY, topEmeralds);
+                    renderTexturedCount(event.getPoseStack(), textureX, y, topEmeralds);
                 }
             }
         }
