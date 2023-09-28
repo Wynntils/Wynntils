@@ -103,16 +103,17 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
         // Don't highlight the cosmetics in the selected slots
         if (SearchableContainerType.SCRAP_MENU.getBounds().getSlots().contains(e.getSlot().index)) {
-            if (selectedCosmetics.contains(e.getSlot().getItem().getHoverName())
-                    && highlightCondition.get() != HighlightCondition.HOVER) {
-                RenderUtils.drawArc(
-                        e.getPoseStack(), selectedHighlightColor.get(), e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
-            } else if (e.getSlot().getItem().getHoverName().equals(hoveredCosmetic)
-                    && highlightCondition.get() != HighlightCondition.SELECTED) {
-                RenderUtils.drawArc(
-                        e.getPoseStack(), hoveredHighlightColor.get(), e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
+            Component hoverName = e.getSlot().getItem().getHoverName();
+            boolean isSelected = selectedCosmetics.contains(hoverName);
+            boolean isHovered = hoverName.equals(hoveredCosmetic);
+            HighlightCondition condition = highlightCondition.get();
+
+            if ((isSelected && condition != HighlightCondition.HOVER) || (isHovered && condition != HighlightCondition.SELECTED)) {
+                CustomColor color = isSelected ? selectedHighlightColor.get() : hoveredHighlightColor.get();
+                RenderUtils.drawArc(e.getPoseStack(), color, e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
             }
         }
+
     }
 
     @SubscribeEvent
