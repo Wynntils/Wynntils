@@ -93,8 +93,8 @@ public class InventoryEmeraldCountFeature extends Feature {
                     if (displayBottom) { // ensure we don't overlap with bottom textures
                         int topDisplayedTextureCount = Arrays.stream(getRenderableEmeraldAmounts(topEmeralds))
                                 .filter(s -> showZerosInEmeraldCount.get() || !s.equals("0"))
-                                .toArray()
-                                .length;
+                                .mapToInt(s -> 1)
+                                .sum();
                         int textureVerticalSize = topDisplayedTextureCount * TEXTURE_SIZE + 2;
                         int bottomStartY = containerScreen.topPos + containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
                         y = Math.min(bottomStartY - textureVerticalSize, y);
