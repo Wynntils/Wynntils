@@ -66,6 +66,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     public void onScreenClose(ScreenClosedEvent e) {
         selectedCosmetics.clear();
         onScrapMenu = false;
+        hoveredCosmetic = null;
     }
 
     @SubscribeEvent
