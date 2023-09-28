@@ -40,7 +40,10 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     public final Config<CustomColor> selectedHighlightColor = new Config<>(CommonColors.ORANGE);
 
     private static final Component ADD_REWARD_TEXT = Component.literal("§7Click on a reward to add it");
+    // The colored glass panes on the new reward screen
+    private static final Component DECORATIVE_ITEM_NAMES = Component.literal("§f");
     private static final Component RETURN_TEXT = Component.literal("§7Return to Scrap Menu");
+    private static final int FINAL_SLOT = 53;
     private static final int RETURN_SLOT = 18;
     private static final List<Integer> SELECTED_COSMETIC_SLOTS = List.of(1, 2, 3, 4, 5);
 
@@ -76,19 +79,17 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (highlightCondition.get() == HighlightCondition.SELECTED) return;
 
         Slot hoveredSlot = event.getHoveredSlot();
+        Component finalItem = event.getScreen()
+                .getMenu()
+                .slots
+                .get(FINAL_SLOT)
+                .getItem()
+                .getHoverName();
 
-        // If no item or on new reward screen don't get a hovered cosmetic, hide §f too as the glass panes on new
-        // reward screen are named that and the return text item isn't added immediately
+        // If not hovering a cosmetic item
         if (hoveredSlot == null
                 || hoveredSlot.getItem().getItem() == Items.AIR
-                || event.getScreen()
-                        .getMenu()
-                        .slots
-                        .get(RETURN_SLOT)
-                        .getItem()
-                        .getHoverName()
-                        .equals(RETURN_TEXT)
-                || hoveredSlot.getItem().getHoverName().equals(Component.literal("§f"))) {
+                || finalItem.equals(DECORATIVE_ITEM_NAMES)) {
             hoveredCosmetic = null;
             return;
         }
