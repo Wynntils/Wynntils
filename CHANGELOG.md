@@ -1,9 +1,21 @@
+## [0.0.3-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.398...v0.0.3-alpha.399) (2023-09-29)
+
+
+### New Features
+
+* Hightlight duplicate cosmetics ([#2135](https://github.com/Wynntils/Artemis/issues/2135)) ([b75c117](https://github.com/Wynntils/Artemis/commit/b75c117832003f529f7faccc76ddf5531061ae5a))
+
 ## [0.0.3-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.397...v0.0.3-alpha.398) (2023-09-29)
 
 
 ### Bug Fixes
 
 * Fix corrupted lost sanctuary key overlay text showing as gray instead of red ([#2137](https://github.com/Wynntils/Artemis/issues/2137)) ([b2a682b](https://github.com/Wynntils/Artemis/commit/b2a682b0641b24186caa656fa4cc3c9877ba20c4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.398 [skip ci] ([a8938eb](https://github.com/Wynntils/Artemis/commit/a8938eb6bfe3d1cf896cbe1d77b3185294e6c9f6))
 
 ## [0.0.3-alpha.397](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.396...v0.0.3-alpha.397) (2023-09-28)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.395 [skip ci] ([ca119ec](https://github.com/Wynntils/Artemis/commit/ca119ec3ad27833292919f5eaf7472b0afe8fd45))
-
-## [0.0.3-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.393...v0.0.3-alpha.394) (2023-09-27)
-
-
-### Bug Fixes
-
-* Fix StyledText style inheritance rules (click/hover event, font, insertion inheritance) ([#2130](https://github.com/Wynntils/Artemis/issues/2130)) ([2f82db2](https://github.com/Wynntils/Artemis/commit/2f82db25b9f8c25bf634aceabfd598fae742c969))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.394 [skip ci] ([6f62f22](https://github.com/Wynntils/Artemis/commit/6f62f22f6dab169bd5a2afcedc69b3beb286707e))
 
