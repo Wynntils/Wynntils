@@ -269,7 +269,7 @@ public class ItemHandler extends Handler {
                 int start = matcher.start(1);
                 int end = matcher.end(1);
 
-                StyledText[] separate = name.separate(PartStyle.StyleType.DEFAULT, start, end);
+                StyledText[] separate = name.partition(PartStyle.StyleType.DEFAULT, start, end);
 
                 return separate[1];
             }

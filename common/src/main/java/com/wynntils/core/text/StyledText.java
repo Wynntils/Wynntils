@@ -414,6 +414,8 @@ public final class StyledText implements Iterable<StyledTextPart> {
      * @param endIndex   the ending index, exclusive
      * @param styleType  the style type to use when calculating indexes
      * @return the new {@link StyledText}
+     * @throws IndexOutOfBoundsException if the indexes are out of bounds
+     * @throws IllegalArgumentException  if the substring splits a formatting code
      */
     public StyledText substring(int beginIndex, int endIndex, PartStyle.StyleType styleType) {
         if (endIndex < beginIndex) {
@@ -467,8 +469,8 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(includedParts, clickEvents, hoverEvents);
     }
 
-    public StyledText[] separate(int... indexes) {
-        return separate(PartStyle.StyleType.NONE, indexes);
+    public StyledText[] partition(int... indexes) {
+        return partition(PartStyle.StyleType.NONE, indexes);
     }
 
     /**
@@ -476,8 +478,9 @@ public final class StyledText implements Iterable<StyledTextPart> {
      * @param styleType the style type to use when calculating indexes
      * @param indexes the indexes to split at, in ascending order
      * @return the split {@link StyledText}s as an array
+     * @throws IllegalArgumentException if the indexes are not in ascending order or an index splits a formatting code
      */
-    public StyledText[] separate(PartStyle.StyleType styleType, int... indexes) {
+    public StyledText[] partition(PartStyle.StyleType styleType, int... indexes) {
         if (indexes.length == 0) {
             return new StyledText[] {this};
         }

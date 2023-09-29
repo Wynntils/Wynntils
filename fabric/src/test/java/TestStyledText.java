@@ -483,10 +483,10 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledText_separateShouldWork() {
+    public void styledText_partitionShouldWork() {
         final StyledText text = StyledText.fromString("§1koala§2bear");
 
-        StyledText[] separatedTexts = text.separate(6);
+        StyledText[] separatedTexts = text.partition(6);
 
         String first = separatedTexts[0].getString();
         String second = separatedTexts[1].getString();
@@ -499,10 +499,10 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledText_separateMultipleIndexesShouldWork() {
+    public void styledText_partitionMultipleIndexesShouldWork() {
         final StyledText text = StyledText.fromString("§1koala§2bear");
 
-        StyledText[] separatedTexts = text.separate(1, 3, 6, 7);
+        StyledText[] separatedTexts = text.partition(1, 3, 6, 7);
 
         String first = separatedTexts[0].getString();
         String second = separatedTexts[1].getString();
@@ -524,12 +524,12 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledText_separateWithUnorderedIndexesShouldError() {
+    public void styledText_partitionWithUnorderedIndexesShouldError() {
         final StyledText text = StyledText.fromString("§1koala§2bear");
 
         Assertions.assertThrows(
                 IllegalArgumentException.class,
-                () -> text.separate(3, 1),
+                () -> text.partition(3, 1),
                 "StyledText.separate() did not throw an exception for unordered indexes.");
     }
 
