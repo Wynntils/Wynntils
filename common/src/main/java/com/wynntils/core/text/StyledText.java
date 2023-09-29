@@ -443,7 +443,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 int startIndexInPart = Math.max(0, beginIndex - currentIndex);
                 int endIndexInPart = Math.min(part.length(), endIndex - currentIndex);
 
-                String fullString = part.getString(null, styleType);
+                String fullString = part.getString(previousPartStyle, styleType);
 
                 String beforeSubstring = fullString.substring(0, startIndexInPart);
                 String includedSubstring = fullString.substring(startIndexInPart, endIndexInPart);
