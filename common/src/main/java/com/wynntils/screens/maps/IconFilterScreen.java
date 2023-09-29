@@ -7,6 +7,7 @@ package com.wynntils.screens.maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.maps.widgets.IconFilterWidget;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -41,7 +42,6 @@ public final class IconFilterScreen extends WynntilsScreen {
     private float dividedWidth;
     private float scrollButtonHeight;
     private float scrollButtonRenderY;
-    private int bottomDisplayedIndex;
     private int iconButtonSize;
     private int scrollOffset = 0;
     private List<Texture> usedIcons;
@@ -117,9 +117,8 @@ public final class IconFilterScreen extends WynntilsScreen {
                         .build());
         // endregion
 
+        // The icons that will be displayed
         usedIcons = new ArrayList<>(icons.keySet());
-
-        bottomDisplayedIndex = Math.min(MAX_ICONS_TO_DISPLAY, usedIcons.size() - 1);
 
         populateIcons();
     }
@@ -148,10 +147,13 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     public void toggleIcon(Texture icon) {
+        // Toggle the icon
         icons.put(icon, !icons.get(icon));
 
         previousScreen.setFilteredIcons(icons);
 
+        // Only have the buttons active if they will do anything.
+        // Eg. Include all will set all to true, so deactive it if no falses
         includeAllButton.active = icons.containsValue(false);
         excludeAllButton.active = icons.containsValue(true);
 
@@ -211,8 +213,10 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     private void renderScrollButton(PoseStack poseStack) {
+        // Don't render the scroll button if it will not be useable
         if (usedIcons.size() <= MAX_ICONS_TO_DISPLAY) return;
 
+        // Calculate where the scroll button should be on the Y axis
         scrollButtonRenderY = MathUtils.map(
                 scrollOffset, 0, usedIcons.size() - MAX_ICONS_TO_DISPLAY, (int) (dividedHeight * 10), (int)
                         (dividedHeight * 51));
@@ -230,6 +234,7 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     private void setScrollOffset(int delta) {
+        // Calculate how many rows should be scrolled past
         scrollOffset = MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, usedIcons.size() - MAX_ICONS_TO_DISPLAY));
 
         populateIcons();
@@ -242,17 +247,24 @@ public final class IconFilterScreen extends WynntilsScreen {
 
         this.iconFilterWidgets.clear();
 
+        // Starting Y position for the icons
         int row = (int) ((int) (dividedHeight * (HEADER_HEIGHT + 2)) + (dividedHeight / 2f));
+        // Starting X position for the row
         int xPos = (int) (dividedWidth * 13);
 
-        for (int i = 0; i < MAX_ICONS_TO_DISPLAY; i++) {
-            bottomDisplayedIndex = i + (scrollOffset * ICONS_PER_ROW);
+        int currentIcon;
 
-            if (bottomDisplayedIndex > usedIcons.size() - 1) {
+        // Render icon widgets
+        for (int i = 0; i < MAX_ICONS_TO_DISPLAY; i++) {
+            // Get the icon to render
+            currentIcon = i + (scrollOffset * ICONS_PER_ROW);
+
+            // If there are less icons than MAX_ICONS_TO_DISPLAY, make sure we don't try and get a icon out of range
+            if (currentIcon > usedIcons.size() - 1) {
                 break;
             }
 
-            Texture icon = usedIcons.get(bottomDisplayedIndex);
+            Texture icon = usedIcons.get(currentIcon);
 
             IconFilterWidget filterWidget = new IconFilterWidget(
                     xPos, row, iconButtonSize, iconButtonSize, icon, this, icons.getOrDefault(icon, false));
@@ -261,7 +273,8 @@ public final class IconFilterScreen extends WynntilsScreen {
 
             this.addRenderableWidget(filterWidget);
 
-            if (xPos + (iconButtonSize * 2) > (int) (dividedWidth * 50)) {
+            // Calculate if we can place another icon button on the same row or not
+            if ((i + 1) % ICONS_PER_ROW == 0) {
                 row += iconButtonSize;
                 xPos = (int) (dividedWidth * 13);
             } else {

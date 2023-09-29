@@ -32,6 +32,7 @@ public class IconFilterWidget extends AbstractWidget {
         this.filterScreen = filterScreen;
         this.included = included;
 
+        // Calculate x/y position of the icon to keep it centered
         iconRenderX = (x + width / 2f) - icon.width() / 2f;
         iconRenderY = (y + height / 2f) - icon.height() / 2f;
 
@@ -53,6 +54,7 @@ public class IconFilterWidget extends AbstractWidget {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
 
+        // Highlight to show inclusion
         if (included) {
             RenderUtils.drawRect(poseStack, CommonColors.RED.withAlpha(35), getX(), getY(), 1, width, height);
         }
@@ -60,6 +62,7 @@ public class IconFilterWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // Toggle if the icon is now included or excluded
         filterScreen.toggleIcon(icon);
 
         return super.mouseClicked(mouseX, mouseY, button);

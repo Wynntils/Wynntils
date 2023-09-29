@@ -1844,7 +1844,7 @@
   "screens.wynntils.poiManagementGui.export": "Export",
   "screens.wynntils.poiManagementGui.exportAll.tooltip": "Export POIs to your clipboard",
   "screens.wynntils.poiManagementGui.exportSelected.tooltip": "Export %d selected POIs to your clipboard",
-  "screens.wynntils.poiManagementGui.exportedWaypoints": "Exported %d POIs!",
+  "screens.wynntils.poiManagementGui.exportedPois": "Exported %d POIs!",
   "screens.wynntils.poiManagementGui.filter": "Filter by icon",
   "screens.wynntils.poiManagementGui.icon": "Icon",
   "screens.wynntils.poiManagementGui.import": "Import",

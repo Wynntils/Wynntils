@@ -95,8 +95,9 @@ public class PoiManagerWidget extends AbstractWidget {
                 .size(manageButtonsWidth * 2 + 20, 20)
                 .build();
 
-        List<CustomPoi> pois = managementScreen.getWaypoints();
+        List<CustomPoi> pois = managementScreen.getPois();
 
+        // Don't allow pois to be moved if at the top/bottom of the list
         if (pois.indexOf(poi) == 0) {
             upButton.active = false;
         }
@@ -160,9 +161,11 @@ public class PoiManagerWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
+        // In selection mode we don't want the edit/delete/move buttons
         if (selectionMode) {
             selectButton.render(poseStack, mouseX, mouseY, partialTick);
 
+            // Border to show selected pois, orange when selected, white if not
             RenderUtils.drawRectBorders(
                     poseStack,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
@@ -184,6 +187,7 @@ public class PoiManagerWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean clickedButton;
 
+        // Determine if a button was clicked or should we select the widget
         if (selectionMode) {
             clickedButton = selectButton.mouseClicked(mouseX, mouseY, button);
         } else {
