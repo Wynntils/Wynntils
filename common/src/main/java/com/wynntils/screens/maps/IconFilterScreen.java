@@ -31,7 +31,8 @@ public final class IconFilterScreen extends WynntilsScreen {
     private final PoiManagementScreen previousScreen;
 
     private boolean draggingScroll = false;
-    private Button filterAllButton;
+    private Button includeAllButton;
+    private Button excludeAllButton;
     private float backgroundHeight;
     private float backgroundWidth;
     private float backgroundX;
@@ -75,19 +76,36 @@ public final class IconFilterScreen extends WynntilsScreen {
 
         int filterButtonWidth = (int) (dividedWidth * 10);
 
-        // region filter all button
-        filterAllButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.iconFilter.filterAll"), (button) -> {
+        // region include/exclude all buttons
+        includeAllButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.iconFilter.includeAll"), (button) -> {
                             icons.replaceAll((key, value) -> true);
+                            button.active = false;
+                            excludeAllButton.active = true;
                             populateIcons();
                         })
                 .pos((int) backgroundX, (int) (dividedHeight * 3))
                 .size(filterButtonWidth, 20)
                 .build();
 
-        filterAllButton.active = icons.containsValue(false);
+        includeAllButton.active = icons.containsValue(false);
 
-        this.addRenderableWidget(filterAllButton);
+        this.addRenderableWidget(includeAllButton);
+
+        excludeAllButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.iconFilter.excludeAll"), (button) -> {
+                            icons.replaceAll((key, value) -> false);
+                            button.active = false;
+                            includeAllButton.active = true;
+                            populateIcons();
+                        })
+                .pos((int) backgroundX + filterButtonWidth + 5, (int) (dividedHeight * 3))
+                .size(filterButtonWidth, 20)
+                .build();
+
+        excludeAllButton.active = icons.containsValue(true);
+
+        this.addRenderableWidget(excludeAllButton);
         // endregion
 
         // region done button
@@ -134,7 +152,8 @@ public final class IconFilterScreen extends WynntilsScreen {
 
         previousScreen.setFilteredIcons(icons);
 
-        filterAllButton.active = icons.containsValue(false);
+        includeAllButton.active = icons.containsValue(false);
+        excludeAllButton.active = icons.containsValue(true);
 
         populateIcons();
     }

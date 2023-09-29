@@ -36,8 +36,10 @@ public class IconFilterWidget extends AbstractWidget {
         iconRenderY = (y + height / 2f) - icon.height() / 2f;
 
         tooltip = included
-                ? List.of(Component.translatable("screens.wynntils.iconFilter.filterExclude.tooltip", EnumUtils.toNiceString(icon)))
-                : List.of(Component.translatable("screens.wynntils.iconFilter.filterInclude.tooltip", EnumUtils.toNiceString(icon)));
+                ? List.of(Component.translatable(
+                        "screens.wynntils.iconFilter.filterExclude.tooltip", EnumUtils.toNiceString(icon)))
+                : List.of(Component.translatable(
+                        "screens.wynntils.iconFilter.filterInclude.tooltip", EnumUtils.toNiceString(icon)));
     }
 
     @Override
