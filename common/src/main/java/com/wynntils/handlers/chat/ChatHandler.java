@@ -18,7 +18,6 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
