@@ -35,12 +35,7 @@ public class BombCommand extends Command {
 
     @Override
     public List<String> getAliases() {
-        return List.of("bombbell");
-    }
-
-    @Override
-    public String getDescription() {
-        return "List previously announced bombs";
+        return List.of("bombbell", "bombs");
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
 import com.wynntils.services.hades.HadesService;
 import com.wynntils.services.itemfilter.ItemFilterService;
+import com.wynntils.services.leaderboard.LeaderboardService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
@@ -29,6 +30,7 @@ public final class Services {
     public static final FavoritesService Favorites = new FavoritesService();
     public static final HadesService Hades = new HadesService();
     public static final ItemFilterService ItemFilter = new ItemFilterService();
+    public static final LeaderboardService Leaderboard = new LeaderboardService();
     public static final LootrunPathsService LootrunPaths = new LootrunPathsService();
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();

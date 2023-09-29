@@ -15,12 +15,12 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Stream;
 
 public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
-    private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new LinkedHashSet<>();
+    private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new CopyOnWriteArraySet<>();
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor, CustomColor textColor) {
         addLocation(new MarkerInfo(

@@ -55,7 +55,6 @@ public final class TerritoryModel extends Model {
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
     private final ScheduledFuture<?> timerFuture;
-    private int errorCount = 0;
 
     public TerritoryModel() {
         super(List.of());
@@ -106,10 +105,6 @@ public final class TerritoryModel extends Model {
                 .orElse(null);
     }
 
-    public void reset() {
-        errorCount = 0;
-    }
-
     @SubscribeEvent
     public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
@@ -156,14 +151,7 @@ public final class TerritoryModel extends Model {
     }
 
     private void updateTerritoryProfileMap() {
-        // dataAthenaTerritoryList is based on
-        // https://api.wynncraft.com/public_api.php?action=territoryList
-        // but guild prefix is injected based on
-        // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
-        // and guild color is injected based on values maintained on Athena, and a constant
-        // level = 1 is also injected.
-
-        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
                 json -> {
                     if (!json.has("territories")) return;
@@ -173,14 +161,9 @@ public final class TerritoryModel extends Model {
                     allTerritoryPois = territoryProfileMap.values().stream()
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
-                    // TODO: Add events if territories changed
                 },
                 onError -> {
-                    errorCount++;
-                    if (errorCount >= MAX_ERRORS) {
-                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups.");
-                        timerFuture.cancel(false);
-                    }
+                    WynntilsMod.warn("Failed to update territory data.");
                 });
     }
 }

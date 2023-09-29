@@ -41,7 +41,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     public String getShortName() {
-        return this.getClass().getSimpleName();
+        return this.getClass().getSimpleName().replace("Feature", "");
     }
 
     @Override

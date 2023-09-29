@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.items.properties.UsesItemPropery;
+import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.utils.type.CappedValue;
 
-public class MultiHealthPotionItem extends GameItem implements UsesItemPropery {
+public class MultiHealthPotionItem extends GameItem implements UsesItemProperty {
     private final int hearts;
     private final CappedValue uses;
 

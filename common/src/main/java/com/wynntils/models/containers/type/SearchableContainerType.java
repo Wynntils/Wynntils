@@ -52,6 +52,10 @@ public enum SearchableContainerType {
         return nextItemSlot;
     }
 
+    public Pattern getTitlePattern() {
+        return titlePattern;
+    }
+
     public Pattern getNextItemPattern() {
         return nextItemPattern;
     }

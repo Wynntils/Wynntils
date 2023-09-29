@@ -7,15 +7,5 @@ package com.wynntils.models.profession.event;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class ProfessionNodeGatheredEvent extends Event {
-    public static class LabelShown extends ProfessionNodeGatheredEvent {
-        private boolean addCooldownArmorstand = false;
-
-        public boolean shouldAddCooldownArmorstand() {
-            return addCooldownArmorstand;
-        }
-
-        public void setAddCooldownArmorstand(boolean addCooldownArmorstand) {
-            this.addCooldownArmorstand = addCooldownArmorstand;
-        }
-    }
+    public static class LabelShown extends ProfessionNodeGatheredEvent {}
 }

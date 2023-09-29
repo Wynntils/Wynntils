@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.SimpleDateFormatter;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -34,34 +33,23 @@ public class TerritoryProfile {
 
     private final String guild;
     private final String guildPrefix;
-    private final CustomColor guildColor;
-    private final String attacker;
     private final Date acquired;
-
-    private final int level;
 
     public TerritoryProfile(
             String name,
             String friendlyName,
             String guildPrefix,
-            CustomColor guildColor,
-            int level,
             int startX,
             int startZ,
             int endX,
             int endZ,
             String guild,
-            String attacker,
             Date acquired) {
         this.name = name;
         this.friendlyName = friendlyName;
 
-        this.level = level;
-
         this.guildPrefix = guildPrefix;
-        this.guildColor = guildColor;
         this.guild = guild;
-        this.attacker = attacker;
 
         this.acquired = acquired;
 
@@ -90,10 +78,6 @@ public class TerritoryProfile {
         return friendlyName;
     }
 
-    public CustomColor getGuildColor() {
-        return guildColor;
-    }
-
     public int getStartX() {
         return startX;
     }
@@ -116,14 +100,6 @@ public class TerritoryProfile {
 
     public String getGuildPrefix() {
         return guildPrefix;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public String getAttacker() {
-        return attacker;
     }
 
     public Date getAcquired() {
@@ -187,9 +163,9 @@ public class TerritoryProfile {
             if (territory.has("location")) {
                 JsonObject location = territory.getAsJsonObject("location");
                 startX = location.get("startX").getAsInt();
-                startZ = location.get("startZ").getAsInt();
+                startZ = location.get("startY").getAsInt();
                 endX = location.get("endX").getAsInt();
-                endZ = location.get("endZ").getAsInt();
+                endZ = location.get("endY").getAsInt();
             }
             String territoryName = territory.get("territory").getAsString();
             String friendlyName = territoryName.replace('’', '\'');
@@ -207,10 +183,6 @@ public class TerritoryProfile {
             } catch (ParseException e) {
                 WynntilsMod.error("Error when trying to parse territory profile data.", e);
             }
-            String attacker = null;
-            if (!territory.get("attacker").isJsonNull()) {
-                attacker = territory.get("attacker").getAsString();
-            }
 
             String guildPrefix;
             if (territory.get("guildPrefix").isJsonNull()) {
@@ -219,29 +191,8 @@ public class TerritoryProfile {
                 guildPrefix = territory.get("guildPrefix").getAsString();
             }
 
-            int level = territory.get("level").getAsInt();
-
-            CustomColor guildColor;
-            if (territory.get("guildColor").getAsString().isEmpty()) {
-                guildColor = CustomColor.colorForStringHash(guild);
-            } else {
-                guildColor =
-                        CustomColor.fromHexString(territory.get("guildColor").getAsString());
-            }
-
             return new TerritoryProfile(
-                    territoryName,
-                    friendlyName,
-                    guildPrefix,
-                    guildColor,
-                    level,
-                    startX,
-                    startZ,
-                    endX,
-                    endZ,
-                    guild,
-                    attacker,
-                    acquired);
+                    territoryName, friendlyName, guildPrefix, startX, startZ, endX, endZ, guild, acquired);
         }
     }
 }

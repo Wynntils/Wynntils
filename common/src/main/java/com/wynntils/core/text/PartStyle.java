@@ -68,13 +68,6 @@ public final class PartStyle {
         } else {
             // This changes properties that are null, as-in, inherting from the previous style.
             inheritedStyle = style.applyTo(parentStyle);
-
-            // We don't want to inherit these properties.
-            inheritedStyle = inheritedStyle
-                    .withClickEvent(style.getClickEvent())
-                    .withHoverEvent(style.getHoverEvent())
-                    .withInsertion(style.getInsertion())
-                    .withFont(style.getFont());
         }
 
         return new PartStyle(

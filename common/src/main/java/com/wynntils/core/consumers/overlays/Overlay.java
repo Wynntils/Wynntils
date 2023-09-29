@@ -116,7 +116,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     public String getShortName() {
-        return this.getClass().getSimpleName();
+        return this.getClass().getSimpleName().replace("Overlay", "");
     }
 
     public String getDeclaringFeatureClassName() {

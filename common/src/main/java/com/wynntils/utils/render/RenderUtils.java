@@ -17,13 +17,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -518,150 +515,6 @@ public final class RenderUtils {
         drawArc(poseStack, color, x, y, z, 0.25f, innerRadius, outerRadius, angleOffset);
     }
 
-    public static void drawTooltip(
-            PoseStack poseStack, List<Component> componentLines, Font font, boolean firstLineHasPlusHeight) {
-        List<ClientTooltipComponent> lines = TooltipUtils.componentToClientTooltipComponent(componentLines);
-
-        int tooltipWidth = TooltipUtils.getToolTipWidth(lines, font);
-        int tooltipHeight = TooltipUtils.getToolTipHeight(lines);
-
-        // background box
-        poseStack.pushPose();
-        int tooltipX = 4;
-        int tooltipY = 4;
-        int zLevel = 400;
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        Matrix4f matrix4f = poseStack.last().pose();
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 4,
-                tooltipX + tooltipWidth + 3,
-                tooltipY - 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY + tooltipHeight + 3,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 4,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 3,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 4,
-                tooltipY - 3,
-                tooltipX - 3,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX + tooltipWidth + 3,
-                tooltipY - 3,
-                tooltipX + tooltipWidth + 4,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 3 + 1,
-                tooltipX - 3 + 1,
-                tooltipY + tooltipHeight + 3 - 1,
-                zLevel,
-                BORDER_START,
-                BORDER_END);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX + tooltipWidth + 2,
-                tooltipY - 3 + 1,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 3 - 1,
-                zLevel,
-                BORDER_START,
-                BORDER_END);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 3,
-                tooltipX + tooltipWidth + 3,
-                tooltipY - 3 + 1,
-                zLevel,
-                BORDER_START,
-                BORDER_START);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY + tooltipHeight + 2,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BORDER_END,
-                BORDER_END);
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        BufferUploader.drawWithShader(bufferBuilder.end());
-        RenderSystem.disableBlend();
-
-        // text
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        poseStack.translate(0.0, 0.0, 400.0);
-        int s = tooltipY;
-        boolean first = firstLineHasPlusHeight;
-        for (ClientTooltipComponent line : lines) {
-            line.renderText(font, tooltipX, s, matrix4f, bufferSource);
-            s += line.getHeight() + (first ? 2 : 0);
-            first = false;
-        }
-        bufferSource.endBatch();
-        poseStack.popPose();
-    }
-
-    public static void drawTooltipAt(
-            PoseStack poseStack,
-            double renderX,
-            double renderY,
-            double renderZ,
-            List<Component> componentLines,
-            Font font,
-            boolean firstLineHasPlusHeight) {
-        poseStack.pushPose();
-
-        poseStack.translate(renderX, renderY, renderZ);
-        drawTooltip(poseStack, componentLines, font, firstLineHasPlusHeight);
-
-        poseStack.popPose();
-    }
-
     /**
      * drawProgressBar
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
@@ -1025,6 +878,69 @@ public final class RenderUtils {
             }
 
             matrixStack.popPose();
+        }
+    }
+
+    public static void renderProfessionBadge(
+            PoseStack poseStack,
+            EntityRenderDispatcher dispatcher,
+            Entity entity,
+            ResourceLocation tex,
+            float width,
+            float height,
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight,
+            float customOffset,
+            float horizontalShift,
+            float verticalShift) {
+        double d = dispatcher.distanceToSqr(entity);
+        if (d <= 4096.0) {
+            poseStack.pushPose();
+
+            poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
+            poseStack.mulPose(dispatcher.cameraOrientation());
+            poseStack.scale(-0.025F, -0.025F, 0.025F);
+
+            Matrix4f matrix = poseStack.last().pose();
+
+            float halfWidth = width / 2;
+            float halfHeight = height / 2;
+            float uScale = 1F / textureWidth;
+            float vScale = 1F / textureHeight;
+
+            RenderSystem.enableDepthTest();
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, tex);
+
+            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+            bufferBuilder
+                    .vertex(matrix, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                    .uv(uOffset * uScale, vOffset * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                    .uv(uOffset * uScale, (v + vOffset) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                    .uv((u + uOffset) * uScale, (v + vOffset) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                    .uv((u + uOffset) * uScale, vOffset * vScale)
+                    .endVertex();
+
+            BufferUploader.drawWithShader(bufferBuilder.end());
+
+            RenderSystem.disableDepthTest();
+
+            poseStack.popPose();
         }
     }
 

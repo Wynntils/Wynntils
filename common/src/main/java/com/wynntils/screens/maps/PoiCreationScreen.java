@@ -38,7 +38,7 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public final class PoiCreationScreen extends AbstractMapScreen implements TextboxScreen {
-    private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
+    private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d{1,8}");
 
     private static final float GRID_DIVISIONS = 64.0f;
 
@@ -477,6 +477,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderIcon(PoseStack poseStack) {

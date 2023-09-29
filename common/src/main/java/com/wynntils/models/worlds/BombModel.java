@@ -74,6 +74,8 @@ public final class BombModel extends Model {
             if (bombType == null) return;
 
             BombInfo removed = CURRENT_SERVER_BOMBS.remove(bombType);
+            if (removed == null) return;
+
             BOMBS.remove(removed);
         }
     }

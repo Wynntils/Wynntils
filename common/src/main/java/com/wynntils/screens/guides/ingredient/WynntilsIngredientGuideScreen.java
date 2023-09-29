@@ -122,9 +122,7 @@ public final class WynntilsIngredientGuideScreen
     }
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
-        elements.addAll(getAllIngredientItems().stream()
-                .filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
-                .toList());
+        elements.addAll(Services.ItemFilter.filterAndSort(searchQuery, getAllIngredientItems()));
     }
 
     private List<GuideIngredientItemStack> getAllIngredientItems() {

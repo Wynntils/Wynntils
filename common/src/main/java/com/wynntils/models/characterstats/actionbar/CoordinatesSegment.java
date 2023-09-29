@@ -10,7 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CoordinatesSegment implements ActionBarSegment {
-    private static final Pattern COORDINATES_PATTERN = Pattern.compile("(§0 *)§7 ?(-?\\d+)§f ?(.+)§7 ?(-?\\d+)( *)");
+    // https://regexr.com/7kfra
+    private static final Pattern COORDINATES_PATTERN = Pattern.compile("§7(-?\\d+)§f ([NWSE]{1,2})§7 (-?\\d+)");
 
     private final Runnable onSegmentCleared;
     private boolean hidden;
@@ -27,11 +28,9 @@ public class CoordinatesSegment implements ActionBarSegment {
     @Override
     public void update(Matcher matcher) {
         /* Currently we don't care about the actual matches.
-        String leftPad = matcher.group(1);
-        String xCoord = matcher.group(2);
-        String orient = matcher.group(3);
-        String yCoord = matcher.group(4);
-        String rightPad = matcher.group(5);
+        String xCoord = matcher.group(1);
+        String orient = matcher.group(2);
+        String yCoord = matcher.group(3);
          */
     }
 

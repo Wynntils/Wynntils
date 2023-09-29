@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.settings.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -16,7 +17,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -64,14 +64,9 @@ public class ConfigurableButton extends WynntilsButton {
                         TextShadow.NORMAL);
 
         if (isHovered && configurable instanceof Feature) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    0,
-                    descriptionTooltip,
-                    FontRenderer.getInstance().getFont(),
-                    false);
+            McUtils.mc()
+                    .screen
+                    .setTooltipForNextRenderPass(Lists.transform(descriptionTooltip, Component::getVisualOrderText));
         }
     }
 

@@ -62,6 +62,9 @@ public class TerritoryPoi implements Poi {
 
         this.territoryInfo = territoryInfo;
         this.fakeTerritoryInfo = fakeTerritoryInfo;
+
+        // Fill the cache with a value so it is not null
+        this.territoryProfileCache = territoryProfileSupplier.get();
     }
 
     @Override
@@ -83,19 +86,12 @@ public class TerritoryPoi implements Poi {
 
         TerritoryProfile territoryProfile = getTerritoryProfile();
 
-        CustomColor color;
-        if (isTerritoryInfoUsable()
-                && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
-                && guildMapScreen.isResourceMode()) {
-            color = territoryInfo.getResourceColor();
-        } else if (!isTerritoryInfoUsable() || territoryInfo.getGuildName().equals(territoryProfile.getGuild())) {
-            // We know the guild name with it's color
-            color = territoryProfile.getGuildColor();
-        } else {
-            // We don't know the holding guild's color
-            // FIXME: Will be fixed when Athena API is added
-            color = CommonColors.WHITE;
-        }
+        CustomColor color = isTerritoryInfoUsable()
+                        && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
+                        && guildMapScreen.isResourceMode()
+                ? territoryInfo.getResourceColor()
+                : Models.Guild.getColor(
+                        isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild());
 
         BufferedRenderUtils.drawRect(
                 poseStack,

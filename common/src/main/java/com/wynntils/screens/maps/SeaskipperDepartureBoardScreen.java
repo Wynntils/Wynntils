@@ -6,6 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
@@ -153,6 +154,8 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 Texture.DESTINATION_LIST.height());
 
         renderWidgets(poseStack, mouseX, mouseY, partialTick);
+
+        renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderDestinations(
@@ -336,6 +339,13 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 .filter(SeaskipperDestinationPoi::isPlayerInside)
                 .findFirst()
                 .orElse(null);
+
+        if (currentLocationPoi == null) {
+            WynntilsMod.warn(
+                    "Opened SeaskipperDepartureBoardScreen without being inside any destination pois. Location: "
+                            + McUtils.player().position());
+            return;
+        }
 
         zoomToDestination(currentLocationPoi);
     }

@@ -47,7 +47,7 @@ public class ConfigCommand extends Command {
 
                         return foundFeature
                                 .map(feature -> Managers.Overlay.getFeatureOverlays(feature).stream()
-                                        .map(Overlay::getJsonName)
+                                        .map(Overlay::getShortName)
                                         .iterator())
                                 .orElse(Collections.emptyIterator());
                     },
@@ -164,11 +164,6 @@ public class ConfigCommand extends Command {
     @Override
     public String getCommandName() {
         return "config";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Read and manipulate Wynntils settings";
     }
 
     @Override
@@ -696,7 +691,7 @@ public class ConfigCommand extends Command {
         }
 
         Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
-                .filter(overlay -> overlay.getJsonName().equals(overlayName))
+                .filter(overlay -> overlay.getShortName().equals(overlayName))
                 .findFirst();
 
         if (overlayOptional.isEmpty()) {

@@ -14,7 +14,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -114,14 +113,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         if (tooltipLines.isEmpty()) return;
 
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
+        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
     }
 
     @Override

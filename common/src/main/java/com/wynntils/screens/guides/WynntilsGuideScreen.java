@@ -20,8 +20,8 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         super(component);
 
         // Override the search widget with our own
-        this.searchWidget =
-                new ItemSearchWidget(0, -22, Texture.CONTENT_BOOK_BACKGROUND.width(), 20, q -> reloadElements(), this);
+        this.searchWidget = new ItemSearchWidget(
+                0, -22, Texture.CONTENT_BOOK_BACKGROUND.width(), 20, true, q -> reloadElements(), this);
     }
 
     @Override
@@ -35,7 +35,6 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
                 (int) (Texture.INFO.height() / 1.7f),
                 Texture.INFO,
                 a -> {},
-                false,
                 true);
         this.addRenderableWidget(helperButton);
 

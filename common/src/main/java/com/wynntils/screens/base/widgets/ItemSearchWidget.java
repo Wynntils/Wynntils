@@ -14,6 +14,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -21,6 +22,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ItemSearchWidget extends SearchWidget {
+    private final boolean supportsSorting;
+
     private ItemSearchQuery searchQuery;
 
     private Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer;
@@ -30,11 +33,13 @@ public class ItemSearchWidget extends SearchWidget {
             int y,
             int width,
             int height,
+            boolean supportsSorting,
             Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
+        this.supportsSorting = supportsSorting;
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = Services.ItemFilter.createSearchQuery("");
+        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting);
     }
 
     @Override
@@ -133,13 +138,14 @@ public class ItemSearchWidget extends SearchWidget {
     }
 
     private StyledText getStyledText(int charIndex, char c) {
-        if (searchQuery.ignoredCharIndices().contains(charIndex)) {
-            return StyledText.fromComponent(Component.literal(String.valueOf(c)).withStyle(ChatFormatting.RED));
-        } else if (searchQuery.validFilterCharIndices().contains(charIndex)) {
-            return StyledText.fromComponent(Component.literal(String.valueOf(c)).withStyle(ChatFormatting.YELLOW));
-        } else {
-            return StyledText.fromString(String.valueOf(c));
+        for (Pair<ChatFormatting, Pair<Integer, Integer>> colorRange : searchQuery.colorRanges()) {
+            if (charIndex >= colorRange.value().key()
+                    && charIndex < colorRange.value().value()) {
+                return StyledText.fromString(colorRange.key() + String.valueOf(c));
+            }
         }
+
+        return StyledText.fromString(String.valueOf(c));
     }
 
     @Override
@@ -149,7 +155,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = Services.ItemFilter.createSearchQuery(text);
+        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
         if (searchQuery.errors().isEmpty()) {

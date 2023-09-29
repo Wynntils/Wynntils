@@ -16,10 +16,14 @@ import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.players.type.PlayerRank;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -199,7 +203,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Your items are damaged.");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.craftedDurability.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -224,7 +230,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.RED + "Your mana bank is empty!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.emptyManaBank.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -353,7 +361,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_PURPLE + "Your horse has despawned.");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationDespawned")
+                            .withStyle(ChatFormatting.DARK_PURPLE));
         }
     }
 
@@ -373,7 +383,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationScared")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -392,7 +404,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "No room for a horse!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationNoRoom")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -411,7 +425,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.GRAY + "→ Housing Island");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.housingTeleport.notificationJoined")
+                            .withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -431,7 +447,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.housingTeleport.notificationCooldown")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -451,7 +469,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.GRAY + "← Housing Island");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.housingTeleport.notificationLeft")
+                            .withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -471,7 +491,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.housingTeleport.notificationCooldown")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -492,21 +514,31 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected StyledText getNotification(Matcher matcher) {
             int ingredientCount = Integer.parseInt(matcher.group(1));
-            StyledText ingredientString =
-                    StyledText.fromString(ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s"));
+            Component formattedPlural = Component.literal(ingredientCount + " ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.translatable("feature.wynntils.chatRedirect.ingredientPouch.ingredient"
+                                    + (ingredientCount == 1 ? "Singular" : "Plural"))
+                            .withStyle(ChatFormatting.LIGHT_PURPLE));
 
-            String emeraldString = matcher.group(2);
+            StyledText emeraldString =
+                    StyledText.fromString(ChatFormatting.GREEN + matcher.group(2) + ChatFormatting.LIGHT_PURPLE);
 
-            return StyledText.fromString(
-                    String.format("§dSold §7%s §dfor §a%s§d.", ingredientString.getString(), emeraldString));
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.chatRedirect.ingredientPouch.notification",
+                            formattedPlural.getString(),
+                            emeraldString.getString())
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
         }
     }
 
     private class LoginRedirector extends SimpleRedirector {
+        // Test suite: https://regexr.com/7khdo
+        private static final String RANK_STRING =
+                Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§.\\[(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)(§.)+\\|?(§.)*\\] §.(?<name>.*)§. has just logged in!$");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)(§.)+\\|?(§.)*\\] §7(?<name>.*)§8 has just logged in!$");
+                "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{6,8}(?:§o)?(?<name>[\\w ]{1,20})§. has just logged in!$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>["
+                + RANK_STRING + "]) §#[0-9a-f]{6,8}(?:§o)?(?<name>[\\w ]{1,20})§. has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -529,13 +561,14 @@ public class ChatRedirectFeature extends Feature {
             String playerName = matcher.group("name");
             PlayerRank rank = PlayerRank.fromString(rankString);
 
-            return StyledText.fromString(ChatFormatting.GREEN + "→ " + rank.getFormattedRank() + playerName);
+            return StyledText.fromString(ChatFormatting.GREEN + "→ " + ChatFormatting.RESET + rank.getTag() + " "
+                    + rank.getTextColor() + playerName);
         }
     }
 
     private class MageTeleportationFailRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cSorry, you can't teleport... Try moving away from blocks.$");
+                Pattern.compile("^§cSorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -549,7 +582,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.mageTeleport.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -569,7 +604,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Not enough mana to cast that spell!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.notEnoughMana.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -588,12 +625,14 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "No totems nearby!");
+            return StyledText.fromComponent(Component.translatable("feature.wynntils.chatRedirect.shaman.notification")
+                    .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
     private class PotionAlreadyActiveRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§cYou already have that potion active...$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§cYou already have that potion active\\.\\.\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -607,13 +646,15 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "This potion is already active!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.potion.notificationAlreadyActive")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
     private class PotionsMaxRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("§4You already are holding the maximum amount of potions allowed.");
+                Pattern.compile("§4You already are holding the maximum amount of potions allowed\\.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -627,13 +668,15 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "At potion charge limit!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.potion.notificationChargeLimit")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
     private class PotionsMovedRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank.$");
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -647,13 +690,15 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.GRAY + "Moved excess healing items to bank.");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.potion.notificationMoved")
+                            .withStyle(ChatFormatting.GRAY));
         }
     }
 
     private class PotionsReplacedRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("§7One less powerful potion was replaced to open space for the added one.");
+                Pattern.compile("§7One less powerful potion was replaced to open space for the added one\\.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -667,13 +712,15 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.GRAY + "Lesser potion replaced.");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.potion.notificationReplaced")
+                            .withStyle(ChatFormatting.GRAY));
         }
     }
 
     private class ScrollTeleportationHousingFailRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cYou can not teleport while inside a house...$");
+                Pattern.compile("^§cYou can not teleport while inside a house\\.\\.\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -687,12 +734,15 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Can't teleport on a housing island!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.scrollTeleport.notificationHousing")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
     private class ScrollTeleportationMobFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§cThere are aggressive mobs nearby...$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§cThere are aggressive mobs nearby\\.\\.\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -706,15 +756,17 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.scrollTeleport.notificationMobs")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
     private class SoulPointGainDiscarder implements Redirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
+                Pattern.compile("^§5As the sun rises, you feel a little bit safer\\.\\.\\.$");
         private static final Pattern BACKGROUND_PATTERN =
-                Pattern.compile("^(§8)?As the sun rises, you feel a little bit safer...$");
+                Pattern.compile("^(§8)?As the sun rises, you feel a little bit safer\\.\\.\\.$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
@@ -765,7 +817,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class SoulPointLossRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§[47](\\d+) soul points? (has|have) been lost...$");
+                Pattern.compile("^§[47](\\d+) soul points? (has|have) been lost\\.\\.\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -780,19 +832,17 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected StyledText getNotification(Matcher matcher) {
             String numberString = matcher.group(1);
-            String pluralizer = "";
-
             int numberValue = Integer.parseInt(numberString);
-            if (numberValue > 1) {
-                pluralizer = "s";
-            }
 
-            return StyledText.fromString(String.format("§4-%s Soul Point%s", numberString, pluralizer));
+            MutableComponent returnable = (numberValue == 1)
+                    ? Component.translatable("feature.wynntils.chatRedirect.soulPoint.notificationSingular")
+                    : Component.translatable("feature.wynntils.chatRedirect.soulPoint.notificationPlural", numberValue);
+            return StyledText.fromComponent(returnable.withStyle(ChatFormatting.RED));
         }
     }
 
     private class SpeedBoostRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§b\\+([23]) minutes§7 speed boost.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§b\\+([23]) minutes§7 speed boost\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -806,14 +856,18 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            String minutesString = String.format("+%s minutes", matcher.group(1));
-            return StyledText.fromString(ChatFormatting.AQUA + minutesString + ChatFormatting.GRAY + " speed boost");
+            String minutes = matcher.group(1);
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.speed.notificationFirst", minutes)
+                            .withStyle(ChatFormatting.AQUA)
+                            .append(Component.translatable("feature.wynntils.chatRedirect.speed.notificationSecond")
+                                    .withStyle(ChatFormatting.GRAY)));
         }
     }
 
     private class ToolDurabilityRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§4Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith.$");
+                "^§4Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith\\.$");
 
         @Override
         public Pattern getForegroundPattern() {
@@ -827,7 +881,9 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Your tool has 0 durability!");
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.toolDurability.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 
@@ -853,8 +909,11 @@ public class ChatRedirectFeature extends Feature {
         }
 
         protected static StyledText getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
-            return StyledText.fromString(ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD
-                    + unusedAbilityPoints + ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points");
+            String pointsString =
+                    ChatFormatting.BOLD + unusedAbilityPoints + ChatFormatting.RESET + ChatFormatting.DARK_AQUA;
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.chatRedirect.unusedPoints.notificationAbility", pointsString)
+                    .withStyle(ChatFormatting.DARK_AQUA));
         }
     }
 
@@ -909,8 +968,11 @@ public class ChatRedirectFeature extends Feature {
         }
 
         protected static StyledText getUnusedSkillPointsMessage(String unusedSkillPoints) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints
-                    + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points");
+            String pointsString =
+                    ChatFormatting.BOLD + unusedSkillPoints + ChatFormatting.RESET + ChatFormatting.DARK_RED;
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.unusedPoints.notificationSkill", pointsString)
+                            .withStyle(ChatFormatting.DARK_RED));
         }
     }
 }

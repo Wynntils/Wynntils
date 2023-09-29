@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.overlays.placement;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
@@ -21,7 +22,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -41,7 +41,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
@@ -221,32 +220,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             }
 
             if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.NONE) {
-                List<ClientTooltipComponent> clientTooltipComponents =
-                        TooltipUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES);
-                int tooltipWidth = TooltipUtils.getToolTipWidth(
-                        clientTooltipComponents, FontRenderer.getInstance().getFont());
-                int tooltipHeight = TooltipUtils.getToolTipHeight(clientTooltipComponents);
-
-                float renderX = mouseX > McUtils.window().getGuiScaledWidth() / 2f ? mouseX - tooltipWidth : mouseX;
-                float renderY = mouseY > McUtils.window().getGuiScaledHeight() / 2f ? mouseY - tooltipHeight : mouseY;
-
-                RenderUtils.drawTooltipAt(
-                        poseStack,
-                        renderX,
-                        renderY,
-                        100,
-                        HELP_TOOLTIP_LINES,
-                        FontRenderer.getInstance().getFont(),
-                        false);
+                McUtils.mc()
+                        .screen
+                        .setTooltipForNextRenderPass(
+                                Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText));
             }
         }
 
         super.doRender(poseStack, mouseX, mouseY, partialTick); // This renders widgets
-        // This renders button tooltips
-        if (this.deferredTooltipRendering != null) {
-            this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
-            this.deferredTooltipRendering = null;
-        }
     }
 
     private CustomColor getOverlayColor(Overlay overlay) {

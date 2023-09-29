@@ -29,11 +29,6 @@ public class ServersCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Show information about Wynncraft servers";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("list")

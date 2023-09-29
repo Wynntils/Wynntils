@@ -30,7 +30,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -303,14 +302,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
             return;
         }
 
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
+        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
     }
 
     private void renderDescription(PoseStack poseStack) {

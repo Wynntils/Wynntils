@@ -8,7 +8,7 @@ public enum ManaTexture {
     WYNN(0, 17, 8),
     BRUNE(83, 100, 8),
     AETHER(116, 131, 7),
-    SKULL(143, 147, 8),
+    SKULL(132, 147, 8),
     INVERSE(100, 115, 7),
     SKYRIM(148, 163, 8),
     RUNE(164, 179, 8),

@@ -63,7 +63,9 @@ public final class UrlManager extends Manager {
 
     public String buildUrl(UrlInfo urlInfo, Map<String, String> arguments) {
         // Verify that arguments match with what is specified
-        assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())));
+        assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())))
+                : "Arguments mismatch for " + urlInfo.url + ", expected: " + urlInfo.arguments() + " got: "
+                        + arguments.keySet();
 
         // Replace %{argKey} with arg value in URL string
         return arguments.keySet().stream()

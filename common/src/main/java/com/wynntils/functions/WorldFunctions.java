@@ -290,17 +290,4 @@ public class WorldFunctions {
                     List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
         }
     }
-
-    public static class GatheringCooldownFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int cooldownLength = Models.Profession.getGatherCooldownTime();
-            long gatherCooldownEndTimestamp = Models.WorldState.getServerJoinTimestamp() + cooldownLength * 1000L;
-            int gatherCooldownSeconds = (int) ((gatherCooldownEndTimestamp - System.currentTimeMillis()) / 1000);
-
-            if (gatherCooldownSeconds > cooldownLength || gatherCooldownSeconds < 0) return 0;
-
-            return gatherCooldownSeconds;
-        }
-    }
 }
