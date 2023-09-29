@@ -20,5 +20,5 @@ license = "LGPL-3.0-only"
 [[dependencies.wynntils]]
     modId = "forge"
     mandatory = true
-    versionRange = "[48.1.0,)"
+    versionRange = "[48.0.0,)"
 
