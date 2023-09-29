@@ -1,9 +1,21 @@
+## [0.0.3-alpha.401](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.400...v0.0.3-alpha.401) (2023-09-29)
+
+
+### New Features
+
+* Add CrowdSourcedDataManager (disabled, in preparation for opt-in crowd-sourced data) ([#2030](https://github.com/Wynntils/Artemis/issues/2030)) ([007b8d6](https://github.com/Wynntils/Artemis/commit/007b8d6877da6ebb94d78a137666e4b4aaaa53eb))
+
 ## [0.0.3-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.399...v0.0.3-alpha.400) (2023-09-29)
 
 
 ### Bug Fixes
 
 * Improve chat screen handling for game messages ([#2139](https://github.com/Wynntils/Artemis/issues/2139)) ([284f9e9](https://github.com/Wynntils/Artemis/commit/284f9e9a6093cc27e7e7ff29962ddcd99848753e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.400 [skip ci] ([71315e7](https://github.com/Wynntils/Artemis/commit/71315e7dc08c218877306a36365d731ac4e182e9))
 
 ## [0.0.3-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.398...v0.0.3-alpha.399) (2023-09-29)
 
@@ -41,16 +53,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2133](https://github.com/Wynntils/Artemis/issues/2133)) ([222bd71](https://github.com/Wynntils/Artemis/commit/222bd710fb6006df3e23203fb8c62227944c3017))
 * **release:** v0.0.3-alpha.397 [skip ci] ([fbaeed9](https://github.com/Wynntils/Artemis/commit/fbaeed9f6670ae6e6b755e0ab261bbad2e1e72e5))
-
-## [0.0.3-alpha.396](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.395...v0.0.3-alpha.396) (2023-09-28)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.396 [skip ci] ([41c4a4d](https://github.com/Wynntils/Artemis/commit/41c4a4d11651c66e9ff0f32223eac030fcc17fb2))
-
-
-### Code Refactoring
-
-* Always use generator style for toArray ([#2134](https://github.com/Wynntils/Artemis/issues/2134)) ([14cdc3f](https://github.com/Wynntils/Artemis/commit/14cdc3f635ea495600fad4cedee45f7db01eba56))
 
