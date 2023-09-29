@@ -24,7 +24,8 @@ public enum RecipientType {
     PARTY("^§7\\[§e[^➤]*§7\\] §f.*$", "^(§8)?\\[§7[^➤]*§8\\] §7[^§]*$", "Party"),
     PRIVATE("^§7\\[.* ➤ .*\\] §f.*$", "^(§8)?\\[.* ➤ .*\\] §7.*$", "Private"),
     SHOUT("^§5.* \\[[A-Z0-9]+\\] shouts: §d.*$", "^(§8)?.* \\[[A-Z0-9]+\\] shouts: §7.*$", "Shout"),
-    PETS("^§2(.*): §a(.*)$", "^§8(.*): §7(.*)$", "Pets");
+    PETS("^§2(.*): §a(.*)$", "^§8(.*): §7(.*)$", "Pets"),
+    GAME_MESSAGE("^§7[A-Z0-9].*$", null, "Game Message"); // Like dialogues but not uttered by an NPC
 
     private final Pattern foregroundPattern;
     private final Pattern backgroundPattern;
