@@ -423,7 +423,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             throw new IndexOutOfBoundsException("beginIndex must be greater than or equal to 0");
         }
         if (endIndex > length(styleType)) {
-            throw new IndexOutOfBoundsException("endIndex must be less than or equal to getString(styleType).length()");
+            throw new IndexOutOfBoundsException("endIndex must be less than or equal to length(styleType)");
         }
 
         List<StyledTextPart> includedParts = new ArrayList<>();
