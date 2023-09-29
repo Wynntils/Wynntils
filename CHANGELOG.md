@@ -1,3 +1,10 @@
+## [0.0.3-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.397...v0.0.3-alpha.398) (2023-09-29)
+
+
+### Bug Fixes
+
+* Fix corrupted lost sanctuary key overlay text showing as gray instead of red ([#2137](https://github.com/Wynntils/Artemis/issues/2137)) ([b2a682b](https://github.com/Wynntils/Artemis/commit/b2a682b0641b24186caa656fa4cc3c9877ba20c4))
+
 ## [0.0.3-alpha.397](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.396...v0.0.3-alpha.397) (2023-09-28)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2133](https://github.com/Wynntils/Artemis/issues/2133)) ([222bd71](https://github.com/Wynntils/Artemis/commit/222bd710fb6006df3e23203fb8c62227944c3017))
+* **release:** v0.0.3-alpha.397 [skip ci] ([fbaeed9](https://github.com/Wynntils/Artemis/commit/fbaeed9f6670ae6e6b755e0ab261bbad2e1e72e5))
 
 ## [0.0.3-alpha.396](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.395...v0.0.3-alpha.396) (2023-09-28)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.394 [skip ci] ([6f62f22](https://github.com/Wynntils/Artemis/commit/6f62f22f6dab169bd5a2afcedc69b3beb286707e))
-
-## [0.0.3-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.392...v0.0.3-alpha.393) (2023-09-27)
-
-
-### Bug Fixes
-
-* fix mod reload looping if a feature crashes ([#2132](https://github.com/Wynntils/Artemis/issues/2132)) ([9a771d6](https://github.com/Wynntils/Artemis/commit/9a771d65946a2ea540acd986a4e3616d39beba38))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.393 [skip ci] ([8df0a68](https://github.com/Wynntils/Artemis/commit/8df0a6806844a77c47ab972c840637a2f5006e74))
 
