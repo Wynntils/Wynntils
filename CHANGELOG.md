@@ -1,9 +1,21 @@
+## [0.0.3-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.399...v0.0.3-alpha.400) (2023-09-29)
+
+
+### Bug Fixes
+
+* Improve chat screen handling for game messages ([#2139](https://github.com/Wynntils/Artemis/issues/2139)) ([284f9e9](https://github.com/Wynntils/Artemis/commit/284f9e9a6093cc27e7e7ff29962ddcd99848753e))
+
 ## [0.0.3-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.398...v0.0.3-alpha.399) (2023-09-29)
 
 
 ### New Features
 
 * Hightlight duplicate cosmetics ([#2135](https://github.com/Wynntils/Artemis/issues/2135)) ([b75c117](https://github.com/Wynntils/Artemis/commit/b75c117832003f529f7faccc76ddf5531061ae5a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.399 [skip ci] ([13288da](https://github.com/Wynntils/Artemis/commit/13288daed7143f74a1f6f15297ae1851d2259792))
 
 ## [0.0.3-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.397...v0.0.3-alpha.398) (2023-09-29)
 
@@ -41,16 +53,4 @@
 ### Code Refactoring
 
 * Always use generator style for toArray ([#2134](https://github.com/Wynntils/Artemis/issues/2134)) ([14cdc3f](https://github.com/Wynntils/Artemis/commit/14cdc3f635ea495600fad4cedee45f7db01eba56))
-
-## [0.0.3-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.394...v0.0.3-alpha.395) (2023-09-27)
-
-
-### Bug Fixes
-
-* add missing annotations to items on trade market ([#2057](https://github.com/Wynntils/Artemis/issues/2057)) ([f3fd6ed](https://github.com/Wynntils/Artemis/commit/f3fd6ed16beedb4375cc282a0da5cb96a9236b6e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.395 [skip ci] ([ca119ec](https://github.com/Wynntils/Artemis/commit/ca119ec3ad27833292919f5eaf7472b0afe8fd45))
 
