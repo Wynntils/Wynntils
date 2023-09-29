@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public enum Dungeon {
     DECREPIT_SEWERS,
     INFESTED_PIT,
-    LOST_SANCTUARY(true),
+    LOST_SANCTUARY(true, false),
     UNDERWORLD_CRYPT,
     TIMELOST_SANCTUM,
     SAND_SWEPT_TOMB("Sand-Swept Tomb"),
@@ -23,19 +23,22 @@ public enum Dungeon {
 
     private final String name;
     private final boolean removed;
+    private final boolean corruptedRemoved;
 
     Dungeon() {
-        this(false);
+        this(false, false);
     }
 
-    Dungeon(boolean removed) {
+    Dungeon(boolean removed, boolean corruptedRemoved) {
         this.name = EnumUtils.toNiceString(name());
         this.removed = removed;
+        this.corruptedRemoved = corruptedRemoved;
     }
 
     Dungeon(String name) {
         this.name = name;
         this.removed = false;
+        this.corruptedRemoved = false;
     }
 
     public static Dungeon fromName(String name) {
@@ -54,6 +57,10 @@ public enum Dungeon {
 
     public boolean isRemoved() {
         return removed;
+    }
+
+    public boolean isCorruptedRemoved() {
+        return corruptedRemoved;
     }
 
     public String getInitials() {
