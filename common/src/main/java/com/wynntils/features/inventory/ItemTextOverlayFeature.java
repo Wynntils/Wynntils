@@ -237,12 +237,10 @@ public class ItemTextOverlayFeature extends Feature {
             String text = dungeon.getInitials();
 
             CustomColor textColor;
-            if (dungeon.isRemoved()) {
-                textColor = REMOVED_COLOR;
-            } else if (item.isCorrupted()) {
-                textColor = CORRUPTED_COLOR;
+            if (item.isCorrupted()) {
+                textColor = dungeon.isCorruptedRemoved() ? REMOVED_COLOR : CORRUPTED_COLOR;
             } else {
-                textColor = STANDARD_COLOR;
+                textColor = dungeon.isRemoved() ? REMOVED_COLOR : STANDARD_COLOR;
             }
 
             TextRenderSetting style =

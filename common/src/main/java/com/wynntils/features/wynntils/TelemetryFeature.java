@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
@@ -14,12 +15,14 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -31,6 +34,13 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public class TelemetryFeature extends Feature {
     @Persisted
     public final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
+
+    // FIXME: Temporary config location, until managers can have their own configs.
+    //        Crash report telemetry and this type of telemetry is really different
+    //        and should be in different places.
+    @Persisted
+    public final HiddenConfig<Map<CrowdSourcedDataType, ConfirmedBoolean>> crowdSourcedDataTypeEnabledMap =
+            new HiddenConfig<>(new TreeMap<>());
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {

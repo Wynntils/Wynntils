@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
 import com.wynntils.core.consumers.overlays.OverlayManager;
+import com.wynntils.core.crowdsource.CrowdSourcedDataManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;
@@ -43,4 +44,5 @@ public final class Managers {
     public static final ConfigManager Config = new ConfigManager(Upfixer, Json, Feature, Overlay);
     public static final NetManager Net = new NetManager(Url);
     public static final StorageManager Storage = new StorageManager(Json, Feature);
+    public static final CrowdSourcedDataManager CrowdSourcedData = new CrowdSourcedDataManager(Storage);
 }
