@@ -5,6 +5,7 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -386,7 +387,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             splitTexts.add(new StyledText(splitParts, clickEvents, hoverEvents));
         }
 
-        return splitTexts.toArray(new StyledText[0]);
+        return splitTexts.toArray(StyledText[]::new);
     }
 
     public StyledText substring(int beginIndex) {
@@ -420,7 +421,8 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 // 1. This full part is included
 
                 includedParts.add(part);
-            } else if (currentIndex + part.length() >= beginIndex || currentIndex + part.length() > endIndex) {
+            } else if (MathUtils.rangesIntersect(
+                    currentIndex, currentIndex + part.length(), beginIndex, endIndex - 1)) {
                 // 2. This part is partially included
 
                 int startIndexInPart = Math.max(0, beginIndex - currentIndex);
