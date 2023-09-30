@@ -1,9 +1,21 @@
+## [0.0.3-alpha.403](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.402...v0.0.3-alpha.403) (2023-09-30)
+
+
+### Miscellaneous Chores
+
+* Release 1.20.2 port ([#2147](https://github.com/Wynntils/Artemis/issues/2147)) ([40bb19d](https://github.com/Wynntils/Artemis/commit/40bb19d48008aa586bee9a3d98d2287feaac4c30))
+
 ## [0.0.3-alpha.402](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.401...v0.0.3-alpha.402) (2023-09-30)
 
 
 ### New Features
 
 * Add a GUI for crowd sourcing settings ([#2146](https://github.com/Wynntils/Artemis/issues/2146)) ([df20bdd](https://github.com/Wynntils/Artemis/commit/df20bdd5c021cebb697e2f54513065a88d51841a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.402 [skip ci] ([739310f](https://github.com/Wynntils/Artemis/commit/739310f069c1f6279e8cc873126f237b80d09192))
 
 ## [0.0.3-alpha.401](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.400...v0.0.3-alpha.401) (2023-09-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.399 [skip ci] ([13288da](https://github.com/Wynntils/Artemis/commit/13288daed7143f74a1f6f15297ae1851d2259792))
-
-## [0.0.3-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.397...v0.0.3-alpha.398) (2023-09-29)
-
-
-### Bug Fixes
-
-* Fix corrupted lost sanctuary key overlay text showing as gray instead of red ([#2137](https://github.com/Wynntils/Artemis/issues/2137)) ([b2a682b](https://github.com/Wynntils/Artemis/commit/b2a682b0641b24186caa656fa4cc3c9877ba20c4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.398 [skip ci] ([a8938eb](https://github.com/Wynntils/Artemis/commit/a8938eb6bfe3d1cf896cbe1d77b3185294e6c9f6))
 
