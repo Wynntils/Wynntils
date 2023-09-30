@@ -120,7 +120,8 @@ public class BankModel extends Model {
             case CHARACTER_BANK -> {
                 customCharacterBankPagesNames.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
-                Map<Integer, String> nameMap = customCharacterBankPagesNames.get().get(Models.Character.getId());
+                Map<Integer, String> nameMap =
+                        customCharacterBankPagesNames.get().get(Models.Character.getId());
 
                 nameMap.put(currentPage, nameToSet);
 
