@@ -216,8 +216,12 @@ public class ContainerSearchFeature extends Feature {
     private SearchableContainerType getCurrentSearchableContainerType(StyledText title) {
         SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
 
-        if (containerType == SearchableContainerType.BANK && filterInBank.get()) {
-            return SearchableContainerType.BANK;
+        if (containerType == SearchableContainerType.ACCOUNT_BANK && filterInBank.get()) {
+            return SearchableContainerType.ACCOUNT_BANK;
+        }
+
+        if (containerType == SearchableContainerType.CHARACTER_BANK && filterInBank.get()) {
+            return SearchableContainerType.CHARACTER_BANK;
         }
 
         if (containerType == SearchableContainerType.BLOCK_BANK && filterInBlockBank.get()) {
