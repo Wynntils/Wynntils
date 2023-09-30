@@ -46,7 +46,7 @@ public class CrowdSourcedData {
     }
 
     <T> Set<T> getData(CrowdSourcedDataGameVersion version, CrowdSourcedDataType crowdSourcedDataType, T dataClass) {
-        if (crowdSourcedDataType.getDataClass() != dataClass.getClass()) {
+        if (crowdSourcedDataType.getDataClass() != dataClass) {
             throw new IllegalArgumentException("The provided data class does not match the crowd sourced data type.");
         }
 
