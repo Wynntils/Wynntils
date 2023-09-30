@@ -38,15 +38,7 @@ public class CrowdSourcedDataManager extends Manager {
     }
 
     public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T crowdSourcedData) {
-        DataCrowdSourcingFeature dataCrowdSourcingFeature =
-                Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class);
-        if (!dataCrowdSourcingFeature.isEnabled()) return;
-
-        ConfirmedBoolean collectionEnabledForType = dataCrowdSourcingFeature
-                .crowdSourcedDataTypeEnabledMap
-                .get()
-                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.FALSE);
-        if (collectionEnabledForType != ConfirmedBoolean.TRUE) return;
+        if (!isDataCollected(crowdSourcedDataType)) return;
 
         collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedData);
         collectedData.touched();
@@ -56,6 +48,23 @@ public class CrowdSourcedDataManager extends Manager {
         return (Set<T>) collectedData
                 .get()
                 .getData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedDataType.getDataClass());
+    }
+
+    public boolean isDataCollected(CrowdSourcedDataType crowdSourcedDataType) {
+        if (!isDataCollectionEnabled()) return false;
+
+        ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
+                .crowdSourcedDataTypeEnabledMap
+                .get()
+                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.FALSE);
+        if (collectionEnabledForType != ConfirmedBoolean.TRUE) return false;
+
+        return true;
+    }
+
+    public boolean isDataCollectionEnabled() {
+        return Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
+                .isEnabled();
     }
 
     private void registerCollectors() {
