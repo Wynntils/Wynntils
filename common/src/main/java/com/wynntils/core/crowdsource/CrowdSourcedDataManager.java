@@ -12,8 +12,9 @@ import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.storage.StorageManager;
-import com.wynntils.features.wynntils.TelemetryFeature;
+import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.telemetry.LootrunLocationDataCollector;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +38,7 @@ public class CrowdSourcedDataManager extends Manager {
     }
 
     public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T crowdSourcedData) {
-        TelemetryFeature.ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(
-                        TelemetryFeature.class)
-                .crowdSourcedDataTypeEnabledMap
-                .get()
-                .getOrDefault(crowdSourcedDataType, TelemetryFeature.ConfirmedBoolean.FALSE);
-        if (collectionEnabledForType != TelemetryFeature.ConfirmedBoolean.TRUE) return;
+        if (getDataCollectionState(crowdSourcedDataType) != ConfirmedBoolean.TRUE) return;
 
         collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedData);
         collectedData.touched();
@@ -52,6 +48,22 @@ public class CrowdSourcedDataManager extends Manager {
         return (Set<T>) collectedData
                 .get()
                 .getData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedDataType.getDataClass());
+    }
+
+    public ConfirmedBoolean getDataCollectionState(CrowdSourcedDataType crowdSourcedDataType) {
+        if (!isDataCollectionEnabled()) return ConfirmedBoolean.FALSE;
+
+        ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
+                .crowdSourcedDataTypeEnabledMap
+                .get()
+                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.UNCONFIRMED);
+
+        return collectionEnabledForType;
+    }
+
+    public boolean isDataCollectionEnabled() {
+        return Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
+                .isEnabled();
     }
 
     private void registerCollectors() {

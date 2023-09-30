@@ -145,6 +145,7 @@ import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
+import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
@@ -344,6 +345,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
+        registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
