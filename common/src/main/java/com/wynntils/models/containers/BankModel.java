@@ -118,11 +118,9 @@ public class BankModel extends Model {
                 customBookshelfPageNames.touched();
             }
             case CHARACTER_BANK -> {
-                Map<Integer, String> nameMap = new TreeMap<>();
+                customCharacterBankPagesNames.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
 
-                if (customCharacterBankPagesNames.get().containsKey(Models.Character.getId())) {
-                    nameMap = customCharacterBankPagesNames.get().get(Models.Character.getId());
-                }
+                Map<Integer, String> nameMap = customCharacterBankPagesNames.get().get(Models.Character.getId());
 
                 nameMap.put(currentPage, nameToSet);
 
@@ -153,10 +151,9 @@ public class BankModel extends Model {
                 customBookshelfPageNames.touched();
             }
             case CHARACTER_BANK -> {
-                customCharacterBankPagesNames.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
                 customCharacterBankPagesNames
                         .get()
-                        .get(Models.Character.getId())
+                        .getOrDefault(Models.Character.getId(), new TreeMap<>())
                         .remove(currentPage);
                 customCharacterBankPagesNames.touched();
             }
@@ -226,7 +223,9 @@ public class BankModel extends Model {
             case ACCOUNT_BANK -> customBankPageNames.get();
             case BLOCK_BANK -> customBlockBankPageNames.get();
             case BOOKSHELF -> customBookshelfPageNames.get();
-            case CHARACTER_BANK -> customCharacterBankPagesNames.get().get(Models.Character.getId());
+            case CHARACTER_BANK -> customCharacterBankPagesNames
+                    .get()
+                    .getOrDefault(Models.Character.getId(), new TreeMap<>());
             case MISC_BUCKET -> customMiscBucketPageNames.get();
             default -> null;
         };
