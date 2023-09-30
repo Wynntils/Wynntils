@@ -16,6 +16,7 @@ import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -270,6 +271,24 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
                                 Component.translatable("screens.wynntils.wynntilsMenu.overlayConfig.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+
+        buttons.get(3)
+                .add(new WynntilsMenuButton(
+                        Texture.SHARE_ICON,
+                        false,
+                        WynntilsCrowdSourcingSettingsScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable(
+                                                        "screens.wynntils.wynntilsMenu.crowdSourcing.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.wynntilsMenu.crowdSourcing.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
