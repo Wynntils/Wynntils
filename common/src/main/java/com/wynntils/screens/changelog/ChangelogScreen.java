@@ -23,6 +23,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
@@ -73,7 +74,9 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
 
         poseStack.translate(
@@ -87,7 +90,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
 
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         poseStack.popPose();
     }
@@ -115,14 +118,14 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (delta > 0) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        if (deltaY > 0) {
             setCurrentPage(getCurrentPage() - 1);
-        } else if (delta < 0) {
+        } else if (deltaY < 0) {
             setCurrentPage(getCurrentPage() + 1);
         }
 
-        return super.mouseScrolled(mouseX, mouseY, delta);
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     private void calculateRenderTasks() {

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -132,23 +133,23 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
-        renderBackground(poseStack);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         boolean inParty = Models.Party.isInParty();
 
         // Update button states before rendering them
-        createLeaveButton.render(poseStack, mouseX, mouseY, partialTick);
+        createLeaveButton.render(guiGraphics, mouseX, mouseY, partialTick);
         kickOfflineButton.active = inParty
                 && !Models.Party.getOfflineMembers().isEmpty()
                 && Models.Party.isPartyLeader(McUtils.playerName());
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
-
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // uncomment when changing gui elements
         // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
@@ -233,7 +234,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
-        partyMembersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+        partyMembersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         // endregion
 
         // region Suggestions
@@ -276,7 +277,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
-        suggestedPlayersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+        suggestedPlayersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         // endregion
     }
 

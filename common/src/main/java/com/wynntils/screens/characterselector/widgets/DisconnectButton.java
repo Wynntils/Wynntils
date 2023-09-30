@@ -13,6 +13,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 
@@ -34,12 +35,13 @@ public class DisconnectButton extends WynntilsButton {
         // This is replicating the behavior found in PauseScreen.onDisconnect()
         TitleScreen titleScreen = new TitleScreen();
         McUtils.mc().level.disconnect();
-        McUtils.mc().clearLevel();
         McUtils.mc().setScreen(titleScreen);
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.DISCONNECT_BUTTON.resource(),

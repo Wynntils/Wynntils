@@ -42,7 +42,7 @@ public final class ItemUtils {
             if (!newItem.getItem().equals(oldItem.getItem())
                     || newItem.getDamageValue() != oldItem.getDamageValue()
                     || newItem.getCount() != oldItem.getCount()
-                    || !ItemStack.tagMatches(oldItem, newItem)) {
+                    || !ItemStack.isSameItemSameTags(oldItem, newItem)) {
                 return false;
             }
         }

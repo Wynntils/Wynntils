@@ -16,6 +16,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -29,7 +30,9 @@ public class GuidePowderItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         CustomColor color = itemStack.getElement().getColor();
 
         RenderUtils.drawTexturedRectWithColor(
@@ -44,7 +47,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
+        RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 200);
