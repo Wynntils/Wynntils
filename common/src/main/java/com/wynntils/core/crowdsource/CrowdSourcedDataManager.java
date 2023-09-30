@@ -38,7 +38,7 @@ public class CrowdSourcedDataManager extends Manager {
     }
 
     public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T crowdSourcedData) {
-        if (!isDataCollected(crowdSourcedDataType)) return;
+        if (getDataCollectionState(crowdSourcedDataType) != ConfirmedBoolean.TRUE) return;
 
         collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedData);
         collectedData.touched();
@@ -50,16 +50,15 @@ public class CrowdSourcedDataManager extends Manager {
                 .getData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedDataType.getDataClass());
     }
 
-    public boolean isDataCollected(CrowdSourcedDataType crowdSourcedDataType) {
-        if (!isDataCollectionEnabled()) return false;
+    public ConfirmedBoolean getDataCollectionState(CrowdSourcedDataType crowdSourcedDataType) {
+        if (!isDataCollectionEnabled()) return ConfirmedBoolean.FALSE;
 
         ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                 .crowdSourcedDataTypeEnabledMap
                 .get()
-                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.FALSE);
-        if (collectionEnabledForType != ConfirmedBoolean.TRUE) return false;
+                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.UNCONFIRMED);
 
-        return true;
+        return collectionEnabledForType;
     }
 
     public boolean isDataCollectionEnabled() {

@@ -64,9 +64,12 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
 
-        Texture stateTexture = Managers.CrowdSourcedData.isDataCollected(crowdSourcedDataType)
-                ? Texture.ACTIVITY_FINISHED
-                : Texture.ACTIVITY_CANNOT_START;
+        Texture stateTexture =
+                switch (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType)) {
+                    case FALSE -> Texture.ACTIVITY_CANNOT_START;
+                    case TRUE -> Texture.ACTIVITY_FINISHED;
+                    case UNCONFIRMED -> Texture.QUESTION_MARK;
+                };
 
         RenderUtils.drawTexturedRect(
                 poseStack,
@@ -82,7 +85,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (Managers.CrowdSourcedData.isDataCollected(crowdSourcedDataType)) {
+            if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) == ConfirmedBoolean.TRUE) {
                 Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                         .crowdSourcedDataTypeEnabledMap
                         .get()
@@ -142,7 +145,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.enableWithFeature")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.DARK_GREEN));
-        } else if (!Managers.CrowdSourcedData.isDataCollected(crowdSourcedDataType)) {
+        } else if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) != ConfirmedBoolean.TRUE) {
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.enable")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));
