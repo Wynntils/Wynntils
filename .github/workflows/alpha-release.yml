@@ -39,6 +39,7 @@ jobs:
           skip-git-pull: true
           pre-release: true
           pre-release-identifier: alpha
+          release-count: 5
 
       - name: Create release
         if: ${{ steps.changelog.outputs.skipped != 'true' }}
