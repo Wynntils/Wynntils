@@ -460,6 +460,80 @@ public class TestStyledText {
     }
 
     @Test
+    public void styledText_substringWithFormattingShouldWork() {
+        final StyledText text = StyledText.fromString("§1koala§2bear");
+
+        StyledText substringText = text.substring(0, 4, PartStyle.StyleType.DEFAULT);
+
+        String substring = substringText.getString();
+
+        final String result = "§1ko";
+
+        Assertions.assertEquals(result, substring, "StyledText.substring() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_substringWithFormattingShouldErrorOnSplitFormattingCode() {
+        final StyledText text = StyledText.fromString("§1koala§2bear");
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> text.substring(0, 1, PartStyle.StyleType.DEFAULT),
+                "StyledText.substring() did not throw an exception for split formatting code.");
+    }
+
+    @Test
+    public void styledText_partitionShouldWork() {
+        final StyledText text = StyledText.fromString("§1koala§2bear");
+
+        StyledText[] separatedTexts = text.partition(6);
+
+        String first = separatedTexts[0].getString();
+        String second = separatedTexts[1].getString();
+
+        final String firstResult = "§1koala§2b";
+        final String secondResult = "§2ear";
+
+        Assertions.assertEquals(firstResult, first, "StyledText.separate() returned an unexpected value.");
+        Assertions.assertEquals(secondResult, second, "StyledText.separate() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_partitionMultipleIndexesShouldWork() {
+        final StyledText text = StyledText.fromString("§1koala§2bear");
+
+        StyledText[] separatedTexts = text.partition(1, 3, 6, 7);
+
+        String first = separatedTexts[0].getString();
+        String second = separatedTexts[1].getString();
+        String third = separatedTexts[2].getString();
+        String fourth = separatedTexts[3].getString();
+        String fifth = separatedTexts[4].getString();
+
+        final String firstResult = "§1k";
+        final String secondResult = "§1oa";
+        final String thirdResult = "§1la§2b";
+        final String fourthResult = "§2e";
+        final String fifthResult = "§2ar";
+
+        Assertions.assertEquals(firstResult, first, "StyledText.separate() returned an unexpected value.");
+        Assertions.assertEquals(secondResult, second, "StyledText.separate() returned an unexpected value.");
+        Assertions.assertEquals(thirdResult, third, "StyledText.separate() returned an unexpected value.");
+        Assertions.assertEquals(fourthResult, fourth, "StyledText.separate() returned an unexpected value.");
+        Assertions.assertEquals(fifthResult, fifth, "StyledText.separate() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_partitionWithUnorderedIndexesShouldError() {
+        final StyledText text = StyledText.fromString("§1koala§2bear");
+
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> text.partition(3, 1),
+                "StyledText.separate() did not throw an exception for unordered indexes.");
+    }
+
+    @Test
     public void styledText_replaceShouldOnlyReplaceFirstOccurence() {
         final Component component = Component.literal("a")
                 .withStyle(ChatFormatting.BOLD)
