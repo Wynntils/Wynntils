@@ -1158,7 +1158,6 @@
   "feature.wynntils.updates.error.development": "Development environment detected, cannot update!",
   "feature.wynntils.updates.name": "Updates",
   "feature.wynntils.updates.reminder": "You are running build %s, but the latest build is %s. Please consider updating by clicking ",
-  "feature.wynntils.updates.reminder.alpha": "Please note that Artemis is in alpha, and newer builds might introduce bugs.",
   "feature.wynntils.updates.reminder.clickable": "here.",
   "feature.wynntils.updates.updateReminder.description": "Should there be a reminder to update if a new version exists on your first join?",
   "feature.wynntils.updates.updateReminder.name": "Update Reminder",
