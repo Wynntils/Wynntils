@@ -5,6 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -13,16 +14,16 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public abstract class ContainerLabelRenderEvent extends Event {
     private final AbstractContainerScreen<?> screen;
-    private final PoseStack poseStack;
+    private final GuiGraphics guiGraphics;
     private final float x;
     private final float y;
 
     private int color;
 
     protected ContainerLabelRenderEvent(
-            AbstractContainerScreen<?> screen, PoseStack poseStack, float x, float y, int color) {
+            AbstractContainerScreen<?> screen, GuiGraphics guiGraphics, float x, float y, int color) {
         this.screen = screen;
-        this.poseStack = poseStack;
+        this.guiGraphics = guiGraphics;
         this.x = x;
         this.y = y;
 
@@ -33,8 +34,12 @@ public abstract class ContainerLabelRenderEvent extends Event {
         return screen;
     }
 
+    public GuiGraphics getGuiGraphics() {
+        return guiGraphics;
+    }
+
     public PoseStack getPoseStack() {
-        return poseStack;
+        return guiGraphics.pose();
     }
 
     public float getX() {
@@ -58,12 +63,12 @@ public abstract class ContainerLabelRenderEvent extends Event {
 
         public ContainerLabel(
                 AbstractContainerScreen<?> screen,
-                PoseStack poseStack,
+                GuiGraphics guiGraphics,
                 int color,
                 float x,
                 float y,
                 Component containerLabel) {
-            super(screen, poseStack, x, y, color);
+            super(screen, guiGraphics, x, y, color);
             this.containerLabel = containerLabel;
         }
 
@@ -81,12 +86,12 @@ public abstract class ContainerLabelRenderEvent extends Event {
 
         public InventoryLabel(
                 AbstractContainerScreen<?> screen,
-                PoseStack poseStack,
+                GuiGraphics guiGraphics,
                 int color,
                 float x,
                 float y,
                 Component inventoryLabel) {
-            super(screen, poseStack, x, y, color);
+            super(screen, guiGraphics, x, y, color);
             this.inventoryLabel = inventoryLabel;
         }
 

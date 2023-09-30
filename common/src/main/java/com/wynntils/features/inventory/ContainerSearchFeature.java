@@ -32,6 +32,7 @@ import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -109,9 +110,9 @@ public class ContainerSearchFeature extends Feature {
         if (lastItemSearchHelperWidget == null) return;
 
         if (lastItemSearchHelperWidget.isHovered()) {
-            event.getScreen()
+            event.getGuiGraphics()
                     .renderComponentTooltip(
-                            event.getPoseStack(),
+                            FontRenderer.getInstance().getFont(),
                             lastItemSearchHelperWidget.getTooltipLines(),
                             event.getMouseX(),
                             event.getMouseY());
