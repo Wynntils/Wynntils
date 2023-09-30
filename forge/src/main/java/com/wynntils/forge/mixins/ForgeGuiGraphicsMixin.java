@@ -54,7 +54,13 @@ public abstract class ForgeGuiGraphicsMixin {
 
         if (event.isCanceled()) return;
 
-        operation.call(instance, font, event.getTooltips(), event.getItemStack().getTooltipImage(), mouseX, mouseY);
+        operation.call(
+                instance,
+                font,
+                event.getTooltips(),
+                event.getItemStack().getTooltipImage(),
+                event.getMouseX(),
+                event.getMouseY());
     }
 
     @Inject(

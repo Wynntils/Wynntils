@@ -24,9 +24,9 @@ import net.minecraftforge.eventbus.api.Event;
  */
 public abstract class ItemTooltipRenderEvent extends Event {
     private final GuiGraphics guiGraphics;
-    private ItemStack itemStack;
-    private int mouseX;
-    private int mouseY;
+    protected ItemStack itemStack;
+    protected int mouseX;
+    protected int mouseY;
 
     protected ItemTooltipRenderEvent(GuiGraphics guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
         this.guiGraphics = guiGraphics;
@@ -55,18 +55,6 @@ public abstract class ItemTooltipRenderEvent extends Event {
         return mouseY;
     }
 
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
-    }
-
-    public void setMouseX(int mouseX) {
-        this.mouseX = mouseX;
-    }
-
-    public void setMouseY(int mouseY) {
-        this.mouseY = mouseY;
-    }
-
     @Cancelable
     public static class Pre extends ItemTooltipRenderEvent {
         private List<Component> tooltips;
@@ -82,6 +70,18 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
         public void setTooltips(List<Component> tooltips) {
             this.tooltips = Collections.unmodifiableList(tooltips);
+        }
+
+        public void setMouseX(int mouseX) {
+            this.mouseX = mouseX;
+        }
+
+        public void setMouseY(int mouseY) {
+            this.mouseY = mouseY;
+        }
+
+        public void setItemStack(ItemStack itemStack) {
+            this.itemStack = itemStack;
         }
     }
 
