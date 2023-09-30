@@ -106,6 +106,10 @@ public class TooltipFittingFeature extends Feature {
         event.setPositioner(new ScaledTooltipPositioner(lastScaleFactor));
     }
 
+    /**
+     * A {@link ClientTooltipPositioner} that adjusts the position of the tooltip to fit the screen.
+     * This is the same as {@link net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner}, but scaled.
+     */
     private static final class ScaledTooltipPositioner implements ClientTooltipPositioner {
         private final float scaleFactor;
 
