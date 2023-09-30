@@ -153,13 +153,12 @@ public class BankModel extends Model {
                 customBookshelfPageNames.touched();
             }
             case CHARACTER_BANK -> {
-                if (customCharacterBankPagesNames.get().containsKey(Models.Character.getId())) {
-                    customCharacterBankPagesNames
-                            .get()
-                            .get(Models.Character.getId())
-                            .remove(currentPage);
-                    customCharacterBankPagesNames.touched();
-                }
+                customCharacterBankPagesNames.get().putIfAbsent(Models.Character.getId(), new TreeMap<>());
+                customCharacterBankPagesNames
+                        .get()
+                        .get(Models.Character.getId())
+                        .remove(currentPage);
+                customCharacterBankPagesNames.touched();
             }
             case MISC_BUCKET -> {
                 customMiscBucketPageNames.get().remove(currentPage);
