@@ -1,9 +1,9 @@
-name: Publish Alpha Release
+name: Publish Beta Release
 
 on:
   push:
     branches:
-      - alpha
+      - beta
 
 jobs:
   changelog:
@@ -38,7 +38,7 @@ jobs:
           skip-version-file: true
           skip-git-pull: true
           pre-release: true
-          pre-release-identifier: alpha
+          pre-release-identifier: beta
           release-count: 5
 
       - name: Create release
