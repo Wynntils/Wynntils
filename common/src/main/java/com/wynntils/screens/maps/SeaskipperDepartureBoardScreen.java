@@ -23,6 +23,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -108,8 +109,10 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderGradientBackground(poseStack);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        renderGradientBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -140,7 +143,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor();
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -153,9 +156,9 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 Texture.DESTINATION_LIST.width(),
                 Texture.DESTINATION_LIST.height());
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderDestinations(
@@ -201,15 +204,15 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
         return filteredPois;
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         for (Renderable renderable : this.renderables) {
-            renderable.render(poseStack, mouseX, mouseY, partialTicks);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
 
         reloadButtons();
 
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
-            destinationButton.render(poseStack, mouseX, mouseY, partialTicks);
+            destinationButton.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -325,7 +328,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Disallow zooming
         return true;
     }

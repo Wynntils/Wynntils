@@ -43,6 +43,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -92,9 +93,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     // region Render
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         float backgroundRenderX = getTranslationX();
         float backgroundRenderY = getTranslationY();
+
+        PoseStack poseStack = guiGraphics.pose();
 
         poseStack.pushPose();
         poseStack.translate(backgroundRenderX, backgroundRenderY, 0);
@@ -103,7 +106,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         renderScrollArea(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (selected != null) {
             renderConfigTitle(poseStack);
@@ -141,18 +144,18 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         poseStack.popPose();
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         int adjustedMouseX = mouseX - (int) getTranslationX();
         int adjustedMouseY = mouseY - (int) getTranslationY();
 
         for (Renderable renderable : renderables) {
-            renderable.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+            renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
         }
 
-        configurableListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+        configurableListScrollButton.renderWidget(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
 
         if (configListScrollButton != null) {
-            configListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+            configListScrollButton.renderWidget(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
         }
 
         // Reverse iteration for so tooltip Z levels are correct when rendering
@@ -160,7 +163,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 i >= configScrollOffset;
                 i--) {
             WynntilsButton configButton = configs.get(i);
-            configButton.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+            configButton.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
         }
 
         // Render configurable's after configs so tooltip Z levels are correct
@@ -169,7 +172,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 i >= configurableScrollOffset * CONFIGURABLES_PER_PAGE;
                 i--) {
             WynntilsButton featureButton = configurables.get(i);
-            featureButton.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+            featureButton.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
         }
     }
 
@@ -251,14 +254,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
 
         if (adjustedMouseX <= Texture.CONFIG_BOOK_BACKGROUND.width() / 2f) {
-            configurableListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, delta);
+            configurableListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY);
         } else if (configListScrollButton != null) {
-            configListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, delta);
+            configListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY);
         }
 
         return true;

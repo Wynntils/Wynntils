@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class FilterButton extends WynntilsButton implements TooltipProvider {
@@ -46,7 +47,9 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawRect(poseStack, getButtonColor(), getX(), getY(), 0, width, height);
 
         if (!this.dynamicTexture) {

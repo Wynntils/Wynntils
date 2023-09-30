@@ -5,6 +5,7 @@ accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation
+accessible class net/minecraft/server/packs/FilePackResources$SharedZipFileAccess
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 accessible field net/minecraft/client/Minecraft gui Lnet/minecraft/client/gui/Gui;
 accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
@@ -31,27 +32,25 @@ accessible field net/minecraft/client/renderer/entity/ItemRenderer textureManage
 accessible field net/minecraft/client/resources/DownloadedPackSource serverPack Lnet/minecraft/server/packs/repository/Pack;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
-accessible field net/minecraft/server/packs/FilePackResources file Ljava/io/File;
 accessible field net/minecraft/world/entity/Entity DATA_CUSTOM_NAME Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/entity/Entity DATA_CUSTOM_NAME_VISIBLE Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/item/ItemStack count I
-accessible field net/minecraft/world/scores/Scoreboard displayObjectives [Lnet/minecraft/world/scores/Objective;
 accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
 accessible method net/minecraft/client/gui/components/AbstractSelectionList getRowBottom (I)I
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
 accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
 accessible method net/minecraft/client/gui/screens/Screen removeWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)V
-accessible method net/minecraft/client/gui/screens/Screen renderTooltip (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/screens/Screen$DeferredTooltipRendering;II)V
-accessible method net/minecraft/client/gui/screens/Screen renderTooltip (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;II)V
 accessible method net/minecraft/client/gui/screens/Screen$DeferredTooltipRendering <init> (Ljava/util/List;Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V
+accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen renderTooltip (Lnet/minecraft/client/gui/GuiGraphics;II)V
 accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode startPrediction (Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/prediction/PredictiveAction;)V
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible method net/minecraft/client/renderer/blockentity/BeaconRenderer renderPart (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFFIIFFFFFFFFFFFF)V
 accessible method net/minecraft/client/renderer/entity/EntityRenderer renderNameTag (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V
-accessible method net/minecraft/client/renderer/entity/ItemRenderer renderGuiItem (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/client/resources/model/BakedModel;)V
 accessible method net/minecraft/client/resources/DownloadedPackSource checkHash (Ljava/lang/String;Ljava/io/File;)Z
-accessible method net/minecraft/server/packs/repository/Pack <init> (Ljava/lang/String;ZLnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/packs/repository/Pack$Info;Lnet/minecraft/server/packs/repository/PackCompatibility;Lnet/minecraft/server/packs/repository/Pack$Position;ZLnet/minecraft/server/packs/repository/PackSource;)V
+accessible method net/minecraft/server/packs/FilePackResources <init> (Ljava/lang/String;Lnet/minecraft/server/packs/FilePackResources$SharedZipFileAccess;ZLjava/lang/String;)V
+accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAccess <init> (Ljava/io/File;)V
+accessible method net/minecraft/server/packs/repository/Pack <init> (Ljava/lang/String;ZLnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/packs/repository/Pack$Info;Lnet/minecraft/server/packs/repository/Pack$Position;ZLnet/minecraft/server/packs/repository/PackSource;)V
 accessible method net/minecraft/world/entity/Entity setSharedFlag (IZ)V
 accessible method net/minecraft/world/item/ItemStack getHideFlags ()I
 extendable class net/minecraft/world/item/ItemStack

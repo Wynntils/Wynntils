@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -106,17 +107,20 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                this.renderComponentTooltip(poseStack, tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.renderComponentTooltip(
+                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
                 return;
             }
         }
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack) {
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.FULLSCREEN_MAP_BORDER.resource(),
@@ -129,8 +133,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-    protected void renderGradientBackground(PoseStack poseStack) {
-        super.renderBackground(poseStack);
+    protected void renderGradientBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     protected void renderPois(
@@ -211,8 +215,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        double newZoom = currentZoom + delta * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        double newZoom = currentZoom + deltaY * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
         setZoom((float) newZoom);
 
         return true;
@@ -277,7 +281,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderMapButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderMapButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.MAP_BUTTONS_BACKGROUND,
@@ -285,7 +291,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(poseStack, mouseX, mouseY, partialTicks);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 
