@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.tooltips;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -11,14 +12,17 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Vector2i;
+import org.joml.Vector2ic;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipFittingFeature extends Feature {
@@ -32,47 +36,51 @@ public class TooltipFittingFeature extends Feature {
     public final Config<Boolean> wrapText = new Config<>(true);
 
     private boolean scaledLast = false;
-    private Screen currentScreen = null;
-    private int oldWidth = -1;
-    private int oldHeight = -1;
+    private float lastScaleFactor = 1f;
 
     // scaling should only happen after every other feature has updated tooltip
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
-        currentScreen = McUtils.mc().screen;
-        if (currentScreen == null) return; // shouldn't be possible
+        Window window = McUtils.mc().getWindow();
 
         if (wrapText.get()) {
             // calculate optimal wrapping for scaled up tooltips
             int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
-                    e.getTooltips(), (int) (currentScreen.width / universalScale.get()), (int)
+                    e.getTooltips(), (int) (window.getGuiScaledWidth() / universalScale.get()), (int)
                             (e.getMouseX() / universalScale.get()));
+
             List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
-            e.setTooltips(Collections.unmodifiableList(wrappedTooltips));
+
+            e.setTooltips(wrappedTooltips);
         }
 
         // calculate scale factor
         float scaleFactor = universalScale.get();
 
         if (fitToScreen.get()) {
-            int lines = e.getTooltips().size();
-            // this is technically slightly larger than the actual height, but due to the tooltip offset/border, it
-            // works to create a nice buffer at the top/bottom of the screen
-            float tooltipHeight = 22 + (lines - 1) * 10;
+            List<Component> tooltips = e.getTooltips();
+
+            List<ClientTooltipComponent> clientTooltipComponents = tooltips.stream()
+                    .map(Component::getVisualOrderText)
+                    .map(ClientTooltipComponent::create)
+                    .toList();
+
+            int tooltipHeight = clientTooltipComponents.size() == 1 ? -2 : 0;
+            tooltipHeight += clientTooltipComponents.stream()
+                    .mapToInt(ClientTooltipComponent::getHeight)
+                    .sum();
+
             tooltipHeight *= universalScale.get();
 
-            if (tooltipHeight > currentScreen.height) scaleFactor *= (currentScreen.height / tooltipHeight);
+            // Compensate for the top and bottom padding
+            tooltipHeight += 10;
+
+            if (tooltipHeight > window.getGuiScaledHeight()) {
+                scaleFactor *= (window.getGuiScaledHeight() / (float) tooltipHeight);
+            }
         }
 
-        // set new screen dimensions - this is done to avoid issues with tooltip offsets being wrong
-        oldWidth = currentScreen.width;
-        currentScreen.width = (int) (oldWidth / scaleFactor);
-        oldHeight = currentScreen.height;
-        currentScreen.height = (int) (oldHeight / scaleFactor);
-
-        // scale mouse coordinates for same reason
-        e.setMouseX((int) (e.getMouseX() / scaleFactor));
-        e.setMouseY((int) (e.getMouseY() / scaleFactor));
+        lastScaleFactor = scaleFactor;
 
         // push pose before scaling, so we can pop it afterwards
         PoseStack poseStack = e.getPoseStack();
@@ -89,11 +97,45 @@ public class TooltipFittingFeature extends Feature {
 
         e.getPoseStack().popPose();
         scaledLast = false;
+    }
 
-        // reset screen dimensions
-        if (currentScreen != null) {
-            currentScreen.width = oldWidth;
-            currentScreen.height = oldHeight;
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRendering(TooltipRenderEvent event) {
+        if (!scaledLast) return;
+
+        event.setPositioner(new ScaledTooltipPositioner(lastScaleFactor));
+    }
+
+    /**
+     * A {@link ClientTooltipPositioner} that adjusts the position of the tooltip to fit the screen.
+     * This is the same as {@link net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner}, but scaled.
+     */
+    private static final class ScaledTooltipPositioner implements ClientTooltipPositioner {
+        private final float scaleFactor;
+
+        private ScaledTooltipPositioner(float scaleFactor) {
+            this.scaleFactor = scaleFactor;
+        }
+
+        @Override
+        public Vector2ic positionTooltip(
+                int screenWidth, int screenHeight, int mouseX, int mouseY, int tooltipWidth, int tooltipHeight) {
+            Vector2i vector2i = new Vector2i(mouseX, mouseY).add(12, -12);
+            this.positionTooltip(screenWidth, screenHeight, vector2i, (int) (tooltipWidth * scaleFactor), (int)
+                    (tooltipHeight * scaleFactor));
+            return vector2i;
+        }
+
+        private void positionTooltip(
+                int screenWidth, int screenHeight, Vector2i tooltipPos, int tooltipWidth, int tooltipHeight) {
+            if (tooltipPos.x + tooltipWidth > screenWidth) {
+                tooltipPos.x = Math.max(tooltipPos.x - 24 - tooltipWidth, 4);
+            }
+
+            int renderedTooltipHeight = tooltipHeight + 3;
+            if (tooltipPos.y + renderedTooltipHeight > screenHeight) {
+                tooltipPos.y = screenHeight - renderedTooltipHeight;
+            }
         }
     }
 }

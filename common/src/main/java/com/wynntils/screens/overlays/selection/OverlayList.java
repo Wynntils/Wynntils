@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.network.chat.Component;
 
@@ -47,12 +48,13 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
         }
 
         this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.render(poseStack, mouseX, mouseY, partialTick);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         OverlayEntry hovered = this.getHovered();
 
@@ -77,7 +79,9 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
     }
 
     @Override
-    protected void renderList(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderList(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         int itemCount = this.getItemCount();
 
         int renderedCount = 0;
@@ -99,7 +103,7 @@ public class OverlayList extends ContainerObjectSelectionList<OverlayEntry> {
             }
 
             entry.render(
-                    poseStack,
+                    guiGraphics,
                     i,
                     top + 1,
                     this.getRowLeft(),

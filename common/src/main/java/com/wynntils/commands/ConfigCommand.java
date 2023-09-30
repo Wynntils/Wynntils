@@ -294,7 +294,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully added a new %s to %s with the id %d."
+                        () -> Component.literal("Successfully added a new %s to %s with the id %d."
                                         .formatted(
                                                 overlayGroupHolder
                                                         .getOverlayClass()
@@ -325,7 +325,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully removed %s from %s with the id %d."
+                        () -> Component.literal("Successfully removed %s from %s with the id %d."
                                         .formatted(
                                                 overlayGroupHolder
                                                         .getOverlayClass()
@@ -344,7 +344,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully reloaded configs from file.")
+                        () -> Component.literal("Successfully reloaded configs from file.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -368,7 +368,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully reset ")
+                        () -> Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
                                 .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
@@ -392,7 +392,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully reset ")
+                        () -> Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
                                 .append(Component.literal(featureName).withStyle(ChatFormatting.YELLOW))
                                 .append(Component.literal("'s config options.").withStyle(ChatFormatting.GREEN)),
@@ -422,7 +422,7 @@ public class ConfigCommand extends Command {
             response.append(current);
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -448,7 +448,7 @@ public class ConfigCommand extends Command {
 
         response.append(getSpecificConfigComponent(config));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -483,7 +483,7 @@ public class ConfigCommand extends Command {
 
         response.append(getSpecificConfigComponent(config));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -524,7 +524,7 @@ public class ConfigCommand extends Command {
             response.append(current);
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -570,7 +570,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully set ")
+                        () -> Component.literal("Successfully set ")
                                 .withStyle(ChatFormatting.GREEN)
                                 .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
@@ -605,7 +605,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully reset ")
+                        () -> Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
                                 .append(Component.literal(config.getDisplayName())
                                         .withStyle(ChatFormatting.UNDERLINE)
@@ -626,7 +626,7 @@ public class ConfigCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully reset ")
+                        () -> Component.literal("Successfully reset ")
                                 .withStyle(ChatFormatting.GREEN)
                                 .append(Component.literal(featureName).withStyle(ChatFormatting.YELLOW))
                                 .append(Component.literal("'s config options.").withStyle(ChatFormatting.GREEN)),

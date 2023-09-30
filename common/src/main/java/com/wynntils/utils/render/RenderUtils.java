@@ -21,6 +21,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -802,8 +803,8 @@ public final class RenderUtils {
         poseStack.translate(-centerX, -centerZ, 0);
     }
 
-    public static void renderItem(PoseStack poseStack, ItemStack itemStack, int x, int y) {
-        McUtils.mc().getItemRenderer().renderGuiItem(poseStack, itemStack, x, y);
+    public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
+        guiGraphics.renderItem(itemStack, x, y);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
@@ -832,7 +833,6 @@ public final class RenderUtils {
                 Texture.VIGNETTE.height());
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.enableBlend();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();

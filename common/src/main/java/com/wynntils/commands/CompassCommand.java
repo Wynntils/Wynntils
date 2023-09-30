@@ -146,7 +146,7 @@ public class CompassCommand extends Command {
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -163,7 +163,7 @@ public class CompassCommand extends Command {
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.get().toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -198,7 +198,7 @@ public class CompassCommand extends Command {
                 .withStyle(ChatFormatting.AQUA);
         response.append(
                 Component.literal(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -243,7 +243,7 @@ public class CompassCommand extends Command {
         MutableComponent response =
                 Component.literal("Compass set to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -269,7 +269,7 @@ public class CompassCommand extends Command {
                         "Compass set to middle of " + territoryProfile.getFriendlyName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -277,7 +277,7 @@ public class CompassCommand extends Command {
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
 
         MutableComponent response = Component.literal("Compass cleared").withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 

@@ -20,6 +20,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -46,7 +47,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
     @Override
     public void render(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             int index,
             int top,
             int left,
@@ -56,6 +57,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
             int mouseY,
             boolean isMouseOver,
             float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
         poseStack.translate(left + PADDING, top + PADDING, 0);
 

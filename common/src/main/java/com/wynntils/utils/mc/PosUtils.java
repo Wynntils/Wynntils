@@ -6,7 +6,6 @@ package com.wynntils.utils.mc;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.core.PositionImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
@@ -20,7 +19,7 @@ public final class PosUtils {
     }
 
     public static Position newPosition(Entity entity) {
-        return new PositionImpl(entity.getX(), entity.getY(), entity.getZ());
+        return new Vec3(entity.getX(), entity.getY(), entity.getZ());
     }
 
     public static Vec3 toVec3(Position position) {
