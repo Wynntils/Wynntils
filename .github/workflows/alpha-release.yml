@@ -138,7 +138,7 @@ jobs:
 
           name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
           version: ${{ needs.changelog.outputs.tag }}
-          version-type: alpha
+          version-type: beta
           changelog: ${{ needs.changelog.outputs.changelog }}
 
           loaders: ${{ matrix.modloader }}
