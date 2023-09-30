@@ -173,7 +173,9 @@ public class BankModel extends Model {
             case ACCOUNT_BANK -> finalBankPage.get();
             case BLOCK_BANK -> finalBlockBankPage.get();
             case BOOKSHELF -> finalBookshelfPage.get();
-            case CHARACTER_BANK -> finalCharacterBankPages.get().getOrDefault(Models.Character.getId(), MAX_CHARACTER_BANK_PAGES);
+            case CHARACTER_BANK -> finalCharacterBankPages
+                    .get()
+                    .getOrDefault(Models.Character.getId(), MAX_CHARACTER_BANK_PAGES);
             case MISC_BUCKET -> finalMiscBucketPage.get();
             default -> 1;
         };
