@@ -53,6 +53,8 @@ public class BankModel extends Model {
     private final Storage<Map<String, Map<Integer, String>>> customCharacterBankPagesNames =
             new Storage<>(new TreeMap<>());
 
+    private static final int MAX_CHARACTER_BANK_PAGES = 10;
+
     private boolean editingName;
     private int currentPage = 1;
     private SearchableContainerType currentContainer;
@@ -171,7 +173,7 @@ public class BankModel extends Model {
             case ACCOUNT_BANK -> finalBankPage.get();
             case BLOCK_BANK -> finalBlockBankPage.get();
             case BOOKSHELF -> finalBookshelfPage.get();
-            case CHARACTER_BANK -> finalCharacterBankPages.get().get(Models.Character.getId());
+            case CHARACTER_BANK -> finalCharacterBankPages.get().getOrDefault(Models.Character.getId(), MAX_CHARACTER_BANK_PAGES);
             case MISC_BUCKET -> finalMiscBucketPage.get();
             default -> 1;
         };
