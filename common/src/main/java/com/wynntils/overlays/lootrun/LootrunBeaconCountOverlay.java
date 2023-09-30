@@ -23,7 +23,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             §bAqua: 0
             §8Dark Gray: 0/1
             §aGreen: 0
-            §cRed: 0/
+            §cRed: 0
             §fWhite: 0/1
             §4R§ca§6i§en§ab§2o§bw§9: 0/1
             """;
