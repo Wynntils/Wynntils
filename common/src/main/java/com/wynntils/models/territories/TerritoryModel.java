@@ -32,9 +32,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.core.Position;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TerritoryModel extends Model {
@@ -109,14 +110,13 @@ public final class TerritoryModel extends Model {
     public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
-        for (Map.Entry<ResourceLocation, Advancement.Builder> added :
-                event.getAdded().entrySet()) {
-            added.getValue().parent((ResourceLocation) null);
-            Advancement built = added.getValue().build(added.getKey());
+        for (AdvancementHolder added : event.getAdded()) {
+            Advancement advancement = added.value();
 
-            if (built.getDisplay() == null) continue;
+            if (advancement.display().isEmpty()) continue;
 
-            String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
+            DisplayInfo displayInfo = advancement.display().get();
+            String territoryName = StyledText.fromComponent(displayInfo.getTitle())
                     .replaceAll("\\[", "")
                     .replaceAll("\\]", "")
                     .trim()
@@ -129,10 +129,10 @@ public final class TerritoryModel extends Model {
             if (territoryName.isEmpty()) continue;
 
             // headquarters frame is challenge
-            boolean headquarters = built.getDisplay().getFrame() == FrameType.CHALLENGE;
+            boolean headquarters = displayInfo.getFrame() == FrameType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            StyledText description = StyledText.fromComponent(built.getDisplay().getDescription());
+            StyledText description = StyledText.fromComponent(displayInfo.getDescription());
             StyledText[] colored = description.split("\n");
             String[] raw = description.getStringWithoutFormatting().split("\n");
 

@@ -79,7 +79,7 @@ public class CosmeticsService extends Service {
 
     // TODO: implement ear rendering
     public boolean shouldRenderEars(AbstractClientPlayer player) {
-        if (!player.isSkinLoaded() || player.isInvisible()) return false;
+        if (player.isInvisible()) return false;
 
         if (Models.Player.getUser(player.getUUID()) == null) return false;
 

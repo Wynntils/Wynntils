@@ -29,6 +29,7 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -132,7 +133,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (draggingScroll) {
             mouseDrag += mouseY - lastMouseY;
             lastMouseY = mouseY;
@@ -145,8 +146,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             }
         }
 
-        this.renderBackground(poseStack);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
+        PoseStack poseStack = guiGraphics.pose();
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.CHARACTER_LIST_BACKGROUND.resource(),
@@ -158,11 +160,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.CHARACTER_LIST_BACKGROUND.width(),
                 Texture.CHARACTER_LIST_BACKGROUND.height());
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderScrollButton(poseStack);
 
-        renderPlayer(poseStack);
+        renderPlayer(guiGraphics, mouseX, mouseY);
 
         if (selected == null) return;
 
@@ -170,7 +172,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack) {
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.BACKGROUND_SPLASH.resource(),
@@ -218,9 +222,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setScrollOffset((int) delta);
-
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        setScrollOffset((int) deltaY);
         return true;
     }
 
@@ -380,25 +383,41 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.SCROLL_BUTTON.height());
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : this.renderables) {
-            renderable.render(poseStack, mouseX, mouseY, partialTick);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         for (ClassInfoButton classInfoButton : classInfoButtons) {
-            classInfoButton.render(poseStack, mouseX, mouseY, partialTick);
+            classInfoButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
-    private void renderPlayer(PoseStack poseStack) {
+    private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();
         McUtils.player().setSwimming(false);
 
-        int scale = this.height / 4;
+        int scale = (int) (this.height / 4.5f);
+
+        int renderX = (int) (this.width * 0.5f);
+        int renderY = (int) (this.height * 0.4f);
+
+        final int renderWidth = (int) (this.width * 0.128f);
+        final int renderHeight = (int) (this.height * 0.5f);
+
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                poseStack, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
+                guiGraphics,
+                renderX,
+                renderY,
+                renderX + renderWidth,
+                renderY + renderHeight,
+                scale,
+                0,
+                renderX + renderWidth / 2,
+                renderY + renderHeight / 2,
+                McUtils.player());
     }
 
     private void setScrollOffset(int delta) {
