@@ -1,9 +1,21 @@
+## [0.0.3-alpha.402](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.401...v0.0.3-alpha.402) (2023-09-30)
+
+
+### New Features
+
+* Add a GUI for crowd sourcing settings ([#2146](https://github.com/Wynntils/Artemis/issues/2146)) ([df20bdd](https://github.com/Wynntils/Artemis/commit/df20bdd5c021cebb697e2f54513065a88d51841a))
+
 ## [0.0.3-alpha.401](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.400...v0.0.3-alpha.401) (2023-09-29)
 
 
 ### New Features
 
 * Add CrowdSourcedDataManager (disabled, in preparation for opt-in crowd-sourced data) ([#2030](https://github.com/Wynntils/Artemis/issues/2030)) ([007b8d6](https://github.com/Wynntils/Artemis/commit/007b8d6877da6ebb94d78a137666e4b4aaaa53eb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.401 [skip ci] ([18b4174](https://github.com/Wynntils/Artemis/commit/18b417472f0ed7f411d85cff9226cde6d27296ad))
 
 ## [0.0.3-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.399...v0.0.3-alpha.400) (2023-09-29)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.398 [skip ci] ([a8938eb](https://github.com/Wynntils/Artemis/commit/a8938eb6bfe3d1cf896cbe1d77b3185294e6c9f6))
-
-## [0.0.3-alpha.397](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.396...v0.0.3-alpha.397) (2023-09-28)
-
-
-### Bug Fixes
-
-* fix StyledText[#substring](https://github.com/Wynntils/Artemis/issues/substring) bounds checks ([#2136](https://github.com/Wynntils/Artemis/issues/2136)) ([d5bee2d](https://github.com/Wynntils/Artemis/commit/d5bee2d19cd78f4430fafae872824866c5749089))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2133](https://github.com/Wynntils/Artemis/issues/2133)) ([222bd71](https://github.com/Wynntils/Artemis/commit/222bd710fb6006df3e23203fb8c62227944c3017))
-* **release:** v0.0.3-alpha.397 [skip ci] ([fbaeed9](https://github.com/Wynntils/Artemis/commit/fbaeed9f6670ae6e6b755e0ab261bbad2e1e72e5))
 
