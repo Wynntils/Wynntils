@@ -105,7 +105,7 @@ jobs:
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
             **/build/libs/*-quilt+MC-*.jar
-          if-no-files-found: error
+          #if-no-files-found: error
 
   release:
     name: Release to Modrinth and CurseForge
