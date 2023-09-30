@@ -57,7 +57,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> BLOCK_BANK_DESTINATIONS = List.of(1, 3, 5, 8, 10, 12);
-    private static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
+    private static final List<Integer> DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
     private boolean quickJumping = false;
@@ -113,7 +113,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
         return switch (Models.Bank.getCurrentContainer()) {
             case ACCOUNT_BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
-            default -> HOUSING_DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
+            default -> DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
         };
     }
 
@@ -316,7 +316,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
                 switch (containerType) {
                     case ACCOUNT_BANK -> defaultValues = QUICK_JUMP_DESTINATIONS;
                     case BLOCK_BANK -> defaultValues = BLOCK_BANK_DESTINATIONS;
-                    case BOOKSHELF, MISC_BUCKET, CHARACTER_BANK -> defaultValues = HOUSING_DEFAULT_DESTINATIONS;
+                    case BOOKSHELF, MISC_BUCKET, CHARACTER_BANK -> defaultValues = DEFAULT_DESTINATIONS;
                     default -> {
                         return null;
                     }
