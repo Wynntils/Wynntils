@@ -12,8 +12,9 @@ import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.storage.StorageManager;
-import com.wynntils.features.wynntils.TelemetryFeature;
+import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.telemetry.LootrunLocationDataCollector;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +38,15 @@ public class CrowdSourcedDataManager extends Manager {
     }
 
     public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T crowdSourcedData) {
-        TelemetryFeature.ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(
-                        TelemetryFeature.class)
+        DataCrowdSourcingFeature dataCrowdSourcingFeature =
+                Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class);
+        if (!dataCrowdSourcingFeature.isEnabled()) return;
+
+        ConfirmedBoolean collectionEnabledForType = dataCrowdSourcingFeature
                 .crowdSourcedDataTypeEnabledMap
                 .get()
-                .getOrDefault(crowdSourcedDataType, TelemetryFeature.ConfirmedBoolean.FALSE);
-        if (collectionEnabledForType != TelemetryFeature.ConfirmedBoolean.TRUE) return;
+                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.FALSE);
+        if (collectionEnabledForType != ConfirmedBoolean.TRUE) return;
 
         collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedData);
         collectedData.touched();
