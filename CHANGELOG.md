@@ -1,9 +1,17 @@
+## [0.0.4-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.1...v0.0.4-alpha.2) (2023-09-30)
+
+
+### Miscellaneous Chores
+
+* Release 1.20.2 port [#2](https://github.com/Wynntils/Artemis/issues/2) ([c4581ff](https://github.com/Wynntils/Artemis/commit/c4581ffedfe0dcf71b4d30806ee7c262a2597a79))
+
 ## [0.0.4-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.0...v0.0.4-alpha.1) (2023-09-30)
 
 
 ### Miscellaneous Chores
 
 * fix max changelog release count ([fdc0b6d](https://github.com/Wynntils/Artemis/commit/fdc0b6dc389615013e580b031696f01c8f5e8e53))
+* **release:** v0.0.4-alpha.1 [skip ci] ([a5283fe](https://github.com/Wynntils/Artemis/commit/a5283fe3c44442f9818114c9969699d84605d435))
 * update conventional-changelog-action ([31ea48e](https://github.com/Wynntils/Artemis/commit/31ea48e24cac281b4773f9d8ae4349d2597cfbd2))
 
 ## [0.0.3-alpha.402](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.401...v0.0.3-alpha.402) (2023-09-30)
@@ -8299,16 +8307,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.401 [skip ci] ([18b4174](https://github.com/Wynntils/Artemis/commit/18b417472f0ed7f411d85cff9226cde6d27296ad))
-
-## [0.0.3-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.399...v0.0.3-alpha.400) (2023-09-29)
-
-
-### Bug Fixes
-
-* Improve chat screen handling for game messages ([#2139](https://github.com/Wynntils/Artemis/issues/2139)) ([284f9e9](https://github.com/Wynntils/Artemis/commit/284f9e9a6093cc27e7e7ff29962ddcd99848753e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.400 [skip ci] ([71315e7](https://github.com/Wynntils/Artemis/commit/71315e7dc08c218877306a36365d731ac4e182e9))
 
