@@ -1,9 +1,21 @@
+## [0.0.4-beta.7](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.6...v0.0.4-beta.7) (2023-10-01)
+
+
+### Bug Fixes
+
+* Copied crowd-sourced data should have a version included ([#2155](https://github.com/Wynntils/Artemis/issues/2155)) ([a0c7315](https://github.com/Wynntils/Artemis/commit/a0c7315ea0f7c6eed353b625381f82b250eaa43c))
+
 ## [0.0.4-beta.6](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.5...v0.0.4-beta.6) (2023-10-01)
 
 
 ### Bug Fixes
 
 * Don't search for empty items (+bugfix in ContainerSearchFeature) ([#2153](https://github.com/Wynntils/Artemis/issues/2153)) ([8368e54](https://github.com/Wynntils/Artemis/commit/8368e547d7e3b04b827582ac76672f9c4983e5c3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.6 [skip ci] ([3b3d7cf](https://github.com/Wynntils/Artemis/commit/3b3d7cfb6f7ab8da488ba86749a10de47c2b01c2))
 
 ## [0.0.4-beta.5](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.4...v0.0.4-beta.5) (2023-10-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.3 [skip ci] ([0140670](https://github.com/Wynntils/Artemis/commit/01406702be72a4151613e7f9cdcb62fa4aeb0a31))
-
-## [0.0.4-beta.2](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.1...v0.0.4-beta.2) (2023-09-30)
-
-
-### Bug Fixes
-
-* UpdatesFeature should not mention alpha anymore ([#2149](https://github.com/Wynntils/Artemis/issues/2149)) ([f915d97](https://github.com/Wynntils/Artemis/commit/f915d972a1725b7abb6fbbbced3dcc90e1d2916a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.2 [skip ci] ([099c8b1](https://github.com/Wynntils/Artemis/commit/099c8b189e708efe1d4fbb5195f451d572d539d7))
 
