@@ -74,6 +74,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private float scrollButtonHeight;
     private float scrollButtonRenderY;
     private int maxPoisToDisplay;
+    private int scrollAreaHeight;
     private int scrollOffset = 0;
     private List<CustomPoi> selectedPois = new ArrayList<>();
     private List<CustomPoi> pois;
@@ -113,6 +114,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         dividedHeight = this.height / GRID_DIVISIONS;
         // How many pois can fit on the background
         maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
+        // How far the scrollbar should be able to go
+        scrollAreaHeight = (int) (dividedHeight * (GRID_ROWS_PER_PAGE - 1));
         backgroundX = dividedWidth * 10;
         backgroundWidth = dividedWidth * 44;
         backgroundY = dividedHeight * 7;
@@ -246,10 +249,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // region sort buttons
         int iconTitleWidth = (McUtils.mc()
-                .font
-                .width(StyledText.fromComponent(
-                                Component.translatable("screens.wynntils.poiManagementGui.icon"))
-                        .getString()))
+                        .font
+                        .width(StyledText.fromComponent(
+                                        Component.translatable("screens.wynntils.poiManagementGui.icon"))
+                                .getString()))
                 + 1;
 
         int nameTitleWidth = (McUtils.mc()
@@ -480,7 +483,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // Handles deleting when the final poi is visible
         if (scrollOffset == Math.max(0, pois.size() - maxPoisToDisplay)) {
-            setScrollOffset(1);
+            scroll(-1);
         }
 
         updateAllUsedIcons();
@@ -542,7 +545,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        setScrollOffset((int) deltaY);
+        double scrollValue = -Math.signum(deltaY);
+        scroll((int) scrollValue);
 
         return true;
     }
@@ -551,14 +555,17 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
+        int renderY = (int) ((this.height - backgroundHeight) / 2) + (int) dividedHeight;
+        int scrollAreaStartY = renderY + 14;
+
         int newValue = (int) MathUtils.map(
                 (float) mouseY,
-                (int) (dividedHeight * 10),
-                (int) (dividedHeight * 52),
+                scrollAreaStartY,
+                scrollAreaStartY + (int) (dividedHeight * 40),
                 0,
-                Math.max(0, pois.size() - maxPoisToDisplay));
+                pois.size() - maxPoisToDisplay);
 
-        setScrollOffset(-newValue + scrollOffset);
+        scroll(newValue - scrollOffset);
 
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
@@ -568,9 +575,10 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         if (pois.size() <= maxPoisToDisplay) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY =
-                MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, (int) (dividedHeight * 10), (int)
-                        (dividedHeight * 51));
+        scrollButtonRenderY = (this.height - backgroundHeight) / 2
+                + (int) dividedHeight
+                + Texture.SCROLL_BUTTON.height() / 2
+                + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -584,9 +592,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 Texture.SCROLL_BUTTON.height());
     }
 
-    private void setScrollOffset(int delta) {
+    private void scroll(int delta) {
         // Calculate how many pois should be scrolled past
-        scrollOffset = MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, pois.size() - maxPoisToDisplay));
+        scrollOffset = MathUtils.clamp(scrollOffset + delta, 0, Math.max(0, pois.size() - maxPoisToDisplay));
 
         populatePois();
     }
@@ -687,7 +695,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         // Sort pois, ignore case and for null Y's, treat them as 0
         switch (sortOrder) {
             case ICON_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getIcon));
-            case ICON_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
+            case ICON_DESC -> sortedPois.sort(
+                    Comparator.comparing(CustomPoi::getIcon).reversed());
             case NAME_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
             case NAME_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
                     .reversed());
@@ -842,7 +851,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // Scroll up 1 poi
         if (scrollOffset == Math.max(0, pois.size() - maxPoisToDisplay)) {
-            setScrollOffset(1);
+            scroll(-1);
         }
 
         // If any pois were selected, deselect them all as they were deleted
