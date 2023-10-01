@@ -524,7 +524,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
             }
         }
 
-        // Returning super.doMouseClicked(mouseX, mouseY, button) causes ConcurrentModificationException
         return true;
     }
 

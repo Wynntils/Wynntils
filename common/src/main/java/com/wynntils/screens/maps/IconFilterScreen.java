@@ -178,7 +178,6 @@ public final class IconFilterScreen extends WynntilsScreen {
             }
         }
 
-        // Returning super.doMouseClicked(mouseX, mouseY, button) causes ConcurrentModificationException
         return true;
     }
 
