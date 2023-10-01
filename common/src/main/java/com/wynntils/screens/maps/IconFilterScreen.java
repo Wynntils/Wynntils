@@ -7,7 +7,6 @@ package com.wynntils.screens.maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.maps.widgets.IconFilterWidget;
-import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -15,7 +14,6 @@ import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;

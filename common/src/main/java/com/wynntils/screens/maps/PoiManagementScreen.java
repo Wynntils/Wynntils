@@ -129,8 +129,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // region import/export
         this.addRenderableWidget(new Button.Builder(
-                Component.translatable("screens.wynntils.poiManagementGui.import"),
-                (button) -> importFromClipboard())
+                        Component.translatable("screens.wynntils.poiManagementGui.import"),
+                        (button) -> importFromClipboard())
                 .pos((int) (dividedWidth * 22), (int) (dividedHeight * 58))
                 .size(importExportButtonWidth, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.import.tooltip")))
@@ -486,9 +486,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         int poiToMoveIndex = pois.indexOf(poiToMove);
 
         // If poi is at the top/bottom of list or if it was selected but then filtered out, don't move it
-        if (poiToMoveIndex == -1
-                || poiToMoveIndex + direction < 0
-                || poiToMoveIndex + direction > pois.size() - 1) {
+        if (poiToMoveIndex == -1 || poiToMoveIndex + direction < 0 || poiToMoveIndex + direction > pois.size() - 1) {
             return;
         }
 
@@ -793,9 +791,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     private void updateSelectedPoiPositions(int direction) {
         // Get selected pois in the same order they are in pois
-        List<CustomPoi> orderedPois = pois.stream()
-                .filter(poi -> selectedPois.contains(poi))
-                .collect(Collectors.toList());
+        List<CustomPoi> orderedPois =
+                pois.stream().filter(poi -> selectedPois.contains(poi)).collect(Collectors.toList());
 
         // If we are shifting pois down the list needs to be reversed
         if (direction == 1) {
