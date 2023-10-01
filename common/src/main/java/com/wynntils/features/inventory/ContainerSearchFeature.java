@@ -290,7 +290,7 @@ public class ContainerSearchFeature extends Feature {
             ItemStack itemStack = container.getItem(i);
 
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOpt.isEmpty()) return;
+            if (wynnItemOpt.isEmpty()) continue;
 
             boolean filtered = !searchQuery.isEmpty() && Services.ItemFilter.matches(searchQuery, itemStack);
 
