@@ -15,6 +15,8 @@ import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -124,18 +126,18 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderBackground(poseStack);
-        renderScrollButton(poseStack);
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderScrollButton(guiGraphics.pose());
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack) {
-        super.renderBackground(poseStack);
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics.pose(),
                 Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
                 backgroundX,
                 backgroundY,
@@ -190,8 +192,8 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setScrollOffset((int) delta);
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        setScrollOffset((int) deltaY);
 
         return true;
     }
@@ -226,7 +228,7 @@ public final class IconFilterScreen extends WynntilsScreen {
                 Texture.SCROLL_BUTTON.resource(),
                 (int) (dividedWidth * 52),
                 scrollButtonRenderY,
-                0,
+                1,
                 dividedWidth,
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),

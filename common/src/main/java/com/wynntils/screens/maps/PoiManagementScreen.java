@@ -574,7 +574,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 Texture.SCROLL_BUTTON.resource(),
                 (int) (dividedWidth * 52),
                 scrollButtonRenderY,
-                0,
+                1,
                 dividedWidth,
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
