@@ -217,14 +217,11 @@ public class ItemFilterService extends Service {
      * @return true if the item matches the search query, false otherwise
      */
     public boolean matches(ItemSearchQuery searchQuery, ItemStack itemStack) {
-        if (searchQuery.isEmpty()) {
-            return true;
-        }
+        if (searchQuery.isEmpty()) return true;
+        if (itemStack.isEmpty()) return false;
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) {
-            return false;
-        }
+        if (wynnItemOpt.isEmpty()) return false;
 
         return filterMatches(searchQuery, wynnItemOpt.get())
                 && itemNameMatches(
