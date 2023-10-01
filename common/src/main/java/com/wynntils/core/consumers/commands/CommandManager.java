@@ -55,6 +55,7 @@ public final class CommandManager extends Manager {
 
     public CommandManager() {
         super(List.of());
+
         registerAllCommands();
     }
 

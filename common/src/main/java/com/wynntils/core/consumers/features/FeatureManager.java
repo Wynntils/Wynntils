@@ -7,11 +7,7 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
-import com.wynntils.core.consumers.overlays.OverlayManager;
-import com.wynntils.core.keybinds.KeyBindManager;
-import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -169,9 +165,8 @@ public final class FeatureManager extends Manager {
 
     private final FeatureCommands commands = new FeatureCommands();
 
-    public FeatureManager(
-            CommandManager command, CrashReportManager crashReport, KeyBindManager keyBind, OverlayManager overlay) {
-        super(List.of(command, crashReport, keyBind, overlay));
+    public FeatureManager() {
+        super(List.of());
     }
 
     public void init() {

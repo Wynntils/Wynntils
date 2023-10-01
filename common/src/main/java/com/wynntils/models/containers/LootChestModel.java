@@ -59,8 +59,8 @@ public final class LootChestModel extends Model {
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
 
-    public LootChestModel(ContainerModel containerModel) {
-        super(List.of(containerModel));
+    public LootChestModel() {
+        super(List.of());
     }
 
     public int getDryCount() {

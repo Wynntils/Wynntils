@@ -40,6 +40,7 @@ public final class DamageModel extends Model {
 
     public DamageModel() {
         super(List.of());
+
         Handlers.BossBar.registerBar(damageBar);
     }
 

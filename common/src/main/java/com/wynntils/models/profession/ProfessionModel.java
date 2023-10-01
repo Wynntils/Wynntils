@@ -13,14 +13,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.event.ProfessionNodeGatheredEvent;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.models.worlds.BombModel;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.Pair;
@@ -73,8 +70,9 @@ public class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
-    public ProfessionModel(CharacterModel characterModel, WorldStateModel worldStateModel, BombModel bombModel) {
-        super(List.of(characterModel, worldStateModel, bombModel));
+    public ProfessionModel() {
+        super(List.of());
+
         for (ProfessionType pt : ProfessionType.values()) {
             rawXpGainInLastMinute.put(pt, new TimedSet<>(1, TimeUnit.MINUTES, true));
         }

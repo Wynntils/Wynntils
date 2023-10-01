@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -38,8 +37,8 @@ public class SpellModel extends Model {
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
 
-    public SpellModel(CharacterModel characterModel) {
-        super(List.of(characterModel));
+    public SpellModel() {
+        super(List.of());
 
         Handlers.ActionBar.registerSegment(spellSegment);
         Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());

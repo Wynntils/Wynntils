@@ -35,8 +35,8 @@ public final class CharacterStatsModel extends Model {
     private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
     private final SprintSegment sprintSegment = new SprintSegment();
 
-    public CharacterStatsModel(CombatXpModel combatXpModel) {
-        super(List.of(combatXpModel));
+    public CharacterStatsModel() {
+        super(List.of());
 
         Handlers.ActionBar.registerSegment(coordinatesSegment);
         Handlers.ActionBar.registerSegment(healthSegment);

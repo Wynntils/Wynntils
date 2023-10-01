@@ -10,7 +10,6 @@ import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
@@ -34,12 +33,10 @@ public final class UrlManager extends Manager {
     private Map<UrlId, UrlInfo> urlMap = Map.of();
     private int version = -1;
 
-    public UrlManager(TickSchedulerManager tickScheduler) {
-        super(List.of(tickScheduler));
-        // This is a way of resolving the circular dependencies between UrlManager and
-        // NetManager. UrlManager needs Net to download the urls.json file, but NetManager
-        // needs UrlManager to resolve the URL for the source urls.json file to download.
-        loadUrls(new NetManager(this));
+    public UrlManager(NetManager netManager) {
+        super(List.of(netManager));
+
+        loadUrls();
     }
 
     public UrlInfo getUrlInfo(UrlId urlId) {
@@ -80,11 +77,10 @@ public final class UrlManager extends Manager {
 
     @Override
     public void reloadData() {
-        // If we reload URLs after initial bootstrapping, use normal manager
-        loadUrls(Managers.Net);
+        loadUrls();
     }
 
-    private void loadUrls(NetManager netManager) {
+    private void loadUrls() {
         // Figure out where to load the URLs from initially
 
         // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
@@ -99,7 +95,7 @@ public final class UrlManager extends Manager {
         }
 
         // Then try to read the URLs from the local cache
-        Pair<FileInputStream, File> localCache = getLocalCacheInputStreams(netManager);
+        Pair<FileInputStream, File> localCache = getLocalCacheInputStreams();
         if (localCache != null) {
             try {
                 readInputStreamForUrl(localCache.key());
@@ -121,7 +117,7 @@ public final class UrlManager extends Manager {
         URI uri = URI.create(urlInfo.url());
         String localFileName = UrlId.DATA_STATIC_URLS.getId();
 
-        Download dl = netManager.download(uri, localFileName);
+        Download dl = Managers.Net.download(uri, localFileName);
         dl.handleInputStream(inputStream -> {
             try {
                 Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
@@ -153,11 +149,11 @@ public final class UrlManager extends Manager {
         return WynntilsMod.getModResourceAsStream("urls.json");
     }
 
-    private Pair<FileInputStream, File> getLocalCacheInputStreams(NetManager netManager) {
+    private Pair<FileInputStream, File> getLocalCacheInputStreams() {
         InputStream bundledStream = WynntilsMod.getModResourceAsStream("urls.json");
 
         // First check if there is a copy in the local cache
-        File cacheFile = netManager.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
+        File cacheFile = Managers.Net.getCacheFile(UrlId.DATA_STATIC_URLS.getId());
         if (cacheFile.exists() && cacheFile.length() > 0) {
             // Yes, we have a cache. Use it to populate the map
             try {
