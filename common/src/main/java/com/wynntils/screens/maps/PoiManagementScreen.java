@@ -79,6 +79,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private List<CustomPoi> pois;
     private Map<Texture, Boolean> filteredIcons = new EnumMap<>(Texture.class);
     private PoiSortButton activeSortButton;
+    private PoiSortButton iconSortButton;
     private PoiSortButton nameSortButton;
     private PoiSortButton xSortButton;
     private PoiSortButton ySortButton;
@@ -244,6 +245,13 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         // endregion
 
         // region sort buttons
+        int iconTitleWidth = (McUtils.mc()
+                .font
+                .width(StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.poiManagementGui.icon"))
+                        .getString()))
+                + 1;
+
         int nameTitleWidth = (McUtils.mc()
                         .font
                         .width(StyledText.fromComponent(
@@ -252,6 +260,15 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 + 1;
 
         int coordinateTitleWidth = (McUtils.mc().font.width("X")) + 1;
+
+        iconSortButton = this.addRenderableWidget(new PoiSortButton(
+                (int) (dividedWidth * 13) - (iconTitleWidth / 2),
+                (int) (dividedHeight * HEADER_HEIGHT) - 10,
+                iconTitleWidth,
+                10,
+                Component.translatable("screens.wynntils.poiManagementGui.icon"),
+                this,
+                PoiSortType.ICON));
 
         nameSortButton = this.addRenderableWidget(new PoiSortButton(
                 (int) (dividedWidth * 22) - (nameTitleWidth / 2),
@@ -301,6 +318,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         if (pois.isEmpty()) {
             searchInput.visible = false;
             filterButton.visible = false;
+            iconSortButton.visible = false;
             nameSortButton.visible = false;
             xSortButton.visible = false;
             ySortButton.visible = false;
@@ -364,17 +382,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.icon")),
-                            (int) (dividedWidth * 13),
-                            (int) (dividedHeight * HEADER_HEIGHT),
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-
             RenderUtils.drawRect(
                     poseStack,
                     CommonColors.WHITE,
@@ -608,6 +615,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 .collect(Collectors.toList());
 
         // Hide buttons if no filtered pois
+        iconSortButton.visible = !pois.isEmpty();
         nameSortButton.visible = !pois.isEmpty();
         xSortButton.visible = !pois.isEmpty();
         ySortButton.visible = !pois.isEmpty();
@@ -678,6 +686,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // Sort pois, ignore case and for null Y's, treat them as 0
         switch (sortOrder) {
+            case ICON_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getIcon));
+            case ICON_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
             case NAME_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
             case NAME_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
                     .reversed());
@@ -729,6 +739,13 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // Update the sort order of pois, first click is ascending, second descending and third will reset
         switch (sortType) {
+            case ICON -> {
+                if (sortOrder == null) {
+                    newOrder = PoiSortOrder.ICON_ASC;
+                } else if (sortOrder == PoiSortOrder.ICON_ASC) {
+                    newOrder = PoiSortOrder.ICON_DESC;
+                }
+            }
             case NAME -> {
                 if (sortOrder == null) {
                     newOrder = PoiSortOrder.NAME_ASC;
@@ -816,6 +833,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         if (customPois.get().isEmpty()) {
             selectAllButton.active = false;
             filterButton.visible = false;
+            iconSortButton.visible = false;
             nameSortButton.visible = false;
             xSortButton.visible = false;
             ySortButton.visible = false;
@@ -948,6 +966,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     public enum PoiSortType {
+        ICON,
         NAME,
         X,
         Y,
@@ -955,6 +974,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     private enum PoiSortOrder {
+        ICON_ASC,
+        ICON_DESC,
         NAME_ASC,
         NAME_DESC,
         X_ASC,
