@@ -19,11 +19,12 @@ import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
     // Constants
+    private static final int FAKE_CONTAINER_ID = 454545;
     private static final CustomColor LABEL_COLOR = CustomColor.fromInt(0x404040);
     private static final ResourceLocation CONTAINER_BACKGROUND =
             new ResourceLocation("textures/gui/container/generic_54.png");
@@ -54,7 +56,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultParent parent) {
         super(
-                ChestMenu.sixRows(999, McUtils.inventory()),
+                ChestMenu.sixRows(FAKE_CONTAINER_ID, McUtils.inventory()),
                 McUtils.inventory(),
                 Component.literal("Trade Market Search Result Wrapped Screen"));
 
@@ -130,34 +132,44 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         updateItems();
 
-        renderables.forEach(c -> c.render(poseStack, mouseX, mouseY, partialTick));
+        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
 
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(poseStack);
 
         // Render item tooltip
-        super.renderTooltip(poseStack, mouseX, mouseY);
+        super.renderTooltip(guiGraphics, mouseX, mouseY);
 
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                this.renderTooltip(poseStack, tooltipProvider.getTooltipLines(), Optional.empty(), mouseX, mouseY);
+                guiGraphics.renderComponentTooltip(
+                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
                 break;
             }
         }
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
-        this.font.draw(
-                poseStack, this.currentState, (float) this.titleLabelX, (float) this.titleLabelY, LABEL_COLOR.asInt());
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.drawString(
+                FontRenderer.getInstance().getFont(),
+                this.currentState,
+                this.titleLabelX,
+                this.titleLabelY,
+                LABEL_COLOR.asInt(),
+                false);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        PoseStack poseStack = guiGraphics.pose();
+
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
@@ -255,12 +267,12 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Signum so we only scroll 1 item at a time
-        double scrollValue = -Math.signum(delta);
+        double scrollValue = -Math.signum(deltaY);
         scroll((int) scrollValue);
 
-        return super.mouseScrolled(mouseX, mouseY, delta);
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     private void scroll(int delta) {
