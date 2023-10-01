@@ -41,7 +41,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private static final int ITEMS_PER_PAGE = 54;
 
     // Info
-    private final TradeMarketSearchResultParent parent;
+    private final TradeMarketSearchResultHolder parent;
     private final WrappedScreenInfo wrappedScreenInfo;
 
     // Widgets
@@ -54,7 +54,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private int scrollOffset = 0;
     private boolean holdingScrollbar = false;
 
-    protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultParent parent) {
+    protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultHolder parent) {
         super(
                 ChestMenu.sixRows(FAKE_CONTAINER_ID, McUtils.inventory()),
                 McUtils.inventory(),

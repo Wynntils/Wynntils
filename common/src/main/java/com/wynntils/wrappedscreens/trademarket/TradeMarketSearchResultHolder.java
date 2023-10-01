@@ -5,7 +5,7 @@
 package com.wynntils.wrappedscreens.trademarket;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.handlers.wrappedscreen.WrappedScreenParent;
+import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMarketSearchResultScreen> {
+public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMarketSearchResultScreen> {
     // Patterns
     private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
 

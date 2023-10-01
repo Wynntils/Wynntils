@@ -13,17 +13,18 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultParent;
+import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultHolder;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class WrappedScreenHandler extends Handler {
-    private final Set<WrappedScreenParent> wrappedScreenParents = new HashSet<>();
+    private final Set<WrappedScreenHolder> wrappedScreenHolders = new HashSet<>();
 
-    private WrappedScreenParent<?> currentWrappedScreenParent;
+    private WrappedScreenHolder<?> currentWrappedScreenHolder;
     private Screen currentWrappedScreen;
 
     public WrappedScreenHandler() {
@@ -39,28 +40,30 @@ public class WrappedScreenHandler extends Handler {
         // If we opened a new screen, reset the current wrapped screen
         resetWrappedScreen(false);
 
-        for (WrappedScreenParent parent : wrappedScreenParents) {
-            if (!titleStyledText.matches(parent.getReplacedScreenTitlePattern())) continue;
+        Optional<WrappedScreenHolder> holderForScreenOpt = wrappedScreenHolders.stream()
+                .filter(holder -> titleStyledText.matches(holder.getReplacedScreenTitlePattern()))
+                .findFirst();
 
-            // Post an event to allow consumers to allow opening the wrapped screen
-            WrappedScreenOpenEvent openEvent = new WrappedScreenOpenEvent(parent.getWrappedScreenClass());
-            WynntilsMod.postEvent(openEvent);
+        if (holderForScreenOpt.isEmpty()) return;
 
-            // If the event was not accepted, don't open the screen
-            if (!openEvent.shouldOpenScreen()) return;
+        WrappedScreenHolder holder = holderForScreenOpt.get();
 
-            // Set up and open the wrapped screen
-            currentWrappedScreenParent = parent;
-            WynntilsMod.registerEventListener(parent);
+        // Post an event to allow consumers to allow opening the wrapped screen
+        WrappedScreenOpenEvent openEvent = new WrappedScreenOpenEvent(holder.getWrappedScreenClass());
+        WynntilsMod.postEvent(openEvent);
 
-            currentWrappedScreen = parent.createWrappedScreen(new WrappedScreenInfo(
-                    abstractContainerScreen, McUtils.containerMenu(), McUtils.containerMenu().containerId));
+        // If the event was not accepted, don't open the screen
+        if (!openEvent.shouldOpenScreen()) return;
 
-            parent.setWrappedScreen(currentWrappedScreen);
-            McUtils.mc().setScreen(currentWrappedScreen);
+        // Set up and open the wrapped screen
+        currentWrappedScreenHolder = holder;
+        WynntilsMod.registerEventListener(holder);
 
-            return;
-        }
+        currentWrappedScreen = holder.createWrappedScreen(new WrappedScreenInfo(
+                abstractContainerScreen, McUtils.containerMenu(), McUtils.containerMenu().containerId));
+
+        holder.setWrappedScreen(currentWrappedScreen);
+        McUtils.mc().setScreen(currentWrappedScreen);
     }
 
     @SubscribeEvent
@@ -80,16 +83,16 @@ public class WrappedScreenHandler extends Handler {
 
         currentWrappedScreen = null;
 
-        currentWrappedScreenParent.reset();
-        WynntilsMod.unregisterEventListener(currentWrappedScreenParent);
-        currentWrappedScreenParent = null;
+        currentWrappedScreenHolder.reset();
+        WynntilsMod.unregisterEventListener(currentWrappedScreenHolder);
+        currentWrappedScreenHolder = null;
     }
 
     private void registerWrappedScreens() {
-        registerWrappedScreen(new TradeMarketSearchResultParent());
+        registerWrappedScreen(new TradeMarketSearchResultHolder());
     }
 
-    private void registerWrappedScreen(WrappedScreenParent parent) {
-        wrappedScreenParents.add(parent);
+    private void registerWrappedScreen(WrappedScreenHolder holder) {
+        wrappedScreenHolders.add(holder);
     }
 }

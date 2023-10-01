@@ -14,7 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
  * This class is only registered to the event bus when active. Every logic that needs to be done on a wrapped screen should be done here.
  * This class may depend on {@link com.wynntils.core.components.Model}s, {@link com.wynntils.core.components.Handler}s and {@link com.wynntils.core.components.Services}s.
  */
-public abstract class WrappedScreenParent<T extends Screen & WrappedScreen> {
+public abstract class WrappedScreenHolder<T extends Screen & WrappedScreen> {
     protected abstract Pattern getReplacedScreenTitlePattern();
 
     /**
