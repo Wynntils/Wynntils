@@ -26,6 +26,7 @@ import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -116,7 +117,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Set<Object> data = Managers.CrowdSourcedData.getData(crowdSourcedDataType);
 
-            String jsonString = Managers.Json.GSON.toJson(data);
+            String jsonString = Managers.Json.GSON.toJson(Map.of(Managers.CrowdSourcedData.CURRENT_GAME_VERSION, data));
 
             McUtils.mc().keyboardHandler.setClipboard(jsonString);
 
