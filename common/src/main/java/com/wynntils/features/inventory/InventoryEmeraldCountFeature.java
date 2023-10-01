@@ -99,7 +99,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                         int bottomStartY = containerScreen.topPos + containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
                         y = Math.min(bottomStartY - textureVerticalSize, y);
                     }
-                    renderTexturedCount(event.getGuiGraphics(), textureX, adjustedY, topEmeralds);
+                    renderTexturedCount(event.getGuiGraphics(), textureX, y, topEmeralds);
                 }
             }
         }
