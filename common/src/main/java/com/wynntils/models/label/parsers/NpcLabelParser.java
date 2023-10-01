@@ -20,9 +20,9 @@ public class NpcLabelParser implements LabelParser {
 
     public LabelInfo getInfo(StyledText label, Location location) {
         if (label.matches(NPC_LABEL_PATTERN)) {
-            return new NpcLabelInfo(label, location);
+            return new NpcLabelInfo(label, location.offset(0, -1, 0));
         } else if (label.matches(TRADE_MARKET_LABEL_PATTERN)) {
-            return new NpcLabelInfo(label, location);
+            return new NpcLabelInfo(label, location.offset(0, -1, 0));
         } else if (label.matches(HOUSING_LABEL_PATTERN)) {
             return new NpcLabelInfo(label, "Housing", location);
         }

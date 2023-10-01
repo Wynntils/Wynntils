@@ -24,7 +24,8 @@ public class GatheringStationLabelParser implements LabelParser {
             ProfessionType professionType = ProfessionType.fromString(matcher.group(1));
             if (professionType == null) return null;
 
-            return new GatheringStationLabelInfo(label, matcher.group(1) + " Station", location, professionType);
+            return new GatheringStationLabelInfo(
+                    label, matcher.group(1) + " Station", location.offset(0, -2, 0), professionType);
         }
 
         return null;
