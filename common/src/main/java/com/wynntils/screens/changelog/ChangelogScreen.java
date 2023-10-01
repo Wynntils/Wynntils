@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
@@ -90,7 +91,9 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
 
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         poseStack.popPose();
     }
