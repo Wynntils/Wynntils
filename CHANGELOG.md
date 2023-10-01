@@ -1,9 +1,21 @@
+## [0.0.4-beta.8](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.7...v0.0.4-beta.8) (2023-10-01)
+
+
+### Bug Fixes
+
+* Fix container search arc rendering weirdly on items with durability arcs ([#2156](https://github.com/Wynntils/Artemis/issues/2156)) ([52c62c3](https://github.com/Wynntils/Artemis/commit/52c62c3e8f9b29e13d3270caa9fcae57dbbba8cc))
+
 ## [0.0.4-beta.7](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.6...v0.0.4-beta.7) (2023-10-01)
 
 
 ### Bug Fixes
 
 * Copied crowd-sourced data should have a version included ([#2155](https://github.com/Wynntils/Artemis/issues/2155)) ([a0c7315](https://github.com/Wynntils/Artemis/commit/a0c7315ea0f7c6eed353b625381f82b250eaa43c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.7 [skip ci] ([44aa2fd](https://github.com/Wynntils/Artemis/commit/44aa2fdd4a1a352580cf1cbcf330dbd92e6e3b3a))
 
 ## [0.0.4-beta.6](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.5...v0.0.4-beta.6) (2023-10-01)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Simplify component dependencies ([#2151](https://github.com/Wynntils/Artemis/issues/2151)) ([e6ad67f](https://github.com/Wynntils/Artemis/commit/e6ad67f8667db57772ac33e34401ecbac81c326f))
-
-## [0.0.4-beta.3](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.2...v0.0.4-beta.3) (2023-10-01)
-
-
-### Bug Fixes
-
-* Emerald count has wrong units when display zero is off ([#2131](https://github.com/Wynntils/Artemis/issues/2131)) ([c1d2630](https://github.com/Wynntils/Artemis/commit/c1d2630dc31ed3f2e3d6b413cc2d1196783fb45f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.3 [skip ci] ([0140670](https://github.com/Wynntils/Artemis/commit/01406702be72a4151613e7f9cdcb62fa4aeb0a31))
 
