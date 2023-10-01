@@ -22,6 +22,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.wrappedscreens.trademarket.widgets.PresetButton;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -129,6 +130,17 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                                 "screens.wynntils.tradeMarketSearchResult.loadNextBatch", parent.getPageLoadBatchSize())
                         .withStyle(ChatFormatting.BOLD)));
         this.addRenderableWidget(loadMoreButton);
+
+        // Add preset buttons
+        for (int i = 0; i < 4; i++) {
+            this.addRenderableWidget(new PresetButton(
+                    renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
+                    renderY + 30 + i * (Texture.PRESET.height() + 2),
+                    Texture.PRESET.width(),
+                    Texture.PRESET.height(),
+                    i,
+                    this));
+        }
     }
 
     @Override
@@ -275,6 +287,14 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
+    public void setSearchQuery(String query) {
+        itemSearchWidget.setTextBoxInput(query);
+    }
+
+    public ItemSearchQuery getSearchQuery() {
+        return itemSearchWidget.getSearchQuery();
+    }
+
     private void scroll(int delta) {
         int maxValue = getMaxScrollOffset();
 
@@ -309,10 +329,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     protected void setCurrentState(Component currentState) {
         this.currentState = currentState;
-    }
-
-    protected ItemSearchQuery getSearchQuery() {
-        return itemSearchWidget.getSearchQuery();
     }
 
     private void reloadElements() {

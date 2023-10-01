@@ -6,9 +6,14 @@ package com.wynntils.models.trademarket;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,7 +29,10 @@ public class TradeMarketModel extends Model {
     };
 
     private static final Pattern TRADE_MARKET_FILTER_SCREEN_TITLE_PATTERN =
-            Pattern.compile("\\[Pg. \\d+\\] Filter Items");
+            Pattern.compile("\\[Pg\\. \\d+\\] Filter Items");
+
+    @Persisted
+    private final Storage<Map<Integer, String>> presetFilters = new Storage<>(new TreeMap<>());
 
     private String lastSearchFilter = "";
 
@@ -52,5 +60,14 @@ public class TradeMarketModel extends Model {
 
     public void setLastSearchFilter(String lastSearchFilter) {
         this.lastSearchFilter = lastSearchFilter;
+    }
+
+    public Optional<String> getPresetFilter(int presetId) {
+        return Optional.ofNullable(presetFilters.get().get(presetId));
+    }
+
+    public void setPresetFilter(int presetId, String filter) {
+        presetFilters.get().put(presetId, filter);
+        presetFilters.touched();
     }
 }

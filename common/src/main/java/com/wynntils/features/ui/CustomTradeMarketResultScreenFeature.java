@@ -64,7 +64,7 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
         if (shiftBehaviorConfig.get() == ShiftBehavior.NONE) return;
         if (McUtils.mc().screen == null) return;
 
-        if (Models.TradeMarket.isFilterScreen(McUtils.mc().screen.getTitle())) {
+        if (!Models.TradeMarket.isFilterScreen(McUtils.mc().screen.getTitle())) {
             return;
         }
 

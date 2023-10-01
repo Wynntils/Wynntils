@@ -64,6 +64,10 @@ public enum Texture {
     UNDISCOVERED_WORLD("icons/discoveries/undiscovered_world.png", 21, 34),
     UNDISCOVERED_WORLD_ICON("icons/discoveries/undiscovered_world_icon.png", 11, 7),
 
+    // Trade Market
+    PRESET("trade_market/preset.png", 16, 16),
+    SAVED_PRESET("trade_market/saved_preset.png", 16, 16),
+
     // Generic
     ADD_ICON("icons/generic/add_icon.png", 14, 14),
     ARROW_LEFT_ICON("icons/generic/arrow_left_icon.png", 16, 16),
