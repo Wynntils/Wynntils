@@ -125,9 +125,8 @@ public final class IconFilterScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(guiGraphics.pose());
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        renderScrollButton(guiGraphics.pose());
     }
 
     @Override

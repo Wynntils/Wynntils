@@ -315,9 +315,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(poseStack);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        renderScrollButton(poseStack);
 
         // Uncomment when editing UI
         //        RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
