@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class CrowdSourcedDataManager extends Manager {
-    private static final CrowdSourcedDataGameVersion CURRENT_GAME_VERSION =
+    public static final CrowdSourcedDataGameVersion CURRENT_GAME_VERSION =
             CrowdSourcedDataGameVersion.VERSION_203_HOTFIX_4;
 
     @Persisted
