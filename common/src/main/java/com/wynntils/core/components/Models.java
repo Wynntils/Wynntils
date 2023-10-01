@@ -24,6 +24,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
 import com.wynntils.models.damage.DamageModel;
+import com.wynntils.models.dungeon.DungeonModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.gear.GearModel;
@@ -67,6 +68,7 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final DamageModel Damage = new DamageModel();
+    public static final DungeonModel Dungeon = new DungeonModel();
     public static final ElementModel Element = new ElementModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final MarkerModel Marker = new MarkerModel();
@@ -82,6 +84,7 @@ public final class Models {
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
+    public static final TradeMarketModel TradeMarket = new TradeMarketModel();
     public static final WarModel War = new WarModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();

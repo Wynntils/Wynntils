@@ -80,7 +80,7 @@ public class QuestCommand extends Command {
         if (Models.Quest.getQuestsRaw().isEmpty()) {
             context.getSource()
                     .sendSuccess(
-                            Component.literal("Quest Book was not scanned. You might have to retry this command.")
+                            () -> Component.literal("Quest Book was not scanned. You might have to retry this command.")
                                     .withStyle(ChatFormatting.YELLOW),
                             false);
         }
@@ -98,7 +98,7 @@ public class QuestCommand extends Command {
         MutableComponent response = Component.literal("Active quests:").withStyle(ChatFormatting.AQUA);
         generateQuestList(quests, response);
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -110,7 +110,7 @@ public class QuestCommand extends Command {
         if (Models.Quest.getQuestsRaw().isEmpty()) {
             context.getSource()
                     .sendSuccess(
-                            Component.literal("Quest Book was not scanned. You might have to retry this command.")
+                            () -> Component.literal("Quest Book was not scanned. You might have to retry this command.")
                                     .withStyle(ChatFormatting.YELLOW),
                             false);
         }
@@ -133,7 +133,7 @@ public class QuestCommand extends Command {
 
         generateQuestList(quests, response);
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -201,7 +201,7 @@ public class QuestCommand extends Command {
                                         Component.literal("Click to lookup quest on wiki"))))
                         .withStyle(ChatFormatting.DARK_AQUA));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -213,7 +213,7 @@ public class QuestCommand extends Command {
         Models.Quest.startTracking(quest);
         MutableComponent response =
                 Component.literal("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -229,7 +229,7 @@ public class QuestCommand extends Command {
 
         MutableComponent response = Component.literal("Stopped tracking quest " + trackedQuest.getName())
                 .withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -241,7 +241,7 @@ public class QuestCommand extends Command {
         Models.Quest.openQuestOnWiki(quest);
         MutableComponent response =
                 Component.literal("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 

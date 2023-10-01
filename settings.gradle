@@ -9,7 +9,8 @@ pluginManagement {
 
 include("common")
 include("fabric")
-include("quilt")
+// FIXME: Include loaders
+// include("quilt")
 include("forge")
 
 rootProject.name = "Wynntils"

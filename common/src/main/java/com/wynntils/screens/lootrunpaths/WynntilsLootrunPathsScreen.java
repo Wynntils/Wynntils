@@ -27,6 +27,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Position;
@@ -93,7 +94,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     }
 
     @Override
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof LootrunPathButton lootrunPathButton) {
             List<Component> tooltipLines;
 
@@ -123,15 +124,17 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                                 .withStyle(ChatFormatting.RED));
             }
 
-            this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
+            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
             return;
         }
 
-        super.renderTooltip(poseStack, mouseX, mouseY);
+        super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -144,7 +147,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         renderVersion(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(poseStack, I18n.get("screens.wynntils.lootruns.noLootruns"));
@@ -156,7 +159,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         poseStack.popPose();
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderDescription(PoseStack poseStack) {

@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[44,)"
+loaderVersion = "[48,)"
 issueTrackerURL = "https://github.com/Wynntils/Artemis/issues"
 license = "LGPL-3.0-only"
 
@@ -15,10 +15,10 @@ license = "LGPL-3.0-only"
 [[dependencies.wynntils]]
     modId = "minecraft"
     mandatory = true
-    versionRange = "[1.19.4]"
+    versionRange = "[1.20.2]"
 
 [[dependencies.wynntils]]
     modId = "forge"
     mandatory = true
-    versionRange = "[44.1.2,)"
+    versionRange = "[48.0.0,)"
 

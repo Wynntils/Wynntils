@@ -18,6 +18,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -87,11 +88,5 @@ public class TelemetryFeature extends Feature {
                 Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
 
         McUtils.sendMessageToClient(component);
-    }
-
-    public enum ConfirmedBoolean {
-        FALSE,
-        TRUE,
-        UNCONFIRMED
     }
 }

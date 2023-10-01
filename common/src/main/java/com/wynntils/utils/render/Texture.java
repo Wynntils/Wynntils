@@ -77,6 +77,7 @@ public enum Texture {
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
+    QUESTION_MARK("icons/generic/question_mark.png", 4, 7),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),

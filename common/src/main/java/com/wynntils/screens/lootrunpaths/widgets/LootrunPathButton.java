@@ -25,6 +25,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -46,7 +47,9 @@ public class LootrunPathButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         CustomColor backgroundColor = getButtonBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 

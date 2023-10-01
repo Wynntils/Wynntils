@@ -19,9 +19,11 @@ import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -103,20 +105,23 @@ public class ItemCompareFeature extends Feature {
 
         poseStack.translate(0, 0, 300);
 
-        int toBeRenderedWidth = abstractContainerScreen.getTooltipFromItem(itemToCompare).stream()
+        int toBeRenderedWidth = abstractContainerScreen.getTooltipFromItem(McUtils.mc(), itemToCompare).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
 
-        int hoveredWidth = abstractContainerScreen.getTooltipFromItem(hoveredItemStack).stream()
+        int hoveredWidth = abstractContainerScreen.getTooltipFromItem(McUtils.mc(), hoveredItemStack).stream()
                 .map(component -> McUtils.mc().font.width(component))
                 .max(Integer::compareTo)
                 .orElse(0);
 
+        GuiGraphics guiGraphics = event.getGuiGraphics();
         if (mouseX + toBeRenderedWidth + hoveredWidth > abstractContainerScreen.width) {
-            abstractContainerScreen.renderTooltip(poseStack, itemToCompare, mouseX - toBeRenderedWidth - 10, mouseY);
+            guiGraphics.renderTooltip(
+                    FontRenderer.getInstance().getFont(), itemToCompare, mouseX - toBeRenderedWidth - 10, mouseY);
         } else {
-            abstractContainerScreen.renderTooltip(poseStack, itemToCompare, mouseX + hoveredWidth + 10, mouseY);
+            guiGraphics.renderTooltip(
+                    FontRenderer.getInstance().getFont(), itemToCompare, mouseX + hoveredWidth + 10, mouseY);
         }
 
         poseStack.popPose();

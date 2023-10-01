@@ -7,6 +7,7 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.horse.type.HorseTier;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -29,8 +30,12 @@ public final class HorseAnnotator implements ItemAnnotator {
         if (!matcher.matches()) return null;
 
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 0, HORSE_TIER_PATTERN);
-        if (!tierMatcher.matches()) return null;
-        int tier = Integer.parseInt(tierMatcher.group(1));
+
+        // The lore may be missing if the item is on the trade market
+        if (!tierMatcher.matches()) {
+            return new HorseItem(HorseTier.fromName(matcher.group(1)), CappedValue.EMPTY, CappedValue.EMPTY, null);
+        }
+        HorseTier tier = HorseTier.fromNumeral(Integer.parseInt(tierMatcher.group(1)));
 
         Matcher levelMatcher = LoreUtils.matchLoreLine(itemStack, 1, HORSE_LEVEL_PATTERN);
         if (!levelMatcher.matches()) return null;

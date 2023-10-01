@@ -83,6 +83,12 @@ public final class McUtils {
     }
 
     public static void sendPacket(Packet<?> packet) {
+        if (mc().getConnection() == null) {
+            WynntilsMod.error(
+                    "Tried to send packet: \"" + packet.getClass().getSimpleName() + "\", but connection was null.");
+            return;
+        }
+
         mc().getConnection().send(packet);
     }
 

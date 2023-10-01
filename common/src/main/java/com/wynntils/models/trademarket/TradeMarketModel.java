@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.trademarket;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -13,6 +14,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TradeMarketModel extends Model {
+    private static final Pattern[] ITEM_NAME_PATTERNS = {
+        // Item on the create buy order menu or create sell offer menu
+        Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+?)(?:§6)? for .+ Each$"),
+        // Items on the trade overview menu
+        Pattern.compile("^§6(?:Buying|Selling) [^ ]+ (.+)$"),
+        // Item on the view existing sell offer menu (on the right side)
+        Pattern.compile("^§7§l[^ ]+x (.+)$")
+    };
+
     private static final Pattern TRADE_MARKET_FILTER_SCREEN_TITLE_PATTERN =
             Pattern.compile("\\[Pg. \\d+\\] Filter Items");
 
@@ -20,6 +30,8 @@ public class TradeMarketModel extends Model {
 
     public TradeMarketModel() {
         super(List.of());
+
+        Handlers.Item.addSimplifiablePatterns(ITEM_NAME_PATTERNS);
     }
 
     @SubscribeEvent

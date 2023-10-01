@@ -56,7 +56,6 @@ import com.wynntils.features.debug.ContentBookDumpFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
-import com.wynntils.features.debug.LootrunBeaconLocationCollectorFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -67,6 +66,7 @@ import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
+import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -146,6 +146,7 @@ import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
+import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
@@ -181,7 +182,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
         registerFeature(new LogItemInfoFeature());
-        registerFeature(new LootrunBeaconLocationCollectorFeature());
         registerFeature(new PacketDebuggerFeature());
 
         // always on
@@ -240,6 +240,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
+        registerFeature(new HightlightDuplicateCosmeticsFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
@@ -346,6 +347,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
+        registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
