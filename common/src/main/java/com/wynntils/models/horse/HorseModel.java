@@ -7,7 +7,6 @@ package com.wynntils.models.horse;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
@@ -20,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
 public class HorseModel extends Model {
-    public HorseModel(ItemModel itemModel) {
-        super(List.of(itemModel));
+    public HorseModel() {
+        super(List.of());
     }
 
     public Optional<HorseItem> getHorse() {

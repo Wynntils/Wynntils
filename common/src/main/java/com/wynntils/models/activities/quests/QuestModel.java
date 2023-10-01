@@ -17,7 +17,6 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -38,8 +37,8 @@ public final class QuestModel extends Model {
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
 
-    public QuestModel(CombatXpModel combatXpModel) {
-        super(List.of(combatXpModel));
+    public QuestModel() {
+        super(List.of());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

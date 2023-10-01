@@ -7,7 +7,6 @@ package com.wynntils.models.ingredients;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.ingredients.type.IngredientInfo;
-import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import java.util.List;
@@ -24,8 +23,8 @@ public class IngredientModel extends Model {
             ChatFormatting.AQUA, 3);
     private final IngredientInfoRegistry ingredientInfoRegistry = new IngredientInfoRegistry();
 
-    public IngredientModel(StatModel statModel) {
-        super(List.of(statModel));
+    public IngredientModel() {
+        super(List.of());
     }
 
     public int getTierFromColorCode(String tierColor) {
