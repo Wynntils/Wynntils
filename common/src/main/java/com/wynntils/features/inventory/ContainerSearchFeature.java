@@ -119,7 +119,7 @@ public class ContainerSearchFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack itemStack = e.getSlot().getItem();
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
