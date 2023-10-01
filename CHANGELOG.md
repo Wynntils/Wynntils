@@ -1,4 +1,16 @@
+## [0.0.4-beta.5](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.4...v0.0.4-beta.5) (2023-10-01)
+
+
+### Bug Fixes
+
+* fix ChangelogScreen rendering a dark background ([#2152](https://github.com/Wynntils/Artemis/issues/2152)) ([ff6a207](https://github.com/Wynntils/Artemis/commit/ff6a207dd963930374a32d5dfbdb7b329348bcca))
+
 ## [0.0.4-beta.4](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.3...v0.0.4-beta.4) (2023-10-01)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.4 [skip ci] ([2766709](https://github.com/Wynntils/Artemis/commit/2766709eb61d0e6af9197e993bc1c021179e00d3))
 
 
 ### Code Refactoring
@@ -40,13 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.1 [skip ci] ([bc60524](https://github.com/Wynntils/Artemis/commit/bc60524d5ab6a45b63927ced41b76a91aeba5dfb))
-
-## [0.0.4-beta.0](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.3...v0.0.4-beta.0) (2023-09-30)
-
-
-### Miscellaneous Chores
-
-* Bump to beta ([f0a5f12](https://github.com/Wynntils/Artemis/commit/f0a5f12285fad0fe053e396cbe81f6d4a0c3fa82))
-* Move CI to Beta too ([d2f9c9d](https://github.com/Wynntils/Artemis/commit/d2f9c9d0cebe2a91313811679a6ed6b31d037985))
-* **release:** v0.0.4-beta.0 [skip ci] ([da3ac91](https://github.com/Wynntils/Artemis/commit/da3ac91de93b46dd94891624c7346868625c83d8))
 
