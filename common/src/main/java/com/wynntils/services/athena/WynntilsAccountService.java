@@ -40,6 +40,7 @@ public final class WynntilsAccountService extends Service {
 
     public WynntilsAccountService() {
         super(List.of());
+
         login();
     }
 

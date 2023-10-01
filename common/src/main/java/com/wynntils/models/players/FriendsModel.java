@@ -12,7 +12,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
@@ -70,8 +69,9 @@ public final class FriendsModel extends Model {
     private Set<String> friends;
     private Map<String, Integer> onlineFriends = new HashMap<>(); // <username, server>
 
-    public FriendsModel(WorldStateModel worldStateModel) {
-        super(List.of(worldStateModel));
+    public FriendsModel() {
+        super(List.of());
+
         resetData();
     }
 

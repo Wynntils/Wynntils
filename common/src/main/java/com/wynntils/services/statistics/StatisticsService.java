@@ -31,6 +31,7 @@ public final class StatisticsService extends Service {
 
     public StatisticsService() {
         super(List.of());
+
         WynntilsMod.registerEventListener(collectors);
     }
 

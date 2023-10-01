@@ -8,7 +8,6 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.core.persisted.type.PersistedMetadata;
@@ -27,8 +26,8 @@ public final class PersistedManager extends Manager {
     private final Map<PersistedValue<?>, PersistedMetadata<?>> metadatas = new HashMap<>();
     private final Set<PersistedValue<?>> persisteds = new TreeSet<>();
 
-    public PersistedManager(JsonManager jsonManager) {
-        super(List.of(jsonManager));
+    public PersistedManager() {
+        super(List.of());
     }
 
     public void setRaw(PersistedValue<?> persisted, Object value) {
