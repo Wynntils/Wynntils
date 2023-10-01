@@ -32,6 +32,7 @@ import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.ItemModel;
+import com.wynntils.models.label.LabelModel;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
@@ -85,6 +86,7 @@ public final class Models {
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();
     public static final ItemModel Item = new ItemModel();
+    public static final LabelModel Label = new LabelModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();
     public static final MobTotemModel MobTotem = new MobTotemModel();

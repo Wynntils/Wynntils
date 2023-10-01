@@ -4,10 +4,12 @@
  */
 package com.wynntils.models.profession.type;
 
+import com.wynntils.utils.type.Pair;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 public final class MaterialProfile {
     private static final Map<MaterialType, List<SourceMaterial>> SOURCE_MATERIALS = Map.of(
@@ -90,6 +92,13 @@ public final class MaterialProfile {
         if (resourceType == null) return null;
 
         return new MaterialProfile(resourceType, sourceMaterial, tier);
+    }
+
+    public static Optional<Pair<MaterialType, SourceMaterial>> findByMaterialName(String name) {
+        return SOURCE_MATERIALS.entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream().map(material -> new Pair<>(entry.getKey(), material)))
+                .filter(pair -> pair.value().name().equals(name))
+                .findFirst();
     }
 
     public ResourceType getResourceType() {

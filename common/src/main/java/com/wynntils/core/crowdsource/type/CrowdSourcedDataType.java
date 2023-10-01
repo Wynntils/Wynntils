@@ -6,13 +6,19 @@ package com.wynntils.core.crowdsource.type;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.crowdsource.datatype.LootrunTaskLocation;
+import com.wynntils.models.label.infos.GatheringNodeLabelInfo;
+import com.wynntils.models.label.infos.GatheringStationLabelInfo;
+import com.wynntils.models.label.infos.NpcLabelInfo;
 import net.minecraft.client.resources.language.I18n;
 
 /**
  * This enum represents the type of crowd sourced data that is being collected.
  */
 public enum CrowdSourcedDataType {
-    LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class);
+    LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class),
+    NPC_LOCATIONS(NpcLabelInfo.class),
+    PROFESSION_NODE_LOCATIONS(GatheringNodeLabelInfo.class),
+    PROFESSION_STATION_LOCATIONS(GatheringStationLabelInfo.class);
 
     private final Class<? extends Comparable<?>> dataClass;
 
