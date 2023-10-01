@@ -14,7 +14,6 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.colors.CustomColor;
@@ -62,8 +61,8 @@ public class GuildModel extends Model {
     private String guildName = "";
     private GuildRank guildRank;
 
-    public GuildModel(CharacterModel characterModel) {
-        super(List.of(characterModel));
+    public GuildModel() {
+        super(List.of());
 
         loadGuildList();
     }

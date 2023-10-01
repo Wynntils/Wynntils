@@ -38,8 +38,9 @@ public final class BombModel extends Model {
 
     private static final ActiveBombContainer BOMBS = new ActiveBombContainer();
 
-    public BombModel(WorldStateModel worldState) {
-        super(List.of(worldState));
+    public BombModel() {
+        super(List.of());
+
         Handlers.BossBar.registerBar(InfoBar);
     }
 

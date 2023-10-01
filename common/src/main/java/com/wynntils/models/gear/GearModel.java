@@ -7,7 +7,6 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -16,8 +15,6 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.UnknownGearItem;
-import com.wynntils.models.stats.StatModel;
-import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
@@ -49,8 +46,8 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel(ElementModel elementModel, StatModel statModel, WynnItemModel wynnItemModel) {
-        super(List.of(elementModel, statModel, wynnItemModel));
+    public GearModel() {
+        super(List.of());
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {

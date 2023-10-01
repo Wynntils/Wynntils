@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -44,8 +43,8 @@ public class CombatXpModel extends Model {
     private final TimedSet<Float> rawXpGainInLastMinute = new TimedSet<>(1, TimeUnit.MINUTES, true);
     private final TimedSet<Float> percentageXpGainInLastMinute = new TimedSet<>(1, TimeUnit.MINUTES, true);
 
-    public CombatXpModel(WorldStateModel worldStateModel) {
-        super(List.of(worldStateModel));
+    public CombatXpModel() {
+        super(List.of());
     }
 
     @SubscribeEvent

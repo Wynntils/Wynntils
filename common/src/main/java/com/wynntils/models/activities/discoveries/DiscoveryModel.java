@@ -15,14 +15,10 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.profile.DiscoveryProfile;
-import com.wynntils.models.activities.quests.QuestModel;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
-import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.marker.MarkerModel;
-import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -51,12 +47,8 @@ public final class DiscoveryModel extends Model {
     private List<StyledText> worldDiscoveriesTooltip = List.of();
     private List<StyledText> secretDiscoveriesTooltip = List.of();
 
-    public DiscoveryModel(
-            CombatXpModel combatXpModel,
-            MarkerModel markerModel,
-            QuestModel questModel,
-            TerritoryModel territoryModel) {
-        super(List.of(combatXpModel, markerModel, questModel, territoryModel));
+    public DiscoveryModel() {
+        super(List.of());
     }
 
     @Override

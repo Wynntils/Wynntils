@@ -11,7 +11,6 @@ import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.telemetry.LootrunLocationDataCollector;
 import com.wynntils.utils.type.ConfirmedBoolean;
@@ -30,9 +29,8 @@ public class CrowdSourcedDataManager extends Manager {
 
     private final Map<CrowdSourcedDataType, CrowdSourcedDataCollector<?>> collectors = new HashMap<>();
 
-    // We only indirectly depend on StorageManager, this manager has storages
-    public CrowdSourcedDataManager(StorageManager storageManager) {
-        super(List.of(storageManager));
+    public CrowdSourcedDataManager() {
+        super(List.of());
 
         registerCollectors();
     }
