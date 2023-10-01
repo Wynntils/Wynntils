@@ -1,9 +1,9 @@
-name: Publish Alpha Release
+name: Publish Beta Release
 
 on:
   push:
     branches:
-      - alpha
+      - beta
 
 jobs:
   changelog:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v3.17.0
+        uses: TriPSs/conventional-changelog-action@v4.1.1
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
@@ -38,7 +38,8 @@ jobs:
           skip-version-file: true
           skip-git-pull: true
           pre-release: true
-          pre-release-identifier: alpha
+          pre-release-identifier: beta
+          release-count: 5
 
       - name: Create release
         if: ${{ steps.changelog.outputs.skipped != 'true' }}
@@ -105,14 +106,16 @@ jobs:
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
             **/build/libs/*-quilt+MC-*.jar
-          if-no-files-found: error
+          # FIXME: Re-add Quilt
+          # if-no-files-found: error
 
   release:
     name: Release to Modrinth and CurseForge
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     strategy:
       matrix:
-        modloader: [fabric, forge, quilt]
+        # FIXME: Re-add Quilt
+        modloader: [fabric, forge]
     runs-on: ubuntu-latest
     needs: [build, changelog]
     steps:
@@ -135,7 +138,7 @@ jobs:
 
           name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
           version: ${{ needs.changelog.outputs.tag }}
-          version-type: alpha
+          version-type: beta
           changelog: ${{ needs.changelog.outputs.changelog }}
 
           loaders: ${{ matrix.modloader }}

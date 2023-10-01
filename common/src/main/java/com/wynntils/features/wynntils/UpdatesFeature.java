@@ -89,8 +89,6 @@ public class UpdatesFeature extends Feature {
                 .append(Component.translatable(
                                 "feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)
                         .append(clickable)
-                        .append(Component.literal("\n"))
-                        .append(Component.translatable("feature.wynntils.updates.reminder.alpha"))
                         .withStyle(ChatFormatting.GREEN)));
     }
 }

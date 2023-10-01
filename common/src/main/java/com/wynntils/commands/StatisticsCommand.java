@@ -68,7 +68,7 @@ public class StatisticsCommand extends Command {
                             .withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -84,7 +84,7 @@ public class StatisticsCommand extends Command {
                     .append(Component.literal(" (" + statistic.getName() + ")").withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -117,19 +117,19 @@ public class StatisticsCommand extends Command {
                 .append(Component.literal(statistic.getFormattedValue(value.average()))
                         .withStyle(ChatFormatting.DARK_GREEN));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
     private int resetStatistics(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.statistics.warnReset")
+                        () -> Component.translatable("command.wynntils.statistics.warnReset")
                                 .withStyle(ChatFormatting.AQUA),
                         false);
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.statistics.clickHere")
+                        () -> Component.translatable("command.wynntils.statistics.clickHere")
                                 .withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(
@@ -144,7 +144,7 @@ public class StatisticsCommand extends Command {
 
         MutableComponent response = Component.literal("All statistics for this character has been reset")
                 .withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 

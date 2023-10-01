@@ -20,6 +20,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -145,6 +146,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     public int length() {
         return parts.stream().mapToInt(StyledTextPart::length).sum();
+    }
+
+    public int length(PartStyle.StyleType styleType) {
+        return getString(styleType).length();
     }
 
     public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {
@@ -391,30 +396,42 @@ public final class StyledText implements Iterable<StyledTextPart> {
     }
 
     public StyledText substring(int beginIndex) {
-        return substring(beginIndex, length());
+        return substring(beginIndex, length(), PartStyle.StyleType.NONE);
+    }
+
+    public StyledText substring(int beginIndex, PartStyle.StyleType styleType) {
+        return substring(beginIndex, length(styleType), styleType);
+    }
+
+    public StyledText substring(int beginIndex, int endIndex) {
+        return substring(beginIndex, endIndex, PartStyle.StyleType.NONE);
     }
 
     /**
      * Returns a new {@link StyledText} that is a substring of this {@link StyledText}.
-     * <p> Note that {@link PartStyle.StyleType.NONE} is used for calculating the index.
+     *
      * @param beginIndex the beginning index, inclusive
-     * @param endIndex the ending index, exclusive
+     * @param endIndex   the ending index, exclusive
+     * @param styleType  the style type to use when calculating indexes
      * @return the new {@link StyledText}
+     * @throws IndexOutOfBoundsException if the indexes are out of bounds
+     * @throws IllegalArgumentException  if the substring splits a formatting code
      */
-    public StyledText substring(int beginIndex, int endIndex) {
+    public StyledText substring(int beginIndex, int endIndex, PartStyle.StyleType styleType) {
         if (endIndex < beginIndex) {
             throw new IndexOutOfBoundsException("endIndex must be greater than beginIndex");
         }
         if (beginIndex < 0) {
             throw new IndexOutOfBoundsException("beginIndex must be greater than or equal to 0");
         }
-        if (endIndex > length()) {
-            throw new IndexOutOfBoundsException("endIndex must be less than or equal to length()");
+        if (endIndex > length(styleType)) {
+            throw new IndexOutOfBoundsException("endIndex must be less than or equal to length(styleType)");
         }
 
         List<StyledTextPart> includedParts = new ArrayList<>();
 
         int currentIndex = 0;
+        PartStyle previousPartStyle = null;
 
         for (StyledTextPart part : parts) {
             if (currentIndex >= beginIndex && currentIndex + part.length() < endIndex) {
@@ -428,17 +445,62 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 int startIndexInPart = Math.max(0, beginIndex - currentIndex);
                 int endIndexInPart = Math.min(part.length(), endIndex - currentIndex);
 
-                String includedSubstring =
-                        part.getString(null, PartStyle.StyleType.NONE).substring(startIndexInPart, endIndexInPart);
+                String fullString = part.getString(previousPartStyle, styleType);
 
-                includedParts.add(new StyledTextPart(
+                String beforeSubstring = fullString.substring(0, startIndexInPart);
+                String includedSubstring = fullString.substring(startIndexInPart, endIndexInPart);
+
+                // If the substring splits a formatting code, then we need to throw an exception
+                if (beforeSubstring.endsWith(String.valueOf(ChatFormatting.PREFIX_CODE))
+                        || includedSubstring.endsWith(String.valueOf(ChatFormatting.PREFIX_CODE))) {
+                    throw new IllegalArgumentException("The substring splits a formatting code.");
+                }
+
+                // Reparse the string to drop the formatting codes and keep them as part styles
+                includedParts.addAll(StyledTextPart.fromCodedString(
                         includedSubstring, part.getPartStyle().getStyle(), null, Style.EMPTY));
             }
 
-            currentIndex += part.length();
+            currentIndex += part.getString(previousPartStyle, styleType).length();
+
+            previousPartStyle = part.getPartStyle();
         }
 
         return new StyledText(includedParts, clickEvents, hoverEvents);
+    }
+
+    public StyledText[] partition(int... indexes) {
+        return partition(PartStyle.StyleType.NONE, indexes);
+    }
+
+    /**
+     * Splits this {@link StyledText} into multiple {@link StyledText}s at the given indexes.
+     * @param styleType the style type to use when calculating indexes
+     * @param indexes the indexes to split at, in ascending order
+     * @return the split {@link StyledText}s as an array
+     * @throws IllegalArgumentException if the indexes are not in ascending order or an index splits a formatting code
+     */
+    public StyledText[] partition(PartStyle.StyleType styleType, int... indexes) {
+        if (indexes.length == 0) {
+            return new StyledText[] {this};
+        }
+
+        List<StyledText> splitTexts = new ArrayList<>();
+
+        int currentIndex = 0;
+
+        for (int index : indexes) {
+            if (index < currentIndex) {
+                throw new IllegalArgumentException("Indexes must be in ascending order");
+            }
+
+            splitTexts.add(substring(currentIndex, index, styleType));
+            currentIndex = index;
+        }
+
+        splitTexts.add(substring(currentIndex, styleType));
+
+        return splitTexts.toArray(StyledText[]::new);
     }
 
     /**

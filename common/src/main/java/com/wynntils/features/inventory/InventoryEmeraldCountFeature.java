@@ -26,6 +26,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -103,7 +104,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                     } else {
                         adjustedY = y;
                     }
-                    renderTexturedCount(event.getPoseStack(), textureX, adjustedY, topEmeralds);
+                    renderTexturedCount(event.getGuiGraphics(), textureX, adjustedY, topEmeralds);
                 }
             }
         }
@@ -113,7 +114,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
                 case TEXTURE -> renderTexturedCount(
-                        event.getPoseStack(), textureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
+                        event.getGuiGraphics(), textureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
             }
         }
     }
@@ -148,7 +149,9 @@ public class InventoryEmeraldCountFeature extends Feature {
         poseStack.popPose();
     }
 
-    private void renderTexturedCount(PoseStack poseStack, int x, int y, int emeralds) {
+    private void renderTexturedCount(GuiGraphics guiGraphics, int x, int y, int emeralds) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
@@ -176,25 +179,15 @@ public class InventoryEmeraldCountFeature extends Feature {
                     Texture.EMERALD_COUNT_BACKGROUND.width(),
                     Texture.EMERALD_COUNT_BACKGROUND.height());
 
-            McUtils.mc()
-                    .getItemRenderer()
-                    .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+            guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
 
             if (EmeraldUnits.values()[i].getSymbol().equals("stx")) { // Make stx not look like normal LE
-                McUtils.mc()
-                        .getItemRenderer()
-                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
-                McUtils.mc()
-                        .getItemRenderer()
-                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
-                McUtils.mc()
-                        .getItemRenderer()
-                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
+                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
+                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
             } else {
                 // This needs to be separate since Z levels are determined by order here
-                McUtils.mc()
-                        .getItemRenderer()
-                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
             }
 
             poseStack.pushPose();

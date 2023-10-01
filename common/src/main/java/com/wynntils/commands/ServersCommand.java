@@ -80,7 +80,7 @@ public class ServersCommand extends Command {
             message.append(Component.literal(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
 
         return 1;
     }
@@ -109,7 +109,7 @@ public class ServersCommand extends Command {
                     Component.literal(String.join(", ", currentTypeServers)).withStyle(ChatFormatting.AQUA));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
 
         return 1;
     }
@@ -131,7 +131,7 @@ public class ServersCommand extends Command {
                     .withStyle(ChatFormatting.AQUA));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
 
         return 1;
     }

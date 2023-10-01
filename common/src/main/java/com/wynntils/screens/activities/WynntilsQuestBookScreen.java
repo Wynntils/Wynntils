@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -169,7 +170,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -182,7 +185,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
         renderVersion(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoQuestsHelper(poseStack);
@@ -194,7 +197,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
         poseStack.popPose();
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @SubscribeEvent
@@ -240,7 +243,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     @Override
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof QuestButton questButton) {
@@ -298,11 +301,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         }
 
         if (tooltipLines.isEmpty()) {
-            super.renderTooltip(poseStack, mouseX, mouseY);
+            super.renderTooltip(guiGraphics, mouseX, mouseY);
             return;
         }
 
-        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
+        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
     private void renderDescription(PoseStack poseStack) {

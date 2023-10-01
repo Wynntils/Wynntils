@@ -10,7 +10,6 @@ import java.util.Comparator;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.core.PositionImpl;
 import net.minecraft.world.phys.Vec3;
 
 public class Location implements Comparable<Location> {
@@ -72,7 +71,7 @@ public class Location implements Comparable<Location> {
     }
 
     public Position toPosition() {
-        return new PositionImpl(x, y, z);
+        return new Vec3(x, y, z);
     }
 
     public boolean equalsIgnoringY(Location other) {

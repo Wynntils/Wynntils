@@ -7,6 +7,7 @@ package com.wynntils.handlers.item;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -261,33 +262,16 @@ public class ItemHandler extends Handler {
     }
 
     private StyledText simplifyName(StyledText name) {
-        String full = name.getString();
+        for (Pattern pattern : simplifiablePatterns) {
+            Matcher matcher = name.getMatcher(pattern);
 
-        for (Pattern p : simplifiablePatterns) {
-            Matcher m = p.matcher(full);
+            if (matcher.matches()) {
+                int start = matcher.start(1);
+                int end = matcher.end(1);
 
-            if (m.matches()) {
-                String str = m.group(1);
+                StyledText[] separate = name.partition(PartStyle.StyleType.DEFAULT, start, end);
 
-                // TODO: Replace this with a specialized method inside StyledText
-                // For the case where the text before the item name is the same color as the item name itself
-                if (!str.startsWith("§")) {
-                    int index = full.indexOf(str);
-
-                    while (full.charAt(index) != '§') {
-                        index--;
-                    }
-
-                    int length = 2;
-                    while (index >= 2 && full.charAt(index - 2) == '§') {
-                        index -= 2;
-                        length += 2;
-                    }
-
-                    str = full.substring(index, index + length) + str;
-                }
-
-                return StyledText.fromString(str);
+                return separate[1];
             }
         }
 
