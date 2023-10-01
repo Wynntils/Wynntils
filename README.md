@@ -1,3 +1,11 @@
+MapData rewrite
+========
+
+TODO:
+* Check which old POIs are not converted
+* Make a list of aspects (like fading, color?) that are not implemented
+
+
 Artemis
 ========
 [![Discord](https://discordapp.com/api/guilds/394189072635133952/widget.png)](https://discord.gg/ve49m9J)
