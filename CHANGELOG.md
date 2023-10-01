@@ -1,9 +1,21 @@
+## [0.0.4-beta.3](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.2...v0.0.4-beta.3) (2023-10-01)
+
+
+### Bug Fixes
+
+* Emerald count has wrong units when display zero is off ([#2131](https://github.com/Wynntils/Artemis/issues/2131)) ([c1d2630](https://github.com/Wynntils/Artemis/commit/c1d2630dc31ed3f2e3d6b413cc2d1196783fb45f))
+
 ## [0.0.4-beta.2](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.1...v0.0.4-beta.2) (2023-09-30)
 
 
 ### Bug Fixes
 
 * UpdatesFeature should not mention alpha anymore ([#2149](https://github.com/Wynntils/Artemis/issues/2149)) ([f915d97](https://github.com/Wynntils/Artemis/commit/f915d972a1725b7abb6fbbbced3dcc90e1d2916a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.2 [skip ci] ([099c8b1](https://github.com/Wynntils/Artemis/commit/099c8b189e708efe1d4fbb5195f451d572d539d7))
 
 ## [0.0.4-beta.1](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.0...v0.0.4-beta.1) (2023-09-30)
 
@@ -33,12 +45,4 @@
 
 * Re-release, fix quilt causing release issues ([c0d2bef](https://github.com/Wynntils/Artemis/commit/c0d2bef76502a0a478832b3204c6bd8ab076c06c))
 * **release:** v0.0.4-alpha.3 [skip ci] ([3a7807e](https://github.com/Wynntils/Artemis/commit/3a7807e10074985408eb00888812d59b66b1c548))
-
-## [0.0.4-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.1...v0.0.4-alpha.2) (2023-09-30)
-
-
-### Miscellaneous Chores
-
-* Release 1.20.2 port [#2](https://github.com/Wynntils/Artemis/issues/2) ([c4581ff](https://github.com/Wynntils/Artemis/commit/c4581ffedfe0dcf71b4d30806ee7c262a2597a79))
-* **release:** v0.0.4-alpha.2 [skip ci] ([4279988](https://github.com/Wynntils/Artemis/commit/42799887a66dd11b382da6a5248df9038f621fa2))
 
