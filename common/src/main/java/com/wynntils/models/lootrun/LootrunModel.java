@@ -19,7 +19,6 @@ import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.extension.EntityExtension;
-import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
@@ -33,7 +32,6 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
-import com.wynntils.models.particle.ParticleModel;
 import com.wynntils.models.particle.event.ParticleVerifiedEvent;
 import com.wynntils.models.particle.type.ParticleType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -136,8 +134,8 @@ public class LootrunModel extends Model {
     private int timeLeft = 0;
     private CappedValue challenges = CappedValue.EMPTY;
 
-    public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
-        super(List.of(beaconModel, markerModel, particleModel));
+    public LootrunModel(MarkerModel markerModel) {
+        super(List.of(markerModel));
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
@@ -166,7 +164,7 @@ public class LootrunModel extends Model {
 
         for (TaskLocation taskLocation : taskLocations.getOrDefault(currentLocation.get(), Set.of())) {
             if (PosUtils.closerThanIgnoringY(
-                    taskLocation.location().toPosition(), event.getParticle().position(), TASK_POSITION_ERROR)) {
+                    taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
                 possibleTaskLocations.add(taskLocation);
                 return;
             }

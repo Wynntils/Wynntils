@@ -16,6 +16,7 @@ import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.language.I18n;
@@ -274,13 +276,32 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
 
+        buttons.get(3)
+                .add(new WynntilsMenuButton(
+                        Texture.SHARE_ICON,
+                        false,
+                        WynntilsCrowdSourcingSettingsScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable(
+                                                        "screens.wynntils.wynntilsMenu.crowdSourcing.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.wynntilsMenu.crowdSourcing.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+
         // endregion
 
         assert buttons.size() == 4 && buttons.stream().allMatch(row -> row.size() <= 4);
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -300,18 +321,17 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderWidgets(poseStack, mouseX, mouseY);
 
-        renderPlayerInfo(poseStack, mouseX, mouseY);
-
-        renderTooltip(poseStack, mouseX, mouseY, translationX, translationY);
+        renderPlayerInfo(guiGraphics, mouseX, mouseY);
 
         poseStack.popPose();
+
+        renderPlayer(guiGraphics, mouseX, mouseY);
+
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private static void renderPlayerInfo(PoseStack poseStack, int mouseX, int mouseY) {
-        int posX = Texture.CONTENT_BOOK_BACKGROUND.width() - 85;
-        int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f) + 25;
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
-                poseStack, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
+    private void renderPlayerInfo(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        PoseStack poseStack = guiGraphics.pose();
 
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getGuildDescription();
@@ -404,6 +424,29 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
+    private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        final float translationX = (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f;
+        final float translationY = (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f;
+
+        int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + translationX);
+        int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + translationY);
+
+        final int renderWidth = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 100);
+        final int renderHeight = 70;
+
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                guiGraphics,
+                posX,
+                posY,
+                posX + renderWidth,
+                posY + renderHeight,
+                25,
+                0.4f,
+                mouseX,
+                mouseY,
+                McUtils.player());
+    }
+
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (this.hovered == null) return false;
@@ -415,13 +458,13 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         return true;
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
+    private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (this.hovered != null) {
-            this.renderComponentTooltip(
-                    poseStack,
+            guiGraphics.renderComponentTooltip(
+                    FontRenderer.getInstance().getFont(),
                     ComponentUtils.wrapTooltips(this.hovered.tooltipList(), 250),
-                    (int) (mouseX - translationX),
-                    (int) (mouseY - translationY));
+                    mouseX,
+                    mouseY);
         }
     }
 

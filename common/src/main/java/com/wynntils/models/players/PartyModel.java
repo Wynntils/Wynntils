@@ -17,7 +17,6 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
@@ -96,10 +95,10 @@ public final class PartyModel extends Model {
     private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
 
-    public PartyModel(WorldStateModel worldStateModel) {
-        super(List.of(worldStateModel));
-        resetData();
+    public PartyModel() {
+        super(List.of());
 
+        resetData();
         Handlers.Scoreboard.addPart(PARTY_SCOREBOARD_PART);
     }
 

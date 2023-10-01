@@ -7,6 +7,7 @@ package com.wynntils.handlers.item;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -15,10 +16,12 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
@@ -36,9 +39,14 @@ public class ItemHandler extends Handler {
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
     private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
     private final List<Pattern> knownMarkerNames = new ArrayList<>();
+    private final List<Pattern> simplifiablePatterns = new ArrayList<>();
 
     public void registerKnownMarkerNames(List<Pattern> markerPatterns) {
         knownMarkerNames.addAll(markerPatterns);
+    }
+
+    public void addSimplifiablePatterns(Pattern... patterns) {
+        Collections.addAll(simplifiablePatterns, patterns);
     }
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
@@ -213,11 +221,13 @@ public class ItemHandler extends Handler {
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
         long startTime = System.currentTimeMillis();
 
+        StyledText simplified = simplifyName(name);
+
         ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(itemStack, name);
+                annotation = annotator.getAnnotation(itemStack, simplified);
                 if (annotation != null) {
                     break;
                 }
@@ -249,6 +259,23 @@ public class ItemHandler extends Handler {
         logProfilingData(startTime, annotation);
 
         return annotation;
+    }
+
+    private StyledText simplifyName(StyledText name) {
+        for (Pattern pattern : simplifiablePatterns) {
+            Matcher matcher = name.getMatcher(pattern);
+
+            if (matcher.matches()) {
+                int start = matcher.start(1);
+                int end = matcher.end(1);
+
+                StyledText[] separate = name.partition(PartStyle.StyleType.DEFAULT, start, end);
+
+                return separate[1];
+            }
+        }
+
+        return name;
     }
 
     private void annotate(ItemStack itemStack) {

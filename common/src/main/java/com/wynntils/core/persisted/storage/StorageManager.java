@@ -6,11 +6,10 @@ package com.wynntils.core.persisted.storage;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.util.UndashedUuid;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.FeatureManager;
-import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.mc.McUtils;
@@ -44,9 +43,11 @@ public final class StorageManager extends Manager {
 
     private boolean storageInitialized = false;
 
-    public StorageManager(JsonManager jsonManager, FeatureManager feature) {
-        super(List.of(jsonManager, feature));
-        userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid().replaceAll("-", "") + FILE_SUFFIX);
+    public StorageManager() {
+        super(List.of());
+
+        userStorageFile = new File(
+                STORAGE_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
     }
 
     public void initComponents() {

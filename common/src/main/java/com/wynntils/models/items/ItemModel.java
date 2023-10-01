@@ -10,9 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
-import com.wynntils.models.elements.ElementModel;
-import com.wynntils.models.gear.GearModel;
-import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
 import com.wynntils.models.items.annotators.game.CharmAnnotator;
 import com.wynntils.models.items.annotators.game.CraftedConsumableAnnotator;
@@ -45,18 +42,13 @@ import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
-import com.wynntils.models.rewards.RewardsModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
-    public ItemModel(
-            ElementModel elementModel,
-            GearModel gearModel,
-            RewardsModel rewardsModel,
-            IngredientModel ingredientModel) {
-        super(List.of(elementModel, gearModel, rewardsModel, ingredientModel));
+    public ItemModel() {
+        super(List.of());
 
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());

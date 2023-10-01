@@ -22,6 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -108,7 +109,9 @@ public class PoiManagerWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         renderIcon(poseStack);
 
         String poiName =
@@ -163,7 +166,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
         // In selection mode we don't want the edit/delete/move buttons
         if (selectionMode) {
-            selectButton.render(poseStack, mouseX, mouseY, partialTick);
+            selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
             // Border to show selected pois, orange when selected, white if not
             RenderUtils.drawRectBorders(
@@ -176,10 +179,10 @@ public class PoiManagerWidget extends AbstractWidget {
                     0,
                     1f);
         } else {
-            editButton.render(poseStack, mouseX, mouseY, partialTick);
-            deleteButton.render(poseStack, mouseX, mouseY, partialTick);
-            upButton.render(poseStack, mouseX, mouseY, partialTick);
-            downButton.render(poseStack, mouseX, mouseY, partialTick);
+            editButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            upButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            downButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

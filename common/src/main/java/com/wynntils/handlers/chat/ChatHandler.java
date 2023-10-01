@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -102,6 +103,18 @@ public final class ChatHandler extends Handler {
 
     public void removeNpcDialogExtractionDependent(Feature feature) {
         dialogExtractionDependents.remove(feature);
+    }
+
+    @SubscribeEvent
+    public void onConnectionChange(WynncraftConnectionEvent event) {
+        // Reset chat handler
+        collectedLines = new ArrayList<>();
+        chatScreenTicks = 0;
+        lastRealChat = null;
+        lastSlowdownApplied = 0;
+        lastScreenNpcDialog = List.of();
+        delayedDialogue = null;
+        delayedType = NpcDialogueType.NONE;
     }
 
     @SubscribeEvent
@@ -349,9 +362,12 @@ public final class ChatHandler extends Handler {
     private void handleFakeChatLine(Component message) {
         // This is a normal, single line chat, sent in the background
         StyledText styledText = StyledText.fromComponent(message);
+        if (styledText.isEmpty()) return;
 
-        // But it can weirdly enough actually also be a foreground NPC chat message...
-        if (getRecipientType(styledText, MessageType.FOREGROUND) == RecipientType.NPC) {
+        // But it can weirdly enough actually also be a foreground NPC chat message, or
+        // a game message; similar to a dialogue but not uttered by an NPC.
+        RecipientType recipientType = getRecipientType(styledText, MessageType.FOREGROUND);
+        if (recipientType == RecipientType.NPC || recipientType == RecipientType.GAME_MESSAGE) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
             postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
@@ -383,7 +399,7 @@ public final class ChatHandler extends Handler {
         WynntilsMod.info("[CHAT] " + styledText.getString().replace("§", "&"));
         RecipientType recipientType = getRecipientType(styledText, messageType);
 
-        if (recipientType == RecipientType.NPC) {
+        if (recipientType == RecipientType.NPC || recipientType == RecipientType.GAME_MESSAGE) {
             if (shouldSeparateNPC()) {
                 postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                 // We need to cancel the original chat event, if any

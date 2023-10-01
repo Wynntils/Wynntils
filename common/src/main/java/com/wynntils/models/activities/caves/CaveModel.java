@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.activities.ActivityModel;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
@@ -26,8 +25,8 @@ public class CaveModel extends Model {
     private List<CaveInfo> caves = new ArrayList<>();
     private List<StyledText> caveProgress = List.of();
 
-    public CaveModel(ActivityModel activityModel) {
-        super(List.of(activityModel));
+    public CaveModel() {
+        super(List.of());
     }
 
     public void reloadCaves() {

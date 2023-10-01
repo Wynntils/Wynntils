@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -224,9 +225,11 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderBackground(poseStack);
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+
+        PoseStack poseStack = guiGraphics.pose();
 
         // Name
         FontRenderer.getInstance()

@@ -36,6 +36,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -312,10 +313,11 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderBackground(poseStack);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(poseStack);
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         // Uncomment when editing UI
         //        RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
@@ -386,11 +388,11 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack) {
-        super.renderBackground(poseStack);
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
+                guiGraphics.pose(),
                 Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
                 backgroundX,
                 backgroundY,
@@ -536,8 +538,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setScrollOffset((int) delta);
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        setScrollOffset((int) deltaY);
 
         return true;
     }

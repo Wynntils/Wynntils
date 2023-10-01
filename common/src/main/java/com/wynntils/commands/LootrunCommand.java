@@ -114,7 +114,7 @@ public class LootrunCommand extends Command {
             Services.LootrunPaths.startRecording();
             context.getSource()
                     .sendSuccess(
-                            Component.translatable(
+                            () -> Component.translatable(
                                     "command.wynntils.lootrun.recordStart",
                                     Component.literal("/lootrun record")
                                             .withStyle(ChatFormatting.UNDERLINE)
@@ -125,7 +125,7 @@ public class LootrunCommand extends Command {
             Services.LootrunPaths.stopRecording();
             context.getSource()
                     .sendSuccess(
-                            Component.translatable(
+                            () -> Component.translatable(
                                             "command.wynntils.lootrun.recordStop1",
                                             Component.literal("/lootrun clear")
                                                     .withStyle(ChatFormatting.UNDERLINE)
@@ -158,7 +158,7 @@ public class LootrunCommand extends Command {
             case SAVED -> {
                 context.getSource()
                         .sendSuccess(
-                                Component.translatable("command.wynntils.lootrun.savedLootrun")
+                                () -> Component.translatable("command.wynntils.lootrun.savedLootrun")
                                         .withStyle(ChatFormatting.GREEN),
                                 false);
                 return 1;
@@ -185,7 +185,7 @@ public class LootrunCommand extends Command {
         BlockPos pos = root.blockPosition();
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.lootrun.addedNote", pos.toShortString())
+                        () -> Component.translatable("command.wynntils.lootrun.addedNote", pos.toShortString())
                                 .append("\n" + text),
                         false);
         return Services.LootrunPaths.addNote(text);
@@ -197,7 +197,7 @@ public class LootrunCommand extends Command {
         BlockPos pos = root.blockPosition();
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.lootrun.addedNote", pos.toShortString())
+                        () -> Component.translatable("command.wynntils.lootrun.addedNote", pos.toShortString())
                                 .append("\n" + text),
                         false);
         return Services.LootrunPaths.addNote(text);
@@ -225,7 +225,7 @@ public class LootrunCommand extends Command {
                         .append(" " + posString + ": ")
                         .append(note.component());
             }
-            context.getSource().sendSuccess(component, false);
+            context.getSource().sendSuccess(() -> component, false);
         }
         return 1;
     }
@@ -237,7 +237,7 @@ public class LootrunCommand extends Command {
         if (removedNote != null) {
             context.getSource()
                     .sendSuccess(
-                            Component.translatable(
+                            () -> Component.translatable(
                                             "command.wynntils.lootrun.noteRemovedSuccessfully", removedNote.component())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
@@ -259,7 +259,7 @@ public class LootrunCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.lootrun.clearSuccessful")
+                        () -> Component.translatable("command.wynntils.lootrun.clearSuccessful")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
         return 1;
@@ -274,7 +274,7 @@ public class LootrunCommand extends Command {
         } else if (file.delete()) {
             context.getSource()
                     .sendSuccess(
-                            Component.translatable("command.wynntils.lootrun.lootrunDeleted", name)
+                            () -> Component.translatable("command.wynntils.lootrun.lootrunDeleted", name)
                                     .withStyle(ChatFormatting.GREEN),
                             false);
             return 1;
@@ -296,7 +296,7 @@ public class LootrunCommand extends Command {
         } else if (oldFile.renameTo(newFile)) {
             context.getSource()
                     .sendSuccess(
-                            Component.translatable("command.wynntils.lootrun.lootrunRenamed", oldName, newName)
+                            () -> Component.translatable("command.wynntils.lootrun.lootrunRenamed", oldName, newName)
                                     .withStyle(ChatFormatting.GREEN),
                             false);
             return 1;
@@ -316,7 +316,7 @@ public class LootrunCommand extends Command {
         if (successful) {
             context.getSource()
                     .sendSuccess(
-                            Component.translatable("command.wynntils.lootrun.chestAdded", pos.toShortString())
+                            () -> Component.translatable("command.wynntils.lootrun.chestAdded", pos.toShortString())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {
@@ -336,7 +336,7 @@ public class LootrunCommand extends Command {
         if (successful) {
             context.getSource()
                     .sendSuccess(
-                            Component.translatable("command.wynntils.lootrun.chestRemoved", pos.toShortString())
+                            () -> Component.translatable("command.wynntils.lootrun.chestRemoved", pos.toShortString())
                                     .withStyle(ChatFormatting.GREEN),
                             false);
         } else {
@@ -356,7 +356,8 @@ public class LootrunCommand extends Command {
             switch (lootrunUndoResult) {
                 case SUCCESSFUL -> {
                     context.getSource()
-                            .sendSuccess(Component.translatable("command.wynntils.lootrun.undoSuccessful"), false);
+                            .sendSuccess(
+                                    () -> Component.translatable("command.wynntils.lootrun.undoSuccessful"), false);
                     return 1;
                 }
                 case ERROR_STAND_NEAR_POINT -> {

@@ -87,7 +87,7 @@ public class WynntilsCommand extends Command {
         Managers.Overlay.resetProfiling();
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.debug.profile.cleared")
+                        () -> Component.translatable("command.wynntils.debug.profile.cleared")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -128,7 +128,8 @@ public class WynntilsCommand extends Command {
                             .formatted(time, count, average, entry.getKey().getSimpleName()));
                 });
 
-        context.getSource().sendSuccess(Component.literal(resList.toString()).withStyle(ChatFormatting.AQUA), false);
+        context.getSource()
+                .sendSuccess(() -> Component.literal(resList.toString()).withStyle(ChatFormatting.AQUA), false);
 
         int totalCount = profilingCounts.values().stream().reduce(0, Integer::sum);
         int totalTime = profilingTimes.values().stream().reduce(0, Integer::sum);
@@ -136,12 +137,12 @@ public class WynntilsCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.debug.profile.total", totalTime, totalCount)
+                        () -> Component.translatable("command.wynntils.debug.profile.total", totalTime, totalCount)
                                 .withStyle(ChatFormatting.AQUA),
                         false);
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.debug.profile.avg", average)
+                        () -> Component.translatable("command.wynntils.debug.profile.avg", average)
                                 .withStyle(ChatFormatting.AQUA),
                         false);
     }
@@ -149,7 +150,7 @@ public class WynntilsCommand extends Command {
     private int reauth(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.reauth.tryReauth")
+                        () -> Component.translatable("command.wynntils.reauth.tryReauth")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -164,12 +165,12 @@ public class WynntilsCommand extends Command {
     private int clearCaches(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.clearCaches.warn")
+                        () -> Component.translatable("command.wynntils.clearCaches.warn")
                                 .withStyle(ChatFormatting.DARK_RED),
                         false);
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.clearCaches.clickHere")
+                        () -> Component.translatable("command.wynntils.clearCaches.clickHere")
                                 .withStyle(ChatFormatting.BLUE)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(
@@ -182,7 +183,7 @@ public class WynntilsCommand extends Command {
     private int doClearCaches(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.clearCaches.deleting")
+                        () -> Component.translatable("command.wynntils.clearCaches.deleting")
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
@@ -201,7 +202,7 @@ public class WynntilsCommand extends Command {
     private int reloadCaches(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("command.wynntils.reloadCaches.reloading")
+                        () -> Component.translatable("command.wynntils.reloadCaches.reloading")
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
@@ -224,7 +225,7 @@ public class WynntilsCommand extends Command {
 
         buildText.setStyle(buildText.getStyle().withColor(ChatFormatting.YELLOW));
 
-        context.getSource().sendSuccess(buildText, false);
+        context.getSource().sendSuccess(() -> buildText, false);
         return 1;
     }
 
@@ -241,7 +242,7 @@ public class WynntilsCommand extends Command {
                                 HoverEvent.Action.SHOW_TEXT,
                                 Component.literal("Click here to open in your browser."))));
 
-        context.getSource().sendSuccess(component.append(url), false);
+        context.getSource().sendSuccess(() -> component.append(url), false);
 
         ApiResponse result = Managers.Net.callApi(UrlId.LINK_WYNNTILS_STATUS);
         result.handleInputStream(
@@ -284,7 +285,7 @@ public class WynntilsCommand extends Command {
                                 HoverEvent.Action.SHOW_TEXT,
                                 Component.literal("Click here to open in your browser."))));
 
-        context.getSource().sendSuccess(c.append(url), false);
+        context.getSource().sendSuccess(() -> c.append(url), false);
         return 1;
     }
 
@@ -299,7 +300,7 @@ public class WynntilsCommand extends Command {
                 .withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         Component.literal("Click here to join our Discord" + " server."))));
-        context.getSource().sendSuccess(msg.append(link), false);
+        context.getSource().sendSuccess(() -> msg.append(link), false);
         return 1;
     }
 
@@ -330,7 +331,7 @@ public class WynntilsCommand extends Command {
                         .withUnderlined(true));
         text.append(response);
 
-        context.getSource().sendSuccess(text, false);
+        context.getSource().sendSuccess(() -> text, false);
 
         return 1;
     }
@@ -353,7 +354,7 @@ public class WynntilsCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("feature.wynntils.updates.checking")
+                        () -> Component.translatable("feature.wynntils.updates.checking")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -383,7 +384,7 @@ public class WynntilsCommand extends Command {
         for (Command command : otherCommands) {
             describeCommand(text, command.getCommandName(), command.getDescription());
         }
-        context.getSource().sendSuccess(text, false);
+        context.getSource().sendSuccess(() -> text, false);
         return 1;
     }
 

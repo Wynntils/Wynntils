@@ -16,6 +16,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -96,11 +97,14 @@ public class PartyMemberWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
-        ResourceLocation skin =
-                (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
+        ResourceLocation skin = (playerInfo == null)
+                ? new ResourceLocation("textures/entity/steve.png")
+                : playerInfo.getSkin().texture();
         // head rendering
         RenderUtils.drawTexturedRect(
                 poseStack,
@@ -159,17 +163,17 @@ public class PartyMemberWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        moveUpButton.render(poseStack, mouseX, mouseY, partialTick);
-        moveDownButton.render(poseStack, mouseX, mouseY, partialTick);
+        moveUpButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        moveDownButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         // only leader can promote/kick
         if (!Models.Party.isPartyLeader(McUtils.playerName())) return;
 
         if (Models.Party.isPartyLeader(playerName)) {
-            disbandButton.render(poseStack, mouseX, mouseY, partialTick);
+            disbandButton.render(guiGraphics, mouseX, mouseY, partialTick);
         } else {
-            promoteButton.render(poseStack, mouseX, mouseY, partialTick);
-            kickButton.render(poseStack, mouseX, mouseY, partialTick);
+            promoteButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            kickButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

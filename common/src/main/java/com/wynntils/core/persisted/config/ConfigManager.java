@@ -7,20 +7,17 @@ package com.wynntils.core.persisted.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.util.UndashedUuid;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.OverlayManager;
-import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.UpfixerManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -43,11 +40,11 @@ public final class ConfigManager extends Manager {
     private final File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager(
-            UpfixerManager upfixerManager, JsonManager jsonManager, FeatureManager feature, OverlayManager overlay) {
-        super(List.of(upfixerManager, jsonManager, feature, overlay));
+    public ConfigManager() {
+        super(List.of());
 
-        userConfig = new File(CONFIG_DIR, McUtils.mc().getUser().getUuid().replaceAll("-", "") + FILE_SUFFIX);
+        userConfig = new File(
+                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
     }
 
     public void init() {

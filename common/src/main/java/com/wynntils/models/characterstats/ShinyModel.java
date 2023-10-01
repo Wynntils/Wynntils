@@ -7,7 +7,6 @@ package com.wynntils.models.characterstats;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.utils.mc.McUtils;
@@ -17,8 +16,8 @@ import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ShinyModel extends Model {
-    public ShinyModel(ItemModel itemModel) {
-        super(List.of(itemModel));
+    public ShinyModel() {
+        super(List.of());
     }
 
     public Optional<ShinyStat> getShinyStat(ItemStack itemStack) {

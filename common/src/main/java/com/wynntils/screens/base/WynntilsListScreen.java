@@ -20,6 +20,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -57,14 +58,14 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
+            renderable.render(guiGraphics, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
@@ -104,7 +105,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         TextShadow.NONE);
     }
 
-    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof TooltipProvider tooltipWidget) {
@@ -113,7 +114,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         if (tooltipLines.isEmpty()) return;
 
-        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
+        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
     @Override
@@ -178,10 +179,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Usually, mouse scroll wheel delta is always (-)1
-        if (Math.abs(delta) == 1) {
-            setCurrentPage(getCurrentPage() - (int) delta);
+        if (Math.abs(deltaY) == 1) {
+            setCurrentPage(getCurrentPage() - (int) deltaY);
             return true;
         }
 
@@ -189,7 +190,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Delta is divided by 10 to make it more precise
         // We subtract so scrolling down actually scrolls down
-        currentScroll -= delta / 10d;
+        currentScroll -= deltaY / 10d;
 
         if (Math.abs(currentScroll) < 1) return true;
 

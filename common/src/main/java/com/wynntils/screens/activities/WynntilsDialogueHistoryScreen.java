@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -115,7 +116,9 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -128,7 +131,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
         renderVersion(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (dialogues.isEmpty()) {
             renderNoDialoguesHelper(poseStack);
@@ -142,7 +145,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
         poseStack.popPose();
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderCurrentPage(PoseStack poseStack) {
@@ -187,8 +190,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setCurrentPage(getCurrentPage() + (delta > 0 ? -1 : 1));
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        setCurrentPage(getCurrentPage() + (deltaY > 0 ? -1 : 1));
 
         return true;
     }
@@ -198,7 +201,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         this.setDialogues(Models.Activity.getDialogueHistory());
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof TooltipProvider tooltipWidget) {
@@ -222,17 +225,17 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
         if (tooltipLines.isEmpty()) return;
 
-        this.renderComponentTooltip(poseStack, tooltipLines, mouseX, mouseY);
+        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
+            renderable.render(guiGraphics, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {

@@ -5,26 +5,31 @@
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.eventbus.api.Event;
 
 public class ScreenRenderEvent extends Event {
     private final Screen screen;
-    private final PoseStack poseStack;
+    private final GuiGraphics guiGraphics;
     private final int mouseX;
     private final int mouseY;
     private final float partialTick;
 
-    public ScreenRenderEvent(Screen screen, PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public ScreenRenderEvent(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.screen = screen;
-        this.poseStack = poseStack;
+        this.guiGraphics = guiGraphics;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
         this.partialTick = partialTick;
     }
 
+    public GuiGraphics getGuiGraphics() {
+        return guiGraphics;
+    }
+
     public PoseStack getPoseStack() {
-        return poseStack;
+        return guiGraphics.pose();
     }
 
     public float getPartialTick() {

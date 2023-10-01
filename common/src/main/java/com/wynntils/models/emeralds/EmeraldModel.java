@@ -9,9 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
-import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -45,8 +43,8 @@ public final class EmeraldModel extends Model {
     private int containerEmeralds = 0;
     private int pouchContainerId = -1;
 
-    public EmeraldModel(CharacterModel characterModel, ItemModel itemModel) {
-        super(List.of(characterModel, itemModel));
+    public EmeraldModel() {
+        super(List.of());
     }
 
     @SubscribeEvent
