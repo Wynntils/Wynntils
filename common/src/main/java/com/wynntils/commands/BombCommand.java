@@ -66,7 +66,7 @@ public class BombCommand extends Command {
 
         MutableComponent component = getBombListComponent(bombBells);
 
-        context.getSource().sendSuccess(component, false);
+        context.getSource().sendSuccess(() -> component, false);
 
         return 1;
     }
@@ -76,7 +76,7 @@ public class BombCommand extends Command {
 
         MutableComponent component = getBombListComponent(bombBells);
 
-        context.getSource().sendSuccess(component, false);
+        context.getSource().sendSuccess(() -> component, false);
 
         return 1;
     }

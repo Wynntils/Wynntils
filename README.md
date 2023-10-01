@@ -14,7 +14,7 @@ Artemis
 
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-Artemis is a rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.19.4 using Architectury, to support **Fabric**, **Forge**, and **Quilt**.
+Artemis is a rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.20.2 using Architectury, to support **Fabric**, **Forge**, and **Quilt**.
 
 Downloading a release
 ========

@@ -7,7 +7,7 @@ package com.wynntils.features.inventory;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -37,9 +37,11 @@ import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -55,7 +57,8 @@ import org.lwjgl.glfw.GLFW;
 public class ItemScreenshotFeature extends Feature {
     // The 4, 4 offset is intentional, otherwise the tooltip will be rendered outside of the screen
     private static final ClientTooltipPositioner NO_POSITIONER =
-            (Screen screen, int mouseX, int mouseY, int width, int height) -> new Vector2i(4, 4);
+            (int screenWidth, int screenHeight, int mouseX, int mouseY, int tooltipWidth, int tooltipHeight) ->
+                    new Vector2i(4, 4);
 
     @RegisterKeyBind
     private final KeyBind itemScreenshotKeyBind =
@@ -120,15 +123,21 @@ public class ItemScreenshotFeature extends Feature {
         // draw tooltip to framebuffer, create image
         McUtils.mc().getMainRenderTarget().unbindWrite();
 
-        PoseStack poseStack = new PoseStack();
+        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), MultiBufferSource.immediate(new BufferBuilder(256)));
         RenderTarget fb = new MainTarget(width * 2, height * 2);
         fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2, false);
         fb.bindWrite(false);
-        poseStack.pushPose();
-        poseStack.scale(scalew, scaleh, 1);
-        screen.renderTooltip(poseStack, deferredTooltipRendering, 0, 0);
-        poseStack.popPose();
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().scale(scalew, scaleh, 1);
+        guiGraphics.renderTooltip(
+                FontRenderer.getInstance().getFont(),
+                deferredTooltipRendering.tooltip(),
+                deferredTooltipRendering.positioner(),
+                0,
+                0);
+        guiGraphics.pose().popPose();
+        guiGraphics.flush();
         fb.unbindWrite();
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 

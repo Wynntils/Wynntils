@@ -14,6 +14,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -43,11 +44,14 @@ public class SuggestionPlayerWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
-        ResourceLocation skin =
-                (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
+        ResourceLocation skin = (playerInfo == null)
+                ? new ResourceLocation("textures/entity/steve.png")
+                : playerInfo.getSkin().texture();
         // head rendering
         RenderUtils.drawTexturedRect(
                 poseStack,
@@ -91,7 +95,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
-        inviteButton.render(poseStack, mouseX, mouseY, partialTick);
+        inviteButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

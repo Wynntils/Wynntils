@@ -7,7 +7,6 @@ package com.wynntils.features.ui;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -21,6 +20,7 @@ import com.wynntils.utils.render.Texture;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -80,8 +80,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private ServerData getWynncraftServer() {
-        ServerData wynncraftServer =
-                new ServerData("Wynncraft", serverType.get().serverAddressPrefix + WYNNCRAFT_DOMAIN, false);
+        ServerData wynncraftServer = new ServerData(
+                "Wynncraft", serverType.get().serverAddressPrefix + WYNNCRAFT_DOMAIN, ServerData.Type.OTHER);
         wynncraftServer.setResourcePackStatus(
                 loadResourcePack.get() ? ServerData.ServerPackStatus.ENABLED : ServerData.ServerPackStatus.DISABLED);
 
@@ -90,7 +90,7 @@ public class WynncraftButtonFeature extends Feature {
 
     private static void connectToServer(ServerData serverData) {
         ConnectScreen.startConnecting(
-                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData);
+                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false);
     }
 
     private static class WynncraftButton extends Button {
@@ -107,17 +107,26 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
-            super.renderWidget(matrices, mouseX, mouseY, partialTicks);
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
                 return;
             }
 
-            RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
-
             // Insets the icon by 3
-            blit(matrices, this.getX() + 3, this.getY() + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
+            guiGraphics.blit(
+                    serverIcon.getServerIconLocation(),
+                    this.getX() + 3,
+                    this.getY() + 3,
+                    this.width - 6,
+                    this.height - 6,
+                    0,
+                    0,
+                    64,
+                    64,
+                    64,
+                    64);
         }
 
         protected static void onPress(Button button) {

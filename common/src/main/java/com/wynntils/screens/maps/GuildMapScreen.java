@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -159,7 +160,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
                         .openGuildMapKeybind
@@ -193,15 +196,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor();
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         renderCoordinates(poseStack, mouseX, mouseY);
 
-        renderMapButtons(poseStack, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredTerritoryInfo(poseStack);
 
-        renderTooltip(poseStack, mouseX, mouseY);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
