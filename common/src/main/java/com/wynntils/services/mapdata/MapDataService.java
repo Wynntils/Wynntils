@@ -15,6 +15,7 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
@@ -44,29 +45,11 @@ public class MapDataService extends Service {
                 .orElse("NAMELESS CATEGORY");
     }
 
-    public MapIcon getIcon(String iconId) {
-        if (iconId.equals(MapIcon.NO_ICON_ID)) {
-            // should return null but we cant handle that
-            // FIXME
-            Stream<MapIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-            MapIcon icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:symbols:waypoint"))
-                    .findFirst()
-                    .orElse(null);
-            return icon;
-        }
+    public Optional<MapIcon> getIcon(String iconId) {
+        if (iconId.equals(MapIcon.NO_ICON_ID)) return Optional.empty();
 
         Stream<MapIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-        MapIcon icon =
-                allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst().orElse(null);
-
-        if (icon == null) {
-            allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-            icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:symbols:waypoint"))
-                    .findFirst()
-                    .orElse(null);
-            return icon;
-        }
-        return icon;
+        return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
     }
 
     // region Support for FullFeatureAttributes and FullCategoryAttributes

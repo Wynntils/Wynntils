@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
 
@@ -22,6 +22,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MapFeaturePoiWrapper implements Poi {
@@ -81,7 +82,7 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         if (hasIcon(iconId)) {
-            MapIcon icon = Services.MapData.getIcon(iconId);
+            MapIcon icon = getIcon(iconId);
 
             float iconWidth = icon.width();
             float iconHeight = icon.height();
@@ -160,6 +161,17 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.popPose();
     }
 
+    private static MapIcon getIcon(String iconId) {
+        Optional<MapIcon> icon = Services.MapData.getIcon(iconId);
+        if (icon.isEmpty()) {
+            // FIXME: Use a fallback icon for now, since the code is not prepared to handle
+            // locations without an icon.
+            return Services.MapData.getIcon(FALLBACK_ICON_ID).orElse(null);
+        }
+
+        return icon.get();
+    }
+
     private boolean hasIcon(String iconId) {
         return !(iconId == null || iconId.equals(MapIcon.NO_ICON_ID));
     }
@@ -183,7 +195,7 @@ public class MapFeaturePoiWrapper implements Poi {
             return (int) (FontRenderer.getInstance().getFont().width(attributes.getLabel()) * scale);
         }
 
-        MapIcon icon = Services.MapData.getIcon(iconId);
+        MapIcon icon = getIcon(iconId);
         if (icon == null) return 32;
 
         return (int) (icon.width() * scale);
@@ -199,7 +211,7 @@ public class MapFeaturePoiWrapper implements Poi {
             return getLabelHeight(scale);
         }
 
-        MapIcon icon = Services.MapData.getIcon(iconId);
+        MapIcon icon = getIcon(iconId);
         if (icon == null) return 32;
 
         return (int) (icon.height() * scale);
