@@ -171,7 +171,7 @@ public class StatusEffectsOverlay extends Overlay {
         private final StatusEffect effect;
 
         private int count = 0;
-        private List<Double> modifierList = new ArrayList<>();
+        private final List<Double> modifierList = new ArrayList<>();
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;

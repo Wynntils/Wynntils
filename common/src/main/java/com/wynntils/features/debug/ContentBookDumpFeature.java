@@ -222,7 +222,7 @@ public class ContentBookDumpFeature extends Feature {
             DumpableActivityRequirements requirements,
             List<String> rewards,
             Location location) {
-        public static DumpableActivityInfo fromActivityInfo(ActivityInfo activityInfo) {
+        private static DumpableActivityInfo fromActivityInfo(ActivityInfo activityInfo) {
             return new DumpableActivityInfo(
                     activityInfo.type(),
                     activityInfo.name(),
@@ -236,16 +236,15 @@ public class ContentBookDumpFeature extends Feature {
                     StyledTextUtils.extractLocation(activityInfo.description().orElse(StyledText.EMPTY))
                             .orElse(null));
         }
+    }
 
-        public record DumpableActivityRequirements(
-                int level, Map<ProfessionType, Integer> professionLevels, List<String> quests) {
-            public static DumpableActivityRequirements fromActivityRequirements(ActivityRequirements requirements) {
-                return new DumpableActivityRequirements(
-                        requirements.level().a(),
-                        requirements.professionLevels().stream()
-                                .collect(Collectors.toMap(o -> o.a().a(), o -> o.a().b())),
-                        requirements.quests().stream().map(Pair::a).toList());
-            }
+    private record DumpableActivityRequirements(
+            int level, Map<ProfessionType, Integer> professionLevels, List<String> quests) {
+        private static DumpableActivityRequirements fromActivityRequirements(ActivityRequirements requirements) {
+            return new DumpableActivityRequirements(
+                    requirements.level().a(),
+                    requirements.professionLevels().stream().collect(Collectors.toMap(o -> o.a().a(), o -> o.a().b())),
+                    requirements.quests().stream().map(Pair::a).toList());
         }
     }
 }
