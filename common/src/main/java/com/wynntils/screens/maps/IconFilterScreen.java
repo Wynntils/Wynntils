@@ -41,8 +41,10 @@ public final class IconFilterScreen extends WynntilsScreen {
     private float dividedHeight;
     private float dividedWidth;
     private float scrollButtonHeight;
+    private float scrollButtonRenderX;
     private float scrollButtonRenderY;
     private int iconButtonSize;
+    private int scrollAreaHeight;
     private int scrollOffset = 0;
     private List<Texture> usedIcons;
 
@@ -72,7 +74,14 @@ public final class IconFilterScreen extends WynntilsScreen {
         backgroundY = dividedHeight * 7;
         backgroundHeight = dividedHeight * 50;
 
-        scrollButtonHeight = (dividedWidth / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+        // Height of the scroll button relative to the scaled width
+        scrollButtonHeight = ((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+
+        // How far the scrollbar should be able to go
+        scrollAreaHeight = (int) (backgroundHeight - scrollButtonHeight) - (int) (dividedHeight * 4);
+
+        // X position of the scroll button
+        scrollButtonRenderX = (int) (dividedWidth * 52) + (dividedWidth / 4);
 
         int filterButtonWidth = (int) (dividedWidth * 10);
 
@@ -168,10 +177,8 @@ public final class IconFilterScreen extends WynntilsScreen {
         }
 
         if (!draggingScroll && (usedIcons.size() > MAX_ICONS_TO_DISPLAY)) {
-            float scrollButtonRenderX = (int) (dividedWidth * 52);
-
             if (mouseX >= scrollButtonRenderX
-                    && mouseX <= scrollButtonRenderX + dividedWidth
+                    && mouseX <= scrollButtonRenderX + (dividedWidth / 2)
                     && mouseY >= scrollButtonRenderY
                     && mouseY <= scrollButtonRenderY + scrollButtonHeight) {
                 draggingScroll = true;
@@ -189,7 +196,8 @@ public final class IconFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        setScrollOffset((int) deltaY);
+        double scrollValue = -Math.signum(deltaY);
+        scroll((int) scrollValue);
 
         return true;
     }
@@ -198,14 +206,17 @@ public final class IconFilterScreen extends WynntilsScreen {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
+        int renderY = (int) ((this.height - backgroundHeight) / 2) + (int) dividedHeight;
+        int scrollAreaStartY = renderY + 14;
+
         int newValue = (int) MathUtils.map(
                 (float) mouseY,
-                (int) (dividedHeight * 10),
-                (int) (dividedHeight * 52),
+                scrollAreaStartY,
+                scrollAreaStartY + (int) (dividedHeight * 40),
                 0,
-                Math.max(0, usedIcons.size() - MAX_ICONS_TO_DISPLAY));
+                usedIcons.size() - MAX_ICONS_TO_DISPLAY);
 
-        setScrollOffset(-newValue + scrollOffset);
+        scroll(newValue - scrollOffset);
 
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
@@ -215,25 +226,25 @@ public final class IconFilterScreen extends WynntilsScreen {
         if (usedIcons.size() <= MAX_ICONS_TO_DISPLAY) return;
 
         // Calculate where the scroll button should be on the Y axis
-        scrollButtonRenderY = MathUtils.map(
-                scrollOffset, 0, usedIcons.size() - MAX_ICONS_TO_DISPLAY, (int) (dividedHeight * 10), (int)
-                        (dividedHeight * 51));
+        scrollButtonRenderY = (this.height - backgroundHeight) / 2
+                + (int) (dividedHeight * 3)
+                + MathUtils.map(scrollOffset, 0, usedIcons.size() - MAX_ICONS_TO_DISPLAY, 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SCROLL_BUTTON.resource(),
-                (int) (dividedWidth * 52),
+                scrollButtonRenderX,
                 scrollButtonRenderY,
                 1,
-                dividedWidth,
+                (dividedWidth / 2),
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
     }
 
-    private void setScrollOffset(int delta) {
+    private void scroll(int delta) {
         // Calculate how many rows should be scrolled past
-        scrollOffset = MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, usedIcons.size() - MAX_ICONS_TO_DISPLAY));
+        scrollOffset = MathUtils.clamp(scrollOffset + delta, 0, Math.max(0, usedIcons.size() - MAX_ICONS_TO_DISPLAY));
 
         populateIcons();
     }

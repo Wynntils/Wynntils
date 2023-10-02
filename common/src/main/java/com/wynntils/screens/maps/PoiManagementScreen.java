@@ -72,6 +72,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private float dividedHeight;
     private float dividedWidth;
     private float scrollButtonHeight;
+    private float scrollButtonRenderX;
     private float scrollButtonRenderY;
     private int maxPoisToDisplay;
     private int scrollAreaHeight;
@@ -114,14 +115,19 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         dividedHeight = this.height / GRID_DIVISIONS;
         // How many pois can fit on the background
         maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
-        // How far the scrollbar should be able to go
-        scrollAreaHeight = (int) (dividedHeight * (GRID_ROWS_PER_PAGE - 1));
         backgroundX = dividedWidth * 10;
         backgroundWidth = dividedWidth * 44;
         backgroundY = dividedHeight * 7;
         backgroundHeight = dividedHeight * 50;
 
-        scrollButtonHeight = (dividedWidth / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+        // Height of the scroll button relative to the scaled width
+        scrollButtonHeight = ((dividedWidth / 2) / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+
+        // How far the scrollbar should be able to go
+        scrollAreaHeight = (int) (backgroundHeight - scrollButtonHeight) - (int) (dividedHeight * 4);
+
+        // X position of the scroll button
+        scrollButtonRenderX = (int) (dividedWidth * 52) + (dividedWidth / 4);
 
         int importExportButtonWidth = (int) (dividedWidth * 6);
 
@@ -524,10 +530,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
 
         if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
-            float scrollButtonRenderX = (int) (dividedWidth * 52);
-
             if (mouseX >= scrollButtonRenderX
-                    && mouseX <= scrollButtonRenderX + dividedWidth
+                    && mouseX <= scrollButtonRenderX + (dividedWidth / 2)
                     && mouseY >= scrollButtonRenderY
                     && mouseY <= scrollButtonRenderY + scrollButtonHeight) {
                 draggingScroll = true;
@@ -576,17 +580,16 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // Calculate where the scroll button should be on the Y axis
         scrollButtonRenderY = (this.height - backgroundHeight) / 2
-                + (int) dividedHeight
-                + Texture.SCROLL_BUTTON.height() / 2
+                + (int) (dividedHeight * 3)
                 + MathUtils.map(scrollOffset, 0, pois.size() - maxPoisToDisplay, 0, scrollAreaHeight);
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.SCROLL_BUTTON.resource(),
-                (int) (dividedWidth * 52),
+                scrollButtonRenderX,
                 scrollButtonRenderY,
                 1,
-                dividedWidth,
+                (dividedWidth / 2),
                 scrollButtonHeight,
                 Texture.SCROLL_BUTTON.width(),
                 Texture.SCROLL_BUTTON.height());
