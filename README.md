@@ -5,6 +5,27 @@ TODO:
 * Check which old POIs are not converted
 * Make a list of aspects (like fading, color?) that are not implemented
 
+/*
+style application:
+1) root style
+2) category style, starting at top category and letting most specific category override
+3) the feature's own style, starting at top category and letting most specific category override
+
+json files can contain:
+features == list of concrete map features (locations, paths or areas)
+categories == list of category definitions
+icons == icon name -> base64 png representation
+*/
+
+// wynntils:lootrun:chest:tier1
+// wynntils:service:profession:scribing
+// wynntils:service:identifier
+// wynntils:npc:quest
+// wynntils:personal:lootrunpath
+// wynntils:personal:openedchest:tier3
+// wynntils:personal:discovery:territory
+// wynntils:personal:saved_bookmarks_poi ???
+
 
 Artemis
 ========
