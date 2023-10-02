@@ -66,7 +66,7 @@ public class ProfessionModel extends Model {
     private Pair<Long, MaterialItem> lastHarvestItemGain = Pair.of(0L, null);
     private HarvestInfo lastHarvest;
 
-    private TimedSet<Position> gatheredNodes = new TimedSet<>(10, TimeUnit.SECONDS, true);
+    private final TimedSet<Position> gatheredNodes = new TimedSet<>(10, TimeUnit.SECONDS, true);
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 

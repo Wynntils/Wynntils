@@ -91,7 +91,7 @@ public final class EnumUtils {
         @Override
         public void write(JsonWriter out, T value) throws IOException {
             if (value != null) {
-                out.value(EnumUtils.toJsonFormat((Enum<?>) value));
+                out.value(EnumUtils.toJsonFormat(value));
             } else {
                 if (!nullAllowed) {
                     WynntilsMod.warn("Writing null enum value to json for " + enumClazz.getSimpleName());
@@ -128,9 +128,9 @@ public final class EnumUtils {
         }
 
         private T replacement() {
-            Enum<?> firstValue = enumClazz.getEnumConstants()[0];
+            T firstValue = enumClazz.getEnumConstants()[0];
             WynntilsMod.warn("Will replace with first enum value: " + firstValue.name());
-            return (T) firstValue;
+            return firstValue;
         }
     }
 }
