@@ -162,8 +162,6 @@ public final class TerritoryModel extends Model {
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
                 },
-                onError -> {
-                    WynntilsMod.warn("Failed to update territory data.");
-                });
+                onError -> WynntilsMod.warn("Failed to update territory data."));
     }
 }

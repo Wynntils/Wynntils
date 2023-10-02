@@ -107,7 +107,7 @@ public final class BombModel extends Model {
     }
 
     private static final class ActiveBombContainer {
-        private Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
+        private final Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
 
         public void add(BombInfo bombInfo) {
             BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());
@@ -129,7 +129,7 @@ public final class BombModel extends Model {
         public void remove(BombInfo removed) {
             bombs.remove(new BombKey(removed.server(), removed.bomb()));
         }
-
-        private record BombKey(String server, BombType type) {}
     }
+
+    private record BombKey(String server, BombType type) {}
 }

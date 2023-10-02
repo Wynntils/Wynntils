@@ -265,6 +265,6 @@ public final class FriendsModel extends Model {
     private enum ListStatus {
         IDLE,
         EXPECTING,
-        PROCESSING;
+        PROCESSING
     }
 }

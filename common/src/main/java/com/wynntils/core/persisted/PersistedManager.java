@@ -109,8 +109,7 @@ public final class PersistedManager extends Manager {
 
         String jsonName = getPrefix(owner) + owner.getJsonName() + "." + fieldName;
 
-        return new PersistedMetadata<T>(
-                owner, fieldName, valueType, defaultValue, i18nKeyOverride, allowNull, jsonName);
+        return new PersistedMetadata<>(owner, fieldName, valueType, defaultValue, i18nKeyOverride, allowNull, jsonName);
     }
 
     private String getPrefix(PersistedOwner owner) {

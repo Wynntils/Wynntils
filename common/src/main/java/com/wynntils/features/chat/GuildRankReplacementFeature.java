@@ -62,18 +62,17 @@ public class GuildRankReplacementFeature extends Feature {
     }
 
     private StyledText modifyByRemovingRank(StyledText styledText) {
-        StyledText modified = styledText.iterate((part, changes) -> {
+        return styledText.iterate((part, changes) -> {
             if (part.getString(null, PartStyle.StyleType.NONE).contains(String.valueOf(STAR))) {
                 changes.remove(part);
                 return IterationDecision.BREAK;
             }
             return IterationDecision.CONTINUE;
         });
-        return modified;
     }
 
     private StyledText modifyByAddingTextRank(StyledText styledText) {
-        StyledText modified = styledText.iterateBackwards((part, changes) -> {
+        return styledText.iterateBackwards((part, changes) -> {
             int stars = (int) part.getString(null, PartStyle.StyleType.NONE)
                     .chars()
                     .filter(c -> c == STAR)
@@ -118,12 +117,10 @@ public class GuildRankReplacementFeature extends Feature {
 
             return IterationDecision.CONTINUE;
         });
-
-        return modified;
     }
 
     private StyledText modifyByAddingSmallStarsRank(StyledText styledText) {
-        StyledText modified = styledText.iterate((part, changes) -> {
+        return styledText.iterate((part, changes) -> {
             String partContent = part.getString(null, PartStyle.StyleType.NONE);
             if (partContent.contains(String.valueOf(STAR))) {
                 changes.set(
@@ -137,7 +134,6 @@ public class GuildRankReplacementFeature extends Feature {
             }
             return IterationDecision.CONTINUE;
         });
-        return modified;
     }
 
     private enum RankType {

@@ -24,8 +24,10 @@ public class PartyManagementScreenFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind openPartyManagementScreen =
-            new KeyBind("Open Party Management Screen", GLFW.GLFW_KEY_O, true, () -> McUtils.mc()
-                    .setScreen(partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create()));
+            new KeyBind("Open Party Management Screen", GLFW.GLFW_KEY_O, true, () -> {
+                partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
+                McUtils.mc().setScreen(partyManagementScreen);
+            });
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
