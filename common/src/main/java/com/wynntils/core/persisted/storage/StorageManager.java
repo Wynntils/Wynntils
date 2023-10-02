@@ -69,8 +69,7 @@ public final class StorageManager extends Manager {
     public void registerStorageable(Storageable owner) {
         Managers.Persisted.verifyAnnotations(owner);
 
-        Managers.Persisted.getPersisted(owner, Storage.class).stream()
-                .forEach(p -> processStorage(owner, p.a(), p.b()));
+        Managers.Persisted.getPersisted(owner, Storage.class).forEach(p -> processStorage(owner, p.a(), p.b()));
     }
 
     private void processStorage(Storageable owner, Field field, Persisted annotation) {

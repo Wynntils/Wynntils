@@ -124,20 +124,14 @@ public class BankModel extends Model {
 
     public void updateFinalPage() {
         switch (currentContainer) {
-            case BANK -> {
-                finalBankPage.store(currentPage);
-            }
+            case BANK -> finalBankPage.store(currentPage);
             case BLOCK_BANK -> {
                 if (currentPage > finalBlockBankPage.get()) {
                     finalBlockBankPage.store(currentPage);
                 }
             }
-            case BOOKSHELF -> {
-                finalBookshelfPage.store(currentPage);
-            }
-            case MISC_BUCKET -> {
-                finalMiscBucketPage.store(currentPage);
-            }
+            case BOOKSHELF -> finalBookshelfPage.store(currentPage);
+            case MISC_BUCKET -> finalMiscBucketPage.store(currentPage);
         }
     }
 

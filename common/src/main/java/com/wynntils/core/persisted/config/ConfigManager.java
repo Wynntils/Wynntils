@@ -222,8 +222,7 @@ public final class ConfigManager extends Manager {
     }
 
     private List<Config<?>> getConfigOptions(PersistedOwner owner) {
-        List<Config<?>> options = new ArrayList<>();
-        options.addAll(Managers.Persisted.getPersisted(owner, Config.class).stream()
+        List<Config<?>> options = new ArrayList<>(Managers.Persisted.getPersisted(owner, Config.class).stream()
                 .map(p -> processConfig(owner, p.a(), p.b()))
                 .toList());
         return options;
