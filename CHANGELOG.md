@@ -1,9 +1,21 @@
+## [0.0.4-beta.9](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.8...v0.0.4-beta.9) (2023-10-02)
+
+
+### Code Refactoring
+
+* Another round of cleanups as suggested by IntelliJ ([#2161](https://github.com/Wynntils/Artemis/issues/2161)) ([02bdb42](https://github.com/Wynntils/Artemis/commit/02bdb42e69b342de3da159cf3ae59aaa4cb97c14))
+
 ## [0.0.4-beta.8](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.7...v0.0.4-beta.8) (2023-10-01)
 
 
 ### Bug Fixes
 
 * Fix container search arc rendering weirdly on items with durability arcs ([#2156](https://github.com/Wynntils/Artemis/issues/2156)) ([52c62c3](https://github.com/Wynntils/Artemis/commit/52c62c3e8f9b29e13d3270caa9fcae57dbbba8cc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.8 [skip ci] ([6793cde](https://github.com/Wynntils/Artemis/commit/6793cdee811f5a7c192480ef473584e737d93227))
 
 ## [0.0.4-beta.7](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.6...v0.0.4-beta.7) (2023-10-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.5 [skip ci] ([1cda7ea](https://github.com/Wynntils/Artemis/commit/1cda7eae6d65f0449882710fa01c997b6d770499))
-
-## [0.0.4-beta.4](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.3...v0.0.4-beta.4) (2023-10-01)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.4 [skip ci] ([2766709](https://github.com/Wynntils/Artemis/commit/2766709eb61d0e6af9197e993bc1c021179e00d3))
-
-
-### Code Refactoring
-
-* Simplify component dependencies ([#2151](https://github.com/Wynntils/Artemis/issues/2151)) ([e6ad67f](https://github.com/Wynntils/Artemis/commit/e6ad67f8667db57772ac33e34401ecbac81c326f))
 
