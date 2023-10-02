@@ -143,7 +143,7 @@ public final class IconFilterScreen extends WynntilsScreen {
         renderScrollButton(guiGraphics.pose());
 
         // Uncomment when editing UI
-//                RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
+        //                RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 
     @Override
@@ -317,13 +317,15 @@ public final class IconFilterScreen extends WynntilsScreen {
         iconsPerRow = MAX_ICONS_PER_ROW;
         maxIconsToDisplay = MAX_ICONS_PER_PAGE;
 
-        // If there are less icons than the default per page, see how big we can make the icons whilst still staying on one page
+        // If there are less icons than the default per page, see how big we can make the icons whilst still staying on
+        // one page
         if (usedIcons.size() < MAX_ICONS_PER_PAGE) {
             int renderAreaWidth = (int) (dividedWidth * 36);
             int renderAreaHeight = (int) (dividedHeight * 40);
             int sizeToCheck;
 
-            // Maximum size should be fitting 2 icons on screen at once which will be roughly half of the width of the renderable area
+            // Maximum size should be fitting 2 icons on screen at once which will be roughly half of the width of the
+            // renderable area
             for (int i = (DEFAULT_WIDGET_SIZE_MULTIPLIER + 1); i < MAX_WIDGET_SIZE_MULTIPLIER; i++) {
                 sizeToCheck = (int) (dividedWidth * i);
 
