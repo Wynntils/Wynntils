@@ -58,8 +58,10 @@ public class PoiService extends Service {
             Texture.WOODCUTTING);
 
     private final Set<LabelPoi> labelPois = new HashSet<>(); // read from json (but sort of done in PlaceListProvider)
-    private final Set<ServicePoi> servicePois = new HashSet<>(); // read from json (but sort of done in ServiceListProvider)
-    private final Set<CombatPoi> combatPois = new HashSet<>(); // read from json (but sort of done in CombatListProvider)
+    private final Set<ServicePoi> servicePois =
+            new HashSet<>(); // read from json (but sort of done in ServiceListProvider)
+    private final Set<CombatPoi> combatPois =
+            new HashSet<>(); // read from json (but sort of done in CombatListProvider)
     private final Set<CombatPoi> cavePois = new HashSet<>(); // read from json (NOT DONE!)
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
