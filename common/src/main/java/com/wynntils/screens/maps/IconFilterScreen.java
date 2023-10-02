@@ -206,15 +206,15 @@ public final class IconFilterScreen extends WynntilsScreen {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
-        int renderY = (int) ((this.height - backgroundHeight) / 2) + (int) dividedHeight;
-        int scrollAreaStartY = renderY + 14;
+        int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
+        int scrollAreaStartY = renderY + 12;
 
         int newValue = (int) MathUtils.map(
                 (float) mouseY,
                 scrollAreaStartY,
                 scrollAreaStartY + (int) (dividedHeight * 40),
                 0,
-                usedIcons.size() - MAX_ICONS_TO_DISPLAY);
+                Math.max(0, usedIcons.size() - MAX_ICONS_TO_DISPLAY));
 
         scroll(newValue - scrollOffset);
 
