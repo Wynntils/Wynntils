@@ -47,12 +47,12 @@ public class CombatListProvider extends BuiltInProvider {
 
         @Override
         public String getFeatureId() {
-            return kind.getServiceId() + "-" + number;
+            return kind.getMapDataId() + "-" + number;
         }
 
         @Override
         public String getCategoryId() {
-            return "wynntils:content:" + kind.getServiceId();
+            return "wynntils:content:" + kind.getMapDataId();
         }
 
         @Override

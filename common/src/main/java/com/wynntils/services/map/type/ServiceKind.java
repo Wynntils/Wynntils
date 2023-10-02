@@ -36,24 +36,24 @@ public enum ServiceKind {
 
     private final String name;
     private final Texture texture;
-    private final String serviceId;
+    private final String mapDataId;
 
-    ServiceKind(String name, Texture texture, String serviceId) {
+    ServiceKind(String name, Texture texture, String mapDataId) {
         this.name = name;
         this.texture = texture;
-        this.serviceId = serviceId;
+        this.mapDataId = mapDataId;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getServiceId() {
-        return serviceId;
-    }
-
     public Texture getIcon() {
         return texture;
+    }
+
+    public String getMapDataId() {
+        return mapDataId;
     }
 
     public static ServiceKind fromString(String str) {

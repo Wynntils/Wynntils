@@ -44,12 +44,12 @@ public class ServiceListProvider extends BuiltInProvider {
 
         @Override
         public String getFeatureId() {
-            return kind.getServiceId() + "-" + number;
+            return kind.getMapDataId() + "-" + number;
         }
 
         @Override
         public String getCategoryId() {
-            return "wynntils:service:" + kind.getServiceId();
+            return "wynntils:service:" + kind.getMapDataId();
         }
 
         @Override

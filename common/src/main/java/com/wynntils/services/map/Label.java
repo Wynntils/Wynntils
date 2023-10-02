@@ -69,18 +69,18 @@ public class Label {
         CITY("city"),
         TOWN_OR_PLACE("place");
 
-        private final String id;
+        private final String mapDataId;
 
-        LabelLayer(String id) {
-            this.id = id;
+        LabelLayer(String mapDataId) {
+            this.mapDataId = mapDataId;
         }
 
-        public String getId() {
-            return id;
+        public String getMapDataId() {
+            return mapDataId;
         }
 
         public String getName() {
-            return StringUtils.capitalized(id);
+            return StringUtils.capitalized(mapDataId);
         }
     }
 }

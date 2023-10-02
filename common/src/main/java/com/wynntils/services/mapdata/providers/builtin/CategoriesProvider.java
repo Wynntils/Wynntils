@@ -80,7 +80,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:service:" + kind.getServiceId();
+            return "wynntils:service:" + kind.getMapDataId();
         }
 
         @Override
@@ -98,7 +98,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public String getIconId() {
-                    return "wynntils:icon:service:" + kind.getServiceId();
+                    return "wynntils:icon:service:" + kind.getMapDataId();
                 }
 
                 @Override
@@ -123,7 +123,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:content:" + kind.getServiceId();
+            return "wynntils:content:" + kind.getMapDataId();
         }
 
         @Override
@@ -141,7 +141,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public String getIconId() {
-                    return "wynntils:icon:content:" + kind.getServiceId();
+                    return "wynntils:icon:content:" + kind.getMapDataId();
                 }
 
                 @Override
@@ -166,7 +166,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:place:" + layer.getId();
+            return "wynntils:place:" + layer.getMapDataId();
         }
 
         @Override

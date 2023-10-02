@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 
 public class PlaceListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
-    private static int counter;
 
     @Override
     public String getProviderId() {
@@ -47,7 +46,7 @@ public class PlaceListProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:place:" + label.getLayer().getId();
+            return "wynntils:place:" + label.getLayer().getMapDataId();
         }
 
         @Override
