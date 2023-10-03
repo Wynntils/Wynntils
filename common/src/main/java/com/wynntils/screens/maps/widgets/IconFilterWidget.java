@@ -20,8 +20,10 @@ import net.minecraft.network.chat.Component;
 
 public class IconFilterWidget extends AbstractWidget {
     private final boolean included;
+    private final float iconHeight;
     private final float iconRenderX;
     private final float iconRenderY;
+    private final float iconWidth;
     private final List<Component> tooltip;
     private final IconFilterScreen filterScreen;
     private final Texture icon;
@@ -33,9 +35,14 @@ public class IconFilterWidget extends AbstractWidget {
         this.filterScreen = filterScreen;
         this.included = included;
 
+        // Scale the icon to fill half of the widget
+        float scaleFactor = 0.5f * Math.min(width, height) / Math.max(icon.width(), icon.height());
+        iconWidth = icon.width() * scaleFactor;
+        iconHeight = icon.height() * scaleFactor;
+
         // Calculate x/y position of the icon to keep it centered
-        iconRenderX = (x + width / 2f) - icon.width() / 2f;
-        iconRenderY = (y + height / 2f) - icon.height() / 2f;
+        iconRenderX = (x + width / 2f) - iconWidth / 2f;
+        iconRenderY = (y + height / 2f) - iconHeight / 2f;
 
         tooltip = included
                 ? List.of(Component.translatable(
@@ -51,7 +58,16 @@ public class IconFilterWidget extends AbstractWidget {
         RenderUtils.drawRect(
                 poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
-        RenderUtils.drawTexturedRect(poseStack, icon, iconRenderX, iconRenderY);
+        RenderUtils.drawScalingTexturedRect(
+                poseStack,
+                icon.resource(),
+                iconRenderX,
+                iconRenderY,
+                1,
+                iconWidth,
+                iconHeight,
+                icon.width(),
+                icon.height());
 
         if (isHovered) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
