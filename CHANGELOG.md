@@ -1,9 +1,21 @@
+## [0.0.4-beta.11](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.10...v0.0.4-beta.11) (2023-10-03)
+
+
+### New Features
+
+* Fabric loader lists conflicting mods ([#2166](https://github.com/Wynntils/Artemis/issues/2166)) ([371d290](https://github.com/Wynntils/Artemis/commit/371d290f2d10507a972833dbf8fc16ee0702bacb))
+
 ## [0.0.4-beta.10](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.9...v0.0.4-beta.10) (2023-10-03)
 
 
 ### Bug Fixes
 
 * Patch ForgeGuiGraphicsMixin[#render](https://github.com/Wynntils/Artemis/issues/render)TooltipPre to avoid weird mixin issue ([#2165](https://github.com/Wynntils/Artemis/issues/2165)) ([136c50b](https://github.com/Wynntils/Artemis/commit/136c50b5691000f1332acfa56fae07bcd5b5caf9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.10 [skip ci] ([f343a63](https://github.com/Wynntils/Artemis/commit/f343a6379465c046a1aaa0b9543f0eedf3a69c51))
 
 ## [0.0.4-beta.9](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.8...v0.0.4-beta.9) (2023-10-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.7 [skip ci] ([44aa2fd](https://github.com/Wynntils/Artemis/commit/44aa2fdd4a1a352580cf1cbcf330dbd92e6e3b3a))
-
-## [0.0.4-beta.6](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.5...v0.0.4-beta.6) (2023-10-01)
-
-
-### Bug Fixes
-
-* Don't search for empty items (+bugfix in ContainerSearchFeature) ([#2153](https://github.com/Wynntils/Artemis/issues/2153)) ([8368e54](https://github.com/Wynntils/Artemis/commit/8368e547d7e3b04b827582ac76672f9c4983e5c3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.6 [skip ci] ([3b3d7cf](https://github.com/Wynntils/Artemis/commit/3b3d7cfb6f7ab8da488ba86749a10de47c2b01c2))
 
