@@ -46,17 +46,20 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public final class PoiManagementScreen extends WynntilsScreen implements TextboxScreen {
+    // Constants
     private static final float GRID_DIVISIONS = 64.0f;
     private static final int GRID_ROWS_PER_PAGE = 43;
     private static final int HEADER_HEIGHT = 12;
 
+    // Collections
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
     private final List<CustomPoi> deletedPois = new ArrayList<>();
     private final List<Integer> deletedIndexes = new ArrayList<>();
+
+    // Previous screen
     private final MainMapScreen oldMapScreen;
 
-    private boolean draggingScroll = false;
-    private boolean selectionMode = false;
+    // Widgets
     private Button deleteSelectedButton;
     private Button deselectAllButton;
     private Button downButton;
@@ -65,6 +68,17 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private Button selectAllButton;
     private Button undoDeleteButton;
     private Button upButton;
+    private PoiSortButton activeSortButton;
+    private PoiSortButton iconSortButton;
+    private PoiSortButton nameSortButton;
+    private PoiSortButton xSortButton;
+    private PoiSortButton ySortButton;
+    private PoiSortButton zSortButton;
+    private TextInputBoxWidget focusedTextInput;
+    private TextInputBoxWidget searchInput;
+
+    // UI size, position etc
+    private boolean draggingScroll = false;
     private float backgroundHeight;
     private float backgroundWidth;
     private float backgroundX;
@@ -77,18 +91,13 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private int maxPoisToDisplay;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
+
+    // Poi display
+    private boolean selectionMode = false;
     private List<CustomPoi> selectedPois = new ArrayList<>();
     private List<CustomPoi> pois;
     private Map<Texture, Boolean> filteredIcons = new EnumMap<>(Texture.class);
-    private PoiSortButton activeSortButton;
-    private PoiSortButton iconSortButton;
-    private PoiSortButton nameSortButton;
-    private PoiSortButton xSortButton;
-    private PoiSortButton ySortButton;
-    private PoiSortButton zSortButton;
     private PoiSortOrder sortOrder;
-    private TextInputBoxWidget focusedTextInput;
-    private TextInputBoxWidget searchInput;
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Management Screen"));

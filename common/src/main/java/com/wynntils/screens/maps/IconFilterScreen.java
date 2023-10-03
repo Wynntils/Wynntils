@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public final class IconFilterScreen extends WynntilsScreen {
+    // Constants
     private static final float GRID_DIVISIONS = 64.0f;
     private static final int DEFAULT_WIDGET_SIZE_MULTIPLIER = 4;
     private static final int HEADER_HEIGHT = 13;
@@ -29,13 +30,19 @@ public final class IconFilterScreen extends WynntilsScreen {
     private static final int MAX_ICONS_PER_ROW = 9;
     private static final int MAX_WIDGET_SIZE_MULTIPLIER = 19;
 
+    // Collections
     private final List<AbstractWidget> iconFilterWidgets = new ArrayList<>();
     private final Map<Texture, Boolean> icons;
+
+    // Previous screen
     private final PoiManagementScreen previousScreen;
 
-    private boolean draggingScroll = false;
+    // Widgets
     private Button includeAllButton;
     private Button excludeAllButton;
+
+    // UI size, position etc
+    private boolean draggingScroll = false;
     private float backgroundHeight;
     private float backgroundWidth;
     private float backgroundX;
@@ -50,6 +57,8 @@ public final class IconFilterScreen extends WynntilsScreen {
     private int maxIconsToDisplay;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
+
+    // Icon display
     private List<Texture> usedIcons;
 
     private IconFilterScreen(PoiManagementScreen previousScreen, Map<Texture, Boolean> icons) {
