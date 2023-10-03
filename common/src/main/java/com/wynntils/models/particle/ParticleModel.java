@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ParticleModel extends Model {
-    private Set<UnverifiedParticle> unverifiedParticles = new HashSet<>();
+    private final Set<UnverifiedParticle> unverifiedParticles = new HashSet<>();
 
     public ParticleModel() {
         super(List.of());

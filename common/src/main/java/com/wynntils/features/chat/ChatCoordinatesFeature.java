@@ -54,7 +54,7 @@ public class ChatCoordinatesFeature extends Feature {
     }
 
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
-        StyledText modified = styledText.iterate((part, changes) -> {
+        return styledText.iterate((part, changes) -> {
             StyledTextPart partToReplace = part;
             Matcher matcher =
                     LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
@@ -93,7 +93,5 @@ public class ChatCoordinatesFeature extends Feature {
 
             return IterationDecision.CONTINUE;
         });
-
-        return modified;
     }
 }

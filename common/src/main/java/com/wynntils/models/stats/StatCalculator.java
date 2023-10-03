@@ -124,15 +124,13 @@ public final class StatCalculator {
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
 
-        float percentage = MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
-        return percentage;
+        return MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
     }
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         // FIXME: This is the chance of getting a *** (3 star) roll, not the chance of
         // getting the maximum possible value. But for now, keep old behavior.
-        double perfectChance = 1 / (possibleValues.baseValue() > 0 ? 101d : 61d) * 100;
-        return perfectChance;
+        return 1 / (possibleValues.baseValue() > 0 ? 101d : 61d) * 100;
     }
 
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {

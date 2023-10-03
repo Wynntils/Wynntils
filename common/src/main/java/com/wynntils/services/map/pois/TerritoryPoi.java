@@ -227,6 +227,9 @@ public class TerritoryPoi implements Poi {
 
     private TerritoryProfile tryGetUpdatedTerritoryProfile() {
         TerritoryProfile territoryProfile = territoryProfileSupplier.get();
-        return territoryProfile != null ? territoryProfileCache = territoryProfile : territoryProfileCache;
+        if (territoryProfile != null) {
+            territoryProfileCache = territoryProfile;
+        }
+        return territoryProfileCache;
     }
 }
