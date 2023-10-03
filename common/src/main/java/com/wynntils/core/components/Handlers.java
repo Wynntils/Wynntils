@@ -10,6 +10,7 @@ import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.container.ContainerQueryHandler;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.handlers.labels.LabelHandler;
+import com.wynntils.handlers.particle.ParticleHandler;
 import com.wynntils.handlers.scoreboard.ScoreboardHandler;
 
 public final class Handlers {
@@ -19,5 +20,6 @@ public final class Handlers {
     public static final ContainerQueryHandler ContainerQuery = new ContainerQueryHandler();
     public static final ItemHandler Item = new ItemHandler();
     public static final LabelHandler Label = new LabelHandler();
+    public static final ParticleHandler Particle = new ParticleHandler();
     public static final ScoreboardHandler Scoreboard = new ScoreboardHandler();
 }

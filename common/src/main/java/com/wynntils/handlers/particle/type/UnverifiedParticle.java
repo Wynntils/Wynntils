@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.particle.type;
+package com.wynntils.handlers.particle.type;
 
-import com.wynntils.models.particle.verifiers.ParticleVerifier;
+import com.wynntils.core.components.Handlers;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.Position;
@@ -23,7 +23,7 @@ public class UnverifiedParticle {
     public boolean addNewParticle(Position newPosition, ParticleOptions newParticleOption) {
         if (newParticleOption != particleEffect) return false;
 
-        if (particleType.getParticleVerifier().verifyNewPosition(particles, newPosition)) {
+        if (Handlers.Particle.getParticleVerifier(particleType).verifyNewPosition(particles, newPosition)) {
             particles.add(newPosition);
             return true;
         }
@@ -32,7 +32,7 @@ public class UnverifiedParticle {
     }
 
     public ParticleVerifier.VerificationResult verifyCompleteness() {
-        return particleType.getParticleVerifier().verifyCompleteness(particles);
+        return Handlers.Particle.getParticleVerifier(particleType).verifyCompleteness(particles);
     }
 
     public ParticleOptions getParticleEffect() {
@@ -40,6 +40,6 @@ public class UnverifiedParticle {
     }
 
     public Particle getParticle() {
-        return particleType.getParticleVerifier().getParticle(particles);
+        return Handlers.Particle.getParticleVerifier(particleType).getParticle(particles);
     }
 }
