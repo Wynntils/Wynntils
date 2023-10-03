@@ -263,8 +263,8 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         int renderY = (this.height - this.imageHeight) / 2;
         int scrollAreaStartY = renderY + 14;
 
-        int newValue = (int) MathUtils.map(
-                (float) mouseY, scrollAreaStartY, scrollAreaStartY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset());
+        int newValue = Math.round(MathUtils.map(
+                (float) mouseY, scrollAreaStartY, scrollAreaStartY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
 
         scroll(newValue - scrollOffset);
 
