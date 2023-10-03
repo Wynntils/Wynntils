@@ -447,12 +447,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         if (!draggingScroll) return false;
 
         int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
-        int scrollAreaStartY = renderY + 12;
+        int scrollAreaStartY = renderY + 7;
 
         int newValue = (int) MathUtils.map(
                 (float) mouseY,
                 scrollAreaStartY,
-                scrollAreaStartY + (int) (dividedHeight * 40),
+                scrollAreaStartY + scrollAreaHeight,
                 0,
                 Math.max(0, pois.size() - maxPoisToDisplay));
 
