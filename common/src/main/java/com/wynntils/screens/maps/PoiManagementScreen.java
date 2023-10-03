@@ -549,7 +549,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         undoDeleteButton.active = true;
 
-        // Handles deleting when the final poi is visible
+        // Handles scrolling when deleting the last poi
         if (scrollOffset == Math.max(0, pois.size() - maxPoisToDisplay)) {
             scroll(-1);
         }
