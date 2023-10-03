@@ -1,9 +1,21 @@
+## [0.0.4-beta.12](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.11...v0.0.4-beta.12) (2023-10-03)
+
+
+### Code Refactoring
+
+* Move ParticleModel into ParticleHandler ([#2164](https://github.com/Wynntils/Artemis/issues/2164)) ([94d138f](https://github.com/Wynntils/Artemis/commit/94d138f3f5983cc89610c0c2d289a6881a63306a))
+
 ## [0.0.4-beta.11](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.10...v0.0.4-beta.11) (2023-10-03)
 
 
 ### New Features
 
 * Fabric loader lists conflicting mods ([#2166](https://github.com/Wynntils/Artemis/issues/2166)) ([371d290](https://github.com/Wynntils/Artemis/commit/371d290f2d10507a972833dbf8fc16ee0702bacb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.11 [skip ci] ([1675328](https://github.com/Wynntils/Artemis/commit/1675328e5ae5a2cae5e8b66f818d08f98a357fad))
 
 ## [0.0.4-beta.10](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.9...v0.0.4-beta.10) (2023-10-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.8 [skip ci] ([6793cde](https://github.com/Wynntils/Artemis/commit/6793cdee811f5a7c192480ef473584e737d93227))
-
-## [0.0.4-beta.7](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.6...v0.0.4-beta.7) (2023-10-01)
-
-
-### Bug Fixes
-
-* Copied crowd-sourced data should have a version included ([#2155](https://github.com/Wynntils/Artemis/issues/2155)) ([a0c7315](https://github.com/Wynntils/Artemis/commit/a0c7315ea0f7c6eed353b625381f82b250eaa43c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.7 [skip ci] ([44aa2fd](https://github.com/Wynntils/Artemis/commit/44aa2fdd4a1a352580cf1cbcf330dbd92e6e3b3a))
 
