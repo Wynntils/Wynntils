@@ -28,6 +28,7 @@ public abstract class ForgeGuiGraphicsMixin {
             method =
                     "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;II)V",
             at = @At("HEAD"),
+            cancellable = true,
             remap = false)
     private void renderTooltipPre(
             Font font,
