@@ -6,8 +6,8 @@ package com.wynntils.crowdsource;
 
 import com.wynntils.core.crowdsource.CrowdSourcedDataCollector;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
-import com.wynntils.models.label.event.LabelIdentifiedEvent;
-import com.wynntils.models.label.infos.GatheringStationLabelInfo;
+import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.models.profession.label.GatheringStationLabelInfo;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionStationLocationDataCollector extends CrowdSourcedDataCollector<GatheringStationLabelInfo> {

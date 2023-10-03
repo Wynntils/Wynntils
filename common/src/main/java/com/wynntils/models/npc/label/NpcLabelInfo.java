@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.label.infos;
+package com.wynntils.models.npc.label;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.label.type.LabelInfo;
+import com.wynntils.handlers.labels.type.LabelInfo;
 import com.wynntils.utils.mc.type.Location;
 
 public class NpcLabelInfo extends LabelInfo {

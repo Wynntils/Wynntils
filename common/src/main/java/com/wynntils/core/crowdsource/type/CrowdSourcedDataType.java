@@ -6,9 +6,9 @@ package com.wynntils.core.crowdsource.type;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.crowdsource.datatype.LootrunTaskLocation;
-import com.wynntils.models.label.infos.GatheringNodeLabelInfo;
-import com.wynntils.models.label.infos.GatheringStationLabelInfo;
-import com.wynntils.models.label.infos.NpcLabelInfo;
+import com.wynntils.models.npc.label.NpcLabelInfo;
+import com.wynntils.models.profession.label.GatheringNodeLabelInfo;
+import com.wynntils.models.profession.label.GatheringStationLabelInfo;
 import net.minecraft.client.resources.language.I18n;
 
 /**

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.label.type;
+package com.wynntils.handlers.labels.type;
 
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.text.StyledText;

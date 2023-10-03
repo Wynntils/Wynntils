@@ -5,6 +5,7 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
@@ -15,6 +16,8 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.event.ProfessionNodeGatheredEvent;
+import com.wynntils.models.profession.label.GatheringNodeLabelParser;
+import com.wynntils.models.profession.label.GatheringStationLabelParser;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -72,6 +75,9 @@ public class ProfessionModel extends Model {
 
     public ProfessionModel() {
         super(List.of());
+
+        Handlers.Label.registerParser(new GatheringNodeLabelParser());
+        Handlers.Label.registerParser(new GatheringStationLabelParser());
 
         for (ProfessionType pt : ProfessionType.values()) {
             rawXpGainInLastMinute.put(pt, new TimedSet<>(1, TimeUnit.MINUTES, true));

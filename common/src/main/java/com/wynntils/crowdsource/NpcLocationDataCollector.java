@@ -6,8 +6,8 @@ package com.wynntils.crowdsource;
 
 import com.wynntils.core.crowdsource.CrowdSourcedDataCollector;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
-import com.wynntils.models.label.event.LabelIdentifiedEvent;
-import com.wynntils.models.label.infos.NpcLabelInfo;
+import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.models.npc.label.NpcLabelInfo;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NpcLocationDataCollector extends CrowdSourcedDataCollector<NpcLabelInfo> {

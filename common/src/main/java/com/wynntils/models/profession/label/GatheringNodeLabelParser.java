@@ -2,12 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.label.parsers;
+package com.wynntils.models.profession.label;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.label.infos.GatheringNodeLabelInfo;
-import com.wynntils.models.label.type.LabelInfo;
-import com.wynntils.models.label.type.LabelParser;
+import com.wynntils.handlers.labels.type.LabelInfo;
+import com.wynntils.handlers.labels.type.LabelParser;
 import com.wynntils.models.profession.type.MaterialProfile;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
