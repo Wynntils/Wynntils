@@ -210,7 +210,7 @@ public class IngredientInfoRegistry {
 
         private ItemMaterial parseMaterial(JsonObject json, String name) {
             JsonObject sprite = JsonUtils.getNullableJsonObject(json, "sprite");
-            if (sprite.getAsJsonObject().size() == 0) {
+            if (sprite.getAsJsonObject().isEmpty()) {
                 WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
                 return ItemMaterial.fromItemId("minecraft:air", 0);
             }
@@ -248,7 +248,7 @@ public class IngredientInfoRegistry {
 
         private Map<IngredientPosition, Integer> getPositionModifiers(JsonObject json) {
             JsonObject positionsJson = JsonUtils.getNullableJsonObject(json, "ingredientPositionModifiers");
-            if (positionsJson.size() == 0) return Map.of();
+            if (positionsJson.isEmpty()) return Map.of();
 
             Map<IngredientPosition, Integer> positionModifiers = new HashMap<>();
             for (IngredientPosition position : IngredientPosition.values()) {

@@ -118,16 +118,17 @@ public class LootrunModel extends Model {
 
     // Data to be persisted
     @Persisted
-    private Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage =
+            new Storage<>(new TreeMap<>());
 
     @Persisted
-    private Storage<Map<String, BeaconColor>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, BeaconColor>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 

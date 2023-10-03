@@ -12,8 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class StringStatFilter extends StatFilter<String> {
-    private String searchLiteral;
-    private boolean strict;
+    private final String searchLiteral;
+    private final boolean strict;
 
     StringStatFilter(String searchLiteral, boolean strict) {
         this.searchLiteral = searchLiteral;

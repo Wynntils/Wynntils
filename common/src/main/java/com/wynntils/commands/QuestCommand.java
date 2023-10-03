@@ -257,7 +257,7 @@ public class QuestCommand extends Command {
                         questInfo.getName().toLowerCase(Locale.ROOT).contains(questNameLowerCase))
                 .toList();
 
-        if (matchingQuests.size() < 1) {
+        if (matchingQuests.isEmpty()) {
             context.getSource()
                     .sendFailure(Component.literal("Quest '" + questName + "' not found")
                             .withStyle(ChatFormatting.RED));

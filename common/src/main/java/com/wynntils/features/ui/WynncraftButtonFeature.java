@@ -157,6 +157,7 @@ public class WynncraftButtonFeature extends Feature {
             this.serverIconLocation = FALLBACK;
         }
 
+        @SuppressWarnings("deprecation")
         private void loadResource(boolean allowStale) {
             // Try default
             ResourceLocation destination =

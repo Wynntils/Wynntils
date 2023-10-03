@@ -77,10 +77,9 @@ public final class FunctionExpression extends Expression {
             return ErrorOr.error(firstError.get().getError());
         }
 
-        ErrorOr<FunctionArguments> arguments = function.getArgumentsBuilder()
+        return function.getArgumentsBuilder()
                 .buildWithValues(
                         calculatedExpressions.stream().map(ErrorOr::getValue).toList());
-        return arguments;
     }
 
     // This method attempts to parse a function expression in the following ways:
