@@ -6,12 +6,12 @@
     "creativecore": "<2.10.4",
     "debugify": "*",
     "exordium": "*",
+    "immediatelyfast": "*",
     "memoryleakfix": "<1.1.2"
   },
   "conflicts": {
     "avomod": "*",
     "chatpatches": "*",
-    "immediatelyfast": "*",
     "weirdchat": "*"
   },
   "contact": {
