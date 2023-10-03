@@ -3,7 +3,16 @@
     "Team Wynntils"
   ],
   "breaks": {
-    "creativecore": "<2.10.4"
+    "creativecore": "<2.10.4",
+    "debugify": "*",
+    "memoryleakfix": "<1.1.2"
+  },
+  "conflicts": {
+    "exordium": "*",
+    "immediatelyfast": "*",
+    "avomod": "*",
+    "chatpatches": "*",
+    "weirdchat": "*"
   },
   "contact": {
     "homepage": "https://wynntils.com",
