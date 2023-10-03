@@ -1,4 +1,16 @@
+## [0.0.4-beta.13](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.12...v0.0.4-beta.13) (2023-10-03)
+
+
+### Bug Fixes
+
+* Do not freeze/crash on invalid mention aliases ([#2029](https://github.com/Wynntils/Artemis/issues/2029)) ([f478d9b](https://github.com/Wynntils/Artemis/commit/f478d9bcaa71d31fd0526189269d71c145e009a5))
+
 ## [0.0.4-beta.12](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.11...v0.0.4-beta.12) (2023-10-03)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.12 [skip ci] ([4b6f4d7](https://github.com/Wynntils/Artemis/commit/4b6f4d742987482e3b0ad4970c20576cdd2f6132))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Another round of cleanups as suggested by IntelliJ ([#2161](https://github.com/Wynntils/Artemis/issues/2161)) ([02bdb42](https://github.com/Wynntils/Artemis/commit/02bdb42e69b342de3da159cf3ae59aaa4cb97c14))
-
-## [0.0.4-beta.8](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.7...v0.0.4-beta.8) (2023-10-01)
-
-
-### Bug Fixes
-
-* Fix container search arc rendering weirdly on items with durability arcs ([#2156](https://github.com/Wynntils/Artemis/issues/2156)) ([52c62c3](https://github.com/Wynntils/Artemis/commit/52c62c3e8f9b29e13d3270caa9fcae57dbbba8cc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.8 [skip ci] ([6793cde](https://github.com/Wynntils/Artemis/commit/6793cdee811f5a7c192480ef473584e737d93227))
 
