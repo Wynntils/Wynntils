@@ -4,6 +4,20 @@
     "wynntils.mixins.quilt.json"
   ],
   "quilt_loader": {
+    "breaks": [
+      {
+        "id": "debugify",
+        "versions": "*"
+      },
+      {
+        "id": "exordium",
+        "versions": "*"
+      },
+      {
+        "id": "memoryleakfix",
+        "versions": ["<1.1.2"]
+      }
+    ],
     "depends": [
       {
         "id": "quilt_loader",
