@@ -254,19 +254,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         // endregion
 
         // region sort buttons
-        int iconTitleWidth = (McUtils.mc()
-                        .font
-                        .width(StyledText.fromComponent(
-                                        Component.translatable("screens.wynntils.poiManagementGui.icon"))
-                                .getString()))
-                + 1;
+        int iconTitleWidth = (McUtils.mc().font.width(I18n.get("screens.wynntils.poiManagementGui.icon"))) + 1;
 
-        int nameTitleWidth = (McUtils.mc()
-                        .font
-                        .width(StyledText.fromComponent(
-                                        Component.translatable("screens.wynntils.poiManagementGui.name"))
-                                .getString()))
-                + 1;
+        int nameTitleWidth = (McUtils.mc().font.width(I18n.get("screens.wynntils.poiManagementGui.name"))) + 1;
 
         int coordinateTitleWidth = (McUtils.mc().font.width("X")) + 1;
 
