@@ -429,10 +429,13 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
 
         if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
-            if (mouseX >= scrollButtonRenderX
-                    && mouseX <= scrollButtonRenderX + (dividedWidth / 2)
-                    && mouseY >= scrollButtonRenderY
-                    && mouseY <= scrollButtonRenderY + scrollButtonHeight) {
+            if (MathUtils.isInside(
+                    (int) mouseX,
+                    (int) mouseY,
+                    (int) scrollButtonRenderX,
+                    (int) (scrollButtonRenderX + (dividedWidth / 2)),
+                    (int) scrollButtonRenderY,
+                    (int) (scrollButtonRenderY + scrollButtonHeight))) {
                 draggingScroll = true;
             }
         }
@@ -726,8 +729,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         // Sort pois, ignore case and for null Y's, treat them as 0
         switch (sortOrder) {
             case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
-            case ICON_DESC -> pois.sort(
-                    Comparator.comparing(CustomPoi::getIcon).reversed());
+            case ICON_DESC -> pois.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
             case NAME_ASC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
             case NAME_DESC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
                     .reversed());

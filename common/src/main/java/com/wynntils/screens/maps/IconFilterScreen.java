@@ -171,10 +171,13 @@ public final class IconFilterScreen extends WynntilsScreen {
         }
 
         if (!draggingScroll && (usedIcons.size() > maxIconsToDisplay)) {
-            if (mouseX >= scrollButtonRenderX
-                    && mouseX <= scrollButtonRenderX + (dividedWidth / 2)
-                    && mouseY >= scrollButtonRenderY
-                    && mouseY <= scrollButtonRenderY + scrollButtonHeight) {
+            if (MathUtils.isInside(
+                    (int) mouseX,
+                    (int) mouseY,
+                    (int) scrollButtonRenderX,
+                    (int) (scrollButtonRenderX + (dividedWidth / 2)),
+                    (int) scrollButtonRenderY,
+                    (int) (scrollButtonRenderY + scrollButtonHeight))) {
                 draggingScroll = true;
             }
         }
