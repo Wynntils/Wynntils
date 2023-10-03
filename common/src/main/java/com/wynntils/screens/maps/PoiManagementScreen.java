@@ -449,12 +449,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
         int scrollAreaStartY = renderY + 7;
 
-        int newValue = (int) MathUtils.map(
+        int newValue = Math.round(MathUtils.map(
                 (float) mouseY,
                 scrollAreaStartY,
                 scrollAreaStartY + scrollAreaHeight,
                 0,
-                Math.max(0, pois.size() - maxPoisToDisplay));
+                Math.max(0, pois.size() - maxPoisToDisplay)));
 
         scroll(newValue - scrollOffset);
 

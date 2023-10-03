@@ -24,11 +24,9 @@ import net.minecraft.network.chat.Component;
 public final class IconFilterScreen extends WynntilsScreen {
     // Constants
     private static final float GRID_DIVISIONS = 64.0f;
-    private static final int DEFAULT_WIDGET_SIZE_MULTIPLIER = 4;
     private static final int HEADER_HEIGHT = 13;
-    private static final int MAX_ICONS_PER_PAGE = 45;
-    private static final int MAX_ICONS_PER_ROW = 9;
-    private static final int MAX_WIDGET_SIZE_INCREASE = 8;
+    private static final int ICONS_PER_ROW = 7;
+    private static final int MAX_ICONS_TO_DISPLAY = 28;
 
     // Collections
     private final List<AbstractWidget> iconFilterWidgets = new ArrayList<>();
@@ -53,8 +51,6 @@ public final class IconFilterScreen extends WynntilsScreen {
     private float scrollButtonRenderX;
     private float scrollButtonRenderY;
     private int iconButtonSize;
-    private int iconsPerRow;
-    private int maxIconsToDisplay;
     private int scrollAreaHeight;
     private int scrollOffset = 0;
 
@@ -81,6 +77,7 @@ public final class IconFilterScreen extends WynntilsScreen {
     protected void doInit() {
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
+        iconButtonSize = (int) (dividedWidth * 5);
         backgroundX = dividedWidth * 10;
         backgroundWidth = dividedWidth * 44;
         backgroundY = dividedHeight * 7;
@@ -141,8 +138,6 @@ public final class IconFilterScreen extends WynntilsScreen {
         // The icons that will be displayed
         usedIcons = new ArrayList<>(icons.keySet());
 
-        calculateIconSize();
-
         populateIcons();
     }
 
@@ -179,7 +174,7 @@ public final class IconFilterScreen extends WynntilsScreen {
             }
         }
 
-        if (!draggingScroll && (usedIcons.size() > maxIconsToDisplay)) {
+        if (!draggingScroll && (usedIcons.size() > MAX_ICONS_TO_DISPLAY)) {
             if (MathUtils.isInside(
                     (int) mouseX,
                     (int) mouseY,
@@ -201,12 +196,12 @@ public final class IconFilterScreen extends WynntilsScreen {
         int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
         int scrollAreaStartY = renderY + 7;
 
-        int newValue = (int) MathUtils.map(
+        int newValue = Math.round(MathUtils.map(
                 (float) mouseY,
                 scrollAreaStartY,
                 scrollAreaStartY + scrollAreaHeight,
                 0,
-                getMaxScrollOffset());
+                getMaxScrollOffset()));
 
         scroll(newValue - scrollOffset);
 
@@ -243,7 +238,7 @@ public final class IconFilterScreen extends WynntilsScreen {
 
     private void renderScrollButton(PoseStack poseStack) {
         // Don't render the scroll button if it will not be useable
-        if (usedIcons.size() <= maxIconsToDisplay) return;
+        if (usedIcons.size() <= MAX_ICONS_TO_DISPLAY) return;
 
         // Calculate where the scroll button should be on the Y axis
         scrollButtonRenderY = (this.height - backgroundHeight) / 2
@@ -272,8 +267,8 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     private int getMaxScrollOffset() {
-        int maxItemOffset = Math.max(0, usedIcons.size() - maxIconsToDisplay);
-        return maxItemOffset / iconsPerRow + (maxItemOffset % iconsPerRow > 0 ? 1 : 0);
+        int maxItemOffset = Math.max(0, usedIcons.size() - MAX_ICONS_TO_DISPLAY);
+        return maxItemOffset / ICONS_PER_ROW + (maxItemOffset % ICONS_PER_ROW > 0 ? 1 : 0);
     }
 
     private void populateIcons() {
@@ -286,16 +281,16 @@ public final class IconFilterScreen extends WynntilsScreen {
         // Starting Y position for the icons
         int row = (int) ((int) (dividedHeight * HEADER_HEIGHT) + (dividedHeight / 2f));
         // Starting X position for the row
-        int xPos = (int) (dividedWidth * 13);
+        int xPos = (int) (dividedWidth * 14);
 
         int currentIcon;
 
         int widgetsOnCurrentRow = 0;
 
         // Render icon widgets
-        for (int i = 0; i < maxIconsToDisplay; i++) {
+        for (int i = 0; i < MAX_ICONS_TO_DISPLAY; i++) {
             // Get the icon to render
-            currentIcon = i + (scrollOffset * iconsPerRow);
+            currentIcon = i + (scrollOffset * ICONS_PER_ROW);
 
             // If there are less icons than MAX_ICONS_TO_DISPLAY, make sure we don't try and get a icon out of range
             if (currentIcon > usedIcons.size() - 1) {
@@ -314,43 +309,12 @@ public final class IconFilterScreen extends WynntilsScreen {
             widgetsOnCurrentRow++;
 
             // Calculate if we can place another icon button on the same row or not
-            if (widgetsOnCurrentRow == iconsPerRow) {
+            if (widgetsOnCurrentRow == ICONS_PER_ROW) {
                 row += iconButtonSize;
-                xPos = (int) (dividedWidth * 13);
+                xPos = (int) (dividedWidth * 14);
                 widgetsOnCurrentRow = 0;
             } else {
                 xPos += iconButtonSize;
-            }
-        }
-    }
-
-    private void calculateIconSize() {
-        iconButtonSize = (int) (dividedWidth * DEFAULT_WIDGET_SIZE_MULTIPLIER);
-        iconsPerRow = MAX_ICONS_PER_ROW;
-        maxIconsToDisplay = MAX_ICONS_PER_PAGE;
-
-        // If there are less icons than the default per page, see how big we can make the icons whilst still staying on
-        // one page
-        if (usedIcons.size() < MAX_ICONS_PER_PAGE) {
-            int renderAreaWidth = (int) (dividedWidth * 36);
-            int renderAreaHeight = (int) (dividedHeight * 40);
-            int sizeToCheck;
-
-            // Increase size up to DEFAULT_WIDGET_SIZE_MULTIPLIER + MAX_WIDGET_SIZE_INCREASE
-            for (int i = 1; i <= MAX_WIDGET_SIZE_INCREASE; i++) {
-                sizeToCheck = (int) (dividedWidth * (DEFAULT_WIDGET_SIZE_MULTIPLIER + i));
-
-                int maxPerRow = renderAreaWidth / sizeToCheck;
-                int rowsNeeded = (usedIcons.size() + maxPerRow - 1) / maxPerRow;
-
-                // Size check would not fit on one screen, use previously checked size (or default)
-                if (rowsNeeded * sizeToCheck > renderAreaHeight) {
-                    return;
-                } else {
-                    iconButtonSize = sizeToCheck;
-                    iconsPerRow = maxPerRow;
-                    maxIconsToDisplay = rowsNeeded * maxPerRow;
-                }
             }
         }
     }
