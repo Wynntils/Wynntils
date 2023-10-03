@@ -682,7 +682,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         // Sort pois
         if (sortOrder != null) {
-            pois = sortPois();
+            sortPois();
         }
 
         // Starting Y position for the pois
@@ -722,32 +722,28 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         }
     }
 
-    private List<CustomPoi> sortPois() {
-        List<CustomPoi> sortedPois = pois;
-
+    private void sortPois() {
         // Sort pois, ignore case and for null Y's, treat them as 0
         switch (sortOrder) {
-            case ICON_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getIcon));
-            case ICON_DESC -> sortedPois.sort(
+            case ICON_ASC -> pois.sort(Comparator.comparing(CustomPoi::getIcon));
+            case ICON_DESC -> pois.sort(
                     Comparator.comparing(CustomPoi::getIcon).reversed());
-            case NAME_ASC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
-            case NAME_DESC -> sortedPois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
+            case NAME_ASC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
+            case NAME_DESC -> pois.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
                     .reversed());
-            case X_ASC -> sortedPois.sort(
+            case X_ASC -> pois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getX()));
-            case X_DESC -> sortedPois.sort(
+            case X_DESC -> pois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
-            case Y_ASC -> sortedPois.sort(Comparator.comparing(
+            case Y_ASC -> pois.sort(Comparator.comparing(
                     poi -> poi.getLocation().getY().orElse(null), Comparator.nullsFirst(Comparator.naturalOrder())));
-            case Y_DESC -> sortedPois.sort(Comparator.comparing(
+            case Y_DESC -> pois.sort(Comparator.comparing(
                     poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
-            case Z_ASC -> sortedPois.sort(
+            case Z_ASC -> pois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getZ()));
-            case Z_DESC -> sortedPois.sort(
+            case Z_DESC -> pois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
         }
-
-        return sortedPois;
     }
 
     private void toggleSelectAll(boolean select) {
