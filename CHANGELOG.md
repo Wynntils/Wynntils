@@ -1,4 +1,16 @@
+## [0.0.4-beta.10](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.9...v0.0.4-beta.10) (2023-10-03)
+
+
+### Bug Fixes
+
+* Patch ForgeGuiGraphicsMixin[#render](https://github.com/Wynntils/Artemis/issues/render)TooltipPre to avoid weird mixin issue ([#2165](https://github.com/Wynntils/Artemis/issues/2165)) ([136c50b](https://github.com/Wynntils/Artemis/commit/136c50b5691000f1332acfa56fae07bcd5b5caf9))
+
 ## [0.0.4-beta.9](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.8...v0.0.4-beta.9) (2023-10-02)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.9 [skip ci] ([e4b3b21](https://github.com/Wynntils/Artemis/commit/e4b3b21086b7d381c0fd2ab7d2a4b852c0aa6ebc))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.6 [skip ci] ([3b3d7cf](https://github.com/Wynntils/Artemis/commit/3b3d7cfb6f7ab8da488ba86749a10de47c2b01c2))
-
-## [0.0.4-beta.5](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.4...v0.0.4-beta.5) (2023-10-01)
-
-
-### Bug Fixes
-
-* fix ChangelogScreen rendering a dark background ([#2152](https://github.com/Wynntils/Artemis/issues/2152)) ([ff6a207](https://github.com/Wynntils/Artemis/commit/ff6a207dd963930374a32d5dfbdb7b329348bcca))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.5 [skip ci] ([1cda7ea](https://github.com/Wynntils/Artemis/commit/1cda7eae6d65f0449882710fa01c997b6d770499))
 
