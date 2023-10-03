@@ -28,7 +28,7 @@ public final class IconFilterScreen extends WynntilsScreen {
     private static final int HEADER_HEIGHT = 13;
     private static final int MAX_ICONS_PER_PAGE = 45;
     private static final int MAX_ICONS_PER_ROW = 9;
-    private static final int MAX_WIDGET_SIZE_MULTIPLIER = 19;
+    private static final int MAX_WIDGET_SIZE_INCREASE = 8;
 
     // Collections
     private final List<AbstractWidget> iconFilterWidgets = new ArrayList<>();
@@ -336,10 +336,9 @@ public final class IconFilterScreen extends WynntilsScreen {
             int renderAreaHeight = (int) (dividedHeight * 40);
             int sizeToCheck;
 
-            // Maximum size should be fitting 2 icons on screen at once which will be roughly half of the width of the
-            // renderable area
-            for (int i = (DEFAULT_WIDGET_SIZE_MULTIPLIER + 1); i < MAX_WIDGET_SIZE_MULTIPLIER; i++) {
-                sizeToCheck = (int) (dividedWidth * i);
+            // Increase size up to DEFAULT_WIDGET_SIZE_MULTIPLIER + MAX_WIDGET_SIZE_INCREASE
+            for (int i = 1; i <= MAX_WIDGET_SIZE_INCREASE; i++) {
+                sizeToCheck = (int) (dividedWidth * (DEFAULT_WIDGET_SIZE_MULTIPLIER + i));
 
                 int maxPerRow = renderAreaWidth / sizeToCheck;
                 int rowsNeeded = (usedIcons.size() + maxPerRow - 1) / maxPerRow;
