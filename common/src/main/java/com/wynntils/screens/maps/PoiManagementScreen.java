@@ -499,38 +499,30 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     }
 
     public void selectPoi(CustomPoi selectedPoi) {
-        boolean add = true;
-        boolean updateState = false;
+        boolean addedPoi = true;
 
         // Deselect a poi
         if (selectedPois.contains(selectedPoi)) {
             selectedPois.remove(selectedPoi);
 
-            add = false;
-
-            // If this was the only selected poi, disable selection mode
-            if (selectedPois.isEmpty()) {
-                updateState = true;
-            }
+            addedPoi = false;
         } else {
             selectedPois.add(selectedPoi);
-
-            updateState = true;
         }
 
         selectAllButton.active = selectedPois.size() < pois.size();
 
-        if (updateState) {
-            selectionMode = add;
+        if (addedPoi || selectedPois.isEmpty()) {
+            selectionMode = addedPoi;
 
-            deselectAllButton.active = add;
-            deleteSelectedButton.active = add;
+            deselectAllButton.active = addedPoi;
+            deleteSelectedButton.active = addedPoi;
 
-            upButton.visible = add;
-            downButton.visible = add;
+            upButton.visible = addedPoi;
+            downButton.visible = addedPoi;
 
             // Export tooltip should display how many of the pois will be exported
-            Component tooltip = add
+            Component tooltip = addedPoi
                     ? Component.translatable(
                             "screens.wynntils.poiManagementGui.exportSelected.tooltip", selectedPois.size())
                     : Component.translatable("screens.wynntils.poiManagementGui.exportAll.tooltip");
