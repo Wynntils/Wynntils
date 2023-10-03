@@ -18,13 +18,17 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
+import com.wynntils.handlers.particle.type.ParticleType;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
+import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
 import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
+import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
@@ -32,8 +36,6 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
-import com.wynntils.models.particle.event.ParticleVerifiedEvent;
-import com.wynntils.models.particle.type.ParticleType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
@@ -139,6 +141,7 @@ public class LootrunModel extends Model {
         super(List.of(markerModel));
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
+        Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
         reloadData();
     }

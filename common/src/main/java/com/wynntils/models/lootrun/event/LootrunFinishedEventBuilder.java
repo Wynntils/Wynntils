@@ -2,9 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.lootrun;
-
-import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
+package com.wynntils.models.lootrun.event;
 
 public abstract class LootrunFinishedEventBuilder {
     public static class Completed {
