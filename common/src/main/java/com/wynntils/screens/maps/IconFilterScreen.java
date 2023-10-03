@@ -162,20 +162,6 @@ public final class IconFilterScreen extends WynntilsScreen {
                 Texture.WAYPOINT_MANAGER_BACKGROUND.height());
     }
 
-    public void toggleIcon(Texture icon) {
-        // Toggle the icon
-        icons.put(icon, !icons.get(icon));
-
-        previousScreen.setFilteredIcons(icons);
-
-        // Only have the buttons active if they will do anything.
-        // Eg. Include all will set all to true, so deactive it if no falses
-        includeAllButton.active = icons.containsValue(false);
-        excludeAllButton.active = icons.containsValue(true);
-
-        populateIcons();
-    }
-
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
@@ -197,20 +183,6 @@ public final class IconFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        draggingScroll = false;
-        return true;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        double scrollValue = -Math.signum(deltaY);
-        scroll((int) scrollValue);
-
-        return true;
-    }
-
-    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
@@ -227,6 +199,34 @@ public final class IconFilterScreen extends WynntilsScreen {
         scroll(newValue - scrollOffset);
 
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        draggingScroll = false;
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        double scrollValue = -Math.signum(deltaY);
+        scroll((int) scrollValue);
+
+        return true;
+    }
+
+    public void toggleIcon(Texture icon) {
+        // Toggle the icon
+        icons.put(icon, !icons.get(icon));
+
+        previousScreen.setFilteredIcons(icons);
+
+        // Only have the buttons active if they will do anything.
+        // Eg. Include all will set all to true, so deactive it if no falses
+        includeAllButton.active = icons.containsValue(false);
+        excludeAllButton.active = icons.containsValue(true);
+
+        populateIcons();
     }
 
     private void renderScrollButton(PoseStack poseStack) {

@@ -418,6 +418,83 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                 Texture.WAYPOINT_MANAGER_BACKGROUND.height());
     }
 
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        // FIXME: Search bar cursor dissapears after interacting with it but still remains focused
+        // should be unfocused
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                return child.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
+        if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
+            if (mouseX >= scrollButtonRenderX
+                    && mouseX <= scrollButtonRenderX + (dividedWidth / 2)
+                    && mouseY >= scrollButtonRenderY
+                    && mouseY <= scrollButtonRenderY + scrollButtonHeight) {
+                draggingScroll = true;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (!draggingScroll) return false;
+
+        int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
+        int scrollAreaStartY = renderY + 12;
+
+        int newValue = (int) MathUtils.map(
+                (float) mouseY,
+                scrollAreaStartY,
+                scrollAreaStartY + (int) (dividedHeight * 40),
+                0,
+                Math.max(0, pois.size() - maxPoisToDisplay));
+
+        scroll(newValue - scrollOffset);
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        draggingScroll = false;
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        double scrollValue = -Math.signum(deltaY);
+        scroll((int) scrollValue);
+
+        return true;
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    @Override
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
+    }
+
     public void selectPoi(CustomPoi selectedPoi) {
         boolean add = true;
         boolean updateState = false;
@@ -519,59 +596,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         populatePois();
     }
 
-    @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        // FIXME: Search bar cursor dissapears after interacting with it but still remains focused
-        // should be unfocused
-        for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                return child.mouseClicked(mouseX, mouseY, button);
-            }
-        }
-
-        if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
-            if (mouseX >= scrollButtonRenderX
-                    && mouseX <= scrollButtonRenderX + (dividedWidth / 2)
-                    && mouseY >= scrollButtonRenderY
-                    && mouseY <= scrollButtonRenderY + scrollButtonHeight) {
-                draggingScroll = true;
-            }
-        }
-
-        return true;
+    public List<CustomPoi> getPois() {
+        return Collections.unmodifiableList(pois);
     }
 
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        draggingScroll = false;
-        return true;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        double scrollValue = -Math.signum(deltaY);
-        scroll((int) scrollValue);
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!draggingScroll) return false;
-
-        int renderY = (int) ((this.height - backgroundHeight) / 2 + (int) (dividedHeight * 3));
-        int scrollAreaStartY = renderY + 12;
-
-        int newValue = (int) MathUtils.map(
-                (float) mouseY,
-                scrollAreaStartY,
-                scrollAreaStartY + (int) (dividedHeight * 40),
-                0,
-                Math.max(0, pois.size() - maxPoisToDisplay));
-
-        scroll(newValue - scrollOffset);
-
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public void setFilteredIcons(Map<Texture, Boolean> filteredIcons) {
+        this.filteredIcons = filteredIcons;
     }
 
     private void renderScrollButton(PoseStack poseStack) {
@@ -945,36 +975,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         deletedPois.remove(deletedPois.size() - 1);
 
         undoDeleteButton.active = !deletedIndexes.isEmpty();
-    }
-
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
-    }
-
-    public List<CustomPoi> getPois() {
-        return Collections.unmodifiableList(pois);
-    }
-
-    public void setFilteredIcons(Map<Texture, Boolean> filteredIcons) {
-        this.filteredIcons = filteredIcons;
     }
 
     public enum PoiSortType {
