@@ -17,7 +17,6 @@ import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -168,12 +167,6 @@ public final class IconFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                return child.mouseClicked(mouseX, mouseY, button);
-            }
-        }
-
         if (!draggingScroll && (usedIcons.size() > MAX_ICONS_TO_DISPLAY)) {
             if (MathUtils.isInside(
                     (int) mouseX,
@@ -183,10 +176,12 @@ public final class IconFilterScreen extends WynntilsScreen {
                     (int) scrollButtonRenderY,
                     (int) (scrollButtonRenderY + scrollButtonHeight))) {
                 draggingScroll = true;
+
+                return true;
             }
         }
 
-        return true;
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     @Override

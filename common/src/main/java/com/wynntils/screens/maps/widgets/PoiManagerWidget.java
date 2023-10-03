@@ -188,6 +188,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
         boolean clickedButton;
 
         // Determine if a button was clicked or should we select the widget

@@ -81,6 +81,7 @@ public class IconFilterWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
         // Toggle if the icon is now included or excluded
         filterScreen.toggleIcon(icon);
 

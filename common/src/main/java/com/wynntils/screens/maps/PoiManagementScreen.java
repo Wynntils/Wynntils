@@ -40,7 +40,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -419,14 +418,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        // FIXME: Search bar cursor dissapears after interacting with it but still remains focused
-        // should be unfocused
-        for (GuiEventListener child : children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                return child.mouseClicked(mouseX, mouseY, button);
-            }
-        }
-
         if (!draggingScroll && (pois.size() > maxPoisToDisplay)) {
             if (MathUtils.isInside(
                     (int) mouseX,
@@ -436,10 +427,12 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                     (int) scrollButtonRenderY,
                     (int) (scrollButtonRenderY + scrollButtonHeight))) {
                 draggingScroll = true;
+
+                return true;
             }
         }
 
-        return true;
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -464,7 +457,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
-        return true;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
