@@ -202,11 +202,7 @@ public final class IconFilterScreen extends WynntilsScreen {
         int scrollAreaStartY = renderY + 7;
 
         int newValue = (int) MathUtils.map(
-                (float) mouseY,
-                scrollAreaStartY,
-                scrollAreaStartY + scrollAreaHeight,
-                0,
-                getMaxScrollOffset());
+                (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset());
 
         scroll(newValue - scrollOffset);
 
