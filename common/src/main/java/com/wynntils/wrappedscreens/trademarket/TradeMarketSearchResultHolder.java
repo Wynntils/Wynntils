@@ -145,7 +145,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
             }
         }
 
-        // Assume the item is before the current page
+        // Assume the item is on a page before the current one
         int pageToLoad = 0;
 
         // Check if the item is on a later page
@@ -208,20 +208,18 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         // We only care about the slots that are in the "search results" area
         if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
 
-        // If we have the item count we expect on the page, we can load the next page
         // If we have found an empty item, we count them and check if we have the expected amount
         Int2ObjectOpenHashMap<ItemStack> currentItems =
                 itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
-
-        // Remove the item if it was already there,
-        // if it is not an empty item, we add it back
-        currentItems.remove(slot);
 
         boolean emptyItem = isEmptyItem(itemStack);
         if (!emptyItem) {
             // Update item in slot, when changing pages,
             // items can change
-            ItemStack oldItem = currentItems.put(slot, itemStack);
+            currentItems.put(slot, itemStack);
+        } else {
+            // Remove the item from the map if it was there
+            currentItems.remove(slot);
         }
 
         pageItemCount++;
@@ -244,9 +242,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
 
             allPagesLoaded = true;
 
-            pageLoadingMode = PageLoadingMode.NONE;
-            requestedPage = -1;
-            runQueuedAction();
+            startNextQueuedAction();
 
             return;
         }
@@ -254,9 +250,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         if (this.currentPage == requestedPage) {
             wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
 
-            pageLoadingMode = PageLoadingMode.NONE;
-            requestedPage = -1;
-            runQueuedAction();
+            startNextQueuedAction();
 
             return;
         }
@@ -281,18 +275,14 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
                     wrappedScreenInfo.containerMenu().getItems());
 
-            pageLoadingMode = PageLoadingMode.NONE;
-            requestedPage = -1;
-            runQueuedAction();
+            startNextQueuedAction();
 
             return;
         } else if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
             if (currentPage == requestedPage) {
                 wrappedScreen.setCurrentState(Component.literal("Couldn't click on item"));
 
-                pageLoadingMode = PageLoadingMode.NONE;
-                requestedPage = -1;
-                runQueuedAction();
+                startNextQueuedAction();
 
                 return;
             }
@@ -322,6 +312,12 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 wrappedScreenInfo.containerId(),
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 wrappedScreenInfo.containerMenu().getItems());
+    }
+
+    private void startNextQueuedAction() {
+        pageLoadingMode = PageLoadingMode.NONE;
+        requestedPage = -1;
+        runQueuedAction();
     }
 
     private void runQueuedAction() {
