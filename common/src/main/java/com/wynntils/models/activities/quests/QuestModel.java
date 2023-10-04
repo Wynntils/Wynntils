@@ -86,7 +86,7 @@ public final class QuestModel extends Model {
                 sortOrder, Stream.concat(quests.stream(), miniQuests.stream()).toList());
     }
 
-    private List<QuestInfo> sortQuestInfoList(ActivitySortOrder sortOrder, List<QuestInfo> questList) {
+    public static List<QuestInfo> sortQuestInfoList(ActivitySortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
 
@@ -149,6 +149,22 @@ public final class QuestModel extends Model {
                 .findFirst();
     }
 
+    public static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
+        // We should always have a length, but if not, better fake one than crashing
+
+        return new QuestInfo(
+                activity.name(),
+                activity.specialInfo().orElse(null),
+                activity.difficulty().orElse(ActivityDifficulty.EASY),
+                activity.status(),
+                activity.length().orElse(ActivityLength.SHORT),
+                activity.requirements().level().key(),
+                activity.description().orElse(StyledText.EMPTY),
+                activity.requirements(),
+                activity.type() == ActivityType.MINI_QUEST,
+                activity.rewards());
+    }
+
     private String stripPrefix(String name) {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
@@ -184,22 +200,6 @@ public final class QuestModel extends Model {
         miniQuests = newMiniQuests;
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.MINI_QUEST));
         WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
-    }
-
-    private static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
-        // We should always have a length, but if not, better fake one than crashing
-
-        return new QuestInfo(
-                activity.name(),
-                activity.specialInfo().orElse(null),
-                activity.difficulty().orElse(ActivityDifficulty.EASY),
-                activity.status(),
-                activity.length().orElse(ActivityLength.SHORT),
-                activity.requirements().level().key(),
-                activity.description().orElse(StyledText.EMPTY),
-                activity.requirements(),
-                activity.type() == ActivityType.MINI_QUEST,
-                activity.rewards());
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {

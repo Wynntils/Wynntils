@@ -71,6 +71,8 @@ public class PageSelectorButton extends WynntilsButton {
     }
 
     private boolean isValid() {
-        return forward ? screen.getCurrentPage() < screen.getMaxPage() : screen.getCurrentPage() > 0;
+        return true;
+        // FIXME: Account for new pages
+        // return forward ? screen.getCurrentPage() < screen.getMaxPage() : screen.getCurrentPage() > 0;
     }
 }

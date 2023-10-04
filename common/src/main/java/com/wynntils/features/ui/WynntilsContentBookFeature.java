@@ -26,6 +26,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.wrappedscreens.activities.WynntilsCaveScreen;
 import com.wynntils.wrappedscreens.activities.WynntilsDiscoveriesScreen;
 import com.wynntils.wrappedscreens.activities.WynntilsQuestBookScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -99,10 +100,13 @@ public class WynntilsContentBookFeature extends Feature {
     @Persisted
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
+    private Class<? extends Screen> expectedScreenClass = null;
+
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
-        if (event.getWrappedScreenClass() == WynntilsQuestBookScreen.class) {
+        if (event.getWrappedScreenClass() == expectedScreenClass) {
             event.setOpenScreen(true);
+            expectedScreenClass = null;
         }
     }
 
@@ -135,19 +139,17 @@ public class WynntilsContentBookFeature extends Feature {
 
         if (itemInHand != null
                 && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
-            // FIXME: Adapt everything else...
-            if (initialPage.get() == InitialPage.QUEST_BOOK) {
+            if (initialPage.get() == InitialPage.USER_PROFILE) {
+                WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
+                event.setCanceled(true);
                 return;
             }
 
-            event.setCanceled(true);
-            WynntilsMenuScreenBase.openBook(
-                    switch (initialPage.get()) {
-                        case USER_PROFILE -> WynntilsMenuScreen.create();
-                        case QUEST_BOOK -> null;
-                        case DISCOVERIES -> WynntilsDiscoveriesScreen.create();
-                        case CAVES -> WynntilsCaveScreen.create();
-                    });
+            expectedScreenClass = switch (initialPage.get()) {
+                case USER_PROFILE -> null;
+                case QUEST_BOOK -> WynntilsQuestBookScreen.class;
+                case DISCOVERIES -> WynntilsDiscoveriesScreen.class;
+                case CAVES -> WynntilsCaveScreen.class;};
         }
     }
 

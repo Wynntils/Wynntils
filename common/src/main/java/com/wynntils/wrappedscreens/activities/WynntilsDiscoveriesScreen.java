@@ -40,7 +40,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<DiscoveryInfo, DiscoveryButton>
-        implements SortableActivityScreen {
+        implements SortableActivityScreen<DiscoveryInfo> {
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
     // Filters
@@ -334,5 +334,10 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
         this.activitySortOrder = newSortOrder;
         this.setCurrentPage(0);
+    }
+
+    @Override
+    public void activitiesChanged(List<DiscoveryInfo> activityInfos) {
+        // FIXME: Implement
     }
 }

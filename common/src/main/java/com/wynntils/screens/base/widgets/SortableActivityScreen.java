@@ -5,9 +5,12 @@
 package com.wynntils.screens.base.widgets;
 
 import com.wynntils.models.activities.type.ActivitySortOrder;
+import java.util.List;
 
-public interface SortableActivityScreen {
+public interface SortableActivityScreen<T> {
     ActivitySortOrder getActivitySortOrder();
 
     void setActivitySortOrder(ActivitySortOrder newSortOrder);
+
+    void activitiesChanged(List<T> activityInfos);
 }

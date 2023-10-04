@@ -48,7 +48,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveButton>
-        implements SortableActivityScreen {
+        implements SortableActivityScreen<CaveInfo> {
     private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
     private CaveInfo trackingRequested = null;
 
@@ -275,6 +275,11 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         this.activitySortOrder = newSortOrder;
         this.setCurrentPage(0);
+    }
+
+    @Override
+    public void activitiesChanged(List<CaveInfo> activityInfos) {
+        // FIXME: Implement
     }
 
     public void setTrackingRequested(CaveInfo caveInfo) {

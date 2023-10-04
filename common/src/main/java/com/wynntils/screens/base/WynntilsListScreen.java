@@ -246,7 +246,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     public void reloadElements() {
         reloadElements(searchWidget.getTextBoxInput());
-        setCurrentPage(0);
+        setCurrentPage(getCurrentPage()); // try to keep the current page if it exists
     }
 
     @Override

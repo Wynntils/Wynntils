@@ -9,9 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
-import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
-import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityStatus;
@@ -24,7 +21,6 @@ import com.wynntils.screens.base.widgets.SortableActivityScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
@@ -42,13 +38,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
-        implements WrappedScreen, SortableActivityScreen {
+        implements WrappedScreen, SortableActivityScreen<QuestInfo> {
     private final WrappedScreenInfo wrappedScreenInfo;
     private final WynntilsQuestBookHolder holder;
+
+    private List<QuestInfo> questInfos = new ArrayList<>();
 
     private QuestInfo trackingRequested = null;
     private boolean showQuests = true;
@@ -191,30 +187,22 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    @SubscribeEvent
-    public void onQuestsReloaded(ActivityUpdatedEvent event) {
-        if (!event.getActivityType().isQuest()) return;
+    @Override
+    public void activitiesChanged(List<QuestInfo> questInfos) {
+        this.questInfos = questInfos;
 
         this.setQuests(getSortedQuests());
         setTrackingRequested(null);
         reloadElements();
     }
 
-    @SubscribeEvent
-    public void onTrackedActivityUpdate(ActivityTrackerUpdatedEvent event) {
-        // Reload so we have the proper order
-        if (McUtils.mc().screen == this) {
-            this.reloadElements();
+    @Override
+    public void setCurrentPage(int currentPage) {
+        if (currentPage == maxPage) {
+            holder.tryLoadNextPage();
         }
-    }
 
-    // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
-    //        Adding a proper way to add quests with scripted container queries would mean this can get removed.
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onMenuClose(MenuEvent.MenuClosedEvent event) {
-        if (McUtils.mc().screen != this) return;
-
-        event.setCanceled(true);
+        super.setCurrentPage(currentPage);
     }
 
     private static void renderNoQuestsHelper(PoseStack poseStack) {
@@ -338,7 +326,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     private List<QuestInfo> getSortedQuests() {
-        return Models.Quest.getSortedQuests(activitySortOrder, showQuests, showMiniQuests);
+        return Models.Quest.sortQuestInfoList(activitySortOrder, questInfos);
     }
 
     private void setQuests(List<QuestInfo> quests) {
