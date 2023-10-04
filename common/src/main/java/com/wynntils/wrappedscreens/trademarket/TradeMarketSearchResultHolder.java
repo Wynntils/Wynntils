@@ -163,10 +163,13 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 }
             }
 
-            if (foundItem) break;
+            if (foundItem) {
+                runOrQueueAction(new QueuedAction(PageLoadingMode.CLICK_ITEM, pageToLoad, clickedItem));
+                return;
+            }
         }
 
-        runOrQueueAction(new QueuedAction(PageLoadingMode.CLICK_ITEM, pageToLoad, clickedItem));
+        wrappedScreen.setCurrentState(Component.literal("Couldn't find item"));
     }
 
     public void goBackToSearch() {
