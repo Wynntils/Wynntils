@@ -47,7 +47,7 @@ public abstract class AbstractActivityHolder<T extends Screen & WrappedScreen & 
     // State
     protected int currentPage = 0;
     protected Map<Integer, Int2ObjectOpenHashMap<I>> infoMap = new TreeMap<>();
-    protected int emptySlotsOnPage = 0;
+    protected int itemsLoadedOnPage = 0;
 
     protected abstract I itemToInfo(ActivityInfo activityInfo);
 
@@ -66,7 +66,7 @@ public abstract class AbstractActivityHolder<T extends Screen & WrappedScreen & 
     protected void reset() {
         currentPage = 0;
         infoMap = new TreeMap<>();
-        emptySlotsOnPage = 0;
+        itemsLoadedOnPage = 0;
     }
 
     @SubscribeEvent
@@ -81,11 +81,11 @@ public abstract class AbstractActivityHolder<T extends Screen & WrappedScreen & 
         Int2ObjectOpenHashMap<I> currentPageMap =
                 infoMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
 
+        itemsLoadedOnPage++;
+
         ItemStack itemStack = event.getItemStack();
 
-        if (itemStack.isEmpty()) {
-            emptySlotsOnPage++;
-        } else {
+        if (!itemStack.isEmpty()) {
             Optional<ActivityItem> activityItemOpt = Models.Item.asWynnItem(itemStack, ActivityItem.class);
             if (activityItemOpt.isEmpty()) {
                 WynntilsMod.warn("Item in slot " + slot + " is not an activity item");
@@ -98,7 +98,7 @@ public abstract class AbstractActivityHolder<T extends Screen & WrappedScreen & 
             currentPageMap.put(slot, info);
         }
 
-        if (currentPageMap.size() + emptySlotsOnPage == CONTENT_ITEMS_PER_PAGE) {
+        if (itemsLoadedOnPage == CONTENT_ITEMS_PER_PAGE) {
             wrappedScreen.activitiesChanged(infoMap.values().stream()
                     .flatMap(map -> map.values().stream())
                     .toList());
@@ -107,21 +107,27 @@ public abstract class AbstractActivityHolder<T extends Screen & WrappedScreen & 
 
     public void tryLoadNextPage() {
         // If the current page is not full, we don't need to load the next page
+        if (itemsLoadedOnPage != CONTENT_ITEMS_PER_PAGE) return;
+
+        // We did not have a full page, there is no next page
         Int2ObjectOpenHashMap<I> currentPageMap = infoMap.getOrDefault(currentPage, new Int2ObjectOpenHashMap<>());
         if (currentPageMap.size() != CONTENT_ITEMS_PER_PAGE) {
             return;
         }
 
-        // We did not have a full page, there is no next page
-        if (emptySlotsOnPage != 0) return;
-
-        // FIXME: Check for "next" item
+        // If there is no next page, we can't need to load it
+        if (!nextPageExists()) return;
 
         this.currentPage++;
+        itemsLoadedOnPage = 0;
         ContainerUtils.clickOnSlot(
                 NEXT_PAGE_SLOT,
                 wrappedScreenInfo.containerId(),
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 wrappedScreenInfo.containerMenu().getItems());
+    }
+
+    public boolean nextPageExists() {
+        return !wrappedScreenInfo.containerMenu().getItems().get(NEXT_PAGE_SLOT).isEmpty();
     }
 }

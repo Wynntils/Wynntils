@@ -180,7 +180,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
         renderDescription(poseStack);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, holder.nextPageExists());
 
         poseStack.popPose();
 
@@ -198,7 +198,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     @Override
     public void setCurrentPage(int currentPage) {
-        if (currentPage == maxPage) {
+        // Try to load the next page if we're on the last loaded page
+        if (currentPage >= maxPage) {
             holder.tryLoadNextPage();
         }
 

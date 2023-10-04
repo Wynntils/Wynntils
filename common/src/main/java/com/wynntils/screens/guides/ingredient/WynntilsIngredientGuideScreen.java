@@ -58,7 +58,7 @@ public final class WynntilsIngredientGuideScreen
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 

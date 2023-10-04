@@ -75,7 +75,7 @@ public class WynntilsCrowdSourcingSettingsScreen
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 

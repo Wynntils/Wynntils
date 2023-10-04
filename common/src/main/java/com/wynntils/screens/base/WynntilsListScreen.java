@@ -75,11 +75,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         }
     }
 
-    protected void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+    protected void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage, boolean additionalPages) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString((currentPage) + " / " + (maxPage)),
+                        StyledText.fromString((currentPage) + " / " + (maxPage) + (additionalPages ? "+" : "")),
                         Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
                         Texture.CONTENT_BOOK_BACKGROUND.width(),
                         Texture.CONTENT_BOOK_BACKGROUND.height() - 25,

@@ -165,7 +165,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsCaves.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 

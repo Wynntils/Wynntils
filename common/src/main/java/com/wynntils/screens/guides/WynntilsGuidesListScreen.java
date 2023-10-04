@@ -133,7 +133,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 

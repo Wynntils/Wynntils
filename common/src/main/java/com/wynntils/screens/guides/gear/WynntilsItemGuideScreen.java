@@ -56,7 +56,7 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 

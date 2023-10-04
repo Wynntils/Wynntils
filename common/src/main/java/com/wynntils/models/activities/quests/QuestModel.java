@@ -154,7 +154,7 @@ public final class QuestModel extends Model {
 
         return new QuestInfo(
                 activity.name(),
-                activity.specialInfo().orElse(null),
+                activity.specialInfo().orElse(""),
                 activity.difficulty().orElse(ActivityDifficulty.EASY),
                 activity.status(),
                 activity.length().orElse(ActivityLength.SHORT),

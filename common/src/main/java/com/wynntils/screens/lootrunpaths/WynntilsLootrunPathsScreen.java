@@ -155,7 +155,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         renderDescription(poseStack);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 

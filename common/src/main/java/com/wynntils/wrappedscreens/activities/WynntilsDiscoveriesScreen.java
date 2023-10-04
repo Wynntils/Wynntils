@@ -261,7 +261,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 I18n.get("screens.wynntils.wynntilsDiscoveries.screenDescription"),
                 I18n.get("screens.wynntils.wynntilsActivities.filterHelper"));
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(poseStack, currentPage + 1, maxPage + 1, false);
 
         poseStack.popPose();
 
