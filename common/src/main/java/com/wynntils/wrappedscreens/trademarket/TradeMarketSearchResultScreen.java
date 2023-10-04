@@ -42,7 +42,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private static final int ITEMS_PER_PAGE = 54;
 
     // Info
-    private final TradeMarketSearchResultHolder parent;
+    private final TradeMarketSearchResultHolder holder;
     private final WrappedScreenInfo wrappedScreenInfo;
 
     // Widgets
@@ -55,7 +55,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private int scrollOffset = 0;
     private boolean holdingScrollbar = false;
 
-    protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultHolder parent) {
+    protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultHolder holder) {
         super(
                 ChestMenu.sixRows(FAKE_CONTAINER_ID, McUtils.inventory()),
                 McUtils.inventory(),
@@ -65,7 +65,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         this.imageHeight = 114 + this.getMenu().getRowCount() * 18;
         this.inventoryLabelY = this.imageHeight - 94;
 
-        this.parent = parent;
+        this.holder = holder;
         this.wrappedScreenInfo = wrappedScreenInfo;
     }
 
@@ -114,7 +114,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 Texture.ARROW_LEFT_ICON.width(),
                 Texture.ARROW_LEFT_ICON.height(),
                 Texture.ARROW_LEFT_ICON,
-                (button) -> parent.goBackToSearch(),
+                (button) -> holder.goBackToSearch(),
                 List.of(Component.translatable("screens.wynntils.tradeMarketSearchResult.backToSearch")
                         .withStyle(ChatFormatting.BOLD)));
         this.addRenderableWidget(backButton);
@@ -125,9 +125,9 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 Texture.SMALL_ADD_ICON.width(),
                 Texture.SMALL_ADD_ICON.height(),
                 Texture.SMALL_ADD_ICON,
-                (button) -> parent.loadNextPageBatch(),
+                (button) -> holder.loadNextPageBatch(),
                 List.of(Component.translatable(
-                                "screens.wynntils.tradeMarketSearchResult.loadNextBatch", parent.getPageLoadBatchSize())
+                                "screens.wynntils.tradeMarketSearchResult.loadNextBatch", holder.getPageLoadBatchSize())
                         .withStyle(ChatFormatting.BOLD)));
         this.addRenderableWidget(loadMoreButton);
 
@@ -240,7 +240,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         }
 
         if (hoveredSlot != null) {
-            parent.clickOnItem(hoveredSlot.getItem());
+            holder.clickOnItem(hoveredSlot.getItem());
             return true;
         }
 
@@ -302,13 +302,13 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     private int getMaxScrollOffset() {
-        int maxItemOffset = Math.max(0, parent.getFilteredItems().size() - 54);
+        int maxItemOffset = Math.max(0, holder.getFilteredItems().size() - 54);
         int maxValue = maxItemOffset / 9 + (maxItemOffset % 9 > 0 ? 1 : 0);
         return maxValue;
     }
 
     private void updateItems() {
-        List<ItemStack> filteredItems = parent.getFilteredItems();
+        List<ItemStack> filteredItems = holder.getFilteredItems();
 
         // Reset all items
         for (int i = 0; i < 54; i++) {
@@ -332,7 +332,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     private void reloadElements() {
-        parent.updateDisplayItems(itemSearchWidget.getSearchQuery());
+        holder.updateDisplayItems(itemSearchWidget.getSearchQuery());
         scrollOffset = 0;
     }
 
