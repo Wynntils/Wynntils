@@ -2,26 +2,23 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.activities;
+package com.wynntils.wrappedscreens.activities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.wrappedscreen.WrappedScreen;
+import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityStatus;
-import com.wynntils.screens.activities.widgets.DialogueHistoryButton;
-import com.wynntils.screens.activities.widgets.QuestButton;
-import com.wynntils.screens.activities.widgets.QuestInfoButton;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
-import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
 import com.wynntils.screens.base.widgets.SortableActivityScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -34,6 +31,9 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.wrappedscreens.activities.widgets.DialogueHistoryButton;
+import com.wynntils.wrappedscreens.activities.widgets.QuestButton;
+import com.wynntils.wrappedscreens.activities.widgets.QuestInfoButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +46,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
-        implements SortableActivityScreen {
+        implements WrappedScreen, SortableActivityScreen {
+    private final WrappedScreenInfo wrappedScreenInfo;
+    private final WynntilsQuestBookHolder holder;
+
     private QuestInfo trackingRequested = null;
     private boolean showQuests = true;
     private boolean showMiniQuests = false;
@@ -54,29 +57,24 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
-    private WynntilsQuestBookScreen() {
+    public WynntilsQuestBookScreen(WrappedScreenInfo wrappedScreenInfo, WynntilsQuestBookHolder holder) {
         super(Component.translatable("screens.wynntils.wynntilsQuestBook.name"));
-
-        // Only register this once
-        WynntilsMod.registerEventListener(this);
+        this.wrappedScreenInfo = wrappedScreenInfo;
+        this.holder = holder;
     }
 
     public static Screen create() {
-        return new WynntilsQuestBookScreen();
+        WynntilsQuestBookHolder.openScreen();
+
+        // Open a dummy screen and seamlessly replace it with the real one
+        return new WynntilsQuestBookScreen(null, null);
     }
 
-    @Override
-    public void onClose() {
-        WynntilsMod.unregisterEventListener(this);
-        super.onClose();
-    }
-
-    /** This is called on every resize. Re-registering widgets are required, re-creating them is not.
-     * */
+    /**
+     * This is called on every resize. Re-registering widgets are required, re-creating them is not.
+     */
     @Override
     protected void doInit() {
-        Models.Quest.rescanQuestBook(true, true);
-
         filterButtons.clear();
 
         super.doInit();
@@ -127,13 +125,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
             this.addRenderableWidget(filterButton);
         }
 
-        this.addRenderableWidget(new ReloadButton(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
-                11,
-                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
-                (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
-                "quest",
-                () -> Models.Quest.rescanQuestBook(showQuests, showMiniQuests)));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
@@ -446,5 +437,10 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 .append(Component.literal("[" + completedCount + "/" + count + "]")
                         .withStyle(ChatFormatting.DARK_AQUA)));
         tooltipLines.add(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 15));
+    }
+
+    @Override
+    public WrappedScreenInfo getWrappedScreenInfo() {
+        return wrappedScreenInfo;
     }
 }

@@ -12,11 +12,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
-import com.wynntils.screens.activities.WynntilsCaveScreen;
-import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
-import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
@@ -25,6 +23,9 @@ import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.wrappedscreens.activities.WynntilsCaveScreen;
+import com.wynntils.wrappedscreens.activities.WynntilsDiscoveriesScreen;
+import com.wynntils.wrappedscreens.activities.WynntilsQuestBookScreen;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -99,6 +100,13 @@ public class WynntilsContentBookFeature extends Feature {
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
     @SubscribeEvent
+    public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
+        if (event.getWrappedScreenClass() == WynntilsQuestBookScreen.class) {
+            event.setOpenScreen(true);
+        }
+    }
+
+    @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
@@ -127,11 +135,16 @@ public class WynntilsContentBookFeature extends Feature {
 
         if (itemInHand != null
                 && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
+            // FIXME: Adapt everything else...
+            if (initialPage.get() == InitialPage.QUEST_BOOK) {
+                return;
+            }
+
             event.setCanceled(true);
             WynntilsMenuScreenBase.openBook(
                     switch (initialPage.get()) {
                         case USER_PROFILE -> WynntilsMenuScreen.create();
-                        case QUEST_BOOK -> WynntilsQuestBookScreen.create();
+                        case QUEST_BOOK -> null;
                         case DISCOVERIES -> WynntilsDiscoveriesScreen.create();
                         case CAVES -> WynntilsCaveScreen.create();
                     });

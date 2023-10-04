@@ -13,6 +13,7 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.wynntils.wrappedscreens.activities.WynntilsQuestBookHolder;
 import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultHolder;
 import java.util.HashSet;
 import java.util.Optional;
@@ -76,9 +77,11 @@ public class WrappedScreenHandler extends Handler {
 
         // If the container was overridden, we don't need to close it
         if (closeContainer) {
-            ContainerUtils.closeContainer(((WrappedScreen) currentWrappedScreen)
-                    .getWrappedScreenInfo()
-                    .containerId());
+            WrappedScreenInfo wrappedScreenInfo = ((WrappedScreen) currentWrappedScreen).getWrappedScreenInfo();
+
+            if (wrappedScreenInfo != null) {
+                ContainerUtils.closeContainer(wrappedScreenInfo.containerId());
+            }
         }
 
         currentWrappedScreen = null;
@@ -90,6 +93,7 @@ public class WrappedScreenHandler extends Handler {
 
     private void registerWrappedScreens() {
         registerWrappedScreen(new TradeMarketSearchResultHolder());
+        registerWrappedScreen(new WynntilsQuestBookHolder());
     }
 
     private void registerWrappedScreen(WrappedScreenHolder holder) {

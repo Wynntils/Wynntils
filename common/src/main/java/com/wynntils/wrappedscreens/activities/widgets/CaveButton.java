@@ -2,14 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.activities.widgets;
+package com.wynntils.wrappedscreens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -27,6 +26,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.wrappedscreens.activities.WynntilsCaveScreen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

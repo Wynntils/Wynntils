@@ -11,10 +11,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
-import com.wynntils.screens.activities.WynntilsCaveScreen;
-import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
-import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
-import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
@@ -36,6 +32,10 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.wrappedscreens.activities.WynntilsCaveScreen;
+import com.wynntils.wrappedscreens.activities.WynntilsDialogueHistoryScreen;
+import com.wynntils.wrappedscreens.activities.WynntilsDiscoveriesScreen;
+import com.wynntils.wrappedscreens.activities.WynntilsQuestBookScreen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +54,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private final List<List<WynntilsMenuButton>> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
+    private boolean firstInit = true;
 
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
@@ -61,10 +62,17 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
         setup();
-        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
-                .displayOverallProgress
-                .get()) {
-            Models.Activity.scanOverallProgress();
+    }
+
+    @Override
+    protected void doInit() {
+        if (firstInit) {
+            firstInit = false;
+            if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                    .displayOverallProgress
+                    .get()) {
+                Models.Activity.scanOverallProgress();
+            }
         }
     }
 

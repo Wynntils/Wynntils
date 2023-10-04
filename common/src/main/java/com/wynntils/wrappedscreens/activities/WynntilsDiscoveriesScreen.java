@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.activities;
+package com.wynntils.wrappedscreens.activities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
@@ -11,8 +11,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivitySortOrder;
-import com.wynntils.screens.activities.widgets.DiscoveryButton;
-import com.wynntils.screens.activities.widgets.DiscoveryProgressButton;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
@@ -29,6 +27,8 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.wrappedscreens.activities.widgets.DiscoveryButton;
+import com.wynntils.wrappedscreens.activities.widgets.DiscoveryProgressButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;

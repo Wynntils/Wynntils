@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.activities.widgets;
+package com.wynntils.wrappedscreens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.wrappedscreens.activities.WynntilsQuestBookScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 

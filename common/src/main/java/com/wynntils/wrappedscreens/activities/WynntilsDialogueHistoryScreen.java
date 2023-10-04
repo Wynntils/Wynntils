@@ -2,14 +2,13 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.activities;
+package com.wynntils.wrappedscreens.activities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
-import com.wynntils.screens.activities.widgets.QuestsPageButton;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsPagedScreen;
@@ -27,6 +26,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.wrappedscreens.activities.widgets.QuestsPageButton;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
