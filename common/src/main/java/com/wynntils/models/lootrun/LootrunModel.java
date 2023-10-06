@@ -456,7 +456,7 @@ public class LootrunModel extends Model {
     private void updateTaskLocationPrediction(Beacon beacon) {
         Optional<LootrunLocation> location = getLocation();
         if (location.isEmpty()) {
-            WynntilsMod.warn("Location was when trying to predict for: " + beacon);
+            WynntilsMod.warn("Location was empty when trying to predict for: " + beacon);
             return;
         }
 
