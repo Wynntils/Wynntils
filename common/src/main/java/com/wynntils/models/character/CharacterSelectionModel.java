@@ -26,9 +26,9 @@ import org.lwjgl.glfw.GLFW;
 public final class CharacterSelectionModel extends Model {
     private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("^§a\\[\\+\\] Create a new character$");
     private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("^§6\\[>\\] Select (.+)$");
-    // Test suite: https://regexr.com/7h4ou
+    // Test suite: https://regexr.com/7l9ks
     private static final Pattern CLASS_ITEM_CLASS_PATTERN = Pattern.compile(
-            "§e- §7Class: (§r)?(§c(?:§l)?☠)?(§r)?(§6(?:§l)?❂)?(§r)?(§3(?:§l)?⛏)?(§r)?(§5(?:§l)?⚔)?(§r)?(\\s)?(§r)?§f(?<name>.+)");
+            "§e- §7Class: (§r)?(§c(?:§l)?)?(§r)?(§6(?:§l)?)?(§r)?(§b(?:§l)?)?(§r)?(§3(?:§l)?)?(§r)?(§5(?:§l)?)?(§r)?(\\s)?(§r)?§f(?<name>.+)");
     private static final Pattern CLASS_ITEM_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
     private static final Pattern CLASS_ITEM_XP_PATTERN = Pattern.compile("§e- §7XP: §f(\\d+)%");
     private static final Pattern CLASS_ITEM_SOUL_POINTS_PATTERN = Pattern.compile("§e- §7Soul Points: §f(\\d+)");
