@@ -4,15 +4,17 @@
  */
 package com.wynntils.forge.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -24,41 +26,42 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiGraphics.class)
 public abstract class ForgeGuiGraphicsMixin {
     // Note: Call site 3 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
-    @Inject(
+    @WrapOperation(
             method =
                     "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;II)V",
-            at = @At("HEAD"),
-            cancellable = true,
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V",
+                            remap = true),
             remap = false)
     private void renderTooltipPre(
+            GuiGraphics instance,
             Font font,
-            List<Component> textComponents,
-            Optional<TooltipComponent> tooltipComponent,
-            ItemStack itemStack,
+            List<Component> tooltipLines,
+            Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
-            CallbackInfo callbackInfo,
-            @Local(ordinal = 0) LocalRef<List<Component>> textComponentRef,
-            @Local(ordinal = 0) LocalRef<ItemStack> itemStackRef,
-            @Local(ordinal = 0) LocalIntRef mouseXRef,
-            @Local(ordinal = 1) LocalIntRef mouseYRef) {
+            Operation<Void> operation,
+            @Local ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
                 (GuiGraphics) (Object) this,
-                itemStackRef.get(),
-                textComponentRef.get(),
-                mouseXRef.get(),
-                mouseYRef.get());
+                itemStack,
+                Screen.getTooltipFromItem(McUtils.mc(), itemStack),
+                mouseX,
+                mouseY);
         MixinHelper.post(event);
 
-        if (event.isCanceled()) {
-            callbackInfo.cancel();
-            return;
-        }
+        if (event.isCanceled()) return;
 
-        textComponentRef.set(event.getTooltips());
-        itemStackRef.set(event.getItemStack());
-        mouseXRef.set(event.getMouseX());
-        mouseYRef.set(event.getMouseY());
+        operation.call(
+                instance,
+                font,
+                event.getTooltips(),
+                event.getItemStack().getTooltipImage(),
+                event.getMouseX(),
+                event.getMouseY());
     }
 
     @Inject(
