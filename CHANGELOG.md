@@ -1,9 +1,21 @@
+## [0.0.4-beta.16](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.15...v0.0.4-beta.16) (2023-10-06)
+
+
+### Bug Fixes
+
+* properly fix ForgeGuiGraphicsMixin ([#2170](https://github.com/Wynntils/Artemis/issues/2170)) ([a934ebd](https://github.com/Wynntils/Artemis/commit/a934ebddee9d5392e47d34aaed4fe9200d907991)), closes [#2165](https://github.com/Wynntils/Artemis/issues/2165)
+
 ## [0.0.4-beta.15](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.14...v0.0.4-beta.15) (2023-10-06)
 
 
 ### New Features
 
 * Process and show "unknown" lootrun locations ([#2169](https://github.com/Wynntils/Artemis/issues/2169)) ([cb0c268](https://github.com/Wynntils/Artemis/commit/cb0c268c90848f9cc0f89aff5229e1bb424283c0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.15 [skip ci] ([b2a8438](https://github.com/Wynntils/Artemis/commit/b2a843831bb4fb0e84e38c162390af2c417b3856))
 
 ## [0.0.4-beta.14](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.13...v0.0.4-beta.14) (2023-10-06)
 
@@ -41,16 +53,4 @@
 ### Code Refactoring
 
 * Move ParticleModel into ParticleHandler ([#2164](https://github.com/Wynntils/Artemis/issues/2164)) ([94d138f](https://github.com/Wynntils/Artemis/commit/94d138f3f5983cc89610c0c2d289a6881a63306a))
-
-## [0.0.4-beta.11](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.10...v0.0.4-beta.11) (2023-10-03)
-
-
-### New Features
-
-* Fabric loader lists conflicting mods ([#2166](https://github.com/Wynntils/Artemis/issues/2166)) ([371d290](https://github.com/Wynntils/Artemis/commit/371d290f2d10507a972833dbf8fc16ee0702bacb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.11 [skip ci] ([1675328](https://github.com/Wynntils/Artemis/commit/1675328e5ae5a2cae5e8b66f818d08f98a357fad))
 
