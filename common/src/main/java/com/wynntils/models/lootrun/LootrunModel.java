@@ -41,6 +41,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
@@ -113,7 +114,6 @@ public class LootrunModel extends Model {
 
     // rely on color, beacon positions change
     private Map<BeaconColor, TaskPrediction> beacons = new HashMap<>();
-    private Map<BeaconColor, Pair<Integer, TaskLocation>> beaconUpdates = new HashMap<>();
 
     // particles can accurately show task locations
     private Set<TaskLocation> possibleTaskLocations = new HashSet<>();
@@ -173,6 +173,11 @@ public class LootrunModel extends Model {
                 return;
             }
         }
+
+        // Our possible task location set did not contain the particle location,
+        // so add a new "unknown" task location to the set.
+        Location location = Location.containing(event.getParticle().position());
+        possibleTaskLocations.add(new TaskLocation(location.toString(), location, LootrunTaskType.UNKNOWN));
     }
 
     @SubscribeEvent
@@ -221,7 +226,6 @@ public class LootrunModel extends Model {
 
         lootrunningState = LootrunningState.NOT_RUNNING;
         taskType = null;
-        beaconUpdates = new HashMap<>();
         beacons = new HashMap<>();
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
@@ -264,7 +268,6 @@ public class LootrunModel extends Model {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
             beacons.remove(beaconColor);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-            beaconUpdates.remove(beaconColor);
         }
     }
 
@@ -421,7 +424,6 @@ public class LootrunModel extends Model {
             possibleTaskLocations = new HashSet<>();
 
             beacons = new HashMap<>();
-            beaconUpdates = new HashMap<>();
 
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
