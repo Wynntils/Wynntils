@@ -1,9 +1,26 @@
+## [0.0.4-beta.14](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.13...v0.0.4-beta.14) (2023-10-06)
+
+
+### New Features
+
+* Wynncraft 2.0.4 support ([#2141](https://github.com/Wynntils/Artemis/issues/2141)) ([af465ed](https://github.com/Wynntils/Artemis/commit/af465ed479b74989e00343695bdd7c1505146cd3)), closes [#1955](https://github.com/Wynntils/Artemis/issues/1955)
+
+
+### Miscellaneous Chores
+
+* Release new version for Wynncraft 2.0.4 ([c88b994](https://github.com/Wynntils/Artemis/commit/c88b994c181dd18abf95bf33fc8a9def30c52e7a))
+
 ## [0.0.4-beta.13](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.12...v0.0.4-beta.13) (2023-10-03)
 
 
 ### Bug Fixes
 
 * Do not freeze/crash on invalid mention aliases ([#2029](https://github.com/Wynntils/Artemis/issues/2029)) ([f478d9b](https://github.com/Wynntils/Artemis/commit/f478d9bcaa71d31fd0526189269d71c145e009a5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.13 [skip ci] ([aa6af88](https://github.com/Wynntils/Artemis/commit/aa6af88c287c1c6d23b804771266319e9999778c))
 
 ## [0.0.4-beta.12](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.11...v0.0.4-beta.12) (2023-10-03)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.10 [skip ci] ([f343a63](https://github.com/Wynntils/Artemis/commit/f343a6379465c046a1aaa0b9543f0eedf3a69c51))
-
-## [0.0.4-beta.9](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.8...v0.0.4-beta.9) (2023-10-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.9 [skip ci] ([e4b3b21](https://github.com/Wynntils/Artemis/commit/e4b3b21086b7d381c0fd2ab7d2a4b852c0aa6ebc))
-
-
-### Code Refactoring
-
-* Another round of cleanups as suggested by IntelliJ ([#2161](https://github.com/Wynntils/Artemis/issues/2161)) ([02bdb42](https://github.com/Wynntils/Artemis/commit/02bdb42e69b342de3da159cf3ae59aaa4cb97c14))
 
