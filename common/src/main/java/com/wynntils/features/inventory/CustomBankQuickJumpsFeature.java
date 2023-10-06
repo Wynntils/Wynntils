@@ -35,7 +35,7 @@ import org.lwjgl.glfw.GLFW;
 public class CustomBankQuickJumpsFeature extends Feature {
     // Change to ranged integer/integer list when implemented
     @Persisted
-    public final Config<String> bankDestinations = new Config<>("1,5,9,13,17,21");
+    public final Config<String> accountBankDestinations = new Config<>("1,5,9,13,17,21");
 
     @Persisted
     public final Config<String> blockBankDestinations = new Config<>("1,3,5,8,10,12");
@@ -44,9 +44,12 @@ public class CustomBankQuickJumpsFeature extends Feature {
     public final Config<String> bookshelfDestinations = new Config<>("1,3,4,6,8,10");
 
     @Persisted
+    public final Config<String> characterBankDestinations = new Config<>("1,3,4,6,8,10");
+
+    @Persisted
     public final Config<String> miscBucketDestinations = new Config<>("1,3,4,6,8,10");
 
-    private static final int MAX_BANK_PAGES = 21;
+    private static final int MAX_ACCOUNT_BANK_PAGES = 21;
     private static final int MAX_BLOCK_BANK_PAGES = 12;
     private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
     private static final int MAX_DESTINATIONS = 6;
@@ -54,12 +57,12 @@ public class CustomBankQuickJumpsFeature extends Feature {
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> BLOCK_BANK_DESTINATIONS = List.of(1, 3, 5, 8, 10, 12);
-    private static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
+    private static final List<Integer> DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
     private boolean quickJumping = false;
     private int currentPage = 1;
-    private int lastPage = MAX_BANK_PAGES;
+    private int lastPage = MAX_ACCOUNT_BANK_PAGES;
     private int pageDestination = 1;
     private List<Integer> customJumpDestinations;
 
@@ -89,9 +92,10 @@ public class CustomBankQuickJumpsFeature extends Feature {
         String configDestinations;
 
         switch (Models.Bank.getCurrentContainer()) {
-            case BANK -> configDestinations = bankDestinations.get();
+            case ACCOUNT_BANK -> configDestinations = accountBankDestinations.get();
             case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
             case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
+            case CHARACTER_BANK -> configDestinations = characterBankDestinations.get();
             case MISC_BUCKET -> configDestinations = miscBucketDestinations.get();
             default -> {
                 return;
@@ -107,9 +111,9 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     private List<Integer> getDefaultJumpDestinations() {
         return switch (Models.Bank.getCurrentContainer()) {
-            case BANK -> QUICK_JUMP_DESTINATIONS;
+            case ACCOUNT_BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
-            default -> HOUSING_DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
+            default -> DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
         };
     }
 
@@ -258,15 +262,15 @@ public class CustomBankQuickJumpsFeature extends Feature {
         int maxValue;
 
         switch (fieldName) {
-            case "bankDestinations" -> {
-                containerType = SearchableContainerType.BANK;
-                maxValue = MAX_BANK_PAGES;
+            case "accountBankDestinations" -> {
+                containerType = SearchableContainerType.ACCOUNT_BANK;
+                maxValue = MAX_ACCOUNT_BANK_PAGES;
             }
             case "blockBankDestinations" -> {
                 containerType = SearchableContainerType.BLOCK_BANK;
                 maxValue = MAX_BLOCK_BANK_PAGES;
             }
-            case "bookshelfDestinations", "miscBucketDestinations" -> {
+            case "bookshelfDestinations", "miscBucketDestinations", "characterBankDestinations" -> {
                 containerType = SearchableContainerType.BOOKSHELF;
                 maxValue = MAX_HOUSING_CONTAINER_PAGES;
             }
@@ -310,9 +314,9 @@ public class CustomBankQuickJumpsFeature extends Feature {
                 List<Integer> defaultValues;
 
                 switch (containerType) {
-                    case BANK -> defaultValues = QUICK_JUMP_DESTINATIONS;
+                    case ACCOUNT_BANK -> defaultValues = QUICK_JUMP_DESTINATIONS;
                     case BLOCK_BANK -> defaultValues = BLOCK_BANK_DESTINATIONS;
-                    case BOOKSHELF, MISC_BUCKET -> defaultValues = HOUSING_DEFAULT_DESTINATIONS;
+                    case BOOKSHELF, MISC_BUCKET, CHARACTER_BANK -> defaultValues = DEFAULT_DESTINATIONS;
                     default -> {
                         return null;
                     }

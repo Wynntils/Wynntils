@@ -8,8 +8,8 @@ import com.wynntils.core.text.StyledText;
 import java.util.regex.Pattern;
 
 public enum SearchableContainerType {
-    BANK(
-            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"),
+    ACCOUNT_BANK(
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Account Bank"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
             new ContainerBounds(0, 0, 5, 6)),
@@ -20,6 +20,11 @@ public enum SearchableContainerType {
             new ContainerBounds(0, 0, 5, 6)),
     BOOKSHELF(
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            8,
+            new ContainerBounds(0, 0, 5, 6)),
+    CHARACTER_BANK(
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Character Bank"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
             new ContainerBounds(0, 0, 5, 6)),
