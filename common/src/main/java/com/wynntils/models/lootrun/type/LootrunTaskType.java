@@ -10,7 +10,8 @@ public enum LootrunTaskType {
     LOOT(Texture.SPELUNK),
     SLAY(Texture.SLAY),
     DESTROY(Texture.DESTROY),
-    DEFEND(Texture.DEFEND);
+    DEFEND(Texture.DEFEND),
+    UNKNOWN(Texture.WAYPOINT);
 
     private final Texture texture;
 
