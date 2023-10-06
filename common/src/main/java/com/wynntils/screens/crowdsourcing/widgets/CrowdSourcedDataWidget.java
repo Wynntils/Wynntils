@@ -115,6 +115,18 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            ConfirmedBoolean dataCollectionState =
+                    Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
+            if (dataCollectionState == ConfirmedBoolean.UNCONFIRMED) {
+                Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
+                        .crowdSourcedDataTypeEnabledMap
+                        .get()
+                        .put(crowdSourcedDataType, ConfirmedBoolean.FALSE);
+
+                Managers.Config.saveConfig();
+                return true;
+            }
+
             Set<Object> data = Managers.CrowdSourcedData.getData(crowdSourcedDataType);
 
             String jsonString = Managers.Json.GSON.toJson(Map.of(Managers.CrowdSourcedData.CURRENT_GAME_VERSION, data));
@@ -145,11 +157,12 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
         lines.add(Component.empty());
 
+        ConfirmedBoolean dataCollectionState = Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
         if (!Managers.CrowdSourcedData.isDataCollectionEnabled()) {
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.enableWithFeature")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.DARK_GREEN));
-        } else if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) != ConfirmedBoolean.TRUE) {
+        } else if (dataCollectionState != ConfirmedBoolean.TRUE) {
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.enable")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));
@@ -159,9 +172,15 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                     .withStyle(ChatFormatting.RED));
         }
 
-        lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.copy")
-                .withStyle(ChatFormatting.BOLD)
-                .withStyle(ChatFormatting.YELLOW));
+        if (dataCollectionState == ConfirmedBoolean.UNCONFIRMED) {
+            lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.disableUnconfirmed")
+                    .withStyle(ChatFormatting.BOLD)
+                    .withStyle(ChatFormatting.RED));
+        } else {
+            lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.copy")
+                    .withStyle(ChatFormatting.BOLD)
+                    .withStyle(ChatFormatting.YELLOW));
+        }
 
         return ComponentUtils.wrapTooltips(lines, 200);
     }

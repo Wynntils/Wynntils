@@ -11,8 +11,11 @@ import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.crowdsource.LootrunLocationDataCollector;
+import com.wynntils.crowdsource.NpcLocationDataCollector;
+import com.wynntils.crowdsource.ProfessionNodeLocationDataCollector;
+import com.wynntils.crowdsource.ProfessionStationLocationDataCollector;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
-import com.wynntils.telemetry.LootrunLocationDataCollector;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
@@ -66,6 +69,11 @@ public class CrowdSourcedDataManager extends Manager {
 
     private void registerCollectors() {
         registerCollector(CrowdSourcedDataType.LOOTRUN_TASK_LOCATIONS, new LootrunLocationDataCollector());
+        registerCollector(CrowdSourcedDataType.NPC_LOCATIONS, new NpcLocationDataCollector());
+        registerCollector(CrowdSourcedDataType.PROFESSION_NODE_LOCATIONS, new ProfessionNodeLocationDataCollector());
+        registerCollector(
+                CrowdSourcedDataType.PROFESSION_CRAFTING_STATION_LOCATIONS,
+                new ProfessionStationLocationDataCollector());
     }
 
     private void registerCollector(CrowdSourcedDataType crowdSourcedDataType, CrowdSourcedDataCollector<?> collector) {

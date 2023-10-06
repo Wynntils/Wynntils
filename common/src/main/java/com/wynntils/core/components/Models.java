@@ -35,6 +35,7 @@ import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
+import com.wynntils.models.npc.NpcModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
@@ -87,6 +88,7 @@ public final class Models {
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();
     public static final MobTotemModel MobTotem = new MobTotemModel();
+    public static final NpcModel NpcModel = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PartyModel Party = new PartyModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();

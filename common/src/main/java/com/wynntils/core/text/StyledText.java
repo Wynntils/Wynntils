@@ -5,9 +5,16 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -713,5 +720,18 @@ public final class StyledText implements Iterable<StyledTextPart> {
     @Override
     public int hashCode() {
         return Objects.hash(parts, clickEvents, hoverEvents);
+    }
+
+    public static class StyledTextSerializer implements JsonSerializer<StyledText>, JsonDeserializer<StyledText> {
+        @Override
+        public StyledText deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            return StyledText.fromString(json.getAsString());
+        }
+
+        @Override
+        public JsonElement serialize(StyledText src, Type typeOfSrc, JsonSerializationContext context) {
+            return context.serialize(src.getString());
+        }
     }
 }
