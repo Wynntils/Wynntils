@@ -1,3 +1,10 @@
+## [0.0.4-beta.15](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.14...v0.0.4-beta.15) (2023-10-06)
+
+
+### New Features
+
+* Process and show "unknown" lootrun locations ([#2169](https://github.com/Wynntils/Artemis/issues/2169)) ([cb0c268](https://github.com/Wynntils/Artemis/commit/cb0c268c90848f9cc0f89aff5229e1bb424283c0))
+
 ## [0.0.4-beta.14](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.13...v0.0.4-beta.14) (2023-10-06)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * Release new version for Wynncraft 2.0.4 ([c88b994](https://github.com/Wynntils/Artemis/commit/c88b994c181dd18abf95bf33fc8a9def30c52e7a))
+* **release:** v0.0.4-beta.14 [skip ci] ([1a8b345](https://github.com/Wynntils/Artemis/commit/1a8b345cdc31c82a47b8e380449f32e4acaa8436))
 
 ## [0.0.4-beta.13](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.12...v0.0.4-beta.13) (2023-10-03)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.11 [skip ci] ([1675328](https://github.com/Wynntils/Artemis/commit/1675328e5ae5a2cae5e8b66f818d08f98a357fad))
-
-## [0.0.4-beta.10](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.9...v0.0.4-beta.10) (2023-10-03)
-
-
-### Bug Fixes
-
-* Patch ForgeGuiGraphicsMixin[#render](https://github.com/Wynntils/Artemis/issues/render)TooltipPre to avoid weird mixin issue ([#2165](https://github.com/Wynntils/Artemis/issues/2165)) ([136c50b](https://github.com/Wynntils/Artemis/commit/136c50b5691000f1332acfa56fae07bcd5b5caf9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.10 [skip ci] ([f343a63](https://github.com/Wynntils/Artemis/commit/f343a6379465c046a1aaa0b9543f0eedf3a69c51))
 
