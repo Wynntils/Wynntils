@@ -25,6 +25,7 @@ public final class SplashService extends Service {
 
     public SplashService() {
         super(List.of());
+
         updateCurrentSplash();
     }
 

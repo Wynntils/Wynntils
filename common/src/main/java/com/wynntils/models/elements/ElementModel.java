@@ -16,6 +16,7 @@ public class ElementModel extends Model {
 
     public ElementModel() {
         super(List.of());
+
         allPowderTierInfo = buildPowderTierInfo();
     }
 

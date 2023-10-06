@@ -26,7 +26,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     private ItemSearchQuery searchQuery;
 
-    private Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer;
+    private final Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer;
 
     public ItemSearchWidget(
             int x,

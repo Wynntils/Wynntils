@@ -13,15 +13,11 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.OverlayManager;
-import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.UpfixerManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -44,9 +40,8 @@ public final class ConfigManager extends Manager {
     private final File userConfig;
     private JsonObject configObject;
 
-    public ConfigManager(
-            UpfixerManager upfixerManager, JsonManager jsonManager, FeatureManager feature, OverlayManager overlay) {
-        super(List.of(upfixerManager, jsonManager, feature, overlay));
+    public ConfigManager() {
+        super(List.of());
 
         userConfig = new File(
                 CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
@@ -227,11 +222,9 @@ public final class ConfigManager extends Manager {
     }
 
     private List<Config<?>> getConfigOptions(PersistedOwner owner) {
-        List<Config<?>> options = new ArrayList<>();
-        options.addAll(Managers.Persisted.getPersisted(owner, Config.class).stream()
+        return new ArrayList<>(Managers.Persisted.getPersisted(owner, Config.class).stream()
                 .map(p -> processConfig(owner, p.a(), p.b()))
                 .toList());
-        return options;
     }
 
     private static Config<?> processConfig(PersistedOwner owner, Field configField, Persisted configInfo) {

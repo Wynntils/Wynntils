@@ -119,7 +119,7 @@ public class ContainerSearchFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         ItemStack itemStack = e.getSlot().getItem();
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
@@ -294,7 +294,7 @@ public class ContainerSearchFeature extends Feature {
             ItemStack itemStack = container.getItem(i);
 
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOpt.isEmpty()) return;
+            if (wynnItemOpt.isEmpty()) continue;
 
             boolean filtered = !searchQuery.isEmpty() && Services.ItemFilter.matches(searchQuery, itemStack);
 

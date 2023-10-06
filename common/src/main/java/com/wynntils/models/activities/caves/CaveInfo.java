@@ -13,7 +13,6 @@ import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.network.chat.Component;
 
 public class CaveInfo {
     private final String name;
@@ -24,7 +23,6 @@ public class CaveInfo {
     private final ActivityLength length;
     private final ActivityDifficulty difficulty;
     private final List<String> rewards;
-    private List<Component> displayLore = null;
 
     public CaveInfo(
             String name,

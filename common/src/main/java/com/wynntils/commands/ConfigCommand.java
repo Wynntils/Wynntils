@@ -386,7 +386,7 @@ public class ConfigCommand extends Command {
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
         if (overlay == null) return 0;
 
-        overlay.getConfigOptions().stream().forEach(Config::reset);
+        overlay.getConfigOptions().forEach(Config::reset);
 
         Managers.Config.saveConfig();
 

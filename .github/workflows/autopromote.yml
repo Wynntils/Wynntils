@@ -24,7 +24,7 @@ jobs:
 
   update-alpha:
     if: github.ref == 'refs/heads/main'
-    name: Merge main into alpha after a PR is merged
+    name: Merge main into beta after a PR is merged
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -35,4 +35,4 @@ jobs:
         with:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'main'
-          target: 'alpha'
+          target: 'beta'

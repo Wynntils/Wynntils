@@ -59,8 +59,8 @@ public class BankModel extends Model {
     private int currentPage = 1;
     private SearchableContainerType currentContainer;
 
-    public BankModel(ContainerModel containerModel) {
-        super(List.of(containerModel));
+    public BankModel() {
+        super(List.of());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

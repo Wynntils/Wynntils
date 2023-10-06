@@ -159,7 +159,7 @@ public class StatusEffectsOverlay extends Overlay {
 
     private String getEffectsKey(StatusEffect effect) {
         return switch (stackingBehaviour.get()) {
-            default -> effect.asString().getString();
+            case NONE, GROUP -> effect.asString().getString();
             case SUM -> effect.getPrefix().getString()
                     + effect.getName().getString()
                     + effect.getModifierSuffix().getString()
@@ -171,7 +171,7 @@ public class StatusEffectsOverlay extends Overlay {
         private final StatusEffect effect;
 
         private int count = 0;
-        private List<Double> modifierList = new ArrayList<>();
+        private final List<Double> modifierList = new ArrayList<>();
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
@@ -187,7 +187,7 @@ public class StatusEffectsOverlay extends Overlay {
 
             switch (stackingBehaviour.get()) {
                 case SUM -> {
-                    if (this.modifierList.size() > 0) {
+                    if (!this.modifierList.isEmpty()) {
                         // SUM modifiers
                         double modifierValue = 0.0;
                         for (double modifier : modifierList) {

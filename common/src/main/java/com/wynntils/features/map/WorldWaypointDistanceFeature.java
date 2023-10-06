@@ -64,7 +64,7 @@ public class WorldWaypointDistanceFeature extends Feature {
     @Persisted
     public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
-    private List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
+    private final List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
 
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {

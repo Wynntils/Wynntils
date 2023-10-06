@@ -58,11 +58,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     public void onContainerRender(ContainerRenderEvent event) {
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
-        if (screen instanceof GearViewerScreen) return;
-
-        if (StyledText.fromComponent(screen.getTitle())
-                .getStringWithoutFormatting()
-                .equals("Character Info")) return;
+        if (isExcludedContainer(screen)) return;
 
         // Always draw top part, which is all there is if it is inventory,
         // and all there is if we combine them, otherwise it is just the
@@ -95,16 +91,15 @@ public class InventoryEmeraldCountFeature extends Feature {
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
                 case TEXTURE -> {
-                    int adjustedY;
-                    if (displayBottom) {
-                        int displayedTextures = getFilteredEmeraldAmounts(topEmeralds).length;
-                        int sizeY = displayedTextures * TEXTURE_SIZE + 2;
-                        int bottomY = containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
-                        adjustedY = y - Math.max(sizeY - bottomY, 0);
-                    } else {
-                        adjustedY = y;
+                    if (displayBottom) { // ensure we don't overlap with bottom textures
+                        int topDisplayedTextureCount = (int) Arrays.stream(getRenderableEmeraldAmounts(topEmeralds))
+                                .filter(s -> showZerosInEmeraldCount.get() || !s.equals("0"))
+                                .count();
+                        int textureVerticalSize = topDisplayedTextureCount * TEXTURE_SIZE + 2;
+                        int bottomStartY = containerScreen.topPos + containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
+                        y = Math.min(bottomStartY - textureVerticalSize, y);
                     }
-                    renderTexturedCount(event.getGuiGraphics(), textureX, adjustedY, topEmeralds);
+                    renderTexturedCount(event.getGuiGraphics(), textureX, y, topEmeralds);
                 }
             }
         }
@@ -155,12 +150,14 @@ public class InventoryEmeraldCountFeature extends Feature {
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
-        String[] emeraldAmounts = getFilteredEmeraldAmounts(emeralds);
+        String[] emeraldAmounts = getRenderableEmeraldAmounts(emeralds);
 
         int renderedCount = 0;
 
         for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
             String emeraldAmount = emeraldAmounts[i];
+
+            if (!showZerosInEmeraldCount.get() && emeraldAmount.equals("0")) continue;
 
             final int renderX = -TEXTURE_SIZE;
             final int renderY = renderedCount * TEXTURE_SIZE;
@@ -213,22 +210,30 @@ public class InventoryEmeraldCountFeature extends Feature {
         poseStack.popPose();
     }
 
-    private String[] getFilteredEmeraldAmounts(int emeralds) {
+    private String[] getRenderableEmeraldAmounts(int emeralds) {
+        String[] emeraldAmounts = new String[4];
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            String[] emeraldAmounts = new String[4];
             emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
             emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
             emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
             emeraldAmounts[3] = StringUtils.formatAmount(emeralds / 262144d);
-            return Arrays.stream(emeraldAmounts)
-                    .filter(emeraldAmount -> !emeraldAmount.equals("0") || showZerosInEmeraldCount.get())
-                    .toArray(String[]::new);
         } else {
-            return Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
-                    .filter(emeraldAmount -> emeraldAmount != 0 || showZerosInEmeraldCount.get())
+            emeraldAmounts = Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
                     .mapToObj(String::valueOf)
                     .toArray(String[]::new);
         }
+
+        return emeraldAmounts;
+    }
+
+    private boolean isExcludedContainer(Screen screen) {
+        if (screen instanceof GearViewerScreen) return true;
+
+        if (StyledText.fromComponent(screen.getTitle())
+                .getStringWithoutFormatting()
+                .equals("Character Info")) return true;
+
+        return false;
     }
 
     public enum EmeraldCountType {
