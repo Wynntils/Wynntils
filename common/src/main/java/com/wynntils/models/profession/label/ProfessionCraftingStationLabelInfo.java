@@ -8,8 +8,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.type.Location;
 
-public class GatheringStationLabelInfo extends ProfessionLabelInfo {
-    public GatheringStationLabelInfo(StyledText label, String name, Location location, ProfessionType professionType) {
+public class ProfessionCraftingStationLabelInfo extends ProfessionLabelInfo {
+    public ProfessionCraftingStationLabelInfo(
+            StyledText label, String name, Location location, ProfessionType professionType) {
         super(label, name, location, professionType);
     }
 

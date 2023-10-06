@@ -7,8 +7,8 @@ package com.wynntils.core.crowdsource.type;
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.crowdsource.datatype.LootrunTaskLocation;
 import com.wynntils.models.npc.label.NpcLabelInfo;
-import com.wynntils.models.profession.label.GatheringNodeLabelInfo;
-import com.wynntils.models.profession.label.GatheringStationLabelInfo;
+import com.wynntils.models.profession.label.ProfessionCraftingStationLabelInfo;
+import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
 import net.minecraft.client.resources.language.I18n;
 
 /**
@@ -17,8 +17,8 @@ import net.minecraft.client.resources.language.I18n;
 public enum CrowdSourcedDataType {
     LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class),
     NPC_LOCATIONS(NpcLabelInfo.class),
-    PROFESSION_NODE_LOCATIONS(GatheringNodeLabelInfo.class),
-    PROFESSION_CRAFTING_STATION_LOCATIONS(GatheringStationLabelInfo.class);
+    PROFESSION_NODE_LOCATIONS(ProfessionGatheringNodeLabelInfo.class),
+    PROFESSION_CRAFTING_STATION_LOCATIONS(ProfessionCraftingStationLabelInfo.class);
 
     private final Class<? extends Comparable<?>> dataClass;
 

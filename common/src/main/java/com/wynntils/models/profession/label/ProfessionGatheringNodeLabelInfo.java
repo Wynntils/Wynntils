@@ -8,11 +8,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.profession.type.MaterialProfile;
 import com.wynntils.utils.mc.type.Location;
 
-public class GatheringNodeLabelInfo extends ProfessionLabelInfo {
+public class ProfessionGatheringNodeLabelInfo extends ProfessionLabelInfo {
     private final MaterialProfile.SourceMaterial sourceMaterial;
     private final MaterialProfile.MaterialType materialType;
 
-    public GatheringNodeLabelInfo(
+    public ProfessionGatheringNodeLabelInfo(
             StyledText label,
             String name,
             Location location,

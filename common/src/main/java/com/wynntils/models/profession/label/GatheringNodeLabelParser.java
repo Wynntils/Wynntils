@@ -26,7 +26,7 @@ public class GatheringNodeLabelParser implements LabelParser {
 
             if (materialLookup.isEmpty()) return null;
 
-            return new GatheringNodeLabelInfo(
+            return new ProfessionGatheringNodeLabelInfo(
                     label,
                     matcher.group(1) + " Node",
                     location,
