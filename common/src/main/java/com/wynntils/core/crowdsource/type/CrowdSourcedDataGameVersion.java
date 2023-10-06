@@ -11,7 +11,8 @@ package com.wynntils.core.crowdsource.type;
  * We may also change this enum if the mod received relevant data collection changes.
  */
 public enum CrowdSourcedDataGameVersion {
-    VERSION_203_HOTFIX_4("2.0.3 Hotfix 4");
+    VERSION_203_HOTFIX_4("2.0.3 Hotfix 4"),
+    VERSION_204_RELEASE("2.0.4 Release");
 
     private final String readableVersion;
 

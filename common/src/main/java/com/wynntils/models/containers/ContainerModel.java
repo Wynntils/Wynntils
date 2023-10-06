@@ -5,7 +5,6 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.type.Pair;
@@ -38,9 +37,10 @@ public final class ContainerModel extends Model {
     // Test suite: https://regexr.com/7jh0s
     private static final Pattern TRADE_MARKET_FILTER_TITLE = Pattern.compile("\\[Pg\\. \\d] Filter Items");
 
-    private static final String BANK_NAME = "Bank";
+    private static final String ACCOUNT_BANK_NAME = "Account Bank";
     private static final String BLOCK_BANK_NAME = "Block Bank";
     private static final String BOOKSHELF_NAME = "Bookshelf";
+    private static final String CHARACTER_BANK_NAME = "Character Bank";
     private static final String MISC_BUCKET_NAME = "Misc. Bucket";
     public static final String CHARACTER_INFO_NAME = "Character Info";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
@@ -73,12 +73,20 @@ public final class ContainerModel extends Model {
         return ABILITY_TREE_PATTERN.matcher(screen.getTitle().getString()).matches();
     }
 
-    public boolean isBankScreen(Screen screen) {
+    public boolean isAccountBankScreen(Screen screen) {
         Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return false;
 
         String type = matcher.group(2);
-        return type.equals(BANK_NAME);
+        return type.equals(ACCOUNT_BANK_NAME);
+    }
+
+    public boolean isCharacterBankScreen(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(CHARACTER_BANK_NAME);
     }
 
     public int getCurrentBankPage(Screen screen) {
@@ -92,10 +100,11 @@ public final class ContainerModel extends Model {
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */
     public boolean isLastBankPage(Screen screen) {
-        return (isBankScreen(screen)
+        return (isAccountBankScreen(screen)
                         || isBlockBankScreen(screen)
                         || isBlockBankScreen(screen)
                         || isBookshelfScreen(screen)
+                        || isCharacterBankScreen(screen)
                         || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
                 && isItemIndicatingLastBankPage(
@@ -219,46 +228,47 @@ public final class ContainerModel extends Model {
     }
 
     private Pair<Integer, Integer> getScrollSlots(AbstractContainerScreen<?> gui, boolean scrollUp) {
-        if (Models.Container.isAbilityTreeScreen(gui)) {
+        if (isAbilityTreeScreen(gui)) {
             return ABILITY_TREE_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isBankScreen(gui)
-                || Models.Container.isBlockBankScreen(gui)
-                || Models.Container.isBookshelfScreen(gui)
-                || Models.Container.isMiscBucketScreen(gui)) {
-            if (!scrollUp && Models.Container.isLastBankPage(gui)) return null;
+        if (isAccountBankScreen(gui)
+                || isBlockBankScreen(gui)
+                || isBookshelfScreen(gui)
+                || isCharacterBankScreen(gui)
+                || isMiscBucketScreen(gui)) {
+            if (!scrollUp && isLastBankPage(gui)) return null;
 
             return BANK_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isGuildBankScreen(gui)) {
+        if (isGuildBankScreen(gui)) {
             return GUILD_BANK_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isGuildMemberListScreen(gui)) {
+        if (isGuildMemberListScreen(gui)) {
             return GUILD_MEMBER_LIST_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isTradeMarketScreen(gui)) {
-            if (scrollUp && Models.Container.isFirstTradeMarketPage(gui)) return null;
+        if (isTradeMarketScreen(gui)) {
+            if (scrollUp && isFirstTradeMarketPage(gui)) return null;
 
             return TRADE_MARKET_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isSecondaryTradeMarketScreen(gui)) {
+        if (isSecondaryTradeMarketScreen(gui)) {
             return TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isScrapMenuScreen(gui)) {
+        if (isScrapMenuScreen(gui)) {
             return SCRAP_MENU_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isContentBook(gui)) {
+        if (isContentBook(gui)) {
             return CONTENT_BOOK_PREVIOUS_NEXT_SLOTS;
         }
 
-        if (Models.Container.isLobbyScreen(gui)) {
+        if (isLobbyScreen(gui)) {
             return LOBBY_PREVIOUS_NEXT_SLOTS;
         }
 
