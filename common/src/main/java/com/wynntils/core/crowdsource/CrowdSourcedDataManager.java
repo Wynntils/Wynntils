@@ -72,7 +72,8 @@ public class CrowdSourcedDataManager extends Manager {
         registerCollector(CrowdSourcedDataType.NPC_LOCATIONS, new NpcLocationDataCollector());
         registerCollector(CrowdSourcedDataType.PROFESSION_NODE_LOCATIONS, new ProfessionNodeLocationDataCollector());
         registerCollector(
-                CrowdSourcedDataType.PROFESSION_STATION_LOCATIONS, new ProfessionStationLocationDataCollector());
+                CrowdSourcedDataType.PROFESSION_CRAFTING_STATION_LOCATIONS,
+                new ProfessionStationLocationDataCollector());
     }
 
     private void registerCollector(CrowdSourcedDataType crowdSourcedDataType, CrowdSourcedDataCollector<?> collector) {

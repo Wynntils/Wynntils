@@ -9,23 +9,19 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.type.Location;
 
 public abstract class LabelInfo implements Comparable<LabelInfo> {
-    protected final transient StyledText label;
-
+    protected final StyledText label;
     protected final String name;
-    protected final String formattedLabelString;
     protected final Location location;
 
     protected LabelInfo(StyledText label, Location location) {
         this.label = label;
         this.name = label.getStringWithoutFormatting();
-        this.formattedLabelString = label.getString();
         this.location = location;
     }
 
     protected LabelInfo(StyledText label, String name, Location location) {
         this.label = label;
         this.name = name;
-        this.formattedLabelString = label.getString();
         this.location = location;
     }
 

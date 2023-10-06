@@ -20,6 +20,6 @@ public class ProfessionStationLocationDataCollector extends CrowdSourcedDataColl
 
     @Override
     protected CrowdSourcedDataType getDataType() {
-        return CrowdSourcedDataType.PROFESSION_STATION_LOCATIONS;
+        return CrowdSourcedDataType.PROFESSION_CRAFTING_STATION_LOCATIONS;
     }
 }

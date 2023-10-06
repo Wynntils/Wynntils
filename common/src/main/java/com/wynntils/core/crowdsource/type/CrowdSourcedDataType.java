@@ -18,7 +18,7 @@ public enum CrowdSourcedDataType {
     LOOTRUN_TASK_LOCATIONS(LootrunTaskLocation.class),
     NPC_LOCATIONS(NpcLabelInfo.class),
     PROFESSION_NODE_LOCATIONS(GatheringNodeLabelInfo.class),
-    PROFESSION_STATION_LOCATIONS(GatheringStationLabelInfo.class);
+    PROFESSION_CRAFTING_STATION_LOCATIONS(GatheringStationLabelInfo.class);
 
     private final Class<? extends Comparable<?>> dataClass;
 
