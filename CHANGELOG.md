@@ -1,9 +1,21 @@
+## [0.0.4-beta.18](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.17...v0.0.4-beta.18) (2023-10-06)
+
+
+### New Features
+
+* Crowd source NPC and profession locations ([#2157](https://github.com/Wynntils/Artemis/issues/2157)) ([edd4691](https://github.com/Wynntils/Artemis/commit/edd46918cbd508cf8990bef772de14c2500fee1f))
+
 ## [0.0.4-beta.17](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.16...v0.0.4-beta.17) (2023-10-06)
 
 
 ### Bug Fixes
 
 * Update class item patterns ([#2171](https://github.com/Wynntils/Artemis/issues/2171)) ([e70d369](https://github.com/Wynntils/Artemis/commit/e70d3692209706431639dd45f6af648d645f9853))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.17 [skip ci] ([b4983a8](https://github.com/Wynntils/Artemis/commit/b4983a8d8cb1670170882813ab3664b2b07ac0a0))
 
 ## [0.0.4-beta.16](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.15...v0.0.4-beta.16) (2023-10-06)
 
@@ -41,16 +53,4 @@
 
 * Release new version for Wynncraft 2.0.4 ([c88b994](https://github.com/Wynntils/Artemis/commit/c88b994c181dd18abf95bf33fc8a9def30c52e7a))
 * **release:** v0.0.4-beta.14 [skip ci] ([1a8b345](https://github.com/Wynntils/Artemis/commit/1a8b345cdc31c82a47b8e380449f32e4acaa8436))
-
-## [0.0.4-beta.13](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.12...v0.0.4-beta.13) (2023-10-03)
-
-
-### Bug Fixes
-
-* Do not freeze/crash on invalid mention aliases ([#2029](https://github.com/Wynntils/Artemis/issues/2029)) ([f478d9b](https://github.com/Wynntils/Artemis/commit/f478d9bcaa71d31fd0526189269d71c145e009a5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.13 [skip ci] ([aa6af88](https://github.com/Wynntils/Artemis/commit/aa6af88c287c1c6d23b804771266319e9999778c))
 
