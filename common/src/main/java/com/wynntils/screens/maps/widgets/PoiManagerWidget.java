@@ -205,7 +205,7 @@ public class PoiManagerWidget extends AbstractWidget {
             return clickedButton;
         } else {
             managementScreen.selectPoi(poi);
-            return super.mouseClicked(mouseX, mouseY, button);
+            return true;
         }
     }
 
