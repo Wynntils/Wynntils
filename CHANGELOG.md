@@ -1,9 +1,21 @@
+## [0.0.4-beta.19](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.18...v0.0.4-beta.19) (2023-10-07)
+
+
+### Bug Fixes
+
+* Update LootrunLocationDataCollector to collect task types, lootrun beacons now display at proper Y levels ([#2172](https://github.com/Wynntils/Artemis/issues/2172)) ([d09c7ca](https://github.com/Wynntils/Artemis/commit/d09c7ca8ecf97626fa76a9de3c734204ae4e71e5))
+
 ## [0.0.4-beta.18](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.17...v0.0.4-beta.18) (2023-10-06)
 
 
 ### New Features
 
 * Crowd source NPC and profession locations ([#2157](https://github.com/Wynntils/Artemis/issues/2157)) ([edd4691](https://github.com/Wynntils/Artemis/commit/edd46918cbd508cf8990bef772de14c2500fee1f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.18 [skip ci] ([48d6791](https://github.com/Wynntils/Artemis/commit/48d6791afb13f80431a2589bd6b9db943edd1d37))
 
 ## [0.0.4-beta.17](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.16...v0.0.4-beta.17) (2023-10-06)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.15 [skip ci] ([b2a8438](https://github.com/Wynntils/Artemis/commit/b2a843831bb4fb0e84e38c162390af2c417b3856))
-
-## [0.0.4-beta.14](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.13...v0.0.4-beta.14) (2023-10-06)
-
-
-### New Features
-
-* Wynncraft 2.0.4 support ([#2141](https://github.com/Wynntils/Artemis/issues/2141)) ([af465ed](https://github.com/Wynntils/Artemis/commit/af465ed479b74989e00343695bdd7c1505146cd3)), closes [#1955](https://github.com/Wynntils/Artemis/issues/1955)
-
-
-### Miscellaneous Chores
-
-* Release new version for Wynncraft 2.0.4 ([c88b994](https://github.com/Wynntils/Artemis/commit/c88b994c181dd18abf95bf33fc8a9def30c52e7a))
-* **release:** v0.0.4-beta.14 [skip ci] ([1a8b345](https://github.com/Wynntils/Artemis/commit/1a8b345cdc31c82a47b8e380449f32e4acaa8436))
 
