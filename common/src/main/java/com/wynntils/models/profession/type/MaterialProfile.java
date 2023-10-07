@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 
 public final class MaterialProfile {
     private static final Map<MaterialType, List<SourceMaterial>> SOURCE_MATERIALS = Map.of(
@@ -94,8 +95,10 @@ public final class MaterialProfile {
         return new MaterialProfile(resourceType, sourceMaterial, tier);
     }
 
-    public static Optional<Pair<MaterialType, SourceMaterial>> findByMaterialName(String name) {
+    public static Optional<Pair<MaterialType, SourceMaterial>> findByMaterialName(
+            String name, ChatFormatting labelColor) {
         return SOURCE_MATERIALS.entrySet().stream()
+                .filter(entry -> entry.getKey().getLabelColor() == labelColor)
                 .flatMap(entry -> entry.getValue().stream().map(material -> new Pair<>(entry.getKey(), material)))
                 .filter(pair -> pair.value().name().equals(name))
                 .findFirst();
@@ -114,19 +117,25 @@ public final class MaterialProfile {
     }
 
     public enum MaterialType {
-        ORE(ProfessionType.MINING),
-        LOG(ProfessionType.WOODCUTTING),
-        CROP(ProfessionType.FARMING),
-        FISH(ProfessionType.FISHING);
+        ORE(ProfessionType.MINING, ChatFormatting.WHITE),
+        LOG(ProfessionType.WOODCUTTING, ChatFormatting.GOLD),
+        CROP(ProfessionType.FARMING, ChatFormatting.YELLOW),
+        FISH(ProfessionType.FISHING, ChatFormatting.AQUA);
 
         private final ProfessionType professionType;
+        private final ChatFormatting labelColor;
 
-        MaterialType(ProfessionType professionType) {
+        MaterialType(ProfessionType professionType, ChatFormatting labelColor) {
             this.professionType = professionType;
+            this.labelColor = labelColor;
         }
 
         public ProfessionType getProfessionType() {
             return professionType;
+        }
+
+        public ChatFormatting getLabelColor() {
+            return labelColor;
         }
     }
 
