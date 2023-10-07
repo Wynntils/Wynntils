@@ -13,25 +13,29 @@ import com.wynntils.utils.type.Pair;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 
 public class GatheringNodeLabelParser implements LabelParser {
-    private static final Pattern GATHERING_NODE_LABEL = Pattern.compile("^§.(.+)$");
+    // Note: At the moment, only Dernic appends to the end of the label, but not consistently..
+    private static final Pattern GATHERING_NODE_LABEL = Pattern.compile("^§(.)(.+?)(:?\\s(Fish|Seed|Ore|Wood))?$");
 
     @Override
     public LabelInfo getInfo(StyledText label, Location location) {
         Matcher matcher = label.getMatcher(GATHERING_NODE_LABEL);
         if (matcher.matches()) {
             Optional<Pair<MaterialProfile.MaterialType, MaterialProfile.SourceMaterial>> materialLookup =
-                    MaterialProfile.findByMaterialName(matcher.group(1));
+                    MaterialProfile.findByMaterialName(
+                            matcher.group(2),
+                            ChatFormatting.getByCode(matcher.group(1).charAt(0)));
 
-            if (materialLookup.isEmpty()) return null;
-
-            return new ProfessionGatheringNodeLabelInfo(
-                    label,
-                    matcher.group(1) + " Node",
-                    location,
-                    materialLookup.get().value(),
-                    materialLookup.get().key());
+            return materialLookup
+                    .map(materialTypeSourceMaterialPair -> new ProfessionGatheringNodeLabelInfo(
+                            label,
+                            matcher.group(2) + " Node",
+                            location,
+                            materialTypeSourceMaterialPair.value(),
+                            materialTypeSourceMaterialPair.key()))
+                    .orElse(null);
         }
 
         return null;
