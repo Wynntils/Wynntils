@@ -1,9 +1,26 @@
+## [0.0.4-beta.20](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.19...v0.0.4-beta.20) (2023-10-07)
+
+
+### New Features
+
+* Waypoint manager redesign ([#2154](https://github.com/Wynntils/Artemis/issues/2154)) ([eb50fa0](https://github.com/Wynntils/Artemis/commit/eb50fa00c35e59c72411bf9811553b6fac8e3dba)), closes [/github.com/Wynntils/Artemis/pull/2140#discussion_r1342006394](https://github.com/Wynntils//github.com/Wynntils/Artemis/pull/2140/issues/discussion_r1342006394)
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2173](https://github.com/Wynntils/Artemis/issues/2173)) ([a0af876](https://github.com/Wynntils/Artemis/commit/a0af876331e1cdc05f481b8364d6db34392ebd9f))
+
 ## [0.0.4-beta.19](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.18...v0.0.4-beta.19) (2023-10-07)
 
 
 ### Bug Fixes
 
 * Update LootrunLocationDataCollector to collect task types, lootrun beacons now display at proper Y levels ([#2172](https://github.com/Wynntils/Artemis/issues/2172)) ([d09c7ca](https://github.com/Wynntils/Artemis/commit/d09c7ca8ecf97626fa76a9de3c734204ae4e71e5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.19 [skip ci] ([3d4a670](https://github.com/Wynntils/Artemis/commit/3d4a670a6fbfd64d151acd1f1a594a75a546e895))
 
 ## [0.0.4-beta.18](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.17...v0.0.4-beta.18) (2023-10-06)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.16 [skip ci] ([268b254](https://github.com/Wynntils/Artemis/commit/268b2549b38c0dcd953811e946af133c59c6d72b))
-
-## [0.0.4-beta.15](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.14...v0.0.4-beta.15) (2023-10-06)
-
-
-### New Features
-
-* Process and show "unknown" lootrun locations ([#2169](https://github.com/Wynntils/Artemis/issues/2169)) ([cb0c268](https://github.com/Wynntils/Artemis/commit/cb0c268c90848f9cc0f89aff5229e1bb424283c0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.15 [skip ci] ([b2a8438](https://github.com/Wynntils/Artemis/commit/b2a843831bb4fb0e84e38c162390af2c417b3856))
 
