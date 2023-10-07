@@ -1,9 +1,17 @@
+## [0.0.4-beta.23](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.22...v0.0.4-beta.23) (2023-10-07)
+
+
+### Miscellaneous Chores
+
+* Also bump current game version ([d8ec979](https://github.com/Wynntils/Artemis/commit/d8ec979182725d6f632e6e24bd7425d58d906665))
+
 ## [0.0.4-beta.22](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.21...v0.0.4-beta.22) (2023-10-07)
 
 
 ### Miscellaneous Chores
 
 * Bump CrowdSourcedDataGameVersion to separate bugged collector data ([9f5f190](https://github.com/Wynntils/Artemis/commit/9f5f190c8b697d1d8332d547b346618a1a06476c))
+* **release:** v0.0.4-beta.22 [skip ci] ([4a01267](https://github.com/Wynntils/Artemis/commit/4a0126759f87936ae97aac5ef7589956ffcb5919))
 
 ## [0.0.4-beta.21](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.20...v0.0.4-beta.21) (2023-10-07)
 
@@ -41,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.19 [skip ci] ([3d4a670](https://github.com/Wynntils/Artemis/commit/3d4a670a6fbfd64d151acd1f1a594a75a546e895))
-
-## [0.0.4-beta.18](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.17...v0.0.4-beta.18) (2023-10-06)
-
-
-### New Features
-
-* Crowd source NPC and profession locations ([#2157](https://github.com/Wynntils/Artemis/issues/2157)) ([edd4691](https://github.com/Wynntils/Artemis/commit/edd46918cbd508cf8990bef772de14c2500fee1f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.18 [skip ci] ([48d6791](https://github.com/Wynntils/Artemis/commit/48d6791afb13f80431a2589bd6b9db943edd1d37))
 
