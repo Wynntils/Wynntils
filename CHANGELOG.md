@@ -1,9 +1,21 @@
+## [0.0.4-beta.22](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.21...v0.0.4-beta.22) (2023-10-07)
+
+
+### Miscellaneous Chores
+
+* Bump CrowdSourcedDataGameVersion to separate bugged collector data ([9f5f190](https://github.com/Wynntils/Artemis/commit/9f5f190c8b697d1d8332d547b346618a1a06476c))
+
 ## [0.0.4-beta.21](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.20...v0.0.4-beta.21) (2023-10-07)
 
 
 ### Bug Fixes
 
 * Fix GatheringNodeLabelParser's regex, match professions by label color, fix NpcLabelParser parsing DXP gains as NPCs ([#2174](https://github.com/Wynntils/Artemis/issues/2174)) ([a5bd6b4](https://github.com/Wynntils/Artemis/commit/a5bd6b454e209e4b362d4a0b2502570dcabfcc77))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.21 [skip ci] ([0b15281](https://github.com/Wynntils/Artemis/commit/0b152814ec594decacc85fd1b74e9dd07d5b9432))
 
 ## [0.0.4-beta.20](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.19...v0.0.4-beta.20) (2023-10-07)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.18 [skip ci] ([48d6791](https://github.com/Wynntils/Artemis/commit/48d6791afb13f80431a2589bd6b9db943edd1d37))
-
-## [0.0.4-beta.17](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.16...v0.0.4-beta.17) (2023-10-06)
-
-
-### Bug Fixes
-
-* Update class item patterns ([#2171](https://github.com/Wynntils/Artemis/issues/2171)) ([e70d369](https://github.com/Wynntils/Artemis/commit/e70d3692209706431639dd45f6af648d645f9853))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.17 [skip ci] ([b4983a8](https://github.com/Wynntils/Artemis/commit/b4983a8d8cb1670170882813ab3664b2b07ac0a0))
 
