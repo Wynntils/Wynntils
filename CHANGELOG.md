@@ -1,3 +1,10 @@
+## [0.0.4-beta.21](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.20...v0.0.4-beta.21) (2023-10-07)
+
+
+### Bug Fixes
+
+* Fix GatheringNodeLabelParser's regex, match professions by label color, fix NpcLabelParser parsing DXP gains as NPCs ([#2174](https://github.com/Wynntils/Artemis/issues/2174)) ([a5bd6b4](https://github.com/Wynntils/Artemis/commit/a5bd6b454e209e4b362d4a0b2502570dcabfcc77))
+
 ## [0.0.4-beta.20](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.19...v0.0.4-beta.20) (2023-10-07)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2173](https://github.com/Wynntils/Artemis/issues/2173)) ([a0af876](https://github.com/Wynntils/Artemis/commit/a0af876331e1cdc05f481b8364d6db34392ebd9f))
+* **release:** v0.0.4-beta.20 [skip ci] ([a5c278f](https://github.com/Wynntils/Artemis/commit/a5c278f3e5c5988453aa463ef32b15fa549e1021))
 
 ## [0.0.4-beta.19](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.18...v0.0.4-beta.19) (2023-10-07)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.17 [skip ci] ([b4983a8](https://github.com/Wynntils/Artemis/commit/b4983a8d8cb1670170882813ab3664b2b07ac0a0))
-
-## [0.0.4-beta.16](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.15...v0.0.4-beta.16) (2023-10-06)
-
-
-### Bug Fixes
-
-* properly fix ForgeGuiGraphicsMixin ([#2170](https://github.com/Wynntils/Artemis/issues/2170)) ([a934ebd](https://github.com/Wynntils/Artemis/commit/a934ebddee9d5392e47d34aaed4fe9200d907991)), closes [#2165](https://github.com/Wynntils/Artemis/issues/2165)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.16 [skip ci] ([268b254](https://github.com/Wynntils/Artemis/commit/268b2549b38c0dcd953811e946af133c59c6d72b))
 
