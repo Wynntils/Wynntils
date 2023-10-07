@@ -1,9 +1,17 @@
+## [0.0.4-beta.24](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.23...v0.0.4-beta.24) (2023-10-07)
+
+
+### Bug Fixes
+
+* Waypoint manager & icon filter crash ([#2176](https://github.com/Wynntils/Artemis/issues/2176)) ([0ef5a09](https://github.com/Wynntils/Artemis/commit/0ef5a093c89dcc9dc4b51b0b1a90485d45335107))
+
 ## [0.0.4-beta.23](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.22...v0.0.4-beta.23) (2023-10-07)
 
 
 ### Miscellaneous Chores
 
 * Also bump current game version ([d8ec979](https://github.com/Wynntils/Artemis/commit/d8ec979182725d6f632e6e24bd7425d58d906665))
+* **release:** v0.0.4-beta.23 [skip ci] ([4b8608f](https://github.com/Wynntils/Artemis/commit/4b8608f5d622fc300b4faa62cc853c13836fcb3b))
 
 ## [0.0.4-beta.22](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.21...v0.0.4-beta.22) (2023-10-07)
 
@@ -37,16 +45,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2173](https://github.com/Wynntils/Artemis/issues/2173)) ([a0af876](https://github.com/Wynntils/Artemis/commit/a0af876331e1cdc05f481b8364d6db34392ebd9f))
 * **release:** v0.0.4-beta.20 [skip ci] ([a5c278f](https://github.com/Wynntils/Artemis/commit/a5c278f3e5c5988453aa463ef32b15fa549e1021))
-
-## [0.0.4-beta.19](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.18...v0.0.4-beta.19) (2023-10-07)
-
-
-### Bug Fixes
-
-* Update LootrunLocationDataCollector to collect task types, lootrun beacons now display at proper Y levels ([#2172](https://github.com/Wynntils/Artemis/issues/2172)) ([d09c7ca](https://github.com/Wynntils/Artemis/commit/d09c7ca8ecf97626fa76a9de3c734204ae4e71e5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.19 [skip ci] ([3d4a670](https://github.com/Wynntils/Artemis/commit/3d4a670a6fbfd64d151acd1f1a594a75a546e895))
 
