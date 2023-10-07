@@ -169,7 +169,12 @@ public class LootrunModel extends Model {
         for (TaskLocation taskLocation : taskLocations.getOrDefault(currentLocation.get(), Set.of())) {
             if (PosUtils.closerThanIgnoringY(
                     taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
-                possibleTaskLocations.add(taskLocation);
+                // FIXME: Remove when 2.0.4 task locations are released
+                //        "Hack" in Y levels from particle position
+                possibleTaskLocations.add(new TaskLocation(
+                        taskLocation.name(),
+                        Location.containing(event.getParticle().position()),
+                        taskLocation.taskType()));
                 return;
             }
         }
@@ -443,7 +448,8 @@ public class LootrunModel extends Model {
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
             selectedBeaconsStorage.touched();
             setLastTaskBeaconColor(closestBeacon.color());
-            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
+            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
+                    closestBeacon, beacons.get(closestBeacon.color()).taskLocation()));
 
             possibleTaskLocations = new HashSet<>();
 
