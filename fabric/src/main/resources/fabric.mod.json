@@ -10,7 +10,6 @@
   "conflicts": {
     "avomod": "*",
     "chatpatches": "*",
-    "immediatelyfast": "*",
     "weirdchat": "*"
   },
   "contact": {
