@@ -51,7 +51,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     private static final int MAX_ACCOUNT_BANK_PAGES = 21;
     private static final int MAX_BLOCK_BANK_PAGES = 12;
-    private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
+    private static final int MAX_DEFAULT_PAGES = 10;
     private static final int MAX_DESTINATIONS = 6;
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int PREVIOUS_PAGE_SLOT = 17;
@@ -272,7 +272,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
             }
             case "bookshelfDestinations", "miscBucketDestinations", "characterBankDestinations" -> {
                 containerType = SearchableContainerType.BOOKSHELF;
-                maxValue = MAX_HOUSING_CONTAINER_PAGES;
+                maxValue = MAX_DEFAULT_PAGES;
             }
             default -> {
                 return;

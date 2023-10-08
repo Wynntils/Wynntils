@@ -7,10 +7,7 @@ package com.wynntils.screens.maps.widgets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -32,65 +29,76 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class PoiManagerWidget extends AbstractWidget {
-    private final CustomPoi poi;
+    private final boolean selected;
+    private final boolean selectionMode;
     private final Button editButton;
     private final Button deleteButton;
     private final Button upButton;
     private final Button downButton;
-    private final int row;
+    private final Button selectButton;
+    private final CustomColor color;
+    private final CustomPoi poi;
+    private final float dividedWidth;
     private final PoiManagementScreen managementScreen;
-    private final List<CustomPoi> pois;
-
-    private CustomColor color;
 
     public PoiManagerWidget(
-            float x, float y, int width, int height, CustomPoi poi, int row, PoiManagementScreen managementScreen) {
-        super((int) x, (int) y, width, height, Component.literal(poi.getName()));
+            int x,
+            int y,
+            int width,
+            int height,
+            CustomPoi poi,
+            PoiManagementScreen managementScreen,
+            float dividedWidth,
+            boolean selectionMode,
+            boolean selected) {
+        super(x, y, width, height, Component.literal(poi.getName()));
         this.poi = poi;
-        this.row = row;
         this.managementScreen = managementScreen;
+        this.dividedWidth = dividedWidth;
+        this.selectionMode = selectionMode;
+        this.selected = selected;
 
-        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get();
+        int manageButtonsWidth = (int) (dividedWidth * 4);
 
-        color = CommonColors.WHITE;
+        color = poi.getVisibility() == CustomPoi.Visibility.HIDDEN ? CommonColors.GRAY : CommonColors.WHITE;
 
-        if (poi.getVisibility() == CustomPoi.Visibility.HIDDEN) {
-            color = CommonColors.GRAY;
-        }
-
-        this.editButton = new Button.Builder(
+        editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
                         (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(this.width / 2 + 85 + 20, 54 + 20 * row)
-                .size(40, 20)
+                .pos(x + width - 20 - (manageButtonsWidth * 2), y)
+                .size(manageButtonsWidth, 20)
                 .build();
 
-        this.deleteButton = new Button.Builder(
+        deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
-                            HiddenConfig<List<CustomPoi>> customPois =
-                                    Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-                            managementScreen.setLastDeletedPoi(
-                                    poi, customPois.get().indexOf(poi));
-                            customPois.get().remove(poi);
-                            customPois.touched();
-                            managementScreen.populatePois();
+                            managementScreen.deletePoi(poi);
                         })
-                .pos(this.width / 2 + 130 + 20, 54 + 20 * row)
-                .size(40, 20)
+                .pos(x + width - 20 - manageButtonsWidth, y)
+                .size(manageButtonsWidth, 20)
                 .build();
 
-        this.upButton = new Button.Builder(Component.literal("\u2303"), (button) -> updateIndex(-1))
-                .pos(this.width / 2 + 172 + 20, 54 + 20 * row)
-                .size(9, 9)
+        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> managementScreen.updatePoiPosition(poi, -1))
+                .pos(x + width - 20, y)
+                .size(10, 20)
                 .build();
 
-        this.downButton = new Button.Builder(Component.literal("\u2304"), (button) -> updateIndex(1))
-                .pos(this.width / 2 + 172 + 20, 54 + 20 * row + 9)
-                .size(9, 9)
+        downButton = new Button.Builder(Component.literal("v"), (button) -> managementScreen.updatePoiPosition(poi, 1))
+                .pos(x + width - 10, y)
+                .size(10, 20)
                 .build();
 
+        Component selectButtonText = selected
+                ? Component.translatable("screens.wynntils.poiManagementGui.deselect")
+                : Component.translatable("screens.wynntils.poiManagementGui.select");
+
+        selectButton = new Button.Builder(selectButtonText, (button) -> managementScreen.selectPoi(poi))
+                .pos(x + width - (manageButtonsWidth * 2 + 20), y)
+                .size(manageButtonsWidth * 2 + 20, 20)
+                .build();
+
+        List<CustomPoi> pois = managementScreen.getPois();
+
+        // Don't allow pois to be moved if at the top/bottom of the list
         if (pois.indexOf(poi) == 0) {
             upButton.active = false;
         }
@@ -106,59 +114,99 @@ public class PoiManagerWidget extends AbstractWidget {
 
         renderIcon(poseStack);
 
-        int maxTextWidth = 90;
-        String poiName = RenderedStringUtils.getMaxFittingText(poi.getName(), maxTextWidth, McUtils.mc().font);
+        String poiName =
+                RenderedStringUtils.getMaxFittingText(poi.getName(), (int) (dividedWidth * 15), McUtils.mc().font);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(poiName),
-                        this.width / 2f - 130,
-                        60 + 20 * row,
+                        getX() + (int) (dividedWidth * 3),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
-                        this.width / 2f - 15,
-                        60 + 20 * row,
+                        getX() + (int) (dividedWidth * 20),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        Optional<Integer> y = poi.getLocation().getY();
+        Optional<Integer> poiY = poi.getLocation().getY();
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        y.isPresent() ? StyledText.fromString(String.valueOf(y.get())) : StyledText.EMPTY,
-                        this.width / 2f + 40,
-                        60 + 20 * row,
+                        poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
+                                .orElse(StyledText.EMPTY),
+                        getX() + (int) (dividedWidth * 23),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
-                        this.width / 2f + 80,
-                        60 + 20 * row,
+                        getX() + (int) (dividedWidth * 26),
+                        getY() + 10,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        editButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        upButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        // In selection mode we don't want the edit/delete/move buttons
+        if (selectionMode) {
+            selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
+
+            // Border to show selected pois, orange when selected, white if not
+            RenderUtils.drawRectBorders(
+                    poseStack,
+                    selected ? CommonColors.ORANGE : CommonColors.WHITE,
+                    getX(),
+                    getY() + 1,
+                    getX() + width,
+                    getY() + height - 1,
+                    0,
+                    1f);
+        } else {
+            editButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            upButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
+        boolean clickedButton;
+
+        // Determine if a button was clicked or should we select the widget
+        if (selectionMode) {
+            clickedButton = selectButton.mouseClicked(mouseX, mouseY, button);
+        } else {
+            clickedButton = editButton.mouseClicked(mouseX, mouseY, button)
+                    || deleteButton.mouseClicked(mouseX, mouseY, button)
+                    || upButton.mouseClicked(mouseX, mouseY, button)
+                    || downButton.mouseClicked(mouseX, mouseY, button);
+        }
+
+        if (clickedButton) {
+            return clickedButton;
+        } else {
+            managementScreen.selectPoi(poi);
+            return true;
+        }
     }
 
     private void renderIcon(PoseStack poseStack) {
@@ -167,33 +215,15 @@ public class PoiManagerWidget extends AbstractWidget {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
 
-        float centreZ = 64 + 20 * row;
-
         RenderUtils.drawTexturedRect(
                 poseStack,
                 poi.getIcon(),
-                this.width / 2f - 151 - (poi.getIcon().width() / 2f),
-                centreZ - (poi.getIcon().height() / 2f));
+                getX() + dividedWidth - (poi.getIcon().width() / 2f),
+                getY() + 10 - (poi.getIcon().height() / 2f));
 
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1, 1, 1, 1);
-    }
-
-    private void updateIndex(int direction) {
-        int indexToSet = pois.indexOf(poi) + direction;
-        pois.remove(poi);
-        pois.add(indexToSet, poi);
-        managementScreen.populatePois();
-        Managers.Config.saveConfig();
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return editButton.mouseClicked(mouseX, mouseY, button)
-                || deleteButton.mouseClicked(mouseX, mouseY, button)
-                || upButton.mouseClicked(mouseX, mouseY, button)
-                || downButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

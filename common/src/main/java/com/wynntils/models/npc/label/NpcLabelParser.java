@@ -11,7 +11,7 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.regex.Pattern;
 
 public class NpcLabelParser implements LabelParser {
-    private static final Pattern NPC_LABEL_PATTERN = Pattern.compile("^§d(.+)$");
+    private static final Pattern NPC_LABEL_PATTERN = Pattern.compile("^§d([^§]+)$");
 
     // Special cases
     private static final Pattern TRADE_MARKET_LABEL_PATTERN = Pattern.compile("^§cTrade Market$");
