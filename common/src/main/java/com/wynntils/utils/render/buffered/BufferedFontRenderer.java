@@ -167,7 +167,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.SEE_THROUGH,
+                        Font.DisplayMode.NORMAL,
                         0,
                         0xF000F0,
                         font.isBidirectional());
