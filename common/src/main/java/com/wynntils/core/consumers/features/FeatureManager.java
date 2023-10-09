@@ -146,6 +146,7 @@ import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -156,6 +157,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {
@@ -166,6 +168,12 @@ public final class FeatureManager extends Manager {
 
     public FeatureManager() {
         super(List.of());
+    }
+
+    @SubscribeEvent
+    public void onCommandsAdded(CommandsAddedEvent event) {
+        // Register feature commands
+        Managers.Command.addNode(event.getRoot(), commands.getCommandNode());
     }
 
     public void init() {
