@@ -1,9 +1,26 @@
+## [0.0.4-beta.26](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.25...v0.0.4-beta.26) (2023-10-09)
+
+
+### Bug Fixes
+
+* Fix class icon items rendering dark ([#2180](https://github.com/Wynntils/Artemis/issues/2180)) ([6d5061b](https://github.com/Wynntils/Artemis/commit/6d5061b61ceb5e23d50afb5cebafbae2714d588d))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2175](https://github.com/Wynntils/Artemis/issues/2175)) ([d5b966f](https://github.com/Wynntils/Artemis/commit/d5b966f2752e7e47096a0b3cc8b33dfa19df687c))
+
 ## [0.0.4-beta.25](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.24...v0.0.4-beta.25) (2023-10-08)
 
 
 ### Bug Fixes
 
 * IF batching on hud text ([#2177](https://github.com/Wynntils/Artemis/issues/2177)) ([705cc81](https://github.com/Wynntils/Artemis/commit/705cc8124ec44b284434da53c3585766cf73a350))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.25 [skip ci] ([7397a41](https://github.com/Wynntils/Artemis/commit/7397a415b4eaaf61840de6d879166dea6a3529f4))
 
 ## [0.0.4-beta.24](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.23...v0.0.4-beta.24) (2023-10-07)
 
@@ -32,16 +49,4 @@
 
 * Bump CrowdSourcedDataGameVersion to separate bugged collector data ([9f5f190](https://github.com/Wynntils/Artemis/commit/9f5f190c8b697d1d8332d547b346618a1a06476c))
 * **release:** v0.0.4-beta.22 [skip ci] ([4a01267](https://github.com/Wynntils/Artemis/commit/4a0126759f87936ae97aac5ef7589956ffcb5919))
-
-## [0.0.4-beta.21](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.20...v0.0.4-beta.21) (2023-10-07)
-
-
-### Bug Fixes
-
-* Fix GatheringNodeLabelParser's regex, match professions by label color, fix NpcLabelParser parsing DXP gains as NPCs ([#2174](https://github.com/Wynntils/Artemis/issues/2174)) ([a5bd6b4](https://github.com/Wynntils/Artemis/commit/a5bd6b454e209e4b362d4a0b2502570dcabfcc77))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.21 [skip ci] ([0b15281](https://github.com/Wynntils/Artemis/commit/0b152814ec594decacc85fd1b74e9dd07d5b9432))
 
