@@ -12,7 +12,7 @@ public enum MiscStatKind {
     HEALTH("Health", StatUnit.RAW, "healthBonus"),
     HEALTH_REGEN_PERCENT("Health Regen", StatUnit.PERCENT, "healthRegen"),
     HEALTH_REGEN_RAW("Health Regen", StatUnit.RAW, "healthRegenRaw"),
-    HEALING_EFFICIENCY("Healing Efficiency", StatUnit.PERCENT, "healingEfficiency"),
+    HEALING_EFFICIENCY("Healing Efficiency", StatUnit.PERCENT, "healingEfficiency", "HEALING_EFFICIENCY"),
     LIFE_STEAL("Life Steal", StatUnit.PER_3_S, "lifeSteal"),
     MANA_REGEN("Mana Regen", StatUnit.PER_5_S, "manaRegen"),
     MANA_STEAL("Mana Steal", StatUnit.PER_3_S, "manaSteal"),
