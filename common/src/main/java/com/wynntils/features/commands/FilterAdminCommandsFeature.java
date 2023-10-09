@@ -5,6 +5,7 @@
 package com.wynntils.features.commands;
 
 import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -43,10 +44,14 @@ public class FilterAdminCommandsFeature extends Feature {
 
         RootCommandNode<SharedSuggestionProvider> newRoot = new RootCommandNode<>();
         for (CommandNode<SharedSuggestionProvider> child : root.getChildren()) {
-            if (!FILTERED_COMMANDS.contains(child.getName())) {
-                newRoot.addChild(child);
+            // Only add literal nodes, not argument nodes
+            if (child instanceof LiteralCommandNode<SharedSuggestionProvider> literalChild) {
+                if (!FILTERED_COMMANDS.contains(literalChild.getName())) {
+                    newRoot.addChild(literalChild);
+                }
             }
         }
+
         event.setRoot(newRoot);
     }
 }
