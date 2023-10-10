@@ -120,7 +120,7 @@ public final class WorldStateModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
                 && StyledText.fromComponent(e.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             setState(WorldState.CHARACTER_SELECTION);

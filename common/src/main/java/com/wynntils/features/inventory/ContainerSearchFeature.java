@@ -278,7 +278,6 @@ public class ContainerSearchFeature extends Feature {
                 Texture.INFO.width() / 3,
                 Texture.INFO.height() / 3,
                 Texture.INFO,
-                a -> {},
                 true);
 
         screen.addRenderableWidget(lastItemSearchHelperWidget);

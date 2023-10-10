@@ -130,7 +130,7 @@ public final class ContainerQueryHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
         // Are we processing a query?
         if (currentStep == null) return;
 

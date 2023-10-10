@@ -4,6 +4,17 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.eventbus.api.Event;
 
-public class ScreenClosedEvent extends Event {}
+public class ScreenClosedEvent extends Event {
+    private final Screen screen;
+
+    public ScreenClosedEvent(Screen screen) {
+        this.screen = screen;
+    }
+
+    public Screen getScreen() {
+        return screen;
+    }
+}

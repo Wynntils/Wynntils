@@ -6,7 +6,6 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
@@ -20,7 +19,6 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     private final Consumer<Integer> onClick;
     private List<Component> tooltip;
 
-    private boolean renderTooltipAboveMouse;
     private final boolean scaleTexture;
 
     public BasicTexturedButton(
@@ -76,12 +74,12 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     @Override
     public void onPress() {}
 
+    public void setTooltip(List<Component> newTooltip) {
+        tooltip = newTooltip;
+    }
+
     @Override
     public List<Component> getTooltipLines() {
         return tooltip;
-    }
-
-    public void setTooltip(List<Component> newTooltip) {
-        tooltip = ComponentUtils.wrapTooltips(newTooltip, 250);
     }
 }

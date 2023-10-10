@@ -25,7 +25,7 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
     }
 
     @Override
-    protected final void init() {
+    public final void init() {
         try {
             doInit();
         } catch (Throwable t) {
