@@ -1,9 +1,21 @@
+## [0.0.4-beta.28](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.27...v0.0.4-beta.28) (2023-10-10)
+
+
+### New Features
+
+* PacketDebuggerFeature presets ([#2183](https://github.com/Wynntils/Artemis/issues/2183)) ([44f9a53](https://github.com/Wynntils/Artemis/commit/44f9a535610bf17ed29d391c120e2f7615732d1a))
+
 ## [0.0.4-beta.27](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.26...v0.0.4-beta.27) (2023-10-09)
 
 
 ### Bug Fixes
 
 * Fix Healing Efficiency internal roll name ([#2181](https://github.com/Wynntils/Artemis/issues/2181)) ([6c2fd30](https://github.com/Wynntils/Artemis/commit/6c2fd30123983f967e21864af947e460b2429dd1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.27 [skip ci] ([20a99be](https://github.com/Wynntils/Artemis/commit/20a99bed0b42191f8d286d392c669abe393bf531))
 
 ## [0.0.4-beta.26](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.25...v0.0.4-beta.26) (2023-10-09)
 
@@ -41,12 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.24 [skip ci] ([d1842dc](https://github.com/Wynntils/Artemis/commit/d1842dc6258e8ed5f9bc30c16106e0568b3e84d4))
-
-## [0.0.4-beta.23](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.22...v0.0.4-beta.23) (2023-10-07)
-
-
-### Miscellaneous Chores
-
-* Also bump current game version ([d8ec979](https://github.com/Wynntils/Artemis/commit/d8ec979182725d6f632e6e24bd7425d58d906665))
-* **release:** v0.0.4-beta.23 [skip ci] ([4b8608f](https://github.com/Wynntils/Artemis/commit/4b8608f5d622fc300b4faa62cc853c13836fcb3b))
 
