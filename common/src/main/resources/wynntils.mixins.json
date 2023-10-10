@@ -8,7 +8,6 @@
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
     "ClientCommonPacketListenerImplMixin",
-    "CommandSuggestionsMixin",
     "ConnectScreenMixin",
     "ConnectionMixin",
     "CrashReportMixin",
