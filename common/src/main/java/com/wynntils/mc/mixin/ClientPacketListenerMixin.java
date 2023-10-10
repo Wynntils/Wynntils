@@ -222,11 +222,22 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         MenuEvent.MenuOpenedEvent event =
-                new MenuEvent.MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId());
+                new MenuEvent.MenuOpenedEvent.Pre(packet.getType(), packet.getTitle(), packet.getContainerId());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method = "handleOpenScreen(Lnet/minecraft/network/protocol/game/ClientboundOpenScreenPacket;)V",
+            at = @At("RETURN"))
+    private void handleOpenScreenPost(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        MenuEvent.MenuOpenedEvent event =
+                new MenuEvent.MenuOpenedEvent.Post(packet.getType(), packet.getTitle(), packet.getContainerId());
+        MixinHelper.post(event);
     }
 
     @Inject(
@@ -286,12 +297,18 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
     @Inject(
             method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleContainerSetSlotPre(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new ContainerSetSlotEvent.Pre(
-                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
+        ContainerSetSlotEvent.Pre event = new ContainerSetSlotEvent.Pre(
+                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem());
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(

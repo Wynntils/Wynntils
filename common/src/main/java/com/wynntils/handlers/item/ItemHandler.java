@@ -11,6 +11,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.LoreUtils;
@@ -70,6 +71,26 @@ public class ItemHandler extends Handler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
         onItemStackUpdate(event.getContainer().getItem(event.getSlot()), event.getItemStack());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        NonNullList<ItemStack> existingItems;
+
+        if (event.getContainerId() == 0) {
+            // Set all for inventory
+            existingItems = McUtils.inventoryMenu().getItems();
+        } else if (event.getContainerId() == McUtils.containerMenu().containerId) {
+            // Set all for the currently open container. Vanilla has copied inventory in the last
+            // slots
+            existingItems = McUtils.containerMenu().getItems();
+        } else {
+            // No matching container found. Annotate anyways.
+            annotate(event.getItemStack());
+            return;
+        }
+
+        onItemStackUpdate(existingItems.get(event.getSlot()), event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
