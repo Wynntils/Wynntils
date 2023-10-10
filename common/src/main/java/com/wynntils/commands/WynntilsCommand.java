@@ -4,7 +4,6 @@
  */
 package com.wynntils.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
@@ -25,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -39,7 +39,8 @@ import net.minecraft.network.chat.Style;
 public class WynntilsCommand extends Command {
     private static final Pattern STATUS_HEADING = Pattern.compile("<h1 class='status-page__title'>(.*)</h1>");
 
-    public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, List<Command> commands) {
+    public void registerWithCommands(
+            Consumer<LiteralArgumentBuilder<CommandSourceStack>> consumer, List<Command> commands) {
         List<LiteralArgumentBuilder<CommandSourceStack>> commandBuilders = getCommandBuilders();
 
         // Also register all our commands as subcommands under the wynntils command and it's aliases
@@ -50,7 +51,7 @@ public class WynntilsCommand extends Command {
                 commandInstance.getCommandBuilders().forEach(builder::then);
             }
 
-            dispatcher.register(builder);
+            consumer.accept(builder);
         }
     }
 
