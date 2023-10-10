@@ -1,9 +1,21 @@
+## [0.0.4-beta.30](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.29...v0.0.4-beta.30) (2023-10-10)
+
+
+### New Features
+
+* Add a custom trade market result screen ([#2037](https://github.com/Wynntils/Artemis/issues/2037)) ([0264547](https://github.com/Wynntils/Artemis/commit/0264547a2169ea185cf9d3a5546aa1a8a56331cb))
+
 ## [0.0.4-beta.29](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.28...v0.0.4-beta.29) (2023-10-10)
 
 
 ### New Features
 
 * Rewrite CommandManager to handle command suggestions and auto-completion better  ([#2182](https://github.com/Wynntils/Artemis/issues/2182)) ([8aa368c](https://github.com/Wynntils/Artemis/commit/8aa368cf805b2d16d95366280010fc21b4112dff))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.29 [skip ci] ([fcf026d](https://github.com/Wynntils/Artemis/commit/fcf026da2f8cc3f6d86c660c8e7c16fe2a846515))
 
 ## [0.0.4-beta.28](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.27...v0.0.4-beta.28) (2023-10-10)
 
@@ -41,16 +53,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2175](https://github.com/Wynntils/Artemis/issues/2175)) ([d5b966f](https://github.com/Wynntils/Artemis/commit/d5b966f2752e7e47096a0b3cc8b33dfa19df687c))
 * **release:** v0.0.4-beta.26 [skip ci] ([516fc1a](https://github.com/Wynntils/Artemis/commit/516fc1a820dc2e496026be367c3a3aaee5a21568))
-
-## [0.0.4-beta.25](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.24...v0.0.4-beta.25) (2023-10-08)
-
-
-### Bug Fixes
-
-* IF batching on hud text ([#2177](https://github.com/Wynntils/Artemis/issues/2177)) ([705cc81](https://github.com/Wynntils/Artemis/commit/705cc8124ec44b284434da53c3585766cf73a350))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.25 [skip ci] ([7397a41](https://github.com/Wynntils/Artemis/commit/7397a415b4eaaf61840de6d879166dea6a3529f4))
 
