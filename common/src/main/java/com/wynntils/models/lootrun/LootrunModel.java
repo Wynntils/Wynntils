@@ -18,13 +18,17 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
+import com.wynntils.handlers.particle.type.ParticleType;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
+import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
 import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
+import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
@@ -32,13 +36,12 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
-import com.wynntils.models.particle.event.ParticleVerifiedEvent;
-import com.wynntils.models.particle.type.ParticleType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
@@ -111,7 +114,6 @@ public class LootrunModel extends Model {
 
     // rely on color, beacon positions change
     private Map<BeaconColor, TaskPrediction> beacons = new HashMap<>();
-    private Map<BeaconColor, Pair<Integer, TaskLocation>> beaconUpdates = new HashMap<>();
 
     // particles can accurately show task locations
     private Set<TaskLocation> possibleTaskLocations = new HashSet<>();
@@ -139,6 +141,7 @@ public class LootrunModel extends Model {
         super(List.of(markerModel));
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
+        Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
         reloadData();
     }
@@ -166,10 +169,20 @@ public class LootrunModel extends Model {
         for (TaskLocation taskLocation : taskLocations.getOrDefault(currentLocation.get(), Set.of())) {
             if (PosUtils.closerThanIgnoringY(
                     taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
-                possibleTaskLocations.add(taskLocation);
+                // FIXME: Remove when 2.0.4 task locations are released
+                //        "Hack" in Y levels from particle position
+                possibleTaskLocations.add(new TaskLocation(
+                        taskLocation.name(),
+                        Location.containing(event.getParticle().position()),
+                        taskLocation.taskType()));
                 return;
             }
         }
+
+        // Our possible task location set did not contain the particle location,
+        // so add a new "unknown" task location to the set.
+        Location location = Location.containing(event.getParticle().position());
+        possibleTaskLocations.add(new TaskLocation(location.toString(), location, LootrunTaskType.UNKNOWN));
     }
 
     @SubscribeEvent
@@ -218,7 +231,6 @@ public class LootrunModel extends Model {
 
         lootrunningState = LootrunningState.NOT_RUNNING;
         taskType = null;
-        beaconUpdates = new HashMap<>();
         beacons = new HashMap<>();
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
@@ -261,7 +273,6 @@ public class LootrunModel extends Model {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
             beacons.remove(beaconColor);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-            beaconUpdates.remove(beaconColor);
         }
     }
 
@@ -418,7 +429,6 @@ public class LootrunModel extends Model {
             possibleTaskLocations = new HashSet<>();
 
             beacons = new HashMap<>();
-            beaconUpdates = new HashMap<>();
 
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
@@ -438,7 +448,8 @@ public class LootrunModel extends Model {
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
             selectedBeaconsStorage.touched();
             setLastTaskBeaconColor(closestBeacon.color());
-            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
+            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
+                    closestBeacon, beacons.get(closestBeacon.color()).taskLocation()));
 
             possibleTaskLocations = new HashSet<>();
 
@@ -453,7 +464,7 @@ public class LootrunModel extends Model {
     private void updateTaskLocationPrediction(Beacon beacon) {
         Optional<LootrunLocation> location = getLocation();
         if (location.isEmpty()) {
-            WynntilsMod.warn("Location was when trying to predict for: " + beacon);
+            WynntilsMod.warn("Location was empty when trying to predict for: " + beacon);
             return;
         }
 

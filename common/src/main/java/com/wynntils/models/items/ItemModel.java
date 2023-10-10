@@ -22,11 +22,13 @@ import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.GearBoxAnnotator;
 import com.wynntils.models.items.annotators.game.HorseAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
+import com.wynntils.models.items.annotators.game.InsulatorAnnotator;
 import com.wynntils.models.items.annotators.game.MaterialAnnotator;
 import com.wynntils.models.items.annotators.game.MiscAnnotator;
 import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.PotionAnnotator;
 import com.wynntils.models.items.annotators.game.PowderAnnotator;
+import com.wynntils.models.items.annotators.game.SimulatorAnnotator;
 import com.wynntils.models.items.annotators.game.TeleportScrollAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.game.TrinketAnnotator;
@@ -67,9 +69,11 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
+        Handlers.Item.registerAnnotator(new InsulatorAnnotator());
         Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
         Handlers.Item.registerAnnotator(new PotionAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
+        Handlers.Item.registerAnnotator(new SimulatorAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new TrinketAnnotator());
 

@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import java.lang.reflect.Type;
@@ -76,16 +77,23 @@ public class CrowdSourcedData {
                 Map<CrowdSourcedDataType, Set<Object>> deserializedGameVersionData = new TreeMap<>();
 
                 for (Map.Entry<String, JsonElement> crowdSourceDataTypeEntry : gameVersionObject.entrySet()) {
-                    CrowdSourcedDataType crowdSourcedDataType = context.deserialize(
-                            new JsonPrimitive(crowdSourceDataTypeEntry.getKey()), CrowdSourcedDataType.class);
-                    JsonArray crowdSourcedTypeArray =
-                            crowdSourceDataTypeEntry.getValue().getAsJsonArray();
+                    try {
+                        CrowdSourcedDataType crowdSourcedDataType = context.deserialize(
+                                new JsonPrimitive(crowdSourceDataTypeEntry.getKey()), CrowdSourcedDataType.class);
+                        JsonArray crowdSourcedTypeArray =
+                                crowdSourceDataTypeEntry.getValue().getAsJsonArray();
 
-                    Set<Object> deserializedCrowdSourcedTypeData = new TreeSet<>();
-                    crowdSourcedTypeArray.forEach(entry -> deserializedCrowdSourcedTypeData.add(
-                            context.deserialize(entry, crowdSourcedDataType.getDataClass())));
+                        Set<Object> deserializedCrowdSourcedTypeData = new TreeSet<>();
+                        crowdSourcedTypeArray.forEach(entry -> deserializedCrowdSourcedTypeData.add(
+                                context.deserialize(entry, crowdSourcedDataType.getDataClass())));
 
-                    deserializedGameVersionData.put(crowdSourcedDataType, deserializedCrowdSourcedTypeData);
+                        deserializedGameVersionData.put(crowdSourcedDataType, deserializedCrowdSourcedTypeData);
+                    } catch (Exception exception) { // Catch all exceptions, null fields cause any exceptions
+                        // We could not deserialize the crowd sourced data type, skip it
+                        WynntilsMod.warn(
+                                "Could not deserialize crowd sourced data type: " + crowdSourceDataTypeEntry.getKey()
+                                        + " for game version: " + gameVersionEntry.getKey());
+                    }
                 }
 
                 deserializedData.put(gameVersion, deserializedGameVersionData);

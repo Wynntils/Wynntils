@@ -2,31 +2,36 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.telemetry;
+package com.wynntils.crowdsource;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.crowdsource.CrowdSourcedDataCollector;
 import com.wynntils.core.crowdsource.datatype.LootrunTaskLocation;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
+import com.wynntils.models.beacons.type.Beacon;
+import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
-import com.wynntils.models.particle.event.ParticleVerifiedEvent;
-import com.wynntils.models.particle.type.ParticleType;
-import com.wynntils.utils.mc.type.Location;
+import com.wynntils.models.lootrun.type.LootrunTaskType;
 import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LootrunLocationDataCollector extends CrowdSourcedDataCollector<LootrunTaskLocation> {
     @SubscribeEvent
-    public void onLootrunParticle(ParticleVerifiedEvent event) {
-        if (event.getParticle().particleType() != ParticleType.LOOTRUN_TASK) return;
+    public void onLootrunTaskSelected(LootrunBeaconSelectedEvent event) {
+        Beacon beacon = event.getBeacon();
 
-        Optional<LootrunLocation> lootrunLocationOpt = Models.Lootrun.getLocation();
-        if (lootrunLocationOpt.isEmpty()) return;
+        if (!beacon.color().isUsedInLootruns()) return;
 
-        LootrunLocation lootrunLocation = lootrunLocationOpt.get();
+        Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getTaskType();
+        if (currentTaskTypeOpt.isEmpty()) return;
+
+        Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getLocation();
+        if (currentLocationOpt.isEmpty()) return;
 
         collect(new LootrunTaskLocation(
-                lootrunLocation, Location.containing(event.getParticle().position())));
+                currentLocationOpt.get(),
+                currentTaskTypeOpt.get(),
+                event.getTaskLocation().location()));
     }
 
     @Override

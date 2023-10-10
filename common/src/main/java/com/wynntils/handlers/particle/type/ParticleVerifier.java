@@ -2,9 +2,8 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.particle.verifiers;
+package com.wynntils.handlers.particle.type;
 
-import com.wynntils.models.particle.type.Particle;
 import java.util.List;
 import net.minecraft.core.Position;
 
