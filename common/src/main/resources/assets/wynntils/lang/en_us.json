@@ -908,6 +908,8 @@
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow.name": "Text Shadow",
   "feature.wynntils.packetDebugger.description": "Adds a packet debugger.",
   "feature.wynntils.packetDebugger.name": "Packet Debugger",
+  "feature.wynntils.packetDebugger.packetFilterType.description": "What type of packet filter should be used?",
+  "feature.wynntils.packetDebugger.packetFilterType.name": "Packet Filter Type",
   "feature.wynntils.partyManagementScreen.description": "Adds the ability to manage your party in a GUI.",
   "feature.wynntils.partyManagementScreen.name": "Party Management Screen",
   "feature.wynntils.partyMembersOverlay.description": "Adds an overlay to see the health and mana of party members using Hades.",
