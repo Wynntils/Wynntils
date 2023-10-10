@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultHolder;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class TradeMarketModel extends Model {
         super(List.of());
 
         Handlers.Item.addSimplifiablePatterns(ITEM_NAME_PATTERNS);
+        Handlers.WrappedScreen.registerWrappedScreen(new TradeMarketSearchResultHolder());
     }
 
     @SubscribeEvent

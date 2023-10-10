@@ -13,7 +13,6 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultHolder;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -26,10 +25,6 @@ public class WrappedScreenHandler extends Handler {
 
     private WrappedScreenHolder<?> currentWrappedScreenHolder;
     private Screen currentWrappedScreen;
-
-    public WrappedScreenHandler() {
-        registerWrappedScreens();
-    }
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent.Post event) {
@@ -71,6 +66,10 @@ public class WrappedScreenHandler extends Handler {
         resetWrappedScreen(true);
     }
 
+    public void registerWrappedScreen(WrappedScreenHolder holder) {
+        wrappedScreenHolders.add(holder);
+    }
+
     private void resetWrappedScreen(boolean closeContainer) {
         if (currentWrappedScreen == null) return;
 
@@ -86,13 +85,5 @@ public class WrappedScreenHandler extends Handler {
         currentWrappedScreenHolder.reset();
         WynntilsMod.unregisterEventListener(currentWrappedScreenHolder);
         currentWrappedScreenHolder = null;
-    }
-
-    private void registerWrappedScreens() {
-        registerWrappedScreen(new TradeMarketSearchResultHolder());
-    }
-
-    private void registerWrappedScreen(WrappedScreenHolder holder) {
-        wrappedScreenHolders.add(holder);
     }
 }
