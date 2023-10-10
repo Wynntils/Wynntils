@@ -119,10 +119,10 @@ public class PacketDebuggerFeature extends Feature {
     }
 
     private enum PacketFilterType {
-        ALL(packetClass -> true),
+        ALL(packetClass -> false),
         FILTERED(IGNORE_LIST::contains),
         CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
-        PARTICLE_ONLY(PARTICLE_PACKET_CLASS::equals);
+        PARTICLE_ONLY(packetClas -> !PARTICLE_PACKET_CLASS.equals(packetClas));
 
         private final Predicate<Class<? extends Packet>> filterPredicate;
 
