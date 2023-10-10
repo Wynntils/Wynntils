@@ -1,9 +1,21 @@
+## [0.0.4-beta.29](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.28...v0.0.4-beta.29) (2023-10-10)
+
+
+### New Features
+
+* Rewrite CommandManager to handle command suggestions and auto-completion better  ([#2182](https://github.com/Wynntils/Artemis/issues/2182)) ([8aa368c](https://github.com/Wynntils/Artemis/commit/8aa368cf805b2d16d95366280010fc21b4112dff))
+
 ## [0.0.4-beta.28](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.27...v0.0.4-beta.28) (2023-10-10)
 
 
 ### New Features
 
 * PacketDebuggerFeature presets ([#2183](https://github.com/Wynntils/Artemis/issues/2183)) ([44f9a53](https://github.com/Wynntils/Artemis/commit/44f9a535610bf17ed29d391c120e2f7615732d1a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.28 [skip ci] ([9f2c8f3](https://github.com/Wynntils/Artemis/commit/9f2c8f3a76ab48a54e2b0cc7ff9598eadc497a36))
 
 ## [0.0.4-beta.27](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.26...v0.0.4-beta.27) (2023-10-09)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.25 [skip ci] ([7397a41](https://github.com/Wynntils/Artemis/commit/7397a415b4eaaf61840de6d879166dea6a3529f4))
-
-## [0.0.4-beta.24](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.23...v0.0.4-beta.24) (2023-10-07)
-
-
-### Bug Fixes
-
-* Waypoint manager & icon filter crash ([#2176](https://github.com/Wynntils/Artemis/issues/2176)) ([0ef5a09](https://github.com/Wynntils/Artemis/commit/0ef5a093c89dcc9dc4b51b0b1a90485d45335107))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.24 [skip ci] ([d1842dc](https://github.com/Wynntils/Artemis/commit/d1842dc6258e8ed5f9bc30c16106e0568b3e84d4))
 
