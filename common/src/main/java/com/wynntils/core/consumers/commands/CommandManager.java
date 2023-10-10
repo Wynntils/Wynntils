@@ -9,7 +9,6 @@ import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
@@ -28,11 +27,10 @@ import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.mc.event.CommandSuggestionsEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandRuntimeException;
@@ -49,14 +47,43 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
+
+/**
+ * We register our commands in two significant ways:
+ * <ol>
+ *     <li> Registering them to our custom client dispatcher,
+ *     which is used to parse and execute commands.
+ *     <li> Registering them to the server dispatcher, which is used to suggest commands.
+ *     This is done after the server initializes the dispatcher.
+ * </ol>
+ */
 public final class CommandManager extends Manager {
-    private final List<Command> commandInstanceSet = new ArrayList<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
+
+    private final List<Command> commandInstanceSet = new ArrayList<>();
+    private WynntilsCommand wynntilsCommand;
 
     public CommandManager() {
         super(List.of());
 
         registerAllCommands();
+    }
+
+    @SubscribeEvent
+    public void onCommandsAdded(CommandsAddedEvent event) {
+        for (Command command : commandInstanceSet) {
+            command.getCommandBuilders().stream()
+                    .map(LiteralArgumentBuilder::build)
+                    .forEach(node -> addNode(event.getRoot(), node));
+        }
+
+        // Wynntils command is special,
+        // it registers every other command as a subcommand
+        wynntilsCommand.registerWithCommands(
+                builder -> {
+                    addNode(event.getRoot(), builder.build());
+                },
+                commandInstanceSet);
     }
 
     @SuppressWarnings("unchecked")
@@ -65,52 +92,9 @@ public final class CommandManager extends Manager {
         root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
     }
 
-    public LiteralCommandNode<CommandSourceStack> registerCommand(LiteralArgumentBuilder<CommandSourceStack> command) {
-        return clientDispatcher.register(command);
-    }
-
-    private void registerCommand(Command command) {
-        commandInstanceSet.add(command);
-        command.getCommandBuilders().forEach(clientDispatcher::register);
-    }
-
-    private void registerCommandWithCommandSet(WynntilsCommand command) {
-        command.registerWithCommands(clientDispatcher, commandInstanceSet);
-        commandInstanceSet.add(command);
-    }
-
     public boolean handleCommand(String message) {
         StringReader reader = new StringReader(message);
         return executeCommand(reader, message);
-    }
-
-    @SubscribeEvent
-    public void onCommandSuggestions(CommandSuggestionsEvent event) {
-        CompletableFuture<Suggestions> serverSuggestions = event.getSuggestions();
-        StringReader command = event.getCommand();
-
-        ParseResults<CommandSourceStack> clientParse = clientDispatcher.parse(command, getSource());
-        CompletableFuture<Suggestions> clientSuggestions =
-                clientDispatcher.getCompletionSuggestions(clientParse, event.getCursor());
-
-        CompletableFuture<Suggestions> result = new CompletableFuture<>();
-
-        CompletableFuture.allOf(clientSuggestions, serverSuggestions).thenRun(() -> {
-            final List<Suggestions> suggestions = new ArrayList<>();
-            suggestions.add(clientSuggestions.join());
-            suggestions.add(serverSuggestions.join());
-            result.complete(Suggestions.merge(command.getString(), suggestions));
-        });
-
-        event.setSuggestions(result);
-    }
-
-    private ClientCommandSourceStack getSource() {
-        LocalPlayer player = McUtils.player();
-
-        if (player == null) return null;
-
-        return new ClientCommandSourceStack(player);
     }
 
     private boolean executeCommand(StringReader reader, String command) {
@@ -161,12 +145,30 @@ public final class CommandManager extends Manager {
         return true;
     }
 
+    private ClientCommandSourceStack getSource() {
+        LocalPlayer player = McUtils.player();
+
+        if (player == null) return null;
+
+        return new ClientCommandSourceStack(player);
+    }
+
     private void sendError(MutableComponent error) {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
     public List<Command> getCommandInstanceSet() {
         return commandInstanceSet;
+    }
+
+    private void registerCommand(Command command) {
+        commandInstanceSet.add(command);
+        command.getCommandBuilders().forEach(clientDispatcher::register);
+    }
+
+    private void registerCommandWithCommandSet(WynntilsCommand command) {
+        command.registerWithCommands(clientDispatcher::register, commandInstanceSet);
+        wynntilsCommand = command;
     }
 
     private void registerAllCommands() {
