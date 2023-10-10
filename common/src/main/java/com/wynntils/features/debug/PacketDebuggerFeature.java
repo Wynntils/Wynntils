@@ -92,6 +92,8 @@ public class PacketDebuggerFeature extends Feature {
             ServerboundContainerClickPacket.class,
             ServerboundContainerButtonClickPacket.class);
 
+    private static final Class<? extends Packet<?>> PARTICLE_PACKET_CLASS = ClientboundLevelParticlesPacket.class;
+
     @Persisted
     private final Config<PacketFilterType> packetFilterType = new Config<>(PacketFilterType.FILTERED);
 
@@ -119,7 +121,8 @@ public class PacketDebuggerFeature extends Feature {
     private enum PacketFilterType {
         ALL(packetClass -> true),
         FILTERED(IGNORE_LIST::contains),
-        CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass));
+        CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
+        PARTICLE_ONLY(PARTICLE_PACKET_CLASS::equals);
 
         private final Predicate<Class<? extends Packet>> filterPredicate;
 
