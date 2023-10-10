@@ -367,6 +367,8 @@ public final class FeatureManager extends Manager {
             McUtils.options().load();
         }
 
+        commands.init();
+
         addCrashCallbacks();
     }
 

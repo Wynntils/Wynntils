@@ -58,8 +58,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * </ol>
  */
 public final class CommandManager extends Manager {
-    private final List<Command> commandInstanceSet = new ArrayList<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
+
+    private final List<Command> commandInstanceSet = new ArrayList<>();
+    private WynntilsCommand wynntilsCommand;
 
     public CommandManager() {
         super(List.of());
@@ -70,20 +72,18 @@ public final class CommandManager extends Manager {
     @SubscribeEvent
     public void onCommandsAdded(CommandsAddedEvent event) {
         for (Command command : commandInstanceSet) {
-            // Wynntils command is special,
-            // it registers every other command as a subcommand
-            if (command instanceof WynntilsCommand wynntilsCommand) {
-                wynntilsCommand.registerWithCommands(
-                        builder -> {
-                            addNode(event.getRoot(), builder.build());
-                        },
-                        commandInstanceSet);
-            }
-
             command.getCommandBuilders().stream()
                     .map(LiteralArgumentBuilder::build)
                     .forEach(node -> addNode(event.getRoot(), node));
         }
+
+        // Wynntils command is special,
+        // it registers every other command as a subcommand
+        wynntilsCommand.registerWithCommands(
+                builder -> {
+                    addNode(event.getRoot(), builder.build());
+                },
+                commandInstanceSet);
     }
 
     @SuppressWarnings("unchecked")
@@ -168,7 +168,7 @@ public final class CommandManager extends Manager {
 
     private void registerCommandWithCommandSet(WynntilsCommand command) {
         command.registerWithCommands(clientDispatcher::register, commandInstanceSet);
-        commandInstanceSet.add(command);
+        wynntilsCommand = command;
     }
 
     private void registerAllCommands() {

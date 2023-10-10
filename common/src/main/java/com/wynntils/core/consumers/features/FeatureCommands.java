@@ -46,12 +46,15 @@ public class FeatureCommands {
         }
     }
 
-    public LiteralCommandNode<CommandSourceStack> getCommandNode() {
+    public void init() {
         // Build the command node if it hasn't been built yet
         if (commandNode == null) {
             commandNode = commandNodeBuilder.build();
         }
+    }
 
+    public LiteralCommandNode<CommandSourceStack> getCommandNode() {
+        assert commandNode != null;
         return commandNode;
     }
 }
