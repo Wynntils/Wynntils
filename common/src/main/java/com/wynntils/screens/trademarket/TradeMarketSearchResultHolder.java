@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wrappedscreens.trademarket;
+package com.wynntils.screens.trademarket;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;

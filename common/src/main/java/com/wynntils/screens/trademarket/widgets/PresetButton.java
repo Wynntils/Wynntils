@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.wrappedscreens.trademarket.widgets;
+package com.wynntils.screens.trademarket.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.trademarket.TradeMarketSearchResultScreen;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.wrappedscreens.trademarket.TradeMarketSearchResultScreen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
