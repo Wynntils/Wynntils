@@ -10,7 +10,8 @@ import com.wynntils.models.items.properties.NumberedTierItemProperty;
 public class PowderItem extends GameItem implements NumberedTierItemProperty {
     private final PowderTierInfo powderTierInfo;
 
-    public PowderItem(PowderTierInfo powderTierInfo) {
+    public PowderItem(int emeraldPrice, PowderTierInfo powderTierInfo) {
+        super(emeraldPrice);
         this.powderTierInfo = powderTierInfo;
     }
 
@@ -25,6 +26,6 @@ public class PowderItem extends GameItem implements NumberedTierItemProperty {
 
     @Override
     public String toString() {
-        return "PowderItem{" + "powderTierInfo=" + powderTierInfo + '}';
+        return "PowderItem{" + "powderTierInfo=" + powderTierInfo + ", emeraldPrice=" + emeraldPrice + '}';
     }
 }

@@ -26,6 +26,7 @@ import com.wynntils.services.itemfilter.statproviders.LevelStatProvider;
 import com.wynntils.services.itemfilter.statproviders.MajorIdStatProvider;
 import com.wynntils.services.itemfilter.statproviders.OverallStatProvider;
 import com.wynntils.services.itemfilter.statproviders.PowderSlotsStatProvider;
+import com.wynntils.services.itemfilter.statproviders.PriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ProfessionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
@@ -385,6 +386,10 @@ public class ItemFilterService extends Service {
     private void registerStatProviders() {
         // Keep some kind of order here, because it is used when displaying the filter helper in the GUI
 
+        // Price Stats
+        registerStatProvider(new PriceStatProvider());
+        registerStatProvider(new EmeraldValueStatProvider());
+
         // Constant Item Stats
         registerStatProvider(new LevelStatProvider());
         registerStatProvider(new RarityStatProvider());
@@ -412,8 +417,6 @@ public class ItemFilterService extends Service {
         for (StatType statType : Models.Stat.getAllStatTypes()) {
             registerStatProvider(new ActualStatProvider(statType));
         }
-
-        registerStatProvider(new EmeraldValueStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {

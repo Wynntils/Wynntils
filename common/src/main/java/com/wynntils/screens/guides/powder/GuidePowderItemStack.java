@@ -31,7 +31,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
     public GuidePowderItemStack(PowderTierInfo powderTierInfo) {
         super(
                 getItemStack(powderTierInfo),
-                new PowderItem(powderTierInfo),
+                new PowderItem(0, powderTierInfo),
                 powderTierInfo.element().getName() + " Powder");
 
         this.element = powderTierInfo.element();

@@ -12,7 +12,8 @@ public class EmeraldItem extends GameItem implements EmeraldValuedItemProperty {
     private final Supplier<Integer> amountSupplier;
     private final EmeraldUnits unit;
 
-    public EmeraldItem(Supplier<Integer> amountSupplier, EmeraldUnits unit) {
+    public EmeraldItem(int emeraldPrice, Supplier<Integer> amountSupplier, EmeraldUnits unit) {
+        super(emeraldPrice);
         this.amountSupplier = amountSupplier;
         this.unit = unit;
     }
@@ -32,6 +33,6 @@ public class EmeraldItem extends GameItem implements EmeraldValuedItemProperty {
 
     @Override
     public String toString() {
-        return "EmeraldItem{" + "amount=" + getAmount() + ", unit=" + unit + '}';
+        return "EmeraldItem{" + "amount=" + getAmount() + ", unit=" + unit + ", emeraldPrice=" + emeraldPrice + '}';
     }
 }

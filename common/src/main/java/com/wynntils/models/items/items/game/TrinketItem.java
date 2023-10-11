@@ -14,13 +14,15 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
     private final GearTier gearTier;
     private final CappedValue uses;
 
-    public TrinketItem(String trinketName, GearTier gearTier, CappedValue uses) {
+    public TrinketItem(int emeraldPrice, String trinketName, GearTier gearTier, CappedValue uses) {
+        super(emeraldPrice);
         this.trinketName = trinketName;
         this.gearTier = gearTier;
         this.uses = uses;
     }
 
-    public TrinketItem(String trinketName, GearTier gearTier) {
+    public TrinketItem(int emeraldPrice, String trinketName, GearTier gearTier) {
+        super(emeraldPrice);
         this.trinketName = trinketName;
         this.gearTier = gearTier;
         this.uses = null;
@@ -45,6 +47,7 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
         return "TrinketItem{" + "trinketName='"
                 + trinketName + '\'' + ", gearTier="
                 + gearTier + ", uses="
-                + uses + '}';
+                + uses + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }

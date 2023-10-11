@@ -17,7 +17,8 @@ public class PotionItem extends GameItem implements UsesItemProperty, LeveledIte
     private final List<ItemEffect> effects;
     private final CappedValue uses;
 
-    public PotionItem(PotionType type, int level, List<ItemEffect> effects, CappedValue uses) {
+    public PotionItem(int emeraldPrice, PotionType type, int level, List<ItemEffect> effects, CappedValue uses) {
+        super(emeraldPrice);
         this.type = type;
         this.level = level;
         this.effects = effects;
@@ -44,6 +45,11 @@ public class PotionItem extends GameItem implements UsesItemProperty, LeveledIte
 
     @Override
     public String toString() {
-        return "PotionItem{" + "type=" + type + ", level=" + level + ", effects=" + effects + ", uses=" + uses + '}';
+        return "PotionItem{" + "type="
+                + type + ", level="
+                + level + ", effects="
+                + effects + ", uses="
+                + uses + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }
