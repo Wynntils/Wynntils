@@ -7,7 +7,6 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.RuneItem;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
