@@ -92,6 +92,10 @@ public final class CommandManager extends Manager {
         root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
     }
 
+    public void addNodeToClientDispatcher(LiteralArgumentBuilder<CommandSourceStack> nodeBuilder) {
+        clientDispatcher.register(nodeBuilder);
+    }
+
     public boolean handleCommand(String message) {
         StringReader reader = new StringReader(message);
         return executeCommand(reader, message);
