@@ -1,9 +1,21 @@
+## [0.0.4-beta.33](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.32...v0.0.4-beta.33) (2023-10-11)
+
+
+### Bug Fixes
+
+* Make price parsing much less memory intensive ([#2187](https://github.com/Wynntils/Artemis/issues/2187)) ([b9bd6a6](https://github.com/Wynntils/Artemis/commit/b9bd6a6caa5c23e46d67286f80ee5240a66d19d1))
+
 ## [0.0.4-beta.32](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.31...v0.0.4-beta.32) (2023-10-11)
 
 
 ### Bug Fixes
 
 * Fix feature-registered client commands not executing correctly ([#2186](https://github.com/Wynntils/Artemis/issues/2186)) ([0e6c9a1](https://github.com/Wynntils/Artemis/commit/0e6c9a13787ba67169470d8253cb8fcca635337c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.32 [skip ci] ([56672d8](https://github.com/Wynntils/Artemis/commit/56672d8c871db4c6ae0178949d9fe161acdd832c))
 
 ## [0.0.4-beta.31](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.30...v0.0.4-beta.31) (2023-10-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.29 [skip ci] ([fcf026d](https://github.com/Wynntils/Artemis/commit/fcf026da2f8cc3f6d86c660c8e7c16fe2a846515))
-
-## [0.0.4-beta.28](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.27...v0.0.4-beta.28) (2023-10-10)
-
-
-### New Features
-
-* PacketDebuggerFeature presets ([#2183](https://github.com/Wynntils/Artemis/issues/2183)) ([44f9a53](https://github.com/Wynntils/Artemis/commit/44f9a535610bf17ed29d391c120e2f7615732d1a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.28 [skip ci] ([9f2c8f3](https://github.com/Wynntils/Artemis/commit/9f2c8f3a76ab48a54e2b0cc7ff9598eadc497a36))
 
