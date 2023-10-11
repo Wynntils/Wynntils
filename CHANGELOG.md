@@ -1,9 +1,21 @@
+## [0.0.4-beta.34](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.33...v0.0.4-beta.34) (2023-10-11)
+
+
+### Bug Fixes
+
+* Parse prices with silverbull discount ([#2188](https://github.com/Wynntils/Artemis/issues/2188)) ([ece209c](https://github.com/Wynntils/Artemis/commit/ece209c07d3ddee345365798477230aa7828a767))
+
 ## [0.0.4-beta.33](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.32...v0.0.4-beta.33) (2023-10-11)
 
 
 ### Bug Fixes
 
 * Make price parsing much less memory intensive ([#2187](https://github.com/Wynntils/Artemis/issues/2187)) ([b9bd6a6](https://github.com/Wynntils/Artemis/commit/b9bd6a6caa5c23e46d67286f80ee5240a66d19d1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.33 [skip ci] ([c2d5f99](https://github.com/Wynntils/Artemis/commit/c2d5f99f000628cded0193bd0386b05df8bf9c77))
 
 ## [0.0.4-beta.32](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.31...v0.0.4-beta.32) (2023-10-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.30 [skip ci] ([f8e3698](https://github.com/Wynntils/Artemis/commit/f8e369854c3c2dc61b29ae0552aa21928fa1ab93))
-
-## [0.0.4-beta.29](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.28...v0.0.4-beta.29) (2023-10-10)
-
-
-### New Features
-
-* Rewrite CommandManager to handle command suggestions and auto-completion better  ([#2182](https://github.com/Wynntils/Artemis/issues/2182)) ([8aa368c](https://github.com/Wynntils/Artemis/commit/8aa368cf805b2d16d95366280010fc21b4112dff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.29 [skip ci] ([fcf026d](https://github.com/Wynntils/Artemis/commit/fcf026da2f8cc3f6d86c660c8e7c16fe2a846515))
 
