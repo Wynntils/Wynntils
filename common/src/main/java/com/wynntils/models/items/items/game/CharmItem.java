@@ -15,7 +15,8 @@ public class CharmItem extends GameItem implements GearTierItemProperty {
     private final List<StatActualValue> identifications;
     private final int rerolls;
 
-    public CharmItem(CharmInfo charmInfo, List<StatActualValue> identifications, int rerolls) {
+    public CharmItem(int emeraldPrice, CharmInfo charmInfo, List<StatActualValue> identifications, int rerolls) {
+        super(emeraldPrice);
         this.charmInfo = charmInfo;
         this.identifications = identifications;
         this.rerolls = rerolls;
@@ -40,9 +41,10 @@ public class CharmItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public String toString() {
-        return "CharmItem{" + "charmProfile="
+        return "CharmItem{" + "charmInfo="
                 + charmInfo + ", identifications="
                 + identifications + ", rerolls="
-                + rerolls + '}';
+                + rerolls + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }

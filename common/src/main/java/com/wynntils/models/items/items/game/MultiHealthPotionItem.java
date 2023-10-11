@@ -11,7 +11,8 @@ public class MultiHealthPotionItem extends GameItem implements UsesItemProperty 
     private final int hearts;
     private final CappedValue uses;
 
-    public MultiHealthPotionItem(int hearts, CappedValue uses) {
+    public MultiHealthPotionItem(int emeraldPrice, int hearts, CappedValue uses) {
+        super(emeraldPrice);
         this.hearts = hearts;
         this.uses = uses;
     }
@@ -27,6 +28,9 @@ public class MultiHealthPotionItem extends GameItem implements UsesItemProperty 
 
     @Override
     public String toString() {
-        return "MultiHealthPotionItem{" + "hearts=" + hearts + ", uses=" + uses + '}';
+        return "MultiHealthPotionItem{" + "hearts="
+                + hearts + ", uses="
+                + uses + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }

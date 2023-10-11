@@ -95,7 +95,7 @@ public final class GearModel extends Model {
                 gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
     }
 
-    public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
+    public CraftedGearItem parseCraftedGearItem(ItemStack itemStack, int emeraldPrice) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         GearType gearType = GearType.fromItemStack(itemStack);
@@ -111,6 +111,7 @@ public final class GearModel extends Model {
         }
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
+                emeraldPrice,
                 gearType,
                 result.health(),
                 result.level(),
@@ -122,11 +123,12 @@ public final class GearModel extends Model {
     }
 
     public UnknownGearItem parseUnknownGearItem(
-            String name, GearType gearType, GearTier gearTier, ItemStack itemStack) {
+            String name, GearType gearType, GearTier gearTier, ItemStack itemStack, int emeraldPrice) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
 
         // FIXME: Damages and requirements are not yet parsed
         return new UnknownGearItem(
+                emeraldPrice,
                 name,
                 gearType,
                 gearTier,

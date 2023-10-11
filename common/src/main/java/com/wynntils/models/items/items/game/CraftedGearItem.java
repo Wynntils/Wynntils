@@ -28,6 +28,7 @@ public class CraftedGearItem extends GameItem
     private final CappedValue durability;
 
     public CraftedGearItem(
+            int emeraldPrice,
             GearType gearType,
             int health,
             int level,
@@ -36,6 +37,7 @@ public class CraftedGearItem extends GameItem
             List<StatActualValue> identifications,
             List<Powder> powders,
             CappedValue durability) {
+        super(emeraldPrice);
         this.gearType = gearType;
         this.health = health;
         this.level = level;
@@ -96,6 +98,7 @@ public class CraftedGearItem extends GameItem
                 + requirements + ", identifications="
                 + identifications + ", powders="
                 + powders + ", durability="
-                + durability + '}';
+                + durability + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }

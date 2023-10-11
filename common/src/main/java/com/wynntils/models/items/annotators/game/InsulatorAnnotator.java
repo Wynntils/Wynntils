@@ -5,20 +5,20 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
-public class InsulatorAnnotator implements ItemAnnotator {
+public class InsulatorAnnotator extends GameItemAnnotator {
     private static final Pattern INSULATOR_PATTERN = Pattern.compile("^§(.)Corkian Insulator$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
         Matcher matcher = name.getMatcher(INSULATOR_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -27,6 +27,6 @@ public class InsulatorAnnotator implements ItemAnnotator {
 
         if (gearTier == null) return null;
 
-        return new InsulatorItem(gearTier);
+        return new InsulatorItem(emeraldPrice, gearTier);
     }
 }
