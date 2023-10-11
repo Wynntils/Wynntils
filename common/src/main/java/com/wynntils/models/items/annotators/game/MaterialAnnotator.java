@@ -9,7 +9,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.type.MaterialProfile;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +17,7 @@ public final class MaterialAnnotator extends GameItemAnnotator {
     private static final Pattern MATERIAL_PATTERN = Pattern.compile("^§f(.*) ([^ ]+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(MATERIAL_PATTERN);
         if (!matcher.matches()) return null;
 

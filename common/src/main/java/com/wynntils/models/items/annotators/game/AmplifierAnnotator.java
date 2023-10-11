@@ -8,7 +8,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.utils.MathUtils;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +16,7 @@ public final class AmplifierAnnotator extends GameItemAnnotator {
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("^§bCorkian Amplifier (I{1,3})$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher ampMatcher = name.getMatcher(AMPLIFIER_PATTERN);
         if (!ampMatcher.matches()) return null;
 

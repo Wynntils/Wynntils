@@ -22,7 +22,7 @@ public final class GatheringToolAnnotator extends GameItemAnnotator {
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(GATHERING_TOOL_PATTERN);
         if (!matcher.matches()) return null;
 

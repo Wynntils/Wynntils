@@ -8,7 +8,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.dungeon.type.Dungeon;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.GameItem;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +17,7 @@ public final class DungeonKeyAnnotator extends GameItemAnnotator {
             Pattern.compile("^(?:§[46])*(?:Broken )?(?:Corrupted )?(.+) Key$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher keyMatcher = name.getMatcher(DUNGEON_KEY_PATTERN);
         if (!keyMatcher.matches()) return null;
 

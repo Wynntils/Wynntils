@@ -11,7 +11,6 @@ import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ public final class GearBoxAnnotator extends GameItemAnnotator {
     private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^§a- §7Lv\\. Range: §f(\\d+)-(\\d+)$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         if (!(itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6)) return null;
