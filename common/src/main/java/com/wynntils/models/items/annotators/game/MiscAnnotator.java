@@ -8,7 +8,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.utils.mc.LoreUtils;
-import java.util.List;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +17,7 @@ public final class MiscAnnotator extends GameItemAnnotator {
     private static final StyledText QUEST_ITEM = StyledText.fromString("§cQuest Item");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         if (loreTag == null) return null;
 

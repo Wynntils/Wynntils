@@ -10,7 +10,6 @@ import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ public final class EmeraldPouchAnnotator extends GameItemAnnotator {
             Pattern.compile("§6§l([\\d\\s]+)" + EmeraldUnits.EMERALD.getSymbol() + ".*");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         // Checks for normal emerald pouch (diamond axe) and emerald pouch pickup texture (gold shovel)
         if (itemStack.getItem() != Items.DIAMOND_AXE && itemStack.getItem() != Items.GOLDEN_SHOVEL) return null;
 

@@ -10,7 +10,6 @@ import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +18,7 @@ public final class CraftedConsumableAnnotator extends GameItemAnnotator {
     private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_PATTERN);
         if (!matcher.matches()) return null;
 

@@ -8,7 +8,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.rewards.type.TomeType;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +19,7 @@ public final class TomeAnnotator extends GameItemAnnotator {
             "^§[5abcdef]((?<Variant>[\\w']+)? ?Tome of (?<Type>\\w+))(?:( Mastery( (?<Tier>[IVX]{1,4}))?))?$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         if (itemStack.getItem() != Items.ENCHANTED_BOOK) return null;
         Matcher matcher = name.getMatcher(TOME_PATTERN);
         if (!matcher.matches()) return null;

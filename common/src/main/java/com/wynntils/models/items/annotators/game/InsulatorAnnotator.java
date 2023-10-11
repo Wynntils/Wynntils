@@ -8,7 +8,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -18,7 +17,7 @@ public class InsulatorAnnotator extends GameItemAnnotator {
     private static final Pattern INSULATOR_PATTERN = Pattern.compile("^§(.)Corkian Insulator$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(INSULATOR_PATTERN);
         if (!matcher.matches()) return null;
 

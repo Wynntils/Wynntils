@@ -10,7 +10,6 @@ import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +23,7 @@ public final class HorseAnnotator extends GameItemAnnotator {
     private static final Pattern HORSE_NAME_PATTERN = Pattern.compile("^§7Name: (.+)$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         if (itemStack.getItem() != Items.SADDLE) return null;
         Matcher matcher = name.getMatcher(HORSE_PATTERN);
         if (!matcher.matches()) return null;
