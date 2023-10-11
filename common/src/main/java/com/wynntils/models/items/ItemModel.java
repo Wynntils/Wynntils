@@ -28,6 +28,7 @@ import com.wynntils.models.items.annotators.game.MiscAnnotator;
 import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.PotionAnnotator;
 import com.wynntils.models.items.annotators.game.PowderAnnotator;
+import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.game.SimulatorAnnotator;
 import com.wynntils.models.items.annotators.game.TeleportScrollAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
@@ -73,6 +74,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
         Handlers.Item.registerAnnotator(new PotionAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
+        Handlers.Item.registerAnnotator(new RuneAnnotator());
         Handlers.Item.registerAnnotator(new SimulatorAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new TrinketAnnotator());
