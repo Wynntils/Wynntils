@@ -1,9 +1,21 @@
+## [0.0.4-beta.32](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.31...v0.0.4-beta.32) (2023-10-11)
+
+
+### Bug Fixes
+
+* Fix feature-registered client commands not executing correctly ([#2186](https://github.com/Wynntils/Artemis/issues/2186)) ([0e6c9a1](https://github.com/Wynntils/Artemis/commit/0e6c9a13787ba67169470d8253cb8fcca635337c))
+
 ## [0.0.4-beta.31](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.30...v0.0.4-beta.31) (2023-10-11)
 
 
 ### New Features
 
 * Add price stat, fix not being able to click items in TM ([#2185](https://github.com/Wynntils/Artemis/issues/2185)) ([d914f91](https://github.com/Wynntils/Artemis/commit/d914f911f8a61823fa9f694a385cb22f4b183f17))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.31 [skip ci] ([e5d1e26](https://github.com/Wynntils/Artemis/commit/e5d1e267dfbbd7eded6d036823313c8ca96305ca))
 
 ## [0.0.4-beta.30](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.29...v0.0.4-beta.30) (2023-10-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.28 [skip ci] ([9f2c8f3](https://github.com/Wynntils/Artemis/commit/9f2c8f3a76ab48a54e2b0cc7ff9598eadc497a36))
-
-## [0.0.4-beta.27](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.26...v0.0.4-beta.27) (2023-10-09)
-
-
-### Bug Fixes
-
-* Fix Healing Efficiency internal roll name ([#2181](https://github.com/Wynntils/Artemis/issues/2181)) ([6c2fd30](https://github.com/Wynntils/Artemis/commit/6c2fd30123983f967e21864af947e460b2429dd1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.27 [skip ci] ([20a99be](https://github.com/Wynntils/Artemis/commit/20a99bed0b42191f8d286d392c669abe393bf531))
 
