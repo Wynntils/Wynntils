@@ -7,6 +7,7 @@ package com.wynntils.core.consumers.features;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import java.lang.reflect.Field;
 import net.minecraft.commands.CommandSourceStack;
@@ -51,6 +52,8 @@ public class FeatureCommands {
         if (commandNode == null) {
             commandNode = commandNodeBuilder.build();
         }
+
+        Managers.Command.addNodeToClientDispatcher(commandNodeBuilder);
     }
 
     public LiteralCommandNode<CommandSourceStack> getCommandNode() {
