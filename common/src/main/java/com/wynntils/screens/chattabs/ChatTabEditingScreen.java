@@ -75,15 +75,9 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     @Override
     protected void doInit() {
         // region Name
-        this.addRenderableWidget(
-                nameInput = new TextInputBoxWidget(
-                        this.width / 2 - 160,
-                        this.height / 2 - 70,
-                        110,
-                        20,
-                        (s) -> updateSaveStatus(),
-                        this,
-                        nameInput));
+        nameInput = new TextInputBoxWidget(
+                this.width / 2 - 160, this.height / 2 - 70, 110, 20, (s) -> updateSaveStatus(), this, nameInput);
+        this.addRenderableWidget(nameInput);
 
         if (firstSetup) {
             if (edited != null) {
@@ -94,24 +88,19 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // endregion
 
         // region Auto Command
-        this.addRenderableWidget(
-                autoCommandInput = new TextInputBoxWidget(
-                        this.width / 2 - 30, this.height / 2 - 70, 110, 20, null, this, autoCommandInput));
+        autoCommandInput = new TextInputBoxWidget(
+                this.width / 2 - 30, this.height / 2 - 70, 110, 20, null, this, autoCommandInput);
+        this.addRenderableWidget(autoCommandInput);
         if (firstSetup && edited != null && edited.getAutoCommand() != null) {
             autoCommandInput.setTextBoxInput(edited.getAutoCommand());
         }
         // endregion
 
         // region Order
-        this.addRenderableWidget(
-                orderInput = new TextInputBoxWidget(
-                        this.width / 2 + 100,
-                        this.height / 2 - 70,
-                        20,
-                        20,
-                        (s) -> updateSaveStatus(),
-                        this,
-                        orderInput));
+
+        orderInput = new TextInputBoxWidget(
+                this.width / 2 + 100, this.height / 2 - 70, 20, 20, (s) -> updateSaveStatus(), this, orderInput);
+        this.addRenderableWidget(orderInput);
         if (firstSetup && edited != null) {
             orderInput.setTextBoxInput(Integer.toString(Services.ChatTab.getTabIndex(edited)));
         }
@@ -154,63 +143,57 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // endregion
 
         // region Filter Regex
-        this.addRenderableWidget(
-                filterRegexInput = new TextInputBoxWidget(
-                        this.width / 2 - 160,
-                        this.height / 2 + 45,
-                        300,
-                        20,
-                        (s) -> updateSaveStatus(),
-                        this,
-                        filterRegexInput));
+        filterRegexInput = new TextInputBoxWidget(
+                this.width / 2 - 160, this.height / 2 + 45, 300, 20, (s) -> updateSaveStatus(), this, filterRegexInput);
+        this.addRenderableWidget(filterRegexInput);
         if (firstSetup && edited != null && edited.getCustomRegexString() != null) {
             filterRegexInput.setTextBoxInput(edited.getCustomRegexString());
         }
 
-        this.addRenderableWidget(
-                regexErrorMsg = new TextWidget(
-                        this.width / 2 - 160 + 100, this.height / 2 + 75 + 7, 200, 20, Component.empty()));
+        regexErrorMsg =
+                new TextWidget(this.width / 2 - 160 + 100, this.height / 2 + 75 + 7, 200, 20, Component.empty());
+        this.addRenderableWidget(regexErrorMsg);
         // endregion
 
         // region Consuming
-        this.addRenderableWidget(
-                consumingCheckbox = new Checkbox(
-                        this.width / 2 - 160,
-                        this.height / 2 + 75,
-                        20,
-                        20,
-                        Component.translatable("screens.wynntils.chatTabsGui.consuming"),
-                        consumingCheckbox != null && consumingCheckbox.selected(),
-                        true));
+        consumingCheckbox = new Checkbox(
+                this.width / 2 - 160,
+                this.height / 2 + 75,
+                20,
+                20,
+                Component.translatable("screens.wynntils.chatTabsGui.consuming"),
+                consumingCheckbox != null && consumingCheckbox.selected(),
+                true);
+        this.addRenderableWidget(consumingCheckbox);
         if (firstSetup && edited != null) {
             consumingCheckbox.selected = edited.isConsuming();
         }
         // endregion
 
         // region Screen Interactions
-        this.addRenderableWidget(
-                saveButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.chatTabsGui.save")
-                                        .withStyle(ChatFormatting.DARK_GREEN),
-                                (button) -> {
-                                    saveChatTab();
-                                    this.onClose();
-                                })
-                        .pos(this.width / 2 - 200, this.height - 40)
-                        .size(100, 20)
-                        .build());
+        saveButton = new Button.Builder(
+                Component.translatable("screens.wynntils.chatTabsGui.save")
+                        .withStyle(ChatFormatting.DARK_GREEN),
+                (button) -> {
+                    saveChatTab();
+                    this.onClose();
+                })
+                .pos(this.width / 2 - 200, this.height - 40)
+                .size(100, 20)
+                .build();
+        this.addRenderableWidget(saveButton);
 
-        this.addRenderableWidget(
-                deleteButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.chatTabsGui.delete")
-                                        .withStyle(ChatFormatting.DARK_RED),
-                                (button) -> {
-                                    deleteChatTab();
-                                    this.onClose();
-                                })
-                        .pos(this.width / 2 - 50, this.height - 40)
-                        .size(100, 20)
-                        .build());
+        deleteButton = new Button.Builder(
+                Component.translatable("screens.wynntils.chatTabsGui.delete")
+                        .withStyle(ChatFormatting.DARK_RED),
+                (button) -> {
+                    deleteChatTab();
+                    this.onClose();
+                })
+                .pos(this.width / 2 - 50, this.height - 40)
+                .size(100, 20)
+                .build();
+        this.addRenderableWidget(deleteButton);
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
