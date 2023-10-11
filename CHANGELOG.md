@@ -1,9 +1,21 @@
+## [0.0.4-beta.35](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.34...v0.0.4-beta.35) (2023-10-11)
+
+
+### New Features
+
+* Annotate runes properly ([#2189](https://github.com/Wynntils/Artemis/issues/2189)) ([dbecef7](https://github.com/Wynntils/Artemis/commit/dbecef71ffdc2b78646d75bf5445a8176c03adaf))
+
 ## [0.0.4-beta.34](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.33...v0.0.4-beta.34) (2023-10-11)
 
 
 ### Bug Fixes
 
 * Parse prices with silverbull discount ([#2188](https://github.com/Wynntils/Artemis/issues/2188)) ([ece209c](https://github.com/Wynntils/Artemis/commit/ece209c07d3ddee345365798477230aa7828a767))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.34 [skip ci] ([eb40e2e](https://github.com/Wynntils/Artemis/commit/eb40e2e40a4c3c80807d80a9bf5293d5bc86d37c))
 
 ## [0.0.4-beta.33](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.32...v0.0.4-beta.33) (2023-10-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.31 [skip ci] ([e5d1e26](https://github.com/Wynntils/Artemis/commit/e5d1e267dfbbd7eded6d036823313c8ca96305ca))
-
-## [0.0.4-beta.30](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.29...v0.0.4-beta.30) (2023-10-10)
-
-
-### New Features
-
-* Add a custom trade market result screen ([#2037](https://github.com/Wynntils/Artemis/issues/2037)) ([0264547](https://github.com/Wynntils/Artemis/commit/0264547a2169ea185cf9d3a5546aa1a8a56331cb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.30 [skip ci] ([f8e3698](https://github.com/Wynntils/Artemis/commit/f8e369854c3c2dc61b29ae0552aa21928fa1ab93))
 
