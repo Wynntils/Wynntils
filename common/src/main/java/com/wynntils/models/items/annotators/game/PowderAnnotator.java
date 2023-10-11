@@ -11,7 +11,6 @@ import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.utils.MathUtils;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +21,7 @@ public final class PowderAnnotator extends GameItemAnnotator {
             Pattern.compile("^§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(POWDER_PATTERN);
         if (!matcher.matches()) return null;
 

@@ -8,7 +8,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.SimulatorItem;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -18,7 +17,7 @@ public class SimulatorAnnotator extends GameItemAnnotator {
     private static final Pattern SIMULATOR_PATTERN = Pattern.compile("^§(.)Corkian Simulator$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(SIMULATOR_PATTERN);
         if (!matcher.matches()) return null;
 
