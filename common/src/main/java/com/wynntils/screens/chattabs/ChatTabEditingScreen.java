@@ -16,6 +16,7 @@ import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -37,6 +38,15 @@ import net.minecraft.network.chat.MutableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
+    private static final float GRID_DIVISIONS = 64.0f;
+    private static final int FIRST_ROW_Y = 20;
+    private static final int SECOND_ROW_Y = 27;
+    private static final int THIRD_ROW_Y = 39;
+    private static final int FOURTH_ROW_Y = 43;
+
+    private float dividedHeight;
+    private float dividedWidth;
+
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget nameInput;
@@ -74,9 +84,21 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
     @Override
     protected void doInit() {
+        dividedWidth = this.width / GRID_DIVISIONS;
+        dividedHeight = this.height / GRID_DIVISIONS;
+
         // region Name
+        //        nameInput = new TextInputBoxWidget(
+        //                this.width / 2 - 160, this.height / 2 - 70, 110, 20, (s) -> updateSaveStatus(), this,
+        // nameInput);
         nameInput = new TextInputBoxWidget(
-                this.width / 2 - 160, this.height / 2 - 70, 110, 20, (s) -> updateSaveStatus(), this, nameInput);
+                (int) (dividedWidth * 35),
+                (int) ((dividedHeight * FIRST_ROW_Y)),
+                (int) (dividedWidth * 10),
+                20,
+                (s) -> updateSaveStatus(),
+                this,
+                nameInput);
         this.addRenderableWidget(nameInput);
 
         if (firstSetup) {
@@ -88,8 +110,16 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // endregion
 
         // region Auto Command
+        //        autoCommandInput = new TextInputBoxWidget(
+        //                this.width / 2 - 30, this.height / 2 - 70, 110, 20, null, this, autoCommandInput);
         autoCommandInput = new TextInputBoxWidget(
-                this.width / 2 - 30, this.height / 2 - 70, 110, 20, null, this, autoCommandInput);
+                (int) (dividedWidth * 47),
+                (int) (dividedHeight * FIRST_ROW_Y),
+                (int) (dividedWidth * 10),
+                20,
+                null,
+                this,
+                autoCommandInput);
         this.addRenderableWidget(autoCommandInput);
         if (firstSetup && edited != null && edited.getAutoCommand() != null) {
             autoCommandInput.setTextBoxInput(edited.getAutoCommand());
@@ -98,8 +128,17 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         // region Order
 
+        //        orderInput = new TextInputBoxWidget(
+        //                this.width / 2 + 100, this.height / 2 - 70, 20, 20, (s) -> updateSaveStatus(), this,
+        // orderInput);
         orderInput = new TextInputBoxWidget(
-                this.width / 2 + 100, this.height / 2 - 70, 20, 20, (s) -> updateSaveStatus(), this, orderInput);
+                (int) (dividedWidth * 59),
+                (int) (dividedHeight * FIRST_ROW_Y),
+                (int) (dividedWidth * 2),
+                20,
+                (s) -> updateSaveStatus(),
+                this,
+                orderInput);
         this.addRenderableWidget(orderInput);
         if (firstSetup && edited != null) {
             orderInput.setTextBoxInput(Integer.toString(Services.ChatTab.getTabIndex(edited)));
@@ -112,12 +151,12 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         List<Checkbox> oldBoxes = new ArrayList<>(recipientTypeBoxes);
         recipientTypeBoxes.clear();
 
-        int x = this.width / 2 - 160;
-        int y = this.height / 2 - 20;
+        int x = (int) (dividedWidth * 35);
+        int y = (int) (dividedHeight * SECOND_ROW_Y);
         for (int i = 0; i < RecipientType.values().length; i++) {
-            if (i == 4) {
-                y += 20;
-                x = this.width / 2 - 160;
+            if (i == 4 || i == 8) {
+                y += (int) (dividedHeight * 3);
+                x = (int) (dividedWidth * 35);
             }
 
             RecipientType type = RecipientType.values()[i];
@@ -137,14 +176,20 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
 
-            x += 80;
+            x += (int) (dividedWidth * 6);
         }
 
         // endregion
 
         // region Filter Regex
         filterRegexInput = new TextInputBoxWidget(
-                this.width / 2 - 160, this.height / 2 + 45, 300, 20, (s) -> updateSaveStatus(), this, filterRegexInput);
+                (int) (dividedWidth * 35),
+                (int) (dividedHeight * THIRD_ROW_Y),
+                (int) (dividedWidth * 26),
+                20,
+                (s) -> updateSaveStatus(),
+                this,
+                filterRegexInput);
         this.addRenderableWidget(filterRegexInput);
         if (firstSetup && edited != null && edited.getCustomRegexString() != null) {
             filterRegexInput.setTextBoxInput(edited.getCustomRegexString());
@@ -157,8 +202,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         // region Consuming
         consumingCheckbox = new Checkbox(
-                this.width / 2 - 160,
-                this.height / 2 + 75,
+                (int) (dividedWidth * 35),
+                (int) (dividedHeight * 43),
                 20,
                 20,
                 Component.translatable("screens.wynntils.chatTabsGui.consuming"),
@@ -178,8 +223,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                     saveChatTab();
                     this.onClose();
                 })
-                .pos(this.width / 2 - 200, this.height - 40)
-                .size(100, 20)
+                .pos((int) (dividedWidth * 35), (int) (dividedHeight * 59))
+                .size((int) (dividedWidth * 8), 20)
                 .build();
         this.addRenderableWidget(saveButton);
 
@@ -190,15 +235,15 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                     deleteChatTab();
                     this.onClose();
                 })
-                .pos(this.width / 2 - 50, this.height - 40)
-                .size(100, 20)
+                .pos((int) (dividedWidth * 44), (int) (dividedHeight * 59))
+                .size((int) (dividedWidth * 8), 20)
                 .build();
         this.addRenderableWidget(deleteButton);
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
-                .pos(this.width / 2 + 100, this.height - 40)
-                .size(100, 20)
+                .pos((int) (dividedWidth * 53), (int) (dividedHeight * 59))
+                .size((int) (dividedWidth * 8), 20)
                 .build());
         // endregion
 
@@ -214,17 +259,23 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         PoseStack poseStack = guiGraphics.pose();
 
+        dividedWidth = this.width / GRID_DIVISIONS;
+        dividedHeight = this.height / GRID_DIVISIONS;
+
+        // Dev/Debug: Uncomment when editing GUI elements for debug grid
+        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
+
         // Name
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.chatTabsGui.name") + ChatFormatting.DARK_RED + " *"),
-                        this.width / 2f - 160,
-                        this.height / 2f - 85,
+                        (int) (dividedWidth * 35),
+                        (int) (dividedHeight * FIRST_ROW_Y),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         // Auto Command
@@ -232,11 +283,11 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.autoCommand")),
-                        this.width / 2f - 30,
-                        this.height / 2f - 85,
+                        (int) (dividedWidth * 47),
+                        (int) (dividedHeight * FIRST_ROW_Y),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         // Order
@@ -244,11 +295,11 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.order")),
-                        this.width / 2f + 100,
-                        this.height / 2f - 85,
+                        (int) (dividedWidth * 59),
+                        (int) (dividedHeight * FIRST_ROW_Y),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         // Recipient Types
@@ -257,11 +308,11 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         poseStack,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.chatTabsGui.types") + ChatFormatting.DARK_RED + " *"),
-                        this.width / 2f - 160,
-                        this.height / 2f - 40,
+                        (int) (dividedWidth * 35),
+                        (int) (dividedHeight * (SECOND_ROW_Y - 1)),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         // Filter Pattern
@@ -269,11 +320,11 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.filter")),
-                        this.width / 2f - 160,
-                        this.height / 2f + 30,
+                        (int) (dividedWidth * 35),
+                        (int) (dividedHeight * THIRD_ROW_Y),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
     }
 
