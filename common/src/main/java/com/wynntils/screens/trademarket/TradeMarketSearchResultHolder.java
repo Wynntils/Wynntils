@@ -145,11 +145,11 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
             }
         }
 
-        // Assume the item is on a page before the current one
-        int pageToLoad = 0;
+        // Check if the item is on a later or earlier page
+        for (int i = 0; i < itemMap.size(); i++) {
+            // Skip the current page
+            if (i == currentPage) continue;
 
-        // Check if the item is on a later page
-        for (int i = currentPage + 1; i < itemMap.size(); i++) {
             boolean foundItem = false;
 
             Int2ObjectOpenHashMap<ItemStack> itemsOnPage = itemMap.get(i);
@@ -158,13 +158,12 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 if (ItemUtils.isItemEqual(itemStack, clickedItem)) {
                     // Item found on a later page, load the pages until the last one and click on it
                     foundItem = true;
-                    pageToLoad = itemMap.size() - 1;
                     break;
                 }
             }
 
             if (foundItem) {
-                runOrQueueAction(new QueuedAction(PageLoadingMode.CLICK_ITEM, pageToLoad, clickedItem));
+                runOrQueueAction(new QueuedAction(PageLoadingMode.CLICK_ITEM, i, clickedItem));
                 return;
             }
         }

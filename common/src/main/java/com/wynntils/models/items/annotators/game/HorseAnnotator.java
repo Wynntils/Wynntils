@@ -5,18 +5,18 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.horse.type.HorseTier;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class HorseAnnotator implements ItemAnnotator {
+public final class HorseAnnotator extends GameItemAnnotator {
     private static final Pattern HORSE_PATTERN = Pattern.compile("^§f(.*) Horse$");
     private static final Pattern HORSE_TIER_PATTERN = Pattern.compile("^§7Tier (\\d)$");
     private static final Pattern HORSE_LEVEL_PATTERN = Pattern.compile("^§6Speed: (\\d+)/(\\d+)$");
@@ -24,7 +24,7 @@ public final class HorseAnnotator implements ItemAnnotator {
     private static final Pattern HORSE_NAME_PATTERN = Pattern.compile("^§7Name: (.+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
         if (itemStack.getItem() != Items.SADDLE) return null;
         Matcher matcher = name.getMatcher(HORSE_PATTERN);
         if (!matcher.matches()) return null;
@@ -33,7 +33,8 @@ public final class HorseAnnotator implements ItemAnnotator {
 
         // The lore may be missing if the item is on the trade market
         if (!tierMatcher.matches()) {
-            return new HorseItem(HorseTier.fromName(matcher.group(1)), CappedValue.EMPTY, CappedValue.EMPTY, null);
+            return new HorseItem(
+                    emeraldPrice, HorseTier.fromName(matcher.group(1)), CappedValue.EMPTY, CappedValue.EMPTY, null);
         }
         HorseTier tier = HorseTier.fromNumeral(Integer.parseInt(tierMatcher.group(1)));
 
@@ -49,6 +50,6 @@ public final class HorseAnnotator implements ItemAnnotator {
         Matcher nameMatcher = LoreUtils.matchLoreLine(itemStack, 5, HORSE_NAME_PATTERN);
         String horseName = nameMatcher.matches() ? nameMatcher.group(1) : null;
 
-        return new HorseItem(tier, new CappedValue(level, maxLevel), new CappedValue(xp, 100), horseName);
+        return new HorseItem(emeraldPrice, tier, new CappedValue(level, maxLevel), new CappedValue(xp, 100), horseName);
     }
 }

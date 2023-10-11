@@ -5,24 +5,24 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 
-public final class TeleportScrollAnnotator implements ItemAnnotator {
+public final class TeleportScrollAnnotator extends GameItemAnnotator {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("^§b(.*) Teleport Scroll$");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- §7Teleports to: §f(.*)");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
         Matcher nameMatcher = name.getMatcher(TELEPORT_SCROLL_PATTERN);
         if (!nameMatcher.matches()) return null;
 
@@ -40,10 +40,10 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
                     .map(s -> s.substring(0, 1))
                     .collect(Collectors.joining())
                     .toUpperCase(Locale.ROOT);
-            return new TeleportScrollItem(destination, true);
+            return new TeleportScrollItem(emeraldPrice, destination, true);
         } else {
             String destination = scrollName.substring(0, 2);
-            return new TeleportScrollItem(destination, false);
+            return new TeleportScrollItem(emeraldPrice, destination, false);
         }
     }
 }

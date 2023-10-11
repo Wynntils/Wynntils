@@ -15,7 +15,8 @@ public class MaterialItem extends GameItem
         implements QualityTierItemProperty, LeveledItemProperty, ProfessionItemProperty {
     private final MaterialProfile materialProfile;
 
-    public MaterialItem(MaterialProfile ingredientProfile) {
+    public MaterialItem(int emeraldPrice, MaterialProfile ingredientProfile) {
+        super(emeraldPrice);
         this.materialProfile = ingredientProfile;
     }
 
@@ -34,12 +35,12 @@ public class MaterialItem extends GameItem
     }
 
     @Override
-    public String toString() {
-        return "MaterialItem{" + "materialProfile=" + materialProfile + '}';
+    public List<ProfessionType> getProfessionTypes() {
+        return List.of(materialProfile.getResourceType().getMaterialType().getProfessionType());
     }
 
     @Override
-    public List<ProfessionType> getProfessionTypes() {
-        return List.of(materialProfile.getResourceType().getMaterialType().getProfessionType());
+    public String toString() {
+        return "MaterialItem{" + "materialProfile=" + materialProfile + ", emeraldPrice=" + emeraldPrice + '}';
     }
 }

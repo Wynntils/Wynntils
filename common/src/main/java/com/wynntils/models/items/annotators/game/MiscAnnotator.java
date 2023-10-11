@@ -5,20 +5,20 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.utils.mc.LoreUtils;
+import java.util.List;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
-public final class MiscAnnotator implements ItemAnnotator {
+public final class MiscAnnotator extends GameItemAnnotator {
     private static final StyledText UNTRADABLE = StyledText.fromString("§cUntradable Item");
     private static final StyledText QUEST_ITEM = StyledText.fromString("§cQuest Item");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, List<StyledText> lore, int emeraldPrice) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         if (loreTag == null) return null;
 
@@ -39,6 +39,6 @@ public final class MiscAnnotator implements ItemAnnotator {
         // e.g. a GUI element
         if (!untradable && !questItem) return null;
 
-        return new MiscItem(name, untradable, questItem);
+        return new MiscItem(emeraldPrice, name, untradable, questItem);
     }
 }

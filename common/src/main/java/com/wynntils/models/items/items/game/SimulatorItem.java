@@ -10,7 +10,8 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 public class SimulatorItem extends GameItem implements GearTierItemProperty {
     private final GearTier gearTier;
 
-    public SimulatorItem(GearTier gearTier) {
+    public SimulatorItem(int emeraldPrice, GearTier gearTier) {
+        super(emeraldPrice);
         this.gearTier = gearTier;
     }
 
@@ -21,6 +22,6 @@ public class SimulatorItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public String toString() {
-        return "SimulatorItem{" + "gearTier=" + gearTier + '}';
+        return "SimulatorItem{" + "gearTier=" + gearTier + ", emeraldPrice=" + emeraldPrice + '}';
     }
 }

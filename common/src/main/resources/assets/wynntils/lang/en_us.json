@@ -2052,6 +2052,7 @@
   "service.wynntils.itemFilter.stat.majorId.description": "Major ID(s) of the item",
   "service.wynntils.itemFilter.stat.overall.description": "Overall roll %% of the item",
   "service.wynntils.itemFilter.stat.powderSlots.description": "Powder slots of the item",
+  "service.wynntils.itemFilter.stat.price.description": "Price of the item",
   "service.wynntils.itemFilter.stat.profession.description": "List of professions related to the item",
   "service.wynntils.itemFilter.stat.qualityTier.description": "Quality Tier of the item (professions)",
   "service.wynntils.itemFilter.stat.rarity.description": "Rarity of the item",

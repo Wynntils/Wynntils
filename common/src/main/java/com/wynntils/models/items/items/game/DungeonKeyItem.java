@@ -11,7 +11,8 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
     private final Dungeon dungeon;
     private final boolean corrupted;
 
-    public DungeonKeyItem(Dungeon dungeon, boolean corrupted) {
+    public DungeonKeyItem(int emeraldPrice, Dungeon dungeon, boolean corrupted) {
+        super(emeraldPrice);
         this.dungeon = dungeon;
         this.corrupted = corrupted;
     }
@@ -31,6 +32,9 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
 
     @Override
     public String toString() {
-        return "DungeonKeyItem{" + "dungeon='" + dungeon + '\'' + ", corrupted=" + corrupted + '}';
+        return "DungeonKeyItem{" + "dungeon="
+                + dungeon + ", corrupted="
+                + corrupted + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }

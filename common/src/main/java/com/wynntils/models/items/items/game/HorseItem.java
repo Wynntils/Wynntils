@@ -14,7 +14,8 @@ public class HorseItem extends GameItem {
     private final CappedValue xp;
     private final String name;
 
-    public HorseItem(HorseTier tier, CappedValue level, CappedValue xp, String name) {
+    public HorseItem(int emeraldPrice, HorseTier tier, CappedValue level, CappedValue xp, String name) {
+        super(emeraldPrice);
         this.tier = tier;
         this.level = level;
         this.xp = xp;
@@ -40,6 +41,11 @@ public class HorseItem extends GameItem {
 
     @Override
     public String toString() {
-        return "HorseItem{" + "tier=" + tier + ", level=" + level + ", xp=" + xp + ", name='" + name + '\'' + '}';
+        return "HorseItem{" + "tier="
+                + tier + ", level="
+                + level + ", xp="
+                + xp + ", name='"
+                + name + '\'' + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }
