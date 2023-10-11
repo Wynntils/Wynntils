@@ -22,9 +22,9 @@ public class RuneItem extends GameItem {
     }
 
     public enum RuneType {
-        Az,
-        Nii,
-        Uth,
-        Tol
+        AZ,
+        NII,
+        UTH,
+        TOL
     }
 }
