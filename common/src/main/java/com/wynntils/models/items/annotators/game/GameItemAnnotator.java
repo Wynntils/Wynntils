@@ -20,7 +20,7 @@ public abstract class GameItemAnnotator implements ItemAnnotator {
 
     // Test suite: https://regexr.com/7lh2b
     private static final Pattern PRICE_PATTERN = Pattern.compile(
-            "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f)(?<price>[\\d,]+)§7²(?: .+)?");
+            "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
     public abstract GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice);
 
@@ -71,7 +71,11 @@ public abstract class GameItemAnnotator implements ItemAnnotator {
         StyledText loreLine = LoreUtils.getLoreLine(itemStack, lineToCheck + 1);
         Matcher matcher = loreLine.getMatcher(PRICE_PATTERN);
         if (matcher.matches()) {
-            return Integer.parseInt(matcher.group("price").replaceAll(",", ""));
+            // If there is a silverbull price, use that instead
+            String priceStr = matcher.group("silverbullPrice");
+            priceStr = priceStr == null ? matcher.group("price") : priceStr;
+
+            return Integer.parseInt(priceStr.replaceAll(",", ""));
         }
 
         // There might be a non-emerald price, just return 0
