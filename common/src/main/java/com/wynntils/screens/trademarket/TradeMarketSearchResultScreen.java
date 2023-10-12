@@ -47,6 +47,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     // Widgets
     private ItemSearchWidget itemSearchWidget;
+    private BasicTexturedButton sortOptionsButton;
 
     // State
     private Component currentState = Component.empty();
@@ -121,7 +122,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         WynntilsButton loadMoreButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
-                renderY + Texture.CONTAINER_SIDEBAR.height() - 20,
+                renderY + Texture.CONTAINER_SIDEBAR.height() - 17,
                 Texture.SMALL_ADD_ICON.width(),
                 Texture.SMALL_ADD_ICON.height(),
                 Texture.SMALL_ADD_ICON,
@@ -131,11 +132,21 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                         .withStyle(ChatFormatting.BOLD)));
         this.addRenderableWidget(loadMoreButton);
 
+        sortOptionsButton = new BasicTexturedButton(
+                renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
+                renderY + Texture.CONTAINER_SIDEBAR.height() - 34,
+                Texture.SORT.width(),
+                Texture.SORT.height(),
+                Texture.SORT,
+                holder::changeSortingMode,
+                holder.getSortingItemTooltip());
+        this.addRenderableWidget(sortOptionsButton);
+
         // Add preset buttons
         for (int i = 0; i < 4; i++) {
             this.addRenderableWidget(new PresetButton(
                     renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
-                    renderY + 30 + i * (Texture.PRESET.height() + 2),
+                    renderY + 25 + i * (Texture.PRESET.height() + 2),
                     Texture.PRESET.width(),
                     Texture.PRESET.height(),
                     i,
@@ -293,6 +304,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     public ItemSearchQuery getSearchQuery() {
         return itemSearchWidget.getSearchQuery();
+    }
+
+    public void onSortingModeChanged() {
+        sortOptionsButton.setTooltip(holder.getSortingItemTooltip());
     }
 
     private void scroll(int delta) {
