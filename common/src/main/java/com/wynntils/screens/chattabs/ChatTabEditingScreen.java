@@ -88,9 +88,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         dividedHeight = this.height / GRID_DIVISIONS;
 
         // region Name
-        //        nameInput = new TextInputBoxWidget(
-        //                this.width / 2 - 160, this.height / 2 - 70, 110, 20, (s) -> updateSaveStatus(), this,
-        // nameInput);
         nameInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 35),
                 (int) ((dividedHeight * FIRST_ROW_Y)),
@@ -110,8 +107,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // endregion
 
         // region Auto Command
-        //        autoCommandInput = new TextInputBoxWidget(
-        //                this.width / 2 - 30, this.height / 2 - 70, 110, 20, null, this, autoCommandInput);
         autoCommandInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 47),
                 (int) (dividedHeight * FIRST_ROW_Y),
@@ -127,10 +122,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // endregion
 
         // region Order
-
-        //        orderInput = new TextInputBoxWidget(
-        //                this.width / 2 + 100, this.height / 2 - 70, 20, 20, (s) -> updateSaveStatus(), this,
-        // orderInput);
         orderInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 59),
                 (int) (dividedHeight * FIRST_ROW_Y),
