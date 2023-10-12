@@ -16,8 +16,7 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty, Level
     private final GearTier gearTier;
     private final RangedValue levelRange;
 
-    public GearBoxItem(int emeraldPrice, GearType gearType, GearTier gearTier, RangedValue levelRange) {
-        super(emeraldPrice);
+    public GearBoxItem(GearType gearType, GearTier gearTier, RangedValue levelRange) {
         this.gearType = gearType;
         this.gearTier = gearTier;
         this.levelRange = levelRange;
@@ -46,9 +45,8 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty, Level
     public String toString() {
         return "GearBoxItem{" + "gearType="
                 + gearType + ", gearTier="
-                + gearTier + ", levelRange="
-                + levelRange + ", emeraldPrice="
-                + emeraldPrice + '}';
+                + gearTier + ", levelRange='"
+                + levelRange + '\'' + '}';
     }
 
     @Override

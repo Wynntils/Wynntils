@@ -22,13 +22,7 @@ public class CraftedConsumableItem extends GameItem
     private final CappedValue uses;
 
     public CraftedConsumableItem(
-            int emeraldPrice,
-            String name,
-            int level,
-            List<StatActualValue> identifications,
-            List<ItemEffect> effects,
-            CappedValue uses) {
-        super(emeraldPrice);
+            String name, int level, List<StatActualValue> identifications, List<ItemEffect> effects, CappedValue uses) {
         this.name = name;
         this.level = level;
         this.identifications = identifications;
@@ -74,7 +68,6 @@ public class CraftedConsumableItem extends GameItem
                 + level + ", identifications="
                 + identifications + ", effects="
                 + effects + ", uses="
-                + uses + ", emeraldPrice="
-                + emeraldPrice + '}';
+                + uses + '}';
     }
 }

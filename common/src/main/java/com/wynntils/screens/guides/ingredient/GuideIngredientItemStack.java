@@ -32,7 +32,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
     private final List<MutableComponent> guideTooltip;
 
     public GuideIngredientItemStack(IngredientInfo ingredientInfo) {
-        super(ingredientInfo.material().itemStack(), new IngredientItem(0, ingredientInfo), ingredientInfo.name());
+        super(ingredientInfo.material().itemStack(), new IngredientItem(ingredientInfo), ingredientInfo.name());
 
         this.ingredientInfo = ingredientInfo;
         this.guideTooltip = generateGuideTooltip();
