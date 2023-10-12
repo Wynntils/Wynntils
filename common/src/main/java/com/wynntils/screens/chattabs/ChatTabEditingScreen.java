@@ -39,10 +39,11 @@ import org.lwjgl.glfw.GLFW;
 
 public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
     private static final float GRID_DIVISIONS = 64.0f;
-    private static final int FIRST_ROW_Y = 20;
-    private static final int SECOND_ROW_Y = 27;
-    private static final int THIRD_ROW_Y = 39;
-    private static final int FOURTH_ROW_Y = 43;
+    private static final int FIRST_ROW_Y = 18;
+    private static final int SECOND_ROW_Y = 25;
+    private static final int THIRD_ROW_Y = 37;
+    private static final int FOURTH_ROW_Y = 41;
+    private static final int FIFTH_ROW_Y = 50;
 
     private float dividedHeight;
     private float dividedWidth;
@@ -194,7 +195,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // region Consuming
         consumingCheckbox = new Checkbox(
                 (int) (dividedWidth * 35),
-                (int) (dividedHeight * 43),
+                (int) (dividedHeight * FOURTH_ROW_Y),
                 20,
                 20,
                 Component.translatable("screens.wynntils.chatTabsGui.consuming"),
@@ -214,7 +215,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                     saveChatTab();
                     this.onClose();
                 })
-                .pos((int) (dividedWidth * 35), (int) (dividedHeight * 59))
+                .pos((int) (dividedWidth * 35), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
         this.addRenderableWidget(saveButton);
@@ -226,14 +227,14 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                     deleteChatTab();
                     this.onClose();
                 })
-                .pos((int) (dividedWidth * 44), (int) (dividedHeight * 59))
+                .pos((int) (dividedWidth * 44), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
         this.addRenderableWidget(deleteButton);
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
-                .pos((int) (dividedWidth * 53), (int) (dividedHeight * 59))
+                .pos((int) (dividedWidth * 53), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), 20)
                 .build());
         // endregion
