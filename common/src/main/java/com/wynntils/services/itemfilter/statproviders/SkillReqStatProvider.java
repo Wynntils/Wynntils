@@ -10,6 +10,7 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
+import net.minecraft.world.item.ItemStack;
 
 public class SkillReqStatProvider extends ItemStatProvider<Integer> {
     private final Skill skill;
@@ -29,7 +30,7 @@ public class SkillReqStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
+    public List<Integer> getValue(ItemStack itemStack, WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
         return gearItem.getGearInfo().requirements().skills().stream()

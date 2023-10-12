@@ -8,10 +8,11 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import net.minecraft.world.item.ItemStack;
 
 public class LevelStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
+    public List<Integer> getValue(ItemStack itemStack, WynnItem wynnItem) {
         if (!(wynnItem instanceof LeveledItemProperty levelItemProperty)) return List.of();
 
         return List.of(levelItemProperty.getLevel());

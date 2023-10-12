@@ -224,7 +224,7 @@ public class ItemFilterService extends Service {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
 
-        return filterMatches(searchQuery, wynnItemOpt.get())
+        return filterMatches(searchQuery, itemStack, wynnItemOpt.get())
                 && itemNameMatches(
                         searchQuery,
                         StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
@@ -247,7 +247,7 @@ public class ItemFilterService extends Service {
 
             for (Pair<SortDirection, ItemStatProvider<?>> pair : searchQuery.sortStatProviders()) {
                 ItemStatProvider<?> statProvider = pair.value();
-                if (statProvider.getValue(wynnItem).isEmpty()) {
+                if (statProvider.getValue(itemStack, wynnItem).isEmpty()) {
                     return false;
                 }
             }
@@ -256,18 +256,8 @@ public class ItemFilterService extends Service {
         });
 
         filteredList = filteredList.sorted((itemStack1, itemStack2) -> {
-            Optional<WynnItem> wynnItem1Opt = Models.Item.getWynnItem(itemStack1);
-            Optional<WynnItem> wynnItem2Opt = Models.Item.getWynnItem(itemStack2);
-
-            if (wynnItem1Opt.isEmpty() || wynnItem2Opt.isEmpty()) {
-                return 0;
-            }
-
-            WynnItem wynnItem1 = wynnItem1Opt.get();
-            WynnItem wynnItem2 = wynnItem2Opt.get();
-
             for (Pair<SortDirection, ItemStatProvider<?>> providerPair : searchQuery.sortStatProviders()) {
-                int compare = providerPair.value().compare(wynnItem1, wynnItem2);
+                int compare = providerPair.value().compare(itemStack1, itemStack2);
 
                 if (compare != 0) {
                     return switch (providerPair.key()) {
@@ -327,11 +317,12 @@ public class ItemFilterService extends Service {
      * Checks if the given item matches all filters. Tokens that are not filters in the search query are ignored. If no
      * filters are present, this method always returns true.
      *
-     * @param wynnItem the item to check
+     * @param itemStack the item to check
+     * @param wynnItem  the wynnItem version of the item
      * @return true if the item matches all filters, false otherwise
      */
-    private boolean filterMatches(ItemSearchQuery searchQuery, WynnItem wynnItem) {
-        return searchQuery.filters().stream().allMatch(o -> o.matches(wynnItem));
+    private boolean filterMatches(ItemSearchQuery searchQuery, ItemStack itemStack, WynnItem wynnItem) {
+        return searchQuery.filters().stream().allMatch(o -> o.matches(itemStack, wynnItem));
     }
 
     /**

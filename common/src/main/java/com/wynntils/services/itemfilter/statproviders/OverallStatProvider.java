@@ -10,10 +10,11 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.item.ItemStack;
 
 public class OverallStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
+    public List<Integer> getValue(ItemStack itemStack, WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
 

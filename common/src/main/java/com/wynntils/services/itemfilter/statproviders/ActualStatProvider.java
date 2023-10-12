@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.itemfilter.statproviders;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.ingredients.type.IngredientInfo;
@@ -19,6 +20,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.item.ItemStack;
 
 public class ActualStatProvider extends ItemStatProvider<StatValue> {
     private final StatType statType;
@@ -38,7 +40,7 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     }
 
     @Override
-    public List<StatValue> getValue(WynnItem wynnItem) {
+    public List<StatValue> getValue(ItemStack itemStack, WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             return handleGearItem(gearItem);
         }
@@ -91,9 +93,16 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     }
 
     @Override
-    public int compare(WynnItem wynnItem1, WynnItem wynnItem2) {
-        List<StatValue> itemValues1 = this.getValue(wynnItem1);
-        List<StatValue> itemValues2 = this.getValue(wynnItem2);
+    public int compare(ItemStack itemStack1, ItemStack itemStack2) {
+        Optional<WynnItem> wynnItem1Opt = Models.Item.getWynnItem(itemStack1);
+        Optional<WynnItem> wynnItem2Opt = Models.Item.getWynnItem(itemStack2);
+
+        if (wynnItem1Opt.isEmpty() && wynnItem2Opt.isEmpty()) return 0;
+        if (wynnItem1Opt.isEmpty()) return 1;
+        if (wynnItem2Opt.isEmpty()) return -1;
+
+        List<StatValue> itemValues1 = this.getValue(itemStack1, wynnItem1Opt.get());
+        List<StatValue> itemValues2 = this.getValue(itemStack2, wynnItem2Opt.get());
 
         if (itemValues1.isEmpty() && !itemValues2.isEmpty()) return 1;
         if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;

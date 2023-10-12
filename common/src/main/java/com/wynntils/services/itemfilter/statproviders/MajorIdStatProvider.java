@@ -9,10 +9,11 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import net.minecraft.world.item.ItemStack;
 
 public class MajorIdStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(WynnItem wynnItem) {
+    public List<String> getValue(ItemStack itemStack, WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
         return gearItem.getGearInfo().fixedStats().majorIds().stream()

@@ -5,14 +5,17 @@
 package com.wynntils.services.itemfilter.type;
 
 import com.google.common.base.CaseFormat;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Translatable;
 import com.wynntils.models.items.WynnItem;
 import java.lang.reflect.ParameterizedType;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.ItemStack;
 
-public abstract class ItemStatProvider<T extends Comparable<T>> implements Translatable, Comparator<WynnItem> {
+public abstract class ItemStatProvider<T extends Comparable<T>> implements Translatable, Comparator<ItemStack> {
     protected final String name;
 
     protected ItemStatProvider() {
@@ -24,10 +27,12 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
      * Returns the value of the stat for the given item.
      * If there is a single value, it is returned as a singleton list.
      * Some stats may have multiple values, in which case a list is returned.
-     * @param wynnItem The item to get the stat value for
+     *
+     * @param itemStack
+     * @param wynnItem  The item to get the stat value for
      * @return The value of the stat for the given item
      */
-    public abstract List<T> getValue(WynnItem wynnItem);
+    public abstract List<T> getValue(ItemStack itemStack, WynnItem wynnItem);
 
     public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -60,9 +65,16 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
     }
 
     @Override
-    public int compare(WynnItem wynnItem1, WynnItem wynnItem2) {
-        List<T> itemValues1 = this.getValue(wynnItem1);
-        List<T> itemValues2 = this.getValue(wynnItem2);
+    public int compare(ItemStack itemStack1, ItemStack itemStack2) {
+        Optional<WynnItem> wynnItem1Opt = Models.Item.getWynnItem(itemStack1);
+        Optional<WynnItem> wynnItem2Opt = Models.Item.getWynnItem(itemStack2);
+
+        if (wynnItem1Opt.isEmpty() && wynnItem2Opt.isEmpty()) return 0;
+        if (wynnItem1Opt.isEmpty()) return 1;
+        if (wynnItem2Opt.isEmpty()) return -1;
+
+        List<T> itemValues1 = this.getValue(itemStack1, wynnItem1Opt.get());
+        List<T> itemValues2 = this.getValue(itemStack2, wynnItem2Opt.get());
 
         if (itemValues1.isEmpty() && !itemValues2.isEmpty()) return 1;
         if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;
