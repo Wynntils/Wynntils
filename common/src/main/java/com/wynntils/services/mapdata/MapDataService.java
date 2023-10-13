@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
+    private static final String NAMELESS_CATEGORY = "Nameless Category";
+
     private final MapDataProviders providers = new MapDataProviders();
 
     public MapDataService() {
@@ -37,7 +39,7 @@ public class MapDataService extends Service {
                 .map(MapCategory::getName)
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElse("NAMELESS CATEGORY");
+                .orElse(NAMELESS_CATEGORY);
     }
 
     public Optional<MapIcon> getIcon(String iconId) {
