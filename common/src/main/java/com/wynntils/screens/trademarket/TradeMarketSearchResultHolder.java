@@ -14,8 +14,10 @@ import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
+import it.unimi.dsi.fastutil.objects.ObjectSortedSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     private boolean allPagesLoaded = false;
 
     // Items
-    private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new TreeMap<>();
+    private Map<Integer, Int2ObjectSortedMap<ItemStack>> itemMap = new TreeMap<>();
     private int pageItemCount = 0;
 
     private List<ItemStack> filteredItems = new ArrayList<>();
@@ -148,8 +150,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     public void clickOnItem(ItemStack clickedItem) {
         // When writing this, items only update on page change,
         // so if we don't switch pages, we can just click on the item
-        Int2ObjectMap.FastEntrySet<ItemStack> currentPageEntries =
-                itemMap.getOrDefault(currentPage, new Int2ObjectOpenHashMap<>()).int2ObjectEntrySet();
+        ObjectSortedSet<Int2ObjectMap.Entry<ItemStack>> currentPageEntries =
+                itemMap.getOrDefault(currentPage, new Int2ObjectAVLTreeMap<>()).int2ObjectEntrySet();
         for (Int2ObjectMap.Entry<ItemStack> entry : currentPageEntries) {
             if (ItemUtils.isItemEqual(entry.getValue(), clickedItem)) {
                 // Item found on the current page, click on it
@@ -171,7 +173,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
 
             boolean foundItem = false;
 
-            Int2ObjectOpenHashMap<ItemStack> itemsOnPage = itemMap.get(i);
+            Int2ObjectSortedMap<ItemStack> itemsOnPage = itemMap.get(i);
 
             for (ItemStack itemStack : itemsOnPage.values()) {
                 if (ItemUtils.isItemEqual(itemStack, clickedItem)) {
@@ -277,8 +279,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
 
         // If we have found an empty item, we count them and check if we have the expected amount
-        Int2ObjectOpenHashMap<ItemStack> currentItems =
-                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
+        Int2ObjectSortedMap<ItemStack> currentItems =
+                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectAVLTreeMap<>());
 
         boolean emptyItem = isEmptyItem(itemStack);
         if (!emptyItem) {
@@ -298,7 +300,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         }
     }
 
-    private void pageLoadedWhileLoadingItems(Int2ObjectOpenHashMap<ItemStack> currentItems) {
+    private void pageLoadedWhileLoadingItems(Int2ObjectSortedMap<ItemStack> currentItems) {
         wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
 
         // We only go to the next page if we have the expected amount of items
@@ -348,7 +350,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     }
 
     private void pageLoadedWhileSelectingItem(
-            Int2ObjectOpenHashMap<ItemStack> currentItems, int slot, ItemStack itemStack) {
+            Int2ObjectSortedMap<ItemStack> currentItems, int slot, ItemStack itemStack) {
         wrappedScreen.setCurrentState(Component.empty()
                 .append(Component.literal("Clicking on "))
                 .append(requestedItem.getHoverName())
