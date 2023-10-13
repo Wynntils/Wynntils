@@ -13,7 +13,7 @@ public interface MapIcon {
 
     ResourceLocation getResourceLocation();
 
-    int width();
+    int getWidth();
 
-    int height();
+    int getHeight();
 }

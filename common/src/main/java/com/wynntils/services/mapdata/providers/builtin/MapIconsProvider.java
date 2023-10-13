@@ -90,12 +90,12 @@ public class MapIconsProvider extends BuiltInProvider {
         }
 
         @Override
-        public int width() {
+        public int getWidth() {
             return texture.width();
         }
 
         @Override
-        public int height() {
+        public int getHeight() {
             return texture.height();
         }
     }

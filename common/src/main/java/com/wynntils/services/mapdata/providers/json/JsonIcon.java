@@ -44,12 +44,12 @@ public class JsonIcon implements MapIcon {
     }
 
     @Override
-    public int width() {
+    public int getWidth() {
         return width;
     }
 
     @Override
-    public int height() {
+    public int getHeight() {
         return height;
     }
 }
