@@ -1,3 +1,10 @@
+## [0.0.4-beta.37](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.36...v0.0.4-beta.37) (2023-10-13)
+
+
+### Bug Fixes
+
+* fix Custom Trade Market screen not displaying items in sort order properly ([#2193](https://github.com/Wynntils/Artemis/issues/2193)) ([e358e9c](https://github.com/Wynntils/Artemis/commit/e358e9c66f106c1dfc3515de67866b1174a0a874))
+
 ## [0.0.4-beta.36](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.35...v0.0.4-beta.36) (2023-10-12)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2190](https://github.com/Wynntils/Artemis/issues/2190)) ([fa11d66](https://github.com/Wynntils/Artemis/commit/fa11d66ed059b02d1753af861c2962fed39fe5c8))
+* **release:** v0.0.4-beta.36 [skip ci] ([a2ee227](https://github.com/Wynntils/Artemis/commit/a2ee227e859356a74caf0942db11795ccdff86fd))
 
 ## [0.0.4-beta.35](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.34...v0.0.4-beta.35) (2023-10-11)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.33 [skip ci] ([c2d5f99](https://github.com/Wynntils/Artemis/commit/c2d5f99f000628cded0193bd0386b05df8bf9c77))
-
-## [0.0.4-beta.32](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.31...v0.0.4-beta.32) (2023-10-11)
-
-
-### Bug Fixes
-
-* Fix feature-registered client commands not executing correctly ([#2186](https://github.com/Wynntils/Artemis/issues/2186)) ([0e6c9a1](https://github.com/Wynntils/Artemis/commit/0e6c9a13787ba67169470d8253cb8fcca635337c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.32 [skip ci] ([56672d8](https://github.com/Wynntils/Artemis/commit/56672d8c871db4c6ae0178949d9fe161acdd832c))
 
