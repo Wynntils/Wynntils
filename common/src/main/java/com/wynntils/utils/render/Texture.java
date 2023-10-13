@@ -66,6 +66,7 @@ public enum Texture {
     // Trade Market
     PRESET("trade_market/preset.png", 16, 16),
     SAVED_PRESET("trade_market/saved_preset.png", 16, 16),
+    SORT("trade_market/sort.png", 16, 16),
 
     // Generic
     ADD_ICON("icons/generic/add_icon.png", 14, 14),
