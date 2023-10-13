@@ -27,7 +27,6 @@ public class CategoriesProvider extends BuiltInProvider {
         for (CombatKind kind : CombatKind.values()) {
             PROVIDED_CATEGORIES.add(new CombatCategory(kind));
         }
-
         for (Label.LabelLayer layer : Label.LabelLayer.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
