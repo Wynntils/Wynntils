@@ -12,7 +12,7 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
-public class AmountStatProvider extends ItemStatProvider<Integer> {
+public class TradeAmountStatProvider extends ItemStatProvider<Integer> {
     @Override
     public List<Integer> getValue(ItemStack itemStack, WynnItem wynnItem) {
         TradeMarketPriceInfo priceInfo = wynnItem.getCache().getOrCalculate(WynnItemCache.EMERALD_PRICE_KEY, () -> {
