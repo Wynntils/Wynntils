@@ -4,16 +4,13 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
+import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -49,7 +46,7 @@ public class CharacterProvider extends BuiltInProvider {
 
         @Override
         public MapAttributes getAttributes() {
-            return new MapAttributes() {
+            return new AbstractMapAttributes() {
                 @Override
                 public String getLabel() {
                     return "Player position";
@@ -63,41 +60,6 @@ public class CharacterProvider extends BuiltInProvider {
                 @Override
                 public int getPriority() {
                     return 900;
-                }
-
-                @Override
-                public int getLevel() {
-                    return 0;
-                }
-
-                @Override
-                public MapVisibility getLabelVisibility() {
-                    return null;
-                }
-
-                @Override
-                public CustomColor getLabelColor() {
-                    return null;
-                }
-
-                @Override
-                public TextShadow getLabelShadow() {
-                    return null;
-                }
-
-                @Override
-                public MapVisibility getIconVisibility() {
-                    return null;
-                }
-
-                @Override
-                public CustomColor getIconColor() {
-                    return null;
-                }
-
-                @Override
-                public MapDecoration getIconDecoration() {
-                    return null;
                 }
             };
         }
