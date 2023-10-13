@@ -96,7 +96,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre event) {
         if (Models.Container.isLootOrRewardChest(
                 StyledText.fromComponent(event.getTitle()).getStringWithoutFormatting())) {
             nextExpectedLootContainerId = event.getContainerId();

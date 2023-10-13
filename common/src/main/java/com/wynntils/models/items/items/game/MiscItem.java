@@ -11,7 +11,8 @@ public class MiscItem extends GameItem {
     private final boolean untradable;
     private final boolean questItem;
 
-    public MiscItem(StyledText name, boolean untradable, boolean questItem) {
+    public MiscItem(int emeraldPrice, StyledText name, boolean untradable, boolean questItem) {
+        super(emeraldPrice);
         this.name = name;
         this.untradable = untradable;
         this.questItem = questItem;
@@ -31,6 +32,10 @@ public class MiscItem extends GameItem {
 
     @Override
     public String toString() {
-        return "MiscItem{" + "untradable=" + untradable + ", questItem=" + questItem + '}';
+        return "MiscItem{" + "name="
+                + name + ", untradable="
+                + untradable + ", questItem="
+                + questItem + ", emeraldPrice="
+                + emeraldPrice + '}';
     }
 }

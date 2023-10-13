@@ -127,6 +127,7 @@ import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
+import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -146,6 +147,7 @@ import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -156,6 +158,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {
@@ -166,6 +169,12 @@ public final class FeatureManager extends Manager {
 
     public FeatureManager() {
         super(List.of());
+    }
+
+    @SubscribeEvent
+    public void onCommandsAdded(CommandsAddedEvent event) {
+        // Register feature commands
+        Managers.Command.addNode(event.getRoot(), commands.getCommandNode());
     }
 
     public void init() {
@@ -320,6 +329,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
+        registerFeature(new CustomTradeMarketResultScreenFeature());
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
@@ -358,6 +368,8 @@ public final class FeatureManager extends Manager {
         synchronized (McUtils.options()) {
             McUtils.options().load();
         }
+
+        commands.init();
 
         addCrashCallbacks();
     }

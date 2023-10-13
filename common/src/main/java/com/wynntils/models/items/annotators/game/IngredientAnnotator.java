@@ -7,21 +7,20 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.type.IngredientInfo;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class IngredientAnnotator implements ItemAnnotator {
+public final class IngredientAnnotator extends GameItemAnnotator {
     // Test suite: https://regexr.com/7co3b
     private static final Pattern INGREDIENT_PATTERN =
             Pattern.compile("^§7(.+?)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(INGREDIENT_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -36,6 +35,6 @@ public final class IngredientAnnotator implements ItemAnnotator {
             WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
         }
 
-        return new IngredientItem(ingredientInfo);
+        return new IngredientItem(emeraldPrice, ingredientInfo);
     }
 }

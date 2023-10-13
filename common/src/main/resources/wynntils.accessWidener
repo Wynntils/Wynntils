@@ -39,6 +39,7 @@ accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/M
 accessible method net/minecraft/client/gui/components/AbstractSelectionList getRowBottom (I)I
 accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
 accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
+accessible method net/minecraft/client/gui/screens/Screen init ()V
 accessible method net/minecraft/client/gui/screens/Screen removeWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)V
 accessible method net/minecraft/client/gui/screens/Screen$DeferredTooltipRendering <init> (Ljava/util/List;Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen renderTooltip (Lnet/minecraft/client/gui/GuiGraphics;II)V

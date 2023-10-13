@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.consumers.features;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -14,10 +15,11 @@ import net.minecraft.commands.Commands;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class FeatureCommands {
-    private final LiteralCommandNode<CommandSourceStack> commandNode;
+    private final LiteralArgumentBuilder<CommandSourceStack> commandNodeBuilder;
+    private LiteralCommandNode<CommandSourceStack> commandNode;
 
     public FeatureCommands() {
-        commandNode = Managers.Command.registerCommand(Commands.literal("execute"));
+        commandNodeBuilder = Commands.literal("execute");
     }
 
     public void discoverCommands(Feature feature) {
@@ -35,7 +37,7 @@ public class FeatureCommands {
                 LiteralCommandNode<CommandSourceStack> featureNode =
                         Commands.literal(feature.getShortName()).build();
                 featureNode.addChild(node);
-                commandNode.addChild(featureNode);
+                commandNodeBuilder.then(featureNode);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error(
                         "Failed reading field of @RegisterCommand " + f.getName() + " in "
@@ -43,5 +45,19 @@ public class FeatureCommands {
                         e);
             }
         }
+    }
+
+    public void init() {
+        // Build the command node if it hasn't been built yet
+        if (commandNode == null) {
+            commandNode = commandNodeBuilder.build();
+        }
+
+        Managers.Command.addNodeToClientDispatcher(commandNodeBuilder);
+    }
+
+    public LiteralCommandNode<CommandSourceStack> getCommandNode() {
+        assert commandNode != null;
+        return commandNode;
     }
 }

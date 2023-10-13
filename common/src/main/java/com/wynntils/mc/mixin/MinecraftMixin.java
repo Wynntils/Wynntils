@@ -4,6 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -20,16 +22,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
-    private void setScreenPost(Screen screen, CallbackInfo ci) {
+    private void setScreenPost(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
         if (screen == null) {
-            MixinHelper.post(new ScreenClosedEvent());
+            MixinHelper.post(new ScreenClosedEvent(oldScreen.get()));
         } else {
             MixinHelper.post(new ScreenOpenedEvent.Post(screen));
         }
     }
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
-    private void setScreenPre(Screen screen, CallbackInfo ci) {
+    private void setScreenPre(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
+        oldScreen.set(((Minecraft) (Object) this).screen);
+
         if (screen == null) return;
 
         ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);

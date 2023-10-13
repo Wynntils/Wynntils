@@ -11,7 +11,8 @@ import com.wynntils.models.items.properties.NumberedTierItemProperty;
 public class AmplifierItem extends GameItem implements NumberedTierItemProperty, GearTierItemProperty {
     private final int tier;
 
-    public AmplifierItem(int tier) {
+    public AmplifierItem(int emeraldPrice, int tier) {
+        super(emeraldPrice);
         this.tier = tier;
     }
 
@@ -27,6 +28,6 @@ public class AmplifierItem extends GameItem implements NumberedTierItemProperty,
 
     @Override
     public String toString() {
-        return "AmplifierItem{" + "tier=" + tier + '}';
+        return "AmplifierItem{" + "tier=" + tier + ", emeraldPrice=" + emeraldPrice + '}';
     }
 }

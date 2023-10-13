@@ -39,13 +39,21 @@ public final class ItemUtils {
         for (int i = 0; i < firstItems.size(); i++) {
             ItemStack newItem = firstItems.get(i);
             ItemStack oldItem = secondItems.get(i);
-            if (!newItem.getItem().equals(oldItem.getItem())
-                    || newItem.getDamageValue() != oldItem.getDamageValue()
-                    || newItem.getCount() != oldItem.getCount()
-                    || !ItemStack.isSameItemSameTags(oldItem, newItem)) {
-                return false;
-            }
+            if (!isItemEqual(oldItem, newItem)) return false;
         }
+        return true;
+    }
+
+    public static boolean isItemEqual(ItemStack oldItem, ItemStack newItem) {
+        if (oldItem == null || newItem == null) return oldItem != newItem;
+
+        if (!newItem.getItem().equals(oldItem.getItem())
+                || newItem.getDamageValue() != oldItem.getDamageValue()
+                || newItem.getCount() != oldItem.getCount()
+                || !ItemStack.isSameItemSameTags(oldItem, newItem)) {
+            return false;
+        }
+
         return true;
     }
 

@@ -26,7 +26,7 @@ public final class ActionBarHandler extends Handler {
             Pattern.compile("(?<LEFT>.+[^ ]) {4,}(?<CENTER>.+[^ ]) {4,}(?<RIGHT>.+)");
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
 
-    private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
+    private static final Map<ActionBarPosition, List<ActionBarSegment>> ALL_SEGMENTS = Map.of(
             ActionBarPosition.LEFT,
             new ArrayList<>(),
             ActionBarPosition.CENTER,
@@ -38,7 +38,7 @@ public final class ActionBarHandler extends Handler {
     private StyledText previousProcessedContent;
 
     public void registerSegment(ActionBarSegment segment) {
-        allSegments.get(segment.getPosition()).add(segment);
+        ALL_SEGMENTS.get(segment.getPosition()).add(segment);
     }
 
     @SubscribeEvent
@@ -89,7 +89,7 @@ public final class ActionBarHandler extends Handler {
     }
 
     private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, StyledText> positionMatches) {
-        List<ActionBarSegment> potentialSegments = allSegments.get(pos);
+        List<ActionBarSegment> potentialSegments = ALL_SEGMENTS.get(pos);
         for (ActionBarSegment segment : potentialSegments) {
             Matcher m = positionMatches.get(pos).getMatcher(segment.getPattern());
             if (m.matches()) {

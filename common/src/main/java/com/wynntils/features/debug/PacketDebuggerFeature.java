@@ -7,17 +7,22 @@ package com.wynntils.features.debug;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundKeepAlivePacket;
 import net.minecraft.network.protocol.common.ServerboundKeepAlivePacket;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -34,6 +39,8 @@ import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
+import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
+import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -43,7 +50,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @ConfigCategory(Category.DEBUG)
 public class PacketDebuggerFeature extends Feature {
     /* These packets just spam the log; ignore them. */
-    private static final List<Class<? extends Packet<?>>> IGNORE_LIST = Arrays.asList(
+    private static final List<Class<? extends Packet<?>>> IGNORE_LIST = List.of(
             // General
             ServerboundKeepAlivePacket.class,
             ClientboundKeepAlivePacket.class,
@@ -74,6 +81,22 @@ public class PacketDebuggerFeature extends Feature {
             ServerboundMovePlayerPacket.PosRot.class,
             ServerboundMovePlayerPacket.Rot.class);
 
+    private static final List<Class<? extends Packet<?>>> CONTAINER_PACKETS = List.of(
+            // S2C
+            ClientboundContainerSetContentPacket.class,
+            ClientboundContainerSetSlotPacket.class,
+            ClientboundContainerSetDataPacket.class,
+
+            // C2S
+            ServerboundContainerClickPacket.class,
+            ServerboundContainerClickPacket.class,
+            ServerboundContainerButtonClickPacket.class);
+
+    private static final Class<? extends Packet<?>> PARTICLE_PACKET_CLASS = ClientboundLevelParticlesPacket.class;
+
+    @Persisted
+    private final Config<PacketFilterType> packetFilterType = new Config<>(PacketFilterType.FILTERED);
+
     private String describePacket(Packet<?> packet) {
         return ReflectionToStringBuilder.toString(packet, ToStringStyle.SHORT_PREFIX_STYLE)
                 .replaceFirst("net\\.minecraft\\.network\\.protocol\\..*\\.", "");
@@ -82,7 +105,7 @@ public class PacketDebuggerFeature extends Feature {
     @SubscribeEvent
     public void onPacketSent(PacketSentEvent<?> e) {
         Packet<?> packet = e.getPacket();
-        if (IGNORE_LIST.contains(packet.getClass())) return;
+        if (packetFilterType.get().isPacketExcluded(packet.getClass())) return;
 
         WynntilsMod.info("SENT packet: " + describePacket(packet));
     }
@@ -90,8 +113,26 @@ public class PacketDebuggerFeature extends Feature {
     @SubscribeEvent
     public void onPacketReceived(PacketReceivedEvent<?> e) {
         Packet<?> packet = e.getPacket();
-        if (IGNORE_LIST.contains(packet.getClass())) return;
+        if (packetFilterType.get().isPacketExcluded(packet.getClass())) return;
 
         WynntilsMod.info("RECV packet: " + describePacket(packet));
+    }
+
+    private enum PacketFilterType {
+        ALL(packetClass -> false),
+        FILTERED(IGNORE_LIST::contains),
+        CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
+        PARTICLE_ONLY(packetClas -> !PARTICLE_PACKET_CLASS.equals(packetClas));
+
+        private final Predicate<Class<? extends Packet>> filterPredicate;
+
+        PacketFilterType(Predicate<Class<? extends Packet>> filterPredicate) {
+            this.filterPredicate = filterPredicate;
+        }
+
+        // True if a packet is filtered out
+        public boolean isPacketExcluded(Class<? extends Packet> packetClass) {
+            return filterPredicate.test(packetClass);
+        }
     }
 }

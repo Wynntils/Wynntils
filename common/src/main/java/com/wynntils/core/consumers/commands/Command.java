@@ -14,7 +14,7 @@ import net.minecraft.commands.Commands;
 public abstract class Command implements Translatable {
     public abstract String getCommandName();
 
-    public List<String> getAliases() {
+    protected List<String> getAliases() {
         return List.of();
     }
 

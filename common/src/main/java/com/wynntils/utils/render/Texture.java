@@ -16,7 +16,6 @@ public enum Texture {
     CHARACTER_LIST_BACKGROUND("character_selection/character_list_background.png", 118, 254),
     DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 52),
     PLAY_BUTTON("character_selection/play_button.png", 79, 76),
-    SCROLL_BUTTON("character_selection/scroll_button.png", 7, 17),
     XP_BAR("character_selection/xp_bar.png", 100, 12),
     // endregion
 
@@ -64,8 +63,14 @@ public enum Texture {
     UNDISCOVERED_WORLD("icons/discoveries/undiscovered_world.png", 21, 34),
     UNDISCOVERED_WORLD_ICON("icons/discoveries/undiscovered_world_icon.png", 11, 7),
 
+    // Trade Market
+    PRESET("trade_market/preset.png", 16, 16),
+    SAVED_PRESET("trade_market/saved_preset.png", 16, 16),
+    SORT("trade_market/sort.png", 16, 16),
+
     // Generic
     ADD_ICON("icons/generic/add_icon.png", 14, 14),
+    ARROW_LEFT_ICON("icons/generic/arrow_left_icon.png", 16, 16),
     BOAT_ICON("icons/generic/boat_icon.png", 15, 14),
     CHALLENGES_ICON("icons/generic/challenges_icon.png", 9, 14),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
@@ -79,6 +84,7 @@ public enum Texture {
     QUESTION_MARK("icons/generic/question_mark.png", 4, 7),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
+    SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
     SOUL_POINT_ICON("icons/generic/soul_point_icon.png", 10, 16),
     WAYPOINT_FOCUS_ICON("icons/generic/waypoint_focus_icon.png", 12, 16),
     WAYPOINT_MANAGER_ICON("icons/generic/waypoint_manager_icon.png", 12, 16),
@@ -198,12 +204,17 @@ public enum Texture {
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
+    CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
+    SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
+    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),
+    SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
+    SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
     VIGNETTE("ui_components/vignette.png", 512, 512);
     // endregion
 

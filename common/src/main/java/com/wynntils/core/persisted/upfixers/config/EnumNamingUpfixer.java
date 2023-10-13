@@ -96,9 +96,9 @@ public class EnumNamingUpfixer implements Upfixer {
         }
 
         private T replacement() {
-            Enum<?> firstValue = enumClazz.getEnumConstants()[0];
+            T firstValue = enumClazz.getEnumConstants()[0];
             WynntilsMod.warn("Will replace with first enum value: " + firstValue.name());
-            return (T) firstValue;
+            return firstValue;
         }
     }
 }

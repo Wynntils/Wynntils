@@ -7,7 +7,7 @@ package com.wynntils.core.consumers.functions.expressions;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class Expression {
-    protected final String rawExpression;
+    private final String rawExpression;
 
     protected Expression(String rawExpression) {
         this.rawExpression = rawExpression;

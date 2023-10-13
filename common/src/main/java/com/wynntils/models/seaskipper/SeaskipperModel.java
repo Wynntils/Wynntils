@@ -50,7 +50,7 @@ public final class SeaskipperModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre event) {
         if (!Models.Container.isSeaskipper(event.getTitle())) return;
 
         containerId = event.getContainerId();

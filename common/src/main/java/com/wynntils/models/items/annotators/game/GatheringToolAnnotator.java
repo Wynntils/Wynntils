@@ -5,8 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.profession.type.ToolProfile;
 import com.wynntils.utils.type.CappedValue;
@@ -17,13 +16,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-public final class GatheringToolAnnotator implements ItemAnnotator {
+public final class GatheringToolAnnotator extends GameItemAnnotator {
     private static final Pattern GATHERING_TOOL_PATTERN =
             Pattern.compile("^§f[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)$");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         Matcher matcher = name.getMatcher(GATHERING_TOOL_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -35,7 +34,7 @@ public final class GatheringToolAnnotator implements ItemAnnotator {
 
         CappedValue durability = getDurability(itemStack);
 
-        return new GatheringToolItem(toolProfile, durability);
+        return new GatheringToolItem(emeraldPrice, toolProfile, durability);
     }
 
     private CappedValue getDurability(ItemStack itemStack) {

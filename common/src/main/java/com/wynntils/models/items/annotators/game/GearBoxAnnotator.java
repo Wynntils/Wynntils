@@ -5,10 +5,9 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
@@ -17,12 +16,12 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class GearBoxAnnotator implements ItemAnnotator {
+public final class GearBoxAnnotator extends GameItemAnnotator {
     private static final Pattern GEAR_BOX_PATTERN = Pattern.compile("^§[5abcdef]Unidentified (.*)$");
     private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^§a- §7Lv\\. Range: §f(\\d+)-(\\d+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
         if (!(itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6)) return null;
@@ -37,7 +36,7 @@ public final class GearBoxAnnotator implements ItemAnnotator {
 
         if (gearTier == null || levelRange == null) return null;
 
-        return new GearBoxItem(gearType, gearTier, levelRange);
+        return new GearBoxItem(emeraldPrice, gearType, gearTier, levelRange);
     }
 
     private static RangedValue getLevelRange(ItemStack itemStack) {

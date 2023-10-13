@@ -9,9 +9,16 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
+import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.handlers.labels.type.LabelInfo;
+import com.wynntils.handlers.labels.type.LabelParser;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +26,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LabelHandler extends Handler {
+    private final List<LabelParser> parsers = new ArrayList<>();
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntitySetData(SetEntityDataEvent event) {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
@@ -42,8 +51,24 @@ public class LabelHandler extends Handler {
                 // Sometimes there is no actual change; ignore it then
                 if (newName.equals(oldName)) return;
 
+                tryIdentifyLabel(newName, entity.position());
                 WynntilsMod.postEvent(new EntityLabelChangedEvent(entity, newName, oldName));
             }
+        }
+    }
+
+    public void registerParser(LabelParser labelParser) {
+        parsers.add(labelParser);
+    }
+
+    private void tryIdentifyLabel(StyledText name, Position position) {
+        for (LabelParser parser : parsers) {
+            LabelInfo info = parser.getInfo(name, Location.containing(position));
+
+            if (info == null) continue;
+
+            WynntilsMod.postEvent(new LabelIdentifiedEvent(info));
+            return;
         }
     }
 }
