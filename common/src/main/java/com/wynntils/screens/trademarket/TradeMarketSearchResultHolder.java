@@ -5,6 +5,7 @@
 package com.wynntils.screens.trademarket;
 
 import com.wynntils.core.components.Services;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -13,12 +14,15 @@ import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
+import it.unimi.dsi.fastutil.objects.ObjectSortedSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.nbt.ListTag;
@@ -31,6 +35,7 @@ import org.lwjgl.glfw.GLFW;
 public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMarketSearchResultScreen> {
     // Patterns
     private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
+    private static final Pattern PAGE_PATTERN = Pattern.compile("§f§lPage (\\d+)§a (:?[<>]§2[<>]§a)+[<>]");
 
     // Constants
     private static final int EXPECTED_ITEMS_PER_PAGE = 42;
@@ -41,6 +46,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     private static final int PREVIOUS_PAGE_SLOT = 26;
     private static final int NEXT_PAGE_SLOT = 35;
     private static final int BACK_TO_SEARCH_SLOT = 8;
+    private static final int SORT_MODE_SLOT = 53;
 
     // Screen
     private TradeMarketSearchResultScreen wrappedScreen;
@@ -51,13 +57,18 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     private PageLoadingMode pageLoadingMode = PageLoadingMode.NONE;
     private QueuedAction queuedAction;
 
+    // Page info
     private int currentPage = 0;
+    private int parsedCurrentPage = 0;
+    private boolean initialPageLoadRequested = false;
     private boolean allPagesLoaded = false;
 
-    private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
+    // Items
+    private Map<Integer, Int2ObjectSortedMap<ItemStack>> itemMap = new TreeMap<>();
     private int pageItemCount = 0;
 
     private List<ItemStack> filteredItems = new ArrayList<>();
+    private ItemStack sortingButtonItem = ItemStack.EMPTY;
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
@@ -73,6 +84,12 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         // Reset the empty item count,
         // set content packets mean we are on a new page
         pageItemCount = 0;
+
+        if (event.getItems().size() >= SORT_MODE_SLOT) {
+            sortingButtonItem = event.getItems().get(SORT_MODE_SLOT);
+            wrappedScreen.onSortingModeChanged();
+            return;
+        }
     }
 
     @SubscribeEvent
@@ -107,8 +124,9 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     protected void setWrappedScreen(TradeMarketSearchResultScreen wrappedScreen) {
         this.wrappedScreen = wrappedScreen;
 
-        // Preload the first batch of pages
-        loadItemsUntilPage(PAGE_BATCH_SIZE, false);
+        // Expect to load the first page only, decide what to do later
+        pageLoadingMode = PageLoadingMode.LOAD_ITEMS;
+        requestedPage = 0;
     }
 
     @Override
@@ -119,9 +137,12 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         queuedAction = null;
         allPagesLoaded = false;
         currentPage = 0;
-        itemMap = new HashMap<>();
+        parsedCurrentPage = 0;
+        initialPageLoadRequested = false;
+        itemMap = new TreeMap<>();
         pageItemCount = 0;
         filteredItems = new ArrayList<>();
+        sortingButtonItem = ItemStack.EMPTY;
 
         this.wrappedScreen = null;
     }
@@ -129,8 +150,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     public void clickOnItem(ItemStack clickedItem) {
         // When writing this, items only update on page change,
         // so if we don't switch pages, we can just click on the item
-        Int2ObjectMap.FastEntrySet<ItemStack> currentPageEntries =
-                itemMap.getOrDefault(currentPage, new Int2ObjectOpenHashMap<>()).int2ObjectEntrySet();
+        ObjectSortedSet<Int2ObjectMap.Entry<ItemStack>> currentPageEntries =
+                itemMap.getOrDefault(currentPage, new Int2ObjectAVLTreeMap<>()).int2ObjectEntrySet();
         for (Int2ObjectMap.Entry<ItemStack> entry : currentPageEntries) {
             if (ItemUtils.isItemEqual(entry.getValue(), clickedItem)) {
                 // Item found on the current page, click on it
@@ -152,7 +173,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
 
             boolean foundItem = false;
 
-            Int2ObjectOpenHashMap<ItemStack> itemsOnPage = itemMap.get(i);
+            Int2ObjectSortedMap<ItemStack> itemsOnPage = itemMap.get(i);
 
             for (ItemStack itemStack : itemsOnPage.values()) {
                 if (ItemUtils.isItemEqual(itemStack, clickedItem)) {
@@ -186,6 +207,33 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         runOrQueueAction(new QueuedAction(PageLoadingMode.LOAD_ITEMS, itemMap.size() - 1 + PAGE_BATCH_SIZE, null));
     }
 
+    public void changeSortingMode(int mouseButton) {
+        WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+        ContainerUtils.clickOnSlot(
+                SORT_MODE_SLOT,
+                wrappedScreenInfo.containerId(),
+                mouseButton,
+                wrappedScreenInfo.containerMenu().getItems());
+
+        // Reset the item map
+        itemMap = new TreeMap<>();
+        pageItemCount = 0;
+
+        // Set the page loading mode so we expect the items to be loaded
+        // Note: At the time of writing this, changing the sorting mode
+        //       triggers a screen reopen, meaning we reset the state,
+        //       so it is up to the holder to figure out how to load pages
+        pageLoadingMode = PageLoadingMode.LOAD_ITEMS;
+        requestedPage = 0;
+
+        // Reset the queued action
+        queuedAction = null;
+    }
+
+    public List<Component> getSortingItemTooltip() {
+        return LoreUtils.getTooltipLines(sortingButtonItem);
+    }
+
     public void updateDisplayItems(ItemSearchQuery searchQuery) {
         filteredItems.clear();
 
@@ -207,12 +255,32 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     }
 
     private void handleSetItem(int slot, ItemStack itemStack) {
+        // Update the sorting mode tooltip
+        if (slot == SORT_MODE_SLOT) {
+            sortingButtonItem = itemStack;
+            wrappedScreen.onSortingModeChanged();
+            return;
+        }
+
+        // Try to update the current page,
+        // the result screen might not open on the first page
+        if (slot == PREVIOUS_PAGE_SLOT || slot == NEXT_PAGE_SLOT) {
+            StyledText itemName = StyledText.fromComponent(itemStack.getHoverName());
+            Matcher matcher = itemName.getMatcher(PAGE_PATTERN);
+            if (matcher.matches()) {
+                int pageItemNumber = Integer.parseInt(matcher.group(1)) - 1;
+                parsedCurrentPage = slot == PREVIOUS_PAGE_SLOT ? pageItemNumber + 1 : pageItemNumber - 1;
+            }
+
+            return;
+        }
+
         // We only care about the slots that are in the "search results" area
         if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
 
         // If we have found an empty item, we count them and check if we have the expected amount
-        Int2ObjectOpenHashMap<ItemStack> currentItems =
-                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
+        Int2ObjectSortedMap<ItemStack> currentItems =
+                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectAVLTreeMap<>());
 
         boolean emptyItem = isEmptyItem(itemStack);
         if (!emptyItem) {
@@ -232,11 +300,32 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         }
     }
 
-    private void pageLoadedWhileLoadingItems(Int2ObjectOpenHashMap<ItemStack> currentItems) {
+    private void pageLoadedWhileLoadingItems(Int2ObjectSortedMap<ItemStack> currentItems) {
         wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
 
         // We only go to the next page if we have the expected amount of items
         if (pageItemCount != EXPECTED_ITEMS_PER_PAGE) return;
+
+        // Decide what to do after the first page is loaded
+        if (!initialPageLoadRequested) {
+            initialPageLoadRequested = true;
+
+            if (parsedCurrentPage == 0) {
+                // We are on the first page, we don't need to do anything special
+                loadItemsUntilPage(PAGE_BATCH_SIZE, true);
+                return;
+            }
+
+            // We are not on the first page, special case
+
+            // Sync the item map and current page info
+            itemMap.put(parsedCurrentPage, itemMap.remove(currentPage));
+            currentPage = parsedCurrentPage;
+
+            // Load the pages until the first page
+            loadItemsUntilPage(1, true);
+            return;
+        }
 
         // If we have air items on the page, we reached the end
         if (currentItems.size() < EXPECTED_ITEMS_PER_PAGE) {
@@ -261,7 +350,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
     }
 
     private void pageLoadedWhileSelectingItem(
-            Int2ObjectOpenHashMap<ItemStack> currentItems, int slot, ItemStack itemStack) {
+            Int2ObjectSortedMap<ItemStack> currentItems, int slot, ItemStack itemStack) {
         wrappedScreen.setCurrentState(Component.empty()
                 .append(Component.literal("Clicking on "))
                 .append(requestedItem.getHoverName())
