@@ -39,11 +39,11 @@ import org.lwjgl.glfw.GLFW;
 
 public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
     private static final float GRID_DIVISIONS = 64.0f;
-    private static final int FIRST_ROW_Y = 18;
-    private static final int SECOND_ROW_Y = 25;
-    private static final int THIRD_ROW_Y = 37;
-    private static final int FOURTH_ROW_Y = 41;
-    private static final int FIFTH_ROW_Y = 50;
+    private static final int FIRST_ROW_Y = 16;
+    private static final int SECOND_ROW_Y = 23;
+    private static final int THIRD_ROW_Y = 35;
+    private static final int FOURTH_ROW_Y = 39;
+    private static final int FIFTH_ROW_Y = 49;
 
     private float dividedHeight;
     private float dividedWidth;
