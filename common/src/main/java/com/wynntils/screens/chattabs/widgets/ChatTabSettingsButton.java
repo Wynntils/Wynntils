@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 
 public class ChatTabSettingsButton extends WynntilsButton {
     public ChatTabSettingsButton(int x, int y, int width, int height) {
-        super(x, y, width, height, Component.literal("Chat Tab Add Button"));
+        super(x, y, width, height, Component.literal("Chat Tab Settings Button"));
     }
 
     @Override
