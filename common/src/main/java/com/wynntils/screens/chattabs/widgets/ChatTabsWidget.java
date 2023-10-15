@@ -11,6 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -55,13 +56,13 @@ public class ChatTabsWidget extends AbstractWidget {
                 .build();
         this.moveUpButton = new Button.Builder(
                         Component.literal("\uD83E\uDC1D"), // Up Button Icon
-                        (button) -> decrementChatTabIndex())
+                        (button) -> setChatTabIndex(-1))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 22)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
         this.moveDownButton = new Button.Builder(
                         Component.literal("\uD83E\uDC1F"), // Down Button Icon
-                        (button) -> incrementChatTabIndex())
+                        (button) -> setChatTabIndex(1))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
@@ -95,18 +96,11 @@ public class ChatTabsWidget extends AbstractWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-    private void incrementChatTabIndex() {
-        setChatTabIndex(Services.ChatTab.getTabIndex(chatTab) + 1);
-    }
+    private void setChatTabIndex(int offset) {
+        int newIndex = MathUtils.clamp(Services.ChatTab.getTabIndex(chatTab) + offset, 0,
+                Services.ChatTab.getTabCount() - 1);
 
-    private void decrementChatTabIndex() {
-        setChatTabIndex(Services.ChatTab.getTabIndex(chatTab) - 1);
-    }
-
-    private void setChatTabIndex(int index) {
         Services.ChatTab.removeTab(chatTab);
-
-        int constrainedIndex = Math.max(0, Math.min(index, Services.ChatTab.getTabCount()));
 
         ChatTab newChatTab = new ChatTab(
                 chatTab.getName(),
@@ -114,7 +108,7 @@ public class ChatTabsWidget extends AbstractWidget {
                 chatTab.getAutoCommand(),
                 chatTab.getFilteredTypes(),
                 chatTab.getCustomRegexString());
-        Services.ChatTab.addTab(constrainedIndex, newChatTab);
+        Services.ChatTab.addTab(newIndex, newChatTab);
     }
 
     @Override
