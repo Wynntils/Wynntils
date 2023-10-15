@@ -53,11 +53,15 @@ public class ChatTabsWidget extends AbstractWidget {
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
                 .build();
-        this.moveUpButton = new Button.Builder(Component.literal("\uD83E\uDC1D"), (button) -> decrementChatTabIndex())
+        this.moveUpButton = new Button.Builder(
+                        Component.literal("\uD83E\uDC1D"), // Up Button Icon
+                        (button) -> decrementChatTabIndex())
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 22)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
-        this.moveDownButton = new Button.Builder(Component.literal("\uD83E\uDC1F"), (button) -> incrementChatTabIndex())
+        this.moveDownButton = new Button.Builder(
+                        Component.literal("\uD83E\uDC1F"), // Down Button Icon
+                        (button) -> incrementChatTabIndex())
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
