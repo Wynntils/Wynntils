@@ -33,7 +33,7 @@ public class ChatTabSettingsButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString("\uD83D\uDDD7"), // Tabs Icon
+                        StyledText.fromString("🗗"),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,
