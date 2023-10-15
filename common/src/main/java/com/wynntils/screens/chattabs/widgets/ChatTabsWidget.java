@@ -10,8 +10,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.services.chat.ChatTab;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -54,15 +54,11 @@ public class ChatTabsWidget extends AbstractWidget {
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
                 .build();
-        this.moveUpButton = new Button.Builder(
-                        Component.literal("🠝"),
-                        (button) -> setChatTabIndex(-1))
+        this.moveUpButton = new Button.Builder(Component.literal("🠝"), (button) -> setChatTabIndex(-1))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 22)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
-        this.moveDownButton = new Button.Builder(
-                        Component.literal("🠟"),
-                        (button) -> setChatTabIndex(1))
+        this.moveDownButton = new Button.Builder(Component.literal("🠟"), (button) -> setChatTabIndex(1))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
@@ -97,8 +93,8 @@ public class ChatTabsWidget extends AbstractWidget {
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void setChatTabIndex(int offset) {
-        int newIndex = MathUtils.clamp(Services.ChatTab.getTabIndex(chatTab) + offset, 0,
-                Services.ChatTab.getTabCount() - 1);
+        int newIndex =
+                MathUtils.clamp(Services.ChatTab.getTabIndex(chatTab) + offset, 0, Services.ChatTab.getTabCount() - 1);
 
         Services.ChatTab.removeTab(chatTab);
 
