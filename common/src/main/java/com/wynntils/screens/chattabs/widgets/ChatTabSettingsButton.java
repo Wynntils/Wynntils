@@ -18,8 +18,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
-public class ChatTabAddButton extends WynntilsButton {
-    public ChatTabAddButton(int x, int y, int width, int height) {
+public class ChatTabSettingsButton extends WynntilsButton {
+    public ChatTabSettingsButton(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Chat Tab Add Button"));
     }
 
@@ -33,13 +33,13 @@ public class ChatTabAddButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString("+"),
+                        StyledText.fromString("\uD83D\uDDD7"), // Tabs Icon
                         getX() + 1,
                         getX() + width,
                         getY() + 1,
                         getY() + height,
                         0,
-                        CommonColors.ORANGE,
+                        CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);

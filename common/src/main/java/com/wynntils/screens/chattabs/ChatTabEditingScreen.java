@@ -12,22 +12,22 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.TextWidget;
+import com.wynntils.screens.chattabs.widgets.ChatTabsWidget;
 import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -48,6 +48,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     private float dividedHeight;
     private float dividedWidth;
 
+    private final List<AbstractWidget> chatTabsWidgets = new ArrayList<>();
+
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget nameInput;
@@ -59,7 +61,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     private Checkbox consumingCheckbox;
 
     private Button saveButton;
-    private Button deleteButton;
+    private Button saveAndCloseButton;
 
     private boolean firstSetup;
     private final ChatTab edited;
@@ -87,6 +89,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     protected void doInit() {
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
+
+        reloadChatTabsWidgets();
 
         // region Name
         nameInput = new TextInputBoxWidget(
@@ -209,28 +213,28 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         // region Screen Interactions
         saveButton = new Button.Builder(
-                Component.translatable("screens.wynntils.chatTabsGui.save")
-                        .withStyle(ChatFormatting.DARK_GREEN),
-                (button) -> {
-                    saveChatTab();
-                    this.onClose();
-                })
+                        Component.translatable("screens.wynntils.chatTabsGui.save")
+                                .withStyle(ChatFormatting.DARK_GREEN),
+                        (button) -> {
+                            saveChatTab();
+                            reloadChatTabsWidgets();
+                        })
                 .pos((int) (dividedWidth * 35), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
         this.addRenderableWidget(saveButton);
 
-        deleteButton = new Button.Builder(
-                Component.translatable("screens.wynntils.chatTabsGui.delete")
-                        .withStyle(ChatFormatting.DARK_RED),
-                (button) -> {
-                    deleteChatTab();
-                    this.onClose();
-                })
+        saveAndCloseButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.chatTabsGui.saveAndClose")
+                                .withStyle(ChatFormatting.GREEN),
+                        (button) -> {
+                            saveChatTab();
+                            this.onClose();
+                        })
                 .pos((int) (dividedWidth * 44), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
-        this.addRenderableWidget(deleteButton);
+        this.addRenderableWidget(saveAndCloseButton);
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
@@ -240,7 +244,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // endregion
 
         firstSetup = false;
-        deleteButton.active = edited != null;
         updateSaveStatus();
     }
 
@@ -256,6 +259,9 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         // Dev/Debug: Uncomment when editing GUI elements for debug grid
         // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
+
+        // Chat Tabs List
+        chatTabsWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
         // Name
         FontRenderer.getInstance()
@@ -324,6 +330,12 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         super.doMouseClicked(mouseX, mouseY, button);
 
+        for (AbstractWidget widget : chatTabsWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                return widget.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
         updateSaveStatus();
 
         return true;
@@ -388,17 +400,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         .collect(Collectors.toSet()),
                 filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
         Services.ChatTab.addTab(insertIndex, chatTab);
-    }
-
-    private void deleteChatTab() {
-        Services.ChatTab.removeTab(edited);
-        if (Objects.equals(Services.ChatTab.getFocusedTab(), edited)) {
-            if (!Services.ChatTab.isTabListEmpty()) {
-                Services.ChatTab.setFocusedTab(0);
-            } else {
-                Services.ChatTab.setFocusedTab(null);
-            }
-        }
+        McUtils.mc().setScreen(ChatTabEditingScreen.create(chatTab));
     }
 
     private void updateSaveStatus() {
@@ -409,14 +411,16 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
             } catch (NumberFormatException ignored) {
                 orderInput.setRenderColor(CommonColors.RED);
                 saveButton.active = false;
+                saveAndCloseButton.active = false;
             }
         }
 
-        if (saveButton == null) return;
+        if (saveButton == null || saveAndCloseButton == null) return;
 
         saveButton.active = !nameInput.getTextBoxInput().isEmpty()
                 && validatePattern()
                 && recipientTypeBoxes.stream().anyMatch(Checkbox::selected);
+        saveAndCloseButton.active = saveButton.active;
     }
 
     private boolean validatePattern() {
@@ -441,5 +445,38 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
+    }
+
+    /**
+     * Reloads the list of chat tab widgets
+     * <p>
+     * This should be called when the chat tabs list is updated, or when a chat tab is created or deleted
+     */
+    public void reloadChatTabsWidgets() {
+        chatTabsWidgets.clear();
+        List<ChatTab> chatTabs = new ArrayList<>(Services.ChatTab.getChatTabs());
+
+        int initialVerticalOffset =
+                (int) (dividedHeight * 32) - (int) ((dividedHeight * (chatTabs.size() * 5 + 1) + 20) / 2);
+
+        for (int i = 0; i < chatTabs.size(); i++) {
+            chatTabsWidgets.add(new ChatTabsWidget(
+                    dividedWidth * 3,
+                    initialVerticalOffset + dividedHeight * (i * 5),
+                    (int) (dividedWidth * 29) - (int) (dividedWidth * 3),
+                    (int) (dividedHeight * 4),
+                    chatTabs.get(i),
+                    29 - 3,
+                    this));
+        }
+
+        chatTabsWidgets.add(
+                new Button.Builder(Component.translatable("screens.wynntils.chatTabsGui.new"), (button) -> McUtils.mc()
+                                .setScreen(ChatTabEditingScreen.create()))
+                        .pos(
+                                (int) (dividedWidth * 13),
+                                initialVerticalOffset + (int) (dividedHeight * (chatTabs.size() * 5 + 1)))
+                        .size((int) (dividedWidth * 6), 20)
+                        .build());
     }
 }

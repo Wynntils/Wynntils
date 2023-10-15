@@ -1,0 +1,128 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.screens.chattabs.widgets;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.chattabs.ChatTabEditingScreen;
+import com.wynntils.services.chat.ChatTab;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+
+public class ChatTabsWidget extends AbstractWidget {
+    private final float gridDivisions;
+    private final ChatTab chatTab;
+    private final Button deleteButton;
+    private final Button moveUpButton;
+    private final Button moveDownButton;
+    private final ChatTabEditingScreen parent;
+
+    public ChatTabsWidget(
+            float x,
+            float y,
+            int width,
+            int height,
+            ChatTab chatTab,
+            float gridDivisions,
+            ChatTabEditingScreen parent) {
+        super((int) x, (int) y, width, height, Component.literal(chatTab.getName()));
+
+        this.chatTab = chatTab;
+        this.gridDivisions = gridDivisions;
+        this.parent = parent;
+
+        this.deleteButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.chatTabsGui.delete")
+                                .withStyle(ChatFormatting.DARK_RED),
+                        (button) -> Services.ChatTab.removeTab(chatTab))
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
+                .size((int) (this.width / gridDivisions * 5) - 3, 20)
+                .build();
+        this.moveUpButton = new Button.Builder(Component.literal("\uD83E\uDC1D"), (button) -> decrementChatTabIndex())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 22)), this.getY() + (this.height / 2) - 10)
+                .size((int) (this.width / gridDivisions * 2) - 2, 20)
+                .build();
+        this.moveDownButton = new Button.Builder(Component.literal("\uD83E\uDC1F"), (button) -> incrementChatTabIndex())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)), this.getY() + (this.height / 2) - 10)
+                .size((int) (this.width / gridDivisions * 2) - 2, 20)
+                .build();
+    }
+
+    @Override
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        if (this.isMouseOver(mouseX, mouseY)) {
+            RenderUtils.drawRect(
+                    poseStack, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), 0, this.width, this.height);
+        }
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(chatTab.getName()),
+                        this.getX() + 4,
+                        this.getY() + (this.height >> 1),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        moveUpButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        moveDownButton.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    private void incrementChatTabIndex() {
+        setChatTabIndex(Services.ChatTab.getTabIndex(chatTab) + 1);
+    }
+
+    private void decrementChatTabIndex() {
+        setChatTabIndex(Services.ChatTab.getTabIndex(chatTab) - 1);
+    }
+
+    private void setChatTabIndex(int index) {
+        Services.ChatTab.removeTab(chatTab);
+
+        int constrainedIndex = Math.max(0, Math.min(index, Services.ChatTab.getTabCount()));
+
+        ChatTab newChatTab = new ChatTab(
+                chatTab.getName(),
+                chatTab.isConsuming(),
+                chatTab.getAutoCommand(),
+                chatTab.getFilteredTypes(),
+                chatTab.getCustomRegexString());
+        Services.ChatTab.addTab(constrainedIndex, newChatTab);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (deleteButton.mouseClicked(mouseX, mouseY, button)
+                || moveUpButton.mouseClicked(mouseX, mouseY, button)
+                || moveDownButton.mouseClicked(mouseX, mouseY, button)) {
+            Managers.TickScheduler.scheduleLater(parent::reloadChatTabsWidgets, 2);
+            return true;
+        }
+
+        McUtils.mc().setScreen(ChatTabEditingScreen.create(this.chatTab));
+        return true;
+    }
+}
