@@ -169,8 +169,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                             || edited.getFilteredTypes().contains(type));
             boolean ticked = oldCheckboxSelected || editedFirstSetupSelected;
 
-            Checkbox newBox = new WynntilsCheckbox(x, y, 20, 20, Component.literal(type.getName()), ticked,
-                    (int) (dividedWidth * 7) - 24);
+            Checkbox newBox = new WynntilsCheckbox(
+                    x, y, 20, 20, Component.literal(type.getName()), ticked, (int) (dividedWidth * 7) - 24);
 
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
