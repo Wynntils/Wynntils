@@ -214,7 +214,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // region Screen Interactions
         saveButton = new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.save")
-                                .withStyle(ChatFormatting.DARK_GREEN),
+                                .withStyle(ChatFormatting.GREEN),
                         (button) -> {
                             saveChatTab();
                             reloadChatTabsWidgets();

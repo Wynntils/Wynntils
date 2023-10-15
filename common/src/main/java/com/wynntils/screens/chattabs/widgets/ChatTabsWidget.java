@@ -49,7 +49,7 @@ public class ChatTabsWidget extends AbstractWidget {
 
         this.deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.delete")
-                                .withStyle(ChatFormatting.DARK_RED),
+                                .withStyle(ChatFormatting.RED),
                         (button) -> Services.ChatTab.removeTab(chatTab))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
