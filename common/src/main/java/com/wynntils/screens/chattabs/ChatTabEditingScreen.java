@@ -12,6 +12,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.TextWidget;
+import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.chattabs.widgets.ChatTabsWidget;
 import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
@@ -39,11 +40,11 @@ import org.lwjgl.glfw.GLFW;
 
 public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
     private static final float GRID_DIVISIONS = 64.0f;
-    private static final int FIRST_ROW_Y = 16;
-    private static final int SECOND_ROW_Y = 23;
-    private static final int THIRD_ROW_Y = 35;
-    private static final int FOURTH_ROW_Y = 39;
-    private static final int FIFTH_ROW_Y = 49;
+    private static final int FIRST_ROW_Y = 9;
+    private static final int SECOND_ROW_Y = 20;
+    private static final int THIRD_ROW_Y = 39;
+    private static final int FOURTH_ROW_Y = 45;
+    private static final int FIFTH_ROW_Y = 52;
 
     private float dividedHeight;
     private float dividedWidth;
@@ -151,7 +152,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         int y = (int) (dividedHeight * SECOND_ROW_Y);
         for (int i = 0; i < RecipientType.values().length; i++) {
             if (i == 4 || i == 8) {
-                y += (int) (dividedHeight * 3);
+                y += (int) (dividedHeight * 5);
                 x = (int) (dividedWidth * 35);
             }
 
@@ -168,11 +169,13 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                             || edited.getFilteredTypes().contains(type));
             boolean ticked = oldCheckboxSelected || editedFirstSetupSelected;
 
-            Checkbox newBox = new Checkbox(x, y, 20, 20, Component.literal(type.getName()), ticked, true);
+            Checkbox newBox = new WynntilsCheckbox(x, y, 20, 20, Component.literal(type.getName()), ticked,
+                    (int) (dividedWidth * 7) - 24);
+
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
 
-            x += (int) (dividedWidth * 6);
+            x += (int) (dividedWidth * 7);
         }
 
         // endregion
