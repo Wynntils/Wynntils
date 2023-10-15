@@ -254,9 +254,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         PoseStack poseStack = guiGraphics.pose();
 
-        dividedWidth = this.width / GRID_DIVISIONS;
-        dividedHeight = this.height / GRID_DIVISIONS;
-
         // Dev/Debug: Uncomment when editing GUI elements for debug grid
         // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
