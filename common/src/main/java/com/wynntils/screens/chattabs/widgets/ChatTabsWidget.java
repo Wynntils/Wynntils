@@ -23,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
 
 public class ChatTabsWidget extends AbstractWidget {
@@ -50,7 +51,10 @@ public class ChatTabsWidget extends AbstractWidget {
         this.deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.chatTabsGui.delete")
                                 .withStyle(ChatFormatting.RED),
-                        (button) -> Services.ChatTab.removeTab(chatTab))
+                        (button) -> {
+                            Services.ChatTab.removeTab(chatTab);
+                            McUtils.mc().setScreen(ChatTabEditingScreen.create());
+                        })
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
                 .build();
