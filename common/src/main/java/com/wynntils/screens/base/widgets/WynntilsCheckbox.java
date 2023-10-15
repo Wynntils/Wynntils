@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,14 +18,22 @@ public class WynntilsCheckbox extends Checkbox {
     private final int maxTextWidth;
     private final int color;
 
-    public WynntilsCheckbox(int x, int y, int width, int height, Component message, boolean selected, int maxTextWidth) {
+    public WynntilsCheckbox(
+            int x, int y, int width, int height, Component message, boolean selected, int maxTextWidth) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
         this.color = CommonColors.WHITE.asInt();
     }
 
-    public WynntilsCheckbox(int x, int y, int width, int height, Component message, boolean selected,
-                            int maxTextWidth, CustomColor color) {
+    public WynntilsCheckbox(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component message,
+            boolean selected,
+            int maxTextWidth,
+            CustomColor color) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
         this.color = color.asInt();
@@ -47,9 +59,16 @@ public class WynntilsCheckbox extends Checkbox {
             int start = this.getX() + this.width + 2;
             int end = start + this.maxTextWidth;
 
-            renderScrollingString(guiGraphics, font, this.getMessage(), start, start, this.getY(),
-                    end, this.getY() + this.getHeight(), this.color);
+            renderScrollingString(
+                    guiGraphics,
+                    font,
+                    this.getMessage(),
+                    start,
+                    start,
+                    this.getY(),
+                    end,
+                    this.getY() + this.getHeight(),
+                    this.color);
         }
-
     }
 }
