@@ -446,12 +446,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
     }
-
-    /**
-     * Reloads the list of chat tab widgets
-     * <p>
-     * This should be called when the chat tabs list is updated, or when a chat tab is created or deleted
-     */
+    
     public void reloadChatTabsWidgets() {
         chatTabsWidgets.clear();
         List<ChatTab> chatTabs = new ArrayList<>(Services.ChatTab.getChatTabs());
