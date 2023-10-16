@@ -11,7 +11,7 @@ import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
-public class PriceStatProvider extends ItemStatProvider<Integer> {
+public class TradeAmountStatProvider extends ItemStatProvider<Integer> {
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
         TradeMarketPriceInfo priceInfo = wynnItem.getData().getOrCalculate(WynnItemData.EMERALD_PRICE_KEY, () -> {
@@ -24,7 +24,6 @@ public class PriceStatProvider extends ItemStatProvider<Integer> {
             return List.of();
         }
 
-        // Silverbull price is the normal price if the item is not discounted
-        return List.of(priceInfo.silverbullPrice());
+        return List.of(priceInfo.amount());
     }
 }

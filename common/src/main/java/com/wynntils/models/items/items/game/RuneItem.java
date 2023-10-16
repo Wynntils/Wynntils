@@ -7,8 +7,7 @@ package com.wynntils.models.items.items.game;
 public class RuneItem extends GameItem {
     private final RuneType type;
 
-    public RuneItem(int emeraldPrice, RuneType type) {
-        super(emeraldPrice);
+    public RuneItem(RuneType type) {
         this.type = type;
     }
 

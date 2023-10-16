@@ -5,19 +5,20 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.SimulatorItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
-public class SimulatorAnnotator extends GameItemAnnotator {
+public class SimulatorAnnotator implements ItemAnnotator {
     private static final Pattern SIMULATOR_PATTERN = Pattern.compile("^§(.)Corkian Simulator$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(SIMULATOR_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -26,6 +27,6 @@ public class SimulatorAnnotator extends GameItemAnnotator {
 
         if (gearTier == null) return null;
 
-        return new SimulatorItem(emeraldPrice, gearTier);
+        return new SimulatorItem(gearTier);
     }
 }

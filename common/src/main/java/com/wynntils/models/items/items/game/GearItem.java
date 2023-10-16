@@ -17,8 +17,7 @@ public class GearItem extends GameItem implements GearTierItemProperty, GearType
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
 
-    public GearItem(int emeraldPrice, GearInfo gearInfo, GearInstance gearInstance) {
-        super(emeraldPrice);
+    public GearItem(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
     }
@@ -52,9 +51,6 @@ public class GearItem extends GameItem implements GearTierItemProperty, GearType
 
     @Override
     public String toString() {
-        return "GearItem{" + "gearInfo="
-                + gearInfo + ", gearInstance="
-                + gearInstance + ", emeraldPrice="
-                + emeraldPrice + '}';
+        return "GearItem{" + "gearInfo=" + gearInfo + ", gearInstance=" + gearInstance + '}';
     }
 }
