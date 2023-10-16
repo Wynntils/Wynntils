@@ -9,11 +9,10 @@ import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public class UsesStatProvider extends ItemStatProvider<CappedValue> {
     @Override
-    public List<CappedValue> getValue(ItemStack itemStack, WynnItem wynnItem) {
+    public List<CappedValue> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof UsesItemProperty usesItemProperty)) return List.of();
 
         return List.of(usesItemProperty.getUses());

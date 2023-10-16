@@ -8,11 +8,10 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.TargetedItemProperty;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public class TargetStatProperty extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(ItemStack itemStack, WynnItem wynnItem) {
+    public List<String> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof TargetedItemProperty targetedItemProperty)) return List.of();
 
         return List.of(targetedItemProperty.getTarget());

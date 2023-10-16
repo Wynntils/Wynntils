@@ -9,11 +9,10 @@ import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public class ProfessionStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(ItemStack itemStack, WynnItem wynnItem) {
+    public List<String> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof ProfessionItemProperty professionItemProperty)) return List.of();
 
         return professionItemProperty.getProfessionTypes().stream()

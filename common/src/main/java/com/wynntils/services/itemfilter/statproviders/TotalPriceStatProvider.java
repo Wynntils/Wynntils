@@ -10,13 +10,13 @@ import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public class TotalPriceStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(ItemStack itemStack, WynnItem wynnItem) {
+    public List<Integer> getValue(WynnItem wynnItem) {
         TradeMarketPriceInfo priceInfo = wynnItem.getData().getOrCalculate(WynnItemData.EMERALD_PRICE_KEY, () -> {
-            TradeMarketPriceInfo calculatedInfo = Models.TradeMarket.calculateItemPriceInfo(itemStack);
+            TradeMarketPriceInfo calculatedInfo =
+                    Models.TradeMarket.calculateItemPriceInfo(wynnItem.getData().get(WynnItemData.ITEMSTACK_KEY));
             return calculatedInfo;
         });
 

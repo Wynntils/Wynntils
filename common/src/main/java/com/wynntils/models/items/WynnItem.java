@@ -22,5 +22,6 @@ public class WynnItem implements ItemAnnotation {
     @Override
     public void onUpdate(ItemStack itemStack) {
         data.clearAll();
+        data.store(WynnItemData.ITEMSTACK_KEY, itemStack);
     }
 }

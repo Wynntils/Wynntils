@@ -6,15 +6,14 @@ package com.wynntils.services.itemfilter.type;
 
 import com.wynntils.models.items.WynnItem;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public record StatProviderAndFilterPair<T>(ItemStatProvider statProvider, StatFilter<T> statFilter) {
     public static StatProviderAndFilterPair<Object> fromPair(ItemStatProvider itemStatProvider, StatFilter value) {
         return new StatProviderAndFilterPair<>(itemStatProvider, value);
     }
 
-    public boolean matches(ItemStack itemStack, WynnItem wynnItem) {
-        List<T> statProviderValues = statProvider.getValue(itemStack, wynnItem);
+    public boolean matches(WynnItem wynnItem) {
+        List<T> statProviderValues = statProvider.getValue(wynnItem);
         return statFilter.matches(statProviderValues);
     }
 }

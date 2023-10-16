@@ -7,11 +7,10 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 
 public class ItemTypeStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(ItemStack itemStack, WynnItem wynnItem) {
+    public List<String> getValue(WynnItem wynnItem) {
         return List.of(wynnItem.getClass().getSimpleName().replace("Item", ""));
     }
 }
