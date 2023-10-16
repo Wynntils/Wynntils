@@ -7,9 +7,9 @@ package com.wynntils.models.rewards;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
-import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.TomeInfo;
@@ -24,8 +24,7 @@ public class RewardsModel extends Model {
         super(List.of());
     }
 
-    public GameItem fromCharmItemStack(
-            ItemStack itemStack, StyledText name, String displayName, String type, int emeraldPrice) {
+    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromStyledText(name);
 
         // TODO: replace with API lookup
@@ -36,17 +35,11 @@ public class RewardsModel extends Model {
             WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(emeraldPrice, charmInfo, result.identifications(), result.rerolls());
+        return new CharmItem(charmInfo, result.identifications(), result.rerolls());
     }
 
     public static TomeItem fromTomeItemStack(
-            ItemStack itemStack,
-            StyledText name,
-            String displayName,
-            TomeType tomeType,
-            String tier,
-            String variant,
-            int emeraldPrice) {
+            ItemStack itemStack, StyledText name, String displayName, TomeType tomeType, String tier, String variant) {
         GearTier gearTier = GearTier.fromStyledText(name);
 
         // TODO: replace with API lookup
@@ -57,6 +50,6 @@ public class RewardsModel extends Model {
             WynntilsMod.warn("Tier for " + tomeInfo.displayName() + " is reported as " + result.tier());
         }
 
-        return new TomeItem(emeraldPrice, tomeInfo, result.identifications(), result.rerolls());
+        return new TomeItem(tomeInfo, result.identifications(), result.rerolls());
     }
 }

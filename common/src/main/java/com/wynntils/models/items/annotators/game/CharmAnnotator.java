@@ -6,22 +6,23 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.items.items.game.GameItem;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemAnnotator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class CharmAnnotator extends GameItemAnnotator {
+public final class CharmAnnotator implements ItemAnnotator {
     private static final Pattern CHARM_PATTERN = Pattern.compile("^§[5abcdef](Charm of the (?<Type>\\w+))$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(CHARM_PATTERN);
         if (!matcher.matches()) return null;
 
         String displayName = matcher.group(1);
         String type = matcher.group("Type");
 
-        return Models.Rewards.fromCharmItemStack(itemStack, name, displayName, type, emeraldPrice);
+        return Models.Rewards.fromCharmItemStack(itemStack, name, displayName, type);
     }
 }

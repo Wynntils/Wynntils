@@ -17,7 +17,7 @@ import com.wynntils.models.gear.tooltip.GearTooltipStyle;
 import com.wynntils.models.gear.tooltip.TooltipIdentificationDecorator;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -93,9 +93,9 @@ public class ItemStatInfoFeature extends Feature {
         GearInfo gearInfo = gearItem.getGearInfo();
 
         try {
-            GearTooltipBuilder builder = gearItem.getCache()
+            GearTooltipBuilder builder = gearItem.getData()
                     .getOrCalculate(
-                            WynnItemCache.TOOLTIP_KEY,
+                            WynnItemData.TOOLTIP_KEY,
                             () -> Models.GearTooltip.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 

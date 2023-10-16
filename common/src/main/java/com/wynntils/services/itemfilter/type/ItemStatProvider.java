@@ -24,6 +24,7 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
      * Returns the value of the stat for the given item.
      * If there is a single value, it is returned as a singleton list.
      * Some stats may have multiple values, in which case a list is returned.
+     *
      * @param wynnItem The item to get the stat value for
      * @return The value of the stat for the given item
      */

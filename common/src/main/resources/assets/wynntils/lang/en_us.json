@@ -2060,6 +2060,8 @@
   "service.wynntils.itemFilter.stat.skillReq.description": "%s requirement of the item",
   "service.wynntils.itemFilter.stat.target.description": "Target of the item (e.g. Detlas)",
   "service.wynntils.itemFilter.stat.tier.description": "Tier of the item (e.g. \"tier:6\" -> VI)",
+  "service.wynntils.itemFilter.stat.totalPrice.description": "Total price of the items in the stack",
+  "service.wynntils.itemFilter.stat.tradeAmount.description": "Amount of the item",
   "service.wynntils.itemFilter.stat.uses.description": "Uses left of the item",
   "service.wynntils.itemFilter.unknownStat": "%s: unknown stat",
   "service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded": "Lootrun \"%s\" could not be loaded.",
