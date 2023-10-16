@@ -1,9 +1,21 @@
+## [0.0.4-beta.38](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.37...v0.0.4-beta.38) (2023-10-16)
+
+
+### New Features
+
+* Parse item prices lazily, add AmountStatProvider and TotalPriceStatProvider ([#2191](https://github.com/Wynntils/Artemis/issues/2191)) ([932ace9](https://github.com/Wynntils/Artemis/commit/932ace9e3f50b428ef55901d41f07dc8a5db4861))
+
 ## [0.0.4-beta.37](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.36...v0.0.4-beta.37) (2023-10-13)
 
 
 ### Bug Fixes
 
 * fix Custom Trade Market screen not displaying items in sort order properly ([#2193](https://github.com/Wynntils/Artemis/issues/2193)) ([e358e9c](https://github.com/Wynntils/Artemis/commit/e358e9c66f106c1dfc3515de67866b1174a0a874))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.37 [skip ci] ([6da6d49](https://github.com/Wynntils/Artemis/commit/6da6d4916f14aa7f11eebace45c458083f798828))
 
 ## [0.0.4-beta.36](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.35...v0.0.4-beta.36) (2023-10-12)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.34 [skip ci] ([eb40e2e](https://github.com/Wynntils/Artemis/commit/eb40e2e40a4c3c80807d80a9bf5293d5bc86d37c))
-
-## [0.0.4-beta.33](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.32...v0.0.4-beta.33) (2023-10-11)
-
-
-### Bug Fixes
-
-* Make price parsing much less memory intensive ([#2187](https://github.com/Wynntils/Artemis/issues/2187)) ([b9bd6a6](https://github.com/Wynntils/Artemis/commit/b9bd6a6caa5c23e46d67286f80ee5240a66d19d1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.33 [skip ci] ([c2d5f99](https://github.com/Wynntils/Artemis/commit/c2d5f99f000628cded0193bd0386b05df8bf9c77))
 
