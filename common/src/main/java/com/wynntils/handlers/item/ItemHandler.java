@@ -281,7 +281,6 @@ public class ItemHandler extends Handler {
         // Store the itemstack in the data for later use
         if (annotation instanceof WynnItem wynnItem) {
             wynnItem.getData().store(WynnItemData.ITEMSTACK_KEY, itemStack);
-        } else {
         }
 
         // Measure performance
