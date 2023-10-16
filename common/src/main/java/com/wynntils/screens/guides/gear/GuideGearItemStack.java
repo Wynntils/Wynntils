@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
@@ -69,6 +69,6 @@ public final class GuideGearItemStack extends GuideItemStack {
         // Force ItemStatInfoFeature to recreate its cache
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(this, GearItem.class);
         if (gearItemOpt.isEmpty()) return;
-        gearItemOpt.get().getCache().clear(WynnItemCache.TOOLTIP_KEY);
+        gearItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
     }
 }

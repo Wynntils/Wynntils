@@ -16,7 +16,7 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -93,7 +93,7 @@ public class ItemFavoriteFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
         int currentRevision = Services.Favorites.getRevision();
-        Integer revision = wynnItem.getCache().get(WynnItemCache.FAVORITE_KEY);
+        Integer revision = wynnItem.getData().get(WynnItemData.FAVORITE_KEY);
         if (revision != null && (revision == currentRevision || revision == -currentRevision)) {
             // The cache is up to date; positive value means it is a favorite
             return revision > 0;
@@ -101,7 +101,7 @@ public class ItemFavoriteFeature extends Feature {
 
         // Cache is missing or outdated
         boolean isFavorite = Services.Favorites.calculateFavorite(itemStack, wynnItem);
-        wynnItem.getCache().store(WynnItemCache.FAVORITE_KEY, isFavorite ? currentRevision : -currentRevision);
+        wynnItem.getData().store(WynnItemData.FAVORITE_KEY, isFavorite ? currentRevision : -currentRevision);
         return isFavorite;
     }
 

@@ -8,10 +8,10 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import net.minecraft.world.item.ItemStack;
 
 public class WynnItem implements ItemAnnotation {
-    private final WynnItemCache cache = new WynnItemCache();
+    private final WynnItemData data = new WynnItemData();
 
-    public WynnItemCache getCache() {
-        return cache;
+    public WynnItemData getData() {
+        return data;
     }
 
     @Override
@@ -21,6 +21,6 @@ public class WynnItem implements ItemAnnotation {
 
     @Override
     public void onUpdate(ItemStack itemStack) {
-        cache.clearAll();
+        data.clearAll();
     }
 }

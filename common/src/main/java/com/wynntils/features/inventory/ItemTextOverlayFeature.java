@@ -17,7 +17,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.dungeon.type.Dungeon;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -130,7 +130,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
         TextOverlayInfo overlayProperty =
-                wynnItem.getCache().getOrCalculate(WynnItemCache.OVERLAY_KEY, () -> calculateOverlay(wynnItem));
+                wynnItem.getData().getOrCalculate(WynnItemData.OVERLAY_KEY, () -> calculateOverlay(wynnItem));
         if (overlayProperty == null) return;
 
         if (!overlayProperty.isTextOverlayEnabled()) return;
