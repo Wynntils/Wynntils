@@ -15,8 +15,7 @@ public class TomeItem extends GameItem implements GearTierItemProperty {
     private final List<StatActualValue> identifications;
     private final int rerolls;
 
-    public TomeItem(int emeraldPrice, TomeInfo tomeInfo, List<StatActualValue> identifications, int rerolls) {
-        super(emeraldPrice);
+    public TomeItem(TomeInfo tomeInfo, List<StatActualValue> identifications, int rerolls) {
         this.tomeInfo = tomeInfo;
         this.identifications = identifications;
         this.rerolls = rerolls;
@@ -41,10 +40,9 @@ public class TomeItem extends GameItem implements GearTierItemProperty {
 
     @Override
     public String toString() {
-        return "TomeItem{" + "tomeInfo="
+        return "TomeItem{" + "tomeProfile="
                 + tomeInfo + ", identifications="
                 + identifications + ", rerolls="
-                + rerolls + ", emeraldPrice="
-                + emeraldPrice + '}';
+                + rerolls + '}';
     }
 }

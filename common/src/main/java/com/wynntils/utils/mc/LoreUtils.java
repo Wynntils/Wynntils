@@ -55,7 +55,11 @@ public final class LoreUtils {
      */
     public static StyledText getLoreLine(ItemStack itemStack, int line) {
         ListTag loreTag = getLoreTag(itemStack);
-        return loreTag == null ? StyledText.EMPTY : StyledText.fromJson(loreTag.getString(line));
+
+        if (loreTag == null) return StyledText.EMPTY;
+        if (loreTag.size() <= line) return StyledText.EMPTY;
+
+        return StyledText.fromJson(loreTag.getString(line));
     }
 
     /**

@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.game.MaterialItem;
@@ -180,8 +180,8 @@ public class ItemHighlightFeature extends Feature {
         if (wynnItemOpt.isEmpty()) return CustomColor.NONE;
 
         WynnItem wynnItem = wynnItemOpt.get();
-        HighlightInfo highlight = wynnItem.getCache()
-                .getOrCalculate(WynnItemCache.HIGHLIGHT_KEY, () -> calculateHighlightInfo(wynnItemOpt.get()));
+        HighlightInfo highlight = wynnItem.getData()
+                .getOrCalculate(WynnItemData.HIGHLIGHT_KEY, () -> calculateHighlightInfo(wynnItemOpt.get()));
         if (highlight == null) return CustomColor.NONE;
 
         if (!highlight.isHighlightEnabled()) return CustomColor.NONE;

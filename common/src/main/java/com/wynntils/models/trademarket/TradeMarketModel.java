@@ -4,19 +4,24 @@
  */
 package com.wynntils.models.trademarket;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TradeMarketModel extends Model {
@@ -31,6 +36,14 @@ public class TradeMarketModel extends Model {
 
     private static final Pattern TRADE_MARKET_FILTER_SCREEN_TITLE_PATTERN =
             Pattern.compile("\\[Pg\\. \\d+\\] Filter Items");
+
+    // Price Parsing
+    private static final int TRADE_MARKET_PRICE_LINE = 1;
+    private static final Pattern PRICE_STR = Pattern.compile("§6Price:");
+
+    // Test suite: https://regexr.com/7lh2b
+    private static final Pattern PRICE_PATTERN = Pattern.compile(
+            "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
     @Persisted
     private final Storage<Map<Integer, String>> presetFilters = new Storage<>(new TreeMap<>());
@@ -71,5 +84,33 @@ public class TradeMarketModel extends Model {
     public void setPresetFilter(int presetId, String filter) {
         presetFilters.get().put(presetId, filter);
         presetFilters.touched();
+    }
+
+    public TradeMarketPriceInfo calculateItemPriceInfo(ItemStack itemStack) {
+        StyledText priceLine = LoreUtils.getLoreLine(itemStack, TRADE_MARKET_PRICE_LINE);
+
+        if (priceLine == null || !priceLine.matches(PRICE_STR)) {
+            WynntilsMod.warn("Trade Market item had an unexpected price line: " + priceLine);
+            return TradeMarketPriceInfo.EMPTY;
+        }
+
+        StyledText priceValueLine = LoreUtils.getLoreLine(itemStack, TRADE_MARKET_PRICE_LINE + 1);
+
+        Matcher matcher = priceValueLine.getMatcher(PRICE_PATTERN);
+        if (!matcher.matches()) {
+            WynntilsMod.warn("Trade Market item had an unexpected price value line: " + priceValueLine);
+            return TradeMarketPriceInfo.EMPTY;
+        }
+
+        int price = Integer.parseInt(matcher.group("price").replace(",", ""));
+
+        String silverbullPriceStr = matcher.group("silverbullPrice");
+        int silverbullPrice =
+                silverbullPriceStr == null ? price : Integer.parseInt(silverbullPriceStr.replace(",", ""));
+
+        String amountStr = matcher.group("amount");
+        int amount = amountStr == null ? 1 : Integer.parseInt(amountStr.replace(",", ""));
+
+        return new TradeMarketPriceInfo(price, silverbullPrice, amount);
     }
 }

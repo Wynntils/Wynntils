@@ -27,7 +27,6 @@ public class UnknownGearItem extends GameItem
     private final int rerolls;
 
     public UnknownGearItem(
-            int emeraldPrice,
             String name,
             GearType gearType,
             GearTier gearTier,
@@ -37,7 +36,6 @@ public class UnknownGearItem extends GameItem
             List<StatActualValue> identifications,
             List<Powder> powders,
             int rerolls) {
-        super(emeraldPrice);
         this.name = name;
         this.gearType = gearType;
         this.gearTier = gearTier;
@@ -99,7 +97,6 @@ public class UnknownGearItem extends GameItem
                 + requirements + ", identifications="
                 + identifications + ", powders="
                 + powders + ", rerolls="
-                + rerolls + ", emeraldPrice="
-                + emeraldPrice + '}';
+                + rerolls + '}';
     }
 }

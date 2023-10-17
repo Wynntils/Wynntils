@@ -10,8 +10,7 @@ public class TeleportScrollItem extends GameItem implements TargetedItemProperty
     private final String destination;
     private final boolean dungeon;
 
-    public TeleportScrollItem(int emeraldPrice, String destination, boolean dungeon) {
-        super(emeraldPrice);
+    public TeleportScrollItem(String destination, boolean dungeon) {
         this.destination = destination;
         this.dungeon = dungeon;
     }
@@ -31,9 +30,6 @@ public class TeleportScrollItem extends GameItem implements TargetedItemProperty
 
     @Override
     public String toString() {
-        return "TeleportScrollItem{" + "destination='"
-                + destination + '\'' + ", dungeon="
-                + dungeon + ", emeraldPrice="
-                + emeraldPrice + '}';
+        return "TeleportScrollItem{" + "destination='" + destination + '\'' + ", dungeon=" + dungeon + '}';
     }
 }
