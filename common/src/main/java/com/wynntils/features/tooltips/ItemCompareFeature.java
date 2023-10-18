@@ -73,7 +73,7 @@ public class ItemCompareFeature extends Feature {
         }
 
         Optional<GearTypeItemProperty> gearItemOpt =
-                Models.Item.asWynnItemPropery(hoveredItemStack, GearTypeItemProperty.class);
+                Models.Item.asWynnItemProperty(hoveredItemStack, GearTypeItemProperty.class);
         if (gearItemOpt.isEmpty()) return;
 
         ItemStack itemToCompare = null;
@@ -128,7 +128,7 @@ public class ItemCompareFeature extends Feature {
     }
 
     private boolean isMatchingType(ItemStack itemStack, GearTypeItemProperty gearItemReference) {
-        Optional<GearTypeItemProperty> gearOpt = Models.Item.asWynnItemPropery(itemStack, GearTypeItemProperty.class);
+        Optional<GearTypeItemProperty> gearOpt = Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
         if (gearOpt.isEmpty()) return false;
 
         return gearOpt.get().getGearType() == gearItemReference.getGearType();

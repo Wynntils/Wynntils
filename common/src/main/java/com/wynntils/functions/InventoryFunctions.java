@@ -31,7 +31,7 @@ public class InventoryFunctions {
                     arguments.getArgument("accessory").getStringValue());
             if (inventoryAccessory == null) return CappedValue.EMPTY;
 
-            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemPropery(
+            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
                     McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
 
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
@@ -61,7 +61,7 @@ public class InventoryFunctions {
                     InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
             if (inventoryArmor == null) return CappedValue.EMPTY;
 
-            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemPropery(
+            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
                     McUtils.inventory().armor.get(inventoryArmor.getSlot()), DurableItemProperty.class);
 
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
@@ -95,7 +95,7 @@ public class InventoryFunctions {
         public CappedValue getValue(FunctionArguments arguments) {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<DurableItemProperty> durableItemOpt =
-                    Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+                    Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
             return durableItemOpt.get().getDurability();
@@ -220,7 +220,7 @@ public class InventoryFunctions {
         public Integer getValue(FunctionArguments arguments) {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<DurableItemProperty> durableItemOpt =
-                    Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+                    Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
             if (durableItemOpt.isEmpty()) return -1;
 
             return durableItemOpt.get().getDurability().current();
@@ -237,7 +237,7 @@ public class InventoryFunctions {
         public Integer getValue(FunctionArguments arguments) {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<DurableItemProperty> durableItemOpt =
-                    Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+                    Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
             if (durableItemOpt.isEmpty()) return -1;
 
             return durableItemOpt.get().getDurability().max();

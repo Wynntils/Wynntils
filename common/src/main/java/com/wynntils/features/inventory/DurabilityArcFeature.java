@@ -44,7 +44,7 @@ public class DurabilityArcFeature extends Feature {
 
     private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<DurableItemProperty> durableItemOpt =
-                Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+                Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
 
         CappedValue durability = durableItemOpt.get().getDurability();
