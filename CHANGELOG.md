@@ -1,9 +1,21 @@
+## [0.0.4-beta.39](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.38...v0.0.4-beta.39) (2023-10-18)
+
+
+### Bug Fixes
+
+* Ingredient pouch not parsing properly when empty ([#2197](https://github.com/Wynntils/Artemis/issues/2197)) ([2449dda](https://github.com/Wynntils/Artemis/commit/2449dda57412cccc530c1427edcdc921f5ad1e9d))
+
 ## [0.0.4-beta.38](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.37...v0.0.4-beta.38) (2023-10-16)
 
 
 ### New Features
 
 * Parse item prices lazily, add AmountStatProvider and TotalPriceStatProvider ([#2191](https://github.com/Wynntils/Artemis/issues/2191)) ([932ace9](https://github.com/Wynntils/Artemis/commit/932ace9e3f50b428ef55901d41f07dc8a5db4861))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.38 [skip ci] ([5253006](https://github.com/Wynntils/Artemis/commit/52530061229f7015b0d0803cb07f3b0e558c5631))
 
 ## [0.0.4-beta.37](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.36...v0.0.4-beta.37) (2023-10-13)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.35 [skip ci] ([68f4b24](https://github.com/Wynntils/Artemis/commit/68f4b246a5f5a9692efb3cdaf0c1ccd9efc9175b))
-
-## [0.0.4-beta.34](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.33...v0.0.4-beta.34) (2023-10-11)
-
-
-### Bug Fixes
-
-* Parse prices with silverbull discount ([#2188](https://github.com/Wynntils/Artemis/issues/2188)) ([ece209c](https://github.com/Wynntils/Artemis/commit/ece209c07d3ddee345365798477230aa7828a767))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.34 [skip ci] ([eb40e2e](https://github.com/Wynntils/Artemis/commit/eb40e2e40a4c3c80807d80a9bf5293d5bc86d37c))
 
