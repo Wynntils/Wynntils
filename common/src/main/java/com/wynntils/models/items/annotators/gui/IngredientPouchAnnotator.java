@@ -27,7 +27,8 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (itemStack.getItem() != Items.DIAMOND_AXE) return null;
+        // DIAMOND_AXE when not empty, SNOW when empty
+        if (itemStack.getItem() != Items.DIAMOND_AXE && itemStack.getItem() != Items.SNOW) return null;
         if (!name.equals(INGREDIENT_POUCH_NAME)) return null;
 
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();

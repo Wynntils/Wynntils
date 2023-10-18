@@ -102,7 +102,7 @@ public final class EmeraldModel extends Model {
     private void adjustBalance(ItemStack newItemStack, boolean isInventory) {
         int adjustValue = 0;
         Optional<EmeraldValuedItemProperty> newItemValueOpt =
-                Models.Item.asWynnItemPropery(newItemStack, EmeraldValuedItemProperty.class);
+                Models.Item.asWynnItemProperty(newItemStack, EmeraldValuedItemProperty.class);
         if (newItemValueOpt.isPresent()) {
             adjustValue += newItemValueOpt.get().getEmeraldValue();
         }
