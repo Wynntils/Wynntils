@@ -1,9 +1,21 @@
+## [0.0.4-beta.40](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.39...v0.0.4-beta.40) (2023-10-20)
+
+
+### Bug Fixes
+
+* Process not fully complete scoreboards, fix fallback mapping ([#2198](https://github.com/Wynntils/Artemis/issues/2198)) ([630b345](https://github.com/Wynntils/Artemis/commit/630b34512c6f56f675eb1f49b8d72db79eadb4d7))
+
 ## [0.0.4-beta.39](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.38...v0.0.4-beta.39) (2023-10-18)
 
 
 ### Bug Fixes
 
 * Ingredient pouch not parsing properly when empty ([#2197](https://github.com/Wynntils/Artemis/issues/2197)) ([2449dda](https://github.com/Wynntils/Artemis/commit/2449dda57412cccc530c1427edcdc921f5ad1e9d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.39 [skip ci] ([739b28b](https://github.com/Wynntils/Artemis/commit/739b28b566268a7fba6c60892d6dea8dc90530ed))
 
 ## [0.0.4-beta.38](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.37...v0.0.4-beta.38) (2023-10-16)
 
@@ -41,16 +53,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2190](https://github.com/Wynntils/Artemis/issues/2190)) ([fa11d66](https://github.com/Wynntils/Artemis/commit/fa11d66ed059b02d1753af861c2962fed39fe5c8))
 * **release:** v0.0.4-beta.36 [skip ci] ([a2ee227](https://github.com/Wynntils/Artemis/commit/a2ee227e859356a74caf0942db11795ccdff86fd))
-
-## [0.0.4-beta.35](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.34...v0.0.4-beta.35) (2023-10-11)
-
-
-### New Features
-
-* Annotate runes properly ([#2189](https://github.com/Wynntils/Artemis/issues/2189)) ([dbecef7](https://github.com/Wynntils/Artemis/commit/dbecef71ffdc2b78646d75bf5445a8176c03adaf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.35 [skip ci] ([68f4b24](https://github.com/Wynntils/Artemis/commit/68f4b246a5f5a9692efb3cdaf0c1ccd9efc9175b))
 
