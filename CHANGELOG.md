@@ -1,9 +1,21 @@
+## [0.0.4-beta.42](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.41...v0.0.4-beta.42) (2023-10-20)
+
+
+### Bug Fixes
+
+* Disable editing of provided pois ([#2200](https://github.com/Wynntils/Artemis/issues/2200)) ([311ce8b](https://github.com/Wynntils/Artemis/commit/311ce8b692ff2b3e71331d70e454261b32fd5927))
+
 ## [0.0.4-beta.41](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.40...v0.0.4-beta.41) (2023-10-20)
 
 
 ### Bug Fixes
 
 * Fix TM not loading when there is only a single page ([#2199](https://github.com/Wynntils/Artemis/issues/2199)) ([6c3af67](https://github.com/Wynntils/Artemis/commit/6c3af679e5c4dd030b1c6a74dac4398c91c0cb76))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.41 [skip ci] ([9ce8eb0](https://github.com/Wynntils/Artemis/commit/9ce8eb0fe24b9d66fe49a3a36a934479a0c27ea7))
 
 ## [0.0.4-beta.40](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.39...v0.0.4-beta.40) (2023-10-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.38 [skip ci] ([5253006](https://github.com/Wynntils/Artemis/commit/52530061229f7015b0d0803cb07f3b0e558c5631))
-
-## [0.0.4-beta.37](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.36...v0.0.4-beta.37) (2023-10-13)
-
-
-### Bug Fixes
-
-* fix Custom Trade Market screen not displaying items in sort order properly ([#2193](https://github.com/Wynntils/Artemis/issues/2193)) ([e358e9c](https://github.com/Wynntils/Artemis/commit/e358e9c66f106c1dfc3515de67866b1174a0a874))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.37 [skip ci] ([6da6d49](https://github.com/Wynntils/Artemis/commit/6da6d4916f14aa7f11eebace45c458083f798828))
 
