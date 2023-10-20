@@ -173,6 +173,10 @@ public class PoiService extends Service {
         loadCustomPoiProviders();
     }
 
+    public boolean isPoiProvided(CustomPoi customPoi) {
+        return getProvidedCustomPois().contains(customPoi);
+    }
+
     private void loadPlaces() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_PLACES);
         dl.handleReader(reader -> {
