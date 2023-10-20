@@ -1,9 +1,21 @@
+## [0.0.4-beta.41](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.40...v0.0.4-beta.41) (2023-10-20)
+
+
+### Bug Fixes
+
+* Fix TM not loading when there is only a single page ([#2199](https://github.com/Wynntils/Artemis/issues/2199)) ([6c3af67](https://github.com/Wynntils/Artemis/commit/6c3af679e5c4dd030b1c6a74dac4398c91c0cb76))
+
 ## [0.0.4-beta.40](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.39...v0.0.4-beta.40) (2023-10-20)
 
 
 ### Bug Fixes
 
 * Process not fully complete scoreboards, fix fallback mapping ([#2198](https://github.com/Wynntils/Artemis/issues/2198)) ([630b345](https://github.com/Wynntils/Artemis/commit/630b34512c6f56f675eb1f49b8d72db79eadb4d7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.40 [skip ci] ([5ba43b2](https://github.com/Wynntils/Artemis/commit/5ba43b239dae1999b4c1b2f31caf017a7fcdc47c))
 
 ## [0.0.4-beta.39](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.38...v0.0.4-beta.39) (2023-10-18)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.37 [skip ci] ([6da6d49](https://github.com/Wynntils/Artemis/commit/6da6d4916f14aa7f11eebace45c458083f798828))
-
-## [0.0.4-beta.36](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.35...v0.0.4-beta.36) (2023-10-12)
-
-
-### New Features
-
-* Add support for Wynn's default sorting button in Trade Market screen ([#2192](https://github.com/Wynntils/Artemis/issues/2192)) ([bb0fd51](https://github.com/Wynntils/Artemis/commit/bb0fd513d33c07ae5df0827926426e8aa5e7fdd2))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2190](https://github.com/Wynntils/Artemis/issues/2190)) ([fa11d66](https://github.com/Wynntils/Artemis/commit/fa11d66ed059b02d1753af861c2962fed39fe5c8))
-* **release:** v0.0.4-beta.36 [skip ci] ([a2ee227](https://github.com/Wynntils/Artemis/commit/a2ee227e859356a74caf0942db11795ccdff86fd))
 
