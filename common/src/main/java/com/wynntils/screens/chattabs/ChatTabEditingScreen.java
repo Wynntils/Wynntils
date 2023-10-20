@@ -447,6 +447,10 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         this.focusedTextInput = focusedTextInput;
     }
 
+    public boolean isActiveChatTab(ChatTab chatTab) {
+        return edited != null && edited.equals(chatTab);
+    }
+
     public void reloadChatTabsWidgets() {
         chatTabsWidgets = new ArrayList<>();
         List<ChatTab> chatTabs = Services.ChatTab.getChatTabs();

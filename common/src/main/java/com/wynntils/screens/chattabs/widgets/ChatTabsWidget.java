@@ -12,6 +12,7 @@ import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -76,13 +77,15 @@ public class ChatTabsWidget extends AbstractWidget {
                     poseStack, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), 0, this.width, this.height);
         }
 
+        CustomColor nameColor = parent.isActiveChatTab(chatTab) ? CommonColors.GREEN : CommonColors.WHITE;
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(chatTab.getName()),
                         this.getX() + 4,
                         this.getY() + (this.height >> 1),
-                        CommonColors.WHITE,
+                        nameColor,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
