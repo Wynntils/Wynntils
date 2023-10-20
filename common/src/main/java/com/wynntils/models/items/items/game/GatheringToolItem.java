@@ -18,8 +18,7 @@ public class GatheringToolItem extends GameItem
     private final ToolProfile toolProfile;
     private final CappedValue durability;
 
-    public GatheringToolItem(int emeraldPrice, ToolProfile toolProfile, CappedValue durability) {
-        super(emeraldPrice);
+    public GatheringToolItem(ToolProfile toolProfile, CappedValue durability) {
         this.toolProfile = toolProfile;
         this.durability = durability;
     }
@@ -44,15 +43,12 @@ public class GatheringToolItem extends GameItem
     }
 
     @Override
-    public List<ProfessionType> getProfessionTypes() {
-        return List.of(toolProfile.toolType().getProfessionType());
+    public String toString() {
+        return "GatheringToolItem{" + "toolProfile=" + toolProfile + ", durability=" + durability + '}';
     }
 
     @Override
-    public String toString() {
-        return "GatheringToolItem{" + "toolProfile="
-                + toolProfile + ", durability="
-                + durability + ", emeraldPrice="
-                + emeraldPrice + '}';
+    public List<ProfessionType> getProfessionTypes() {
+        return List.of(toolProfile.toolType().getProfessionType());
     }
 }

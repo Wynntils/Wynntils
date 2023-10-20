@@ -95,7 +95,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
         JsonObject itemData = LoreUtils.getJsonFromIngameLore(itemStack);
         GearInstance gearInstance = Models.Gear.parseInstance(gearInfo, itemData);
-        return new FakeItemStack(new GearItem(0, gearInfo, gearInstance), "From " + playerName.getString());
+        return new FakeItemStack(new GearItem(gearInfo, gearInstance), "From " + playerName.getString());
     }
 
     @Override

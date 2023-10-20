@@ -33,6 +33,8 @@ import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.SkillReqStatProvider;
 import com.wynntils.services.itemfilter.statproviders.SkillStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
@@ -327,7 +329,7 @@ public class ItemFilterService extends Service {
      * Checks if the given item matches all filters. Tokens that are not filters in the search query are ignored. If no
      * filters are present, this method always returns true.
      *
-     * @param wynnItem the item to check
+     * @param wynnItem the wynnItem version of the item
      * @return true if the item matches all filters, false otherwise
      */
     private boolean filterMatches(ItemSearchQuery searchQuery, WynnItem wynnItem) {
@@ -388,6 +390,8 @@ public class ItemFilterService extends Service {
 
         // Price Stats
         registerStatProvider(new PriceStatProvider());
+        registerStatProvider(new TotalPriceStatProvider());
+        registerStatProvider(new TradeAmountStatProvider());
         registerStatProvider(new EmeraldValueStatProvider());
 
         // Constant Item Stats

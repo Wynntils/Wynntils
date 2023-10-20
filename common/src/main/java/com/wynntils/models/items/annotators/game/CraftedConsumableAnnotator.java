@@ -5,8 +5,9 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
-import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
@@ -14,11 +15,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class CraftedConsumableAnnotator extends GameItemAnnotator {
+public final class CraftedConsumableAnnotator implements ItemAnnotator {
     private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -29,7 +30,6 @@ public final class CraftedConsumableAnnotator extends GameItemAnnotator {
         WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
 
         return new CraftedConsumableItem(
-                emeraldPrice,
                 craftedName,
                 parseResult.level(),
                 parseResult.identifications(),

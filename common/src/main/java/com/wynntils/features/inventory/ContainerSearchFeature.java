@@ -24,7 +24,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -125,7 +125,7 @@ public class ContainerSearchFeature extends Feature {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
-        Boolean result = wynnItemOpt.get().getCache().get(WynnItemCache.SEARCHED_KEY);
+        Boolean result = wynnItemOpt.get().getData().get(WynnItemData.SEARCHED_KEY);
         if (result == null || !result) return;
 
         RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 200, 1f, 6, 8);
@@ -297,7 +297,7 @@ public class ContainerSearchFeature extends Feature {
 
             boolean filtered = !searchQuery.isEmpty() && Services.ItemFilter.matches(searchQuery, itemStack);
 
-            wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
+            wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;
             }

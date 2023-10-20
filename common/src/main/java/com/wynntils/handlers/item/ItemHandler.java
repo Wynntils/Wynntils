@@ -14,6 +14,8 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -275,6 +277,11 @@ public class ItemHandler extends Handler {
         crashedAnnotators.clear();
 
         if (annotation == null) return null;
+
+        // Store the itemstack in the data for later use
+        if (annotation instanceof WynnItem wynnItem) {
+            wynnItem.getData().store(WynnItemData.ITEMSTACK_KEY, itemStack);
+        }
 
         // Measure performance
         logProfilingData(startTime, annotation);
