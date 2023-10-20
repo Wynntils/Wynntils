@@ -7,7 +7,7 @@ package com.wynntils.screens.base.widgets;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.Minecraft;
+import com.wynntils.utils.render.FontRenderer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
@@ -41,9 +41,8 @@ public class WynntilsCheckbox extends Checkbox {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.enableDepthTest();
-        Font font = minecraft.font;
+        Font font = FontRenderer.getInstance().getFont();
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         ResourceLocation resourceLocation;
