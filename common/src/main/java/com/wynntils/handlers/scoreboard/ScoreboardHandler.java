@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.scoreboard;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.PartStyle;
@@ -18,13 +18,11 @@ import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -48,7 +46,7 @@ public final class ScoreboardHandler extends Handler {
     private static final ScoreboardPart FALLBACK_SCOREBOARD_PART = new FallbackScoreboardPart();
 
     private String currentScoreboardName = "";
-    private final Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
+    private List<Pair<ScoreboardPart, ScoreboardSegment>> scoreboardSegments = new ArrayList<>();
 
     private final List<ScoreboardPart> scoreboardParts = new ArrayList<>();
 
@@ -92,9 +90,9 @@ public final class ScoreboardHandler extends Handler {
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) return;
 
-        scoreboardSegments.keySet().forEach(ScoreboardPart::reset);
+        scoreboardSegments.forEach(pair -> pair.key().reset());
 
-        scoreboardSegments.clear();
+        scoreboardSegments = new ArrayList<>();
         currentScoreboardName = "";
     }
 
@@ -104,10 +102,10 @@ public final class ScoreboardHandler extends Handler {
 
         // 2. Verify that the scoreboard is in a semi-valid state
         // (in a state where we can make sense of it, even if the actual data is still being updated)
-        if (!isScoreboardValid(reconstructedScoreboard)) return;
+        List<ScoreboardPart> validParts = getValidScoreboardParts(reconstructedScoreboard);
 
         // 3. Calculate the scoreboard segments, do segment updates
-        calculateScoreboardSegments(reconstructedScoreboard);
+        calculateScoreboardSegments(reconstructedScoreboard, validParts);
 
         // 4. Create our own scoreboard to hide specific segments
         createScoreboardFromSegments(reconstructedScoreboard);
@@ -126,7 +124,7 @@ public final class ScoreboardHandler extends Handler {
                 .toList();
     }
 
-    private boolean isScoreboardValid(List<ScoreboardLine> reconstructedScoreboard) {
+    private List<ScoreboardPart> getValidScoreboardParts(List<ScoreboardLine> reconstructedScoreboard) {
         // The scoreboard is valid if:
         // 1. There are no duplicate lines
         // 2. There are no gaps in the scores, and they are decreasing (there are no duplicate scores)
@@ -140,14 +138,15 @@ public final class ScoreboardHandler extends Handler {
 
         // 0. An empty scoreboard is valid
         if (reconstructedScoreboard.isEmpty()) {
-            return true;
+            return List.of();
         }
 
         // 1. Check for duplicate lines
         List<StyledText> lines = new ArrayList<>();
         for (ScoreboardLine line : reconstructedScoreboard) {
             if (lines.contains(line.line())) {
-                return false;
+                // We found a duplicate line, so the scoreboard is invalid
+                return List.of();
             }
 
             lines.add(line.line());
@@ -160,7 +159,8 @@ public final class ScoreboardHandler extends Handler {
                 .orElse(0);
         for (ScoreboardLine line : reconstructedScoreboard.stream().skip(1).toList()) {
             if (line.score() + 1 != lastScore) {
-                return false;
+                // We found a gap in the scores, so the scoreboard is invalid
+                return List.of();
             }
 
             lastScore = line.score();
@@ -172,26 +172,38 @@ public final class ScoreboardHandler extends Handler {
                 .map(ScoreboardLine::line)
                 .orElse(StyledText.EMPTY)
                 .equals(StyledText.fromString("À"))) {
-            return false;
+            // We did not find a new line at the start, so the scoreboard is invalid
+            return List.of();
         }
 
         // 4. Check for segment correctness
+        //    There are 2 error cases here:
+        //       - Fatal error: We find info that makes the current scoreboard invalid
+        //       - "Valid" error: We find an error, but it only makes the current segment invalid, not the scoreboard
+        //                        If we find a segment that is not valid,
+        //                        we return the list of valid segments up to that point.
+        //                        This is a valid case because the scoreboard cannot fit all segments,
+        //                        so it will only display the x lines.
         int currentIndex = 1;
         List<ScoreboardLine> scoreboardLines = reconstructedScoreboard.stream().toList();
 
-        Set<ScoreboardPart> usedParts = new HashSet<>();
-
+        List<ScoreboardPart> scoreboardParts = new ArrayList<>();
         while (currentIndex < scoreboardLines.size()) {
             ScoreboardPart part = getScoreboardPartForHeader(scoreboardLines.get(currentIndex));
 
             // We could not find a suitable part for the header
-            if (part == null || usedParts.contains(part)) {
-                return false;
+            if (part == null) {
+                return scoreboardParts;
             }
 
-            // The header cannot be the last line
+            // A part cannot be duplicated unless the scoreboard is invalid (or the part is the fallback part)
+            if (part != FALLBACK_SCOREBOARD_PART && scoreboardParts.contains(part)) {
+                return List.of();
+            }
+
+            // The header can be the last line, but that makes that segment invalid
             if (currentIndex + 1 == scoreboardLines.size()) {
-                return false;
+                return scoreboardParts;
             }
 
             // The next line cannot be the end of this segment
@@ -201,10 +213,10 @@ public final class ScoreboardHandler extends Handler {
                     .line()
                     .getMatcher(NEXT_LINE_PATTERN)
                     .matches()) {
-                return false;
+                return List.of();
             }
 
-            usedParts.add(part);
+            scoreboardParts.add(part);
 
             // Find the next segment end
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
@@ -220,27 +232,40 @@ public final class ScoreboardHandler extends Handler {
         // All checks passed, so the scoreboard is valid
         // (In theory, this can happen while the scoreboard is still being updated, but it's very unlikely, and we
         // cannot do anything about it)
-        return true;
+        return scoreboardParts;
     }
 
-    private void calculateScoreboardSegments(List<ScoreboardLine> reconstructedScoreboard) {
+    private void calculateScoreboardSegments(
+            List<ScoreboardLine> reconstructedScoreboard, List<ScoreboardPart> validParts) {
         int currentIndex = 1;
         List<ScoreboardLine> scoreboardLines = reconstructedScoreboard.stream().toList();
 
-        Map<ScoreboardPart, ScoreboardSegment> oldSegments = ImmutableMap.copyOf(scoreboardSegments);
-        scoreboardSegments.clear();
+        List<Pair<ScoreboardPart, ScoreboardSegment>> oldSegments = ImmutableList.copyOf(scoreboardSegments);
+        scoreboardSegments = new ArrayList<>();
 
-        while (currentIndex < scoreboardLines.size()) {
+        int validPartIndex = 0;
+        while (currentIndex < scoreboardLines.size() && validPartIndex < validParts.size()) {
             ScoreboardLine headerLine = scoreboardLines.get(currentIndex);
-            ScoreboardPart part = getScoreboardPartForHeader(headerLine);
+            ScoreboardPart calculatedPart = getScoreboardPartForHeader(headerLine);
 
             // We could not find a suitable part for the header
-            if (part == null) {
+            if (calculatedPart == null) {
                 WynntilsMod.error(
                         "Scoreboard passed validness check, but we could not find a scoreboard part for the line: "
                                 + scoreboardLines.get(currentIndex).line());
                 return;
             }
+
+            // Check if we calculate the same part as during the validation
+            if (calculatedPart != validParts.get(validPartIndex)) {
+                WynntilsMod.error("Scoreboard passed validness check, but the scoreboard part for the line: "
+                        + scoreboardLines.get(currentIndex).line()
+                        + " does not match the valid part: "
+                        + validParts.get(validPartIndex));
+                return;
+            }
+
+            validPartIndex++;
 
             List<StyledText> contentLines = new ArrayList<>();
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
@@ -254,26 +279,36 @@ public final class ScoreboardHandler extends Handler {
                 contentLines.add(line.line());
             }
 
-            ScoreboardSegment segment = new ScoreboardSegment(part, headerLine.line(), contentLines);
+            ScoreboardSegment segment = new ScoreboardSegment(calculatedPart, headerLine.line(), contentLines);
             boolean eventCanceled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(segment));
 
             segment.setVisibility(!eventCanceled);
-            scoreboardSegments.put(part, segment);
+            scoreboardSegments.add(new Pair<>(calculatedPart, segment));
         }
 
         // Handle segment removals
-        for (Map.Entry<ScoreboardPart, ScoreboardSegment> entry : oldSegments.entrySet()) {
-            if (scoreboardSegments.get(entry.getKey()) == null) {
-                entry.getKey().onSegmentRemove(entry.getValue());
+        for (Pair<ScoreboardPart, ScoreboardSegment> oldPair : oldSegments) {
+            // Special case for the fallback part, don't call onSegmentRemove
+            if (oldPair.key() == FALLBACK_SCOREBOARD_PART) continue;
+
+            Optional<Pair<ScoreboardPart, ScoreboardSegment>> segmentOpt = scoreboardSegments.stream()
+                    .filter(pair -> pair.key() == oldPair.key())
+                    .findFirst();
+            if (segmentOpt.isEmpty()) {
+                oldPair.key().onSegmentRemove(oldPair.value());
             }
         }
 
         // Handle segment changes
-        for (Map.Entry<ScoreboardPart, ScoreboardSegment> entry : scoreboardSegments.entrySet()) {
-            ScoreboardSegment oldSegment = oldSegments.get(entry.getKey());
+        for (Pair<ScoreboardPart, ScoreboardSegment> pair : scoreboardSegments) {
+            // Special case for the fallback part, don't call onSegmentChange
+            if (pair.key() == FALLBACK_SCOREBOARD_PART) continue;
 
-            if (oldSegment == null || !oldSegment.equals(entry.getValue())) {
-                entry.getKey().onSegmentChange(entry.getValue());
+            Optional<Pair<ScoreboardPart, ScoreboardSegment>> oldSegmentOpt = oldSegments.stream()
+                    .filter(oldPair -> oldPair.key() == pair.key())
+                    .findFirst();
+            if (oldSegmentOpt.isEmpty() || !oldSegmentOpt.get().value().equals(pair.value())) {
+                pair.key().onSegmentChange(pair.value());
             }
         }
     }
@@ -294,7 +329,7 @@ public final class ScoreboardHandler extends Handler {
 
         scoreboard.setDisplayObjective(DisplaySlot.SIDEBAR, wynntilsObjective);
 
-        if (scoreboardSegments.values().stream().noneMatch(ScoreboardSegment::isVisible)) return;
+        if (scoreboardSegments.stream().map(Pair::value).noneMatch(ScoreboardSegment::isVisible)) return;
 
         int currentScoreboardLine = MAX_SCOREBOARD_LINE;
 
@@ -305,7 +340,8 @@ public final class ScoreboardHandler extends Handler {
         int separatorCount = 2;
 
         // Insert the visible segments
-        List<ScoreboardSegment> segments = scoreboardSegments.values().stream().toList();
+        List<ScoreboardSegment> segments =
+                scoreboardSegments.stream().map(Pair::value).toList();
         for (int i = 0; i < segments.size(); i++) {
             ScoreboardSegment scoreboardSegment = segments.get(i);
             if (!scoreboardSegment.isVisible()) continue;
