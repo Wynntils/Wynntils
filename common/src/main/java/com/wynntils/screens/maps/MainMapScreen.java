@@ -408,7 +408,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
-                if (hovered instanceof CustomPoi customPoi) {
+                if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
@@ -417,7 +417,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
-                if (hovered instanceof CustomPoi customPoi) {
+                if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     HiddenConfig<List<CustomPoi>> customPois =
                             Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
                     customPois.get().remove(customPoi);
