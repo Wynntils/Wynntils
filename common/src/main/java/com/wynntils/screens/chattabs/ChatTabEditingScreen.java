@@ -266,26 +266,27 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         if (edited == null) {
             FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.create")),
-                        dividedWidth * 48,
-                        dividedHeight * HEADER_ROW_Y,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.create")),
+                            dividedWidth * 48,
+                            dividedHeight * HEADER_ROW_Y,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
         } else {
             FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.chatTabsGui.edit") + "'" + edited.getName() + "'"),
-                        dividedWidth * 48,
-                        dividedHeight * HEADER_ROW_Y,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(
+                                    I18n.get("screens.wynntils.chatTabsGui.edit") + "'" + edited.getName() + "'"),
+                            dividedWidth * 48,
+                            dividedHeight * HEADER_ROW_Y,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
         }
 
         // Name
@@ -496,14 +497,14 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
         ChatFormatting color = edited == null ? ChatFormatting.GREEN : ChatFormatting.WHITE;
 
-        chatTabsWidgets.add(
-                new Button.Builder(Component.translatable("screens.wynntils.chatTabsGui.new").withStyle(color),
-                        (button) -> McUtils.mc()
-                                .setScreen(ChatTabEditingScreen.create()))
-                        .pos(
-                                (int) (dividedWidth * 13),
-                                initialVerticalOffset + (int) (dividedHeight * (chatTabs.size() * 5 + 1)))
-                        .size((int) (dividedWidth * 6), 20)
-                        .build());
+        chatTabsWidgets.add(new Button.Builder(
+                        Component.translatable("screens.wynntils.chatTabsGui.new")
+                                .withStyle(color),
+                        (button) -> McUtils.mc().setScreen(ChatTabEditingScreen.create()))
+                .pos(
+                        (int) (dividedWidth * 13),
+                        initialVerticalOffset + (int) (dividedHeight * (chatTabs.size() * 5 + 1)))
+                .size((int) (dividedWidth * 6), 20)
+                .build());
     }
 }
