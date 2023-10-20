@@ -449,7 +449,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
     public void reloadChatTabsWidgets() {
         chatTabsWidgets = new ArrayList<>();
-        List<ChatTab> chatTabs = new ArrayList<>(Services.ChatTab.getChatTabs());
+        List<ChatTab> chatTabs = Services.ChatTab.getChatTabs();
 
         int initialVerticalOffset =
                 (int) (dividedHeight * 32) - (int) ((dividedHeight * (chatTabs.size() * 5 + 1) + 20) / 2);
