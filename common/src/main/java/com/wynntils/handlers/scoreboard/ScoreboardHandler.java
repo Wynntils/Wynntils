@@ -180,10 +180,10 @@ public final class ScoreboardHandler extends Handler {
         //    There are 2 error cases here:
         //       - Fatal error: We find info that makes the current scoreboard invalid
         //       - "Valid" error: We find an error, but it only makes the current scoreboard invalid, not the whole
-        //                        If we find a segment that is not valid, we return the list of valid segments up to
-        // that point
-        //                        This is a valid case because the scoreboard cannot "fit" all segments, so it will only
-        // display the x lines
+        //                        If we find a segment that is not valid,
+        //                        we return the list of valid segments up to that point.
+        //                        This is a valid case because the scoreboard cannot fit all segments,
+        //                        so it will only display the x lines.
         int currentIndex = 1;
         List<ScoreboardLine> scoreboardLines = reconstructedScoreboard.stream().toList();
 
