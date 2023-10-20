@@ -1754,6 +1754,8 @@
   "screens.wynntils.chatTabsGui.autoCommand": "Auto Command",
   "screens.wynntils.chatTabsGui.cancel": "Cancel",
   "screens.wynntils.chatTabsGui.consuming": "Consuming",
+  "screens.wynntils.chatTabsGui.create": "Create New Tab",
+  "screens.wynntils.chatTabsGui.edit": "Editing Tab ",
   "screens.wynntils.chatTabsGui.delete": "Delete",
   "screens.wynntils.chatTabsGui.filter": "Filter Pattern",
   "screens.wynntils.chatTabsGui.name": "Name",
