@@ -49,7 +49,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     private float dividedHeight;
     private float dividedWidth;
 
-    private final List<AbstractWidget> chatTabsWidgets = new ArrayList<>();
+    private List<AbstractWidget> chatTabsWidgets = new ArrayList<>();
 
     private TextInputBoxWidget focusedTextInput;
 
@@ -448,7 +448,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     }
 
     public void reloadChatTabsWidgets() {
-        chatTabsWidgets.clear();
+        chatTabsWidgets = new ArrayList<>();
         List<ChatTab> chatTabs = new ArrayList<>(Services.ChatTab.getChatTabs());
 
         int initialVerticalOffset =
