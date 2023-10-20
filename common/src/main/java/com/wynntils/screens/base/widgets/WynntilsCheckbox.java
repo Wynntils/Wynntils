@@ -41,7 +41,7 @@ public class WynntilsCheckbox extends Checkbox {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        Minecraft minecraft = Minecraft.getInstance();
+        Minecraft minecraft = McUtils.mc();
         RenderSystem.enableDepthTest();
         Font font = minecraft.font;
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
