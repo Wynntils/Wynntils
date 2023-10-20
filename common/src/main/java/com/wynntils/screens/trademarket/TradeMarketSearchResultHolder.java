@@ -312,19 +312,20 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
 
             if (parsedCurrentPage == 0) {
                 // We are on the first page, we don't need to do anything special
-                loadItemsUntilPage(PAGE_BATCH_SIZE, true);
+                loadItemsUntilPage(PAGE_BATCH_SIZE, false);
+
+                // Continue loading the pages as usual
+            } else {
+                // We are not on the first page, special case
+
+                // Sync the item map and current page info
+                itemMap.put(parsedCurrentPage, itemMap.remove(currentPage));
+                currentPage = parsedCurrentPage;
+
+                // Load the pages until the first page
+                loadItemsUntilPage(1, true);
                 return;
             }
-
-            // We are not on the first page, special case
-
-            // Sync the item map and current page info
-            itemMap.put(parsedCurrentPage, itemMap.remove(currentPage));
-            currentPage = parsedCurrentPage;
-
-            // Load the pages until the first page
-            loadItemsUntilPage(1, true);
-            return;
         }
 
         // If we have air items on the page, we reached the end
