@@ -115,7 +115,7 @@ public class ChatTabsWidget extends AbstractWidget {
         if (deleteButton.mouseClicked(mouseX, mouseY, button)
                 || moveUpButton.mouseClicked(mouseX, mouseY, button)
                 || moveDownButton.mouseClicked(mouseX, mouseY, button)) {
-            Managers.TickScheduler.scheduleLater(parent::reloadChatTabsWidgets, 2);
+            parent.reloadChatTabsWidgets();
             return true;
         }
 
