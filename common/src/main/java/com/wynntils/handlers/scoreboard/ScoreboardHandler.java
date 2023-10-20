@@ -287,15 +287,15 @@ public final class ScoreboardHandler extends Handler {
         }
 
         // Handle segment removals
-        for (Pair<ScoreboardPart, ScoreboardSegment> pair : oldSegments) {
+        for (Pair<ScoreboardPart, ScoreboardSegment> oldPair : oldSegments) {
             // Special case for the fallback part, don't call onSegmentRemove
-            if (pair.key() == FALLBACK_SCOREBOARD_PART) continue;
+            if (oldPair.key() == FALLBACK_SCOREBOARD_PART) continue;
 
-            Optional<Pair<ScoreboardPart, ScoreboardSegment>> oldSegmentOpt = scoreboardSegments.stream()
-                    .filter(oldPair -> oldPair.key() == pair.key())
+            Optional<Pair<ScoreboardPart, ScoreboardSegment>> segmentOpt = scoreboardSegments.stream()
+                    .filter(pair -> pair.key() == oldPair.key())
                     .findFirst();
-            if (oldSegmentOpt.isEmpty()) {
-                pair.key().onSegmentRemove(pair.value());
+            if (segmentOpt.isEmpty()) {
+                oldPair.key().onSegmentRemove(oldPair.value());
             }
         }
 
