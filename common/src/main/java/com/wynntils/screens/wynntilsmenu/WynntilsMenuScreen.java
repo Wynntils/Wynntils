@@ -55,21 +55,31 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private final List<List<WynntilsMenuButton>> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
 
+    private boolean firstInit = true;
+
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
 
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
         setup();
-        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
-                .displayOverallProgress
-                .get()) {
-            Models.Activity.scanOverallProgress();
-        }
     }
 
     public static Screen create() {
         return new WynntilsMenuScreen();
+    }
+
+    @Override
+    protected void doInit() {
+        if (firstInit) {
+            if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                    .displayOverallProgress
+                    .get()) {
+                Models.Activity.scanOverallProgress();
+            }
+        }
+
+        firstInit = false;
     }
 
     private void setup() {
