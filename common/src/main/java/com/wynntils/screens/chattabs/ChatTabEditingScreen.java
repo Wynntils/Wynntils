@@ -281,7 +281,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                     .renderText(
                             poseStack,
                             StyledText.fromString(
-                                    I18n.get("screens.wynntils.chatTabsGui.edit") + "'" + edited.getName() + "'"),
+                                    I18n.get("screens.wynntils.chatTabsGui.edit", edited.getName())),
                             dividedWidth * 48,
                             dividedHeight * HEADER_ROW_Y,
                             CommonColors.WHITE,
