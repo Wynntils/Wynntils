@@ -54,6 +54,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
+    private boolean firstInit = true;
+
     private WynntilsQuestBookScreen() {
         super(Component.translatable("screens.wynntils.wynntilsQuestBook.name"));
 
@@ -75,7 +77,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
      * */
     @Override
     protected void doInit() {
-        Models.Quest.rescanQuestBook(true, true);
+        if (firstInit) {
+            Models.Quest.rescanQuestBook(true, true);
+        }
+
+        firstInit = false;
 
         filterButtons.clear();
 
