@@ -78,7 +78,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     @Override
     protected void doInit() {
         if (firstInit) {
-            Models.Quest.rescanQuestBook(true, true);
+            Models.Quest.rescanQuestBook(true, false);
         }
 
         firstInit = false;
@@ -126,6 +126,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 () -> {
                     showMiniQuests = !showMiniQuests;
                     reloadElements();
+
+                    if (showMiniQuests) {
+                        // Scan mini quests, we don't do this on init because it's slow
+                        Models.Quest.rescanQuestBook(false, true);
+                    }
                 },
                 () -> showMiniQuests));
 
