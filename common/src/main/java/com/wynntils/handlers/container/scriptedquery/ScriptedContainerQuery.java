@@ -9,7 +9,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.utils.wynn.ItemUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
@@ -54,6 +56,12 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     @Override
     public boolean verifyContainer(Component title, MenuType<?> menuType) {
         return currentStep.getVerification().verify(title, menuType);
+    }
+
+    @Override
+    public boolean verifyContentChange(
+            ContainerContent container, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
+        return currentStep.getContentVerification().verify(container, changes, changeType);
     }
 
     @Override

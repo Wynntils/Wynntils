@@ -9,20 +9,26 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerAction;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
 import org.lwjgl.glfw.GLFW;
 
 public class QueryStep {
     // We should never get to MenuOpenedEvent
     private static final ContainerVerification EXPECT_SAME_MENU = (title, type) -> false;
+    private static final ContainerContentVerification WAIT_FOR_SET_CONTENT =
+            (container, changes, changeType) -> changeType == ContainerContentChangeType.SET_CONTENT;
     private static final ContainerAction IGNORE_INCOMING_CONTAINER = c -> {};
 
     private final ContainerPredicate startAction;
     private ContainerVerification verification = EXPECT_SAME_MENU;
+    private ContainerContentVerification contentVerification = WAIT_FOR_SET_CONTENT;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
 
     protected QueryStep(ContainerPredicate startAction) {
@@ -32,6 +38,7 @@ public class QueryStep {
     protected QueryStep(QueryStep queryStep) {
         this.startAction = queryStep.startAction;
         this.verification = queryStep.verification;
+        this.contentVerification = queryStep.contentVerification;
         this.handleContent = queryStep.handleContent;
     }
 
@@ -45,6 +52,13 @@ public class QueryStep {
         return new QueryStep(container -> {
             ContainerUtils.clickOnSlot(
                     slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+            return true;
+        });
+    }
+
+    public static QueryStep clickOnSlot(int slotNum, Supplier<Integer> mouseButtonSupplier) {
+        return new QueryStep(container -> {
+            ContainerUtils.clickOnSlot(slotNum, container.containerId(), mouseButtonSupplier.get(), container.items());
             return true;
         });
     }
@@ -72,6 +86,11 @@ public class QueryStep {
         return this;
     }
 
+    public QueryStep verifyContentChange(ContainerContentVerification verification) {
+        this.contentVerification = verification;
+        return this;
+    }
+
     public QueryStep processIncomingContainer(ContainerAction action) {
         this.handleContent = action;
         return this;
@@ -83,6 +102,10 @@ public class QueryStep {
 
     ContainerVerification getVerification() {
         return verification;
+    }
+
+    ContainerContentVerification getContentVerification() {
+        return contentVerification;
     }
 
     ContainerAction getHandleContent() {

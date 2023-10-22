@@ -5,8 +5,11 @@
 package com.wynntils.handlers.container;
 
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 
 public interface ContainerQueryStep {
     /**
@@ -21,6 +24,14 @@ public interface ContainerQueryStep {
      * title. To ensure robustness, make this test as tight as possible.
      */
     boolean verifyContainer(Component title, MenuType<?> menuType);
+
+    /**
+     * Verify that the container has the expected content change.
+     * This is called when a set slot or set content packet is received.
+     * This method needs to return true before {@link #handleContent} is called.
+     */
+    boolean verifyContentChange(
+            ContainerContent container, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType);
 
     /**
      * Process the actual content of the container that this step has opened up.

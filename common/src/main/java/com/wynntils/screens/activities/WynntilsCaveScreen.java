@@ -7,9 +7,12 @@ package com.wynntils.screens.activities;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
@@ -86,6 +89,12 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
     @Override
     public void onClose() {
         WynntilsMod.unregisterEventListener(this);
+
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .cancelAllQueriesOnScreenClose
+                .get()) {
+            Handlers.ContainerQuery.endAllQueries();
+        }
 
         super.onClose();
     }

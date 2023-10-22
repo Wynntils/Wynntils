@@ -6,8 +6,11 @@ package com.wynntils.screens.activities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
@@ -54,6 +57,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
+    private boolean firstInit = true;
+
     private WynntilsQuestBookScreen() {
         super(Component.translatable("screens.wynntils.wynntilsQuestBook.name"));
 
@@ -68,6 +73,13 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     @Override
     public void onClose() {
         WynntilsMod.unregisterEventListener(this);
+
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .cancelAllQueriesOnScreenClose
+                .get()) {
+            Handlers.ContainerQuery.endAllQueries();
+        }
+
         super.onClose();
     }
 
@@ -75,7 +87,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
      * */
     @Override
     protected void doInit() {
-        Models.Quest.rescanQuestBook(true, true);
+        if (firstInit) {
+            Models.Quest.rescanQuestBook(true, false);
+        }
+
+        firstInit = false;
 
         filterButtons.clear();
 
@@ -120,6 +136,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 () -> {
                     showMiniQuests = !showMiniQuests;
                     reloadElements();
+
+                    if (showMiniQuests) {
+                        // Scan mini quests, we don't do this on init because it's slow
+                        Models.Quest.rescanQuestBook(false, true);
+                    }
                 },
                 () -> showMiniQuests));
 
