@@ -1215,6 +1215,8 @@
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils Pause Screen",
   "feature.wynntils.wynncraftPauseScreen.territoryMap.name": "Territory Map",
   "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu",
+  "feature.wynntils.wynntilsContentBook.cancelAllQueriesOnScreenClose.description": "Should running and queued container queries be canceled when the screen is closed? Disabling this allows tasks like quest tracking to continue running in the background, but makes you unable to interact with your inventory until the queries are done.",
+  "feature.wynntils.wynntilsContentBook.cancelAllQueriesOnScreenClose.name": "Cancel All Queries on Screen Close",
   "feature.wynntils.wynntilsContentBook.description": "Adds a custom content book.",
   "feature.wynntils.wynntilsContentBook.displayOverallProgress.description": "Disabling this stops the mod from parsing the content book when opening the Wynntils menu.",
   "feature.wynntils.wynntilsContentBook.displayOverallProgress.name": "Display Overall Progress",

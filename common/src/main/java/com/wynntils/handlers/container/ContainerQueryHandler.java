@@ -87,6 +87,20 @@ public final class ContainerQueryHandler extends Handler {
         }
     }
 
+    public void endAllQueries() {
+        // Close current container and cancel current query
+        if (containerId != NO_CONTAINER) {
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+            raiseError("Container query interrupted by user");
+        }
+
+        // Cancel all queued queries
+        for (ContainerQueryStep queuedQuery : queuedQueries) {
+            queuedQuery.onError("Container query interrupted by user");
+        }
+        queuedQueries.clear();
+    }
+
     @SubscribeEvent
     public void onSound(LocalSoundEvent.Client e) {
         // Silence the menu click sound when we are processing query

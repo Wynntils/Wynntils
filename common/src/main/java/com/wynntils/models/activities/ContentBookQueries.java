@@ -19,7 +19,6 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.items.items.gui.ActivityItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
@@ -280,7 +279,9 @@ public class ContentBookQueries {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Activity Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
-                    McUtils.sendErrorToClient("Setting tracking in Content Book failed");
+                    Managers.Notification.queueMessage(
+                            StyledText.fromComponent(Component.literal("Setting tracking in Content Book failed")
+                                    .withStyle(ChatFormatting.RED)));
                 })
 
                 // Open compass/character menu
