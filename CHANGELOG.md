@@ -1,3 +1,10 @@
+## [0.0.4-beta.44](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.43...v0.0.4-beta.44) (2023-10-22)
+
+
+### New Features
+
+* Make the content book much faster ([#2203](https://github.com/Wynntils/Artemis/issues/2203)) ([8162817](https://github.com/Wynntils/Artemis/commit/816281711e97b1af5f78975ddd63b800f515a1c4))
+
 ## [0.0.4-beta.43](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.42...v0.0.4-beta.43) (2023-10-22)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2201](https://github.com/Wynntils/Artemis/issues/2201)) ([1052913](https://github.com/Wynntils/Artemis/commit/1052913d7cc5a7f902934e16042bc127bad89b05))
+* **release:** v0.0.4-beta.43 [skip ci] ([ada1b37](https://github.com/Wynntils/Artemis/commit/ada1b37e22a011e9cd5c712f2dffed964cdd8cb9))
 
 ## [0.0.4-beta.42](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.41...v0.0.4-beta.42) (2023-10-20)
 
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.40 [skip ci] ([5ba43b2](https://github.com/Wynntils/Artemis/commit/5ba43b239dae1999b4c1b2f31caf017a7fcdc47c))
-
-## [0.0.4-beta.39](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.38...v0.0.4-beta.39) (2023-10-18)
-
-
-### Bug Fixes
-
-* Ingredient pouch not parsing properly when empty ([#2197](https://github.com/Wynntils/Artemis/issues/2197)) ([2449dda](https://github.com/Wynntils/Artemis/commit/2449dda57412cccc530c1427edcdc921f5ad1e9d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.39 [skip ci] ([739b28b](https://github.com/Wynntils/Artemis/commit/739b28b566268a7fba6c60892d6dea8dc90530ed))
 
