@@ -82,8 +82,8 @@ public final class ContainerQueryHandler extends Handler {
             if (!firstStep.startStep(null)) {
                 endQuery();
             }
-        } catch (ContainerQueryException e) {
-            raiseError("Cannot execute first step: " + e.getMessage());
+        } catch (Throwable t) {
+            raiseError("Cannot execute first step: " + t.getMessage());
         }
     }
 
@@ -109,8 +109,8 @@ public final class ContainerQueryHandler extends Handler {
                 try {
                     // Return true iff taking the next step succeeded
                     if (currentStep.startStep(currentContent)) return;
-                } catch (ContainerQueryException ex) {
-                    raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
+                } catch (Throwable t) {
+                    raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
                     return;
                 }
 
@@ -207,8 +207,8 @@ public final class ContainerQueryHandler extends Handler {
             if (currentStep.verifyContentChange(currentContent, changeMap, ContainerContentChangeType.SET_CONTENT)) {
                 processContainer(currentContent);
             }
-        } catch (ContainerQueryException ex) {
-            raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
+        } catch (Throwable t) {
+            raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
         } finally {
             e.setCanceled(true);
         }
@@ -256,8 +256,8 @@ public final class ContainerQueryHandler extends Handler {
             if (currentStep.verifyContentChange(currentContent, changeMap, ContainerContentChangeType.SET_SLOT)) {
                 processContainer(currentContent);
             }
-        } catch (ContainerQueryException ex) {
-            raiseError("Error while processing set slot for " + firstStepName + ": " + ex.getMessage());
+        } catch (Throwable t) {
+            raiseError("Error while processing set slot for " + firstStepName + ": " + t.getMessage());
         } finally {
             e.setCanceled(true);
         }
