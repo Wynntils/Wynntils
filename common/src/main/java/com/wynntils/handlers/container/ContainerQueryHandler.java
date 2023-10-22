@@ -4,15 +4,20 @@
  */
 package com.wynntils.handlers.container;
 
+import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,21 +42,23 @@ public final class ContainerQueryHandler extends Handler {
 
     private Component currentTitle;
     private MenuType<?> currentMenuType;
+    private ContainerContent currentContent;
     private int containerId = NO_CONTAINER;
     private int lastHandledContentId = NO_CONTAINER;
     private List<ItemStack> lastHandledItems = List.of();
     private int ticksRemaining;
-    private int ticksUntilNextOperation;
+    private int ticksUntilNextOperation = -1;
 
     public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
             // Only add if it is not already enqueued
-            if (queuedQueries.stream()
-                    .filter(query -> query.getName().equals(firstStep.getName()))
-                    .findAny()
-                    .isEmpty()) {
-                queuedQueries.add(firstStep);
-            }
+            boolean alreadyRunning = currentStep.getName().equals(firstStep.getName());
+            boolean alreadyQueued =
+                    queuedQueries.stream().anyMatch(query -> query.getName().equals(firstStep.getName()));
+
+            if (alreadyRunning || alreadyQueued) return;
+
+            queuedQueries.add(firstStep);
             return;
         }
 
@@ -75,9 +82,23 @@ public final class ContainerQueryHandler extends Handler {
             if (!firstStep.startStep(null)) {
                 endQuery();
             }
-        } catch (ContainerQueryException e) {
-            raiseError("Cannot execute first step: " + e.getMessage());
+        } catch (Throwable t) {
+            raiseError("Cannot execute first step: " + t.getMessage());
         }
+    }
+
+    public void endAllQueries() {
+        // Close current container and cancel current query
+        if (containerId != NO_CONTAINER) {
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+            raiseError("Container query interrupted by user");
+        }
+
+        // Cancel all queued queries
+        for (ContainerQueryStep queuedQuery : queuedQueries) {
+            queuedQuery.onError("Container query interrupted by user");
+        }
+        queuedQueries.clear();
     }
 
     @SubscribeEvent
@@ -99,14 +120,11 @@ public final class ContainerQueryHandler extends Handler {
             ticksUntilNextOperation--;
 
             if (ticksUntilNextOperation == 0) {
-                ContainerContent containerContent =
-                        new ContainerContent(lastHandledItems, currentTitle, currentMenuType, containerId);
-
                 try {
                     // Return true iff taking the next step succeeded
-                    if (currentStep.startStep(containerContent)) return;
-                } catch (ContainerQueryException ex) {
-                    raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
+                    if (currentStep.startStep(currentContent)) return;
+                } catch (Throwable t) {
+                    raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
                     return;
                 }
 
@@ -176,6 +194,9 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
 
+        // We already processed the current step and are waiting to execute it
+        if (ticksUntilNextOperation >= 0) return;
+
         if (containerId == lastHandledContentId && ItemUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
             // After opening a new container, Wynncraft sometimes sends contents twice. Ignore this.
             e.setCanceled(true);
@@ -185,16 +206,74 @@ public final class ContainerQueryHandler extends Handler {
 
         lastHandledContentId = containerId;
         lastHandledItems = e.getItems();
-        ContainerContent currentContainer =
-                new ContainerContent(e.getItems(), currentTitle, currentMenuType, containerId);
+        currentContent =
+                new ContainerContent(ImmutableList.copyOf(e.getItems()), currentTitle, currentMenuType, containerId);
         resetTimer();
 
         try {
             // Now actually process this container
-            processContainer(currentContainer);
+
+            // Create a map of the changes
+            Int2ObjectArrayMap<ItemStack> changeMap = new Int2ObjectArrayMap<>();
+            e.getItems().forEach(itemStack -> changeMap.put(changeMap.size(), itemStack));
+
+            // Process container iff verifying succeeded
+            if (currentStep.verifyContentChange(currentContent, changeMap, ContainerContentChangeType.SET_CONTENT)) {
+                processContainer(currentContent);
+            }
+        } catch (Throwable t) {
+            raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
+        } finally {
             e.setCanceled(true);
-        } catch (ContainerQueryException ex) {
-            raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
+        }
+    }
+
+    @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre e) {
+        if (currentStep == null) return;
+        // We got an inventory update, can happen all the time
+        if (e.getContainerId() == 0) return;
+        // Ignore weird set slot packets from Wynn
+        if (e.getContainerId() == -1) return;
+
+        if (containerId == NO_CONTAINER) {
+            // We have not registered a MenuOpenedEvent. Assume this means that this is the
+            // content of another container, so just pass it on
+            return;
+        }
+
+        int id = e.getContainerId();
+        if (id != containerId) {
+            raiseError("Another container opened #2");
+            return;
+        }
+
+        // We already processed the current step and are waiting to execute it
+        if (ticksUntilNextOperation >= 0) return;
+
+        lastHandledContentId = containerId;
+
+        List<ItemStack> items = new ArrayList<>(currentContent.items());
+        items.set(e.getSlot(), e.getItemStack());
+        currentContent = new ContainerContent(ImmutableList.copyOf(items), currentTitle, currentMenuType, containerId);
+
+        resetTimer();
+
+        try {
+            // Now actually process this container
+
+            // Create a map of the changes
+            Int2ObjectArrayMap<ItemStack> changeMap = new Int2ObjectArrayMap<>();
+            changeMap.put(e.getSlot(), e.getItemStack());
+
+            // Process container iff verifying succeeded
+            if (currentStep.verifyContentChange(currentContent, changeMap, ContainerContentChangeType.SET_SLOT)) {
+                processContainer(currentContent);
+            }
+        } catch (Throwable t) {
+            raiseError("Error while processing set slot for " + firstStepName + ": " + t.getMessage());
+        } finally {
+            e.setCanceled(true);
         }
     }
 
@@ -232,6 +311,8 @@ public final class ContainerQueryHandler extends Handler {
         lastHandledContentId = NO_CONTAINER;
         lastHandledItems = List.of();
         currentStep = null;
+        currentContent = null;
+        ticksUntilNextOperation = -1;
     }
 
     private void resetTimer() {

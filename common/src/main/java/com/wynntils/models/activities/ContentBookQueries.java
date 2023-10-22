@@ -13,16 +13,18 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.items.items.gui.ActivityItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
@@ -44,9 +46,12 @@ public class ContentBookQueries {
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
     private static final String FILTER_ITEM_TITLE = "§eFilter";
     private static final Pattern ACTIVE_FILTER = Pattern.compile("^§f- §7(.*)$");
+    private static final Pattern INACTIVE_FILTER = Pattern.compile("^§7- §8(.*)$");
     private static final int MAX_FILTERS = 11;
 
     private String selectedFilter;
+    private String activeFilter;
+    private int filterChangeDirection;
     private int filterLoopCount;
 
     private MessageContainer stateMessageContainer;
@@ -92,6 +97,11 @@ public class ContentBookQueries {
                     filterLoopCount = 0;
                     selectedFilter = null;
                 })
+                .reprocess(c -> {
+                    // Determine the best direction to change the filter
+                    filterChangeDirection =
+                            getFilterChangeDirection(c.items().get(CHANGE_VIEW_SLOT), activityType.getDisplayName());
+                })
                 .repeat(
                         c -> {
                             filterLoopCount++;
@@ -99,7 +109,7 @@ public class ContentBookQueries {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
                             }
 
-                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
+                            activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
                             if (activeFilter == null) {
                                 throw new ContainerQueryException("Cannot determine active filter");
                             }
@@ -111,7 +121,8 @@ public class ContentBookQueries {
                             // Continue looping until filter matches
                             return !activeFilter.equals(activityType.getDisplayName());
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT, () -> filterChangeDirection)
+                                .verifyContentChange(getContentBookFilterChangeVerification()))
 
                 // Process first page
                 .reprocess(c -> {
@@ -135,6 +146,12 @@ public class ContentBookQueries {
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
+                .execute(() -> {
+                    // Inverse the filter change direction
+                    filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                            ? GLFW.GLFW_MOUSE_BUTTON_LEFT
+                            : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                })
                 .repeat(
                         c -> {
                             if (!RESET_FILTERS) {
@@ -154,7 +171,8 @@ public class ContentBookQueries {
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT, () -> filterChangeDirection)
+                                .verifyContentChange(getContentBookFilterChangeVerification()))
 
                 // Finally signal we're done
                 .execute(() -> processResult.accept(newActivity, progress))
@@ -187,6 +205,62 @@ public class ContentBookQueries {
         return null;
     }
 
+    private int getFilterChangeDirection(ItemStack itemStack, String targetFilter) {
+        StyledText itemName = ItemUtils.getItemName(itemStack);
+        if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+
+        int activeFilterIndex = -1;
+        int targetFilterIndex = -1;
+        int filterCount = 0;
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
+        for (int i = 0; i < lore.size(); i++) {
+            StyledText line = lore.get(i);
+
+            Matcher m = line.getMatcher(ACTIVE_FILTER);
+            if (m.matches()) {
+                activeFilterIndex = i;
+                filterCount++;
+                continue;
+            }
+
+            m = line.getMatcher(INACTIVE_FILTER);
+            if (m.matches()) {
+                filterCount++;
+
+                if (m.group(1).equals(targetFilter)) {
+                    targetFilterIndex = i;
+                }
+            }
+        }
+
+        if (activeFilterIndex == -1 || targetFilterIndex == -1) {
+            return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+        }
+
+        // Calculate the direction for the shortest path, handle wrap-around
+        // Left is forward, right is backward
+        int forward = targetFilterIndex - activeFilterIndex;
+        int backward = activeFilterIndex - targetFilterIndex;
+        if (forward < 0) forward += filterCount;
+        if (backward < 0) backward += filterCount;
+
+        return forward < backward ? GLFW.GLFW_MOUSE_BUTTON_LEFT : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+    }
+
+    private ContainerContentVerification getContentBookFilterChangeVerification() {
+        return (container, changes, changeType) -> {
+            // Only set slot changes can be valid
+            if (changeType == ContainerContentChangeType.SET_CONTENT) return false;
+
+            // Check if the progress item changed, this is the last item to change
+            if (!changes.containsKey(PROGRESS_SLOT)) return false;
+
+            // Check if the filter item changed, and if so, if the active filter changed
+            String itemFilter = getActiveFilter(container.items().get(CHANGE_VIEW_SLOT));
+            return !Objects.equals(itemFilter, activeFilter);
+        };
+    }
+
     private void processContentBookPage(ContainerContent container, List<ActivityInfo> newActivities) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
@@ -205,7 +279,9 @@ public class ContentBookQueries {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Activity Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
-                    McUtils.sendErrorToClient("Setting tracking in Content Book failed");
+                    Managers.Notification.queueMessage(
+                            StyledText.fromComponent(Component.literal("Setting tracking in Content Book failed")
+                                    .withStyle(ChatFormatting.RED)));
                 })
 
                 // Open compass/character menu
@@ -217,6 +293,11 @@ public class ContentBookQueries {
                     filterLoopCount = 0;
                     selectedFilter = null;
                 })
+                .reprocess(c -> {
+                    // Determine the best direction to change the filter
+                    filterChangeDirection =
+                            getFilterChangeDirection(c.items().get(CHANGE_VIEW_SLOT), activityType.getDisplayName());
+                })
                 .repeat(
                         c -> {
                             filterLoopCount++;
@@ -224,7 +305,7 @@ public class ContentBookQueries {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
                             }
 
-                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
+                            activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
                             if (activeFilter == null) {
                                 throw new ContainerQueryException("Cannot determine active filter");
                             }
@@ -236,7 +317,8 @@ public class ContentBookQueries {
                             // Continue looping until filter matches
                             return !activeFilter.equals(activityType.getDisplayName());
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT, () -> filterChangeDirection)
+                                .verifyContentChange(getContentBookFilterChangeVerification()))
 
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)
@@ -254,6 +336,12 @@ public class ContentBookQueries {
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
+                .execute(() -> {
+                    // Inverse the filter change direction
+                    filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                            ? GLFW.GLFW_MOUSE_BUTTON_LEFT
+                            : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                })
                 .repeat(
                         c -> {
                             if (!RESET_FILTERS) {
@@ -273,7 +361,8 @@ public class ContentBookQueries {
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT, () -> filterChangeDirection)
+                                .verifyContentChange(getContentBookFilterChangeVerification()))
                 .build();
 
         query.executeQuery();
