@@ -1,9 +1,26 @@
+## [0.0.4-beta.43](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.42...v0.0.4-beta.43) (2023-10-22)
+
+
+### New Features
+
+* New chat tabs screen ([#2195](https://github.com/Wynntils/Artemis/issues/2195)) ([369cde1](https://github.com/Wynntils/Artemis/commit/369cde18ffc8f1faaf30b0a7b4d079cbce5b887a))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2201](https://github.com/Wynntils/Artemis/issues/2201)) ([1052913](https://github.com/Wynntils/Artemis/commit/1052913d7cc5a7f902934e16042bc127bad89b05))
+
 ## [0.0.4-beta.42](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.41...v0.0.4-beta.42) (2023-10-20)
 
 
 ### Bug Fixes
 
 * Disable editing of provided pois ([#2200](https://github.com/Wynntils/Artemis/issues/2200)) ([311ce8b](https://github.com/Wynntils/Artemis/commit/311ce8b692ff2b3e71331d70e454261b32fd5927))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.42 [skip ci] ([33b972e](https://github.com/Wynntils/Artemis/commit/33b972e6b58484f4944e1694a375c12e9c5f261a))
 
 ## [0.0.4-beta.41](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.40...v0.0.4-beta.41) (2023-10-20)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.39 [skip ci] ([739b28b](https://github.com/Wynntils/Artemis/commit/739b28b566268a7fba6c60892d6dea8dc90530ed))
-
-## [0.0.4-beta.38](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.37...v0.0.4-beta.38) (2023-10-16)
-
-
-### New Features
-
-* Parse item prices lazily, add AmountStatProvider and TotalPriceStatProvider ([#2191](https://github.com/Wynntils/Artemis/issues/2191)) ([932ace9](https://github.com/Wynntils/Artemis/commit/932ace9e3f50b428ef55901d41f07dc8a5db4861))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.38 [skip ci] ([5253006](https://github.com/Wynntils/Artemis/commit/52530061229f7015b0d0803cb07f3b0e558c5631))
 
