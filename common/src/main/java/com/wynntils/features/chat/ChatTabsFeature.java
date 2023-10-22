@@ -24,8 +24,8 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.screens.chattabs.widgets.ChatTabAddButton;
 import com.wynntils.screens.chattabs.widgets.ChatTabButton;
+import com.wynntils.screens.chattabs.widgets.ChatTabSettingsButton;
 import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -80,7 +80,7 @@ public class ChatTabsFeature extends Feature {
         if (event.getScreen() instanceof ChatScreen chatScreen) {
             int xOffset = 0;
 
-            chatScreen.addRenderableWidget(new ChatTabAddButton(xOffset + 2, chatScreen.height - 35, 12, 13));
+            chatScreen.addRenderableWidget(new ChatTabSettingsButton(xOffset + 2, chatScreen.height - 35, 12, 13));
             xOffset += 15;
 
             for (ChatTab chatTab : Services.ChatTab.getTabs().toList()) {
@@ -97,7 +97,7 @@ public class ChatTabsFeature extends Feature {
         GuiEventListener guiEventListener = event.getGuiEventListener();
 
         // These should not be focused
-        if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabAddButton) {
+        if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabSettingsButton) {
             event.setCanceled(true);
         }
     }

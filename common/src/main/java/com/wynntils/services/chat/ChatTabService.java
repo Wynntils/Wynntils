@@ -40,7 +40,7 @@ public final class ChatTabService extends Service {
         super(List.of());
     }
 
-    private List<ChatTab> getChatTabs() {
+    public List<ChatTab> getChatTabs() {
         return Managers.Feature.getFeatureInstance(ChatTabsFeature.class)
                 .chatTabs
                 .get();
