@@ -11,6 +11,8 @@ import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsGridLayoutScreen extends WynntilsScreen implements TextboxScreen {
     private static final float GRID_DIVISIONS = 64f;
+    // Certain elements require static 20 height or button textures will break
+    protected static final int BUTTON_HEIGHT = 20;
     protected float dividedHeight;
     protected float dividedWidth;
     private TextInputBoxWidget focusedTextInput;
