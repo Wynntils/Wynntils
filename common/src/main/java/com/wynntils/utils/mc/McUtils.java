@@ -119,6 +119,11 @@ public final class McUtils {
      * @param message The message to send.
      */
     public static void sendChatAsPlayer(String message) {
+        if (Services.ChatTab.getFocusedTab() == null) {
+            sendChat(message);
+            return;
+        }
+        
         String autoCommand = Services.ChatTab.getFocusedTab().getAutoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
