@@ -23,7 +23,7 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
         // We have no reference point, assume it's valid
         if (positions.isEmpty()) {
             // Left, Top, Right, Bottom particles are always on .5 on x and z axis
-            return Math.abs(addedPosition.x() % 1) == 0.5d && Math.abs(addedPosition.z() % 1) == 0.5d;
+            return isParticlePrecise(addedPosition);
         }
 
         // Lootrun task particles are a circle, we get the packets in this order:
@@ -46,7 +46,7 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
 
         // Left, Top, Right, Bottom particles are always on .5 on x and z axis
         if (positions.size() % 5 == 0) {
-            return Math.abs(addedPosition.x() % 1) == 0.5d && Math.abs(addedPosition.z() % 1) == 0.5d;
+            return isParticlePrecise(addedPosition);
         }
 
         return true;
@@ -54,6 +54,27 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
 
     @Override
     public VerificationResult verifyCompleteness(List<Position> positions) {
+        // We only get two particles if the player trips the particle limit
+        if (positions.size() == 2) {
+            // The two particles are the right and left particles
+            Position rightParticle = positions.get(0);
+            Position leftParticle = positions.get(1);
+
+            // Verify both particles are on .5 on x and z axis
+            if (isParticlePrecise(rightParticle) && isParticlePrecise(leftParticle)) {
+                // Verify the distance between the two particles is 10 blocks
+                Vec3 rightParticleVec = new Vec3(rightParticle.x(), rightParticle.y(), rightParticle.z());
+                Vec3 leftParticleVec = new Vec3(leftParticle.x(), leftParticle.y(), leftParticle.z());
+
+                return rightParticleVec.distanceTo(leftParticleVec) == 10d
+                        ? VerificationResult.VERIFIED
+                        : VerificationResult.INVALID;
+            }
+
+            // We might still get a full circle
+            return VerificationResult.UNVERIFIED;
+        }
+
         // verifyNewPosition is quite strict, so we can just check the size
         if (positions.size() == 20) {
             return VerificationResult.VERIFIED;
@@ -70,5 +91,9 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
 
         Position verifiedParticlePosition = new Vec3(rightParticle.x() - RADIUS, rightParticle.y(), rightParticle.z());
         return new Particle(verifiedParticlePosition, ParticleType.LOOTRUN_TASK);
+    }
+
+    private static boolean isParticlePrecise(Position addedPosition) {
+        return Math.abs(addedPosition.x() % 1) == 0.5d && Math.abs(addedPosition.z() % 1) == 0.5d;
     }
 }
