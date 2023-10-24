@@ -131,7 +131,7 @@ public class InputTranscriptionFeature extends Feature {
 
             if (!updatedMessage.equals(message)) {
                 event.setCanceled(true);
-                McUtils.sendChat(updatedMessage);
+                McUtils.sendChatAsPlayer(updatedMessage);
             }
         }
 

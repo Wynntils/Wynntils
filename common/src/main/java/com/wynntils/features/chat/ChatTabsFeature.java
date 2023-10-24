@@ -17,7 +17,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
-import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -135,17 +135,16 @@ public class ChatTabsFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatSend(ChatSentEvent event) {
+    public void onChatScreenSend(ChatScreenSendEvent event) {
         if (Services.ChatTab.getFocusedTab() == null) return;
-        if (event.getMessage().isBlank()) return;
+        if (event.getInput().isBlank()) return;
 
         ChatTab focusedTab = Services.ChatTab.getFocusedTab();
         if (focusedTab.getAutoCommand() != null && !focusedTab.getAutoCommand().isBlank()) {
             event.setCanceled(true);
-
             String autoCommand = focusedTab.getAutoCommand();
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            McUtils.sendCommand(autoCommand + event.getMessage());
+            McUtils.sendCommand(autoCommand + " " + event.getInput());
         }
     }
 
