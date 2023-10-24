@@ -66,7 +66,7 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
                 Vec3 rightParticleVec = new Vec3(rightParticle.x(), rightParticle.y(), rightParticle.z());
                 Vec3 leftParticleVec = new Vec3(leftParticle.x(), leftParticle.y(), leftParticle.z());
 
-                return rightParticleVec.distanceTo(leftParticleVec) == 10d
+                return rightParticleVec.distanceToSqr(leftParticleVec) == 100d
                         ? VerificationResult.VERIFIED
                         : VerificationResult.INVALID;
             }
