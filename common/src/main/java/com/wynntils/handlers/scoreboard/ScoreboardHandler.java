@@ -158,8 +158,10 @@ public final class ScoreboardHandler extends Handler {
                 .findFirst()
                 .orElse(0);
         for (ScoreboardLine line : reconstructedScoreboard.stream().skip(1).toList()) {
-            if (line.score() + 1 != lastScore) {
-                // We found a gap in the scores, so the scoreboard is invalid
+            if (line.score() >= lastScore) {
+                // We found a non strictly decreasing score, so the scoreboard is invalid
+                // Note: lastScore - line.score() should always be 1,
+                //       but during very specific cases during lootruns there can be a gap of 2
                 return List.of();
             }
 

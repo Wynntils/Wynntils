@@ -36,7 +36,9 @@ public class DailyObjectiveScoreboardPart extends AbstractObjectivesScoreboardPa
             return;
         }
 
-        WynntilsMod.info("Adding " + objectives.size() + " daily objectives.");
+        if (Models.Objectives.getPersonalObjectives().isEmpty()) {
+            WynntilsMod.info("Adding " + objectives.size() + " daily objectives.");
+        }
 
         for (WynnObjective objective : objectives) {
             if (!objective.isGuildObjective()) {
