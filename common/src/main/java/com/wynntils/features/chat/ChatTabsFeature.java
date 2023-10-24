@@ -139,13 +139,8 @@ public class ChatTabsFeature extends Feature {
         if (Services.ChatTab.getFocusedTab() == null) return;
         if (event.getInput().isBlank()) return;
 
-        ChatTab focusedTab = Services.ChatTab.getFocusedTab();
-        if (focusedTab.getAutoCommand() != null && !focusedTab.getAutoCommand().isBlank()) {
-            event.setCanceled(true);
-            String autoCommand = focusedTab.getAutoCommand();
-            autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            McUtils.sendCommand(autoCommand + " " + event.getInput());
-        }
+        event.setCanceled(true);
+        McUtils.sendChatAsPlayer(event.getInput());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

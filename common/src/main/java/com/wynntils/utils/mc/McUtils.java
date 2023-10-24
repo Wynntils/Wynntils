@@ -123,7 +123,6 @@ public final class McUtils {
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
             McUtils.sendCommand(autoCommand + " " + message);
-            return;
         } else {
             sendChat(message);
         }
