@@ -1,9 +1,21 @@
+## [0.0.4-beta.45](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.44...v0.0.4-beta.45) (2023-10-24)
+
+
+### Bug Fixes
+
+* Fix scoreboard not appearing during lootruns when a mission is active and guild objective is complete, but yet to be claimed ([#2205](https://github.com/Wynntils/Artemis/issues/2205)) ([1adcb0f](https://github.com/Wynntils/Artemis/commit/1adcb0f5566fa6ffeb459e8421da57b2dac601d6))
+
 ## [0.0.4-beta.44](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.43...v0.0.4-beta.44) (2023-10-22)
 
 
 ### New Features
 
 * Make the content book much faster ([#2203](https://github.com/Wynntils/Artemis/issues/2203)) ([8162817](https://github.com/Wynntils/Artemis/commit/816281711e97b1af5f78975ddd63b800f515a1c4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.44 [skip ci] ([5f67d7a](https://github.com/Wynntils/Artemis/commit/5f67d7a3c25f8afb5c7023f0ee50a660bc616fbf))
 
 ## [0.0.4-beta.43](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.42...v0.0.4-beta.43) (2023-10-22)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.41 [skip ci] ([9ce8eb0](https://github.com/Wynntils/Artemis/commit/9ce8eb0fe24b9d66fe49a3a36a934479a0c27ea7))
-
-## [0.0.4-beta.40](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.39...v0.0.4-beta.40) (2023-10-20)
-
-
-### Bug Fixes
-
-* Process not fully complete scoreboards, fix fallback mapping ([#2198](https://github.com/Wynntils/Artemis/issues/2198)) ([630b345](https://github.com/Wynntils/Artemis/commit/630b34512c6f56f675eb1f49b8d72db79eadb4d7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.40 [skip ci] ([5ba43b2](https://github.com/Wynntils/Artemis/commit/5ba43b239dae1999b4c1b2f31caf017a7fcdc47c))
 
