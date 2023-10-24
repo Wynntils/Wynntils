@@ -106,7 +106,7 @@ public final class McUtils {
     }
 
     /**
-     * Sends some message to the server, as if the player typed it in chat.
+     * Sends some chat message directly to the server.
      * Does not respect ChatTabFeature settings.
      * @param message The message to send.
      */
@@ -123,7 +123,7 @@ public final class McUtils {
             sendChat(message);
             return;
         }
-        
+
         String autoCommand = Services.ChatTab.getFocusedTab().getAutoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
