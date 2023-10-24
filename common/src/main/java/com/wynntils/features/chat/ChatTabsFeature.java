@@ -134,13 +134,10 @@ public class ChatTabsFeature extends Feature {
         Services.ChatTab.setFocusedTab(Services.ChatTab.getNextFocusedTab());
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatScreenSend(ChatScreenSendEvent event) {
-        if (Services.ChatTab.getFocusedTab() == null) return;
-        if (event.getInput().isBlank()) return;
-
+        Services.ChatTab.sendChat(event.getInput());
         event.setCanceled(true);
-        McUtils.sendChatAsPlayer(event.getInput());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

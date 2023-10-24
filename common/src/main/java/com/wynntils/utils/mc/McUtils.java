@@ -6,7 +6,6 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -112,24 +111,5 @@ public final class McUtils {
      */
     public static void sendChat(String message) {
         mc().getConnection().sendChat(message);
-    }
-
-    /**
-     * Simulates the player typing a message in chat. Respects ChatTabFeature settings.
-     * @param message The message to send.
-     */
-    public static void sendChatAsPlayer(String message) {
-        if (Services.ChatTab.getFocusedTab() == null) {
-            sendChat(message);
-            return;
-        }
-
-        String autoCommand = Services.ChatTab.getFocusedTab().getAutoCommand();
-        if (autoCommand != null && !autoCommand.isBlank()) {
-            autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            McUtils.sendCommand(autoCommand + " " + message);
-        } else {
-            sendChat(message);
-        }
     }
 }
