@@ -350,7 +350,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         // Order of these matter!
         // First, check if we need to load a new widget. If yes, it could have a different save button
-        // state. So update that next. Then, we need to determine if a checkbox was clicked.
+        // state. Then, we need to determine if a checkbox was clicked.
         // If yes, update the save/add button states and move on.
         // If not, deal with clicks on the save/add buttons, then super method if needed.
         for (AbstractWidget widget : chatTabsWidgets) {
