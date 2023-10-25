@@ -22,7 +22,7 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
     public boolean verifyNewPosition(List<Position> positions, Position addedPosition) {
         // We have no reference point, assume it's valid
         if (positions.isEmpty()) {
-            // Left, Top, Right, Bottom particles are always on .5 on x and z axis
+            // Left, Top, Right, Bottom particles are always on .5 or .0 on x and z axis
             return isParticlePrecise(addedPosition);
         }
 
@@ -44,7 +44,7 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
         boolean isPartOfCircle = circleCenter.closerThan(addedPosition, CIRCLE_RADIUS_WITH_ERROR);
         if (!isPartOfCircle) return false;
 
-        // Left, Top, Right, Bottom particles are always on .5 on x and z axis
+        // Left, Top, Right, Bottom particles are always on .5 or .0 on x and z axis
         if (positions.size() % 5 == 0) {
             return isParticlePrecise(addedPosition);
         }
