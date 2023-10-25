@@ -94,6 +94,6 @@ public class LootrunTaskParticleVerifier implements ParticleVerifier {
     }
 
     private static boolean isParticlePrecise(Position addedPosition) {
-        return Math.abs(addedPosition.x() % 1) == 0.5d && Math.abs(addedPosition.z() % 1) == 0.5d;
+        return Math.abs(addedPosition.x() % 0.5d) == 0 && Math.abs(addedPosition.z() % 0.5d) == 0;
     }
 }
