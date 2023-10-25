@@ -122,7 +122,7 @@ public class PacketDebuggerFeature extends Feature {
         ALL(packetClass -> false),
         FILTERED(IGNORE_LIST::contains),
         CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
-        PARTICLE_ONLY(packetClas -> !PARTICLE_PACKET_CLASS.equals(packetClas));
+        PARTICLE_ONLY(packetClass -> !PARTICLE_PACKET_CLASS.equals(packetClass));
 
         private final Predicate<Class<? extends Packet>> filterPredicate;
 
