@@ -1,9 +1,21 @@
+## [0.0.4-beta.46](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.45...v0.0.4-beta.46) (2023-10-25)
+
+
+### Bug Fixes
+
+* Fix lootrun task locations not getting parsed when particle limit is tripped ([#2206](https://github.com/Wynntils/Artemis/issues/2206)) ([d328a69](https://github.com/Wynntils/Artemis/commit/d328a694532e5adeca8643307bc13dee827aacae))
+
 ## [0.0.4-beta.45](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.44...v0.0.4-beta.45) (2023-10-24)
 
 
 ### Bug Fixes
 
 * Fix scoreboard not appearing during lootruns when a mission is active and guild objective is complete, but yet to be claimed ([#2205](https://github.com/Wynntils/Artemis/issues/2205)) ([1adcb0f](https://github.com/Wynntils/Artemis/commit/1adcb0f5566fa6ffeb459e8421da57b2dac601d6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.45 [skip ci] ([9f2b06b](https://github.com/Wynntils/Artemis/commit/9f2b06b24288371d0cba4f24412f43aacdcb094b))
 
 ## [0.0.4-beta.44](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.43...v0.0.4-beta.44) (2023-10-22)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.42 [skip ci] ([33b972e](https://github.com/Wynntils/Artemis/commit/33b972e6b58484f4944e1694a375c12e9c5f261a))
-
-## [0.0.4-beta.41](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.40...v0.0.4-beta.41) (2023-10-20)
-
-
-### Bug Fixes
-
-* Fix TM not loading when there is only a single page ([#2199](https://github.com/Wynntils/Artemis/issues/2199)) ([6c3af67](https://github.com/Wynntils/Artemis/commit/6c3af679e5c4dd030b1c6a74dac4398c91c0cb76))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.41 [skip ci] ([9ce8eb0](https://github.com/Wynntils/Artemis/commit/9ce8eb0fe24b9d66fe49a3a36a934479a0c27ea7))
 
