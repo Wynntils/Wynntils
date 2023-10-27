@@ -1,9 +1,21 @@
+## [0.0.4-beta.48](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.47...v0.0.4-beta.48) (2023-10-27)
+
+
+### Bug Fixes
+
+* make content book work after wynn hotfix ([#2212](https://github.com/Wynntils/Artemis/issues/2212)) ([2ca5749](https://github.com/Wynntils/Artemis/commit/2ca5749fbf7066e35672924a641c97335257d25b))
+
 ## [0.0.4-beta.47](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.46...v0.0.4-beta.47) (2023-10-25)
 
 
 ### Bug Fixes
 
 * Fix some specific lootrun tasks not getting parsed in Sky (and MH?) ([#2208](https://github.com/Wynntils/Artemis/issues/2208)) ([ab134e7](https://github.com/Wynntils/Artemis/commit/ab134e74233be7949b5c4f148a1d3070b569816c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.47 [skip ci] ([0ed8f22](https://github.com/Wynntils/Artemis/commit/0ed8f224a735e533c3e954ba9a2839bfba1412c8))
 
 ## [0.0.4-beta.46](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.45...v0.0.4-beta.46) (2023-10-25)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.44 [skip ci] ([5f67d7a](https://github.com/Wynntils/Artemis/commit/5f67d7a3c25f8afb5c7023f0ee50a660bc616fbf))
-
-## [0.0.4-beta.43](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.42...v0.0.4-beta.43) (2023-10-22)
-
-
-### New Features
-
-* New chat tabs screen ([#2195](https://github.com/Wynntils/Artemis/issues/2195)) ([369cde1](https://github.com/Wynntils/Artemis/commit/369cde18ffc8f1faaf30b0a7b4d079cbce5b887a))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2201](https://github.com/Wynntils/Artemis/issues/2201)) ([1052913](https://github.com/Wynntils/Artemis/commit/1052913d7cc5a7f902934e16042bc127bad89b05))
-* **release:** v0.0.4-beta.43 [skip ci] ([ada1b37](https://github.com/Wynntils/Artemis/commit/ada1b37e22a011e9cd5c712f2dffed964cdd8cb9))
 
