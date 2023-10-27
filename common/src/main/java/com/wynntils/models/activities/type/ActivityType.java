@@ -8,7 +8,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public enum ActivityType {
-    ALL("Show All", "all", null),
+    RECOMMENDED("Recommended", "recommended", null),
     QUEST("Quest", "quests", ChatFormatting.AQUA),
     STORYLINE_QUEST("Quest", "quests", ChatFormatting.GREEN),
     MINI_QUEST("Mini-Quest", "mini-quests", ChatFormatting.DARK_PURPLE),
