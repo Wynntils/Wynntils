@@ -75,17 +75,6 @@ public class CustomBankQuickJumpsFeature extends Feature {
         getCustomJumpDestinations();
 
         currentPage = Models.Bank.getCurrentPage();
-
-        if (!quickJumping) return;
-
-        if (pageDestination > lastPage) {
-            quickJumping = false;
-            pageDestination = currentPage;
-        } else if (pageDestination != currentPage) {
-            jumpToDestination();
-        } else {
-            quickJumping = false;
-        }
     }
 
     private void getCustomJumpDestinations() {
@@ -182,6 +171,17 @@ public class CustomBankQuickJumpsFeature extends Feature {
             Models.Bank.updateFinalPage();
 
             lastPage = currentPage;
+        }
+
+        if (!quickJumping) return;
+
+        if (pageDestination > lastPage) {
+            quickJumping = false;
+            pageDestination = currentPage;
+        } else if (pageDestination != currentPage) {
+            jumpToDestination();
+        } else {
+            quickJumping = false;
         }
     }
 
