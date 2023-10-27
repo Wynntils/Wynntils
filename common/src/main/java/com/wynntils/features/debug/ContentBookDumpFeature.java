@@ -105,7 +105,7 @@ public class ContentBookDumpFeature extends Feature {
     private void dumpContentBook() {
         currentDump = new ArrayList<>();
 
-        Models.Activity.scanContentBook(ActivityType.ALL, (activityInfos, progress) -> {
+        Models.Activity.scanContentBook(ActivityType.RECOMMENDED, (activityInfos, progress) -> {
             currentDump.addAll(activityInfos.stream()
                     .map(DumpableActivityInfo::fromActivityInfo)
                     .toList());
@@ -201,7 +201,7 @@ public class ContentBookDumpFeature extends Feature {
         }
 
         // Remove unused types
-        mappedDumpedActivities.remove(ActivityType.ALL);
+        mappedDumpedActivities.remove(ActivityType.RECOMMENDED);
         mappedDumpedActivities.remove(ActivityType.STORYLINE_QUEST);
 
         for (List<DumpableActivityInfo> value : mappedDumpedActivities.values()) {
