@@ -18,6 +18,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,17 +71,15 @@ public class TooltipFittingFeature extends Feature {
                     .mapToInt(ClientTooltipComponent::getHeight)
                     .sum();
 
-            tooltipHeight *= universalScale.get();
-
             // Compensate for the top and bottom padding
-            tooltipHeight += 10;
+            tooltipHeight += TooltipRenderUtil.PADDING_TOP + TooltipRenderUtil.PADDING_BOTTOM;
+
+            tooltipHeight *= universalScale.get();
 
             if (tooltipHeight > window.getGuiScaledHeight()) {
                 scaleFactor *= (window.getGuiScaledHeight() / (float) tooltipHeight);
             }
         }
-
-        lastScaleFactor = scaleFactor;
 
         // push pose before scaling, so we can pop it afterwards
         PoseStack poseStack = e.getPoseStack();
@@ -88,6 +87,7 @@ public class TooltipFittingFeature extends Feature {
         poseStack.scale(scaleFactor, scaleFactor, 1);
 
         scaledLast = true;
+        lastScaleFactor = scaleFactor;
     }
 
     // highest priority to reset pose before other features start rendering
@@ -120,22 +120,33 @@ public class TooltipFittingFeature extends Feature {
         @Override
         public Vector2ic positionTooltip(
                 int screenWidth, int screenHeight, int mouseX, int mouseY, int tooltipWidth, int tooltipHeight) {
-            Vector2i vector2i = new Vector2i(mouseX, mouseY).add(12, -12);
-            this.positionTooltip(screenWidth, screenHeight, vector2i, (int) (tooltipWidth * scaleFactor), (int)
-                    (tooltipHeight * scaleFactor));
-            return vector2i;
-        }
+            Vector2i tooltipPos = new Vector2i(mouseX, mouseY);
 
-        private void positionTooltip(
-                int screenWidth, int screenHeight, Vector2i tooltipPos, int tooltipWidth, int tooltipHeight) {
-            if (tooltipPos.x + tooltipWidth > screenWidth) {
-                tooltipPos.x = Math.max(tooltipPos.x - 24 - tooltipWidth, 4);
+            tooltipWidth *= scaleFactor;
+            tooltipHeight *= scaleFactor;
+
+            int widthPaddings =
+                    (int) ((TooltipRenderUtil.PADDING_LEFT + TooltipRenderUtil.PADDING_RIGHT) * scaleFactor);
+            int heightPaddings =
+                    (int) ((TooltipRenderUtil.PADDING_TOP + TooltipRenderUtil.PADDING_BOTTOM) * scaleFactor);
+
+            if (tooltipPos.x + tooltipWidth + widthPaddings > screenWidth) {
+                // FIXME: There are still edge cases where the tooltip is not fully visible
+                tooltipPos.x = Math.max(tooltipPos.x - tooltipWidth - widthPaddings, TooltipRenderUtil.PADDING_LEFT);
+            } else {
+                tooltipPos.x = (int) ((tooltipPos.x + TooltipRenderUtil.PADDING_RIGHT + 1) / scaleFactor)
+                        + TooltipRenderUtil.MOUSE_OFFSET;
             }
 
-            int renderedTooltipHeight = tooltipHeight + 3;
-            if (tooltipPos.y + renderedTooltipHeight > screenHeight) {
-                tooltipPos.y = screenHeight - renderedTooltipHeight;
+            if (tooltipPos.y + tooltipHeight + heightPaddings > screenHeight) {
+                // FIXME: There are still edge cases where the tooltip is not fully visible
+                tooltipPos.y = Math.max(tooltipPos.y - tooltipHeight - heightPaddings, TooltipRenderUtil.PADDING_TOP);
+            } else {
+                tooltipPos.y = (int) ((tooltipPos.y + TooltipRenderUtil.PADDING_BOTTOM + 1) / scaleFactor)
+                        - TooltipRenderUtil.MOUSE_OFFSET;
             }
+
+            return tooltipPos;
         }
     }
 }
