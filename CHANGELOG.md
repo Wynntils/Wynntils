@@ -1,9 +1,21 @@
+## [0.0.4-beta.49](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.48...v0.0.4-beta.49) (2023-10-28)
+
+
+### Bug Fixes
+
+* Allow wynncraft.com as a valid ip for connecting ([#2217](https://github.com/Wynntils/Artemis/issues/2217)) ([6fd9c32](https://github.com/Wynntils/Artemis/commit/6fd9c324e1ad25935a91b4c426f30e40d499b99d))
+
 ## [0.0.4-beta.48](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.47...v0.0.4-beta.48) (2023-10-27)
 
 
 ### Bug Fixes
 
 * make content book work after wynn hotfix ([#2212](https://github.com/Wynntils/Artemis/issues/2212)) ([2ca5749](https://github.com/Wynntils/Artemis/commit/2ca5749fbf7066e35672924a641c97335257d25b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.48 [skip ci] ([0c3ef35](https://github.com/Wynntils/Artemis/commit/0c3ef35a01010dd671c4c84b9bda65bc2189c42e))
 
 ## [0.0.4-beta.47](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.46...v0.0.4-beta.47) (2023-10-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.45 [skip ci] ([9f2b06b](https://github.com/Wynntils/Artemis/commit/9f2b06b24288371d0cba4f24412f43aacdcb094b))
-
-## [0.0.4-beta.44](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.43...v0.0.4-beta.44) (2023-10-22)
-
-
-### New Features
-
-* Make the content book much faster ([#2203](https://github.com/Wynntils/Artemis/issues/2203)) ([8162817](https://github.com/Wynntils/Artemis/commit/816281711e97b1af5f78975ddd63b800f515a1c4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.44 [skip ci] ([5f67d7a](https://github.com/Wynntils/Artemis/commit/5f67d7a3c25f8afb5c7023f0ee50a660bc616fbf))
 
