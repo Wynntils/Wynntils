@@ -7,11 +7,13 @@ package com.wynntils.screens.maps;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
 import com.wynntils.screens.maps.widgets.PoiSortButton;
@@ -64,7 +66,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private Button downButton;
     private Button exportButton;
     private Button filterButton;
+    private Button removeMarkersButton;
     private Button selectAllButton;
+    private Button setMarkersButton;
     private Button undoDeleteButton;
     private Button upButton;
     private PoiSortButton activeSortButton;
@@ -139,11 +143,31 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         int importExportButtonWidth = (int) (dividedWidth * 6);
 
+        // region exit button
         this.addRenderableWidget(
                 new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
                         .pos((int) (dividedWidth * 60), (int) (dividedHeight * 4))
                         .size(20, 20)
                         .build());
+        // endregion
+
+        // region info button
+        this.addRenderableWidget(new InfoButton(
+                (int) (dividedWidth * 3),
+                (int) (dividedHeight * 4),
+                Component.literal("")
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help")
+                                .withStyle(ChatFormatting.UNDERLINE))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help1")
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help2")
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help3")
+                                .withStyle(ChatFormatting.GRAY))));
+        // endregion
 
         // region import/export
         this.addRenderableWidget(new Button.Builder(
@@ -184,6 +208,33 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         deleteSelectedButton.active = false;
 
         this.addRenderableWidget(deleteSelectedButton);
+        // endregion
+
+        // region marker buttons
+        setMarkersButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.poiManagementGui.setMarkers"),
+                        (button) -> toggleMarkers(true))
+                .pos((int) dividedWidth, (int) (dividedHeight * 58) - 75)
+                .size((int) (dividedWidth * 8), 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.setMarkers.tooltip")))
+                .build();
+
+        setMarkersButton.active = false;
+
+        this.addRenderableWidget(setMarkersButton);
+
+        removeMarkersButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.poiManagementGui.removeMarkers"),
+                        (button) -> toggleMarkers(false))
+                .pos((int) dividedWidth, (int) (dividedHeight * 58) - 50)
+                .size((int) (dividedWidth * 8), 20)
+                .tooltip(Tooltip.create(
+                        Component.translatable("screens.wynntils.poiManagementGui.removeMarkers.tooltip")))
+                .build();
+
+        removeMarkersButton.active = false;
+
+        this.addRenderableWidget(removeMarkersButton);
         // endregion
 
         // region select buttons
@@ -509,6 +560,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
             deselectAllButton.active = addedPoi;
             deleteSelectedButton.active = addedPoi;
+            setMarkersButton.active = addedPoi;
+            removeMarkersButton.active = addedPoi;
 
             upButton.visible = addedPoi;
             downButton.visible = addedPoi;
@@ -662,6 +715,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         exportButton.active = !pois.isEmpty();
         selectAllButton.active = !pois.isEmpty();
         deselectAllButton.active = !selectedPois.isEmpty();
+        setMarkersButton.active = !selectedPois.isEmpty();
+        removeMarkersButton.active = !selectedPois.isEmpty();
 
         // Only hide search bar & filter button if no pois at all
         // Can't check if filtered pois is empty as they may be empty due to the filters
@@ -740,6 +795,16 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                     Comparator.comparing(poi -> poi.getLocation().getZ()));
             case Z_DESC -> pois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+        }
+    }
+
+    private void toggleMarkers(boolean addMarkers) {
+        if (addMarkers) {
+            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                    poi.getLocation().asLocation()));
+        } else {
+            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+                    poi.getLocation().asLocation()));
         }
     }
 
