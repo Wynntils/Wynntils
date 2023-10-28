@@ -1,9 +1,26 @@
+## [0.0.4-beta.50](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.49...v0.0.4-beta.50) (2023-10-28)
+
+
+### New Features
+
+* Set markers from waypoint manager ([#2218](https://github.com/Wynntils/Artemis/issues/2218)) ([c58e1d1](https://github.com/Wynntils/Artemis/commit/c58e1d135ed544280ebe92da60f0dbdf96aa2391))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2219](https://github.com/Wynntils/Artemis/issues/2219)) ([ac3f576](https://github.com/Wynntils/Artemis/commit/ac3f576c87c5fab6af85cb86f17e510560f99a01))
+
 ## [0.0.4-beta.49](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.48...v0.0.4-beta.49) (2023-10-28)
 
 
 ### Bug Fixes
 
 * Allow wynncraft.com as a valid ip for connecting ([#2217](https://github.com/Wynntils/Artemis/issues/2217)) ([6fd9c32](https://github.com/Wynntils/Artemis/commit/6fd9c324e1ad25935a91b4c426f30e40d499b99d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.49 [skip ci] ([116c48a](https://github.com/Wynntils/Artemis/commit/116c48a1e8e9ac85a1c42271488a8ebe6d134a75))
 
 ## [0.0.4-beta.48](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.47...v0.0.4-beta.48) (2023-10-27)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.46 [skip ci] ([282fbb2](https://github.com/Wynntils/Artemis/commit/282fbb2f5c9ebb70686cdab0968d6533245259de))
-
-## [0.0.4-beta.45](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.44...v0.0.4-beta.45) (2023-10-24)
-
-
-### Bug Fixes
-
-* Fix scoreboard not appearing during lootruns when a mission is active and guild objective is complete, but yet to be claimed ([#2205](https://github.com/Wynntils/Artemis/issues/2205)) ([1adcb0f](https://github.com/Wynntils/Artemis/commit/1adcb0f5566fa6ffeb459e8421da57b2dac601d6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.45 [skip ci] ([9f2b06b](https://github.com/Wynntils/Artemis/commit/9f2b06b24288371d0cba4f24412f43aacdcb094b))
 
