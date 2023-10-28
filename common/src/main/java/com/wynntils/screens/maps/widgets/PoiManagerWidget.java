@@ -7,6 +7,7 @@ package com.wynntils.screens.maps.widgets;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
@@ -27,6 +28,8 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import org.lwjgl.glfw.GLFW;
 
 public class PoiManagerWidget extends AbstractWidget {
     private final boolean selected;
@@ -189,6 +192,18 @@ public class PoiManagerWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(poi.getLocation().asLocation());
+            return true;
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+                    poi.getLocation().asLocation());
+            return true;
+        }
+
         boolean clickedButton;
 
         // Determine if a button was clicked or should we select the widget
