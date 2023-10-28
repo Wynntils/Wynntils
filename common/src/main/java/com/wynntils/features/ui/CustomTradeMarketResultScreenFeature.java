@@ -7,7 +7,9 @@ package com.wynntils.features.ui;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -23,6 +25,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@ConfigCategory(Category.UI)
 public class CustomTradeMarketResultScreenFeature extends Feature {
     private static final String SEARCH_ITEM_TITLE = "§a§lSearch";
 

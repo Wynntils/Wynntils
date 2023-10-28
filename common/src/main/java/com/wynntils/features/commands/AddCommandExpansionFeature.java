@@ -387,6 +387,7 @@ public class AddCommandExpansionFeature extends Feature {
                 .then(literal("high"))
                 .then(literal("veryhigh"))
                 .then(literal("highest"))
+                .then(literal("unlimited"))
                 .then(argument("particles_per_tick", IntegerArgumentType.integer()))
                 .build();
         addNode(root, node);
