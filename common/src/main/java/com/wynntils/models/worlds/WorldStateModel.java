@@ -32,7 +32,6 @@ public final class WorldStateModel extends Model {
     private static final Pattern HOUSING_NAME = Pattern.compile("^§f  §l([^§\"\\\\]{1,18})$");
     private static final Pattern HUB_NAME = Pattern.compile("^\n§6§l play.wynncraft.com \n$");
     private static final Position CHARACTER_SELECTION_POSITION = new Vec3(-1337.5, 16.2, -1120.5);
-    private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
