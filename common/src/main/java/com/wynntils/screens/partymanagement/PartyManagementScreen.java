@@ -129,6 +129,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         this.addRenderableWidget(kickOfflineButton);
         // endregion
 
+        // region info button
         this.addRenderableWidget(new InfoButton(
                 (int) (dividedWidth * 2),
                 (int) (dividedHeight * 58),
@@ -147,6 +148,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         .append(Component.literal("\n"))
                         .append(Component.translatable("screens.wynntils.partyManagementGui.friend")
                                 .withStyle(ChatFormatting.GREEN))));
+        // endregion
     }
 
     @Override
