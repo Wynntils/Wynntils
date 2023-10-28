@@ -117,6 +117,20 @@ public class CustomBankQuickJumpsFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onSetSlotPost(SetSlotEvent.Post e) {
+        if (!quickJumping) return;
+
+        if (pageDestination > lastPage) {
+            quickJumping = false;
+            pageDestination = currentPage;
+        } else if (pageDestination != currentPage && ((e.getSlot() == NEXT_PAGE_SLOT && pageDestination > currentPage) || (e.getSlot() == PREVIOUS_PAGE_SLOT && pageDestination < currentPage))) {
+            jumpToDestination();
+        } else if (pageDestination == currentPage) {
+            quickJumping = false;
+        }
+    }
+
+    @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
         SearchableContainerType currentContainer = Models.Bank.getCurrentContainer();
         if (currentContainer == null) return;
@@ -125,17 +139,6 @@ public class CustomBankQuickJumpsFeature extends Feature {
             Models.Bank.updateFinalPage();
 
             lastPage = currentPage;
-        }
-
-        if (!quickJumping) return;
-
-        if (pageDestination > lastPage) {
-            quickJumping = false;
-            pageDestination = currentPage;
-        } else if (pageDestination != currentPage) {
-            jumpToDestination();
-        } else {
-            quickJumping = false;
         }
     }
 
