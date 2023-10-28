@@ -123,7 +123,9 @@ public class CustomBankQuickJumpsFeature extends Feature {
         if (pageDestination > lastPage) {
             quickJumping = false;
             pageDestination = currentPage;
-        } else if (pageDestination != currentPage && ((e.getSlot() == NEXT_PAGE_SLOT && pageDestination > currentPage) || (e.getSlot() == PREVIOUS_PAGE_SLOT && pageDestination < currentPage))) {
+        } else if (pageDestination != currentPage
+                && ((e.getSlot() == NEXT_PAGE_SLOT && pageDestination > currentPage)
+                        || (e.getSlot() == PREVIOUS_PAGE_SLOT && pageDestination < currentPage))) {
             jumpToDestination();
         } else if (pageDestination == currentPage) {
             quickJumping = false;
