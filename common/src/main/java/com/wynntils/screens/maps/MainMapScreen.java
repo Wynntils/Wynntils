@@ -212,6 +212,18 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.waypoints.add.name")),
                         Component.translatable("screens.wynntils.map.waypoints.add.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        if (firstInit) {
+            // When outside of the main map, center to the middle of the map if feature enabled
+            if (!isPlayerInsideMainArea()
+                    && Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                            .centerWhenUnmapped
+                            .get()) {
+                centerMap();
+            }
+
+            firstInit = false;
+        }
     }
 
     @Override

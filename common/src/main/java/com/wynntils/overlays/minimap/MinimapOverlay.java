@@ -59,6 +59,9 @@ public class MinimapOverlay extends Overlay {
     public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> hideWhenUnmapped = new Config<>(true);
+
+    @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @Persisted
@@ -120,6 +123,10 @@ public class MinimapOverlay extends Overlay {
         BoundingBox textureBoundingBox =
                 BoundingBox.centered((float) playerX, (float) playerZ, width * scale.get(), height * scale.get());
 
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
+
+        if (hideWhenUnmapped.get() && maps.isEmpty()) return;
+
         // enable mask
         switch (maskType.get()) {
             case RECTANGULAR -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
@@ -152,7 +159,6 @@ public class MinimapOverlay extends Overlay {
             }
         }
 
-        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(playerX);
             float textureZ = map.getTextureZPosition(playerZ);
