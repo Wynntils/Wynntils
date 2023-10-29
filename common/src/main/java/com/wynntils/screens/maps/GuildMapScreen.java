@@ -53,7 +53,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private static final int MIN_X = -2400;
     private static final int MIN_Z = -6600;
 
-    private boolean firstInit;
+    private boolean firstInit = true;
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
     private boolean hybridMode = true;
@@ -64,9 +64,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private BasicTexturedButton territoryDefenseFilterButton;
     private BasicTexturedButton hybridModeButton;
 
-    private GuildMapScreen() {
-        this.firstInit = true;
-    }
+    private GuildMapScreen() {}
 
     public static Screen create() {
         return new GuildMapScreen();
