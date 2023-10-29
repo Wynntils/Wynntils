@@ -52,6 +52,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private static final int MAX_Z = -150;
     private static final int MIN_X = -2400;
     private static final int MIN_Z = -6600;
+
+    private boolean firstInit;
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
     private boolean hybridMode = true;
@@ -63,12 +65,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     private BasicTexturedButton hybridModeButton;
 
     private GuildMapScreen() {
-        // When outside of the main map, center to the middle of the map
-        if (!MathUtils.isInside(
-                (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z)) {
-            updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
-            setZoom(0);
-        }
+        this.firstInit = true;
     }
 
     public static Screen create() {
@@ -171,6 +168,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
                         Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        if (firstInit) {
+            // When outside of the main map, center to the middle of the map
+            if (!MathUtils.isInside(
+                    (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z)) {
+                updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
+                setZoom(0);
+            }
+
+            firstInit = false;
+        }
     }
 
     @Override
