@@ -214,11 +214,14 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         if (firstInit) {
-            // When outside of the main map, center to the middle of the map if feature enabled
-            if (!isPlayerInsideMainArea()
-                    && Managers.Feature.getFeatureInstance(MainMapFeature.class)
+            BoundingBox textureBoundingBox =
+                    BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
+
+            // When in an unmapped area, center to the middle of the map if the feature is enabled
+            if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                             .centerWhenUnmapped
-                            .get()) {
+                            .get()
+                    && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
                 centerMap();
             }
 
