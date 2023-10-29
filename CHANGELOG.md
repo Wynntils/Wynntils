@@ -1,3 +1,10 @@
+## [0.0.4-beta.52](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.51...v0.0.4-beta.52) (2023-10-29)
+
+
+### Miscellaneous Chores
+
+* Bump mixinextras to stable version, other dependency updates ([#2224](https://github.com/Wynntils/Artemis/issues/2224)) ([9ce62fe](https://github.com/Wynntils/Artemis/commit/9ce62fece4d1b3ec51635fdf67fb20a7a76963f0))
+
 ## [0.0.4-beta.51](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.50...v0.0.4-beta.51) (2023-10-29)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2221](https://github.com/Wynntils/Artemis/issues/2221)) ([f512069](https://github.com/Wynntils/Artemis/commit/f512069155893cc1ed207bb0cba4b2f23d388449))
+* **release:** v0.0.4-beta.51 [skip ci] ([d26ee48](https://github.com/Wynntils/Artemis/commit/d26ee489ad1a1c85071967948e1d217efe22c7ad))
 
 ## [0.0.4-beta.50](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.49...v0.0.4-beta.50) (2023-10-28)
 
@@ -46,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.48 [skip ci] ([0c3ef35](https://github.com/Wynntils/Artemis/commit/0c3ef35a01010dd671c4c84b9bda65bc2189c42e))
-
-## [0.0.4-beta.47](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.46...v0.0.4-beta.47) (2023-10-25)
-
-
-### Bug Fixes
-
-* Fix some specific lootrun tasks not getting parsed in Sky (and MH?) ([#2208](https://github.com/Wynntils/Artemis/issues/2208)) ([ab134e7](https://github.com/Wynntils/Artemis/commit/ab134e74233be7949b5c4f148a1d3070b569816c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.47 [skip ci] ([0ed8f22](https://github.com/Wynntils/Artemis/commit/0ed8f224a735e533c3e954ba9a2839bfba1412c8))
 
