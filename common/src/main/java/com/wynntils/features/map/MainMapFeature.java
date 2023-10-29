@@ -87,7 +87,7 @@ public class MainMapFeature extends Feature {
     public final Config<Float> poiScale = new Config<>(1f);
 
     @Persisted
-    public final Config<Boolean> centerWhenUnmapped = new Config<>(false);
+    public final Config<Boolean> centerWhenUnmapped = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
