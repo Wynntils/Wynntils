@@ -102,7 +102,7 @@
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "ac509a4e620ac65718a6b0816e848db5",
+    "md5": "26f32fb8e2a8d31c49747a8410a63acb",
     "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/content/cave.json"
   },
   {
@@ -172,7 +172,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamed",
-    "md5": "2b6eceaad26e47976b8e7dac96fdba2d",
+    "md5": "4eb2931b1dbea269574b8864c8712ba4",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/lootrun_tasks_named.json"
   },
   {
