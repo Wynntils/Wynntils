@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingShape;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
@@ -197,7 +198,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
-            if (filterBox.intersects(textureBoundingBox)) {
+            if (BoundingShape.intersects(filterBox, textureBoundingBox)) {
                 filteredPois.add(poi);
                 if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
                     hovered = poi;
