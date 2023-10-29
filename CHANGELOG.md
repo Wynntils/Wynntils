@@ -1,3 +1,15 @@
+## [0.0.4-beta.51](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.50...v0.0.4-beta.51) (2023-10-29)
+
+
+### New Features
+
+* Center guild map when outside main area ([#2216](https://github.com/Wynntils/Artemis/issues/2216)) ([e008aa6](https://github.com/Wynntils/Artemis/commit/e008aa674a7ad4cf9281fe2b0b48ed2e55d92447))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2221](https://github.com/Wynntils/Artemis/issues/2221)) ([f512069](https://github.com/Wynntils/Artemis/commit/f512069155893cc1ed207bb0cba4b2f23d388449))
+
 ## [0.0.4-beta.50](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.49...v0.0.4-beta.50) (2023-10-28)
 
 
@@ -9,6 +21,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2219](https://github.com/Wynntils/Artemis/issues/2219)) ([ac3f576](https://github.com/Wynntils/Artemis/commit/ac3f576c87c5fab6af85cb86f17e510560f99a01))
+* **release:** v0.0.4-beta.50 [skip ci] ([49088f8](https://github.com/Wynntils/Artemis/commit/49088f8962fdc94ca898b21d97a0445a72595362))
 
 ## [0.0.4-beta.49](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.48...v0.0.4-beta.49) (2023-10-28)
 
@@ -45,16 +58,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.47 [skip ci] ([0ed8f22](https://github.com/Wynntils/Artemis/commit/0ed8f224a735e533c3e954ba9a2839bfba1412c8))
-
-## [0.0.4-beta.46](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.45...v0.0.4-beta.46) (2023-10-25)
-
-
-### Bug Fixes
-
-* Fix lootrun task locations not getting parsed when particle limit is tripped ([#2206](https://github.com/Wynntils/Artemis/issues/2206)) ([d328a69](https://github.com/Wynntils/Artemis/commit/d328a694532e5adeca8643307bc13dee827aacae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.46 [skip ci] ([282fbb2](https://github.com/Wynntils/Artemis/commit/282fbb2f5c9ebb70686cdab0968d6533245259de))
 
