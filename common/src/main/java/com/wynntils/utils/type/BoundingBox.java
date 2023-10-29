@@ -31,6 +31,6 @@ public class BoundingBox {
     public boolean intersects(BoundingBox other) {
         boolean xIntersects = Math.max(x1, other.x1) < Math.min(x2, other.x2);
         boolean zIntersects = Math.max(z1, other.z1) < Math.min(z2, other.z2);
-        return xIntersects || zIntersects;
+        return xIntersects && zIntersects;
     }
 }
