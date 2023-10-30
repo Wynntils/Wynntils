@@ -1,9 +1,17 @@
+## [0.0.4-beta.53](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.52...v0.0.4-beta.53) (2023-10-30)
+
+
+### Bug Fixes
+
+* properly position item tooltips when applying custom scaling ([#2226](https://github.com/Wynntils/Artemis/issues/2226)) ([424fc7d](https://github.com/Wynntils/Artemis/commit/424fc7de3313edea57e86240735f8acfed769d06))
+
 ## [0.0.4-beta.52](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.51...v0.0.4-beta.52) (2023-10-29)
 
 
 ### Miscellaneous Chores
 
 * Bump mixinextras to stable version, other dependency updates ([#2224](https://github.com/Wynntils/Artemis/issues/2224)) ([9ce62fe](https://github.com/Wynntils/Artemis/commit/9ce62fece4d1b3ec51635fdf67fb20a7a76963f0))
+* **release:** v0.0.4-beta.52 [skip ci] ([492e840](https://github.com/Wynntils/Artemis/commit/492e8402d57ca8a82f5a88784fe23433400fa0d5))
 
 ## [0.0.4-beta.51](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.50...v0.0.4-beta.51) (2023-10-29)
 
@@ -42,16 +50,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.49 [skip ci] ([116c48a](https://github.com/Wynntils/Artemis/commit/116c48a1e8e9ac85a1c42271488a8ebe6d134a75))
-
-## [0.0.4-beta.48](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.47...v0.0.4-beta.48) (2023-10-27)
-
-
-### Bug Fixes
-
-* make content book work after wynn hotfix ([#2212](https://github.com/Wynntils/Artemis/issues/2212)) ([2ca5749](https://github.com/Wynntils/Artemis/commit/2ca5749fbf7066e35672924a641c97335257d25b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.48 [skip ci] ([0c3ef35](https://github.com/Wynntils/Artemis/commit/0c3ef35a01010dd671c4c84b9bda65bc2189c42e))
 
