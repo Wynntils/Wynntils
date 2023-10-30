@@ -38,6 +38,8 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingCircle;
+import com.wynntils.utils.type.BoundingShape;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
@@ -117,8 +119,8 @@ public class MinimapOverlay extends Overlay {
         double playerX = McUtils.player().getX();
         double playerZ = McUtils.player().getZ();
 
-        BoundingBox textureBoundingBox =
-                BoundingBox.centered((float) playerX, (float) playerZ, width * scale.get(), height * scale.get());
+        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(
+                BoundingBox.centered((float) playerX, (float) playerZ, width * scale.get(), height * scale.get()));
 
         // enable mask
         switch (maskType.get()) {
@@ -152,7 +154,7 @@ public class MinimapOverlay extends Overlay {
             }
         }
 
-        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
+        List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(playerX);
             float textureZ = map.getTextureZPosition(playerZ);
@@ -173,7 +175,7 @@ public class MinimapOverlay extends Overlay {
             poseStack.popPose();
         }
 
-        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, textureBoundingBox);
+        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, textureBoundingCircle);
 
         // cursor
         MapRenderer.renderCursor(
@@ -206,7 +208,7 @@ public class MinimapOverlay extends Overlay {
             float height,
             double playerX,
             double playerZ,
-            BoundingBox textureBoundingBox) {
+            BoundingCircle textureBoundingCircle) {
         float sinRotationRadians;
         float cosRotationRadians;
 
@@ -260,7 +262,7 @@ public class MinimapOverlay extends Overlay {
             BoundingBox box = BoundingBox.centered(
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
-            if (box.intersects(textureBoundingBox)) {
+            if (BoundingShape.intersects(box, textureBoundingCircle)) {
                 poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom);
             }
         }
