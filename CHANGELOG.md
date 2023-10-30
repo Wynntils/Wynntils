@@ -1,9 +1,21 @@
+## [0.0.4-beta.55](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.54...v0.0.4-beta.55) (2023-10-30)
+
+
+### Bug Fixes
+
+* Fix custom quick jumps not working ([#2213](https://github.com/Wynntils/Artemis/issues/2213)) ([3f0d493](https://github.com/Wynntils/Artemis/commit/3f0d4939b08e889aa6bfcd7160ff1e2f8742734a))
+
 ## [0.0.4-beta.54](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.53...v0.0.4-beta.54) (2023-10-30)
 
 
 ### Bug Fixes
 
 * Fix minimap not rendering edges of maps correctly due to broken bounds checks ([#2223](https://github.com/Wynntils/Artemis/issues/2223)) ([75cca4e](https://github.com/Wynntils/Artemis/commit/75cca4ed1f9fe7cfbb3feb1abd9aff40cfd87a73))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.54 [skip ci] ([70328e3](https://github.com/Wynntils/Artemis/commit/70328e3430d90debf39f480a31dc396d4c0ca799))
 
 ## [0.0.4-beta.53](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.52...v0.0.4-beta.53) (2023-10-30)
 
@@ -37,17 +49,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2221](https://github.com/Wynntils/Artemis/issues/2221)) ([f512069](https://github.com/Wynntils/Artemis/commit/f512069155893cc1ed207bb0cba4b2f23d388449))
 * **release:** v0.0.4-beta.51 [skip ci] ([d26ee48](https://github.com/Wynntils/Artemis/commit/d26ee489ad1a1c85071967948e1d217efe22c7ad))
-
-## [0.0.4-beta.50](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.49...v0.0.4-beta.50) (2023-10-28)
-
-
-### New Features
-
-* Set markers from waypoint manager ([#2218](https://github.com/Wynntils/Artemis/issues/2218)) ([c58e1d1](https://github.com/Wynntils/Artemis/commit/c58e1d135ed544280ebe92da60f0dbdf96aa2391))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2219](https://github.com/Wynntils/Artemis/issues/2219)) ([ac3f576](https://github.com/Wynntils/Artemis/commit/ac3f576c87c5fab6af85cb86f17e510560f99a01))
-* **release:** v0.0.4-beta.50 [skip ci] ([49088f8](https://github.com/Wynntils/Artemis/commit/49088f8962fdc94ca898b21d97a0445a72595362))
 
