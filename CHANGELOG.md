@@ -1,9 +1,21 @@
+## [0.0.4-beta.54](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.53...v0.0.4-beta.54) (2023-10-30)
+
+
+### Bug Fixes
+
+* Fix minimap not rendering edges of maps correctly due to broken bounds checks ([#2223](https://github.com/Wynntils/Artemis/issues/2223)) ([75cca4e](https://github.com/Wynntils/Artemis/commit/75cca4ed1f9fe7cfbb3feb1abd9aff40cfd87a73))
+
 ## [0.0.4-beta.53](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.52...v0.0.4-beta.53) (2023-10-30)
 
 
 ### Bug Fixes
 
 * properly position item tooltips when applying custom scaling ([#2226](https://github.com/Wynntils/Artemis/issues/2226)) ([424fc7d](https://github.com/Wynntils/Artemis/commit/424fc7de3313edea57e86240735f8acfed769d06))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.53 [skip ci] ([ced16bb](https://github.com/Wynntils/Artemis/commit/ced16bbdedbf098e9bcea68003db84d19bee05ea))
 
 ## [0.0.4-beta.52](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.51...v0.0.4-beta.52) (2023-10-29)
 
@@ -38,16 +50,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2219](https://github.com/Wynntils/Artemis/issues/2219)) ([ac3f576](https://github.com/Wynntils/Artemis/commit/ac3f576c87c5fab6af85cb86f17e510560f99a01))
 * **release:** v0.0.4-beta.50 [skip ci] ([49088f8](https://github.com/Wynntils/Artemis/commit/49088f8962fdc94ca898b21d97a0445a72595362))
-
-## [0.0.4-beta.49](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.48...v0.0.4-beta.49) (2023-10-28)
-
-
-### Bug Fixes
-
-* Allow wynncraft.com as a valid ip for connecting ([#2217](https://github.com/Wynntils/Artemis/issues/2217)) ([6fd9c32](https://github.com/Wynntils/Artemis/commit/6fd9c324e1ad25935a91b4c426f30e40d499b99d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.49 [skip ci] ([116c48a](https://github.com/Wynntils/Artemis/commit/116c48a1e8e9ac85a1c42271488a8ebe6d134a75))
 
