@@ -77,7 +77,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("help").executes(this::help))
                 .then(Commands.literal("menu"))
-                .executes(context -> menu())
+                .executes(this::menu)
                 .then(Commands.literal("reauth").executes(this::reauth))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("status").executes(this::status))
@@ -366,7 +366,7 @@ public class WynntilsCommand extends Command {
         return 1;
     }
 
-    private int menu() {
+    private int menu(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the lootrun screen
         Managers.TickScheduler.scheduleLater(() -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()), 2);
         return 1;
