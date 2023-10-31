@@ -123,6 +123,8 @@ public class TooltipFittingFeature extends Feature {
             Vector2i vector2i = new Vector2i(mouseX, mouseY).add(12, -12);
             this.positionTooltip(screenWidth, screenHeight, vector2i, (int) (tooltipWidth * scaleFactor), (int)
                     (tooltipHeight * scaleFactor));
+
+            vector2i.div(scaleFactor); // scale mouse position so tooltip is rendered at the proper location
             return vector2i;
         }
 
