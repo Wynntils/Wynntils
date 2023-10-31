@@ -366,7 +366,7 @@ public class WynntilsCommand extends Command {
     }
 
     private int menu(CommandContext<CommandSourceStack> context) {
-        // Delay is needed to prevent chat screen overwriting the lootrun screen
+        // Delay is needed to prevent chat screen overwriting the menu screen
         Managers.TickScheduler.scheduleLater(() -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()), 2);
         return 1;
     }
