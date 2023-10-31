@@ -11,6 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,10 +39,19 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
         // This should never happens, since the handler matched this before calling us
         if (!matcher.matches()) return;
 
-        String questName = content.get(0).getNormalized().trim().getStringWithoutFormatting();
+        List<String> questNameParts = new ArrayList<>();
+        for (StyledText line : content) {
+            if (line.startsWith("§f")) { // Indicates quest name
+                questNameParts.add(line.getNormalized().trim().getStringWithoutFormatting());
+            } else {
+                // We only care about the first few lines
+                // If other lines with §f come up later, they probably aren't the name
+                break;
+            }
+        }
 
         StringBuilder nextTask = new StringBuilder();
-        List<StyledText> taskLines = content.subList(1, content.size());
+        List<StyledText> taskLines = content.subList(questNameParts.size(), content.size());
 
         for (StyledText line : taskLines) {
             String unformatted = line.getString(PartStyle.StyleType.NONE);
@@ -67,7 +77,7 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
 
-        Models.Activity.updateTracker(questName, type, fixedNextTask);
+        Models.Activity.updateTracker(String.join(" ", questNameParts), type, fixedNextTask);
     }
 
     @Override
