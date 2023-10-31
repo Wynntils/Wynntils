@@ -25,11 +25,8 @@ public class LootrunLocationDataCollector extends CrowdSourcedDataCollector<Loot
         Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getTaskType();
         if (currentTaskTypeOpt.isEmpty()) return;
 
-        Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getLocation();
-        if (currentLocationOpt.isEmpty()) return;
-
         collect(new LootrunTaskLocation(
-                currentLocationOpt.get(),
+                LootrunLocation.UNKNOWN,
                 currentTaskTypeOpt.get(),
                 event.getTaskLocation().location()));
     }

@@ -4,27 +4,10 @@
  */
 package com.wynntils.models.lootrun.type;
 
-import com.wynntils.utils.type.BoundingBox;
-import net.minecraft.core.Position;
-
 public enum LootrunLocation {
-    SILENT_EXPANSE(400, -1150, 1600, -180),
-    CORKUS(-2150, -3500, -1200, -2100),
-    MOLTEN_HEIGHTS_HIKE(900, -5800, 1700, -4900),
-    SKY_ISLANDS_EXPLORATION(700, -4900, 1700, -4100);
-
-    private final BoundingBox boundingBox;
-
-    LootrunLocation(int startX, int startZ, int endX, int endZ) {
-        this.boundingBox = new BoundingBox(startX, startZ, endX, endZ);
-    }
-
-    public static LootrunLocation fromCoordinates(Position position) {
-        for (LootrunLocation location : LootrunLocation.values()) {
-            if (location.boundingBox.contains((float) position.x(), (float) position.z())) {
-                return location;
-            }
-        }
-        return null;
-    }
+    SILENT_EXPANSE,
+    CORKUS,
+    MOLTEN_HEIGHTS_HIKE,
+    SKY_ISLANDS_EXPLORATION,
+    UNKNOWN
 }
