@@ -20,7 +20,6 @@ import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.MapCommand;
-import com.wynntils.commands.MenuCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServersCommand;
 import com.wynntils.commands.StatisticsCommand;
@@ -185,7 +184,6 @@ public final class CommandManager extends Manager {
         registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new MapCommand());
-        registerCommand(new MenuCommand());
         registerCommand(new QuestCommand());
         registerCommand(new ServersCommand());
         registerCommand(new StatisticsCommand());
