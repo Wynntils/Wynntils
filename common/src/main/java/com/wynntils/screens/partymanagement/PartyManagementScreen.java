@@ -8,9 +8,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
-import com.wynntils.screens.partymanagement.widgets.LegendButton;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
@@ -102,7 +103,26 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(kickOfflineButton);
         // endregion
 
-        this.addRenderableWidget(new LegendButton((int) (dividedWidth * 2), (int) (dividedHeight * 58)));
+        // region info button
+        this.addRenderableWidget(new InfoButton(
+                (int) (dividedWidth * 2),
+                (int) (dividedHeight * 58),
+                Component.literal("")
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.legend")
+                                .withStyle(ChatFormatting.UNDERLINE))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.self")
+                                .withStyle(ChatFormatting.BOLD))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.leader")
+                                .withStyle(ChatFormatting.YELLOW))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.offline")
+                                .withStyle(ChatFormatting.STRIKETHROUGH))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.friend")
+                                .withStyle(ChatFormatting.GREEN))));
+        // endregion
     }
 
     @Override

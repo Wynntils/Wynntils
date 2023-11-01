@@ -21,6 +21,7 @@ import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingShape;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
@@ -196,7 +197,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
             BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
 
-            if (filterBox.intersects(textureBoundingBox)) {
+            if (BoundingShape.intersects(filterBox, textureBoundingBox)) {
                 filteredPois.add(poi);
             }
         }

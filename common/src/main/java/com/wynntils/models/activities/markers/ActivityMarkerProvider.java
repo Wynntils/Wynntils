@@ -15,6 +15,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
@@ -41,8 +42,8 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 Texture.QUESTS_SCROLL_ICON));
     }
 
-    public Location getSpawnLocation() {
-        return spawnInfo.location();
+    public Optional<Location> getSpawnLocation() {
+        return spawnInfo == null ? Optional.empty() : Optional.ofNullable(spawnInfo.location());
     }
 
     public void setTrackedActivityLocation(Location trackedActivityLocation, BeaconColor beaconColor) {

@@ -42,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
@@ -78,7 +79,14 @@ public class ContentBookDumpFeature extends Feature {
     public void onSetSpawn(SetSpawnEvent event) {
         if (currentlyTracking == null) return;
 
-        Location currentTracker = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
+        Optional<Location> spawnLocationOpt = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
+        if (spawnLocationOpt.isEmpty()) {
+            WynntilsMod.error("Could not get spawn location for " + currentlyTracking.name());
+            return;
+        }
+
+        Location currentTracker = spawnLocationOpt.get();
+
         if (lastTrackedLocation != currentTracker && currentTracker != null) {
             currentDump.remove(currentlyTracking);
 
@@ -105,14 +113,20 @@ public class ContentBookDumpFeature extends Feature {
     private void dumpContentBook() {
         currentDump = new ArrayList<>();
 
-        Models.Activity.scanContentBook(ActivityType.ALL, (activityInfos, progress) -> {
+        Models.Activity.scanContentBook(ActivityType.RECOMMENDED, (activityInfos, progress) -> {
             currentDump.addAll(activityInfos.stream()
                     .map(DumpableActivityInfo::fromActivityInfo)
                     .toList());
 
-            filterEntriesNeedingManualTracking();
+            Models.Activity.scanContentBook(ActivityType.TERRITORIAL_DISCOVERY, (activityInfos2, progress2) -> {
+                currentDump.addAll(activityInfos2.stream()
+                        .map(DumpableActivityInfo::fromActivityInfo)
+                        .toList());
 
-            trackManually();
+                filterEntriesNeedingManualTracking();
+
+                trackManually();
+            });
         });
     }
 
@@ -146,7 +160,8 @@ public class ContentBookDumpFeature extends Feature {
 
         // Track the activity
         currentlyTracking = info;
-        lastTrackedLocation = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
+        lastTrackedLocation =
+                Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation().orElse(null);
         WynntilsMod.info("Tracking " + info.name());
         Models.Activity.startTracking(info.name(), info.type());
     }
@@ -201,7 +216,7 @@ public class ContentBookDumpFeature extends Feature {
         }
 
         // Remove unused types
-        mappedDumpedActivities.remove(ActivityType.ALL);
+        mappedDumpedActivities.remove(ActivityType.RECOMMENDED);
         mappedDumpedActivities.remove(ActivityType.STORYLINE_QUEST);
 
         for (List<DumpableActivityInfo> value : mappedDumpedActivities.values()) {
