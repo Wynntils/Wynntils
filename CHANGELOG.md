@@ -1,9 +1,21 @@
+## [0.0.4-beta.57](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.56...v0.0.4-beta.57) (2023-11-01)
+
+
+### Bug Fixes
+
+* Trade market buttons break with chat tabs ([#2204](https://github.com/Wynntils/Artemis/issues/2204)) ([8938ff5](https://github.com/Wynntils/Artemis/commit/8938ff584959d8487acd75eae5cfcfe59ccae5e3))
+
 ## [0.0.4-beta.56](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.55...v0.0.4-beta.56) (2023-10-31)
 
 
 ### New Features
 
 * Add Menu Command ([#2228](https://github.com/Wynntils/Artemis/issues/2228)) ([cee2f5c](https://github.com/Wynntils/Artemis/commit/cee2f5ccbd2c86ca08624a462071caa3c0407bde))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.56 [skip ci] ([2abe9db](https://github.com/Wynntils/Artemis/commit/2abe9db9062452e9fdd7c1555a52cb084338419f))
 
 ## [0.0.4-beta.55](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.54...v0.0.4-beta.55) (2023-10-30)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.53 [skip ci] ([ced16bb](https://github.com/Wynntils/Artemis/commit/ced16bbdedbf098e9bcea68003db84d19bee05ea))
-
-## [0.0.4-beta.52](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.51...v0.0.4-beta.52) (2023-10-29)
-
-
-### Miscellaneous Chores
-
-* Bump mixinextras to stable version, other dependency updates ([#2224](https://github.com/Wynntils/Artemis/issues/2224)) ([9ce62fe](https://github.com/Wynntils/Artemis/commit/9ce62fece4d1b3ec51635fdf67fb20a7a76963f0))
-* **release:** v0.0.4-beta.52 [skip ci] ([492e840](https://github.com/Wynntils/Artemis/commit/492e8402d57ca8a82f5a88784fe23433400fa0d5))
 
