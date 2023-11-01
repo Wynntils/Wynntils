@@ -49,7 +49,7 @@ public class CoordinateOverlay extends TextOverlay {
                         .minimapOverlay
                         .hideWhenUnmapped
                         .get()
-                == MinimapOverlay.UnmappedOption.BOTH) {
+                == MinimapOverlay.UnmappedOption.MINIMAP_AND_COORDS) {
             return this.shouldBeColored.get() ? UNMAPPED_TEMPLATE_COLORED : UNMAPPED_TEMPLATE;
         } else {
             return this.shouldBeColored.get() ? TEMPLATE_COLORED : TEMPLATE;

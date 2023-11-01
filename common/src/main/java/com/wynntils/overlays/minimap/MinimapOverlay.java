@@ -61,7 +61,7 @@ public class MinimapOverlay extends Overlay {
     public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
     @Persisted
-    public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.BOTH);
+    public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.MINIMAP_AND_COORDS);
 
     @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
@@ -498,7 +498,7 @@ public class MinimapOverlay extends Overlay {
 
     public enum UnmappedOption {
         MINIMAP,
-        BOTH,
+        MINIMAP_AND_COORDS,
         NEITHER
     }
 
