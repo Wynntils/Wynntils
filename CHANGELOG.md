@@ -1,9 +1,21 @@
+## [0.0.4-beta.58](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.57...v0.0.4-beta.58) (2023-11-01)
+
+
+### Bug Fixes
+
+* Multiline quest titles do not track ([#2231](https://github.com/Wynntils/Artemis/issues/2231)) ([2b1e62b](https://github.com/Wynntils/Artemis/commit/2b1e62b386ba8dbea8e4e64bb61dab79a245f096))
+
 ## [0.0.4-beta.57](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.56...v0.0.4-beta.57) (2023-11-01)
 
 
 ### Bug Fixes
 
 * Trade market buttons break with chat tabs ([#2204](https://github.com/Wynntils/Artemis/issues/2204)) ([8938ff5](https://github.com/Wynntils/Artemis/commit/8938ff584959d8487acd75eae5cfcfe59ccae5e3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.57 [skip ci] ([0c89977](https://github.com/Wynntils/Artemis/commit/0c89977f8a9b33d1432a9cbec28edd95e255d3fd))
 
 ## [0.0.4-beta.56](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.55...v0.0.4-beta.56) (2023-10-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.54 [skip ci] ([70328e3](https://github.com/Wynntils/Artemis/commit/70328e3430d90debf39f480a31dc396d4c0ca799))
-
-## [0.0.4-beta.53](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.52...v0.0.4-beta.53) (2023-10-30)
-
-
-### Bug Fixes
-
-* properly position item tooltips when applying custom scaling ([#2226](https://github.com/Wynntils/Artemis/issues/2226)) ([424fc7d](https://github.com/Wynntils/Artemis/commit/424fc7de3313edea57e86240735f8acfed769d06))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.53 [skip ci] ([ced16bb](https://github.com/Wynntils/Artemis/commit/ced16bbdedbf098e9bcea68003db84d19bee05ea))
 
