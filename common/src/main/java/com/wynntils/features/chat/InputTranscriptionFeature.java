@@ -5,13 +5,14 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
-import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.EditBoxInsertEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -24,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -118,22 +120,20 @@ public class InputTranscriptionFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
-    public void onChatSend(ChatSentEvent event) {
-        if (event.getMessage().isBlank()) return;
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onChatScreenSend(ChatScreenSendEvent event) {
+        // Parses brackets and does the transcription, then sends the new message.
+        if (event.getInput().isBlank()) return;
 
-        String message = event.getMessage();
+        String message = event.getInput();
+        if (!Models.WynnAlphabet.containsBrackets(message)) return;
 
-        if (Models.WynnAlphabet.containsBrackets(message)) {
-            String updatedMessage = Models.WynnAlphabet.transcribeBracketedText(message);
+        String updatedMessage = Models.WynnAlphabet.transcribeBracketedText(message);
+        updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
+        if (updatedMessage.equals(message)) return; // No changes, we can pretend nothing happened.
 
-            updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
-
-            if (!updatedMessage.equals(message)) {
-                event.setCanceled(true);
-                McUtils.sendChat(updatedMessage);
-            }
-        }
+        event.setCanceled(true);
+        Services.ChatTab.sendChat(updatedMessage);
 
         Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
     }

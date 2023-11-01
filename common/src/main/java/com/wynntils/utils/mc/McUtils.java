@@ -104,7 +104,12 @@ public final class McUtils {
         mc().getConnection().sendCommand(command);
     }
 
-    public static void sendChat(String command) {
-        mc().getConnection().sendChat(command);
+    /**
+     * Sends some chat message directly to the server.
+     * Does not respect ChatTabFeature settings.
+     * @param message The message to send.
+     */
+    public static void sendChat(String message) {
+        mc().getConnection().sendChat(message);
     }
 }
