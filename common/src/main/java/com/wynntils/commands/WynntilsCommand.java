@@ -14,6 +14,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -74,6 +76,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("help").executes(this::help))
+                .then(Commands.literal("menu").executes(this::menu))
                 .then(Commands.literal("reauth").executes(this::reauth))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("status").executes(this::status))
@@ -362,6 +365,12 @@ public class WynntilsCommand extends Command {
         return 1;
     }
 
+    private int menu(CommandContext<CommandSourceStack> context) {
+        // Delay is needed to prevent chat screen overwriting the menu screen
+        Managers.TickScheduler.scheduleLater(() -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()), 2);
+        return 1;
+    }
+
     private int help(CommandContext<CommandSourceStack> context) {
         MutableComponent text = Component.literal("Available Wynntils commands: \n")
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
@@ -372,6 +381,7 @@ public class WynntilsCommand extends Command {
         describeWynntilsSubcommand(text, "discord", "Provide an invite link to our Discord server");
         describeWynntilsSubcommand(text, "donate", "Provides a link to our Patreon");
         describeWynntilsSubcommand(text, "help", "List of all available commands for Wynntils");
+        describeWynntilsSubcommand(text, "menu", "Opens Wynntils Menu");
         describeWynntilsSubcommand(text, "reauth", "Re-authorize Wynntils online services (Athena and Hades)");
         describeWynntilsSubcommand(text, "reloadcaches", "Clear and re-download caches of online data");
         describeWynntilsSubcommand(text, "status", "Show Wynntils server status");
