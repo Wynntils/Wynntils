@@ -221,4 +221,26 @@ public final class ChatTabService extends Service {
 
         return event.getOriginalStyledText().matches(regex.get());
     }
+
+    /**
+     * Sends a chat message respecting chat tab autocommand settings.
+     * If no chat tab is actively selected, the message will be sent normally.
+     * @param message The message to send.
+     */
+    public void sendChat(String message) {
+        if (message.isBlank()) return;
+
+        if (getFocusedTab() == null) {
+            McUtils.sendChat(message);
+            return;
+        }
+
+        String autoCommand = getFocusedTab().getAutoCommand();
+        if (autoCommand != null && !autoCommand.isBlank()) {
+            autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
+            McUtils.sendCommand(autoCommand + " " + message);
+        } else {
+            McUtils.sendChat(message);
+        }
+    }
 }
