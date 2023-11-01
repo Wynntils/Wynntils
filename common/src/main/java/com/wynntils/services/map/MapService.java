@@ -11,6 +11,9 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.features.map.MinimapFeature;
+import com.wynntils.overlays.minimap.MinimapOverlay;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.BoundingCircle;
 import com.wynntils.utils.type.BoundingShape;
@@ -48,6 +51,18 @@ public final class MapService extends Service {
         return maps.stream()
                 .filter(map -> BoundingShape.intersects(map.getBox(), circle))
                 .toList();
+    }
+
+    public boolean isPlayerInMappedArea() {
+        MinimapOverlay minimapOverlay = Managers.Feature.getFeatureInstance(MinimapFeature.class).minimapOverlay;
+        float width = minimapOverlay.getWidth();
+        float height = minimapOverlay.getHeight();
+        float scale = minimapOverlay.scale.get();
+
+        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
+                (float) McUtils.player().getX(), (float) McUtils.player().getZ(), width * scale, height * scale));
+
+        return !getMapsForBoundingCircle(textureBoundingCircle).isEmpty();
     }
 
     private void loadMaps() {

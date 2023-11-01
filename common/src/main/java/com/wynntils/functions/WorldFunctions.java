@@ -290,4 +290,11 @@ public class WorldFunctions {
                     List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
         }
     }
+
+    public static class InMappedAreaFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Services.Map.isPlayerInMappedArea();
+        }
+    }
 }

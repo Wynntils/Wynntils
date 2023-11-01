@@ -61,7 +61,7 @@ public class MinimapOverlay extends Overlay {
     public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideWhenUnmapped = new Config<>(false);
+    public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.BOTH);
 
     @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
@@ -90,7 +90,7 @@ public class MinimapOverlay extends Overlay {
     public MinimapOverlay() {
         super(
                 new OverlayPosition(
-                        5.25f,
+                        20.25f,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
@@ -127,7 +127,7 @@ public class MinimapOverlay extends Overlay {
 
         List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
 
-        if (hideWhenUnmapped.get() && maps.isEmpty()) return;
+        if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
         // enable mask
         switch (maskType.get()) {
@@ -495,6 +495,12 @@ public class MinimapOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {}
+
+    public enum UnmappedOption {
+        MINIMAP,
+        BOTH,
+        NEITHER
+    }
 
     private enum CompassRenderType {
         NONE,
