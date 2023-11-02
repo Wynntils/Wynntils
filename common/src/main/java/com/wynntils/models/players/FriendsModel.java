@@ -228,7 +228,6 @@ public final class FriendsModel extends Model {
      * Sends "/friend list" to Wynncraft and waits for the response.
      * (!) Skips if the last request was less than 250ms ago.
      * When the response is received, friends will be updated.
-     * 5 tick delay between requesting friend list and online friend list.
      */
     public void requestData() {
         if (McUtils.player() == null) return;
