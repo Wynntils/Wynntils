@@ -171,7 +171,7 @@ public class LootrunModel extends Model {
                 if (PosUtils.closerThanIgnoringY(
                         taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
                     // Note: We do this re-allocation so we always display the correct location,
-                    //       even if it slightly changed, or our data is inprecise.
+                    //       even if it slightly changed, or our data is imprecise.
                     possibleTaskLocations.add(new TaskLocation(
                             taskLocation.name(),
                             Location.containing(event.getParticle().position()),
