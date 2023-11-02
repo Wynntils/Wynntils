@@ -9,13 +9,12 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class WynntilsGridLayoutScreen extends WynntilsScreen implements TextboxScreen {
+public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
     private static final float GRID_DIVISIONS = 64f;
     // Certain elements require static 20 height or button textures will break
     protected static final int BUTTON_HEIGHT = 20;
     protected float dividedHeight;
     protected float dividedWidth;
-    private TextInputBoxWidget focusedTextInput;
     /*
     Some notes on element alignment and sizing:
     All elements should be positioned dynamically relative to window size. That is; you must use this.height and
@@ -48,7 +47,7 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen implements
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
+        return (getFocusedTextInput() != null && getFocusedTextInput().charTyped(codePoint, modifiers))
                 || super.charTyped(codePoint, modifiers);
     }
 
@@ -56,7 +55,7 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen implements
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // When tab is pressed, focus the next text box
         if (keyCode == GLFW.GLFW_KEY_TAB) {
-            int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
+            int index = getFocusedTextInput() == null ? 0 : children().indexOf(getFocusedTextInput());
             int actualIndex = Math.max(index, 0) + 1;
 
             // Try to find next text input
@@ -77,17 +76,7 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen implements
             }
         }
 
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
+        return (getFocusedTextInput() != null && getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers))
                 || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
     }
 }

@@ -6,12 +6,16 @@ package com.wynntils.core.consumers.screens;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public abstract class WynntilsScreen extends Screen {
+public abstract class WynntilsScreen extends Screen implements TextboxScreen {
+    private TextInputBoxWidget focusedTextInput;
+
     protected WynntilsScreen(Component component) {
         super(component);
     }
@@ -77,5 +81,15 @@ public abstract class WynntilsScreen extends Screen {
         } catch (Throwable t) {
             failure(errorDesc, t);
         }
+    }
+
+    @Override
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    @Override
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
     }
 }
