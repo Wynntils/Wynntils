@@ -291,7 +291,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            McUtils.sendCommand("gu territory " + territoryPoi.getName());
+            Managers.Command.queueCommand("gu territory " + territoryPoi.getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
             int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);

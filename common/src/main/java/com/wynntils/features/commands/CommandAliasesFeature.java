@@ -14,7 +14,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
-import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class CommandAliasesFeature extends Feature {
         for (CommandAlias commandAlias : aliases.get()) {
             if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
                 e.setCanceled(true);
-                McUtils.sendCommand(commandAlias.getOriginalCommand());
+                Managers.Command.queueCommand(commandAlias.getOriginalCommand());
                 break;
             }
         }

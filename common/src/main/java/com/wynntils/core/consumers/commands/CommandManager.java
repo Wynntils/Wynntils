@@ -203,7 +203,7 @@ public final class CommandManager extends Manager {
     }
 
     /**
-     * Queue a command to be executed. Executions happen in the order they are queued, every 5 ticks when on world.
+     * Queue a command to be executed. Executions happen in the order they are queued.
      * Queued commands automatically log when they are executed.
      * @param command The command to queue. The leading '/' should not be included.
      */
@@ -217,8 +217,9 @@ public final class CommandManager extends Manager {
         commandQueueTicks++;
 
         if (commandQueueTicks >= TICKS_PER_EXECUTE && !commandQueue.isEmpty()) {
-            WynntilsMod.info("Executing queued command: " + commandQueue.peek());
-            McUtils.sendCommand(commandQueue.poll());
+            String command = commandQueue.poll();
+            WynntilsMod.info("Executing queued command: " + command);
+            McUtils.mc().getConnection().sendCommand(command);
             commandQueueTicks = 0;
         }
     }

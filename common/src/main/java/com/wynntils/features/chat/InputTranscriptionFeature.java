@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.chat;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -149,7 +150,7 @@ public class InputTranscriptionFeature extends Feature {
 
             if (!updatedCommand.equals(command)) {
                 event.setCanceled(true);
-                McUtils.sendCommand(updatedCommand);
+                Managers.Command.queueCommand(updatedCommand);
             }
         }
 

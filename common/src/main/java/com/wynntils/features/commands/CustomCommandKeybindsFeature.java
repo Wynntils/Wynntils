@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.commands;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -97,7 +98,7 @@ public class CustomCommandKeybindsFeature extends Feature {
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
-            case EXECUTE -> McUtils.sendCommand(keybindCommand);
+            case EXECUTE -> Managers.Command.queueCommand(keybindCommand);
             case SUGGEST -> McUtils.mc().setScreen(new ChatScreen(keybindCommand));
         }
     }
