@@ -12,6 +12,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     private TextInputBoxWidget focusedTextInput;
@@ -91,5 +92,40 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
+    }
+
+    @Override
+    public boolean charTyped(char codePoint, int modifiers) {
+        return (getFocusedTextInput() != null && getFocusedTextInput().charTyped(codePoint, modifiers))
+                || super.charTyped(codePoint, modifiers);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // When tab is pressed, focus the next text box
+        if (keyCode == GLFW.GLFW_KEY_TAB) {
+            int index = getFocusedTextInput() == null ? 0 : children().indexOf(getFocusedTextInput());
+            int actualIndex = Math.max(index, 0) + 1;
+
+            // Try to find next text input
+            // From index - end
+            for (int i = actualIndex; i < children().size(); i++) {
+                if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
+                    setFocusedTextInput(textInputBoxWidget);
+                    return true;
+                }
+            }
+
+            // From 0 - index
+            for (int i = 0; i < Math.min(actualIndex, children().size()); i++) {
+                if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
+                    setFocusedTextInput(textInputBoxWidget);
+                    return true;
+                }
+            }
+        }
+
+        return (getFocusedTextInput() != null && getFocusedTextInput().keyPressed(keyCode, scanCode, modifiers))
+                || super.keyPressed(keyCode, scanCode, modifiers);
     }
 }
