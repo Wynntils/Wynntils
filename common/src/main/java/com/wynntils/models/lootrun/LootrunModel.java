@@ -45,6 +45,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +56,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Vector2d;
@@ -163,26 +165,55 @@ public class LootrunModel extends Model {
     public void onLootrunParticle(ParticleVerifiedEvent event) {
         if (event.getParticle().particleType() != ParticleType.LOOTRUN_TASK) return;
 
-        Optional<LootrunLocation> currentLocation = getLocation();
-        if (currentLocation.isEmpty()) return;
+        boolean foundTaskLocation = false;
+        for (Set<TaskLocation> taskLocationsForLocation : taskLocations.values()) {
+            for (TaskLocation taskLocation : taskLocationsForLocation) {
+                if (PosUtils.closerThanIgnoringY(
+                        taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
+                    // Note: We do this re-allocation so we always display the correct location,
+                    //       even if it slightly changed, or our data is imprecise.
+                    possibleTaskLocations.add(new TaskLocation(
+                            taskLocation.name(),
+                            Location.containing(event.getParticle().position()),
+                            taskLocation.taskType()));
 
-        for (TaskLocation taskLocation : taskLocations.getOrDefault(currentLocation.get(), Set.of())) {
-            if (PosUtils.closerThanIgnoringY(
-                    taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
-                // FIXME: Remove when 2.0.4 task locations are released
-                //        "Hack" in Y levels from particle position
-                possibleTaskLocations.add(new TaskLocation(
-                        taskLocation.name(),
-                        Location.containing(event.getParticle().position()),
-                        taskLocation.taskType()));
-                return;
+                    foundTaskLocation = true;
+                    break;
+                }
             }
+
+            if (foundTaskLocation) break;
         }
 
-        // Our possible task location set did not contain the particle location,
-        // so add a new "unknown" task location to the set.
-        Location location = Location.containing(event.getParticle().position());
-        possibleTaskLocations.add(new TaskLocation(location.toString(), location, LootrunTaskType.UNKNOWN));
+        if (!foundTaskLocation) {
+            // Our possible task location set did not contain the particle location,
+            // so add a new "unknown" task location to the set.
+            Location location = Location.containing(event.getParticle().position());
+            possibleTaskLocations.add(new TaskLocation(location.toString(), location, LootrunTaskType.UNKNOWN));
+        }
+
+        // Only log this in development environments.
+        if (!WynntilsMod.isDevelopmentEnvironment()) return;
+
+        // Check if we have tasks from multiple locations, log in case we do.
+        for (LootrunLocation location : LootrunLocation.values()) {
+            List<TaskLocation> tasksInLocation = possibleTaskLocations.stream()
+                    .filter(taskLocation ->
+                            taskLocations.getOrDefault(location, Set.of()).contains(taskLocation))
+                    .toList();
+
+            if (!tasksInLocation.isEmpty() && tasksInLocation.size() < possibleTaskLocations.size()) {
+                List<TaskLocation> tasksNotInLocation = possibleTaskLocations.stream()
+                        .filter(taskLocation -> !tasksInLocation.contains(taskLocation))
+                        .toList();
+
+                WynntilsMod.warn("Found tasks from multiple locations: " + possibleTaskLocations);
+                WynntilsMod.warn("Task location is: " + location);
+                WynntilsMod.warn("Tasks in location: " + tasksInLocation);
+                WynntilsMod.warn("Tasks outside location: " + tasksNotInLocation);
+                break;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -301,13 +332,6 @@ public class LootrunModel extends Model {
 
     public LootrunningState getState() {
         return lootrunningState;
-    }
-
-    public Optional<LootrunLocation> getLocation() {
-        if (McUtils.mc().player == null) return Optional.empty();
-
-        return Optional.ofNullable(
-                LootrunLocation.fromCoordinates(McUtils.mc().player.position()));
     }
 
     public Optional<LootrunTaskType> getTaskType() {
@@ -435,11 +459,6 @@ public class LootrunModel extends Model {
             return;
         }
 
-        if (oldState == LootrunningState.NOT_RUNNING) {
-            WynntilsMod.info("Started a lootrun at " + getLocation());
-            return;
-        }
-
         Beacon closestBeacon = getClosestBeacon();
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
@@ -462,19 +481,14 @@ public class LootrunModel extends Model {
     }
 
     private void updateTaskLocationPrediction(Beacon beacon) {
-        Optional<LootrunLocation> location = getLocation();
-        if (location.isEmpty()) {
-            WynntilsMod.warn("Location was empty when trying to predict for: " + beacon);
-            return;
-        }
-
         Set<TaskLocation> currentTaskLocations = possibleTaskLocations;
         if (currentTaskLocations == null || currentTaskLocations.isEmpty()) {
-            WynntilsMod.warn("No task locations found for " + location.get() + ". Using fallback, all locations.");
-            currentTaskLocations = taskLocations.get(location.get());
+            WynntilsMod.warn("No task locations found. Using fallback, all locations.");
+            currentTaskLocations =
+                    taskLocations.values().stream().flatMap(Collection::stream).collect(Collectors.toUnmodifiableSet());
         }
         if (currentTaskLocations == null || currentTaskLocations.isEmpty()) {
-            WynntilsMod.warn("Fallback failed, no task locations found for " + location.get());
+            WynntilsMod.warn("Fallback failed, no task locations found!");
             return;
         }
 
