@@ -1,9 +1,21 @@
+## [0.0.4-beta.59](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.58...v0.0.4-beta.59) (2023-11-02)
+
+
+### Bug Fixes
+
+* Container quick jumping sometimes does not reset ([#2232](https://github.com/Wynntils/Artemis/issues/2232)) ([a4ff9bb](https://github.com/Wynntils/Artemis/commit/a4ff9bb9caf9dd7a468598e455b0a6b628ac0550))
+
 ## [0.0.4-beta.58](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.57...v0.0.4-beta.58) (2023-11-01)
 
 
 ### Bug Fixes
 
 * Multiline quest titles do not track ([#2231](https://github.com/Wynntils/Artemis/issues/2231)) ([2b1e62b](https://github.com/Wynntils/Artemis/commit/2b1e62b386ba8dbea8e4e64bb61dab79a245f096))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.58 [skip ci] ([778014b](https://github.com/Wynntils/Artemis/commit/778014bf51601a8bb3caff5c90419016e48352fa))
 
 ## [0.0.4-beta.57](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.56...v0.0.4-beta.57) (2023-11-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.55 [skip ci] ([0fd88b6](https://github.com/Wynntils/Artemis/commit/0fd88b6e5bac6662a761c4d7261db94f93a7134d))
-
-## [0.0.4-beta.54](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.53...v0.0.4-beta.54) (2023-10-30)
-
-
-### Bug Fixes
-
-* Fix minimap not rendering edges of maps correctly due to broken bounds checks ([#2223](https://github.com/Wynntils/Artemis/issues/2223)) ([75cca4e](https://github.com/Wynntils/Artemis/commit/75cca4ed1f9fe7cfbb3feb1abd9aff40cfd87a73))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.54 [skip ci] ([70328e3](https://github.com/Wynntils/Artemis/commit/70328e3430d90debf39f480a31dc396d4c0ca799))
 
