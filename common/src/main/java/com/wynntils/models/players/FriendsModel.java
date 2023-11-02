@@ -240,17 +240,13 @@ public final class FriendsModel extends Model {
             WynntilsMod.info("Skipping friend list request because it was requested very recently.");
         }
 
-        Managers.TickScheduler.scheduleLater(
-                () -> {
-                    if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
-                        onlineMessageStatus = ListStatus.EXPECTING;
-                        lastOnlineRequest = System.currentTimeMillis();
-                        Managers.Command.queueCommand("friend online");
-                    } else {
-                        WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
-                    }
-                },
-                5);
+        if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
+            onlineMessageStatus = ListStatus.EXPECTING;
+            lastOnlineRequest = System.currentTimeMillis();
+            Managers.Command.queueCommand("friend online");
+        } else {
+            WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
+        }
     }
 
     public boolean isFriend(String playerName) {
