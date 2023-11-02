@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -237,22 +236,22 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {
             friendMessageStatus = ListStatus.EXPECTING;
             lastFriendRequest = System.currentTimeMillis();
-            McUtils.sendCommand("friend list");
-            WynntilsMod.info("Requested friend list from Wynncraft.");
+            Managers.Command.queueCommand("friend list");
         } else {
             WynntilsMod.info("Skipping friend list request because it was requested very recently.");
         }
 
-        Managers.TickScheduler.scheduleLater(() -> {
-            if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
-                onlineMessageStatus = ListStatus.EXPECTING;
-                lastOnlineRequest = System.currentTimeMillis();
-                McUtils.sendCommand("friend online");
-                WynntilsMod.info("Requested online friend list from Wynncraft.");
-            } else {
-                WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
-            }
-        }, 5);
+        Managers.TickScheduler.scheduleLater(
+                () -> {
+                    if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
+                        onlineMessageStatus = ListStatus.EXPECTING;
+                        lastOnlineRequest = System.currentTimeMillis();
+                        Managers.Command.queueCommand("friend online");
+                    } else {
+                        WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
+                    }
+                },
+                5);
     }
 
     public boolean isFriend(String playerName) {
