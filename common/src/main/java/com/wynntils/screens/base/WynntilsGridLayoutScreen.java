@@ -5,11 +5,8 @@
 package com.wynntils.screens.base;
 
 import com.wynntils.core.consumers.screens.WynntilsScreen;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
     private static final float GRID_DIVISIONS = 64f;
@@ -49,6 +46,6 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-//        RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
+        //        RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 }
