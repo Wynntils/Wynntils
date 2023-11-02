@@ -5,8 +5,10 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -227,6 +229,7 @@ public final class FriendsModel extends Model {
      * Sends "/friend list" to Wynncraft and waits for the response.
      * (!) Skips if the last request was less than 250ms ago.
      * When the response is received, friends will be updated.
+     * 5 tick delay between requesting friend list and online friend list.
      */
     public void requestData() {
         if (McUtils.player() == null) return;
@@ -240,14 +243,16 @@ public final class FriendsModel extends Model {
             WynntilsMod.info("Skipping friend list request because it was requested very recently.");
         }
 
-        if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
-            onlineMessageStatus = ListStatus.EXPECTING;
-            lastOnlineRequest = System.currentTimeMillis();
-            McUtils.sendCommand("friend online");
-            WynntilsMod.info("Requested online friend list from Wynncraft.");
-        } else {
-            WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
-        }
+        Managers.TickScheduler.scheduleLater(() -> {
+            if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
+                onlineMessageStatus = ListStatus.EXPECTING;
+                lastOnlineRequest = System.currentTimeMillis();
+                McUtils.sendCommand("friend online");
+                WynntilsMod.info("Requested online friend list from Wynncraft.");
+            } else {
+                WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
+            }
+        }, 5);
     }
 
     public boolean isFriend(String playerName) {

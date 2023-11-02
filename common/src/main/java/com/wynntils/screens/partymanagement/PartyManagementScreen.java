@@ -5,6 +5,7 @@
 package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -413,7 +414,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
 
     private void refreshAll() {
         Models.Party.requestData();
-        Models.Friends.requestData();
+        Managers.TickScheduler.scheduleLater(Models.Friends::requestData, 5);
         reloadCreateLeaveButton();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
