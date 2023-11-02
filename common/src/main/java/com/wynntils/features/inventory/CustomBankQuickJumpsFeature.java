@@ -80,6 +80,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
         pageDestination = 1;
+        quickJumping = false;
     }
 
     @SubscribeEvent
