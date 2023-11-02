@@ -140,9 +140,6 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
 
-        // uncomment when changing gui elements
-        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
-
         // region Invite field header
         FontRenderer.getInstance()
                 .renderText(

@@ -389,9 +389,6 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
         PoseStack poseStack = guiGraphics.pose();
         renderScrollButton(poseStack);
 
-        // Uncomment when editing UI
-        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
-
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
                 .get()

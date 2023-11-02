@@ -253,9 +253,6 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         PoseStack poseStack = guiGraphics.pose();
 
-        // Dev/Debug: Uncomment when editing GUI elements for debug grid
-        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
-
         // Chat Tabs List
         chatTabsWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 

@@ -140,9 +140,6 @@ public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics.pose());
-
-        // Uncomment when editing UI
-        //                RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 
     @Override
