@@ -92,8 +92,8 @@
     "url": "https://athena.wynntils.com/cache/get/leaderboard"
   },
   {
-    "id": "dataWynncraftTerritoryList",
-    "url": "https://api.wynncraft.com/public_api.php?action=territoryList"
+    "id": "dataWynncraftTerritoryListV3",
+    "url": "https://api.wynncraft.com/v3/guild/list/territory"
   },
   {
     "id": "dataStaticCombatLocations",
