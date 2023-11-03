@@ -91,7 +91,9 @@ public class TerritoryPoi implements Poi {
                 && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
             color = territoryInfo.getResourceColor();
-        } else if (territoryProfile.getGuildInfo() == TerritoryProfile.GuildInfo.NONE) {
+        } else if ((isTerritoryInfoUsable()
+                        && territoryInfo.getGuildName().equals(TerritoryProfile.GuildInfo.NONE.name()))
+                || territoryProfile.getGuildInfo() == TerritoryProfile.GuildInfo.NONE) {
             // Uncaptured territory at season reset
             color = CommonColors.WHITE;
         } else {
@@ -145,7 +147,7 @@ public class TerritoryPoi implements Poi {
                             TextShadow.OUTLINE);
         }
 
-        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getFriendlyName();
+        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild();
         Models.GuildAttackTimer.getAttackTimerForTerritory(guildName).ifPresent(attackTimer -> {
             final String timeLeft = attackTimer.timerString();
 

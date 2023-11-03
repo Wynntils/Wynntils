@@ -188,7 +188,7 @@ public class TerritoryProfile {
     }
 
     public record GuildInfo(String name, String prefix) {
-        public static final GuildInfo NONE = new GuildInfo("None", "None");
+        public static final GuildInfo NONE = new GuildInfo("No owner", "None");
     }
 
     public record TerritoryLocation(int startX, int startZ, int endX, int endZ) {}
