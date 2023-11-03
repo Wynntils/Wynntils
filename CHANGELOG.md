@@ -1,9 +1,21 @@
+## [0.0.4-beta.61](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.60...v0.0.4-beta.61) (2023-11-03)
+
+
+### New Features
+
+* Migrate to V3 territory API ([#2236](https://github.com/Wynntils/Artemis/issues/2236)) ([5eacf08](https://github.com/Wynntils/Artemis/commit/5eacf08032ce1a39fff8b8fa6f99f7f4e7f5ef99))
+
 ## [0.0.4-beta.60](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.59...v0.0.4-beta.60) (2023-11-02)
 
 
 ### Bug Fixes
 
 * Don't rely on coordinates to guess the lootrun locations ([#2230](https://github.com/Wynntils/Artemis/issues/2230)) ([d3ddc0c](https://github.com/Wynntils/Artemis/commit/d3ddc0c9d9eeaf82425d3c48881a4319101b846b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.60 [skip ci] ([5cfbd0b](https://github.com/Wynntils/Artemis/commit/5cfbd0b73e0a595bf37f863957a6a2e7b92fa555))
 
 ## [0.0.4-beta.59](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.58...v0.0.4-beta.59) (2023-11-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.57 [skip ci] ([0c89977](https://github.com/Wynntils/Artemis/commit/0c89977f8a9b33d1432a9cbec28edd95e255d3fd))
-
-## [0.0.4-beta.56](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.55...v0.0.4-beta.56) (2023-10-31)
-
-
-### New Features
-
-* Add Menu Command ([#2228](https://github.com/Wynntils/Artemis/issues/2228)) ([cee2f5c](https://github.com/Wynntils/Artemis/commit/cee2f5ccbd2c86ca08624a462071caa3c0407bde))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.56 [skip ci] ([2abe9db](https://github.com/Wynntils/Artemis/commit/2abe9db9062452e9fdd7c1555a52cb084338419f))
 
