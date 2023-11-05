@@ -212,6 +212,21 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.waypoints.add.name")),
                         Component.translatable("screens.wynntils.map.waypoints.add.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        if (firstInit) {
+            BoundingBox textureBoundingBox =
+                    BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
+
+            // When in an unmapped area, center to the middle of the map if the feature is enabled
+            if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                            .centerWhenUnmapped
+                            .get()
+                    && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
+                centerMap();
+            }
+
+            firstInit = false;
+        }
     }
 
     @Override

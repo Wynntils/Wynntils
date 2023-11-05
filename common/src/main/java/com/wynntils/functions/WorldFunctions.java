@@ -290,4 +290,23 @@ public class WorldFunctions {
                     List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
         }
     }
+
+    public static class InMappedAreaFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            float width = arguments.getArgument("width").getDoubleValue().floatValue();
+            float height = arguments.getArgument("height").getDoubleValue().floatValue();
+            float scale = arguments.getArgument("scale").getDoubleValue().floatValue();
+
+            return Services.Map.isPlayerInMappedArea(width, height, scale);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("width", Number.class, 130),
+                    new FunctionArguments.Argument<>("height", Number.class, 130),
+                    new FunctionArguments.Argument<>("scale", Number.class, 1)));
+        }
+    }
 }
