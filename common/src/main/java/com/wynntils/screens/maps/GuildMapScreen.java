@@ -20,7 +20,6 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -46,14 +45,6 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
-    private static final int MAP_CENTER_X = -150;
-    private static final int MAP_CENTER_Z = -3000;
-    private static final int MAX_X = 1650;
-    private static final int MAX_Z = -150;
-    private static final int MIN_X = -2400;
-    private static final int MIN_Z = -6600;
-
-    private boolean firstInit = true;
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
     private boolean hybridMode = true;
@@ -169,10 +160,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         if (firstInit) {
             // When outside of the main map, center to the middle of the map
-            if (!MathUtils.isInside(
-                    (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z)) {
-                updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
-                setZoom(0);
+            if (!isPlayerInsideMainArea()) {
+                centerMap();
             }
 
             firstInit = false;
