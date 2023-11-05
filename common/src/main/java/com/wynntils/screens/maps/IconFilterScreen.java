@@ -5,7 +5,7 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.maps.widgets.IconFilterWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -20,9 +20,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public final class IconFilterScreen extends WynntilsScreen {
+public final class IconFilterScreen extends WynntilsGridLayoutScreen {
     // Constants
-    private static final float GRID_DIVISIONS = 64.0f;
     private static final int HEADER_HEIGHT = 13;
     private static final int ICONS_PER_ROW = 7;
     private static final int MAX_ICONS_TO_DISPLAY = 28;
@@ -44,8 +43,6 @@ public final class IconFilterScreen extends WynntilsScreen {
     private float backgroundWidth;
     private float backgroundX;
     private float backgroundY;
-    private float dividedHeight;
-    private float dividedWidth;
     private float scrollButtonHeight;
     private float scrollButtonRenderX;
     private float scrollButtonRenderY;
@@ -74,8 +71,7 @@ public final class IconFilterScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        dividedWidth = this.width / GRID_DIVISIONS;
-        dividedHeight = this.height / GRID_DIVISIONS;
+        super.doInit();
         iconButtonSize = (int) (dividedWidth * 5);
         backgroundX = dividedWidth * 10;
         backgroundWidth = dividedWidth * 44;
@@ -144,9 +140,6 @@ public final class IconFilterScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics.pose());
-
-        // Uncomment when editing UI
-        //                RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 
     @Override
