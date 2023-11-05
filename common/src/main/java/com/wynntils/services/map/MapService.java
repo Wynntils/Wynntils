@@ -11,8 +11,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.features.map.MinimapFeature;
-import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.BoundingCircle;
@@ -53,12 +51,7 @@ public final class MapService extends Service {
                 .toList();
     }
 
-    public boolean isPlayerInMappedArea() {
-        MinimapOverlay minimapOverlay = Managers.Feature.getFeatureInstance(MinimapFeature.class).minimapOverlay;
-        float width = minimapOverlay.getWidth();
-        float height = minimapOverlay.getHeight();
-        float scale = minimapOverlay.scale.get();
-
+    public boolean isPlayerInMappedArea(float width, float height, float scale) {
         BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ(), width * scale, height * scale));
 
