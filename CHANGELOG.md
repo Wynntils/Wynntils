@@ -1,4 +1,16 @@
+## [0.0.4-beta.63](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.62...v0.0.4-beta.63) (2023-11-05)
+
+
+### New Features
+
+* Add option to hide minimap and center main map in unmapped areas ([#2222](https://github.com/Wynntils/Artemis/issues/2222)) ([0b917fd](https://github.com/Wynntils/Artemis/commit/0b917fd85edae3fde33a90d04189300c7143325f))
+
 ## [0.0.4-beta.62](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.61...v0.0.4-beta.62) (2023-11-05)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.62 [skip ci] ([7da7d59](https://github.com/Wynntils/Artemis/commit/7da7d5933aab471e7a0d21123e23e328a8d8e013))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.59 [skip ci] ([e977037](https://github.com/Wynntils/Artemis/commit/e9770372bfb28936226e07cd1d80eb23c31a87f3))
-
-## [0.0.4-beta.58](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.57...v0.0.4-beta.58) (2023-11-01)
-
-
-### Bug Fixes
-
-* Multiline quest titles do not track ([#2231](https://github.com/Wynntils/Artemis/issues/2231)) ([2b1e62b](https://github.com/Wynntils/Artemis/commit/2b1e62b386ba8dbea8e4e64bb61dab79a245f096))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.58 [skip ci] ([778014b](https://github.com/Wynntils/Artemis/commit/778014bf51601a8bb3caff5c90419016e48352fa))
 
