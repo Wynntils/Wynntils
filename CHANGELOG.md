@@ -1,9 +1,21 @@
+## [0.0.4-beta.62](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.61...v0.0.4-beta.62) (2023-11-05)
+
+
+### Code Refactoring
+
+* Grid screens use abstract WynntilsGridLayoutScreen ([#2207](https://github.com/Wynntils/Artemis/issues/2207)) ([3b90f37](https://github.com/Wynntils/Artemis/commit/3b90f37eebeba346b365b8bb4b53621126123983))
+
 ## [0.0.4-beta.61](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.60...v0.0.4-beta.61) (2023-11-03)
 
 
 ### New Features
 
 * Migrate to V3 territory API ([#2236](https://github.com/Wynntils/Artemis/issues/2236)) ([5eacf08](https://github.com/Wynntils/Artemis/commit/5eacf08032ce1a39fff8b8fa6f99f7f4e7f5ef99))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.61 [skip ci] ([5ba31c5](https://github.com/Wynntils/Artemis/commit/5ba31c54af4d670d04f987a143034fb417c1ec2b))
 
 ## [0.0.4-beta.60](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.59...v0.0.4-beta.60) (2023-11-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.58 [skip ci] ([778014b](https://github.com/Wynntils/Artemis/commit/778014bf51601a8bb3caff5c90419016e48352fa))
-
-## [0.0.4-beta.57](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.56...v0.0.4-beta.57) (2023-11-01)
-
-
-### Bug Fixes
-
-* Trade market buttons break with chat tabs ([#2204](https://github.com/Wynntils/Artemis/issues/2204)) ([8938ff5](https://github.com/Wynntils/Artemis/commit/8938ff584959d8487acd75eae5cfcfe59ccae5e3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.57 [skip ci] ([0c89977](https://github.com/Wynntils/Artemis/commit/0c89977f8a9b33d1432a9cbec28edd95e255d3fd))
 
