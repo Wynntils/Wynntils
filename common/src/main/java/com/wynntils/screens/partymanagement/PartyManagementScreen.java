@@ -414,7 +414,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
 
     private void refreshAll() {
         Models.Party.requestData();
-        Managers.TickScheduler.scheduleLater(Models.Friends::requestData, 5);
+        Models.Friends.requestData();
         reloadCreateLeaveButton();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
