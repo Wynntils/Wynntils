@@ -1,9 +1,21 @@
+## [0.0.4-beta.65](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.64...v0.0.4-beta.65) (2023-11-06)
+
+
+### Bug Fixes
+
+* Fix territory held times being displayed wrongly ([#2240](https://github.com/Wynntils/Artemis/issues/2240)) ([0dcffea](https://github.com/Wynntils/Artemis/commit/0dcffea89acbef85ec48ce669424b350894f50e3))
+
 ## [0.0.4-beta.64](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.63...v0.0.4-beta.64) (2023-11-05)
 
 
 ### Bug Fixes
 
 * Fix grid screens not rendering all elements ([#2238](https://github.com/Wynntils/Artemis/issues/2238)) ([7ed4235](https://github.com/Wynntils/Artemis/commit/7ed4235bcbce883ec640c1a7393132ea12527ddd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.64 [skip ci] ([358ec9c](https://github.com/Wynntils/Artemis/commit/358ec9cc84691181a19258174096b834abf6409a))
 
 ## [0.0.4-beta.63](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.62...v0.0.4-beta.63) (2023-11-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.61 [skip ci] ([5ba31c5](https://github.com/Wynntils/Artemis/commit/5ba31c54af4d670d04f987a143034fb417c1ec2b))
-
-## [0.0.4-beta.60](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.59...v0.0.4-beta.60) (2023-11-02)
-
-
-### Bug Fixes
-
-* Don't rely on coordinates to guess the lootrun locations ([#2230](https://github.com/Wynntils/Artemis/issues/2230)) ([d3ddc0c](https://github.com/Wynntils/Artemis/commit/d3ddc0c9d9eeaf82425d3c48881a4319101b846b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.60 [skip ci] ([5cfbd0b](https://github.com/Wynntils/Artemis/commit/5cfbd0b73e0a595bf37f863957a6a2e7b92fa555))
 
