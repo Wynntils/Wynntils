@@ -23,8 +23,7 @@ import net.minecraft.core.Position;
 
 public class TerritoryProfile {
     private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
-    private static final SimpleDateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.ROOT);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
 
     private final String name;
     private final String friendlyName;
