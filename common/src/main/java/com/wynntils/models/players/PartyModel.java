@@ -351,7 +351,7 @@ public final class PartyModel extends Model {
 
         expectingPartyMessage = true;
         lastPartyRequest = System.currentTimeMillis();
-        Managers.Command.queueCommand("party list");
+        Handlers.Command.sendCommand("party list");
     }
 
     public void increasePlayerPriority(String playerName) {
@@ -413,7 +413,7 @@ public final class PartyModel extends Model {
      */
     public void partyKick(String player) {
         nextKickHandled = true;
-        Managers.Command.queueCommand("party kick " + player);
+        Handlers.Command.sendCommand("party kick " + player);
         processPartyKick(player);
     }
 
@@ -421,7 +421,7 @@ public final class PartyModel extends Model {
      * Promotes a player to party leader.
      */
     public void partyPromote(String player) {
-        Managers.Command.queueCommand("party promote " + player);
+        Handlers.Command.sendCommand("party promote " + player);
     }
 
     /**
@@ -429,35 +429,35 @@ public final class PartyModel extends Model {
      */
     public void partyInvite(String player) {
         if (!inParty) partyCreate();
-        Managers.Command.queueCommand("party invite " + player);
+        Handlers.Command.sendCommand("party invite " + player);
     }
 
     /**
      * Leaves the party.
      */
     public void partyLeave() {
-        Managers.Command.queueCommand("party leave");
+        Handlers.Command.sendCommand("party leave");
     }
 
     /**
      * Disbands the party.
      */
     public void partyDisband() {
-        Managers.Command.queueCommand("party disband");
+        Handlers.Command.sendCommand("party disband");
     }
 
     /**
      * Creates a party.
      */
     public void partyCreate() {
-        Managers.Command.queueCommand("party create");
+        Handlers.Command.sendCommand("party create");
     }
 
     /**
      * Join another players party
      */
     public void partyJoin(String playerName) {
-        Managers.Command.queueCommand("party join " + playerName);
+        Handlers.Command.sendCommand("party join " + playerName);
     }
 
     /**

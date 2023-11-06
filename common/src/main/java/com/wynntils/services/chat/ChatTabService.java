@@ -5,6 +5,7 @@
 package com.wynntils.services.chat;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
@@ -240,7 +241,7 @@ public final class ChatTabService extends Service {
         String autoCommand = getFocusedTab().getAutoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            Managers.Command.queueCommand(autoCommand + " " + message);
+            Handlers.Command.sendCommand(autoCommand + " " + message);
         } else {
             McUtils.sendChat(message);
         }

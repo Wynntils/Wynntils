@@ -6,6 +6,7 @@ package com.wynntils.features.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.RootCommandNode;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -38,7 +39,7 @@ public class CommandAliasesFeature extends Feature {
         for (CommandAlias commandAlias : aliases.get()) {
             if (commandAlias.getAliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
                 e.setCanceled(true);
-                Managers.Command.queueCommand(commandAlias.getOriginalCommand());
+                Handlers.Command.sendCommand(commandAlias.getOriginalCommand());
                 break;
             }
         }

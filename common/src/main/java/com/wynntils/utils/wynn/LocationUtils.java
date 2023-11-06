@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Optional;
@@ -53,11 +53,11 @@ public final class LocationUtils {
 
     private static void sendShareMessage(String target, String locationString) {
         if (target.equals("guild")) {
-            Managers.Command.queueCommand("g " + locationString);
+            Handlers.Command.sendCommand("g " + locationString);
         } else if (target.equals("party")) {
-            Managers.Command.queueCommand("p " + locationString);
+            Handlers.Command.sendCommand("p " + locationString);
         } else {
-            Managers.Command.queueCommand("msg " + target + " " + locationString);
+            Handlers.Command.sendCommand("msg " + target + " " + locationString);
         }
     }
 }

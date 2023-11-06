@@ -27,14 +27,10 @@ import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.CommandsAddedEvent;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandRuntimeException;
@@ -61,17 +57,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  *     This is done after the server initializes the dispatcher.
  * </ol>
  */
-public final class CommandManager extends Manager {
-    private final Queue<String> commandQueue = new LinkedList<>();
-    private int commandQueueTicks = 0;
-    private static final int TICKS_PER_EXECUTE = 7;
-
+public final class ClientCommandManager extends Manager {
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     private final List<Command> commandInstanceSet = new ArrayList<>();
     private WynntilsCommand wynntilsCommand;
 
-    public CommandManager() {
+    public ClientCommandManager() {
         super(List.of());
 
         registerAllCommands();
@@ -200,27 +192,5 @@ public final class CommandManager extends Manager {
         // The WynntilsCommand must be registered last, since it
         // need the above commands as aliases
         registerCommandWithCommandSet(new WynntilsCommand());
-    }
-
-    /**
-     * Queue a command to be executed. Executions happen in the order they are queued.
-     * Queued commands automatically log when they are executed.
-     * @param command The command to queue. The leading '/' should not be included.
-     */
-    public void queueCommand(String command) {
-        commandQueue.add(command);
-    }
-
-    @SubscribeEvent
-    public void onTick(TickEvent e) {
-        if (!Models.WorldState.onWorld()) return;
-        commandQueueTicks++;
-
-        if (commandQueueTicks >= TICKS_PER_EXECUTE && !commandQueue.isEmpty()) {
-            String command = commandQueue.poll();
-            WynntilsMod.info("Executing queued command: " + command);
-            McUtils.mc().getConnection().sendCommand(command);
-            commandQueueTicks = 0;
-        }
     }
 }

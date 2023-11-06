@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
@@ -76,7 +76,7 @@ public class QueryStep {
 
     public static QueryStep sendCommand(String command) {
         return new QueryStep(container -> {
-            Managers.Command.queueCommand(command);
+            Handlers.Command.sendCommand(command);
             return true;
         });
     }
