@@ -46,8 +46,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
     private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
+    private static final int MAP_CENTER_X = -150;
+    private static final int MAP_CENTER_Z = -3000;
+    private static final int MAX_X = 1650;
+    private static final int MAX_Z = -150;
+    private static final int MIN_X = -2400;
+    private static final int MIN_Z = -6600;
 
     protected boolean holdingMapKey = false;
+    protected boolean firstInit = true;
 
     protected float renderWidth;
     protected float renderHeight;
@@ -357,6 +364,16 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void centerMapAroundPlayer() {
         updateMapCenter(
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
+    }
+
+    protected void centerMap() {
+        updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
+        setZoom(0);
+    }
+
+    protected boolean isPlayerInsideMainArea() {
+        return MathUtils.isInside(
+                (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }
 
     protected void setZoom(float zoomTargetDelta) {
