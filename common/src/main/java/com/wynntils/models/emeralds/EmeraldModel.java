@@ -8,7 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.ItemModel;
@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -48,6 +47,73 @@ public final class EmeraldModel extends Model {
 
     public EmeraldModel(CharacterModel characterModel, ItemModel itemModel) {
         super(List.of(characterModel, itemModel));
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent e) {
+        if (e.getNewState() != WorldState.WORLD) return;
+
+        inventoryEmeralds = 0;
+        containerEmeralds = 0;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        recountEmeralds();
+    }
+
+    private void recountEmeralds() {
+        inventoryEmeralds = 0;
+
+        // Rescan inventory after merging items
+        List<ItemStack> items = McUtils.inventoryMenu().getItems();
+        for (ItemStack item : items) {
+            adjustBalance(item, true);
+        }
+
+        containerEmeralds = 0;
+
+        // Rescan container after merging items
+        items = McUtils.containerMenu().getItems();
+        for (ItemStack item : items) {
+            adjustBalance(item, false);
+        }
+    }
+
+    @SubscribeEvent
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+        String title = WynnUtils.normalizeBadString(e.getTitle().getString());
+        if (title.equals("Emerald Pouch")) {
+            pouchContainerId = e.getContainerId();
+        } else {
+            pouchContainerId = -1;
+        }
+    }
+
+    @SubscribeEvent
+    public void onMenuClosed(MenuEvent.MenuClosedEvent e) {
+        containerEmeralds = 0;
+        pouchContainerId = -1;
+    }
+
+    @SubscribeEvent
+    public void onContainerClose(ContainerCloseEvent.Post event) {
+        containerEmeralds = 0;
+    }
+
+    private void adjustBalance(ItemStack newItemStack, boolean isInventory) {
+        int adjustValue = 0;
+        Optional<EmeraldValuedItemProperty> newItemValueOpt =
+                Models.Item.asWynnItemPropery(newItemStack, EmeraldValuedItemProperty.class);
+        if (newItemValueOpt.isPresent()) {
+            adjustValue += newItemValueOpt.get().getEmeraldValue();
+        }
+
+        if (isInventory) {
+            inventoryEmeralds += adjustValue;
+        } else {
+            containerEmeralds += adjustValue;
+        }
     }
 
     public String getFormattedString(int emeralds, boolean appendZeros) {
@@ -85,7 +151,7 @@ public final class EmeraldModel extends Model {
     }
 
     public int getAmountInContainer() {
-        return containerEmeralds;
+        return containerEmeralds - inventoryEmeralds;
     }
 
     public String convertEmeraldPrice(String inputStr) {
@@ -144,92 +210,5 @@ public final class EmeraldModel extends Model {
 
     public double getTaxAmount() {
         return Models.Character.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
-    }
-
-    @SubscribeEvent
-    public void onWorldChange(WorldStateEvent e) {
-        if (e.getNewState() != WorldState.WORLD) return;
-
-        inventoryEmeralds = 0;
-        containerEmeralds = 0;
-
-        // Rescan inventory at login
-        Inventory inventory = McUtils.inventory();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            adjustBalance(null, inventory.getItem(i), true);
-        }
-    }
-
-    @SubscribeEvent
-    public void onSetSlot(SetSlotEvent.Post event) {
-        boolean isInventory = event.getContainer() == McUtils.inventory();
-        if (pouchContainerId != -1 && !isInventory) return;
-
-        // FIXME: This is a hack to always have up-to-date emerald counts
-        //        When Wynncraft fixes emerald stacking,
-        //        this can be simplified greatly (by using old and new stacks)
-        //        However, this is really fast so maybe we can keep it (pending profiling)
-        if (isInventory) {
-            inventoryEmeralds = 0;
-
-            // Rescan inventory after merging items
-            List<ItemStack> items = McUtils.inventoryMenu().getItems();
-            for (ItemStack item : items) {
-                adjustBalance(null, item, true);
-            }
-        } else if (event.getContainer() == McUtils.containerMenu()) {
-            containerEmeralds = 0;
-
-            // Rescan container after merging items
-            List<ItemStack> items = McUtils.containerMenu().getItems();
-            for (ItemStack item : items) {
-                adjustBalance(null, item, false);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
-        String title = WynnUtils.normalizeBadString(e.getTitle().getString());
-        if (title.equals("Emerald Pouch")) {
-            pouchContainerId = e.getContainerId();
-        } else {
-            pouchContainerId = -1;
-        }
-    }
-
-    @SubscribeEvent
-    public void onMenuClosed(MenuEvent.MenuClosedEvent e) {
-        containerEmeralds = 0;
-        pouchContainerId = -1;
-    }
-
-    @SubscribeEvent
-    public void onContainerClose(ContainerCloseEvent.Post event) {
-        containerEmeralds = 0;
-    }
-
-    private void adjustBalance(ItemStack oldItemStack, ItemStack newItemStack, boolean isInventory) {
-        int adjustValue = 0;
-        Optional<EmeraldValuedItemProperty> oldItemValueOpt =
-                Models.Item.asWynnItemPropery(oldItemStack, EmeraldValuedItemProperty.class);
-        if (oldItemValueOpt.isPresent()) {
-            adjustValue -= oldItemValueOpt.get().getEmeraldValue();
-        }
-
-        Optional<EmeraldValuedItemProperty> newItemValueOpt =
-                Models.Item.asWynnItemPropery(newItemStack, EmeraldValuedItemProperty.class);
-        if (newItemValueOpt.isPresent()) {
-            adjustValue += newItemValueOpt.get().getEmeraldValue();
-        }
-
-        // We most likely replaced the same item, so we don't need to adjust
-        if (adjustValue == 0) return;
-
-        if (isInventory) {
-            inventoryEmeralds = Math.max(0, inventoryEmeralds + adjustValue);
-        } else {
-            containerEmeralds = Math.max(0, containerEmeralds + adjustValue);
-        }
     }
 }

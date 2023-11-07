@@ -167,7 +167,10 @@ public class ItemHandler extends Handler {
         if (!firstItem.getItem().equals(secondItem.getItem())) return false;
 
         // We have to use the count field here to bypass the getCount method empty flag
-        if (firstItem.count != secondItem.count) {
+        // If the count is not 1, we need to reannotate, since we can't tell the old item count
+        // This is because we set the item count locally, then the server sends a packet to confirm,
+        // which passes this check, but the annotation is not updated
+        if (firstItem.count != secondItem.count || firstItem.count != 1) {
             return false;
         }
 

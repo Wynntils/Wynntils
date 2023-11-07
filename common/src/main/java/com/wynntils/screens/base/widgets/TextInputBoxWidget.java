@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -17,6 +18,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
@@ -34,6 +36,8 @@ public class TextInputBoxWidget extends AbstractWidget {
     private static final int CURSOR_TICK = 350;
 
     private final Consumer<String> onUpdateConsumer;
+
+    protected List<Component> tooltip;
     protected String textBoxInput = "";
     protected int cursorPosition = 0;
     private int highlightPosition = 0;
@@ -181,6 +185,10 @@ public class TextInputBoxWidget extends AbstractWidget {
                 (textPadding + this.height - textPadding) / 2,
                 VerticalAlignment.MIDDLE,
                 false);
+
+        if (isHovered && tooltip != null) {
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+        }
 
         poseStack.popPose();
     }

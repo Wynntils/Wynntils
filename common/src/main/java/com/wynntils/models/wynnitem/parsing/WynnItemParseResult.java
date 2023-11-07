@@ -17,6 +17,7 @@ import java.util.Optional;
 public record WynnItemParseResult(
         GearTier tier,
         String itemType,
+        int health,
         int level,
         List<StatActualValue> identifications,
         List<ItemEffect> effects,

@@ -467,7 +467,8 @@ public final class PartyModel extends Model {
      * Consider running {@link #requestData()} before this.
      */
     public void partyKickOffline() {
-        offlineMembers.forEach(this::partyKick);
+        Set<String> offlineMembersCopy = new HashSet<>(offlineMembers);
+        offlineMembersCopy.forEach(this::partyKick);
     }
     // endregion
 }

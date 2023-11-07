@@ -4,6 +4,7 @@
  */
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -506,5 +507,19 @@ public class TestStyledText {
                 result,
                 styledText.getString(PartStyle.StyleType.NONE),
                 "StyledText.replaceAll() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_getStringWithNonChatFormattingColors() {
+        final CustomColor color = new CustomColor(36, 12, 42);
+        final Component component = Component.literal("test").withStyle(style -> style.withColor(color.asInt()));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        final String result = "§#240c2atest";
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
     }
 }

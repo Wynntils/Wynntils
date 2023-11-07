@@ -6,18 +6,19 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
+import java.util.function.Supplier;
 
 public class EmeraldItem extends GameItem implements EmeraldValuedItemProperty {
-    private final int amount;
+    private final Supplier<Integer> amountSupplier;
     private final EmeraldUnits unit;
 
-    public EmeraldItem(int amount, EmeraldUnits unit) {
-        this.amount = amount;
+    public EmeraldItem(Supplier<Integer> amountSupplier, EmeraldUnits unit) {
+        this.amountSupplier = amountSupplier;
         this.unit = unit;
     }
 
     public int getAmount() {
-        return amount;
+        return amountSupplier.get();
     }
 
     public EmeraldUnits getUnit() {
@@ -26,11 +27,11 @@ public class EmeraldItem extends GameItem implements EmeraldValuedItemProperty {
 
     @Override
     public int getEmeraldValue() {
-        return amount * unit.getMultiplier();
+        return getAmount() * unit.getMultiplier();
     }
 
     @Override
     public String toString() {
-        return "EmeraldItem{" + "amount=" + amount + ", unit=" + unit + '}';
+        return "EmeraldItem{" + "amount=" + getAmount() + ", unit=" + unit + '}';
     }
 }

@@ -6,10 +6,10 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import com.wynntils.models.items.properties.UsesItemPropery;
+import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.utils.type.CappedValue;
 
-public class TrinketItem extends GameItem implements GearTierItemProperty, UsesItemPropery {
+public class TrinketItem extends GameItem implements GearTierItemProperty, UsesItemProperty {
     private final String trinketName;
     private final GearTier gearTier;
     private final CappedValue uses;

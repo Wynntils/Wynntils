@@ -35,11 +35,6 @@ public class MapCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Manage map related settings";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return Commands.literal("map")

@@ -56,11 +56,6 @@ public class LootrunCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Load, record and manage lootruns";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("load")

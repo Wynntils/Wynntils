@@ -55,11 +55,6 @@ public class CompassCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Set your compass to various targets";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("at")

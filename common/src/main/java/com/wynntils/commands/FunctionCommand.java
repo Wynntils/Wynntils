@@ -61,11 +61,6 @@ public class FunctionCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Call Wynntils functions";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("list")

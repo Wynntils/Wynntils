@@ -19,11 +19,6 @@ public class TerritoryCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Alias of /compass territory";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return Commands.literal("territory")

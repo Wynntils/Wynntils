@@ -167,11 +167,6 @@ public class ConfigCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Read and manipulate Wynntils settings";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(this.buildGetConfigNode())
