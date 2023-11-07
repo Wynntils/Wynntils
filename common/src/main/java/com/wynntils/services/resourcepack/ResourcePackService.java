@@ -5,6 +5,7 @@
 package com.wynntils.services.resourcepack;
 
 import com.google.common.hash.Hashing;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -90,6 +91,17 @@ public final class ResourcePackService extends Service {
         Pack pack = getPackForHash(requestedPreloadHash.get());
         if (pack == null) {
             // File is missing, forget about it
+            requestedPreloadHash.store("");
+            return;
+        }
+
+        try {
+            // If the pack is corrupted, this will throw an exception
+            pack.open();
+        } catch (Throwable t) {
+            WynntilsMod.warn("Failed to open preloaded resource pack", t);
+
+            // File is corrupted, don't try to load it again
             requestedPreloadHash.store("");
             return;
         }
