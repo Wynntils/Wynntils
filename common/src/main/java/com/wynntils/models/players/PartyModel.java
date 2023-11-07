@@ -351,8 +351,7 @@ public final class PartyModel extends Model {
 
         expectingPartyMessage = true;
         lastPartyRequest = System.currentTimeMillis();
-        McUtils.sendCommand("party list");
-        WynntilsMod.info("Requested party list from Wynncraft.");
+        Handlers.Command.sendCommand("party list");
     }
 
     public void increasePlayerPriority(String playerName) {
@@ -414,7 +413,7 @@ public final class PartyModel extends Model {
      */
     public void partyKick(String player) {
         nextKickHandled = true;
-        McUtils.sendCommand("party kick " + player);
+        Handlers.Command.sendCommand("party kick " + player);
         processPartyKick(player);
     }
 
@@ -422,7 +421,7 @@ public final class PartyModel extends Model {
      * Promotes a player to party leader.
      */
     public void partyPromote(String player) {
-        McUtils.sendCommand("party promote " + player);
+        Handlers.Command.sendCommand("party promote " + player);
     }
 
     /**
@@ -430,35 +429,35 @@ public final class PartyModel extends Model {
      */
     public void partyInvite(String player) {
         if (!inParty) partyCreate();
-        McUtils.sendCommand("party invite " + player);
+        Handlers.Command.sendCommand("party invite " + player);
     }
 
     /**
      * Leaves the party.
      */
     public void partyLeave() {
-        McUtils.sendCommand("party leave");
+        Handlers.Command.sendCommand("party leave");
     }
 
     /**
      * Disbands the party.
      */
     public void partyDisband() {
-        McUtils.sendCommand("party disband");
+        Handlers.Command.sendCommand("party disband");
     }
 
     /**
      * Creates a party.
      */
     public void partyCreate() {
-        McUtils.sendCommand("party create");
+        Handlers.Command.sendCommand("party create");
     }
 
     /**
      * Join another players party
      */
     public void partyJoin(String playerName) {
-        McUtils.sendCommand("party join " + playerName);
+        Handlers.Command.sendCommand("party join " + playerName);
     }
 
     /**

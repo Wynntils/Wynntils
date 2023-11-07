@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.consumers.commands.CommandManager;
+import com.wynntils.core.consumers.commands.ClientCommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
 import com.wynntils.core.consumers.overlays.OverlayManager;
@@ -27,7 +27,7 @@ public final class Managers {
     public static final NetManager Net = new NetManager();
     public static final UrlManager Url = new UrlManager(Net);
 
-    public static final CommandManager Command = new CommandManager();
+    public static final ClientCommandManager Command = new ClientCommandManager();
     public static final ConfigManager Config = new ConfigManager();
     public static final ConnectionManager Connection = new ConnectionManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();

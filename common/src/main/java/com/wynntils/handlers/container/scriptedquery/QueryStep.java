@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
@@ -13,7 +14,6 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
@@ -76,7 +76,7 @@ public class QueryStep {
 
     public static QueryStep sendCommand(String command) {
         return new QueryStep(container -> {
-            McUtils.sendCommand(command);
+            Handlers.Command.sendCommand(command);
             return true;
         });
     }

@@ -5,6 +5,7 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -234,8 +235,7 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {
             friendMessageStatus = ListStatus.EXPECTING;
             lastFriendRequest = System.currentTimeMillis();
-            McUtils.sendCommand("friend list");
-            WynntilsMod.info("Requested friend list from Wynncraft.");
+            Handlers.Command.sendCommand("friend list");
         } else {
             WynntilsMod.info("Skipping friend list request because it was requested very recently.");
         }
@@ -243,8 +243,7 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
             onlineMessageStatus = ListStatus.EXPECTING;
             lastOnlineRequest = System.currentTimeMillis();
-            McUtils.sendCommand("friend online");
-            WynntilsMod.info("Requested online friend list from Wynncraft.");
+            Handlers.Command.sendCommand("friend online");
         } else {
             WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
         }

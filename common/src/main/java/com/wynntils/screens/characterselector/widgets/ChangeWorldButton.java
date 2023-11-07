@@ -6,6 +6,7 @@ package com.wynntils.screens.characterselector.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -31,7 +32,7 @@ public class ChangeWorldButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        McUtils.sendCommand("hub");
+        Handlers.Command.sendCommand("hub");
     }
 
     @Override
