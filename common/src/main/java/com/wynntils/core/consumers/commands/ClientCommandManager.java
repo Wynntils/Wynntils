@@ -57,13 +57,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  *     This is done after the server initializes the dispatcher.
  * </ol>
  */
-public final class CommandManager extends Manager {
+public final class ClientCommandManager extends Manager {
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     private final List<Command> commandInstanceSet = new ArrayList<>();
     private WynntilsCommand wynntilsCommand;
 
-    public CommandManager() {
+    public ClientCommandManager() {
         super(List.of());
 
         registerAllCommands();

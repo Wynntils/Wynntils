@@ -5,6 +5,7 @@
 package com.wynntils.services.chat;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
@@ -225,6 +226,8 @@ public final class ChatTabService extends Service {
     /**
      * Sends a chat message respecting chat tab autocommand settings.
      * If no chat tab is actively selected, the message will be sent normally.
+     * Since autocommands are still commands, they will be queued just like any other command.
+     * They are also subject to the same ratelimits on Wynncraft.
      * @param message The message to send.
      */
     public void sendChat(String message) {
@@ -238,7 +241,7 @@ public final class ChatTabService extends Service {
         String autoCommand = getFocusedTab().getAutoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            McUtils.sendCommand(autoCommand + " " + message);
+            Handlers.Command.sendCommand(autoCommand + " " + message);
         } else {
             McUtils.sendChat(message);
         }

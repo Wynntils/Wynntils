@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.utilities;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
@@ -51,7 +52,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
 
         if (amountToContribute != -1) {
             waitingForCommandResponse = true;
-            McUtils.sendCommand("guild xp " + amountToContribute);
+            Handlers.Command.sendCommand("guild xp " + amountToContribute);
         }
     }
 

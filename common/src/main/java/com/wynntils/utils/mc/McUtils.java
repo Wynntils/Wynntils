@@ -97,14 +97,6 @@ public final class McUtils {
     }
 
     /**
-     * Sends the specified command to the server.
-     * @param command The command to send. The leading '/' should not be included.
-     */
-    public static void sendCommand(String command) {
-        mc().getConnection().sendCommand(command);
-    }
-
-    /**
      * Sends some chat message directly to the server.
      * Does not respect ChatTabFeature settings.
      * @param message The message to send.
