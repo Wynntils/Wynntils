@@ -1,9 +1,21 @@
+## [0.0.4-beta.66](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.65...v0.0.4-beta.66) (2023-11-07)
+
+
+### Bug Fixes
+
+* Experimental fix for crashes when preloading a corrupted resource pack ([#2241](https://github.com/Wynntils/Artemis/issues/2241)) ([436f199](https://github.com/Wynntils/Artemis/commit/436f199c16f7dc1c2fdef08e5d053fbabda76a6d))
+
 ## [0.0.4-beta.65](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.64...v0.0.4-beta.65) (2023-11-06)
 
 
 ### Bug Fixes
 
 * Fix territory held times being displayed wrongly ([#2240](https://github.com/Wynntils/Artemis/issues/2240)) ([0dcffea](https://github.com/Wynntils/Artemis/commit/0dcffea89acbef85ec48ce669424b350894f50e3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.65 [skip ci] ([53d86ac](https://github.com/Wynntils/Artemis/commit/53d86ace0a34ba980c2214ce02b5f51d64b504dd))
 
 ## [0.0.4-beta.64](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.63...v0.0.4-beta.64) (2023-11-05)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Grid screens use abstract WynntilsGridLayoutScreen ([#2207](https://github.com/Wynntils/Artemis/issues/2207)) ([3b90f37](https://github.com/Wynntils/Artemis/commit/3b90f37eebeba346b365b8bb4b53621126123983))
-
-## [0.0.4-beta.61](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.60...v0.0.4-beta.61) (2023-11-03)
-
-
-### New Features
-
-* Migrate to V3 territory API ([#2236](https://github.com/Wynntils/Artemis/issues/2236)) ([5eacf08](https://github.com/Wynntils/Artemis/commit/5eacf08032ce1a39fff8b8fa6f99f7f4e7f5ef99))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.61 [skip ci] ([5ba31c5](https://github.com/Wynntils/Artemis/commit/5ba31c54af4d670d04f987a143034fb417c1ec2b))
 
