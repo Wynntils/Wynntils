@@ -166,21 +166,21 @@ public class CustomNametagRendererFeature extends Feature {
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }
 
-        if (!showWynntilsMarker.get()) return;
-
         // Add an appropriate Wynntils marker
         Component realName = event.getDisplayName();
-        Component vanillaNametag;
+        Component vanillaNametag = realName;
 
-        StyledText styledText = StyledText.fromComponent(realName);
-        if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
-            vanillaNametag = Component.literal(WYNNTILS_LOGO)
-                    .withStyle(ChatFormatting.DARK_GRAY)
-                    .append(realName);
-        } else {
-            vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(realName);
+        if (showWynntilsMarker.get()) {
+            StyledText styledText = StyledText.fromComponent(realName);
+            if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
+                vanillaNametag = Component.literal(WYNNTILS_LOGO)
+                        .withStyle(ChatFormatting.DARK_GRAY)
+                        .append(realName);
+            } else {
+                vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(realName);
+            }
         }
         nametags.add(new CustomNametag(vanillaNametag, 1f));
     }
