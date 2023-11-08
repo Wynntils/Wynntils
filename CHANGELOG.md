@@ -1,9 +1,21 @@
+## [0.0.4-beta.68](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.67...v0.0.4-beta.68) (2023-11-08)
+
+
+### Bug Fixes
+
+* Player name not rendering with Wynntils marker disabled ([#2242](https://github.com/Wynntils/Artemis/issues/2242)) ([ffbb67d](https://github.com/Wynntils/Artemis/commit/ffbb67d68632900249ca203188f8b0d62bc80d49))
+
 ## [0.0.4-beta.67](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.66...v0.0.4-beta.67) (2023-11-07)
 
 
 ### Bug Fixes
 
 * Command cooldown related fixes ([#2234](https://github.com/Wynntils/Artemis/issues/2234)) ([dc8c825](https://github.com/Wynntils/Artemis/commit/dc8c82500941e2101d93ee356bae042ed073535a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.67 [skip ci] ([d984fa0](https://github.com/Wynntils/Artemis/commit/d984fa0854cbf75f0885d91d4b0334448efee863))
 
 ## [0.0.4-beta.66](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.65...v0.0.4-beta.66) (2023-11-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.64 [skip ci] ([358ec9c](https://github.com/Wynntils/Artemis/commit/358ec9cc84691181a19258174096b834abf6409a))
-
-## [0.0.4-beta.63](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.62...v0.0.4-beta.63) (2023-11-05)
-
-
-### New Features
-
-* Add option to hide minimap and center main map in unmapped areas ([#2222](https://github.com/Wynntils/Artemis/issues/2222)) ([0b917fd](https://github.com/Wynntils/Artemis/commit/0b917fd85edae3fde33a90d04189300c7143325f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.63 [skip ci] ([540c8f2](https://github.com/Wynntils/Artemis/commit/540c8f2ca8753a206ec81ce4073b964176868ec1))
 
