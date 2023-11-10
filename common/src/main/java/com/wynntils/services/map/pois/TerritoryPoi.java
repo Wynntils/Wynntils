@@ -147,8 +147,7 @@ public class TerritoryPoi implements Poi {
                             TextShadow.OUTLINE);
         }
 
-        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild();
-        Models.GuildAttackTimer.getAttackTimerForTerritory(guildName).ifPresent(attackTimer -> {
+        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName()).ifPresent(attackTimer -> {
             final String timeLeft = attackTimer.timerString();
 
             BufferedFontRenderer.getInstance()
