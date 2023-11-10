@@ -147,24 +147,25 @@ public class TerritoryPoi implements Poi {
                             TextShadow.OUTLINE);
         }
 
-        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName()).ifPresent(attackTimer -> {
-            final String timeLeft = attackTimer.timerString();
+        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
+                .ifPresent(attackTimer -> {
+                    final String timeLeft = attackTimer.timerString();
 
-            BufferedFontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
-                            StyledText.fromString(timeLeft),
-                            actualRenderX,
-                            actualRenderX + renderWidth,
-                            actualRenderZ,
-                            actualRenderZ + renderHeight,
-                            0,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.OUTLINE);
-        });
+                    BufferedFontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    poseStack,
+                                    bufferSource,
+                                    StyledText.fromString(timeLeft),
+                                    actualRenderX,
+                                    actualRenderX + renderWidth,
+                                    actualRenderZ,
+                                    actualRenderZ + renderHeight,
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.OUTLINE);
+                });
 
         if (hovered) {
             BufferedFontRenderer.getInstance()
