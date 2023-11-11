@@ -1,9 +1,21 @@
+## [0.0.4-beta.70](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.69...v0.0.4-beta.70) (2023-11-11)
+
+
+### Bug Fixes
+
+* Fix overlay configs not being suggested correctly ([#2245](https://github.com/Wynntils/Artemis/issues/2245)) ([adf5d92](https://github.com/Wynntils/Artemis/commit/adf5d923d19040f068b436294ec78edf5f2b31fa))
+
 ## [0.0.4-beta.69](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.68...v0.0.4-beta.69) (2023-11-11)
 
 
 ### Bug Fixes
 
 * Display attack timer and territory name on hover ([#2244](https://github.com/Wynntils/Artemis/issues/2244)) ([9264ebd](https://github.com/Wynntils/Artemis/commit/9264ebd6233665b4f5a66051d5fcec9d11893680))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.69 [skip ci] ([3c6a0d9](https://github.com/Wynntils/Artemis/commit/3c6a0d92c37cc1c572c2efab6a520cdf6bf511c5))
 
 ## [0.0.4-beta.68](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.67...v0.0.4-beta.68) (2023-11-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.66 [skip ci] ([660bbf4](https://github.com/Wynntils/Artemis/commit/660bbf466f183b4dbf65a2a3e98e32dcf8d0bd9e))
-
-## [0.0.4-beta.65](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.64...v0.0.4-beta.65) (2023-11-06)
-
-
-### Bug Fixes
-
-* Fix territory held times being displayed wrongly ([#2240](https://github.com/Wynntils/Artemis/issues/2240)) ([0dcffea](https://github.com/Wynntils/Artemis/commit/0dcffea89acbef85ec48ce669424b350894f50e3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.65 [skip ci] ([53d86ac](https://github.com/Wynntils/Artemis/commit/53d86ace0a34ba980c2214ce02b5f51d64b504dd))
 
