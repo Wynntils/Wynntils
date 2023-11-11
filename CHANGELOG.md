@@ -1,9 +1,21 @@
+## [0.0.4-beta.69](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.68...v0.0.4-beta.69) (2023-11-11)
+
+
+### Bug Fixes
+
+* Display attack timer and territory name on hover ([#2244](https://github.com/Wynntils/Artemis/issues/2244)) ([9264ebd](https://github.com/Wynntils/Artemis/commit/9264ebd6233665b4f5a66051d5fcec9d11893680))
+
 ## [0.0.4-beta.68](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.67...v0.0.4-beta.68) (2023-11-08)
 
 
 ### Bug Fixes
 
 * Player name not rendering with Wynntils marker disabled ([#2242](https://github.com/Wynntils/Artemis/issues/2242)) ([ffbb67d](https://github.com/Wynntils/Artemis/commit/ffbb67d68632900249ca203188f8b0d62bc80d49))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.68 [skip ci] ([498cb7a](https://github.com/Wynntils/Artemis/commit/498cb7a07a57583cb8e219b61124018872f810ee))
 
 ## [0.0.4-beta.67](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.66...v0.0.4-beta.67) (2023-11-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.65 [skip ci] ([53d86ac](https://github.com/Wynntils/Artemis/commit/53d86ace0a34ba980c2214ce02b5f51d64b504dd))
-
-## [0.0.4-beta.64](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.63...v0.0.4-beta.64) (2023-11-05)
-
-
-### Bug Fixes
-
-* Fix grid screens not rendering all elements ([#2238](https://github.com/Wynntils/Artemis/issues/2238)) ([7ed4235](https://github.com/Wynntils/Artemis/commit/7ed4235bcbce883ec640c1a7393132ea12527ddd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.64 [skip ci] ([358ec9c](https://github.com/Wynntils/Artemis/commit/358ec9cc84691181a19258174096b834abf6409a))
 
