@@ -88,7 +88,7 @@ public class ConfigCommand extends Command {
 
                         Feature feature = featureOptional.get();
                         Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
-                                .filter(overlay -> overlay.getJsonName().equals(overlayName))
+                                .filter(overlay -> overlay.getShortName().equals(overlayName))
                                 .findFirst();
 
                         return overlayOptional
