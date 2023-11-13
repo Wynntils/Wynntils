@@ -89,6 +89,10 @@ public final class ContainerModel extends Model {
         return type.equals(CHARACTER_BANK_NAME);
     }
 
+    public boolean isCharacterInfoScreen(Screen screen) {
+        return StyledText.fromComponent(screen.getTitle()).getStringWithoutFormatting().equals(CHARACTER_INFO_NAME);
+    }
+
     public int getCurrentBankPage(Screen screen) {
         Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return 0;

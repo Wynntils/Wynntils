@@ -1,0 +1,41 @@
+package com.wynntils.features.utilities;
+
+import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import com.wynntils.utils.mc.McUtils;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+public class SkillPointLoadoutsFeature extends Feature {
+
+    @SubscribeEvent
+    public void onCharacterInfoScreenOpened(ScreenOpenedEvent e) {
+        if (!(e.getScreen() instanceof ContainerScreen screen)) return;
+        if (!Models.Container.isCharacterInfoScreen(screen)) return;
+        if (screen.topPos == 0 || screen.width == 0) return; // Not done loading
+
+        screen.addRenderableWidget(
+                new LoadoutScreenButton(
+                        screen.width / 2 - LoadoutScreenButton.BUTTON_WIDTH / 2,
+                        screen.topPos - 24)
+        );
+    }
+
+    private static final class LoadoutScreenButton extends WynntilsButton {
+        private static final int BUTTON_WIDTH = 150;
+        private static final int BUTTON_HEIGHT = 20;
+
+        private LoadoutScreenButton(int x, int y) {
+            super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.translatable("feature.wynntils.skillPointLoadouts.button"));
+        }
+
+        @Override
+        public void onPress() {
+            McUtils.mc().setScreen(SkillPointLoadoutsScreen.create());
+        }
+    }
+}
