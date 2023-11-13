@@ -1,9 +1,21 @@
+## [0.0.4-beta.71](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.70...v0.0.4-beta.71) (2023-11-13)
+
+
+### Bug Fixes
+
+* Detect flying chests as reward ([#2248](https://github.com/Wynntils/Artemis/issues/2248)) ([78e4813](https://github.com/Wynntils/Artemis/commit/78e4813e0297d545d85c53795d4cc4d141c5b2be))
+
 ## [0.0.4-beta.70](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.69...v0.0.4-beta.70) (2023-11-11)
 
 
 ### Bug Fixes
 
 * Fix overlay configs not being suggested correctly ([#2245](https://github.com/Wynntils/Artemis/issues/2245)) ([adf5d92](https://github.com/Wynntils/Artemis/commit/adf5d923d19040f068b436294ec78edf5f2b31fa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.70 [skip ci] ([b7264b4](https://github.com/Wynntils/Artemis/commit/b7264b40f4ff777c6c3a2707a92bad90a5decab7))
 
 ## [0.0.4-beta.69](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.68...v0.0.4-beta.69) (2023-11-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.67 [skip ci] ([d984fa0](https://github.com/Wynntils/Artemis/commit/d984fa0854cbf75f0885d91d4b0334448efee863))
-
-## [0.0.4-beta.66](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.65...v0.0.4-beta.66) (2023-11-07)
-
-
-### Bug Fixes
-
-* Experimental fix for crashes when preloading a corrupted resource pack ([#2241](https://github.com/Wynntils/Artemis/issues/2241)) ([436f199](https://github.com/Wynntils/Artemis/commit/436f199c16f7dc1c2fdef08e5d053fbabda76a6d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.66 [skip ci] ([660bbf4](https://github.com/Wynntils/Artemis/commit/660bbf466f183b4dbf65a2a3e98e32dcf8d0bd9e))
 
