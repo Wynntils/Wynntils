@@ -202,7 +202,8 @@ public final class ContainerModel extends Model {
     public boolean isRewardChest(String title) {
         return title.startsWith("Daily Rewards")
                 || title.contains("Objective Rewards")
-                || title.contains("Challenge Rewards");
+                || title.contains("Challenge Rewards")
+                || title.contains("Flying Chest");
     }
 
     public boolean isLootOrRewardChest(Screen screen) {
