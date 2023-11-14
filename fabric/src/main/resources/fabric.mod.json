@@ -3,7 +3,6 @@
     "Team Wynntils"
   ],
   "breaks": {
-    "debugify": "*",
     "exordium": "*",
     "memoryleakfix": "<1.1.2"
   },
