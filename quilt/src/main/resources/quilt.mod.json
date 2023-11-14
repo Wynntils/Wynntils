@@ -6,10 +6,6 @@
   "quilt_loader": {
     "breaks": [
       {
-        "id": "debugify",
-        "versions": "*"
-      },
-      {
         "id": "exordium",
         "versions": "*"
       },
