@@ -1,9 +1,21 @@
+## [0.0.4-beta.72](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.71...v0.0.4-beta.72) (2023-11-14)
+
+
+### New Features
+
+* Jukebox menu scrolling ([#2249](https://github.com/Wynntils/Artemis/issues/2249)) ([8a04632](https://github.com/Wynntils/Artemis/commit/8a04632af9e9f3cb7bf8414b3b829728d4fae4df))
+
 ## [0.0.4-beta.71](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.70...v0.0.4-beta.71) (2023-11-13)
 
 
 ### Bug Fixes
 
 * Detect flying chests as reward ([#2248](https://github.com/Wynntils/Artemis/issues/2248)) ([78e4813](https://github.com/Wynntils/Artemis/commit/78e4813e0297d545d85c53795d4cc4d141c5b2be))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.71 [skip ci] ([55fcc61](https://github.com/Wynntils/Artemis/commit/55fcc61c4a57b539fbfd3b9bbe0ab090ce7968a7))
 
 ## [0.0.4-beta.70](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.69...v0.0.4-beta.70) (2023-11-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.68 [skip ci] ([498cb7a](https://github.com/Wynntils/Artemis/commit/498cb7a07a57583cb8e219b61124018872f810ee))
-
-## [0.0.4-beta.67](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.66...v0.0.4-beta.67) (2023-11-07)
-
-
-### Bug Fixes
-
-* Command cooldown related fixes ([#2234](https://github.com/Wynntils/Artemis/issues/2234)) ([dc8c825](https://github.com/Wynntils/Artemis/commit/dc8c82500941e2101d93ee356bae042ed073535a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.67 [skip ci] ([d984fa0](https://github.com/Wynntils/Artemis/commit/d984fa0854cbf75f0885d91d4b0334448efee863))
 
