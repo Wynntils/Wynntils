@@ -1,9 +1,21 @@
+## [0.0.4-beta.73](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.72...v0.0.4-beta.73) (2023-11-14)
+
+
+### Bug Fixes
+
+* Round spell cost base values correctly ([#2243](https://github.com/Wynntils/Artemis/issues/2243)) ([f5d0160](https://github.com/Wynntils/Artemis/commit/f5d01601f587988df90baffab7d71dd7c86dc9f9))
+
 ## [0.0.4-beta.72](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.71...v0.0.4-beta.72) (2023-11-14)
 
 
 ### New Features
 
 * Jukebox menu scrolling ([#2249](https://github.com/Wynntils/Artemis/issues/2249)) ([8a04632](https://github.com/Wynntils/Artemis/commit/8a04632af9e9f3cb7bf8414b3b829728d4fae4df))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.72 [skip ci] ([6fb6ba7](https://github.com/Wynntils/Artemis/commit/6fb6ba7397e3e2ff46f6f0b95f379a37f09348c2))
 
 ## [0.0.4-beta.71](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.70...v0.0.4-beta.71) (2023-11-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.69 [skip ci] ([3c6a0d9](https://github.com/Wynntils/Artemis/commit/3c6a0d92c37cc1c572c2efab6a520cdf6bf511c5))
-
-## [0.0.4-beta.68](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.67...v0.0.4-beta.68) (2023-11-08)
-
-
-### Bug Fixes
-
-* Player name not rendering with Wynntils marker disabled ([#2242](https://github.com/Wynntils/Artemis/issues/2242)) ([ffbb67d](https://github.com/Wynntils/Artemis/commit/ffbb67d68632900249ca203188f8b0d62bc80d49))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.68 [skip ci] ([498cb7a](https://github.com/Wynntils/Artemis/commit/498cb7a07a57583cb8e219b61124018872f810ee))
 
