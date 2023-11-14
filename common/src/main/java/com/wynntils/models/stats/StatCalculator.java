@@ -11,25 +11,42 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public final class StatCalculator {
-    public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified) {
+    public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, boolean isInverted) {
         if (preIdentified) {
             // This is actually a single, fixed value
             return RangedValue.of(baseValue, baseValue);
         } else {
             int low;
             int high;
+
             if (baseValue > 0) {
-                // Between 30% and 130% of base value, always at least 1
-                low = Math.max((int) Math.round(baseValue * 0.3), 1);
-                high = (int) Math.round(baseValue * 1.3);
-            } else {
-                // Between 70% and 130% of base value, always at most -1
                 // Round ties towards positive infinity (confirmed on Wynncraft)
-                low = (int) Math.round(baseValue * 1.3);
-                high = Math.min((int) Math.round(baseValue * 0.7), -1);
+                RoundingMode roundingMode = isInverted ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP;
+
+                // Between 30% and 130% of base value, always at least 1
+                low = Math.max(
+                        new BigDecimal(baseValue * 0.3)
+                                .setScale(0, roundingMode)
+                                .intValue(),
+                        1);
+                high = new BigDecimal(baseValue * 1.3).setScale(0, roundingMode).intValue();
+            } else {
+                // Round ties towards positive infinity (confirmed on Wynncraft)
+                RoundingMode roundingMode = isInverted ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN;
+
+                // Between 70% and 130% of base value, always at most -1
+                low = new BigDecimal(baseValue * 1.3).setScale(0, roundingMode).intValue();
+                high = Math.min(
+                        new BigDecimal(baseValue * 0.7)
+                                .setScale(0, roundingMode)
+                                .intValue(),
+                        -1);
             }
+
             return RangedValue.of(low, high);
         }
     }
