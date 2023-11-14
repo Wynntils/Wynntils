@@ -50,12 +50,14 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> GUILD_MEMBER_LIST_PREVIOUS_NEXT_SLOTS = new Pair<>(10, 28);
+    private static final Pair<Integer, Integer> JUKEBOX_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> LOBBY_PREVIOUS_NEXT_SLOTS = new Pair<>(36, 44);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
     private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
+    private static final StyledText JUKEBOX_NAME = StyledText.fromString("Player's Jukebox");
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
@@ -123,6 +125,13 @@ public final class ContainerModel extends Model {
     public boolean isGuildMemberListScreen(Screen screen) {
         return StyledText.fromComponent(screen.getTitle())
                 .matches(SearchableContainerType.MEMBER_LIST.getTitlePattern());
+    }
+
+    public boolean isJukeboxScreen(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        if (cs.getMenu().getRowCount() != 6) return false;
+
+        return StyledText.fromComponent(cs.getTitle()).equals(JUKEBOX_NAME);
     }
 
     public boolean isTradeMarketScreen(Screen screen) {
