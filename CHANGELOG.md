@@ -1,9 +1,21 @@
+## [0.0.4-beta.74](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.73...v0.0.4-beta.74) (2023-11-14)
+
+
+### Miscellaneous Chores
+
+* remove Debugify from the incompatible mod list (experimentally) ([#2247](https://github.com/Wynntils/Artemis/issues/2247)) ([410a210](https://github.com/Wynntils/Artemis/commit/410a210778844172585033e4eae1a61597021988))
+
 ## [0.0.4-beta.73](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.72...v0.0.4-beta.73) (2023-11-14)
 
 
 ### Bug Fixes
 
 * Round spell cost base values correctly ([#2243](https://github.com/Wynntils/Artemis/issues/2243)) ([f5d0160](https://github.com/Wynntils/Artemis/commit/f5d01601f587988df90baffab7d71dd7c86dc9f9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.73 [skip ci] ([0c47997](https://github.com/Wynntils/Artemis/commit/0c479973f15a2aae6d20a4808f187e0133be76a0))
 
 ## [0.0.4-beta.72](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.71...v0.0.4-beta.72) (2023-11-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.70 [skip ci] ([b7264b4](https://github.com/Wynntils/Artemis/commit/b7264b40f4ff777c6c3a2707a92bad90a5decab7))
-
-## [0.0.4-beta.69](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.68...v0.0.4-beta.69) (2023-11-11)
-
-
-### Bug Fixes
-
-* Display attack timer and territory name on hover ([#2244](https://github.com/Wynntils/Artemis/issues/2244)) ([9264ebd](https://github.com/Wynntils/Artemis/commit/9264ebd6233665b4f5a66051d5fcec9d11893680))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.69 [skip ci] ([3c6a0d9](https://github.com/Wynntils/Artemis/commit/3c6a0d92c37cc1c572c2efab6a520cdf6bf511c5))
 
