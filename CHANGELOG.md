@@ -1,8 +1,16 @@
+## [0.0.4-beta.75](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.74...v0.0.4-beta.75) (2023-11-15)
+
+
+### Bug Fixes
+
+* Revert game message dialogue handling ([#2251](https://github.com/Wynntils/Artemis/issues/2251)) ([1df0702](https://github.com/Wynntils/Artemis/commit/1df07021e4abf92abf8880be30166c9f8ded335a))
+
 ## [0.0.4-beta.74](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.73...v0.0.4-beta.74) (2023-11-14)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.4-beta.74 [skip ci] ([0644456](https://github.com/Wynntils/Artemis/commit/064445644680356eae66fa8430d4c8e316968570))
 * remove Debugify from the incompatible mod list (experimentally) ([#2247](https://github.com/Wynntils/Artemis/issues/2247)) ([410a210](https://github.com/Wynntils/Artemis/commit/410a210778844172585033e4eae1a61597021988))
 
 ## [0.0.4-beta.73](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.72...v0.0.4-beta.73) (2023-11-14)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.71 [skip ci] ([55fcc61](https://github.com/Wynntils/Artemis/commit/55fcc61c4a57b539fbfd3b9bbe0ab090ce7968a7))
-
-## [0.0.4-beta.70](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.69...v0.0.4-beta.70) (2023-11-11)
-
-
-### Bug Fixes
-
-* Fix overlay configs not being suggested correctly ([#2245](https://github.com/Wynntils/Artemis/issues/2245)) ([adf5d92](https://github.com/Wynntils/Artemis/commit/adf5d923d19040f068b436294ec78edf5f2b31fa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.70 [skip ci] ([b7264b4](https://github.com/Wynntils/Artemis/commit/b7264b40f4ff777c6c3a2707a92bad90a5decab7))
 
