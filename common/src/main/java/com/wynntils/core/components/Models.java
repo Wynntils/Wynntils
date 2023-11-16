@@ -44,6 +44,7 @@ import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
+import com.wynntils.models.skillpoint.SkillPointModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
@@ -101,6 +102,7 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final ShinyModel Shiny = new ShinyModel();
+    public static final SkillPointModel SkillPoint = new SkillPointModel();
     public static final SpellModel Spell = new SpellModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();

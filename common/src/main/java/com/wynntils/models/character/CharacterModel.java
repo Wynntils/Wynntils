@@ -22,6 +22,8 @@ import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -29,6 +31,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,10 +54,11 @@ public final class CharacterModel extends Model {
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
-    private static final int CHARACTER_INFO_SLOT = 7;
+    public static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int GUILD_INFO_SLOT = 26;
+    private static final int SKILL_POINT_START_SLOT = 11;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -181,6 +185,12 @@ public final class CharacterModel extends Model {
         ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
         ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
         ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
+
+        ItemStack[] skillPointItems = new ItemStack[5];
+        for (int i = 0; i < 5; i++) {
+            skillPointItems[i] = container.items().get(SKILL_POINT_START_SLOT + i);
+        }
+        Models.SkillPoint.updateTotals(skillPointItems);
 
         Models.Profession.resetValueFromItem(professionInfoItem);
         Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
