@@ -57,6 +57,7 @@ public class SkillPointModel extends Model {
     }
 
     private void calculateGearSkillPoints() {
+        // fixme: these can be crafted, so we need to check for that
         gearSkillPoints.clear();
         McUtils.inventory().armor.forEach(itemStack -> {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
