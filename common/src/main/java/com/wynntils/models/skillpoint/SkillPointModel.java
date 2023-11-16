@@ -1,6 +1,7 @@
 package com.wynntils.models.skillpoint;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -46,7 +47,16 @@ public class SkillPointModel extends Model {
         }
     }
 
-    public void calculateGearSkillPoints() {
+    public void calculateAssignedSkillPoints() {
+        McUtils.player().closeContainer();
+
+        Managers.TickScheduler.scheduleNextTick(() -> {
+            calculateGearSkillPoints();
+            queryTomeSkillPoints();
+        });
+    }
+
+    private void calculateGearSkillPoints() {
         gearSkillPoints.clear();
         McUtils.inventory().armor.forEach(itemStack -> {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
@@ -60,8 +70,7 @@ public class SkillPointModel extends Model {
             }
         });
 
-        // 27-30 are accessories
-        for (int i = 27; i <= 30; i++) { // fixme this doesn't work??
+        for (int i = 9; i <= 12; i++) {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(McUtils.inventory().getItem(i));
             if (wynnItemOptional.isEmpty()) continue; // Empty slot
             if (wynnItemOptional.get() instanceof GearItem gearItem) {
@@ -74,11 +83,12 @@ public class SkillPointModel extends Model {
         }
     }
 
-    public void queryTomeSkillPoints() { // fixme this also doesn't work
-        // doesn't like having another container open
+    private void queryTomeSkillPoints() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Tome Skill Point Query")
                 .onError(msg -> WynntilsMod.warn("Failed to query tome skill points: " + msg))
 
+                .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
+                        .expectContainerTitle("Character Info"))
                 .then(QueryStep.clickOnSlot(TOME_SLOT)
                         .expectContainerTitle("Mastery Tomes")
                         .processIncomingContainer(this::processTomeSkillPoints))

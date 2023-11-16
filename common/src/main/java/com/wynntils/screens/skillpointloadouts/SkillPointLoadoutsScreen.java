@@ -45,8 +45,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 Component.literal("Refresh skill points")) {
                                 @Override
                                 public void onPress() {
-                                    Models.SkillPoint.calculateGearSkillPoints();
-                                    Models.SkillPoint.queryTomeSkillPoints();
+                                    Models.SkillPoint.calculateAssignedSkillPoints();
                                 }
                             }
         );
