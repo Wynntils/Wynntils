@@ -18,6 +18,7 @@ public class MapMarkerProfile extends LocationProfile {
         mmn_t.put("Content_Dungeon", "Dungeons");
         mmn_t.put("Content_CorruptedDungeon", "Corrupted Dungeons");
         mmn_t.put("Content_BossAltar", "Boss Altar");
+        mmn_t.put("Content_Raid", "Raid");
         mmn_t.put("Merchant_Accessory", "Accessory Merchant");
         mmn_t.put("Merchant_Armour", "Armour Merchant");
         mmn_t.put("Merchant_Dungeon", "Dungeon Merchant");
