@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-import com.wynntils.core.encoding.EncodedByteBuffer;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.UnsignedByte;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;

@@ -4,9 +4,11 @@
  */
 package com.wynntils.models.gear.encoding;
 
+import com.wynntils.utils.EncodedByteBuffer;
+
 /**
  * This class is responsible for encoding gear data into a byte array,
  * which can be used further encode the gear into a string
- * using {@link com.wynntils.core.encoding.EncodedByteBuffer}.
+ * using {@link EncodedByteBuffer}.
  */
 public class GearEncoder {}
