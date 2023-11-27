@@ -204,9 +204,7 @@ public final class CharacterModel extends Model {
 
         Matcher veteran = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, VETERAN_PATTERN);
 
-        if (veteran.matches()) {
-            isVeteran = true;
-        }
+        isVeteran = veteran.matches();
 
         Matcher status = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
         if (!status.matches()) {
