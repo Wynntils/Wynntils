@@ -95,11 +95,11 @@ public final class CharacterStatsModel extends Model {
      */
     private int getCurrentSoulPoints() {
         ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() != Items.NETHER_STAR) {
-            return -1;
+        if (soulPoints.getItem() == Items.NETHER_STAR || soulPoints.getItem() == Items.DIAMOND_AXE) {
+            return soulPoints.getCount();
         }
 
-        return soulPoints.getCount();
+        return -1;
     }
 
     public CappedValue getSoulPoints() {
