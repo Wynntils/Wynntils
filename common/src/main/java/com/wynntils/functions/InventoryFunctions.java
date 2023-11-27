@@ -50,7 +50,9 @@ public class InventoryFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
-            return allShinyStats.stream().map(s -> s.name() + ": " + s.value()).collect(Collectors.joining("\n"));
+            return allShinyStats.stream()
+                    .map(s -> s.statType() + ": " + s.value())
+                    .collect(Collectors.joining("\n"));
         }
     }
 
@@ -256,7 +258,9 @@ public class InventoryFunctions {
             Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
             if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
 
-            return new NamedValue(shinyStatOpt.get().name(), shinyStatOpt.get().value());
+            return new NamedValue(
+                    shinyStatOpt.get().statType().displayName(),
+                    shinyStatOpt.get().value());
         }
     }
 
