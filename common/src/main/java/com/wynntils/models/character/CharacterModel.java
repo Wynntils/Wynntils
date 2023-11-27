@@ -49,6 +49,8 @@ public final class CharacterModel extends Model {
     // Test suite: https://regexr.com/7irg0
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
+    // Test suite: https://regexr.com/7ntns
+    private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     private static final int CHARACTER_INFO_SLOT = 7;
@@ -68,6 +70,8 @@ public final class CharacterModel extends Model {
     private ClassType classType;
     private boolean reskinned;
     private int level;
+
+    private boolean isVeteran = false;
 
     @Persisted
     public final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
@@ -115,6 +119,10 @@ public final class CharacterModel extends Model {
         if (!hasCharacter) return "-";
 
         return id;
+    }
+
+    public boolean isVeteran() {
+        return isVeteran;
     }
 
     @SubscribeEvent
@@ -193,6 +201,10 @@ public final class CharacterModel extends Model {
 
     private void parseCratesBombsCosmeticsContainer(ContainerContent container) {
         ItemStack rankSubscriptionItem = container.items().get(RANK_SUBSCRIPTION_INFO_SLOT);
+
+        Matcher veteran = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, VETERAN_PATTERN);
+
+        isVeteran = veteran.matches();
 
         Matcher status = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
         if (!status.matches()) {
