@@ -81,7 +81,10 @@ public final class CharacterStatsModel extends Model {
      * Return the maximum number of soul points the character can currently have
      */
     private int getMaxSoulPoints() {
-        // FIXME: If player is veteran, we should always return 15
+        if (Models.Character.isVeteran()) {
+            return 15;
+        }
+
         int maxIfNotVeteran =
                 10 + MathUtils.clamp(Models.CombatXp.getCombatLevel().current() / 15, 0, 5);
         if (getCurrentSoulPoints() > maxIfNotVeteran) {
@@ -95,11 +98,11 @@ public final class CharacterStatsModel extends Model {
      */
     private int getCurrentSoulPoints() {
         ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() != Items.NETHER_STAR) {
-            return -1;
+        if (soulPoints.getItem() == Items.NETHER_STAR || soulPoints.getItem() == Items.DIAMOND_AXE) {
+            return soulPoints.getCount();
         }
 
-        return soulPoints.getCount();
+        return -1;
     }
 
     public CappedValue getSoulPoints() {
