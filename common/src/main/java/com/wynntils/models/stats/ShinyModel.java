@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.characterstats;
+package com.wynntils.models.stats;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
