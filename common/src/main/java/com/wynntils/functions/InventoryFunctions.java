@@ -51,7 +51,7 @@ public class InventoryFunctions {
         public String getValue(FunctionArguments arguments) {
             List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
             return allShinyStats.stream()
-                    .map(s -> s.statType() + ": " + s.value())
+                    .map(s -> s.statType().displayName() + ": " + s.value())
                     .collect(Collectors.joining("\n"));
         }
     }
