@@ -81,7 +81,10 @@ public final class CharacterStatsModel extends Model {
      * Return the maximum number of soul points the character can currently have
      */
     private int getMaxSoulPoints() {
-        // FIXME: If player is veteran, we should always return 15
+        if (Models.Character.isVeteran()) {
+            return 15;
+        }
+
         int maxIfNotVeteran =
                 10 + MathUtils.clamp(Models.CombatXp.getCombatLevel().current() / 15, 0, 5);
         if (getCurrentSoulPoints() > maxIfNotVeteran) {
