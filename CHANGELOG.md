@@ -1,9 +1,21 @@
+## [0.0.4-beta.76](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.75...v0.0.4-beta.76) (2023-11-27)
+
+
+### Bug Fixes
+
+* Detect soul points in hunted ([#2254](https://github.com/Wynntils/Artemis/issues/2254)) ([5a287c1](https://github.com/Wynntils/Artemis/commit/5a287c1194b195aea26061c3ac8c48c4791a488a))
+
 ## [0.0.4-beta.75](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.74...v0.0.4-beta.75) (2023-11-15)
 
 
 ### Bug Fixes
 
 * Revert game message dialogue handling ([#2251](https://github.com/Wynntils/Artemis/issues/2251)) ([1df0702](https://github.com/Wynntils/Artemis/commit/1df07021e4abf92abf8880be30166c9f8ded335a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.75 [skip ci] ([ed2f075](https://github.com/Wynntils/Artemis/commit/ed2f075f8eeabaf10f4d977a7dc685bc3efae6c6))
 
 ## [0.0.4-beta.74](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.73...v0.0.4-beta.74) (2023-11-14)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.72 [skip ci] ([6fb6ba7](https://github.com/Wynntils/Artemis/commit/6fb6ba7397e3e2ff46f6f0b95f379a37f09348c2))
-
-## [0.0.4-beta.71](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.70...v0.0.4-beta.71) (2023-11-13)
-
-
-### Bug Fixes
-
-* Detect flying chests as reward ([#2248](https://github.com/Wynntils/Artemis/issues/2248)) ([78e4813](https://github.com/Wynntils/Artemis/commit/78e4813e0297d545d85c53795d4cc4d141c5b2be))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.71 [skip ci] ([55fcc61](https://github.com/Wynntils/Artemis/commit/55fcc61c4a57b539fbfd3b9bbe0ab090ce7968a7))
 
