@@ -1,9 +1,21 @@
+## [0.0.4-beta.77](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.76...v0.0.4-beta.77) (2023-11-28)
+
+
+### Miscellaneous Chores
+
+* Move to using Wynntils/Static-Storage ([#2258](https://github.com/Wynntils/Artemis/issues/2258)) ([30a882d](https://github.com/Wynntils/Artemis/commit/30a882db8bc5a2d348c66b36a468578cfd2d721d))
+
 ## [0.0.4-beta.76](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.75...v0.0.4-beta.76) (2023-11-27)
 
 
 ### Bug Fixes
 
 * Detect soul points in hunted ([#2254](https://github.com/Wynntils/Artemis/issues/2254)) ([5a287c1](https://github.com/Wynntils/Artemis/commit/5a287c1194b195aea26061c3ac8c48c4791a488a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.76 [skip ci] ([ed86384](https://github.com/Wynntils/Artemis/commit/ed86384ffd1bfb9f22e103acc31a9cab953a9664))
 
 ## [0.0.4-beta.75](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.74...v0.0.4-beta.75) (2023-11-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.73 [skip ci] ([0c47997](https://github.com/Wynntils/Artemis/commit/0c479973f15a2aae6d20a4808f187e0133be76a0))
-
-## [0.0.4-beta.72](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.71...v0.0.4-beta.72) (2023-11-14)
-
-
-### New Features
-
-* Jukebox menu scrolling ([#2249](https://github.com/Wynntils/Artemis/issues/2249)) ([8a04632](https://github.com/Wynntils/Artemis/commit/8a04632af9e9f3cb7bf8414b3b829728d4fae4df))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.72 [skip ci] ([6fb6ba7](https://github.com/Wynntils/Artemis/commit/6fb6ba7397e3e2ff46f6f0b95f379a37f09348c2))
 
