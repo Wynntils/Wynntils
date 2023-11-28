@@ -26,18 +26,18 @@
   },
   {
     "arguments": [
-      "stream"
-    ],
-    "id": "apiAthenaUpdateCheck",
-    "url": "https://athena.wynntils.com/version/latest/%{stream}"
-  },
-  {
-    "arguments": [
       "old_version",
       "new_version"
     ],
     "id": "apiAthenaUpdateChangelog",
     "url": "https://athena.wynntils.com/version/changelog/%{old_version}/%{new_version}"
+  },
+  {
+    "arguments": [
+      "stream"
+    ],
+    "id": "apiAthenaUpdateCheck",
+    "url": "https://athena.wynntils.com/version/latest/%{stream}"
   },
   {
     "arguments": [
@@ -72,10 +72,6 @@
     "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}"
   },
   {
-    "id": "dataAthenaServerList",
-    "url": "https://athena.wynntils.com/cache/get/serverList"
-  },
-  {
     "id": "dataAthenaGuildList",
     "url": "https://athena.wynntils.com/cache/get/guildList"
   },
@@ -84,13 +80,13 @@
     "url": "https://athena.wynntils.com/cache/get/leaderboard"
   },
   {
-    "id": "dataWynncraftTerritoryListV3",
-    "url": "https://api.wynncraft.com/v3/guild/list/territory"
+    "id": "dataAthenaServerList",
+    "url": "https://athena.wynntils.com/cache/get/serverList"
   },
   {
-    "id": "dataStaticCombatLocations",
-    "md5": "f8d2b16d8cd33181b6a3857fa5e390a9",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
+    "id": "dataStaticAbilities",
+    "md5": "69b6987c0bc3b76224718b4bad7d48a5",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/abilities.json"
   },
   {
     "id": "dataStaticCaveInfo",
@@ -98,14 +94,19 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
   },
   {
+    "id": "dataStaticCombatLocations",
+    "md5": "f8d2b16d8cd33181b6a3857fa5e390a9",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
+  },
+  {
     "id": "dataStaticGear",
     "md5": "43752a252ba67b8491945ad648dea931",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
-    "id": "dataStaticItemObtain",
-    "md5": "20e9a265f5e2ed91b02d80623b3765bd",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"
+    "id": "dataStaticIngredientSkins",
+    "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/ingredient_skins.json"
   },
   {
     "id": "dataStaticIngredients",
@@ -113,9 +114,14 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/ingredients.json"
   },
   {
-    "id": "dataStaticIngredientSkins",
-    "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/ingredient_skins.json"
+    "id": "dataStaticItemObtain",
+    "md5": "20e9a265f5e2ed91b02d80623b3765bd",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"
+  },
+  {
+    "id": "dataStaticLootrunTasksNamed",
+    "md5": "4eb2931b1dbea269574b8864c8712ba4",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/lootrun_tasks_named.json"
   },
   {
     "id": "dataStaticMajorIds",
@@ -148,28 +154,22 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
   },
   {
-    "id": "dataStaticSplashes",
-    "md5": "262f3c73093a1f0979beedb8b25e9420",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/splashes.json"
-  },
-  {
-    "id": "dataStaticLootrunTasksNamed",
-    "md5": "4eb2931b1dbea269574b8864c8712ba4",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/lootrun_tasks_named.json"
-  },
-  {
     "id": "dataStaticShinyStats",
     "md5": "2dbc0fdde50512b64828d5642bb480b6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/shiny_stats.json"
   },
   {
-    "id": "dataStaticAbilities",
-    "md5": "69b6987c0bc3b76224718b4bad7d48a5",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/abilities.json"
+    "id": "dataStaticSplashes",
+    "md5": "262f3c73093a1f0979beedb8b25e9420",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/splashes.json"
   },
   {
     "id": "dataStaticUrls",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/urls.json"
+  },
+  {
+    "id": "dataWynncraftTerritoryListV3",
+    "url": "https://api.wynncraft.com/v3/guild/list/territory"
   },
   {
     "arguments": [
