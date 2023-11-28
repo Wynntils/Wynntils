@@ -270,7 +270,7 @@ public final class WynnItemParser {
             if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                 String shinyName = shinyStatMatcher.group(1);
                 int shinyValue = Integer.parseInt(shinyStatMatcher.group(2));
-                shinyStat = Optional.of(new ShinyStat(shinyName, shinyValue));
+                shinyStat = Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue));
             }
         }
 
