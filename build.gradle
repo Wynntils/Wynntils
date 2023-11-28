@@ -1,3 +1,5 @@
+import groovy.json.*
+
 plugins {
     id "architectury-plugin" version "${architectury_plugin_version}"
     id "dev.architectury.loom" version "${architectury_loom_version}" apply false
@@ -108,6 +110,27 @@ allprojects {
                     " * This file is released under LGPLv3. See LICENSE for full license details.\n" +
                     " */")
                     .updateYearWithLatest(true)
+        }
+        format "urls.json", {
+            target "src/main/resources/assets/wynntils/urls.json"
+            custom "Sort Urls by Id", {
+                def json = new JsonSlurper().parseText(it)
+
+                // Sort the urls by id, if there is no id, put it first
+                json = json.sort { a, b ->
+                    if (a.id == null) {
+                        return -1
+                    } else if (b.id == null) {
+                        return 1
+                    } else {
+                        return a.id.compareTo(b.id)
+                    }
+                }
+
+                return new JsonBuilder(json).toPrettyString()
+            }
+            trimTrailingWhitespace()
+            endWithNewline()
         }
         json {
             target "src/**/*.json"
