@@ -45,6 +45,7 @@ public enum UrlId {
     DATA_STATIC_PLACES("dataStaticPlaces"),
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
+    DATA_STATIC_SHINY_STATS("dataStaticShinyStats"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
     DATA_STATIC_TOMES("dataStaticTomes"),
     DATA_STATIC_URLS("dataStaticUrls"),
