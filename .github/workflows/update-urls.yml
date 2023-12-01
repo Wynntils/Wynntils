@@ -19,7 +19,7 @@ jobs:
 
       - name: Update Urls
         run: |
-          wget -O common/src/main/resources/assets/wynntils/urls.json "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
+          wget -O common/src/main/resources/assets/wynntils/urls.json "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/urls.json"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4

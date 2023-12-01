@@ -367,7 +367,7 @@ public final class ChatHandler extends Handler {
         // But it can weirdly enough actually also be a foreground NPC chat message, or
         // a game message; similar to a dialogue but not uttered by an NPC.
         RecipientType recipientType = getRecipientType(styledText, MessageType.FOREGROUND);
-        if (recipientType == RecipientType.NPC || recipientType == RecipientType.GAME_MESSAGE) {
+        if (recipientType == RecipientType.NPC) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
             postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
@@ -399,7 +399,7 @@ public final class ChatHandler extends Handler {
         WynntilsMod.info("[CHAT] " + styledText.getString().replace("§", "&"));
         RecipientType recipientType = getRecipientType(styledText, messageType);
 
-        if (recipientType == RecipientType.NPC || recipientType == RecipientType.GAME_MESSAGE) {
+        if (recipientType == RecipientType.NPC) {
             if (shouldSeparateNPC()) {
                 postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                 // We need to cancel the original chat event, if any
