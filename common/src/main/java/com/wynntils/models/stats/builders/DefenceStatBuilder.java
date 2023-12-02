@@ -7,6 +7,7 @@ package com.wynntils.models.stats.builders;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.StatUnit;
+import com.wynntils.utils.StringUtils;
 import java.util.function.Consumer;
 
 public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
@@ -17,17 +18,13 @@ public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
             DefenceStatType statType = new DefenceStatType(
                     "DEFENCE_" + element.name(),
                     element.getDisplayName() + " Defence",
-                    "bonus" + element.getDisplayName() + "Defense",
+                    StringUtils.uncapitalizeFirst(element.getDisplayName()) + "Defence",
                     element.name() + "DEFENSE",
                     StatUnit.PERCENT);
             callback.accept(statType);
         }
 
         callback.accept(new DefenceStatType(
-                "DEFENCE_ELEMENTAL",
-                "Elemental Defence",
-                "bonusElementalDefense",
-                "ELEMENTALDEFENSE",
-                StatUnit.PERCENT));
+                "DEFENCE_ELEMENTAL", "Elemental Defence", "elementalDecense", "ELEMENTALDEFENSE", StatUnit.PERCENT));
     }
 }

@@ -266,7 +266,13 @@ public class IngredientInfoRegistry {
             JsonObject identificationsJson = JsonUtils.getNullableJsonObject(json, "identifications");
 
             for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-                StatType statType = Models.Stat.fromInternalRollId(entry.getKey());
+                // FIXME: Remove hack when Ingredient API is migrated
+                StatType statType;
+                if (entry.getKey().equals("DEFENSEPOINTS")) {
+                    statType = Models.Stat.fromInternalRollId("DEFENCEPOINTS");
+                } else {
+                    statType = Models.Stat.fromInternalRollId(entry.getKey());
+                }
 
                 if (statType == null) {
                     WynntilsMod.warn("Ingredient DB contains invalid stat type " + entry.getKey());

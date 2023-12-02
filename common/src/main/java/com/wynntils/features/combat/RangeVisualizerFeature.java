@@ -120,11 +120,11 @@ public class RangeVisualizerFeature extends Feature {
         // Offset the radius slightly so multiple circles can be shown for each player
         // Only a few major IDs can actually be applied at the same time, but we make this general
         List<Pair<CustomColor, Float>> circles = validGear.stream()
-                .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.id()) {
-                    case "TAUNT" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
-                    case "HERO" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
-                    case "ALTRUISM" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
-                    case "GUARDIAN" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
+                .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
+                    case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
+                    case "Saviour's Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
+                    case "Heart of the Pack" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
+                    case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
                     default -> null;
                 }))
                 .filter(Objects::nonNull)

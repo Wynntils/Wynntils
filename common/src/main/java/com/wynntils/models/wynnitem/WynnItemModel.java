@@ -40,7 +40,7 @@ public class WynnItemModel extends Model {
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
-        return itemObtainMap.get(name);
+        return itemObtainMap.getOrDefault(name, List.of());
     }
 
     public Optional<String> getMaterialName(int idCode, int damageCode) {
