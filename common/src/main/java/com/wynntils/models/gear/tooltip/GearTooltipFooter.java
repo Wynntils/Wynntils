@@ -30,15 +30,14 @@ public final class GearTooltipFooter {
         // major ids
         if (gearInfo.fixedStats().majorIds().isPresent()) {
             GearMajorId majorId = gearInfo.fixedStats().majorIds().get();
-            StyledText name = StyledText.fromString(ChatFormatting.AQUA + "+" + majorId.name() + ": ");
+
+            // The majorId lore contains the name, and colors
             // This dance to and from component is needed to properly recolor all neutral text
             StyledText lore = StyledText.fromComponent(Component.empty()
                     .withStyle(ChatFormatting.DARK_AQUA)
                     .append(majorId.lore().getComponent()));
-            StyledText majorIdText = name.append(lore);
 
-            Stream.of(RenderedStringUtils.wrapTextBySize(majorIdText, PIXEL_WIDTH))
-                    .forEach(c -> footer.add(c.getComponent()));
+            Stream.of(RenderedStringUtils.wrapTextBySize(lore, PIXEL_WIDTH)).forEach(c -> footer.add(c.getComponent()));
         }
 
         footer.add(Component.literal(""));

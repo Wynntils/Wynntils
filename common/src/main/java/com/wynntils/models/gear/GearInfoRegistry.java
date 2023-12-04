@@ -294,7 +294,7 @@ public class GearInfoRegistry {
             // Some helmets are player heads
             String skin = JsonUtils.getNullableJsonString(json, "skin");
             if (skin != null) {
-                return ItemMaterial.fromPlayerHeadTexture(skin);
+                return ItemMaterial.fromPlayerHeadUUID(skin);
             }
 
             String materialType =
@@ -400,7 +400,8 @@ public class GearInfoRegistry {
 
             return Optional.of(new GearMajorId(
                     majorIdsJson.get("name").getAsString(),
-                    StyledText.fromString(majorIdsJson.get("description").getAsString())));
+                    StyledText.fromString(
+                            majorIdsJson.get("description").getAsString().replaceAll("&", "§"))));
         }
 
         private List<Pair<Skill, Integer>> parseSkillBonuses(JsonObject json) {
@@ -471,8 +472,13 @@ public class GearInfoRegistry {
             JsonObject identificationsJson = json.get("identifications").getAsJsonObject();
             boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
-            for (StatType statType : Models.Stat.getAllStatTypes()) {
-                if (!identificationsJson.has(statType.getApiName())) continue;
+            for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
+                StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+
+                if (statType == null) {
+                    WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
+                    continue;
+                }
 
                 int baseValue;
                 boolean preIdentified;
@@ -485,8 +491,7 @@ public class GearInfoRegistry {
                     // We have a pre-identified item, so there is no range
                     preIdentified = true;
                 } else {
-                    JsonObject statObject = JsonUtils.getNullableJsonObject(identificationsJson, statType.getApiName());
-                    if (statObject.isEmpty()) continue;
+                    JsonObject statObject = entry.getValue().getAsJsonObject();
 
                     baseValue = JsonUtils.getNullableJsonInt(statObject, "raw");
                     preIdentified = false;
@@ -511,9 +516,5 @@ public class GearInfoRegistry {
             // Return an immutable list
             return List.copyOf(list);
         }
-    }
-
-    protected static class WynncraftGearInfoResponse {
-        protected Map<String, GearInfo> items;
     }
 }
