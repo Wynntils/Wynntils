@@ -129,25 +129,21 @@ public class GearInfoRegistry {
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            // Wynncraft API name field includes "unnormalized" characters like ֎, we want to remove them
-            String primaryName = json.get("name").getAsString();
-            String secondaryName = null;
+            // Wynncraft API has two fields: name and internalName. The former is a display name,
+            // the latter is a static internal name that never changes.
+            String displayName = json.get("name").getAsString();
+            String internalName = JsonUtils.getNullableJsonString(json, "internalName");
 
-            String normalizedApiName = WynnUtils.normalizeBadString(primaryName);
-            if (!normalizedApiName.equals(primaryName)) {
-                // Normalization removed a ֎ from the name. This means we want to
-                // treat the name as apiName and the normalized name as display name
-                secondaryName = normalizedApiName;
-            }
-
-            String name;
-            String apiName;
-            if (secondaryName == null) {
-                name = primaryName;
-                apiName = null;
-            } else {
-                name = secondaryName;
-                apiName = primaryName;
+            // If the display name is the same as the internal name,
+            // we treat the internal name as null,
+            // and override it, if the displayed name needs to be normalized
+            if (displayName.equals(internalName)) {
+                String normalizedApiName = WynnUtils.normalizeBadString(displayName);
+                if (!normalizedApiName.equals(displayName)) {
+                    // Normalization removed a ֎ from the name. This means we want to
+                    // treat the name as internalName and the normalized name as display name
+                    displayName = normalizedApiName;
+                }
             }
 
             GearType type = parseType(json);
@@ -162,12 +158,13 @@ public class GearInfoRegistry {
 
             int powderSlots = JsonUtils.getNullableJsonInt(json, "powderSlots");
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, name, apiName, type);
+            GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
 
-            return new GearInfo(name, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
+            return new GearInfo(
+                    displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
         }
 
         private GearType parseType(JsonObject json) {

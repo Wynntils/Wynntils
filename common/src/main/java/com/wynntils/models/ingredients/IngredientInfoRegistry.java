@@ -122,28 +122,24 @@ public class IngredientInfoRegistry {
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            // Wynncraft API name field includes "unnormalized" characters like ֎, we want to remove them
-            String primaryName = json.get("name").getAsString();
-            String secondaryName = null;
+            // Wynncraft API has two fields: name and internalName. The former is a display name,
+            // the latter is a static internal name that never changes.
+            String displayName = json.get("name").getAsString();
+            String internalName = JsonUtils.getNullableJsonString(json, "internalName");
 
-            String normalizedApiName = WynnUtils.normalizeBadString(primaryName);
-            if (!normalizedApiName.equals(primaryName)) {
-                // Normalization removed a ֎ from the name. This means we want to
-                // treat the name as apiName and the normalized name as display name
-                secondaryName = normalizedApiName;
+            // If the display name is the same as the internal name,
+            // we treat the internal name as null,
+            // and override it, if the displayed name needs to be normalized
+            if (displayName.equals(internalName)) {
+                String normalizedApiName = WynnUtils.normalizeBadString(displayName);
+                if (!normalizedApiName.equals(displayName)) {
+                    // Normalization removed a ֎ from the name. This means we want to
+                    // treat the name as internalName and the normalized name as display name
+                    displayName = normalizedApiName;
+                }
             }
 
-            String name;
-            String apiName;
-            if (secondaryName == null) {
-                name = primaryName;
-                apiName = null;
-            } else {
-                name = secondaryName;
-                apiName = primaryName;
-            }
-
-            Optional<String> apiNameOpt = Optional.ofNullable(apiName);
+            Optional<String> internalNameOpt = Optional.ofNullable(internalName);
 
             int tier = JsonUtils.getNullableJsonInt(json, "tier");
 
@@ -152,7 +148,7 @@ public class IngredientInfoRegistry {
 
             List<ProfessionType> professions = parseProfessions(requirements);
 
-            ItemMaterial material = parseMaterial(json, name);
+            ItemMaterial material = parseMaterial(json, displayName);
 
             // Get consumables-only parts
             JsonObject consumableIdsJson = JsonUtils.getNullableJsonObject(json, "consumableOnlyIDs");
@@ -170,10 +166,10 @@ public class IngredientInfoRegistry {
             List<Pair<StatType, RangedValue>> variableStats = parseVariableStats(json);
 
             return new IngredientInfo(
-                    name,
+                    displayName,
                     tier,
                     level,
-                    apiNameOpt,
+                    internalNameOpt,
                     material,
                     professions,
                     skillRequirements,

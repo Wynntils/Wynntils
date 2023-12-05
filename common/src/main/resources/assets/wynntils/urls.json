@@ -94,6 +94,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
   },
   {
+    "id": "dataStaticCharms",
+    "md5": "51be47f730418630dc5333178196bf9f",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/charms.json"
+  },
+  {
     "id": "dataStaticCombatLocations",
     "md5": "f8d2b16d8cd33181b6a3857fa5e390a9",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
@@ -105,8 +110,8 @@
   },
   {
     "id": "dataStaticGearAdvanced",
-    "md5": "49b5c0cdaad480682d4525d622fd89fd",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/v3api/Reference/advanced_gear.json"
+    "md5": "0a02f3804d4550947b3507743e4be841",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
     "id": "dataStaticIngredientSkins",
@@ -120,8 +125,8 @@
   },
   {
     "id": "dataStaticIngredientsAdvanced",
-    "md5": "7fbf8487021f322f7318158831805e43",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/v3api/Reference/advanced_ingredients.json"
+    "md5": "681d41d79c8bb9658085569719d07a76",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
     "id": "dataStaticItemObtain",
@@ -149,6 +154,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/material_conversions.json"
   },
   {
+    "id": "dataStaticMaterials",
+    "md5": "09758a52d4317cd67bbdd439b110e90d",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/materials.json"
+  },
+  {
     "id": "dataStaticPlaces",
     "md5": "c1907ba6d7c8851be2c6cf3062d17de5",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/places.json"
@@ -172,6 +182,16 @@
     "id": "dataStaticSplashes",
     "md5": "262f3c73093a1f0979beedb8b25e9420",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/splashes.json"
+  },
+  {
+    "id": "dataStaticTomes",
+    "md5": "41bfd7ed5453320ca299e9a5ebb7cb1d",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
+  },
+  {
+    "id": "dataStaticTools",
+    "md5": "da5c6b5f3d1d44033e13a93e2dd8ca6e",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {
     "id": "dataStaticUrls",
