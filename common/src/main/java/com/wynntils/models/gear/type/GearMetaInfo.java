@@ -13,6 +13,7 @@ import java.util.Optional;
 // The api name is normally the same as the name, but if not, the api name is given
 // by apiName
 public record GearMetaInfo(
+        GearDropRestrictions dropRestrictions,
         GearRestrictions restrictions,
         ItemMaterial material,
         List<ItemObtainInfo> obtainInfo,

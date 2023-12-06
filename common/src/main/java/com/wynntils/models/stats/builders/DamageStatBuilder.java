@@ -9,6 +9,7 @@ import com.wynntils.models.stats.type.AttackType;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatUnit;
+import com.wynntils.utils.StringUtils;
 import java.util.function.Consumer;
 
 public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
@@ -26,20 +27,29 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
     }
 
     private static DamageStatType buildDamageStat(AttackType attackType, DamageType damageType, StatUnit unit) {
-        String apiName = buildApiName(attackType, damageType, unit);
         return new DamageStatType(
                 buildKey(attackType, damageType, unit),
                 buildDisplayName(attackType, damageType),
-                apiName,
-                buildInternalRollName(apiName),
+                buildApiName(attackType, damageType, unit),
+                buildInternalRollName(buildOldApiName(attackType, damageType, unit)),
                 unit);
     }
 
-    private static String buildApiName(AttackType attackType, DamageType damageType, StatUnit unit) {
+    // This format is still used for internal rolls, but not for the api
+    private static String buildOldApiName(AttackType attackType, DamageType damageType, StatUnit unit) {
         return CaseFormat.UPPER_CAMEL.to(
                 CaseFormat.LOWER_CAMEL,
                 attackType.getApiName() + damageType.getApiName() + "DamageBonus"
                         + (unit == StatUnit.RAW ? "Raw" : ""));
+    }
+
+    private static String buildApiName(AttackType attackType, DamageType damageType, StatUnit unit) {
+        if (unit == StatUnit.RAW) {
+            return "raw" + StringUtils.capitalizeFirst(damageType.getApiName()) + attackType.getApiName() + "Damage";
+        }
+
+        return CaseFormat.UPPER_CAMEL.to(
+                CaseFormat.LOWER_CAMEL, damageType.getApiName() + attackType.getApiName() + "Damage");
     }
 
     private static String buildKey(AttackType attackType, DamageType damageType, StatUnit unit) {

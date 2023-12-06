@@ -80,6 +80,18 @@ public final class StatModel extends Model {
         return null;
     }
 
+    public StatType fromApiRollId(String id) {
+        for (StatType statType : statTypeRegistry) {
+            if (statType.getApiName().equals(id)) return statType;
+        }
+
+        for (StatType statType : skillStats) {
+            if (statType.getApiName().equals(id)) return statType;
+        }
+
+        return null;
+    }
+
     public String getDisplayName(StatType statType, GearInfo gearInfo, ClassType currentClass) {
         if (statType instanceof SpellStatType spellStatType) {
             ClassType classReq = gearInfo.type().getClassReq();
