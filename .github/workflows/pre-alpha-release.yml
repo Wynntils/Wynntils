@@ -95,7 +95,6 @@ jobs:
           files: |
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
-            **/build/libs/*-quilt+MC-*.jar
 
   release-gh:
     name: Release Github
