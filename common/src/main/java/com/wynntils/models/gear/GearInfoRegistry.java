@@ -32,6 +32,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.FixedStats;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
@@ -474,6 +475,11 @@ public class GearInfoRegistry {
 
                 if (statType == null) {
                     WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
+                    continue;
+                }
+
+                if (statType instanceof SkillStatType) {
+                    // Skill stats are not variable for gear
                     continue;
                 }
 
