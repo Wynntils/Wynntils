@@ -17,7 +17,7 @@ public record FixedStats(
         int healthBuff,
         List<Pair<Skill, Integer>> skillBonuses,
         Optional<GearAttackSpeed> attackSpeed,
-        List<GearMajorId> majorIds,
+        Optional<GearMajorId> majorIds,
         List<Pair<DamageType, RangedValue>> damages,
         List<Pair<Element, Integer>> defences) {
     public int getSkillBonus(Skill skill) {

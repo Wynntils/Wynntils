@@ -38,9 +38,9 @@ public record ItemMaterial(ItemStack itemStack) {
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial fromPlayerHeadTexture(String skinTexture) {
+    public static ItemMaterial fromPlayerHeadUUID(String uuid) {
         ItemStack itemStack = createItemStack(Items.PLAYER_HEAD, 0);
-        SkinUtils.setPlayerHeadSkin(itemStack, skinTexture);
+        SkinUtils.setPlayerHeadFromUUID(itemStack, uuid);
 
         return new ItemMaterial(itemStack);
     }
