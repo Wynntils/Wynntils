@@ -1,9 +1,17 @@
+## [0.0.4-beta.78](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.77...v0.0.4-beta.78) (2023-12-06)
+
+
+### Miscellaneous Chores
+
+* Bump loom and other dependencies. Remove Quilt support. ([#2261](https://github.com/Wynntils/Artemis/issues/2261)) ([233e522](https://github.com/Wynntils/Artemis/commit/233e522c68021bb0694efcc0be4a9075303f7c47))
+
 ## [0.0.4-beta.77](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.76...v0.0.4-beta.77) (2023-11-28)
 
 
 ### Miscellaneous Chores
 
 * Move to using Wynntils/Static-Storage ([#2258](https://github.com/Wynntils/Artemis/issues/2258)) ([30a882d](https://github.com/Wynntils/Artemis/commit/30a882db8bc5a2d348c66b36a468578cfd2d721d))
+* **release:** v0.0.4-beta.77 [skip ci] ([377f8b8](https://github.com/Wynntils/Artemis/commit/377f8b8d94c0ca2390aa0eb9bc79b802963be830))
 
 ## [0.0.4-beta.76](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.75...v0.0.4-beta.76) (2023-11-27)
 
@@ -36,16 +44,4 @@
 
 * **release:** v0.0.4-beta.74 [skip ci] ([0644456](https://github.com/Wynntils/Artemis/commit/064445644680356eae66fa8430d4c8e316968570))
 * remove Debugify from the incompatible mod list (experimentally) ([#2247](https://github.com/Wynntils/Artemis/issues/2247)) ([410a210](https://github.com/Wynntils/Artemis/commit/410a210778844172585033e4eae1a61597021988))
-
-## [0.0.4-beta.73](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.72...v0.0.4-beta.73) (2023-11-14)
-
-
-### Bug Fixes
-
-* Round spell cost base values correctly ([#2243](https://github.com/Wynntils/Artemis/issues/2243)) ([f5d0160](https://github.com/Wynntils/Artemis/commit/f5d01601f587988df90baffab7d71dd7c86dc9f9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.73 [skip ci] ([0c47997](https://github.com/Wynntils/Artemis/commit/0c479973f15a2aae6d20a4808f187e0133be76a0))
 
