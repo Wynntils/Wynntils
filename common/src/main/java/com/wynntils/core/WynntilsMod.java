@@ -275,7 +275,6 @@ public final class WynntilsMod {
 
     public enum ModLoader {
         FORGE,
-        FABRIC,
-        QUILT
+        FABRIC
     }
 }

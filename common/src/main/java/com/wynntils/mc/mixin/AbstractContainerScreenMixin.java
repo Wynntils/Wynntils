@@ -132,7 +132,7 @@ public abstract class AbstractContainerScreenMixin {
 
     // Note: Call site 2 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       Additionally, we do not require these mixins, since forge will not match the method signatures,
-    //       and this way we don't need to duplicate this across fabric and quilt only mixins.
+    //       and this way we don't need to make this mixin fabric only.
     //       See ForgeGuiGraphicsMixin for the Forge mixin.
     @WrapOperation(
             method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V",
