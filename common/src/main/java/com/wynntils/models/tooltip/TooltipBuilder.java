@@ -9,8 +9,10 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatListOrdering;
+import com.wynntils.models.tooltip.gear.GearTooltipFooter;
+import com.wynntils.models.tooltip.gear.GearTooltipHeader;
+import com.wynntils.models.tooltip.gear.IdentifiableGearItemInfo;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -23,8 +25,7 @@ import net.minecraft.world.item.ItemStack;
 public final class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
             new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
-    private final GearInfo gearInfo;
-    private final GearInstance gearInstance;
+    private final IdentifiableItemInfo itemInfo;
     private final List<Component> header;
     private final List<Component> footer;
 
@@ -34,10 +35,8 @@ public final class TooltipBuilder {
     private TooltipIdentificationDecorator cachedDecorator;
     private List<Component> identificationsCache;
 
-    private TooltipBuilder(
-            GearInfo gearInfo, GearInstance gearInstance, List<Component> header, List<Component> footer) {
-        this.gearInfo = gearInfo;
-        this.gearInstance = gearInstance;
+    private TooltipBuilder(IdentifiableItemInfo itemInfo, List<Component> header, List<Component> footer) {
+        this.itemInfo = itemInfo;
         this.header = header;
         this.footer = footer;
     }
@@ -46,24 +45,22 @@ public final class TooltipBuilder {
      * Creates a tooltip builder that provides a synthetic header and footer
      */
     public static TooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
-        List<Component> header = TooltipHeader.buildTooltip(gearInfo, gearInstance, hideUnidentified);
-        List<Component> footer = TooltipFooter.buildTooltip(gearInfo, gearInstance);
-        return new TooltipBuilder(gearInfo, gearInstance, header, footer);
+        List<Component> header = GearTooltipHeader.buildTooltip(gearInfo, gearInstance, hideUnidentified);
+        List<Component> footer = GearTooltipFooter.buildTooltip(gearInfo, gearInstance);
+        return new TooltipBuilder(IdentifiableGearItemInfo.from(gearInfo, gearInstance), header, footer);
     }
 
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public static TooltipBuilder fromParsedItemStack(ItemStack itemStack, GearItem gearItem) {
-        GearInfo gearInfo = gearItem.getGearInfo();
-        GearInstance gearInstance = gearItem.getGearInstance().orElse(null);
+    public static TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemInfo itemInfo) {
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         Pair<List<Component>, List<Component>> splitLore = extractHeaderAndFooter(tooltips);
         List<Component> header = splitLore.a();
         List<Component> footer = splitLore.b();
 
-        return new TooltipBuilder(gearInfo, gearInstance, header, footer);
+        return new TooltipBuilder(itemInfo, header, footer);
     }
 
     public List<Component> getTooltipLines(
@@ -78,8 +75,7 @@ public final class TooltipBuilder {
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
         if (currentClass != cachedCurrentClass || cachedStyle != style || cachedDecorator != decorator) {
-            identifications =
-                    TooltipIdentifications.buildTooltip(gearInfo, gearInstance, currentClass, decorator, style);
+            identifications = TooltipIdentifications.buildTooltip(itemInfo, currentClass, decorator, style);
             identificationsCache = identifications;
             cachedCurrentClass = currentClass;
             cachedStyle = style;

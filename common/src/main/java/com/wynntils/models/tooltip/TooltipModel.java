@@ -7,7 +7,6 @@ package com.wynntils.models.tooltip;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.items.items.game.GearItem;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,7 +25,7 @@ public class TooltipModel extends Model {
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, GearItem gearItem) {
-        return TooltipBuilder.fromParsedItemStack(itemStack, gearItem);
+    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemInfo itemInfo) {
+        return TooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
     }
 }

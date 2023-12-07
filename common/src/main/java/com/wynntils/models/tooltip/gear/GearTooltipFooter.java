@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tooltip;
+package com.wynntils.models.tooltip.gear;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public final class TooltipFooter {
+public final class GearTooltipFooter {
     private static final int PIXEL_WIDTH = 150;
 
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance) {

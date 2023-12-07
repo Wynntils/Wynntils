@@ -92,10 +92,8 @@ public final class StatModel extends Model {
         return null;
     }
 
-    public String getDisplayName(StatType statType, GearInfo gearInfo, ClassType currentClass) {
+    public String getDisplayName(StatType statType, ClassType classReq, ClassType currentClass) {
         if (statType instanceof SpellStatType spellStatType) {
-            ClassType classReq = gearInfo.type().getClassReq();
-
             // If there is no class associated with the gear (i.e. it is not
             // a weapon), chose our current class
             ClassType classToUse = classReq != null ? classReq : currentClass;

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tooltip;
+package com.wynntils.models.tooltip.gear;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.activities.quests.QuestInfo;
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class TooltipHeader {
+public final class GearTooltipHeader {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
         List<Component> header = new ArrayList<>();
 
