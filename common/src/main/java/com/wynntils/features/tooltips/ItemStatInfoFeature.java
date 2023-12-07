@@ -12,17 +12,20 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.tooltip.IdentifiableItemInfo;
 import com.wynntils.models.tooltip.TooltipBuilder;
 import com.wynntils.models.tooltip.TooltipIdentificationDecorator;
 import com.wynntils.models.tooltip.TooltipStyle;
+import com.wynntils.models.tooltip.gear.IdentifiableGearItemInfo;
+import com.wynntils.models.tooltip.tome.IdentifiableTomeItemInfo;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -34,6 +37,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -42,7 +46,15 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
-    private final Set<GearItem> brokenItems = new HashSet<>();
+    private static final Function<GearItem, IdentifiableItemInfo> GEAR_ITEM_INFO_FUNCTION =
+            gearItem -> IdentifiableGearItemInfo.from(
+                    gearItem.getGearInfo(), gearItem.getGearInstance().orElse(null));
+
+    private static final Function<TomeItem, IdentifiableItemInfo> TOME_ITEM_INFO_FUNCTION =
+            tomeItem -> IdentifiableTomeItemInfo.from(
+                    tomeItem.getTomeInfo(), tomeItem.getTomeInstance().orElse(null));
+
+    private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
     public final Config<Boolean> showStars = new Config<>(true);
@@ -84,19 +96,20 @@ public class ItemStatInfoFeature extends Feature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
 
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearItem.class);
-        if (gearItemOpt.isEmpty()) return;
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
+        if (wynnItemOpt.isEmpty()) return;
 
-        GearItem gearItem = gearItemOpt.get();
-        if (brokenItems.contains(gearItem)) return;
+        WynnItem wynnItem = wynnItemOpt.get();
+        if (brokenItems.contains(wynnItem)) return;
 
-        GearInfo gearInfo = gearItem.getGearInfo();
+        IdentifiableItemInfo itemInfo = getItemInfo(wynnItem);
+        if (itemInfo == null) return;
 
         try {
-            TooltipBuilder builder = gearItem.getData()
+            TooltipBuilder builder = wynnItem.getData()
                     .getOrCalculate(
                             WynnItemData.TOOLTIP_KEY,
-                            () -> Models.Tooltip.fromParsedItemStack(event.getItemStack(), gearItem));
+                            () -> Models.Tooltip.fromParsedItemStack(event.getItemStack(), itemInfo));
             if (builder == null) return;
 
             IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;
@@ -108,23 +121,18 @@ public class ItemStatInfoFeature extends Feature {
             LinkedList<Component> tooltips = new LinkedList<>(
                     builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
 
-            Optional<GearInstance> optionalGearInstance = gearItem.getGearInstance();
-            if (optionalGearInstance.isPresent()) {
-                GearInstance gearInstance = optionalGearInstance.get();
-
-                // Update name depending on overall percentage; this needs to be done every rendering
-                // for rainbow/defective effects
-                if (overallPercentageInName.get() && gearInstance.hasOverallValue()) {
-                    updateItemName(gearInfo, gearInstance, tooltips);
-                }
+            // Update name depending on overall percentage; this needs to be done every rendering
+            // for rainbow/defective effects
+            if (overallPercentageInName.get() && itemInfo.hasOverallValue()) {
+                updateItemName(itemInfo, tooltips);
             }
 
             event.setTooltips(tooltips);
         } catch (Exception e) {
-            brokenItems.add(gearItem);
-            WynntilsMod.error("Exception when creating tooltips for item " + gearInfo.name(), e);
-            WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + gearItem);
-            McUtils.sendErrorToClient("Wynntils error: Problem showing tooltip for item " + gearInfo.name());
+            brokenItems.add(wynnItem);
+            WynntilsMod.error("Exception when creating tooltips for item " + itemInfo.getName(), e);
+            WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + wynnItem);
+            McUtils.sendErrorToClient("Wynntils error: Problem showing tooltip for item " + itemInfo.getName());
 
             if (brokenItems.size() > 10) {
                 // Give up and disable feature
@@ -133,17 +141,27 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    private void updateItemName(GearInfo gearInfo, GearInstance gearInstance, Deque<Component> tooltips) {
+    private IdentifiableItemInfo getItemInfo(WynnItem wynnItem) {
+        if (wynnItem instanceof GearItem gearItem) {
+            return GEAR_ITEM_INFO_FUNCTION.apply(gearItem);
+        } else if (wynnItem instanceof TomeItem tomeItem) {
+            return TOME_ITEM_INFO_FUNCTION.apply(tomeItem);
+        } else {
+            throw new IllegalArgumentException("Unknown item type: " + wynnItem.getClass());
+        }
+    }
+
+    private void updateItemName(IdentifiableItemInfo itemInfo, Deque<Component> tooltips) {
         MutableComponent name;
-        if (perfect.get() && gearInstance.isPerfect()) {
-            name = ComponentUtils.makeRainbowStyle("Perfect " + gearInfo.name());
-        } else if (defective.get() && gearInstance.isDefective()) {
+        if (perfect.get() && itemInfo.isPerfect()) {
+            name = ComponentUtils.makeRainbowStyle("Perfect " + itemInfo.getName());
+        } else if (defective.get() && itemInfo.isDefective()) {
             name = ComponentUtils.makeObfuscated(
-                    "Defective " + gearInfo.name(), obfuscationChanceStart.get(), obfuscationChanceEnd.get());
+                    "Defective " + itemInfo.getName(), obfuscationChanceStart.get(), obfuscationChanceEnd.get());
         } else {
             name = tooltips.getFirst().copy();
             name.append(ColorScaleUtils.getPercentageTextComponent(
-                    gearInstance.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
+                    itemInfo.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
         }
         tooltips.removeFirst();
         tooltips.addFirst(name);
