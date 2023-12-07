@@ -13,6 +13,9 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.DoubleSummaryStatistics;
+import java.util.List;
+import java.util.Optional;
 
 public final class StatCalculator {
     public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, boolean isInverted) {
@@ -187,5 +190,35 @@ public final class StatCalculator {
             result = (avg - 70) / 61d;
         }
         return result * 100;
+    }
+
+    public static Optional<Float> calculateOverallQuality(
+            String itemName, List<StatPossibleValues> possibleValuesList, List<StatActualValue> identifications) {
+        DoubleSummaryStatistics percents = identifications.stream()
+                .filter(actualValue -> {
+                    // We do not include values that cannot possibly change
+                    StatPossibleValues possibleValues = possibleValuesList.stream()
+                            .filter(possibleValue -> possibleValue.statType().equals(actualValue.statType()))
+                            .findFirst()
+                            .orElse(null);
+                    if (possibleValues == null) {
+                        WynntilsMod.warn(
+                                "Error:" + itemName + " claims to have identification " + actualValue.statType());
+                        return false;
+                    }
+                    return !possibleValues.range().isFixed()
+                            && possibleValues.range().inRange(actualValue.value());
+                })
+                .mapToDouble(actualValue -> {
+                    StatPossibleValues possibleValues = possibleValuesList.stream()
+                            .filter(possibleValue -> possibleValue.statType().equals(actualValue.statType()))
+                            .findFirst()
+                            .orElse(null);
+                    return StatCalculator.getPercentage(actualValue, possibleValues);
+                })
+                .summaryStatistics();
+        if (percents.getCount() == 0) return Optional.empty();
+
+        return Optional.of((float) percents.getAverage());
     }
 }

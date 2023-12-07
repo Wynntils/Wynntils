@@ -13,6 +13,7 @@ import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.TomeInfo;
+import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
@@ -54,6 +55,6 @@ public class RewardsModel extends Model {
             WynntilsMod.warn("Tier for " + tomeInfo.name() + " is reported as " + result.tier());
         }
 
-        return new TomeItem(tomeInfo, result.identifications(), result.rerolls());
+        return new TomeItem(tomeInfo, TomeInstance.create(tomeInfo, result.identifications()), result.rerolls());
     }
 }

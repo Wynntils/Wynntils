@@ -4,14 +4,11 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
-import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,30 +26,12 @@ public record GearInstance(
             int rerolls,
             Optional<ShinyStat> shinyStat) {
         return new GearInstance(
-                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStat);
-    }
-
-    private static Optional<Float> calculateOverallQuality(GearInfo gearInfo, List<StatActualValue> identifications) {
-        DoubleSummaryStatistics percents = identifications.stream()
-                .filter(actualValue -> {
-                    // We do not include values that cannot possibly change
-                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());
-                    if (possibleValues == null) {
-                        WynntilsMod.warn("Error:" + gearInfo.name() + " claims to have identification "
-                                + actualValue.statType());
-                        return false;
-                    }
-                    return !possibleValues.range().isFixed()
-                            && possibleValues.range().inRange(actualValue.value());
-                })
-                .mapToDouble(actualValue -> {
-                    StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());
-                    return StatCalculator.getPercentage(actualValue, possibleValues);
-                })
-                .summaryStatistics();
-        if (percents.getCount() == 0) return Optional.empty();
-
-        return Optional.of((float) percents.getAverage());
+                identifications,
+                powders,
+                rerolls,
+                StatCalculator.calculateOverallQuality(
+                        gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
+                shinyStat);
     }
 
     public boolean hasOverallValue() {

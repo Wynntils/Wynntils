@@ -24,7 +24,19 @@ public record TomeInfo(
         TomeRequirements requirements,
         List<Pair<Skill, Integer>> skillBonuses,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
+    public StatPossibleValues getPossibleValues(StatType statType) {
+        return this.variableStats().stream()
+                .filter(p -> p.key().equals(statType))
+                .findFirst()
+                .map(Pair::value)
+                .orElse(null);
+    }
+
     public Map<StatType, StatPossibleValues> getVariableStatsMap() {
         return variableStats().stream().collect(Collectors.toMap(Pair::key, Pair::value));
+    }
+
+    public List<StatPossibleValues> getPossibleValueList() {
+        return variableStats().stream().map(Pair::value).toList();
     }
 }

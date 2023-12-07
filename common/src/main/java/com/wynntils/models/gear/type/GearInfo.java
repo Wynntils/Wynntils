@@ -36,4 +36,8 @@ public record GearInfo(
     public Map<StatType, StatPossibleValues> getVariableStatsMap() {
         return variableStats().stream().collect(Collectors.toMap(Pair::key, Pair::value));
     }
+
+    public List<StatPossibleValues> getPossibleValueList() {
+        return variableStats().stream().map(Pair::value).toList();
+    }
 }
