@@ -11,22 +11,22 @@ import com.wynntils.models.items.items.game.GearItem;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
-public class GearTooltipModel extends Model {
-    public GearTooltipModel() {
+public class TooltipModel extends Model {
+    public TooltipModel() {
         super(List.of());
     }
 
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */
-    public GearTooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
-        return GearTooltipBuilder.buildNew(gearInfo, gearInstance, hideUnidentified);
+    public TooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
+        return TooltipBuilder.buildNew(gearInfo, gearInstance, hideUnidentified);
     }
 
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public GearTooltipBuilder fromParsedItemStack(ItemStack itemStack, GearItem gearItem) {
-        return GearTooltipBuilder.fromParsedItemStack(itemStack, gearItem);
+    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, GearItem gearItem) {
+        return TooltipBuilder.fromParsedItemStack(itemStack, gearItem);
     }
 }

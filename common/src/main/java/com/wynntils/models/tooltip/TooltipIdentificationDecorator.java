@@ -10,6 +10,5 @@ import net.minecraft.network.chat.MutableComponent;
 
 @FunctionalInterface
 public interface TooltipIdentificationDecorator {
-    MutableComponent getSuffix(
-            StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style);
+    MutableComponent getSuffix(StatActualValue statActualValue, StatPossibleValues possibleValues, TooltipStyle style);
 }

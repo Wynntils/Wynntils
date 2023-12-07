@@ -6,7 +6,7 @@ package com.wynntils.models.tooltip;
 
 import com.wynntils.models.stats.type.StatListOrdering;
 
-public record GearTooltipStyle(
+public record TooltipStyle(
         StatListOrdering identificationOrdering,
         boolean useDelimiters,
         boolean showBestValueLastAlways,

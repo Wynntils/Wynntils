@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public final class GearTooltipFooter {
+public final class TooltipFooter {
     private static final int PIXEL_WIDTH = 150;
 
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance) {

@@ -50,7 +50,7 @@ import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.token.TokenModel;
-import com.wynntils.models.tooltip.GearTooltipModel;
+import com.wynntils.models.tooltip.TooltipModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
@@ -79,7 +79,6 @@ public final class Models {
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
     public static final GearModel Gear = new GearModel();
-    public static final GearTooltipModel GearTooltip = new GearTooltipModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
     public static final HorseModel Horse = new HorseModel();
@@ -106,6 +105,7 @@ public final class Models {
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
+    public static final TooltipModel Tooltip = new TooltipModel();
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final TradeMarketModel TradeMarket = new TradeMarketModel();
     public static final WarModel War = new WarModel();

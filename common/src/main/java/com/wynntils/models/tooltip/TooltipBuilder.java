@@ -20,9 +20,9 @@ import java.util.regex.Matcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public final class GearTooltipBuilder {
-    private static final GearTooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new GearTooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
+public final class TooltipBuilder {
+    private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
     private final List<Component> header;
@@ -30,11 +30,11 @@ public final class GearTooltipBuilder {
 
     // The identificationsCache is only valid if the cached dependencies matchs
     private ClassType cachedCurrentClass;
-    private GearTooltipStyle cachedStyle;
+    private TooltipStyle cachedStyle;
     private TooltipIdentificationDecorator cachedDecorator;
     private List<Component> identificationsCache;
 
-    private GearTooltipBuilder(
+    private TooltipBuilder(
             GearInfo gearInfo, GearInstance gearInstance, List<Component> header, List<Component> footer) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
@@ -45,16 +45,16 @@ public final class GearTooltipBuilder {
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */
-    public static GearTooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
-        List<Component> header = GearTooltipHeader.buildTooltip(gearInfo, gearInstance, hideUnidentified);
-        List<Component> footer = GearTooltipFooter.buildTooltip(gearInfo, gearInstance);
-        return new GearTooltipBuilder(gearInfo, gearInstance, header, footer);
+    public static TooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
+        List<Component> header = TooltipHeader.buildTooltip(gearInfo, gearInstance, hideUnidentified);
+        List<Component> footer = TooltipFooter.buildTooltip(gearInfo, gearInstance);
+        return new TooltipBuilder(gearInfo, gearInstance, header, footer);
     }
 
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public static GearTooltipBuilder fromParsedItemStack(ItemStack itemStack, GearItem gearItem) {
+    public static TooltipBuilder fromParsedItemStack(ItemStack itemStack, GearItem gearItem) {
         GearInfo gearInfo = gearItem.getGearInfo();
         GearInstance gearInstance = gearItem.getGearInstance().orElse(null);
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
@@ -63,11 +63,11 @@ public final class GearTooltipBuilder {
         List<Component> header = splitLore.a();
         List<Component> footer = splitLore.b();
 
-        return new GearTooltipBuilder(gearInfo, gearInstance, header, footer);
+        return new TooltipBuilder(gearInfo, gearInstance, header, footer);
     }
 
     public List<Component> getTooltipLines(
-            ClassType currentClass, GearTooltipStyle style, TooltipIdentificationDecorator decorator) {
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
         List<Component> tooltip = new ArrayList<>();
 
         // Header and footer are always constant
@@ -79,7 +79,7 @@ public final class GearTooltipBuilder {
         // style and provided decorator. If all match, use cache.
         if (currentClass != cachedCurrentClass || cachedStyle != style || cachedDecorator != decorator) {
             identifications =
-                    GearTooltipIdentifications.buildTooltip(gearInfo, gearInstance, currentClass, decorator, style);
+                    TooltipIdentifications.buildTooltip(gearInfo, gearInstance, currentClass, decorator, style);
             identificationsCache = identifications;
             cachedCurrentClass = currentClass;
             cachedStyle = style;

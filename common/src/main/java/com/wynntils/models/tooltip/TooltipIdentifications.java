@@ -24,13 +24,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class GearTooltipIdentifications {
+public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
             GearInfo gearInfo,
             GearInstance gearInstance,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
-            GearTooltipStyle style) {
+            TooltipStyle style) {
         List<Component> identifications = new ArrayList<>();
 
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
@@ -85,7 +85,7 @@ public final class GearTooltipIdentifications {
             GearInstance gearInstance,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
-            GearTooltipStyle style) {
+            TooltipStyle style) {
         if (gearInstance != null) {
             // We have an actual value
             StatActualValue statActualValue = gearInstance.getActualValue(statType);
@@ -119,7 +119,7 @@ public final class GearTooltipIdentifications {
     }
 
     private static MutableComponent buildIdentifiedLine(
-            GearInfo gearInfo, GearTooltipStyle style, StatActualValue actualValue, ClassType currentClass) {
+            GearInfo gearInfo, TooltipStyle style, StatActualValue actualValue, ClassType currentClass) {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
@@ -141,7 +141,7 @@ public final class GearTooltipIdentifications {
     }
 
     private static MutableComponent buildUnidentifiedLine(
-            GearInfo gearInfo, GearTooltipStyle style, StatPossibleValues possibleValues) {
+            GearInfo gearInfo, TooltipStyle style, StatPossibleValues possibleValues) {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
 

@@ -20,9 +20,9 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.models.tooltip.GearTooltipBuilder;
-import com.wynntils.models.tooltip.GearTooltipStyle;
+import com.wynntils.models.tooltip.TooltipBuilder;
 import com.wynntils.models.tooltip.TooltipIdentificationDecorator;
+import com.wynntils.models.tooltip.TooltipStyle;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -93,14 +93,14 @@ public class ItemStatInfoFeature extends Feature {
         GearInfo gearInfo = gearItem.getGearInfo();
 
         try {
-            GearTooltipBuilder builder = gearItem.getData()
+            TooltipBuilder builder = gearItem.getData()
                     .getOrCalculate(
                             WynnItemData.TOOLTIP_KEY,
-                            () -> Models.GearTooltip.fromParsedItemStack(event.getItemStack(), gearItem));
+                            () -> Models.Tooltip.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
             IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;
-            GearTooltipStyle currentIdentificationStyle = new GearTooltipStyle(
+            TooltipStyle currentIdentificationStyle = new TooltipStyle(
                     identificationsOrdering.get(),
                     groupIdentifications.get(),
                     showBestValueLastAlways.get(),
@@ -152,7 +152,7 @@ public class ItemStatInfoFeature extends Feature {
     private class IdentificationDecorator implements TooltipIdentificationDecorator {
         @Override
         public MutableComponent getSuffix(
-                StatActualValue statActualValue, StatPossibleValues possibleValues, GearTooltipStyle style) {
+                StatActualValue statActualValue, StatPossibleValues possibleValues, TooltipStyle style) {
             if (!possibleValues.range().inRange(statActualValue.value())) {
                 // Our actual value lies outside the range of possible values
                 // This can happen if the API data is outdated. In this case, just mark
@@ -173,7 +173,7 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         private MutableComponent getInnerRollSuffix(
-                GearTooltipStyle style, StatActualValue statActualValue, StatPossibleValues possibleValues) {
+                TooltipStyle style, StatActualValue statActualValue, StatPossibleValues possibleValues) {
             MutableComponent rangeTextComponent = Component.literal(" <")
                     .append(Component.literal(statActualValue.internalRoll().low() + "% to "
                                     + statActualValue.internalRoll().high() + "%")
@@ -185,7 +185,7 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         private MutableComponent getRangeSuffix(
-                GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+                TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             Pair<Integer, Integer> displayRange =
                     StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
 
@@ -199,7 +199,7 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         private MutableComponent getRerollSuffix(
-                GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+                TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             MutableComponent rerollChancesComponent = Component.literal(String.format(
                             Locale.ROOT, " \u2605%.2f%%", StatCalculator.getPerfectChance(possibleValues)))
                     .withStyle(ChatFormatting.AQUA)
@@ -218,7 +218,7 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         private MutableComponent getPercentSuffix(
-                GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
+                TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent =
                     ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp.get(), decimalPlaces.get());

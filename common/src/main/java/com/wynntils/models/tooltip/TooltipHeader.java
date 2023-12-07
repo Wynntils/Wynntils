@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class GearTooltipHeader {
+public final class TooltipHeader {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
         List<Component> header = new ArrayList<>();
 
