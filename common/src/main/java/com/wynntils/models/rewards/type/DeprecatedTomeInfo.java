@@ -6,4 +6,5 @@ package com.wynntils.models.rewards.type;
 
 import com.wynntils.models.gear.type.GearTier;
 
-public record TomeInfo(String displayName, GearTier gearTier, String variant, TomeType type, String tomeTier) {}
+public record DeprecatedTomeInfo(
+        String displayName, GearTier gearTier, String variant, TomeType type, String tomeTier) {}

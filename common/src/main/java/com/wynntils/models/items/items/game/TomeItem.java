@@ -6,22 +6,22 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import com.wynntils.models.rewards.type.TomeInfo;
+import com.wynntils.models.rewards.type.DeprecatedTomeInfo;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 
 public class TomeItem extends GameItem implements GearTierItemProperty {
-    private final TomeInfo tomeInfo;
+    private final DeprecatedTomeInfo tomeInfo;
     private final List<StatActualValue> identifications;
     private final int rerolls;
 
-    public TomeItem(TomeInfo tomeInfo, List<StatActualValue> identifications, int rerolls) {
+    public TomeItem(DeprecatedTomeInfo tomeInfo, List<StatActualValue> identifications, int rerolls) {
         this.tomeInfo = tomeInfo;
         this.identifications = identifications;
         this.rerolls = rerolls;
     }
 
-    public TomeInfo getTomeProfile() {
+    public DeprecatedTomeInfo getTomeProfile() {
         return tomeInfo;
     }
 

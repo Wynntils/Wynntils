@@ -12,7 +12,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.CharmInfo;
-import com.wynntils.models.rewards.type.TomeInfo;
+import com.wynntils.models.rewards.type.DeprecatedTomeInfo;
 import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
@@ -43,7 +43,7 @@ public class RewardsModel extends Model {
         GearTier gearTier = GearTier.fromStyledText(name);
 
         // TODO: replace with API lookup
-        TomeInfo tomeInfo = new TomeInfo(displayName, gearTier, variant, tomeType, tier);
+        DeprecatedTomeInfo tomeInfo = new DeprecatedTomeInfo(displayName, gearTier, variant, tomeType, tier);
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
         if (result.tier() != tomeInfo.gearTier()) {
