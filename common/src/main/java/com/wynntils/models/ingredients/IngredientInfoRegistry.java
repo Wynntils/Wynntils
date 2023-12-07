@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -19,6 +18,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.AbstractItemInfoDeserializer;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -27,7 +27,6 @@ import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,28 +115,15 @@ public class IngredientInfoRegistry {
         });
     }
 
-    private static final class IngredientInfoDeserializer implements JsonDeserializer<IngredientInfo> {
+    private static final class IngredientInfoDeserializer extends AbstractItemInfoDeserializer<IngredientInfo> {
         @Override
         public IngredientInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            // Wynncraft API has two fields: name and internalName. The former is a display name,
-            // the latter is a static internal name that never changes.
-            String displayName = json.get("name").getAsString();
-            String internalName = JsonUtils.getNullableJsonString(json, "internalName");
-
-            // If the display name is the same as the internal name,
-            // we treat the internal name as null,
-            // and override it, if the displayed name needs to be normalized
-            if (displayName.equals(internalName)) {
-                String normalizedApiName = WynnUtils.normalizeBadString(displayName);
-                if (!normalizedApiName.equals(displayName)) {
-                    // Normalization removed a ֎ from the name. This means we want to
-                    // treat the name as internalName and the normalized name as display name
-                    displayName = normalizedApiName;
-                }
-            }
+            Pair<String, String> names = parseNames(json);
+            String displayName = names.key();
+            String internalName = names.value();
 
             Optional<String> internalNameOpt = Optional.ofNullable(internalName);
 
@@ -165,7 +151,7 @@ public class IngredientInfoRegistry {
             // Get recipe position format modifiers
             Map<IngredientPosition, Integer> positionModifiers = getPositionModifiers(json);
 
-            List<Pair<StatType, RangedValue>> variableStats = parseVariableStats(json);
+            List<Pair<StatType, RangedValue>> variableStats = parseVariableIngredientStats(json);
 
             return new IngredientInfo(
                     displayName,
@@ -250,7 +236,7 @@ public class IngredientInfoRegistry {
             return Map.copyOf(positionModifiers);
         }
 
-        private List<Pair<StatType, RangedValue>> parseVariableStats(JsonObject json) {
+        private List<Pair<StatType, RangedValue>> parseVariableIngredientStats(JsonObject json) {
             List<Pair<StatType, RangedValue>> list = new ArrayList<>();
             JsonObject identificationsJson = JsonUtils.getNullableJsonObject(json, "identifications");
 
