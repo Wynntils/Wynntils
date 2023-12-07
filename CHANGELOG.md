@@ -1,9 +1,21 @@
+## [0.0.4-beta.82](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.81...v0.0.4-beta.82) (2023-12-07)
+
+
+### Bug Fixes
+
+* Fix ingredient durability being multiplied by 1000 ([#2266](https://github.com/Wynntils/Artemis/issues/2266)) ([1b98841](https://github.com/Wynntils/Artemis/commit/1b988414f40b873413561f9ef4731d7fc3d6ff4a))
+
 ## [0.0.4-beta.81](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.80...v0.0.4-beta.81) (2023-12-06)
 
 
 ### Bug Fixes
 
 * Fix chat gear encoding after Item API V3 ([#2265](https://github.com/Wynntils/Artemis/issues/2265)) ([5733b95](https://github.com/Wynntils/Artemis/commit/5733b95a991029d0286d9d0f710bb5a904fa20e8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.81 [skip ci] ([a3e0419](https://github.com/Wynntils/Artemis/commit/a3e0419594b18d1d56cd68f77597a989a2a8346a))
 
 ## [0.0.4-beta.80](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.79...v0.0.4-beta.80) (2023-12-06)
 
@@ -33,12 +45,4 @@
 
 * Bump loom and other dependencies. Remove Quilt support. ([#2261](https://github.com/Wynntils/Artemis/issues/2261)) ([233e522](https://github.com/Wynntils/Artemis/commit/233e522c68021bb0694efcc0be4a9075303f7c47))
 * **release:** v0.0.4-beta.78 [skip ci] ([9aa8b08](https://github.com/Wynntils/Artemis/commit/9aa8b08f1c3648a5822e8f0b7922ccef359a4227))
-
-## [0.0.4-beta.77](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.76...v0.0.4-beta.77) (2023-11-28)
-
-
-### Miscellaneous Chores
-
-* Move to using Wynntils/Static-Storage ([#2258](https://github.com/Wynntils/Artemis/issues/2258)) ([30a882d](https://github.com/Wynntils/Artemis/commit/30a882db8bc5a2d348c66b36a468578cfd2d721d))
-* **release:** v0.0.4-beta.77 [skip ci] ([377f8b8](https://github.com/Wynntils/Artemis/commit/377f8b8d94c0ca2390aa0eb9bc79b802963be830))
 
