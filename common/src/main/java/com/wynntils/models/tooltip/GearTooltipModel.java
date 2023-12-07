@@ -2,10 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear;
+package com.wynntils.models.tooltip;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;

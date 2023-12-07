@@ -6,10 +6,10 @@ package com.wynntils.screens.guides.gear;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.tooltip.GearTooltipBuilder;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;
