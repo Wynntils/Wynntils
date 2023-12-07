@@ -157,7 +157,9 @@ public class IngredientInfoRegistry {
 
             // Get items-only parts
             JsonObject itemIdsJson = JsonUtils.getNullableJsonObject(json, "itemOnlyIDs");
-            int durabilityModifier = JsonUtils.getNullableJsonInt(itemIdsJson, "durabilityModifier");
+            // Durability modifier is multiplied by 1000 in the API, so we divide it here
+            // (there is no known reason for this)
+            int durabilityModifier = JsonUtils.getNullableJsonInt(itemIdsJson, "durabilityModifier") / 1000;
             List<Pair<Skill, Integer>> skillRequirements = getSkillRequirements(itemIdsJson);
 
             // Get recipe position format modifiers
