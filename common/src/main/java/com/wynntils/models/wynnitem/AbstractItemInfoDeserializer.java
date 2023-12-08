@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserializer<T> {
     protected Pair<String, String> parseNames(JsonObject json) {
@@ -137,9 +136,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         String lore = JsonUtils.getNullableJsonString(json, "lore");
         if (lore == null) return Optional.empty();
 
-        // Some lore contain like "\\[Community Event Winner\\]", fix that
-        return Optional.of(StyledText.fromString(
-                StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
+        return Optional.of(StyledText.fromString(lore));
     }
 
     protected GearDropRestrictions parseDropRestrictions(JsonObject json) {
