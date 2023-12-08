@@ -13,6 +13,7 @@ public enum ItemObtainType {
     CHALLENGE("challenge", "Challenge"), // at the moment, only Legendary Island
     EVENT("event", "Event"), // like Bonfire, Heroes, etc.
     LOOTRUN("lootrun", "Lootrun"), // lootrun
+    GUILD("guild", "Guild"), // guild
     UNKNOWN("never", "Unknown"), // more information is needed
 
     // From crowd sourced data or Wynncraft API

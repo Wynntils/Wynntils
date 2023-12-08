@@ -28,7 +28,6 @@ import com.wynntils.models.dungeon.DungeonModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.gear.GearModel;
-import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.ItemModel;
@@ -79,7 +78,6 @@ public final class Models {
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
     public static final GearModel Gear = new GearModel();
-    public static final GearTooltipModel GearTooltip = new GearTooltipModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
     public static final HorseModel Horse = new HorseModel();

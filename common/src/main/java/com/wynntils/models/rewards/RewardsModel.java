@@ -13,15 +13,22 @@ import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.TomeInfo;
-import com.wynntils.models.rewards.type.TomeType;
+import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
+    private final TomeInfoRegistry tomeInfoRegistry = new TomeInfoRegistry();
+
     public RewardsModel() {
         super(List.of());
+    }
+
+    @Override
+    public void reloadData() {
+        tomeInfoRegistry.reloadData();
     }
 
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
@@ -38,18 +45,16 @@ public class RewardsModel extends Model {
         return new CharmItem(charmInfo, result.identifications(), result.rerolls());
     }
 
-    public static TomeItem fromTomeItemStack(
-            ItemStack itemStack, StyledText name, String displayName, TomeType tomeType, String tier, String variant) {
+    public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name) {
         GearTier gearTier = GearTier.fromStyledText(name);
 
-        // TODO: replace with API lookup
-        TomeInfo tomeInfo = new TomeInfo(displayName, gearTier, variant, tomeType, tier);
+        TomeInfo tomeInfo = tomeInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
-        if (result.tier() != tomeInfo.gearTier()) {
-            WynntilsMod.warn("Tier for " + tomeInfo.displayName() + " is reported as " + result.tier());
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, tomeInfo.getVariableStatsMap());
+        if (result.tier() != tomeInfo.tier()) {
+            WynntilsMod.warn("Tier for " + tomeInfo.name() + " is reported as " + result.tier());
         }
 
-        return new TomeItem(tomeInfo, result.identifications(), result.rerolls());
+        return new TomeItem(tomeInfo, TomeInstance.create(tomeInfo, result.identifications()), result.rerolls());
     }
 }
