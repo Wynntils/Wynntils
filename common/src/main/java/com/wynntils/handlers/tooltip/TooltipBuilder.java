@@ -2,17 +2,20 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tooltip;
+package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.tooltip.gear.GearTooltipFooter;
+import com.wynntils.handlers.tooltip.gear.GearTooltipHeader;
+import com.wynntils.handlers.tooltip.gear.IdentifiableGearItemInfo;
+import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
+import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.stats.type.StatListOrdering;
-import com.wynntils.models.tooltip.gear.GearTooltipFooter;
-import com.wynntils.models.tooltip.gear.GearTooltipHeader;
-import com.wynntils.models.tooltip.gear.IdentifiableGearItemInfo;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;

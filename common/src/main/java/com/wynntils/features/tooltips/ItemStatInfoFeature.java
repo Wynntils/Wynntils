@@ -5,12 +5,19 @@
 package com.wynntils.features.tooltips;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.gear.IdentifiableGearItemInfo;
+import com.wynntils.handlers.tooltip.tome.IdentifiableTomeItemInfo;
+import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
+import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -20,12 +27,6 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.models.tooltip.IdentifiableItemInfo;
-import com.wynntils.models.tooltip.TooltipBuilder;
-import com.wynntils.models.tooltip.TooltipIdentificationDecorator;
-import com.wynntils.models.tooltip.TooltipStyle;
-import com.wynntils.models.tooltip.gear.IdentifiableGearItemInfo;
-import com.wynntils.models.tooltip.tome.IdentifiableTomeItemInfo;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -109,7 +110,7 @@ public class ItemStatInfoFeature extends Feature {
             TooltipBuilder builder = wynnItem.getData()
                     .getOrCalculate(
                             WynnItemData.TOOLTIP_KEY,
-                            () -> Models.Tooltip.fromParsedItemStack(event.getItemStack(), itemInfo));
+                            () -> Handlers.Tooltip.fromParsedItemStack(event.getItemStack(), itemInfo));
             if (builder == null) return;
 
             IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;

@@ -2,19 +2,15 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tooltip;
+package com.wynntils.handlers.tooltip;
 
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Handler;
+import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
-public class TooltipModel extends Model {
-    public TooltipModel() {
-        super(List.of());
-    }
-
+public class TooltipHandler extends Handler {
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */

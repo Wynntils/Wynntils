@@ -2,15 +2,15 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tooltip.tome;
+package com.wynntils.handlers.tooltip.tome;
 
+import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.models.tooltip.IdentifiableItemInfo;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 
