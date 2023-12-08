@@ -19,4 +19,5 @@ public record GearMetaInfo(
         List<ItemObtainInfo> obtainInfo,
         Optional<StyledText> lore,
         Optional<String> apiName,
-        boolean allowCraftsman) {}
+        boolean allowCraftsman,
+        boolean preIdentified) {}

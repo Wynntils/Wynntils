@@ -68,9 +68,11 @@ public final class GearModel extends Model {
     }
 
     public boolean canBeGearBox(GearInfo gear) {
+        // If an item is pre-identified, it cannot be in a gear box
         // If all the ways we can obtain this is by merchants, it cannot be in a gear box
-        return gear.metaInfo().obtainInfo().stream()
-                .anyMatch(o -> !o.sourceType().isMerchant());
+        return !gear.metaInfo().preIdentified()
+                && gear.metaInfo().obtainInfo().stream()
+                        .anyMatch(o -> !o.sourceType().isMerchant());
     }
 
     @Override
