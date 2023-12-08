@@ -130,7 +130,14 @@ public class TomeInfoRegistry {
             List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
 
             return new GearMetaInfo(
-                    dropRestrictions, restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true);
+                    dropRestrictions,
+                    restrictions,
+                    material,
+                    obtainInfo,
+                    Optional.empty(),
+                    Optional.empty(),
+                    true,
+                    false);
         }
 
         private ItemMaterial parseOtherMaterial(JsonObject json, TomeType tomeType) {
