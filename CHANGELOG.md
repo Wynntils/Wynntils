@@ -1,9 +1,21 @@
+## [0.0.4-beta.84](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.83...v0.0.4-beta.84) (2023-12-08)
+
+
+### Bug Fixes
+
+* Pre-identified items cannot be gears, don't crash item stat feature if an item is not identifiable ([#2269](https://github.com/Wynntils/Artemis/issues/2269)) ([8a5b326](https://github.com/Wynntils/Artemis/commit/8a5b3264175ba5878ca0151f4d4a8d4514d7301e))
+
 ## [0.0.4-beta.83](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.82...v0.0.4-beta.83) (2023-12-08)
 
 
 ### New Features
 
 * Parse tomes as gears, show tome identification percentages ([#2267](https://github.com/Wynntils/Artemis/issues/2267)) ([352de8b](https://github.com/Wynntils/Artemis/commit/352de8bd9ca6897846248a8b1f5db49bf4fc6cff))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.83 [skip ci] ([5da1d27](https://github.com/Wynntils/Artemis/commit/5da1d27a5a8951a3e7a3ba7aa22349bee8b48334))
 
 ## [0.0.4-beta.82](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.81...v0.0.4-beta.82) (2023-12-07)
 
@@ -37,16 +49,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#2263](https://github.com/Wynntils/Artemis/issues/2263)) ([4f6cb50](https://github.com/Wynntils/Artemis/commit/4f6cb50e95e9b7e6b2467aafa99ef1e5a702fb40))
 * Bump Fabric Loader requirement to 0.15.0 (needed by previous builds) ([#2264](https://github.com/Wynntils/Artemis/issues/2264)) ([bf88cf0](https://github.com/Wynntils/Artemis/commit/bf88cf07446a464d7d3af2d068a94c4871a81492))
 * **release:** v0.0.4-beta.80 [skip ci] ([94a30ae](https://github.com/Wynntils/Artemis/commit/94a30ae1a2bb6654284a8e9f74fca17d36a1075b))
-
-## [0.0.4-beta.79](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.78...v0.0.4-beta.79) (2023-12-06)
-
-
-### New Features
-
-* Migrate to using Item API v3 for items and ingredients ([#2259](https://github.com/Wynntils/Artemis/issues/2259)) ([690cecf](https://github.com/Wynntils/Artemis/commit/690cecff771f2512264e12655bff8e1bd310bb9e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.79 [skip ci] ([a3c1edb](https://github.com/Wynntils/Artemis/commit/a3c1edbc7e97b9279c97eadebdd55e334f69ab64))
 
