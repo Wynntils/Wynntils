@@ -46,6 +46,7 @@ public enum UrlId {
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
+    DATA_STATIC_TOMES("dataStaticTomes"),
     DATA_STATIC_URLS("dataStaticUrls"),
     DATA_WYNNCRAFT_TERRITORY_LIST("dataWynncraftTerritoryListV3"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
