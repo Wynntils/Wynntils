@@ -83,9 +83,17 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
         boolean allowCraftsman = JsonUtils.getNullableJsonBoolean(json, "allowCraftsman");
+        boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         return new GearMetaInfo(
-                dropRestrictions, restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman);
+                dropRestrictions,
+                restrictions,
+                material,
+                obtainInfo,
+                loreOpt,
+                apiNameOpt,
+                allowCraftsman,
+                preIdentifiedItem);
     }
 
     protected List<ItemObtainInfo> parseObtainInfo(JsonObject json, String name) {
