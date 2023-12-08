@@ -145,11 +145,12 @@ public class ItemStatInfoFeature extends Feature {
     private IdentifiableItemInfo getItemInfo(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             return GEAR_ITEM_INFO_FUNCTION.apply(gearItem);
-        } else if (wynnItem instanceof TomeItem tomeItem) {
-            return TOME_ITEM_INFO_FUNCTION.apply(tomeItem);
-        } else {
-            throw new IllegalArgumentException("Unknown item type: " + wynnItem.getClass());
         }
+        if (wynnItem instanceof TomeItem tomeItem) {
+            return TOME_ITEM_INFO_FUNCTION.apply(tomeItem);
+        }
+
+        return null;
     }
 
     private void updateItemName(IdentifiableItemInfo itemInfo, Deque<Component> tooltips) {
