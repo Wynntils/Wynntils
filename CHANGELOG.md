@@ -1,9 +1,21 @@
+## [0.0.4-beta.83](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.82...v0.0.4-beta.83) (2023-12-08)
+
+
+### New Features
+
+* Parse tomes as gears, show tome identification percentages ([#2267](https://github.com/Wynntils/Artemis/issues/2267)) ([352de8b](https://github.com/Wynntils/Artemis/commit/352de8bd9ca6897846248a8b1f5db49bf4fc6cff))
+
 ## [0.0.4-beta.82](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.81...v0.0.4-beta.82) (2023-12-07)
 
 
 ### Bug Fixes
 
 * Fix ingredient durability being multiplied by 1000 ([#2266](https://github.com/Wynntils/Artemis/issues/2266)) ([1b98841](https://github.com/Wynntils/Artemis/commit/1b988414f40b873413561f9ef4731d7fc3d6ff4a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.82 [skip ci] ([3044e77](https://github.com/Wynntils/Artemis/commit/3044e771cb12d6949a9db9d869a766e2bc343aa6))
 
 ## [0.0.4-beta.81](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.80...v0.0.4-beta.81) (2023-12-06)
 
@@ -37,12 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.79 [skip ci] ([a3c1edb](https://github.com/Wynntils/Artemis/commit/a3c1edbc7e97b9279c97eadebdd55e334f69ab64))
-
-## [0.0.4-beta.78](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.77...v0.0.4-beta.78) (2023-12-06)
-
-
-### Miscellaneous Chores
-
-* Bump loom and other dependencies. Remove Quilt support. ([#2261](https://github.com/Wynntils/Artemis/issues/2261)) ([233e522](https://github.com/Wynntils/Artemis/commit/233e522c68021bb0694efcc0be4a9075303f7c47))
-* **release:** v0.0.4-beta.78 [skip ci] ([9aa8b08](https://github.com/Wynntils/Artemis/commit/9aa8b08f1c3648a5822e8f0b7922ccef359a4227))
 
