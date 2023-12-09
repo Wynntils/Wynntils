@@ -98,7 +98,7 @@ public class ItemScreenshotFeature extends Feature {
         // width calculation
         int width = 0;
         for (Component c : tooltip) {
-            int w = font.width(c.getString());
+            int w = font.width(c);
             if (w > width) {
                 width = w;
             }
