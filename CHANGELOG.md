@@ -1,9 +1,21 @@
+## [0.0.4-beta.88](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.87...v0.0.4-beta.88) (2023-12-09)
+
+
+### Miscellaneous Chores
+
+* Fix mod game version being wrongly published on Modrinth/Curseforge ([#2272](https://github.com/Wynntils/Artemis/issues/2272)) ([421cc47](https://github.com/Wynntils/Artemis/commit/421cc477512c517e496817d3aaeea25ddb8c8001))
+
 ## [0.0.4-beta.87](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.86...v0.0.4-beta.87) (2023-12-09)
 
 
 ### Bug Fixes
 
 * Fix item screenshots not accounting for a component's style properly ([#2273](https://github.com/Wynntils/Artemis/issues/2273)) ([f149075](https://github.com/Wynntils/Artemis/commit/f1490758868014be99d2dc3ec45f5655471b893e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.87 [skip ci] ([c98e1c4](https://github.com/Wynntils/Artemis/commit/c98e1c4714a234574f12a0e5c20fd634bce9346d))
 
 ## [0.0.4-beta.86](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.85...v0.0.4-beta.86) (2023-12-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.84 [skip ci] ([6f6da3b](https://github.com/Wynntils/Artemis/commit/6f6da3b85e406708aeef99a41e6d7c841638ea9e))
-
-## [0.0.4-beta.83](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.82...v0.0.4-beta.83) (2023-12-08)
-
-
-### New Features
-
-* Parse tomes as gears, show tome identification percentages ([#2267](https://github.com/Wynntils/Artemis/issues/2267)) ([352de8b](https://github.com/Wynntils/Artemis/commit/352de8bd9ca6897846248a8b1f5db49bf4fc6cff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.83 [skip ci] ([5da1d27](https://github.com/Wynntils/Artemis/commit/5da1d27a5a8951a3e7a3ba7aa22349bee8b48334))
 
