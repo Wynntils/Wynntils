@@ -1,9 +1,21 @@
+## [0.0.4-beta.86](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.85...v0.0.4-beta.86) (2023-12-09)
+
+
+### Bug Fixes
+
+* Fix chat items not displaying "static" stats ([#2270](https://github.com/Wynntils/Artemis/issues/2270)) ([d1068bd](https://github.com/Wynntils/Artemis/commit/d1068bd9c61838214c6ba45ed0b9552a2019e0c5))
+
 ## [0.0.4-beta.85](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.84...v0.0.4-beta.85) (2023-12-08)
 
 
 ### Bug Fixes
 
 * Pre-identified items cannot be gears, don't crash item stat feature if an item is not identifiable ([#2269](https://github.com/Wynntils/Artemis/issues/2269)) ([9afbe50](https://github.com/Wynntils/Artemis/commit/9afbe5017bbe5ab2bfaa0065814a1b6ce81c7179))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.85 [skip ci] ([723dfe2](https://github.com/Wynntils/Artemis/commit/723dfe2fd024b21bfe9773b78bc33a5d387faabf))
 
 ## [0.0.4-beta.84](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.83...v0.0.4-beta.84) (2023-12-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.82 [skip ci] ([3044e77](https://github.com/Wynntils/Artemis/commit/3044e771cb12d6949a9db9d869a766e2bc343aa6))
-
-## [0.0.4-beta.81](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.80...v0.0.4-beta.81) (2023-12-06)
-
-
-### Bug Fixes
-
-* Fix chat gear encoding after Item API V3 ([#2265](https://github.com/Wynntils/Artemis/issues/2265)) ([5733b95](https://github.com/Wynntils/Artemis/commit/5733b95a991029d0286d9d0f710bb5a904fa20e8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.81 [skip ci] ([a3e0419](https://github.com/Wynntils/Artemis/commit/a3e0419594b18d1d56cd68f77597a989a2a8346a))
 
