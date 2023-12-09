@@ -11,7 +11,8 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
-import com.wynntils.models.rewards.type.DeprecatedCharmInfo;
+import com.wynntils.models.rewards.type.CharmInfo;
+import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
@@ -36,14 +37,14 @@ public class RewardsModel extends Model {
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromStyledText(name);
 
-        DeprecatedCharmInfo charmInfo = new DeprecatedCharmInfo(displayName, tier, type);
+        CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (result.tier() != charmInfo.tier()) {
-            WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());
+            WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, result.identifications(), result.rerolls());
+        return new CharmItem(charmInfo, CharmInstance.create(charmInfo, result.identifications()), result.rerolls());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name) {

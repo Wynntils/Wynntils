@@ -12,6 +12,7 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 
 public final class IdentifiableTomeItemInfo implements IdentifiableItemInfo {
@@ -51,6 +52,12 @@ public final class IdentifiableTomeItemInfo implements IdentifiableItemInfo {
     @Override
     public List<StatPossibleValues> getPossibleValues() {
         return tomeInfo.variableStats().stream().map(Pair::b).toList();
+    }
+
+    @Override
+    public RangedValue getIdentificationLevelRange() {
+        // Irrelevant for tomes
+        return RangedValue.NONE;
     }
 
     @Override

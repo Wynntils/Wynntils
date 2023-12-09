@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.charm.IdentifiableCharmItemInfo;
 import com.wynntils.handlers.tooltip.gear.IdentifiableGearItemInfo;
 import com.wynntils.handlers.tooltip.tome.IdentifiableTomeItemInfo;
 import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
@@ -21,6 +22,7 @@ import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.stats.StatCalculator;
@@ -54,6 +56,10 @@ public class ItemStatInfoFeature extends Feature {
     private static final Function<TomeItem, IdentifiableItemInfo> TOME_ITEM_INFO_FUNCTION =
             tomeItem -> IdentifiableTomeItemInfo.from(
                     tomeItem.getTomeInfo(), tomeItem.getTomeInstance().orElse(null));
+
+    private static final Function<CharmItem, IdentifiableItemInfo> CHARM_ITEM_INFO_FUNCTION =
+            charmItem -> IdentifiableCharmItemInfo.from(
+                    charmItem.getCharmInfo(), charmItem.getCharmInstance().orElse(null));
 
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
@@ -148,6 +154,9 @@ public class ItemStatInfoFeature extends Feature {
         }
         if (wynnItem instanceof TomeItem tomeItem) {
             return TOME_ITEM_INFO_FUNCTION.apply(tomeItem);
+        }
+        if (wynnItem instanceof CharmItem charmItem) {
+            return CHARM_ITEM_INFO_FUNCTION.apply(charmItem);
         }
 
         return null;
