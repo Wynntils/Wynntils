@@ -33,5 +33,9 @@ public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
                 "bonusElementalDefense",
                 "ELEMENTALDEFENSEBONUS",
                 StatUnit.PERCENT));
+
+        // Special case for the "defenceToMobs" stat
+        callback.accept(new DefenceStatType(
+                "DEFENCE_TO_MOBS", "Mob Damage Resistance", "defenceToMobs", "DEFENCETOMOBS", StatUnit.PERCENT, true));
     }
 }

@@ -40,19 +40,34 @@ public enum MiscStatKind {
     LOOT_BONUS("Loot Bonus", StatUnit.PERCENT, "lootBonus"),
     LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality", "LOOT_QUALITY"),
     GATHER_XP_BONUS("Gather XP Bonus", StatUnit.PERCENT, "gatherXpBonus", "GATHER_XP_BONUS"),
-    GATHER_SPEED("Gather Speed", StatUnit.PERCENT, "gatherSpeed", "GATHER_SPEED");
+    GATHER_SPEED("Gather Speed", StatUnit.PERCENT, "gatherSpeed", "GATHER_SPEED"),
     // (The last three are currently only found on crafted gear)
+
+    // Special tome only stats, which are only found as base stats on tomes
+    SLAYING_XP("Slaying XP", StatUnit.PERCENT, "slayingXP", "SLAYING_XP"),
+    GATHERING_XP("Gathering XP", StatUnit.PERCENT, "gatheringXP", "GATHERING_XP"),
+    DUNGEON_XP("Dungeon XP", StatUnit.PERCENT, "dungeonXP", "DUNGEON_XP");
 
     private final String displayName;
     private final String apiName;
     private final StatUnit unit;
     private final String internalRollName;
+    private final boolean tomeStatType;
+
+    MiscStatKind(String displayName, StatUnit unit, String apiName, String internalRollName, boolean tomeStatType) {
+        this.displayName = displayName;
+        this.apiName = apiName;
+        this.unit = unit;
+        this.internalRollName = internalRollName;
+        this.tomeStatType = tomeStatType;
+    }
 
     MiscStatKind(String displayName, StatUnit unit, String apiName, String internalRollName) {
         this.displayName = displayName;
         this.apiName = apiName;
         this.unit = unit;
         this.internalRollName = internalRollName;
+        this.tomeStatType = false;
     }
 
     MiscStatKind(String displayName, StatUnit unit, String apiName) {
@@ -73,5 +88,9 @@ public enum MiscStatKind {
 
     public StatUnit getUnit() {
         return unit;
+    }
+
+    public boolean isTomeStatType() {
+        return tomeStatType;
     }
 }

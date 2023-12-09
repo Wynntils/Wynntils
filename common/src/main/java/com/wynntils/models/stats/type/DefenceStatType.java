@@ -8,4 +8,14 @@ public final class DefenceStatType extends StatType {
     public DefenceStatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
         super(key, displayName, apiName, internalRollName, unit);
     }
+
+    public DefenceStatType(
+            String key,
+            String displayName,
+            String apiName,
+            String internalRollName,
+            StatUnit unit,
+            boolean tomeStatType) {
+        super(key, displayName, apiName, internalRollName, unit, tomeStatType);
+    }
 }

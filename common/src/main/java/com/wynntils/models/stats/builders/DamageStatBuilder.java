@@ -24,6 +24,10 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
                 callback.accept(rawType);
             }
         }
+
+        // Special case for "damageToMobs" stat
+        callback.accept(new DamageStatType(
+                "DAMAGE_TO_MOBS", "Damage to Mobs", "damageToMobs", "DAMAGETOMOBS", StatUnit.PERCENT, true));
     }
 
     private static DamageStatType buildDamageStat(AttackType attackType, DamageType damageType, StatUnit unit) {

@@ -14,6 +14,7 @@ public abstract class StatType {
     private final String apiName;
     private final String internalRollName;
     private final StatUnit unit;
+    private final boolean tomeStatType;
 
     protected StatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
         this.key = key;
@@ -21,6 +22,22 @@ public abstract class StatType {
         this.apiName = apiName;
         this.internalRollName = internalRollName;
         this.unit = unit;
+        this.tomeStatType = false;
+    }
+
+    protected StatType(
+            String key,
+            String displayName,
+            String apiName,
+            String internalRollName,
+            StatUnit unit,
+            boolean tomeStatType) {
+        this.key = key;
+        this.displayName = displayName;
+        this.apiName = apiName;
+        this.internalRollName = internalRollName;
+        this.unit = unit;
+        this.tomeStatType = tomeStatType;
     }
 
     public String getKey() {
@@ -47,6 +64,12 @@ public abstract class StatType {
 
     public boolean showAsInverted() {
         return false;
+    }
+
+    // Tomes have a special stats that are not variable,
+    // and are not displayed as regular stats
+    public boolean isTomeStatType() {
+        return tomeStatType;
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.elements.type.Skill;
@@ -22,6 +23,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeRequirements;
 import com.wynntils.models.rewards.type.TomeVariant;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
@@ -115,11 +117,63 @@ public class TomeInfoRegistry {
             TomeRequirements requirements = parseTomeRequirements(json);
 
             JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
+            List<Pair<StatType, Integer>> staticBaseStats = parseStaticBaseStats(json);
             List<Pair<Skill, Integer>> skillBonuses = parseSkillBonuses(identifications);
 
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
 
-            return new TomeInfo(displayName, type, variant, tier, metaInfo, requirements, skillBonuses, variableStats);
+            return new TomeInfo(
+                    displayName,
+                    type,
+                    variant,
+                    tier,
+                    metaInfo,
+                    requirements,
+                    staticBaseStats,
+                    skillBonuses,
+                    variableStats);
+        }
+
+        private List<Pair<StatType, Integer>> parseStaticBaseStats(JsonObject json) {
+            JsonObject baseJson = JsonUtils.getNullableJsonObject(json, "base");
+
+            List<Pair<StatType, Integer>> list = new ArrayList<>();
+            for (Map.Entry<String, JsonElement> entry : baseJson.entrySet()) {
+                StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+
+                if (statType == null) {
+                    WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
+                    continue;
+                }
+
+                if (statType instanceof SkillStatType) {
+                    // Skill stats are not variable for gear
+                    continue;
+                }
+
+                int baseValue;
+
+                // Base ids are a pre-identified, so there is no range
+                if (baseJson.get(statType.getApiName()).isJsonPrimitive()) {
+                    baseValue = JsonUtils.getNullableJsonInt(baseJson, statType.getApiName());
+                } else {
+                    WynntilsMod.warn("Tome with a non-static base stat: " + statType.getApiName());
+                    continue;
+                }
+
+                // If the base value is 0, this stat is not present on the item
+                if (baseValue == 0) continue;
+
+                // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
+                // and only converted to negative at display time.
+                if (statType.showAsInverted()) {
+                    baseValue = -baseValue;
+                }
+
+                list.add(Pair.of(statType, baseValue));
+            }
+
+            return list;
         }
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, TomeType type) {
