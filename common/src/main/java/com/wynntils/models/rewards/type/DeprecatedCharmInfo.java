@@ -6,4 +6,4 @@ package com.wynntils.models.rewards.type;
 
 import com.wynntils.models.gear.type.GearTier;
 
-public record CharmInfo(String displayName, GearTier tier, String type) {}
+public record DeprecatedCharmInfo(String displayName, GearTier tier, String type) {}
