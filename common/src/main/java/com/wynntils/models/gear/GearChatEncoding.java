@@ -156,7 +156,12 @@ public class GearChatEncoding {
         for (StatType statType : sortedStats) {
             StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
-            if (possibleValues.isPreIdentified()) continue;
+            // Pre-identified stats are not encoded, but need to be added
+            if (possibleValues.isPreIdentified()) {
+                identifications.add(
+                        Models.Stat.buildActualValue(statType, possibleValues.baseValue(), 0, possibleValues));
+                continue;
+            }
 
             if (counter >= ids.length) return null; // some kind of mismatch, abort
 
