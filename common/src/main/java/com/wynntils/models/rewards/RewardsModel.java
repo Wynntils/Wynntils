@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
     private final TomeInfoRegistry tomeInfoRegistry = new TomeInfoRegistry();
+    private final CharmInfoRegistry charmInfoRegistry = new CharmInfoRegistry();
 
     public RewardsModel() {
         super(List.of());
@@ -29,12 +30,12 @@ public class RewardsModel extends Model {
     @Override
     public void reloadData() {
         tomeInfoRegistry.reloadData();
+        charmInfoRegistry.reloadData();
     }
 
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromStyledText(name);
 
-        // TODO: replace with API lookup
         DeprecatedCharmInfo charmInfo = new DeprecatedCharmInfo(displayName, tier, type);
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);

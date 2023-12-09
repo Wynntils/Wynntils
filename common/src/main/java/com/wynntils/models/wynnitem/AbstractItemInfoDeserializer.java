@@ -365,15 +365,16 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(list);
     }
 
-    protected List<Pair<StatType, StatPossibleValues>> parseVariableStats(JsonObject json) {
+    protected List<Pair<StatType, StatPossibleValues>> parseVariableStats(
+            JsonObject json, String identificationsObjectKey) {
         List<Pair<StatType, StatPossibleValues>> list = new ArrayList<>();
 
-        if (!json.has("identifications")) {
+        if (!json.has(identificationsObjectKey)) {
             // No identifications, so no variable stats
             return List.of();
         }
 
-        JsonObject identificationsJson = json.get("identifications").getAsJsonObject();
+        JsonObject identificationsJson = json.get(identificationsObjectKey).getAsJsonObject();
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {

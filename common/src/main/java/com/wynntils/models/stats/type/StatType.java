@@ -14,7 +14,7 @@ public abstract class StatType {
     private final String apiName;
     private final String internalRollName;
     private final StatUnit unit;
-    private final boolean tomeStatType;
+    private final SpecialStatType specialStatType;
 
     protected StatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
         this.key = key;
@@ -22,7 +22,7 @@ public abstract class StatType {
         this.apiName = apiName;
         this.internalRollName = internalRollName;
         this.unit = unit;
-        this.tomeStatType = false;
+        this.specialStatType = SpecialStatType.NONE;
     }
 
     protected StatType(
@@ -31,13 +31,13 @@ public abstract class StatType {
             String apiName,
             String internalRollName,
             StatUnit unit,
-            boolean tomeStatType) {
+            SpecialStatType specialStatType) {
         this.key = key;
         this.displayName = displayName;
         this.apiName = apiName;
         this.internalRollName = internalRollName;
         this.unit = unit;
-        this.tomeStatType = tomeStatType;
+        this.specialStatType = specialStatType;
     }
 
     public String getKey() {
@@ -66,10 +66,8 @@ public abstract class StatType {
         return false;
     }
 
-    // Tomes have a special stats that are not variable,
-    // and are not displayed as regular stats
-    public boolean isTomeStatType() {
-        return tomeStatType;
+    public SpecialStatType getSpecialStatType() {
+        return specialStatType;
     }
 
     @Override
@@ -97,5 +95,16 @@ public abstract class StatType {
                 + apiName + ", " + "internalRollName="
                 + internalRollName + ", " + "unit="
                 + unit + ']';
+    }
+
+    public enum SpecialStatType {
+        NONE,
+
+        // Tomes have a special stats that are not variable,
+        // and are not displayed as regular stats
+        TOME_BASE_STAT,
+
+        // Some stats on charms only apply to a level range of mobs/players
+        CHARM_LEVELED_STAT
     }
 }

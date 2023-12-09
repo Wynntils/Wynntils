@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.stats.builders;
 
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import java.util.Locale;
 
@@ -44,22 +45,42 @@ public enum MiscStatKind {
     // (The last three are currently only found on crafted gear)
 
     // Special tome only stats, which are only found as base stats on tomes
-    SLAYING_XP("Slaying XP", StatUnit.PERCENT, "slayingXP", "SLAYING_XP"),
-    GATHERING_XP("Gathering XP", StatUnit.PERCENT, "gatheringXP", "GATHERING_XP"),
-    DUNGEON_XP("Dungeon XP", StatUnit.PERCENT, "dungeonXP", "DUNGEON_XP");
+    SLAYING_XP("Slaying XP", StatUnit.PERCENT, "slayingXP", "SLAYING_XP", StatType.SpecialStatType.TOME_BASE_STAT),
+    GATHERING_XP(
+            "Gathering XP", StatUnit.PERCENT, "gatheringXP", "GATHERING_XP", StatType.SpecialStatType.TOME_BASE_STAT),
+    DUNGEON_XP("Dungeon XP", StatUnit.PERCENT, "dungeonXP", "DUNGEON_XP", StatType.SpecialStatType.TOME_BASE_STAT),
+
+    // Charm stats
+    LEVELED_XP_BONUS(
+            "XP from Lv. ${} content",
+            StatUnit.PERCENT,
+            "leveledXpBonus",
+            "LEVELED_XP_BONUS",
+            StatType.SpecialStatType.CHARM_LEVELED_STAT),
+    LEVELED_LOOT_BONUS(
+            "Loot from Lv. ${} content",
+            StatUnit.PERCENT,
+            "leveledLootBonus",
+            "LEVELED_LOOT_BONUS",
+            StatType.SpecialStatType.CHARM_LEVELED_STAT);
 
     private final String displayName;
     private final String apiName;
     private final StatUnit unit;
     private final String internalRollName;
-    private final boolean tomeStatType;
+    private final StatType.SpecialStatType specialStatType;
 
-    MiscStatKind(String displayName, StatUnit unit, String apiName, String internalRollName, boolean tomeStatType) {
+    MiscStatKind(
+            String displayName,
+            StatUnit unit,
+            String apiName,
+            String internalRollName,
+            StatType.SpecialStatType specialStatType) {
         this.displayName = displayName;
         this.apiName = apiName;
         this.unit = unit;
         this.internalRollName = internalRollName;
-        this.tomeStatType = tomeStatType;
+        this.specialStatType = specialStatType;
     }
 
     MiscStatKind(String displayName, StatUnit unit, String apiName, String internalRollName) {
@@ -67,7 +88,7 @@ public enum MiscStatKind {
         this.apiName = apiName;
         this.unit = unit;
         this.internalRollName = internalRollName;
-        this.tomeStatType = false;
+        this.specialStatType = StatType.SpecialStatType.NONE;
     }
 
     MiscStatKind(String displayName, StatUnit unit, String apiName) {
@@ -90,7 +111,7 @@ public enum MiscStatKind {
         return unit;
     }
 
-    public boolean isTomeStatType() {
-        return tomeStatType;
+    public StatType.SpecialStatType getSpecialStatType() {
+        return specialStatType;
     }
 }

@@ -15,7 +15,7 @@ public final class DamageStatType extends StatType {
             String apiName,
             String internalRollName,
             StatUnit unit,
-            boolean tomeStatType) {
-        super(key, displayName, apiName, internalRollName, unit, tomeStatType);
+            SpecialStatType specialStatType) {
+        super(key, displayName, apiName, internalRollName, unit, specialStatType);
     }
 }
