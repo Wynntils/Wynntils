@@ -24,7 +24,7 @@ public class TestUnsignedByte {
 
         final short[] expected = {214, 121, 11, 49, 43, 75};
 
-        Assertions.assertArrayEquals(expected, result, "toUnsignedByte() did not return the correct string");
+        Assertions.assertArrayEquals(expected, result, "toUnsignedByte() did not return the correct bytes");
     }
 
     @Test
@@ -35,6 +35,36 @@ public class TestUnsignedByte {
 
         final byte[] expected = {(byte) 214, 121, 11, 49, 43, 75};
 
-        Assertions.assertArrayEquals(expected, result, "toPrimitive() did not return the correct string");
+        Assertions.assertArrayEquals(expected, result, "toPrimitive() did not return the correct bytes");
+    }
+
+    @Test
+    public void simpleByteArray_fromNegativeBytesWorks() {
+        byte[] bytes = {-1, -2, -127, -128, 0};
+
+        UnsignedByte[] result = UnsignedByte.of(bytes);
+
+        final UnsignedByte[] expected = {
+            UnsignedByte.of((byte) 255),
+            UnsignedByte.of((byte) 254),
+            UnsignedByte.of((byte) 129),
+            UnsignedByte.of((byte) 128),
+            UnsignedByte.of((byte) 0)
+        };
+
+        Assertions.assertArrayEquals(expected, result, "of() did not transform the bytes correctly");
+    }
+
+    @Test
+    public void simpleByteArray_fromPositiveBytesWorks() {
+        byte[] bytes = {1, 2, 127, 0};
+
+        UnsignedByte[] result = UnsignedByte.of(bytes);
+
+        final UnsignedByte[] expected = {
+            UnsignedByte.of((byte) 1), UnsignedByte.of((byte) 2), UnsignedByte.of((byte) 127), UnsignedByte.of((byte) 0)
+        };
+
+        Assertions.assertArrayEquals(expected, result, "of() did not transform the bytes correctly");
     }
 }
