@@ -196,7 +196,8 @@ public class PoiManagerWidget extends AbstractWidget {
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(poi.getLocation().asLocation());
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor());
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
