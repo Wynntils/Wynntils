@@ -417,8 +417,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             }
             // Range will always be stored such as "low" means "worst possible value" and
             // "high" means "best possible value".
-            RangedValue range = StatCalculator.calculatePossibleValuesRange(
-                    baseValue, preIdentifiedItem, statType.showAsInverted());
+            RangedValue range =
+                    StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType.showAsInverted());
             StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
             list.add(Pair.of(statType, possibleValues));
         }
