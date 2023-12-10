@@ -6,10 +6,10 @@ package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Style;
 
 public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
-            IdentifiableItemInfo itemInfo,
+            IdentifiableItemProperty itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -79,7 +79,7 @@ public final class TooltipIdentifications {
 
     private static MutableComponent getStatLine(
             StatType statType,
-            IdentifiableItemInfo itemInfo,
+            IdentifiableItemProperty itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -131,7 +131,10 @@ public final class TooltipIdentifications {
     }
 
     private static MutableComponent buildIdentifiedLine(
-            IdentifiableItemInfo itemInfo, TooltipStyle style, StatActualValue actualValue, ClassType currentClass) {
+            IdentifiableItemProperty itemInfo,
+            TooltipStyle style,
+            StatActualValue actualValue,
+            ClassType currentClass) {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
@@ -154,7 +157,7 @@ public final class TooltipIdentifications {
     }
 
     private static MutableComponent buildUnidentifiedLine(
-            IdentifiableItemInfo itemInfo, TooltipStyle style, StatPossibleValues possibleValues) {
+            IdentifiableItemProperty itemInfo, TooltipStyle style, StatPossibleValues possibleValues) {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
 

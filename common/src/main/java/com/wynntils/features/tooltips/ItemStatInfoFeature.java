@@ -13,16 +13,12 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
-import com.wynntils.handlers.tooltip.gear.IdentifiableGearItemInfo;
-import com.wynntils.handlers.tooltip.tome.IdentifiableTomeItemInfo;
-import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
-import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -38,7 +34,6 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -47,14 +42,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
-    private static final Function<GearItem, IdentifiableItemInfo> GEAR_ITEM_INFO_FUNCTION =
-            gearItem -> IdentifiableGearItemInfo.from(
-                    gearItem.getGearInfo(), gearItem.getGearInstance().orElse(null));
-
-    private static final Function<TomeItem, IdentifiableItemInfo> TOME_ITEM_INFO_FUNCTION =
-            tomeItem -> IdentifiableTomeItemInfo.from(
-                    tomeItem.getTomeInfo(), tomeItem.getTomeInstance().orElse(null));
-
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
@@ -103,7 +90,7 @@ public class ItemStatInfoFeature extends Feature {
         WynnItem wynnItem = wynnItemOpt.get();
         if (brokenItems.contains(wynnItem)) return;
 
-        IdentifiableItemInfo itemInfo = getItemInfo(wynnItem);
+        IdentifiableItemProperty itemInfo = getItemInfo(wynnItem);
         if (itemInfo == null) return;
 
         try {
@@ -142,18 +129,15 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    private IdentifiableItemInfo getItemInfo(WynnItem wynnItem) {
-        if (wynnItem instanceof GearItem gearItem) {
-            return GEAR_ITEM_INFO_FUNCTION.apply(gearItem);
-        }
-        if (wynnItem instanceof TomeItem tomeItem) {
-            return TOME_ITEM_INFO_FUNCTION.apply(tomeItem);
+    private IdentifiableItemProperty getItemInfo(WynnItem wynnItem) {
+        if (wynnItem instanceof IdentifiableItemProperty itemInfo) {
+            return itemInfo;
         }
 
         return null;
     }
 
-    private void updateItemName(IdentifiableItemInfo itemInfo, Deque<Component> tooltips) {
+    private void updateItemName(IdentifiableItemProperty itemInfo, Deque<Component> tooltips) {
         MutableComponent name;
         if (perfect.get() && itemInfo.isPerfect()) {
             name = ComponentUtils.makeRainbowStyle("Perfect " + itemInfo.getName());

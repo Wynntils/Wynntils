@@ -64,7 +64,7 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        TooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(gearInfo, null, true);
+        TooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new GearItem(gearInfo, null), true);
         this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache
