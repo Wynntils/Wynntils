@@ -4,7 +4,12 @@
  */
 package com.wynntils.models.stats;
 
+import com.google.common.reflect.TypeToken;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.spells.type.SpellType;
@@ -25,6 +30,7 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.type.RangedValue;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,6 +42,9 @@ public final class StatModel extends Model {
     private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;
     private final List<SkillStatType> skillStats;
+
+    // An id map for stat type -> unique id keys, used for gear chat encoding
+    private Map<StatType, Integer> statTypeIdMap = new HashMap<>();
 
     public StatModel() {
         super(List.of());
@@ -54,6 +63,13 @@ public final class StatModel extends Model {
 
         // Finally create ordered lists for sorting
         orderingLists = StatListOrderer.createOrderingMap(miscStats, defenceStats, damageStats, spellStats);
+
+        reloadData();
+    }
+
+    @Override
+    public void reloadData() {
+        loadIdentificationKeys();
     }
 
     public StatActualValue buildActualValue(
@@ -80,7 +96,7 @@ public final class StatModel extends Model {
         return null;
     }
 
-    public StatType fromApiRollId(String id) {
+    public StatType fromApiName(String id) {
         for (StatType statType : statTypeRegistry) {
             if (statType.getApiName().equals(id)) return statType;
         }
@@ -148,6 +164,28 @@ public final class StatModel extends Model {
                 statTypeLookup.put(alias, spellStatType.getUnit(), spellStatType);
             }
         }
+    }
+
+    private void loadIdentificationKeys() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_IDENTIFICATION_KEYS);
+        dl.handleReader(reader -> {
+            Type type = new TypeToken<Map<String, Integer>>() {}.getType();
+            Map<String, Integer> apiNamesToIdMap = Managers.Json.GSON.fromJson(reader, type);
+
+            Map<StatType, Integer> tempMap = new HashMap<>();
+
+            for (Map.Entry<String, Integer> entry : apiNamesToIdMap.entrySet()) {
+                StatType statType = fromApiName(entry.getKey());
+                if (statType == null) {
+                    WynntilsMod.warn("Unknown stat type for identification key: " + entry.getKey());
+                    continue;
+                }
+
+                tempMap.put(statType, entry.getValue());
+            }
+
+            statTypeIdMap = Map.copyOf(tempMap);
+        });
     }
 
     private static class StatLookupTable {

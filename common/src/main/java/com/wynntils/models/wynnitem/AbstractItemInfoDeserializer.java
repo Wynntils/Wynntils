@@ -377,7 +377,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-            StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+            StatType statType = Models.Stat.fromApiName(entry.getKey());
 
             if (statType == null) {
                 WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
