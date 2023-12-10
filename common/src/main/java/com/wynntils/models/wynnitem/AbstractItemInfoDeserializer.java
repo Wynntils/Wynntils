@@ -367,7 +367,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 statApiName = "elementalDefence";
             }
 
-            StatType statType = Models.Stat.fromApiRollId(statApiName);
+            StatType statType = Models.Stat.fromApiName(statApiName);
 
             if (statType == null) {
                 WynntilsMod.warn("Item DB contains invalid stat type " + statApiName);

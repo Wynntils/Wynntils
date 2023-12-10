@@ -241,7 +241,7 @@ public class IngredientInfoRegistry {
             JsonObject identificationsJson = JsonUtils.getNullableJsonObject(json, "identifications");
 
             for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-                StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+                StatType statType = Models.Stat.fromApiName(entry.getKey());
 
                 if (statType == null) {
                     WynntilsMod.warn("Ingredient DB contains invalid stat type " + entry.getKey());
