@@ -1,9 +1,27 @@
+## [0.0.4-beta.91](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.90...v0.0.4-beta.91) (2023-12-11)
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2276](https://github.com/Wynntils/Artemis/issues/2276)) ([ebbe7dc](https://github.com/Wynntils/Artemis/commit/ebbe7dce594ab238e8fab8d7034de0e4f112542c))
+* [auto-generated] Update urls.json [ci skip] ([#2278](https://github.com/Wynntils/Artemis/issues/2278)) ([381fbf2](https://github.com/Wynntils/Artemis/commit/381fbf2b7ecb42c202d5b4b0112b60df5b77a9c3))
+
+
+### Code Refactoring
+
+* Make IdentifiableItemInfo be an item property ([#2275](https://github.com/Wynntils/Artemis/issues/2275)) ([4e2e62c](https://github.com/Wynntils/Artemis/commit/4e2e62ca4f2e4d686c414105acbdf926fdad66e5))
+
 ## [0.0.4-beta.90](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.89...v0.0.4-beta.90) (2023-12-10)
 
 
 ### Bug Fixes
 
 * Use poi icon when setting markers from waypoint manager ([#2274](https://github.com/Wynntils/Artemis/issues/2274)) ([cd5b94b](https://github.com/Wynntils/Artemis/commit/cd5b94bc63befe3f17b7e3cbb781d2b7b281d2ee))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.90 [skip ci] ([21b68ad](https://github.com/Wynntils/Artemis/commit/21b68adeddd77a7cf20e23e731c088407fcd9890))
 
 ## [0.0.4-beta.89](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.88...v0.0.4-beta.89) (2023-12-09)
 
@@ -32,16 +50,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.87 [skip ci] ([c98e1c4](https://github.com/Wynntils/Artemis/commit/c98e1c4714a234574f12a0e5c20fd634bce9346d))
-
-## [0.0.4-beta.86](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.85...v0.0.4-beta.86) (2023-12-09)
-
-
-### Bug Fixes
-
-* Fix chat items not displaying "static" stats ([#2270](https://github.com/Wynntils/Artemis/issues/2270)) ([d1068bd](https://github.com/Wynntils/Artemis/commit/d1068bd9c61838214c6ba45ed0b9552a2019e0c5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.86 [skip ci] ([b5fb4ef](https://github.com/Wynntils/Artemis/commit/b5fb4ef157943bc6c3fec3f966e332ea60207542))
 
