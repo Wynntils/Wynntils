@@ -10,11 +10,19 @@ import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
-public class TypeDataTransformer implements DataTransformer<TypeData> {
+public class TypeDataTransformer extends DataTransformer<TypeData> {
+    public static final byte ID = 1;
+
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, TypeData data) {
         return switch (version) {
-            case VERSION_1 -> ErrorOr.of(new UnsignedByte[0]);
+            case VERSION_1 -> ErrorOr.of(
+                    new UnsignedByte[] {UnsignedByte.of(data.itemType().getId())});
         };
+    }
+
+    @Override
+    protected byte getId() {
+        return ID;
     }
 }

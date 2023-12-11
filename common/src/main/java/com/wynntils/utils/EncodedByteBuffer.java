@@ -6,8 +6,11 @@ package com.wynntils.utils;
 
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A buffer of bytes that can be encoded and decoded to various formats.
@@ -114,5 +117,14 @@ public final class EncodedByteBuffer {
 
     public UnsignedByte[] getBytes() {
         return bytes;
+    }
+
+    @Override
+    public String toString() {
+        return "EncodedByteBuffer{" + "bytes="
+                + Arrays.stream(bytes)
+                        .map(UnsignedByte::value)
+                        .map(Objects::toString)
+                        .collect(Collectors.joining(", ")) + '}';
     }
 }

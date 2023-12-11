@@ -29,6 +29,7 @@ import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
+import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
@@ -82,6 +83,7 @@ public final class Models {
     public static final GuildModel Guild = new GuildModel();
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();
+    public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();
