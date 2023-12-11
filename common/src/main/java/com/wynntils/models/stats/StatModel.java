@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class StatModel extends Model {
@@ -96,6 +97,10 @@ public final class StatModel extends Model {
         }
 
         return null;
+    }
+
+    public Optional<Integer> getIdForStatType(StatType statType) {
+        return Optional.ofNullable(statTypeIdMap.get(statType));
     }
 
     public String getDisplayName(

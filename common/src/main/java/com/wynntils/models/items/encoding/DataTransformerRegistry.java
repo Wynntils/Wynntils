@@ -45,7 +45,6 @@ public final class DataTransformerRegistry {
 
     public ErrorOr<EncodedByteBuffer> encodeData(ItemTransformingVersion version, List<ItemData> data) {
         // FIXME: Explore using some kind of "ByteBuilder" instead of List<UnsignedByte>
-        // FIXME: Add start/end bytes
         List<UnsignedByte> bytes = new ArrayList<>();
 
         for (ItemData itemData : data) {
@@ -72,7 +71,7 @@ public final class DataTransformerRegistry {
                     "No data transformer found for " + data.getClass().getSimpleName());
         }
 
-        return dataTransformer.encodeData(version, data);
+        return dataTransformer.encode(version, data);
     }
 
     private ErrorOr<List<ItemData>> decodeData(ItemTransformingVersion version, EncodedByteBuffer encodedItem) {
@@ -80,34 +79,39 @@ public final class DataTransformerRegistry {
     }
 
     private <T extends ItemData> void registerDataTransformer(
-            Class<T> dataClass, int id, DataTransformer<T> dataTransformer) {
+            Class<T> dataClass, byte id, DataTransformer<T> dataTransformer) {
         dataTransformers.put(dataClass, id, dataTransformer);
     }
 
     private void registerAllTransformers() {
-        registerDataTransformer(StartData.class, 0, new StartDataTransformer());
+        registerDataTransformer(StartData.class, StartDataTransformer.ID, new StartDataTransformer());
 
         // Order is irrelevant here, keep it ordered as the ids are
-        registerDataTransformer(TypeData.class, 1, new TypeDataTransformer());
-        registerDataTransformer(NameData.class, 2, new NameDataTransformer());
-        registerDataTransformer(IdentificationData.class, 3, new IdentificationDataTransformer());
-        registerDataTransformer(PowderData.class, 4, new PowderDataTransformer());
-        registerDataTransformer(RerollData.class, 5, new RerollDataTransformer());
-        registerDataTransformer(ShinyData.class, 6, new ShinyDataTransformer());
+        registerDataTransformer(TypeData.class, TypeDataTransformer.ID, new TypeDataTransformer());
+        registerDataTransformer(NameData.class, NameDataTransformer.ID, new NameDataTransformer());
+        registerDataTransformer(
+                IdentificationData.class, IdentificationDataTransformer.ID, new IdentificationDataTransformer());
+        registerDataTransformer(PowderData.class, PowderDataTransformer.ID, new PowderDataTransformer());
+        registerDataTransformer(RerollData.class, RerollDataTransformer.ID, new RerollDataTransformer());
+        registerDataTransformer(ShinyData.class, ShinyDataTransformer.ID, new ShinyDataTransformer());
 
-        registerDataTransformer(EndData.class, 255, new EndDataTransformer());
+        registerDataTransformer(EndData.class, EndDataTransformer.ID, new EndDataTransformer());
     }
 
     private static final class DataTransformerMap {
         private final Map<Class<? extends ItemData>, DataTransformer<? extends ItemData>> dataTransformers =
                 new HashMap<>();
 
-        private final Map<Integer, DataTransformer<? extends ItemData>> idToTransformerMap = new HashMap<>();
+        private final Map<Byte, DataTransformer<? extends ItemData>> idToTransformerMap = new HashMap<>();
 
         public void put(
-                Class<? extends ItemData> dataClass, int id, DataTransformer<? extends ItemData> dataTransformer) {
-            dataTransformers.put(dataClass, dataTransformer);
-            idToTransformerMap.put(id, dataTransformer);
+                Class<? extends ItemData> dataClass, byte id, DataTransformer<? extends ItemData> dataTransformer) {
+            if (dataTransformers.put(dataClass, dataTransformer) != null) {
+                throw new IllegalStateException("Duplicate data class: " + dataClass.getSimpleName());
+            }
+            if (idToTransformerMap.put(id, dataTransformer) != null) {
+                throw new IllegalStateException("Duplicate id: " + id);
+            }
         }
 
         public <T extends ItemData> DataTransformer<T> get(Class<T> dataClass) {

@@ -7,13 +7,13 @@ package com.wynntils.models.items.encoding.type;
 public enum ItemType {
     GEAR(0);
 
-    private final int id;
+    private final byte id;
 
     ItemType(int id) {
-        this.id = id;
+        this.id = (byte) id;
     }
 
-    public int getId() {
+    public byte getId() {
         return id;
     }
 }

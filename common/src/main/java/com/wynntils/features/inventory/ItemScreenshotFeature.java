@@ -21,9 +21,11 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
@@ -212,6 +214,16 @@ public class ItemScreenshotFeature extends Feature {
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.chatItemError"));
             return;
         }
+
+        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer = Models.ItemEncoding.encodeItem(gearItem);
+        if (errorOrEncodedByteBuffer.hasError()) {
+            WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
+        } else {
+            WynntilsMod.info("Encoded item: " + errorOrEncodedByteBuffer.getValue());
+            WynntilsMod.info("Encoded item UTF-16: "
+                    + errorOrEncodedByteBuffer.getValue().toUtf16String());
+        }
+
         String encoded = Models.Gear.toEncodedString(gearItem);
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")

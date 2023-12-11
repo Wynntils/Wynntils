@@ -9,7 +9,7 @@ import java.util.Objects;
 public final class UnsignedByte {
     private final short value;
 
-    private UnsignedByte(byte value) {
+    public UnsignedByte(byte value) {
         this.value = (short) (value & 0xFF);
     }
 

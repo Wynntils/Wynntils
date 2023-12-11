@@ -5,6 +5,8 @@
 package com.wynntils.models.items.encoding;
 
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.data.EndData;
+import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
@@ -15,6 +17,7 @@ import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +79,12 @@ public final class ItemTransformerRegistry {
     }
 
     private ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem, ItemTransformer<WynnItem> transformer) {
-        List<ItemData> encodedData = transformer.encode(wynnItem);
+        List<ItemData> encodedData = new ArrayList<>();
+
+        encodedData.add(new StartData(CURRENT_VERSION));
+        encodedData.addAll(transformer.encode(wynnItem));
+        encodedData.add(new EndData());
+
         return dataTransformerRegistry.encodeData(CURRENT_VERSION, encodedData);
     }
 
@@ -103,8 +111,14 @@ public final class ItemTransformerRegistry {
         private final Map<ItemType, ItemTransformer<? extends WynnItem>> typeTransformers = new HashMap<>();
 
         public void put(Class<? extends WynnItem> itemClass, ItemTransformer<? extends WynnItem> itemTransformer) {
-            itemTransformers.put(itemClass, itemTransformer);
-            typeTransformers.put(itemTransformer.getType(), itemTransformer);
+            if (itemTransformers.put(itemClass, itemTransformer) != null) {
+                throw new IllegalArgumentException(
+                        "Item transformer already registered for " + itemClass.getSimpleName());
+            }
+            if (typeTransformers.put(itemTransformer.getType(), itemTransformer) != null) {
+                throw new IllegalArgumentException(
+                        "Item transformer already registered for " + itemTransformer.getType());
+            }
         }
 
         public <T extends WynnItem> ItemTransformer<T> get(Class<T> itemClass) {
