@@ -7,14 +7,14 @@ package com.wynntils.handlers.tooltip;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.gear.GearTooltipFooter;
 import com.wynntils.handlers.tooltip.gear.GearTooltipHeader;
-import com.wynntils.handlers.tooltip.gear.IdentifiableGearItemInfo;
-import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 public final class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
             new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
-    private final IdentifiableItemInfo itemInfo;
+    private final IdentifiableItemProperty itemInfo;
     private final List<Component> header;
     private final List<Component> footer;
 
@@ -38,7 +38,7 @@ public final class TooltipBuilder {
     private TooltipIdentificationDecorator cachedDecorator;
     private List<Component> identificationsCache;
 
-    private TooltipBuilder(IdentifiableItemInfo itemInfo, List<Component> header, List<Component> footer) {
+    private TooltipBuilder(IdentifiableItemProperty itemInfo, List<Component> header, List<Component> footer) {
         this.itemInfo = itemInfo;
         this.header = header;
         this.footer = footer;
@@ -47,16 +47,19 @@ public final class TooltipBuilder {
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */
-    public static TooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
+    public static TooltipBuilder buildNewGear(GearItem gearItem, boolean hideUnidentified) {
+        GearInfo gearInfo = gearItem.getGearInfo();
+        GearInstance gearInstance = gearItem.getGearInstance().orElse(null);
+
         List<Component> header = GearTooltipHeader.buildTooltip(gearInfo, gearInstance, hideUnidentified);
         List<Component> footer = GearTooltipFooter.buildTooltip(gearInfo, gearInstance);
-        return new TooltipBuilder(IdentifiableGearItemInfo.from(gearInfo, gearInstance), header, footer);
+        return new TooltipBuilder(gearItem, header, footer);
     }
 
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public static TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemInfo itemInfo) {
+    public static TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 
         Pair<List<Component>, List<Component>> splitLore = extractHeaderAndFooter(tooltips);

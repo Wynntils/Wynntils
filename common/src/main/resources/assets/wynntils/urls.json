@@ -114,6 +114,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
+    "id": "dataStaticIdentificationKeys",
+    "md5": "5b9ff37eb2f8d2b1579d2fa30c1185e3",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/id_keys.json"
+  },
+  {
     "id": "dataStaticIngredientSkins",
     "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/ingredient_skins.json"
