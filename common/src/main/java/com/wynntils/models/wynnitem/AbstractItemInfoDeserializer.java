@@ -23,7 +23,6 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.FixedStats;
-import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
@@ -285,7 +284,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
 
         int healthBuff = JsonUtils.getNullableJsonInt(baseStats, "health");
-        List<Pair<Skill, Integer>> skillBonuses = parseSkillBonuses(identifications);
         String attackSpeedStr = JsonUtils.getNullableJsonString(json, "attackSpeed");
         Optional<GearAttackSpeed> attackSpeed = Optional.ofNullable(GearAttackSpeed.fromString(attackSpeedStr));
 
@@ -293,7 +291,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         List<Pair<DamageType, RangedValue>> damages = parseDamages(baseStats);
         List<Pair<Element, Integer>> defences = parseDefences(baseStats);
 
-        return new FixedStats(healthBuff, skillBonuses, attackSpeed, majorIds, damages, defences);
+        return new FixedStats(healthBuff, attackSpeed, majorIds, damages, defences);
     }
 
     protected Optional<GearMajorId> parseMajorIds(JsonObject json) {
@@ -304,22 +302,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 majorIdsJson.get("name").getAsString(),
                 StyledText.fromString(
                         majorIdsJson.get("description").getAsString().replaceAll("&", "§"))));
-    }
-
-    protected List<Pair<Skill, Integer>> parseSkillBonuses(JsonObject json) {
-        if (json.isEmpty()) return List.of();
-
-        List<Pair<Skill, Integer>> list = new ArrayList<>();
-        for (Skill skill : Skill.values()) {
-            String skillBonusApiName = "raw" + com.wynntils.utils.StringUtils.capitalizeFirst(skill.getApiName());
-            int minPoints = JsonUtils.getNullableJsonInt(json, skillBonusApiName);
-            if (minPoints == 0) continue;
-
-            list.add(Pair.of(skill, minPoints));
-        }
-
-        // Return an immutable list
-        return List.copyOf(list);
     }
 
     protected List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
@@ -384,11 +366,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 continue;
             }
 
-            if (statType instanceof SkillStatType) {
-                // Skill stats are not variable for gear
-                continue;
-            }
-
             int baseValue;
             boolean preIdentified;
 
@@ -416,8 +393,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             }
             // Range will always be stored such as "low" means "worst possible value" and
             // "high" means "best possible value".
-            RangedValue range = StatCalculator.calculatePossibleValuesRange(
-                    baseValue, preIdentifiedItem, statType.showAsInverted());
+            RangedValue range =
+                    StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType.showAsInverted());
             StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
             list.add(Pair.of(statType, possibleValues));
         }

@@ -35,25 +35,22 @@ public final class StatModel extends Model {
     private final List<StatType> statTypeRegistry = new ArrayList<>();
     private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;
-    private final List<SkillStatType> skillStats;
 
     public StatModel() {
         super(List.of());
 
         // First build stats of all kinds
+        List<SkillStatType> skillStats = buildStats(new SkillStatBuilder());
         List<MiscStatType> miscStats = buildStats(new MiscStatBuilder());
         List<DefenceStatType> defenceStats = buildStats(new DefenceStatBuilder());
         List<DamageStatType> damageStats = buildStats(new DamageStatBuilder());
         List<SpellStatType> spellStats = buildStats(new SpellStatBuilder());
 
-        // Skill stats is special, they are not variable for gear
-        skillStats = buildStats(new SkillStatBuilder());
-
         // Then put them all in the registry
-        initRegistry(miscStats, defenceStats, damageStats, spellStats);
+        initRegistry(skillStats, miscStats, defenceStats, damageStats, spellStats);
 
         // Finally create ordered lists for sorting
-        orderingLists = StatListOrderer.createOrderingMap(miscStats, defenceStats, damageStats, spellStats);
+        orderingLists = StatListOrderer.createOrderingMap(skillStats, miscStats, defenceStats, damageStats, spellStats);
     }
 
     public StatActualValue buildActualValue(
@@ -73,19 +70,11 @@ public final class StatModel extends Model {
             if (statType.getInternalRollName().equals(id)) return statType;
         }
 
-        for (StatType statType : skillStats) {
-            if (statType.getInternalRollName().equals(id)) return statType;
-        }
-
         return null;
     }
 
     public StatType fromApiRollId(String id) {
         for (StatType statType : statTypeRegistry) {
-            if (statType.getApiName().equals(id)) return statType;
-        }
-
-        for (StatType statType : skillStats) {
             if (statType.getApiName().equals(id)) return statType;
         }
 
@@ -129,10 +118,12 @@ public final class StatModel extends Model {
     }
 
     private void initRegistry(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
+        statTypeRegistry.addAll(skillStats);
         statTypeRegistry.addAll(miscStats);
         statTypeRegistry.addAll(defenceStats);
         statTypeRegistry.addAll(damageStats);

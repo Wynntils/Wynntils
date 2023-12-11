@@ -6,9 +6,10 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.stats.type.SkillStatType;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
-import com.wynntils.utils.type.Pair;
 import java.util.List;
 
 public class SkillStatProvider extends ItemStatProvider<Integer> {
@@ -30,11 +31,11 @@ public class SkillStatProvider extends ItemStatProvider<Integer> {
 
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof GearItem gearItem)) return List.of();
+        if (!(wynnItem instanceof IdentifiableItemProperty identifiableItemProperty)) return List.of();
 
-        return gearItem.getGearInfo().fixedStats().skillBonuses().stream()
-                .filter(pair -> pair.key() == skill)
-                .map(Pair::value)
+        return identifiableItemProperty.getIdentifications().stream()
+                .filter(id -> id.statType() instanceof SkillStatType)
+                .map(StatActualValue::value)
                 .toList();
     }
 }

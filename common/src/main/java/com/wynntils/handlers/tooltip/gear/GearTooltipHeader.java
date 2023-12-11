@@ -23,7 +23,6 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 
 public final class GearTooltipHeader {
     public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
@@ -116,30 +115,7 @@ public final class GearTooltipHeader {
             header.add(Component.literal(""));
         }
 
-        // skill bonuses
-        List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
-        if (!skillBonuses.isEmpty()) {
-            for (Skill skill : Models.Element.getGearSkillOrder()) {
-                int skillBonusValue = gearInfo.fixedStats().getSkillBonus(skill);
-                if (skillBonusValue == 0) continue;
-
-                Component line = buildSkillBonusLine(skill, skillBonusValue);
-                header.add(line);
-            }
-            header.add(Component.literal(""));
-        }
-
         return header;
-    }
-
-    private static Component buildSkillBonusLine(Skill skill, int value) {
-        boolean isGood = (value > 0);
-
-        MutableComponent skillBonusLine = Component.literal(StringUtils.toSignedString(value))
-                .withStyle(Style.EMPTY.withColor(isGood ? ChatFormatting.GREEN : ChatFormatting.RED));
-        skillBonusLine.append(Component.literal(" " + skill.getDisplayName()).withStyle(ChatFormatting.GRAY));
-
-        return skillBonusLine;
     }
 
     private static MutableComponent buildRequirementLine(String requirementName, boolean fulfilled) {
