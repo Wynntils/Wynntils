@@ -85,7 +85,8 @@ public final class StatCalculator {
 
         // If present, use the starInternalRollRanges to further bound the possible rolls
         // (negative stats do not have starInternalRollRanges, we do not need to check for them)
-        if (statCalculationInfo.starInternalRollRanges().size() > stars) {
+        // (stars is -1 if we don't want stars to be taken into account)
+        if (stars != -1 && statCalculationInfo.starInternalRollRanges().size() > stars) {
             RangedValue rangedValue =
                     statCalculationInfo.starInternalRollRanges().get(stars);
             starMin = rangedValue.low();
@@ -159,48 +160,54 @@ public final class StatCalculator {
     }
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
-        // FIXME: This is the chance of getting a *** (3 star) roll, not the chance of
-        // getting the maximum possible value. But for now, keep old behavior.
-        return 1 / (possibleValues.baseValue() > 0 ? 101d : 61d) * 100;
+        StatCalculationInfo statCalculationInfo =
+                possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+
+        int allCases =
+                statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
+
+        // Internal roll range for maxiumum value
+        // Do not confuse this with a "3 star" roll, aka perfect internal roll
+        RangedValue perfectInternalRollRange = calculateInternalRollRange(
+                possibleValues, possibleValues.range().high(), -1);
+        int perfectCases = perfectInternalRollRange.high() - perfectInternalRollRange.low() + 1;
+
+        return ((double) perfectCases) / allCases * 100;
     }
 
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
         assert !possibleValues.range().isFixed();
 
-        // This code finds the lowest possible and highest possible rolls that achieve the correct
-        // result (inclusive). Then, it finds the average decrease and increase afterwards
-        RangedValue innerRollRange = actualValue.internalRoll();
+        StatCalculationInfo statCalculationInfo =
+                possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
 
-        // FIXME: What we probably really want is the percentage of possible internal rolls
-        // that is lower than innerRollRange.low, but do not change this for now.
-        double result;
-        double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
-        if (innerRollRange.low() > 0) {
-            result = (avg - 30) / 101d;
-        } else {
-            result = (130 - avg) / 61d;
-        }
-        return result * 100;
+        // This code finds the lowest possible and highest possible rolls that achieve the correct
+        // result (inclusive). Then, it calculates the chance where we can get a lower roll
+        RangedValue internalRollRange = actualValue.internalRoll();
+
+        int allCases =
+                statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
+        int decreaseCases =
+                internalRollRange.low() - statCalculationInfo.range().low();
+
+        return ((double) decreaseCases) / allCases * 100;
     }
 
     public static double getIncreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
         assert !possibleValues.range().isFixed();
 
+        StatCalculationInfo statCalculationInfo =
+                possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+
         // This code finds the lowest possible and highest possible rolls that achieve the correct
-        // result (inclusive). Then, it finds the average decrease and increase afterwards
-        RangedValue innerRollRange = actualValue.internalRoll();
+        // result (inclusive). Then, it calculates the chance where we can get a higher roll
+        RangedValue internalRollRange = actualValue.internalRoll();
 
-        // FIXME: What we probably really want is the percentage of possible internal rolls
-        // that is higher than innerRollRange.high, but do not change this for now.
-        double result;
-        double avg = (innerRollRange.low() + innerRollRange.high()) / 2d;
+        int allCases =
+                statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
+        int increaseCases = statCalculationInfo.range().high() - internalRollRange.high();
 
-        if (innerRollRange.low() > 0) {
-            result = (130 - avg) / 101d;
-        } else {
-            result = (avg - 70) / 61d;
-        }
-        return result * 100;
+        return ((double) increaseCases) / allCases * 100;
     }
 
     public static Optional<Float> calculateOverallQuality(
