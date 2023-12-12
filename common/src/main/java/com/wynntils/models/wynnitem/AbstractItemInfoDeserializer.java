@@ -369,6 +369,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             int baseValue;
             boolean preIdentified;
 
+            // The new API has a range for each stat,
+            // we still like to manually calculate,
+            // but it is great for verification
+            RangedValue apiRange;
+
             // This is a pre-identified id, so there is no range
             if (preIdentifiedItem
                     || identificationsJson.get(statType.getApiName()).isJsonPrimitive()) {
@@ -376,25 +381,41 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
                 // We have a pre-identified item, so there is no range
                 preIdentified = true;
+
+                apiRange = RangedValue.of(baseValue, baseValue);
             } else {
                 JsonObject statObject = entry.getValue().getAsJsonObject();
 
                 baseValue = JsonUtils.getNullableJsonInt(statObject, "raw");
                 preIdentified = false;
+
+                apiRange = RangedValue.of(
+                        statObject.get("min").getAsInt(), statObject.get("max").getAsInt());
             }
 
             // If the base value is 0, this stat is not present on the item
             if (baseValue == 0) continue;
 
-            // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
-            // and only converted to negative at display time.
-            if (statType.showAsInverted()) {
+            // "Inverted" stats (i.e. spell costs) are calculated
+            // as inverted, but are later changed back
+            if (statType.calculateAsInverted()) {
                 baseValue = -baseValue;
+
+                // If the stat is inverted, the API range is also inverted,
+                // so the check below does not fail
+                apiRange = RangedValue.of(-apiRange.low(), -apiRange.high());
             }
+
             // Range will always be stored such as "low" means "worst possible value" and
             // "high" means "best possible value".
-            RangedValue range =
-                    StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType.showAsInverted());
+            RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
+
+            // Verify that the calculated range matches the API's range
+            if (!apiRange.equals(range)) {
+                WynntilsMod.warn(
+                        "Stat " + statType.getApiName() + " has a range mismatch: " + apiRange + " vs " + range);
+            }
+
             StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
             list.add(Pair.of(statType, possibleValues));
         }

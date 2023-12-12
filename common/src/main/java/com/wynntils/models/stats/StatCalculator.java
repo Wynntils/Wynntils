@@ -6,6 +6,7 @@ package com.wynntils.models.stats;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatCalculationInfo;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.MathUtils;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public final class StatCalculator {
-    public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, boolean isInverted) {
+    public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, StatType statType) {
         if (preIdentified) {
             // This is actually a single, fixed value
             return RangedValue.of(baseValue, baseValue);
@@ -26,28 +27,33 @@ public final class StatCalculator {
             int low;
             int high;
 
-            if (baseValue > 0) {
-                // Round ties towards positive infinity (confirmed on Wynncraft)
-                RoundingMode roundingMode = isInverted ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP;
+            StatCalculationInfo statCalculationInfo = statType.getStatCalculationInfo(baseValue);
+            RoundingMode roundingMode = statCalculationInfo.roundingMode();
 
-                // Between 30% and 130% of base value, always at least 1
-                low = Math.max(
-                        new BigDecimal(baseValue * 0.3)
-                                .setScale(0, roundingMode)
-                                .intValue(),
-                        1);
-                high = new BigDecimal(baseValue * 1.3).setScale(0, roundingMode).intValue();
-            } else {
-                // Round ties towards positive infinity (confirmed on Wynncraft)
-                RoundingMode roundingMode = isInverted ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN;
+            // We can be really precise (and slow) here, since we are calculating this once, when initializing items
+            low = new BigDecimal(baseValue)
+                    .multiply(BigDecimal.valueOf(statCalculationInfo.range().low()))
+                    .divide(BigDecimal.valueOf(100), roundingMode)
+                    .setScale(0, roundingMode)
+                    .intValue();
+            high = new BigDecimal(baseValue)
+                    .multiply(BigDecimal.valueOf(statCalculationInfo.range().high()))
+                    .divide(BigDecimal.valueOf(100), roundingMode)
+                    .setScale(0, roundingMode)
+                    .intValue();
 
-                // Between 70% and 130% of base value, always at most -1
-                low = new BigDecimal(baseValue * 1.3).setScale(0, roundingMode).intValue();
-                high = Math.min(
-                        new BigDecimal(baseValue * 0.7)
-                                .setScale(0, roundingMode)
-                                .intValue(),
-                        -1);
+            // When calculating using the negative range, we need to swap the bounds
+            if (high < low) {
+                int temp = low;
+                low = high;
+                high = temp;
+            }
+
+            if (statCalculationInfo.minimumValue().isPresent()) {
+                low = Math.max(low, statCalculationInfo.minimumValue().get());
+            }
+            if (statCalculationInfo.maximumValue().isPresent()) {
+                high = Math.min(high, statCalculationInfo.maximumValue().get());
             }
 
             return RangedValue.of(low, high);
@@ -64,54 +70,48 @@ public final class StatCalculator {
         double lowerRawRollBound = (value * 100 - 50) / ((double) baseValue);
         double higherRawRollBound = (value * 100 + 50) / ((double) baseValue);
 
+        StatCalculationInfo statCalculationInfo =
+                possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+
         if (baseValue > 0) {
             // We can further bound the possible rolls using the star count
-            int starMin = 30;
-            int starMax = 130;
+            int starMin = statCalculationInfo.range().low();
+            int starMax = statCalculationInfo.range().high();
 
-            switch (stars) {
-                case 0 -> {
-                    starMin = 30;
-                    starMax = 100;
-                }
-                case 1 -> {
-                    starMin = 101;
-                    starMax = 124;
-                }
-                case 2 -> {
-                    starMin = 125;
-                    starMax = 129;
-                }
-                case 3 -> {
-                    return RangedValue.of(130, 130);
-                }
-                default -> WynntilsMod.warn("Invalid star count of " + stars);
+            // If present, use the starInternalRollRanges to further bound the possible rolls
+            if (statCalculationInfo.starInternalRollRanges().size() < stars) {
+                RangedValue rangedValue =
+                        statCalculationInfo.starInternalRollRanges().get(stars);
+                starMin = rangedValue.low();
+                starMax = rangedValue.high();
             }
 
             int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
             int higherRollBound = (int) Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
             return RangedValue.of(lowerRollBound, higherRollBound);
         } else {
-            int lowerRollBound = (int) Math.min(Math.ceil(lowerRawRollBound) - 1, 130);
-            int higherRollBound = (int) Math.max(Math.ceil(higherRawRollBound), 70);
+            int lowerRollBound = (int) Math.min(
+                    Math.ceil(lowerRawRollBound) - 1,
+                    statCalculationInfo.range().high());
+            int higherRollBound = (int) Math.max(
+                    Math.ceil(higherRawRollBound), statCalculationInfo.range().low());
             return RangedValue.of(lowerRollBound, higherRollBound);
         }
     }
 
-    public static int calculateStarsFromInternalRoll(int internalRoll) {
+    public static int calculateStarsFromInternalRoll(StatType statType, int baseValue, int internalRoll) {
         // Star calculation reference, from salted:
         // https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
-        int stars;
-        if (internalRoll < 101) {
-            stars = 0;
-        } else if (internalRoll < 125) {
-            stars = 1;
-        } else if (internalRoll < 130) {
-            stars = 2;
-        } else {
-            stars = 3;
+        StatCalculationInfo statCalculationInfo = statType.getStatCalculationInfo(baseValue);
+        for (int stars = 0; stars < statCalculationInfo.starInternalRollRanges().size(); stars++) {
+            RangedValue rangedValue =
+                    statCalculationInfo.starInternalRollRanges().get(stars);
+            if (rangedValue.inRange(internalRoll)) {
+                return stars;
+            }
         }
-        return stars;
+
+        return 0;
     }
 
     public static Pair<Integer, Integer> getDisplayRange(
@@ -132,7 +132,7 @@ public final class StatCalculator {
         }
         // We store "inverted" stats (spell costs) as positive numbers internally,
         // but need to display them as negative numbers
-        if (statType.showAsInverted()) {
+        if (statType.calculateAsInverted()) {
             first = -first;
             last = -last;
         }
