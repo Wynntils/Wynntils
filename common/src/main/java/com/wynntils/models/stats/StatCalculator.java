@@ -64,39 +64,50 @@ public final class StatCalculator {
         // This code finds the lowest possible and highest possible rolls that result in the current
         // value (inclusive).
 
-        // Note that due to rounding, a bound may not actually be a possible roll
-        // if it results in a value that is exactly .5, which then rounds up/down
         int baseValue = possibleValues.baseValue();
         double lowerRawRollBound = (value * 100 - 50) / ((double) baseValue);
-        double higherRawRollBound = (value * 100 + 50) / ((double) baseValue);
+        // .5 is rounded up, so we need to add .49
+        double higherRawRollBound = (value * 100 + 49) / ((double) baseValue);
 
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
 
-        if (baseValue > 0) {
-            // We can further bound the possible rolls using the star count
-            int starMin = statCalculationInfo.range().low();
-            int starMax = statCalculationInfo.range().high();
-
-            // If present, use the starInternalRollRanges to further bound the possible rolls
-            if (statCalculationInfo.starInternalRollRanges().size() < stars) {
-                RangedValue rangedValue =
-                        statCalculationInfo.starInternalRollRanges().get(stars);
-                starMin = rangedValue.low();
-                starMax = rangedValue.high();
-            }
-
-            int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
-            int higherRollBound = (int) Math.min(Math.ceil(higherRawRollBound) - 1, starMax);
-            return RangedValue.of(lowerRollBound, higherRollBound);
-        } else {
-            int lowerRollBound = (int) Math.min(
-                    Math.ceil(lowerRawRollBound) - 1,
-                    statCalculationInfo.range().high());
-            int higherRollBound = (int) Math.max(
-                    Math.ceil(higherRawRollBound), statCalculationInfo.range().low());
-            return RangedValue.of(lowerRollBound, higherRollBound);
+        if (baseValue < 0) {
+            // Swap the bounds, since we are calculating using the negative range
+            double temp = lowerRawRollBound;
+            lowerRawRollBound = higherRawRollBound;
+            higherRawRollBound = temp;
         }
+
+        // We can further bound the possible rolls using the star count
+        int starMin = statCalculationInfo.range().low();
+        int starMax = statCalculationInfo.range().high();
+
+        // If present, use the starInternalRollRanges to further bound the possible rolls
+        // (negative stats do not have starInternalRollRanges, we do not need to check for them)
+        if (statCalculationInfo.starInternalRollRanges().size() > stars) {
+            RangedValue rangedValue =
+                    statCalculationInfo.starInternalRollRanges().get(stars);
+            starMin = rangedValue.low();
+            starMax = rangedValue.high();
+        }
+
+        int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
+        int higherRollBound = (int) Math.max(lowerRollBound, Math.min(Math.floor(higherRawRollBound), starMax));
+
+        // Check if the bounds are in the correct order
+        assert lowerRollBound <= higherRollBound;
+        // Check if the bounds are valid
+        assert Math.round(baseValue * lowerRollBound / 100d) == Math.round(baseValue * higherRollBound / 100d);
+        // Check if the lowest bound is the actually lowest possible roll
+        assert lowerRollBound == starMin
+                || Math.round(baseValue * lowerRollBound / 100d) != Math.round(baseValue * (lowerRollBound - 1) / 100d);
+        // Check if the highest bound is the actually highest possible roll
+        assert higherRollBound == starMax
+                || Math.round(baseValue * higherRollBound / 100d)
+                        != Math.round(baseValue * (higherRollBound + 1) / 100d);
+
+        return RangedValue.of(lowerRollBound, higherRollBound);
     }
 
     public static int calculateStarsFromInternalRoll(StatType statType, int baseValue, int internalRoll) {
