@@ -8,6 +8,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.mc.event.PackGetFixedPositionEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -27,5 +28,10 @@ public class AutoApplyResourcePackFeature extends Feature {
             // Use this resource pack as our preloaded pack
             Services.ResourcePack.setRequestedPreloadHash(packHash);
         }
+    }
+
+    @SubscribeEvent
+    public void onResourcePackFixedPosition(PackGetFixedPositionEvent event) {
+        if (event.getPack().getId().equals("server")) event.setFixedPosition(false);
     }
 }

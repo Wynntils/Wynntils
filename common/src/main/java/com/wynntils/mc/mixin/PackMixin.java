@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.PackGetFixedPositionEvent;
 import net.minecraft.server.packs.repository.Pack;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -31,13 +31,8 @@ public abstract class PackMixin {
                             value = "FIELD",
                             opcode = Opcodes.GETFIELD))
     private boolean onGetFixedPosition(Pack pack) {
-        boolean enabled = Managers.Feature.getFeatureInstance(AutoApplyResourcePackFeature.class)
-                .isEnabled();
-        if (enabled) {
-            if (pack.getId().equals("server")) {
-                return false;
-            }
-        }
-        return this.fixedPosition;
+        PackGetFixedPositionEvent event = new PackGetFixedPositionEvent(pack, this.fixedPosition);
+        MixinHelper.postAlways(event);
+        return event.isFixedPosition();
     }
 }
