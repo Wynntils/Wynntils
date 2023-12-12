@@ -47,7 +47,8 @@
     "accessors.ItemStackInfoAccessor",
     "accessors.LerpingBossEventAccessor",
     "accessors.MinecraftAccessor",
-    "accessors.OptionsAccessor"
+    "accessors.OptionsAccessor",
+    "PackMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
