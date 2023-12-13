@@ -107,6 +107,10 @@ public final class TooltipBuilder {
 
         boolean headerEnded = false;
         boolean footerStarted = false;
+        boolean skillPointsStarted = false;
+
+        boolean foundSkills = false;
+        boolean foundIdentifications = false;
         for (Component loreLine : lore) {
             StyledText codedLine = StyledText.fromComponent(loreLine).getNormalized();
 
@@ -117,16 +121,28 @@ public final class TooltipBuilder {
                 } else {
                     Matcher matcher = codedLine.getMatcher(WynnItemParser.IDENTIFICATION_STAT_PATTERN);
                     if (matcher.matches()) {
+                        // Some orders do not have a blank line after a skill point line,
+                        // so reset the flag here
+                        skillPointsStarted = false;
+
                         String statName = matcher.group(6);
 
                         if (Skill.isSkill(statName)) {
-                            // Skill points counts to the header since they are fixed (but look like
-                            // identified stats), so ignore those, and fall through
+                            skillPointsStarted = true;
+                            foundSkills = true;
+                            // Skill points are in a separate section to the rest of the identifications,
+                            // but we still don't want to keep them
                         } else {
-                            headerEnded = true;
+                            foundIdentifications = true;
                             // Don't keep identifications lines at all
-                            continue;
                         }
+
+                        headerEnded = true;
+                        continue;
+                    } else if (skillPointsStarted) {
+                        // If there were skill points, there might be a blank line after them
+                        skillPointsStarted = false;
+                        continue;
                     }
                 }
             }
@@ -139,6 +155,12 @@ public final class TooltipBuilder {
                 footerStarted = true;
                 footer.add(loreLine);
             }
+        }
+
+        if (foundSkills && !foundIdentifications) {
+            // If there were skills but no identifications,
+            // then the footer is missing a blank line
+            footer.add(0, Component.literal(""));
         }
 
         return Pair.of(header, footer);

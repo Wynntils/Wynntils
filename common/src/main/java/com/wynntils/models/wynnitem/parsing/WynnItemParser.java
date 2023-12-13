@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.StatCalculator;
@@ -192,9 +191,6 @@ public final class WynnItemParser {
 
                 StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (statType == null) {
-                    // Skill bonuses looks like stats when parsing, ignore them
-                    if (Skill.isSkill(statDisplayName)) continue;
-
                     WynntilsMod.warn(
                             "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
                     continue;
