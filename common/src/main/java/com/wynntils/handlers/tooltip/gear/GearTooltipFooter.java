@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.tooltip;
+package com.wynntils.handlers.tooltip.gear;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
@@ -28,18 +28,16 @@ public final class GearTooltipFooter {
         List<Component> footer = new ArrayList<>();
 
         // major ids
-        if (!gearInfo.fixedStats().majorIds().isEmpty()) {
-            for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
-                StyledText name = StyledText.fromString(ChatFormatting.AQUA + "+" + majorId.name() + ": ");
-                // This dance to and from component is needed to properly recolor all neutral text
-                StyledText lore = StyledText.fromComponent(Component.empty()
-                        .withStyle(ChatFormatting.DARK_AQUA)
-                        .append(majorId.lore().getComponent()));
-                StyledText majorIdText = name.append(lore);
+        if (gearInfo.fixedStats().majorIds().isPresent()) {
+            GearMajorId majorId = gearInfo.fixedStats().majorIds().get();
 
-                Stream.of(RenderedStringUtils.wrapTextBySize(majorIdText, PIXEL_WIDTH))
-                        .forEach(c -> footer.add(c.getComponent()));
-            }
+            // The majorId lore contains the name, and colors
+            // This dance to and from component is needed to properly recolor all neutral text
+            StyledText lore = StyledText.fromComponent(Component.empty()
+                    .withStyle(ChatFormatting.DARK_AQUA)
+                    .append(majorId.lore().getComponent()));
+
+            Stream.of(RenderedStringUtils.wrapTextBySize(lore, PIXEL_WIDTH)).forEach(c -> footer.add(c.getComponent()));
         }
 
         footer.add(Component.literal(""));

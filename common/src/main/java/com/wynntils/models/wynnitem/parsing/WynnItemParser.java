@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.StatCalculator;
@@ -26,6 +25,7 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +62,8 @@ public final class WynnItemParser {
     // Test suite: https://regexr.com/7i5h5
     public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
 
-    public static WynnItemParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
+    public static WynnItemParseResult parseItemStack(
+            ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
@@ -190,9 +191,6 @@ public final class WynnItemParser {
 
                 StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (statType == null) {
-                    // Skill bonuses looks like stats when parsing, ignore them
-                    if (Skill.isSkill(statDisplayName)) continue;
-
                     WynntilsMod.warn(
                             "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
                     continue;
@@ -204,7 +202,7 @@ public final class WynnItemParser {
 
                 int stars = starString == null ? 0 : starString.length();
 
-                StatPossibleValues possibleValues = gearInfo != null ? gearInfo.getPossibleValues(statType) : null;
+                StatPossibleValues possibleValues = possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
                 StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
                 identifications.add(actualValue);
             }

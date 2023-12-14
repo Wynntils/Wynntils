@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public enum MiscStatKind {
     // Health and mana
-    HEALTH("Health", StatUnit.RAW, "healthBonus"),
+    HEALTH("Health", StatUnit.RAW, "rawHealth", "HEALTHBONUS"),
     HEALTH_REGEN_PERCENT("Health Regen", StatUnit.PERCENT, "healthRegen"),
     HEALTH_REGEN_RAW("Health Regen", StatUnit.RAW, "healthRegenRaw"),
     HEALING_EFFICIENCY("Healing Efficiency", StatUnit.PERCENT, "healingEfficiency", "HEALING_EFFICIENCY"),
@@ -18,13 +18,13 @@ public enum MiscStatKind {
     MANA_STEAL("Mana Steal", StatUnit.PER_3_S, "manaSteal"),
 
     // Movement
-    WALK_SPEED("Walk Speed", StatUnit.PERCENT, "speed"),
+    WALK_SPEED("Walk Speed", StatUnit.PERCENT, "walkSpeed", "SPEED"),
     SPRINT("Sprint", StatUnit.PERCENT, "sprint", "STAMINA"),
     SPRINT_REGEN("Sprint Regen", StatUnit.PERCENT, "sprintRegen", "STAMINA_REGEN"),
     JUMP_HEIGHT("Jump Height", StatUnit.RAW, "jumpHeight", "JUMP_HEIGHT"),
 
     // Damage
-    ATTACK_SPEED("Attack Speed", StatUnit.TIER, "attackSpeedBonus", "ATTACKSPEED"),
+    ATTACK_SPEED("Attack Speed", StatUnit.TIER, "rawAttackSpeed", "ATTACKSPEED"),
     REFLECTION("Reflection", StatUnit.PERCENT, "reflection"),
     THORNS("Thorns", StatUnit.PERCENT, "thorns"),
     EXPLODING("Exploding", StatUnit.PERCENT, "exploding"),
@@ -34,8 +34,8 @@ public enum MiscStatKind {
     WEAKEN_ENEMY("Weaken Enemy", StatUnit.PERCENT, "weakenEnemy"),
 
     // Bonuses for soul points, emeralds, XP, loot and gathering
-    SOUL_POINT_REGEN("Soul Point Regen", StatUnit.PERCENT, "soulPoints"),
-    STEALING("Stealing", StatUnit.PERCENT, "emeraldStealing"),
+    SOUL_POINT_REGEN("Soul Point Regen", StatUnit.PERCENT, "soulPointRegen", "SOULPOINTS"),
+    STEALING("Stealing", StatUnit.PERCENT, "stealing", "EMERALDSTEALING"),
     XP_BONUS("XP Bonus", StatUnit.PERCENT, "xpBonus"),
     LOOT_BONUS("Loot Bonus", StatUnit.PERCENT, "lootBonus"),
     LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality", "LOOT_QUALITY"),

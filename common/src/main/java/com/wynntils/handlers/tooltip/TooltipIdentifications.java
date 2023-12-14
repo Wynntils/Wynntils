@@ -2,13 +2,14 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.tooltip;
+package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
@@ -24,27 +25,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class GearTooltipIdentifications {
+public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
-            GearInfo gearInfo,
-            GearInstance gearInstance,
+            IdentifiableItemProperty itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
-            GearTooltipStyle style) {
+            TooltipStyle style) {
         List<Component> identifications = new ArrayList<>();
 
         List<StatType> listOrdering = Models.Stat.getOrderingList(style.identificationOrdering());
-        ArrayList<StatType> allStats = new ArrayList<>(gearInfo.getVariableStats());
+        List<StatType> allStats = new ArrayList<>(itemInfo.getVariableStats());
 
-        if (gearInstance != null) {
-            // If the gear instance contains identifications with stat types not present in the
-            // GearInfo, add these as well to the list of stats to be displayed. This should not happen,
-            // but might if the GearInfo from the API is not up to date with the actual gear.
-            gearInstance.identifications().stream()
-                    .map(StatActualValue::statType)
-                    .filter(stat -> !allStats.contains(stat))
-                    .forEach(allStats::add);
-        }
+        // If the item instance contains identifications with stat types not present in the
+        // variable stats list, add these as well to the list of stats to be displayed.
+        // This should not happen, but might if the info from the API is not up to date with the actual item.
+        itemInfo.getIdentifications().stream()
+                .map(StatActualValue::statType)
+                .filter(stat -> !allStats.contains(stat))
+                .forEach(allStats::add);
 
         if (allStats.isEmpty()) return identifications;
 
@@ -63,7 +61,7 @@ public final class GearTooltipIdentifications {
             // Most stat types are probably not valid for this gear
             if (!allStats.contains(statType)) continue;
 
-            MutableComponent line = getStatLine(statType, gearInfo, gearInstance, currentClass, decorator, style);
+            MutableComponent line = getStatLine(statType, itemInfo, currentClass, decorator, style);
             if (line == null) continue;
 
             identifications.add(line);
@@ -81,26 +79,31 @@ public final class GearTooltipIdentifications {
 
     private static MutableComponent getStatLine(
             StatType statType,
-            GearInfo gearInfo,
-            GearInstance gearInstance,
+            IdentifiableItemProperty itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
-            GearTooltipStyle style) {
-        if (gearInstance != null) {
+            TooltipStyle style) {
+        if (!itemInfo.getIdentifications().isEmpty()) {
             // We have an actual value
-            StatActualValue statActualValue = gearInstance.getActualValue(statType);
+            StatActualValue statActualValue = itemInfo.getIdentifications().stream()
+                    .filter(stat -> stat.statType() == statType)
+                    .findFirst()
+                    .orElse(null);
             if (statActualValue == null) {
-                WynntilsMod.warn("Missing value in item " + gearInfo.name() + " for stat: " + statType);
+                WynntilsMod.warn("Missing value in item " + itemInfo.getName() + " for stat: " + statType);
                 return null;
             }
 
-            MutableComponent line = buildIdentifiedLine(gearInfo, style, statActualValue, currentClass);
+            MutableComponent line = buildIdentifiedLine(itemInfo, style, statActualValue, currentClass);
 
-            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
+            StatPossibleValues possibleValues = itemInfo.getPossibleValues().stream()
+                    .filter(stat -> stat.statType() == statType)
+                    .findFirst()
+                    .orElse(null);
             // Normally this should not happen, but if our API data does not match the
             // actual gear, it might, so handle it gracefully
             if (possibleValues == null) {
-                WynntilsMod.warn("Missing stat type in item " + gearInfo.name() + " for stat: " + statType
+                WynntilsMod.warn("Missing stat type in item " + itemInfo.getName() + " for stat: " + statType
                         + " which has value: " + statActualValue.value());
                 return line;
             }
@@ -113,13 +116,25 @@ public final class GearTooltipIdentifications {
             return line;
         } else {
             // Can only show range of possible values
-            StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
-            return buildUnidentifiedLine(gearInfo, style, possibleValues);
+            StatPossibleValues possibleValues = itemInfo.getPossibleValues().stream()
+                    .filter(stat -> stat.statType() == statType)
+                    .findFirst()
+                    .orElse(null);
+            if (possibleValues == null) {
+                WynntilsMod.warn("Missing possible values for stat type in item " + itemInfo.getName() + " for stat: "
+                        + statType);
+                return null;
+            }
+
+            return buildUnidentifiedLine(itemInfo, style, possibleValues);
         }
     }
 
     private static MutableComponent buildIdentifiedLine(
-            GearInfo gearInfo, GearTooltipStyle style, StatActualValue actualValue, ClassType currentClass) {
+            IdentifiableItemProperty itemInfo,
+            TooltipStyle style,
+            StatActualValue actualValue,
+            ClassType currentClass) {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
@@ -134,14 +149,15 @@ public final class GearTooltipIdentifications {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        line.append(Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo, currentClass))
-                .withStyle(ChatFormatting.GRAY));
+        line.append(
+                Component.literal(" " + Models.Stat.getDisplayName(statType, itemInfo.getRequiredClass(), currentClass))
+                        .withStyle(ChatFormatting.GRAY));
 
         return line;
     }
 
     private static MutableComponent buildUnidentifiedLine(
-            GearInfo gearInfo, GearTooltipStyle style, StatPossibleValues possibleValues) {
+            IdentifiableItemProperty itemInfo, TooltipStyle style, StatPossibleValues possibleValues) {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
 
@@ -161,9 +177,10 @@ public final class GearTooltipIdentifications {
         line.append(Component.literal(displayRange.b() + statType.getUnit().getDisplayName())
                 .withStyle(colorCode));
 
-        line.append(
-                Component.literal(" " + Models.Stat.getDisplayName(statType, gearInfo, Models.Character.getClassType()))
-                        .withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" "
+                        + Models.Stat.getDisplayName(
+                                statType, itemInfo.getRequiredClass(), Models.Character.getClassType()))
+                .withStyle(ChatFormatting.GRAY));
 
         return line;
     }

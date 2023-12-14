@@ -12,18 +12,12 @@ public enum Skill {
     STRENGTH(Element.EARTH),
     DEXTERITY(Element.THUNDER),
     INTELLIGENCE(Element.WATER),
-    DEFENCE(Element.FIRE, "defense"), // Note! Must be spelled with "C" to match in-game
+    DEFENCE(Element.FIRE), // Note! Must be spelled with "C" to match in-game
     AGILITY(Element.AIR);
 
     private final Element associatedElement;
     private final String apiName;
     private final String displayName;
-
-    Skill(Element associatedElement, String apiName) {
-        this.associatedElement = associatedElement;
-        this.apiName = apiName;
-        this.displayName = StringUtils.capitalized(this.name());
-    }
 
     Skill(Element associatedElement) {
         this.associatedElement = associatedElement;

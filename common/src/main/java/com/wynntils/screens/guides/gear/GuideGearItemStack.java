@@ -4,9 +4,10 @@
  */
 package com.wynntils.screens.guides.gear;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
+import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
@@ -63,8 +64,8 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        GearTooltipBuilder gearTooltipBuilder = Models.GearTooltip.buildNew(gearInfo, null, true);
-        this.generatedTooltip = gearTooltipBuilder.getTooltipLines(Models.Character.getClassType());
+        TooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new GearItem(gearInfo, null), true);
+        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(this, GearItem.class);

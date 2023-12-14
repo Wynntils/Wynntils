@@ -4,12 +4,10 @@
  */
 package com.wynntils.models.ingredients;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -24,14 +22,13 @@ import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +38,6 @@ import java.util.stream.Stream;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class IngredientInfoRegistry {
-    private Map<String, String> ingredientSkins = Map.of();
     private List<IngredientInfo> ingredientInfoRegistry = List.of();
     private Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
     private Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
@@ -53,8 +49,9 @@ public class IngredientInfoRegistry {
     }
 
     public void loadData() {
-        // We trigger the chain of downloading everything by downloading skins
-        loadIngredientSkins();
+        // We do not explicitly load the ingredient DB here,
+        // but when all of it's dependencies are loaded,
+        // the NetResultProcessedEvent will trigger the load.
     }
 
     public IngredientInfo getFromDisplayName(String ingredientName) {
@@ -68,11 +65,8 @@ public class IngredientInfoRegistry {
     @SubscribeEvent
     public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
         UrlId urlId = event.getUrlId();
-        if (urlId == UrlId.DATA_STATIC_INGREDIENT_SKINS
-                || urlId == UrlId.DATA_STATIC_ITEM_OBTAIN
-                || urlId == UrlId.DATA_STATIC_MATERIAL_CONVERSION) {
-            // We need both ingredient skins and obtain info to be able to load the ingredient DB
-            if (ingredientSkins.isEmpty()) return;
+        if (urlId == UrlId.DATA_STATIC_ITEM_OBTAIN || urlId == UrlId.DATA_STATIC_MATERIAL_CONVERSION) {
+            // We need both material conversio  and obtain info to be able to load the ingredient DB
             if (!Models.WynnItem.hasObtainInfo()) return;
             if (!Models.WynnItem.hasMaterialConversionInfo()) return;
 
@@ -81,27 +75,30 @@ public class IngredientInfoRegistry {
         }
     }
 
-    private void loadIngredientSkins() {
-        // Download and parse ingredient player head textures
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENT_SKINS);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<Map<String, String>>() {}.getType();
-            ingredientSkins = WynntilsMod.GSON.fromJson(reader, type);
-        });
-    }
-
     private void loadIngredients() {
         // Download and parse the ingredient DB
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS);
-        dl.handleReader(reader -> {
-            Gson ingredientInfoGson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer(ingredientSkins))
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS_ADVANCED);
+        dl.handleJsonObject(json -> {
+            Gson gson = new GsonBuilder()
+                    .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
                     .create();
-            WynncraftIngredientInfoResponse ingredientInfoResponse =
-                    ingredientInfoGson.fromJson(reader, WynncraftIngredientInfoResponse.class);
 
             // Create fast lookup maps
-            List<IngredientInfo> registry = ingredientInfoResponse.ingredients;
+            List<IngredientInfo> registry = new ArrayList<>();
+
+            for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+                JsonObject ingredientObject = entry.getValue().getAsJsonObject();
+
+                // Inject the name into the object
+                ingredientObject.addProperty("name", entry.getKey());
+
+                // Deserialize the item
+                IngredientInfo ingredientInfo = gson.fromJson(ingredientObject, IngredientInfo.class);
+
+                // Add the item to the registry
+                registry.add(ingredientInfo);
+            }
+
             Map<String, IngredientInfo> lookupMap = new HashMap<>();
             Map<String, IngredientInfo> altLookupMap = new HashMap<>();
             for (IngredientInfo ingredientInfo : registry) {
@@ -118,52 +115,26 @@ public class IngredientInfoRegistry {
         });
     }
 
-    private static final class IngredientInfoDeserializer implements JsonDeserializer<IngredientInfo> {
-        private final Map<String, String> ingredientSkins;
-
-        private IngredientInfoDeserializer(Map<String, String> ingredientSkins) {
-            this.ingredientSkins = ingredientSkins;
-        }
-
+    private static final class IngredientInfoDeserializer extends AbstractItemInfoDeserializer<IngredientInfo> {
         @Override
         public IngredientInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
-            // Wynncraft API has two fields: name and displayName. The former is the "api name", and is
-            // always present, the latter is only present if it differs from the api name.
-            // We want to store this the other way around: We always want a displayName (as the "name"),
-            // but if it the apiName is different, we want to store it separately
-            String primaryName = json.get("name").getAsString();
-            String secondaryName = JsonUtils.getNullableJsonString(json, "displayName");
+            Pair<String, String> names = parseNames(json);
+            String displayName = names.key();
+            String internalName = names.value();
 
-            if (secondaryName == null) {
-                String normalizedApiName = WynnUtils.normalizeBadString(primaryName);
-                if (!normalizedApiName.equals(primaryName)) {
-                    // Normalization removed a ֎ from the name. This means we want to
-                    // treat the name as apiName and the normalized name as display name
-                    secondaryName = normalizedApiName;
-                }
-            }
-
-            String name;
-            String apiName;
-            if (secondaryName == null) {
-                name = primaryName;
-                apiName = null;
-            } else {
-                name = secondaryName;
-                apiName = primaryName;
-            }
-
-            Optional<String> apiNameOpt = Optional.ofNullable(apiName);
+            Optional<String> internalNameOpt = Optional.ofNullable(internalName);
 
             int tier = JsonUtils.getNullableJsonInt(json, "tier");
-            int level = json.get("level").getAsInt();
 
-            List<ProfessionType> professions = parseProfessions(json);
+            JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
+            int level = requirements.get("level").getAsInt();
 
-            ItemMaterial material = parseMaterial(json, name);
+            List<ProfessionType> professions = parseProfessions(requirements);
+
+            ItemMaterial material = parseMaterial(json, displayName);
 
             // Get consumables-only parts
             JsonObject consumableIdsJson = JsonUtils.getNullableJsonObject(json, "consumableOnlyIDs");
@@ -172,19 +143,21 @@ public class IngredientInfoRegistry {
 
             // Get items-only parts
             JsonObject itemIdsJson = JsonUtils.getNullableJsonObject(json, "itemOnlyIDs");
-            int durabilityModifier = JsonUtils.getNullableJsonInt(itemIdsJson, "durabilityModifier");
+            // Durability modifier is multiplied by 1000 in the API, so we divide it here
+            // (there is no known reason for this)
+            int durabilityModifier = JsonUtils.getNullableJsonInt(itemIdsJson, "durabilityModifier") / 1000;
             List<Pair<Skill, Integer>> skillRequirements = getSkillRequirements(itemIdsJson);
 
             // Get recipe position format modifiers
             Map<IngredientPosition, Integer> positionModifiers = getPositionModifiers(json);
 
-            List<Pair<StatType, RangedValue>> variableStats = parseVariableStats(json);
+            List<Pair<StatType, RangedValue>> variableStats = parseVariableIngredientStats(json);
 
             return new IngredientInfo(
-                    name,
+                    displayName,
                     tier,
                     level,
-                    apiNameOpt,
+                    internalNameOpt,
                     material,
                     professions,
                     skillRequirements,
@@ -205,24 +178,26 @@ public class IngredientInfoRegistry {
                 professions.add(professionType);
             }
 
-            return Collections.unmodifiableList(professions);
+            return List.copyOf(professions);
         }
 
         private ItemMaterial parseMaterial(JsonObject json, String name) {
-            JsonObject sprite = JsonUtils.getNullableJsonObject(json, "sprite");
-            if (sprite.getAsJsonObject().isEmpty()) {
-                WynntilsMod.warn("Ingredient DB is missing sprite for " + name);
+            String material = JsonUtils.getNullableJsonString(json, "material");
+            if (material == null || material.isEmpty()) {
+                WynntilsMod.warn("Ingredient DB is missing material for " + name);
                 return ItemMaterial.fromItemId("minecraft:air", 0);
             }
 
-            int id = JsonUtils.getNullableJsonInt(sprite, "id");
-            int damage = JsonUtils.getNullableJsonInt(sprite, "damage");
+            String[] materialParts = material.split(":");
+
+            int id = Integer.parseInt(materialParts[0]);
+            int damage = Integer.parseInt(materialParts[1]);
 
             if (id == 397) {
                 // This is a player head. Check if we got a skin for it instead!
-                String skinTexture = ingredientSkins.get(name);
+                String skinTexture = JsonUtils.getNullableJsonString(json, "skin");
                 if (skinTexture != null) {
-                    return ItemMaterial.fromPlayerHeadTexture(skinTexture);
+                    return ItemMaterial.fromPlayerHeadUUID(skinTexture);
                 }
             }
 
@@ -243,7 +218,7 @@ public class IngredientInfoRegistry {
                 }
             }
 
-            return Collections.unmodifiableList(skillRequirements);
+            return List.copyOf(skillRequirements);
         }
 
         private Map<IngredientPosition, Integer> getPositionModifiers(JsonObject json) {
@@ -258,15 +233,15 @@ public class IngredientInfoRegistry {
                 positionModifiers.put(position, value);
             }
 
-            return Collections.unmodifiableMap(positionModifiers);
+            return Map.copyOf(positionModifiers);
         }
 
-        private List<Pair<StatType, RangedValue>> parseVariableStats(JsonObject json) {
+        private List<Pair<StatType, RangedValue>> parseVariableIngredientStats(JsonObject json) {
             List<Pair<StatType, RangedValue>> list = new ArrayList<>();
             JsonObject identificationsJson = JsonUtils.getNullableJsonObject(json, "identifications");
 
             for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-                StatType statType = Models.Stat.fromInternalRollId(entry.getKey());
+                StatType statType = Models.Stat.fromApiRollId(entry.getKey());
 
                 if (statType == null) {
                     WynntilsMod.warn("Ingredient DB contains invalid stat type " + entry.getKey());
@@ -274,19 +249,15 @@ public class IngredientInfoRegistry {
                 }
 
                 JsonObject rangeJson = entry.getValue().getAsJsonObject();
-                int low = JsonUtils.getNullableJsonInt(rangeJson, "minimum");
-                int high = JsonUtils.getNullableJsonInt(rangeJson, "maximum");
+                int low = JsonUtils.getNullableJsonInt(rangeJson, "min");
+                int high = JsonUtils.getNullableJsonInt(rangeJson, "max");
 
                 RangedValue range = RangedValue.of(low, high);
                 list.add(Pair.of(statType, range));
             }
 
             // Return an immutable list
-            return Collections.unmodifiableList(list);
+            return List.copyOf(list);
         }
-    }
-
-    protected static class WynncraftIngredientInfoResponse {
-        protected List<IngredientInfo> ingredients;
     }
 }

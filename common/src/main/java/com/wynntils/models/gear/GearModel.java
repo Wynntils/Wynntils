@@ -68,9 +68,11 @@ public final class GearModel extends Model {
     }
 
     public boolean canBeGearBox(GearInfo gear) {
+        // If an item is pre-identified, it cannot be in a gear box
         // If all the ways we can obtain this is by merchants, it cannot be in a gear box
-        return gear.metaInfo().obtainInfo().stream()
-                .anyMatch(o -> !o.sourceType().isMerchant());
+        return !gear.metaInfo().preIdentified()
+                && gear.metaInfo().obtainInfo().stream()
+                        .anyMatch(o -> !o.sourceType().isMerchant());
     }
 
     @Override
@@ -79,7 +81,7 @@ public final class GearModel extends Model {
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }

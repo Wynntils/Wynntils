@@ -21,6 +21,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public record ItemMaterial(ItemStack itemStack) {
+    public static ItemMaterial getDefaultTomeItemMaterial() {
+        ItemStack itemStack = createItemStack(Items.ENCHANTED_BOOK, 0);
+        return new ItemMaterial(itemStack);
+    }
+
     public static ItemMaterial fromArmorType(String materialType, GearType gearType, CustomColor color) {
         String itemId = (materialType.equals("chain") ? "chainmail" : materialType) + "_"
                 + gearType.name().toLowerCase(Locale.ROOT);
@@ -38,9 +43,9 @@ public record ItemMaterial(ItemStack itemStack) {
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial fromPlayerHeadTexture(String skinTexture) {
+    public static ItemMaterial fromPlayerHeadUUID(String uuid) {
         ItemStack itemStack = createItemStack(Items.PLAYER_HEAD, 0);
-        SkinUtils.setPlayerHeadSkin(itemStack, skinTexture);
+        SkinUtils.setPlayerHeadFromUUID(itemStack, uuid);
 
         return new ItemMaterial(itemStack);
     }

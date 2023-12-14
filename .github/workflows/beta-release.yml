@@ -96,7 +96,6 @@ jobs:
           files: |
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
-            **/build/libs/*-quilt+MC-*.jar
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -105,16 +104,13 @@ jobs:
           path: |
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
-            **/build/libs/*-quilt+MC-*.jar
-          # FIXME: Re-add Quilt
-          # if-no-files-found: error
+          if-no-files-found: error
 
   release:
     name: Release to Modrinth and CurseForge
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     strategy:
       matrix:
-        # FIXME: Re-add Quilt
         modloader: [fabric, forge]
     runs-on: ubuntu-latest
     needs: [build, changelog]
@@ -139,6 +135,7 @@ jobs:
           name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
           version: ${{ needs.changelog.outputs.tag }}
           version-type: beta
+          game-versions: 1.20.2
           changelog: ${{ needs.changelog.outputs.changelog }}
 
           loaders: ${{ matrix.modloader }}
