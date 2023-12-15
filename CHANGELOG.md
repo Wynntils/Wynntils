@@ -1,4 +1,16 @@
+## [0.0.4-beta.93](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.92...v0.0.4-beta.93) (2023-12-15)
+
+
+### Bug Fixes
+
+* fix legacy order not displaying skill stats ([#2283](https://github.com/Wynntils/Artemis/issues/2283)) ([1a72ac1](https://github.com/Wynntils/Artemis/commit/1a72ac16a455fbc171724cfcee5dd3ea5fbd9bb7))
+
 ## [0.0.4-beta.92](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.91...v0.0.4-beta.92) (2023-12-13)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.92 [skip ci] ([d592e13](https://github.com/Wynntils/Artemis/commit/d592e1346f82f8edf1f25f9b86ad23f023b1beaf))
 
 
 ### Code Refactoring
@@ -38,12 +50,4 @@
 
 * Create FUNDING.yml ([e3e3f76](https://github.com/Wynntils/Artemis/commit/e3e3f76fed0603349890de58a520588243ccefec))
 * **release:** v0.0.4-beta.89 [skip ci] ([f2d4950](https://github.com/Wynntils/Artemis/commit/f2d4950931950d0ee419f0a8c0d8d6b2e5e5f817))
-
-## [0.0.4-beta.88](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.87...v0.0.4-beta.88) (2023-12-09)
-
-
-### Miscellaneous Chores
-
-* Fix mod game version being wrongly published on Modrinth/Curseforge ([#2272](https://github.com/Wynntils/Artemis/issues/2272)) ([421cc47](https://github.com/Wynntils/Artemis/commit/421cc477512c517e496817d3aaeea25ddb8c8001))
-* **release:** v0.0.4-beta.88 [skip ci] ([5f37323](https://github.com/Wynntils/Artemis/commit/5f37323c07ba8b7b26e95fed15df7c9f248b8596))
 
