@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.world.item.ItemStack;
 
 public class SkillPointModel extends Model {
     private static final int TOME_SLOT = 8;
+    private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
 
     private final Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
@@ -40,17 +40,6 @@ public class SkillPointModel extends Model {
         super(List.of());
     }
 
-    public void updateTotals(ItemStack[] skillPointItems) {
-        for (int i = 0; i < 5; i++) {
-            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(skillPointItems[i]);
-            if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof SkillPointItem skillPoint) {
-                totalSkillPoints.put(skillPoint.getSkill(), skillPoint.getSkillPoints());
-            } else {
-                WynntilsMod.warn("Failed to parse skill point item: " + LoreUtils.getStringLore(skillPointItems[i]));
-            }
-        }
-    }
-
     public void calculateAssignedSkillPoints() {
         // No .closeContainer() here, we want the screen to remain open but close the inventory in the background
         McUtils.player()
@@ -59,8 +48,12 @@ public class SkillPointModel extends Model {
         McUtils.player().containerMenu = McUtils.player().inventoryMenu;
 
         Managers.TickScheduler.scheduleNextTick(() -> {
+            querySkillPoints();
             calculateGearSkillPoints();
-            queryTomeSkillPoints();
+            for (Skill skill : Skill.values()) {
+                assignedSkillPoints.put(
+                        skill, getTotalSkillPoints(skill) - getGearSkillPoints(skill) - getTomeSkillPoints(skill));
+            }
         });
     }
 
@@ -98,17 +91,35 @@ public class SkillPointModel extends Model {
         }
     }
 
-    private void queryTomeSkillPoints() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Tome Skill Point Query")
-                .onError(msg -> WynntilsMod.warn("Failed to query tome skill points: " + msg))
+    private void querySkillPoints() {
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Skill Point Query")
+                .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
-                        .expectContainerTitle("Character Info"))
+                        .expectContainerTitle("Character Info")
+                        .processIncomingContainer(this::processTotalSkillPoints))
                 .then(QueryStep.clickOnSlot(TOME_SLOT)
                         .expectContainerTitle("Mastery Tomes")
                         .processIncomingContainer(this::processTomeSkillPoints))
                 .build();
 
         query.executeQuery();
+    }
+
+    private void processTotalSkillPoints(ContainerContent content) {
+        System.out.println("querying total skill points");
+        totalSkillPoints.clear();
+        for (Integer slot : SKILL_POINT_TOTAL_SLOTS) {
+            Optional<WynnItem> wynnItemOptional =
+                    Models.Item.getWynnItem(content.items().get(slot));
+            if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof SkillPointItem skillPoint) {
+                totalSkillPoints.merge(skillPoint.getSkill(), skillPoint.getSkillPoints(), Integer::sum);
+            } else {
+                WynntilsMod.warn("Failed to parse skill point item: "
+                        + LoreUtils.getStringLore(content.items().get(slot)));
+            }
+        }
+
+        System.out.println("total skill points: " + totalSkillPoints);
     }
 
     private void processTomeSkillPoints(ContainerContent content) {

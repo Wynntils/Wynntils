@@ -57,7 +57,6 @@ public final class CharacterModel extends Model {
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int GUILD_INFO_SLOT = 26;
-    private static final int SKILL_POINT_START_SLOT = 11;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -190,12 +189,6 @@ public final class CharacterModel extends Model {
         ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
         ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
         ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
-
-        ItemStack[] skillPointItems = new ItemStack[5];
-        for (int i = 0; i < 5; i++) {
-            skillPointItems[i] = container.items().get(SKILL_POINT_START_SLOT + i);
-        }
-        Models.SkillPoint.updateTotals(skillPointItems);
 
         Models.Profession.resetValueFromItem(professionInfoItem);
         Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
