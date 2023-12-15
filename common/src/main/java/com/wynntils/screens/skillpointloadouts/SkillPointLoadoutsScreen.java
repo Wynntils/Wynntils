@@ -44,12 +44,24 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 new WynntilsButton(
                         (int) dividedWidth * 32,
                         (int) dividedHeight * 32,
-                        100,
+                        120,
                         20,
                         Component.literal("Refresh skill points")) {
                     @Override
                     public void onPress() {
-                        Models.SkillPoint.calculateAssignedSkillPoints();
+                        Models.SkillPoint.populateSkillPoints();
+                    }
+                });
+        addRenderableWidget(
+                new WynntilsButton(
+                        (int) dividedWidth * 40,
+                        (int) dividedHeight * 32,
+                        30,
+                        20,
+                        Component.literal("Clear")) {
+                    @Override
+                    public void onPress() {
+                        Models.SkillPoint.clear();
                     }
                 });
     }

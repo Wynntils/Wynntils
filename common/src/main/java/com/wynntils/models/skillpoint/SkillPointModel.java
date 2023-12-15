@@ -42,7 +42,15 @@ public class SkillPointModel extends Model {
         super(List.of());
     }
 
-    public void calculateAssignedSkillPoints() {
+    public void clear() {
+        totalSkillPoints.clear();
+        gearSkillPoints.clear();
+        craftedSkillPoints.clear();
+        tomeSkillPoints.clear();
+        assignedSkillPoints.clear();
+    }
+
+    public void populateSkillPoints() {
         // No .closeContainer() here, we want the screen to remain open but close the inventory in the background
         McUtils.player()
                 .connection
@@ -50,12 +58,8 @@ public class SkillPointModel extends Model {
         McUtils.player().containerMenu = McUtils.player().inventoryMenu;
 
         Managers.TickScheduler.scheduleNextTick(() -> {
-            querySkillPoints();
             calculateGearSkillPoints();
-            for (Skill skill : Skill.values()) {
-                assignedSkillPoints.put(
-                        skill, getTotalSkillPoints(skill) - getGearSkillPoints(skill) - getTomeSkillPoints(skill));
-            }
+            querySkillPoints();
         });
     }
 
@@ -158,6 +162,15 @@ public class SkillPointModel extends Model {
             }
         }
         System.out.println("tome skill points: " + tomeSkillPoints);
+
+        calculateAssignedSkillPoints();
+    }
+
+    private void calculateAssignedSkillPoints() {
+        for (Skill skill : Skill.values()) {
+            assignedSkillPoints.put(
+                    skill, getTotalSkillPoints(skill) - getGearSkillPoints(skill) - getTomeSkillPoints(skill));
+        }
     }
 
     public int getTotalSkillPoints(Skill skill) {
