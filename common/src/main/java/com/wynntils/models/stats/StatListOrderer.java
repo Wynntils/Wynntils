@@ -240,13 +240,19 @@ public final class StatListOrderer {
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
         List<StatType> allStats = new ArrayList<>();
-        allStats.addAll(skillStats);
+        // We add skill stats in a special way
+        // The legacy order is defined by Athena, and is missing all skill stats
+        // We can add them here, since they are guranteed to be fixed stats,
+        // so it doesn't break the encoding order
         allStats.addAll(miscStats);
         allStats.addAll(defenceStats);
         allStats.addAll(damageStats);
         allStats.addAll(spellStats);
 
         List<StatType> legacyOrdering = new ArrayList<>();
+
+        // We add skill stats separately, as they are not present in the legacy order
+        legacyOrdering.addAll(skillStats);
 
         // Legacy ordering is determined by a hard-coded list in Athena, which is
         // by LEGACY_ORDER
