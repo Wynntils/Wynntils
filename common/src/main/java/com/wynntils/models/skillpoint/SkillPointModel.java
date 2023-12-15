@@ -14,6 +14,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
@@ -33,6 +34,7 @@ public class SkillPointModel extends Model {
 
     private final Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
+    private final Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
 
@@ -58,8 +60,10 @@ public class SkillPointModel extends Model {
     }
 
     private void calculateGearSkillPoints() {
-        // fixme: these can be crafted, so we need to check for that
         gearSkillPoints.clear();
+        craftedSkillPoints.clear();
+
+        // Cannot combine these loops because of the way the inventory is numbered when a container is open
         McUtils.inventory().armor.forEach(itemStack -> {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isEmpty()) return; // Empty slot
@@ -68,6 +72,11 @@ public class SkillPointModel extends Model {
                 gear.getIdentifications().stream()
                         .filter(x -> x.statType() instanceof SkillStatType)
                         .forEach(x -> gearSkillPoints.merge(
+                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+            } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
+                craftedGear.getIdentifications().stream()
+                        .filter(x -> x.statType() instanceof SkillStatType)
+                        .forEach(x -> craftedSkillPoints.merge(
                                 ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
             } else {
                 WynntilsMod.warn("Failed to parse armour: " + LoreUtils.getStringLore(itemStack));
@@ -83,6 +92,11 @@ public class SkillPointModel extends Model {
                 gear.getIdentifications().stream()
                         .filter(x -> x.statType() instanceof SkillStatType)
                         .forEach(x -> gearSkillPoints.merge(
+                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+            } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
+                craftedGear.getIdentifications().stream()
+                        .filter(x -> x.statType() instanceof SkillStatType)
+                        .forEach(x -> craftedSkillPoints.merge(
                                 ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
             } else {
                 WynntilsMod.warn("Failed to parse accessory: "
@@ -147,6 +161,10 @@ public class SkillPointModel extends Model {
 
     public int getGearSkillPoints(Skill skill) {
         return gearSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getCraftedSkillPoints(Skill skill) {
+        return craftedSkillPoints.getOrDefault(skill, 0);
     }
 
     public int getTomeSkillPoints(Skill skill) {

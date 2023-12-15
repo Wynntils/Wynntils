@@ -98,7 +98,17 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getGearSkillPoints(skill))),
                             dividedWidth * 6,
                             dividedHeight * (10 + i),
-                            CommonColors.RED,
+                            CommonColors.AQUA,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.valueOf(Models.SkillPoint.getCraftedSkillPoints(skill))),
+                            dividedWidth * 8,
+                            dividedHeight * (10 + i),
+                            CommonColors.DARK_AQUA,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
@@ -106,7 +116,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getTomeSkillPoints(skill))),
-                            dividedWidth * 8,
+                            dividedWidth * 10,
                             dividedHeight * (10 + i),
                             CommonColors.YELLOW,
                             HorizontalAlignment.LEFT,
@@ -116,7 +126,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getAssignedSkillPoints(skill))),
-                            dividedWidth * 10,
+                            dividedWidth * 12,
                             dividedHeight * (10 + i),
                             CommonColors.GREEN,
                             HorizontalAlignment.LEFT,
