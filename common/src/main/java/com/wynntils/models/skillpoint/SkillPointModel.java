@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.skillpoint;
 
 import com.wynntils.core.WynntilsMod;
@@ -8,24 +12,23 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.character.CharacterModel;
-import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.world.item.ItemStack;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.world.item.ItemStack;
 
 public class SkillPointModel extends Model {
     private static final int TOME_SLOT = 8;
-    private static final int[] SKILL_POINT_TIME_SLOTS = {4, 11, 19};
+    private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
 
     private final Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -48,7 +51,7 @@ public class SkillPointModel extends Model {
     }
 
     public void calculateAssignedSkillPoints() {
-        McUtils.player().closeContainer();
+        //        McUtils.player().closeContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
             calculateGearSkillPoints();
@@ -62,24 +65,30 @@ public class SkillPointModel extends Model {
         McUtils.inventory().armor.forEach(itemStack -> {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isEmpty()) return; // Empty slot
-            if (wynnItemOptional.get() instanceof GearItem gearItem) {
-                for (Skill skill : Skill.values()) {
-                    gearSkillPoints.merge(skill, gearItem.getGearInfo().fixedStats().getSkillBonus(skill), Integer::sum);
-                }
+
+            if (wynnItemOptional.get() instanceof GearItem gear) {
+                gear.getIdentifications().stream()
+                        .filter(x -> x.statType() instanceof SkillStatType)
+                        .forEach(x -> gearSkillPoints.merge(
+                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
             } else {
                 WynntilsMod.warn("Failed to parse armour: " + LoreUtils.getStringLore(itemStack));
             }
         });
 
         for (int i = 9; i <= 12; i++) {
-            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(McUtils.inventory().getItem(i));
+            Optional<WynnItem> wynnItemOptional =
+                    Models.Item.getWynnItem(McUtils.inventory().getItem(i));
             if (wynnItemOptional.isEmpty()) continue; // Empty slot
-            if (wynnItemOptional.get() instanceof GearItem gearItem) {
-                for (Skill skill : Skill.values()) {
-                    gearSkillPoints.merge(skill, gearItem.getGearInfo().fixedStats().getSkillBonus(skill), Integer::sum);
-                }
+
+            if (wynnItemOptional.get() instanceof GearItem gear) {
+                gear.getIdentifications().stream()
+                        .filter(x -> x.statType() instanceof SkillStatType)
+                        .forEach(x -> gearSkillPoints.merge(
+                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
             } else {
-                WynntilsMod.warn("Failed to parse accessory: " + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
+                WynntilsMod.warn("Failed to parse accessory: "
+                        + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
             }
         }
     }
@@ -87,7 +96,6 @@ public class SkillPointModel extends Model {
     private void queryTomeSkillPoints() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Tome Skill Point Query")
                 .onError(msg -> WynntilsMod.warn("Failed to query tome skill points: " + msg))
-
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
                         .expectContainerTitle("Character Info"))
                 .then(QueryStep.clickOnSlot(TOME_SLOT)
@@ -99,15 +107,19 @@ public class SkillPointModel extends Model {
     }
 
     private void processTomeSkillPoints(ContainerContent content) {
+        System.out.println("querying tomes");
         tomeSkillPoints.clear();
-        for (Integer slot : SKILL_POINT_TIME_SLOTS) {
-            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(content.items().get(slot));
+        for (Integer slot : SKILL_POINT_TOME_SLOTS) {
+            Optional<WynnItem> wynnItemOptional =
+                    Models.Item.getWynnItem(content.items().get(slot));
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof TomeItem tome) {
-                for (Skill skill : Skill.values()) {
-                    tomeSkillPoints.merge(skill, 2, Integer::sum);
-                }
+                tome.getIdentifications().stream()
+                        .filter(x -> x.statType() instanceof SkillStatType)
+                        .forEach(x -> tomeSkillPoints.merge(
+                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
             } else {
-                WynntilsMod.warn("Failed to parse tome: " + LoreUtils.getStringLore(content.items().get(slot)));
+                WynntilsMod.warn("Failed to parse tome: "
+                        + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
     }

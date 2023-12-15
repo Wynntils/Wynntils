@@ -56,7 +56,8 @@ public class AbilityTreeContainerQueries {
                 })
 
                 // Open character/compass menu
-                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
 
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT)

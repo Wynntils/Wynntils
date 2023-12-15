@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
@@ -11,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SkillPointLoadoutsFeature extends Feature {
-
     @SubscribeEvent
     public void onCharacterInfoScreenOpened(ScreenOpenedEvent e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
@@ -19,10 +22,7 @@ public class SkillPointLoadoutsFeature extends Feature {
         if (screen.topPos == 0 || screen.width == 0) return; // Not done loading
 
         screen.addRenderableWidget(
-                new LoadoutScreenButton(
-                        screen.width / 2 - LoadoutScreenButton.BUTTON_WIDTH / 2,
-                        screen.topPos - 24)
-        );
+                new LoadoutScreenButton(screen.width / 2 - LoadoutScreenButton.BUTTON_WIDTH / 2, screen.topPos - 24));
     }
 
     private static final class LoadoutScreenButton extends WynntilsButton {
@@ -30,7 +30,12 @@ public class SkillPointLoadoutsFeature extends Feature {
         private static final int BUTTON_HEIGHT = 20;
 
         private LoadoutScreenButton(int x, int y) {
-            super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.translatable("feature.wynntils.skillPointLoadouts.button"));
+            super(
+                    x,
+                    y,
+                    BUTTON_WIDTH,
+                    BUTTON_HEIGHT,
+                    Component.translatable("feature.wynntils.skillPointLoadouts.button"));
         }
 
         @Override

@@ -92,7 +92,9 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isCharacterInfoScreen(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle()).getStringWithoutFormatting().equals(CHARACTER_INFO_NAME);
+        return StyledText.fromComponent(screen.getTitle())
+                .getStringWithoutFormatting()
+                .equals(CHARACTER_INFO_NAME);
     }
 
     public int getCurrentBankPage(Screen screen) {

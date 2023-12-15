@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.skillpointloadouts;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,13 +17,12 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private final List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
@@ -37,18 +40,18 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         super.doInit();
         // TODO populate loadoutWidgets from model or smth
 
-        addRenderableWidget(new WynntilsButton(
-                (int) dividedWidth * 32,
-                (int) dividedHeight * 32,
-                100,
-                20,
-                Component.literal("Refresh skill points")) {
-                                @Override
-                                public void onPress() {
-                                    Models.SkillPoint.calculateAssignedSkillPoints();
-                                }
-                            }
-        );
+        addRenderableWidget(
+                new WynntilsButton(
+                        (int) dividedWidth * 32,
+                        (int) dividedHeight * 32,
+                        100,
+                        20,
+                        Component.literal("Refresh skill points")) {
+                    @Override
+                    public void onPress() {
+                        Models.SkillPoint.calculateAssignedSkillPoints();
+                    }
+                });
     }
 
     @Override
@@ -120,8 +123,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
         }
-
-
 
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
