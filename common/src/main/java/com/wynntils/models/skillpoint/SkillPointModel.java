@@ -24,6 +24,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.item.ItemStack;
 
 public class SkillPointModel extends Model {
@@ -51,7 +52,11 @@ public class SkillPointModel extends Model {
     }
 
     public void calculateAssignedSkillPoints() {
-        //        McUtils.player().closeContainer();
+        // No .closeContainer() here, we want the screen to remain open but close the inventory in the background
+        McUtils.player()
+                .connection
+                .send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        McUtils.player().containerMenu = McUtils.player().inventoryMenu;
 
         Managers.TickScheduler.scheduleNextTick(() -> {
             calculateGearSkillPoints();
@@ -122,6 +127,7 @@ public class SkillPointModel extends Model {
                         + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
+        System.out.println("tome skill points: " + tomeSkillPoints);
     }
 
     public int getTotalSkillPoints(Skill skill) {
