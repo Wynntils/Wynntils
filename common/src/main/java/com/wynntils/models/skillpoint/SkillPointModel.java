@@ -69,15 +69,17 @@ public class SkillPointModel extends Model {
             if (wynnItemOptional.isEmpty()) return; // Empty slot
 
             if (wynnItemOptional.get() instanceof GearItem gear) {
-                gear.getIdentifications().stream()
-                        .filter(x -> x.statType() instanceof SkillStatType)
-                        .forEach(x -> gearSkillPoints.merge(
-                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+                gear.getIdentifications().forEach(x -> {
+                    if (x.statType() instanceof SkillStatType skillStat) {
+                        gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                    }
+                });
             } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
-                craftedGear.getIdentifications().stream()
-                        .filter(x -> x.statType() instanceof SkillStatType)
-                        .forEach(x -> craftedSkillPoints.merge(
-                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+                craftedGear.getIdentifications().forEach(x -> {
+                    if (x.statType() instanceof SkillStatType skillStat) {
+                        craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                    }
+                });
             } else {
                 WynntilsMod.warn("Failed to parse armour: " + LoreUtils.getStringLore(itemStack));
             }
@@ -89,15 +91,17 @@ public class SkillPointModel extends Model {
             if (wynnItemOptional.isEmpty()) continue; // Empty slot
 
             if (wynnItemOptional.get() instanceof GearItem gear) {
-                gear.getIdentifications().stream()
-                        .filter(x -> x.statType() instanceof SkillStatType)
-                        .forEach(x -> gearSkillPoints.merge(
-                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+                gear.getIdentifications().forEach(x -> {
+                    if (x.statType() instanceof SkillStatType skillStat) {
+                        gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                    }
+                });
             } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
-                craftedGear.getIdentifications().stream()
-                        .filter(x -> x.statType() instanceof SkillStatType)
-                        .forEach(x -> craftedSkillPoints.merge(
-                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+                craftedGear.getIdentifications().forEach(x -> {
+                    if (x.statType() instanceof SkillStatType skillStat) {
+                        craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                    }
+                });
             } else {
                 WynntilsMod.warn("Failed to parse accessory: "
                         + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
@@ -143,10 +147,11 @@ public class SkillPointModel extends Model {
             Optional<WynnItem> wynnItemOptional =
                     Models.Item.getWynnItem(content.items().get(slot));
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof TomeItem tome) {
-                tome.getIdentifications().stream()
-                        .filter(x -> x.statType() instanceof SkillStatType)
-                        .forEach(x -> tomeSkillPoints.merge(
-                                ((SkillStatType) x.statType()).getSkill(), x.value(), Integer::sum));
+                tome.getIdentifications().forEach(x -> {
+                    if (x.statType() instanceof SkillStatType skillStat) {
+                        tomeSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                    }
+                });
             } else {
                 WynntilsMod.warn("Failed to parse tome: "
                         + LoreUtils.getStringLore(content.items().get(slot)));
