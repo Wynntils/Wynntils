@@ -239,6 +239,8 @@
   "feature.wynntils.containerSearch.filterInGuildMemberList.name": "Search Bar in Guild Members",
   "feature.wynntils.containerSearch.filterInMiscBucket.description": "Should there be a search widget in the misc bucket in your housing plot?",
   "feature.wynntils.containerSearch.filterInMiscBucket.name": "Search Bar in Misc Bucket",
+  "feature.wynntils.containerSearch.filterInPetMenu.description": "Should there be a search widget in the pet menu?",
+  "feature.wynntils.containerSearch.filterInPetMenu.name": "Search Bar in Pet Menu",
   "feature.wynntils.containerSearch.filterInScrapMenu.description": "Should there be a search widget in the scrap menu?",
   "feature.wynntils.containerSearch.filterInScrapMenu.name": "Search Bar in Scrap Menu",
   "feature.wynntils.containerSearch.highlightColor.description": "What color should the highlight circles be?",
