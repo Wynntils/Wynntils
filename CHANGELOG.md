@@ -1,9 +1,26 @@
+## [0.0.4-beta.94](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.93...v0.0.4-beta.94) (2023-12-17)
+
+
+### New Features
+
+* Pet menu search ([#2285](https://github.com/Wynntils/Artemis/issues/2285)) ([73fa7bd](https://github.com/Wynntils/Artemis/commit/73fa7bd607be22fcbf5450126966800fcc15cbc8))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2284](https://github.com/Wynntils/Artemis/issues/2284)) ([5a6c0f9](https://github.com/Wynntils/Artemis/commit/5a6c0f961f332c62726d3d4e05b4eac0b8252c00))
+
 ## [0.0.4-beta.93](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.92...v0.0.4-beta.93) (2023-12-15)
 
 
 ### Bug Fixes
 
 * fix legacy order not displaying skill stats ([#2283](https://github.com/Wynntils/Artemis/issues/2283)) ([1a72ac1](https://github.com/Wynntils/Artemis/commit/1a72ac16a455fbc171724cfcee5dd3ea5fbd9bb7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.93 [skip ci] ([945310d](https://github.com/Wynntils/Artemis/commit/945310d7391dd17ab53c3f3b5569010c569197e7))
 
 ## [0.0.4-beta.92](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.91...v0.0.4-beta.92) (2023-12-13)
 
@@ -42,12 +59,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.90 [skip ci] ([21b68ad](https://github.com/Wynntils/Artemis/commit/21b68adeddd77a7cf20e23e731c088407fcd9890))
-
-## [0.0.4-beta.89](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.88...v0.0.4-beta.89) (2023-12-09)
-
-
-### Miscellaneous Chores
-
-* Create FUNDING.yml ([e3e3f76](https://github.com/Wynntils/Artemis/commit/e3e3f76fed0603349890de58a520588243ccefec))
-* **release:** v0.0.4-beta.89 [skip ci] ([f2d4950](https://github.com/Wynntils/Artemis/commit/f2d4950931950d0ee419f0a8c0d8d6b2e5e5f817))
 
