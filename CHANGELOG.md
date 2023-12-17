@@ -1,3 +1,15 @@
+## [0.0.4-beta.95](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.94...v0.0.4-beta.95) (2023-12-17)
+
+
+### Bug Fixes
+
+* Fix occasional crashes when a tome info is not found ([#2287](https://github.com/Wynntils/Artemis/issues/2287)) ([d72cda5](https://github.com/Wynntils/Artemis/commit/d72cda5e287f65f3236de90cd6114fb838c6f46f))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2286](https://github.com/Wynntils/Artemis/issues/2286)) ([6ecde5f](https://github.com/Wynntils/Artemis/commit/6ecde5fa37e97d582561b914f2772f9bd33b092b))
+
 ## [0.0.4-beta.94](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.93...v0.0.4-beta.94) (2023-12-17)
 
 
@@ -9,6 +21,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2284](https://github.com/Wynntils/Artemis/issues/2284)) ([5a6c0f9](https://github.com/Wynntils/Artemis/commit/5a6c0f961f332c62726d3d4e05b4eac0b8252c00))
+* **release:** v0.0.4-beta.94 [skip ci] ([06eab26](https://github.com/Wynntils/Artemis/commit/06eab262192e1f23075c98a4ba43e777f9f9e52c))
 
 ## [0.0.4-beta.93](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.92...v0.0.4-beta.93) (2023-12-15)
 
@@ -47,16 +60,4 @@
 ### Code Refactoring
 
 * Make IdentifiableItemInfo be an item property ([#2275](https://github.com/Wynntils/Artemis/issues/2275)) ([4e2e62c](https://github.com/Wynntils/Artemis/commit/4e2e62ca4f2e4d686c414105acbdf926fdad66e5))
-
-## [0.0.4-beta.90](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.89...v0.0.4-beta.90) (2023-12-10)
-
-
-### Bug Fixes
-
-* Use poi icon when setting markers from waypoint manager ([#2274](https://github.com/Wynntils/Artemis/issues/2274)) ([cd5b94b](https://github.com/Wynntils/Artemis/commit/cd5b94bc63befe3f17b7e3cbb781d2b7b281d2ee))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.90 [skip ci] ([21b68ad](https://github.com/Wynntils/Artemis/commit/21b68adeddd77a7cf20e23e731c088407fcd9890))
 
