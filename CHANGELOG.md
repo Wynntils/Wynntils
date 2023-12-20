@@ -1,4 +1,16 @@
+## [0.0.4-beta.97](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.96...v0.0.4-beta.97) (2023-12-20)
+
+
+### New Features
+
+* Parse charms as gears, show charm identification percentages  ([#2271](https://github.com/Wynntils/Artemis/issues/2271)) ([ff02a95](https://github.com/Wynntils/Artemis/commit/ff02a959640af633d42bfaebec653e9db7a7e72a)), closes [#2282](https://github.com/Wynntils/Artemis/issues/2282) [#2283](https://github.com/Wynntils/Artemis/issues/2283) [#2284](https://github.com/Wynntils/Artemis/issues/2284) [#2285](https://github.com/Wynntils/Artemis/issues/2285)
+
 ## [0.0.4-beta.96](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.95...v0.0.4-beta.96) (2023-12-20)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.96 [skip ci] ([e19cc13](https://github.com/Wynntils/Artemis/commit/e19cc13c78317684f15476056a27acdab8cb08d0))
 
 
 ### Code Refactoring
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.93 [skip ci] ([945310d](https://github.com/Wynntils/Artemis/commit/945310d7391dd17ab53c3f3b5569010c569197e7))
-
-## [0.0.4-beta.92](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.91...v0.0.4-beta.92) (2023-12-13)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.92 [skip ci] ([d592e13](https://github.com/Wynntils/Artemis/commit/d592e1346f82f8edf1f25f9b86ad23f023b1beaf))
-
-
-### Code Refactoring
-
-* Treat SkillStatType as a regular stat ([#2280](https://github.com/Wynntils/Artemis/issues/2280)) ([037d817](https://github.com/Wynntils/Artemis/commit/037d8174633d6dab81abc85aba2b5802a6fcf0d0))
 
