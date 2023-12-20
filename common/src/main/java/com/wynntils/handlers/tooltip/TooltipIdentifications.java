@@ -150,9 +150,13 @@ public final class TooltipIdentifications {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        line.append(
-                Component.literal(" " + Models.Stat.getDisplayName(statType, itemInfo.getRequiredClass(), currentClass))
-                        .withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" "
+                        + Models.Stat.getDisplayName(
+                                statType,
+                                itemInfo.getRequiredClass(),
+                                currentClass,
+                                itemInfo.getIdentificationLevelRange()))
+                .withStyle(ChatFormatting.GRAY));
 
         return line;
     }
@@ -180,7 +184,10 @@ public final class TooltipIdentifications {
 
         line.append(Component.literal(" "
                         + Models.Stat.getDisplayName(
-                                statType, itemInfo.getRequiredClass(), Models.Character.getClassType()))
+                                statType,
+                                itemInfo.getRequiredClass(),
+                                Models.Character.getClassType(),
+                                itemInfo.getIdentificationLevelRange()))
                 .withStyle(ChatFormatting.GRAY));
 
         return line;

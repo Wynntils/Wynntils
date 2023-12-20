@@ -347,22 +347,30 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(list);
     }
 
-    protected List<Pair<StatType, StatPossibleValues>> parseVariableStats(JsonObject json) {
+    protected List<Pair<StatType, StatPossibleValues>> parseVariableStats(
+            JsonObject json, String identificationsObjectKey) {
         List<Pair<StatType, StatPossibleValues>> list = new ArrayList<>();
 
-        if (!json.has("identifications")) {
+        if (!json.has(identificationsObjectKey)) {
             // No identifications, so no variable stats
             return List.of();
         }
 
-        JsonObject identificationsJson = json.get("identifications").getAsJsonObject();
+        JsonObject identificationsJson = json.get(identificationsObjectKey).getAsJsonObject();
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-            StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+            String statApiName = entry.getKey();
+
+            if (statApiName.equals("elementalDefense")) {
+                // The API is inconsistent, and rarely usese "elementalDefense" instead of "elementalDefence"
+                statApiName = "elementalDefence";
+            }
+
+            StatType statType = Models.Stat.fromApiRollId(statApiName);
 
             if (statType == null) {
-                WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
+                WynntilsMod.warn("Item DB contains invalid stat type " + statApiName);
                 continue;
             }
 
@@ -375,9 +383,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             RangedValue apiRange;
 
             // This is a pre-identified id, so there is no range
-            if (preIdentifiedItem
-                    || identificationsJson.get(statType.getApiName()).isJsonPrimitive()) {
-                baseValue = JsonUtils.getNullableJsonInt(identificationsJson, statType.getApiName());
+            if (preIdentifiedItem || identificationsJson.get(entry.getKey()).isJsonPrimitive()) {
+                baseValue = JsonUtils.getNullableJsonInt(identificationsJson, entry.getKey());
 
                 // We have a pre-identified item, so there is no range
                 preIdentified = true;

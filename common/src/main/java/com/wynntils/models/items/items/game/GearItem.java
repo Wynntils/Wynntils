@@ -17,6 +17,7 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +83,12 @@ public class GearItem extends GameItem
     @Override
     public List<StatPossibleValues> getPossibleValues() {
         return gearInfo.variableStats().stream().map(Pair::b).toList();
+    }
+
+    @Override
+    public RangedValue getIdentificationLevelRange() {
+        // Gears do not have level-specific stats
+        return RangedValue.NONE;
     }
 
     @Override

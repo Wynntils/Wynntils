@@ -8,6 +8,7 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.models.stats.type.AttackType;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.StringUtils;
 import java.util.function.Consumer;
@@ -24,6 +25,16 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
                 callback.accept(rawType);
             }
         }
+
+        // Special case for "damageToMobs" tome stat
+        callback.accept(new DamageStatType(
+                "DAMAGE_TO_MOBS",
+                "Damage to Mobs",
+                "damageToMobs",
+                "DAMAGETOMOBS",
+                StatUnit.PERCENT,
+                StatType.SpecialStatType.TOME_BASE_STAT,
+                true));
     }
 
     private static DamageStatType buildDamageStat(AttackType attackType, DamageType damageType, StatUnit unit) {
