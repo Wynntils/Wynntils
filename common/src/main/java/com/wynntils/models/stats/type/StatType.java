@@ -82,7 +82,7 @@ public abstract class StatType {
                         calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
                         Optional.of(1),
                         Optional.empty(),
-                        displayAsInverted() ? List.of() : STAR_INTERNAL_ROLL_RANGES)
+                        treatAsInverted() ? List.of() : STAR_INTERNAL_ROLL_RANGES)
                 : new StatCalculationInfo(
                         RangedValue.of(70, 130),
                         calculateAsInverted() ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN,
