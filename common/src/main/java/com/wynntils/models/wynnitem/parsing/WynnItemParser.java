@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.StatCalculator;
@@ -199,7 +198,7 @@ public final class WynnItemParser {
                             "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
                     continue;
                 }
-                if (statType.showAsInverted()) {
+                if (statType.calculateAsInverted()) {
                     // Spell Cost stats are shown as negative, but we store them as positive
                     value = -value;
                 }
@@ -299,7 +298,9 @@ public final class WynnItemParser {
         }
 
         // Negative values can never show stars
-        int stars = (value > 0) ? StatCalculator.calculateStarsFromInternalRoll(internalRoll) : 0;
+        int stars = (value > 0)
+                ? StatCalculator.calculateStarsFromInternalRoll(statType, possibleValue.baseValue(), internalRoll)
+                : 0;
 
         // In this case, we actually know the exact internal roll
         return new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll));

@@ -4,11 +4,23 @@
  */
 package com.wynntils.models.stats.type;
 
+import com.wynntils.utils.type.RangedValue;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 // The key is strictly not necessary, but is internally useful
 // The "internalRollName" is what is used in the json lore of other player's items
 public abstract class StatType {
+    // These ranges are used everywhere, except charms
+    private static final List<RangedValue> STAR_INTERNAL_ROLL_RANGES = List.of(
+            RangedValue.of(30, 100), // 0 stars
+            RangedValue.of(101, 124), // 1 star
+            RangedValue.of(125, 129), // 2 stars
+            RangedValue.of(130, 130) // 3 stars
+            );
+
     private final String key;
     private final String displayName;
     private final String apiName;
@@ -62,7 +74,37 @@ public abstract class StatType {
         return unit;
     }
 
-    public boolean showAsInverted() {
+    public StatCalculationInfo getStatCalculationInfo(int baseValue) {
+        boolean usePostiveRange = baseValue > 0;
+        return usePostiveRange
+                ? new StatCalculationInfo(
+                        RangedValue.of(30, 130),
+                        calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
+                        Optional.of(1),
+                        Optional.empty(),
+                        STAR_INTERNAL_ROLL_RANGES)
+                : new StatCalculationInfo(
+                        RangedValue.of(70, 130),
+                        calculateAsInverted() ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN,
+                        Optional.empty(),
+                        Optional.of(-1),
+                        List.of());
+    }
+
+    /**
+     * Whether the stat should be displayed as inverted.
+     * This should be true if a value with a positive sign has a negative effect.
+     * @return true if the stat should be displayed as inverted, false otherwise
+     */
+    public boolean displayAsInverted() {
+        return false;
+    }
+
+    /**
+     * Whether the stat should be calculated as inverted (the base value is given a negative sign before being used in calculations).
+     * @return true if the stat should be calculated as inverted, false otherwise
+     */
+    public boolean calculateAsInverted() {
         return false;
     }
 

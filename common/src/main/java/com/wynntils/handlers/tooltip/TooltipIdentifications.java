@@ -6,10 +6,10 @@ package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Style;
 
 public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
-            IdentifiableItemInfo itemInfo,
+            IdentifiableItemProperty itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -79,7 +79,7 @@ public final class TooltipIdentifications {
 
     private static MutableComponent getStatLine(
             StatType statType,
-            IdentifiableItemInfo itemInfo,
+            IdentifiableItemProperty itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -131,16 +131,20 @@ public final class TooltipIdentifications {
     }
 
     private static MutableComponent buildIdentifiedLine(
-            IdentifiableItemInfo itemInfo, TooltipStyle style, StatActualValue actualValue, ClassType currentClass) {
+            IdentifiableItemProperty itemInfo,
+            TooltipStyle style,
+            StatActualValue actualValue,
+            ClassType currentClass) {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
-        int valueToShow = statType.showAsInverted() ? -value : value;
+        int valueToShow = statType.calculateAsInverted() ? -value : value;
+        boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
         String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
 
         MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
                         + statType.getUnit().getDisplayName())
-                .withStyle(Style.EMPTY.withColor((value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+                .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         if (!starString.isEmpty()) {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
@@ -158,19 +162,19 @@ public final class TooltipIdentifications {
     }
 
     private static MutableComponent buildUnidentifiedLine(
-            IdentifiableItemInfo itemInfo, TooltipStyle style, StatPossibleValues possibleValues) {
+            IdentifiableItemProperty itemInfo, TooltipStyle style, StatPossibleValues possibleValues) {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
-
-        // Use value.low as representative; assume both high and low are either < or > 0.
-        boolean isGood = valueRange.low() > 0;
-        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
-        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
         // Determine which value to show first and which to show last in the "A to B"
         // range displayed
         Pair<Integer, Integer> displayRange =
                 StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
+
+        // Use displayRange.a as representative; assume both a and b are either < or > 0.
+        boolean hasPositiveEffect = displayRange.a() > 0 ^ statType.displayAsInverted();
+        ChatFormatting colorCode = hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED;
+        ChatFormatting colorCodeDark = hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
         MutableComponent line =
                 Component.literal(StringUtils.toSignedString(displayRange.a())).withStyle(colorCode);

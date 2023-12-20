@@ -5,23 +5,22 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Handler;
-import com.wynntils.handlers.tooltip.type.IdentifiableItemInfo;
-import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import net.minecraft.world.item.ItemStack;
 
 public class TooltipHandler extends Handler {
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */
-    public TooltipBuilder buildNew(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
-        return TooltipBuilder.buildNew(gearInfo, gearInstance, hideUnidentified);
+    public TooltipBuilder buildNew(GearItem gearItem, boolean hideUnidentified) {
+        return TooltipBuilder.buildNewGear(gearItem, hideUnidentified);
     }
 
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemInfo itemInfo) {
+    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
         return TooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
     }
 }

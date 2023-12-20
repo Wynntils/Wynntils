@@ -15,7 +15,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRestrictions;
@@ -118,20 +117,11 @@ public class TomeInfoRegistry {
 
             JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
             List<Pair<StatType, Integer>> staticBaseStats = parseStaticBaseStats(json);
-            List<Pair<Skill, Integer>> skillBonuses = parseSkillBonuses(identifications);
 
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
             return new TomeInfo(
-                    displayName,
-                    type,
-                    variant,
-                    tier,
-                    metaInfo,
-                    requirements,
-                    staticBaseStats,
-                    skillBonuses,
-                    variableStats);
+                    displayName, type, variant, tier, metaInfo, requirements, staticBaseStats, variableStats);
         }
 
         private List<Pair<StatType, Integer>> parseStaticBaseStats(JsonObject json) {

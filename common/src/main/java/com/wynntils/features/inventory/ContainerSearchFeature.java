@@ -70,6 +70,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInScrapMenu = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInPetMenu = new Config<>(true);
+
+    @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
@@ -246,6 +249,10 @@ public class ContainerSearchFeature extends Feature {
 
         if (containerType == SearchableContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
             return SearchableContainerType.SCRAP_MENU;
+        }
+
+        if (containerType == SearchableContainerType.PET_MENU && filterInPetMenu.get()) {
+            return SearchableContainerType.PET_MENU;
         }
 
         return null;

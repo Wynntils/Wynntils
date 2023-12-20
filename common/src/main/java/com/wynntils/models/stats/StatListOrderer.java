@@ -8,6 +8,7 @@ import com.wynntils.models.stats.builders.MiscStatKind;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -151,20 +152,22 @@ public final class StatListOrderer {
             MiscStatKind.LOOT_QUALITY);
 
     public static Map<StatListOrdering, List<StatType>> createOrderingMap(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
         return Map.of(
                 StatListOrdering.DEFAULT,
-                createDefaultOrdering(miscStats, defenceStats, damageStats, spellStats),
+                createDefaultOrdering(skillStats, miscStats, defenceStats, damageStats, spellStats),
                 StatListOrdering.WYNNCRAFT,
-                createWynncraftOrdering(miscStats, defenceStats, damageStats, spellStats),
+                createWynncraftOrdering(skillStats, miscStats, defenceStats, damageStats, spellStats),
                 StatListOrdering.LEGACY,
-                createLegacyOrdering(miscStats, defenceStats, damageStats, spellStats));
+                createLegacyOrdering(skillStats, miscStats, defenceStats, damageStats, spellStats));
     }
 
     private static List<StatType> createDefaultOrdering(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
@@ -172,6 +175,8 @@ public final class StatListOrderer {
         List<StatType> defaultOrdering = new ArrayList<>();
 
         // Default ordering is a lightly curated version of the Wynncraft vanilla ordering
+        defaultOrdering.addAll(skillStats);
+        defaultOrdering.add(new StatListDelimiter());
         defaultOrdering.addAll(miscStats);
         defaultOrdering.add(new StatListDelimiter());
         defaultOrdering.addAll(defenceStats);
@@ -183,6 +188,7 @@ public final class StatListOrderer {
     }
 
     private static List<StatType> createWynncraftOrdering(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
@@ -190,6 +196,8 @@ public final class StatListOrderer {
         List<StatType> wynncraftOrdering = new ArrayList<>();
 
         // Wynncraft order seem to have grown a bit haphazardly
+        wynncraftOrdering.addAll(skillStats);
+        wynncraftOrdering.add(new StatListDelimiter());
         addMiscStats(wynncraftOrdering, miscStats, WYNNCRAFT_MISC_ORDER_1);
         wynncraftOrdering.add(new StatListDelimiter());
         wynncraftOrdering.addAll(damageStats);
@@ -226,17 +234,25 @@ public final class StatListOrderer {
     }
 
     private static List<StatType> createLegacyOrdering(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
         List<StatType> allStats = new ArrayList<>();
+        // We add skill stats in a special way
+        // The legacy order is defined by Athena, and is missing all skill stats
+        // We can add them here, since they are guranteed to be fixed stats,
+        // so it doesn't break the encoding order
         allStats.addAll(miscStats);
         allStats.addAll(defenceStats);
         allStats.addAll(damageStats);
         allStats.addAll(spellStats);
 
         List<StatType> legacyOrdering = new ArrayList<>();
+
+        // We add skill stats separately, as they are not present in the legacy order
+        legacyOrdering.addAll(skillStats);
 
         // Legacy ordering is determined by a hard-coded list in Athena, which is
         // by LEGACY_ORDER

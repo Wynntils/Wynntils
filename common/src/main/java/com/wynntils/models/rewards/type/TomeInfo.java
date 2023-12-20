@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.rewards.type;
 
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.TomeType;
@@ -23,7 +22,6 @@ public record TomeInfo(
         GearMetaInfo metaInfo,
         TomeRequirements requirements,
         List<Pair<StatType, Integer>> staticBaseStats,
-        List<Pair<Skill, Integer>> skillBonuses,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()
