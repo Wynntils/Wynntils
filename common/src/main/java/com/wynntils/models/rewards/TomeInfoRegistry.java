@@ -156,7 +156,7 @@ public class TomeInfoRegistry {
 
                 // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
                 // and only converted to negative at display time.
-                if (statType.showAsInverted()) {
+                if (statType.calculateAsInverted()) {
                     baseValue = -baseValue;
                 }
 

@@ -82,7 +82,7 @@ public abstract class StatType {
                         calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
                         Optional.of(1),
                         Optional.empty(),
-                        STAR_INTERNAL_ROLL_RANGES)
+                        displayAsInverted() ? List.of() : STAR_INTERNAL_ROLL_RANGES)
                 : new StatCalculationInfo(
                         RangedValue.of(70, 130),
                         calculateAsInverted() ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN,
@@ -92,8 +92,19 @@ public abstract class StatType {
     }
 
     /**
+     * Whether the stat should be treated as negative when calculating the total stat value.
+     * This is used when calculating the internal roll and percentage of a stat.
+     * Use this if a stat with a positive sign has a negative effect.
+     * @return true if the stat should be treated as negative, false otherwise
+     */
+    public boolean treatAsNegative() {
+        return false;
+    }
+
+    /**
      * Whether the stat should be displayed as inverted.
-     * This should be true if a value with a positive sign has a negative effect.
+     * This should be true if a value with a positive sign should be displayed as negative.
+     * Usually this should be used in combination with {@link #calculateAsInverted()} or {@link #treatAsNegative()}.
      * @return true if the stat should be displayed as inverted, false otherwise
      */
     public boolean displayAsInverted() {

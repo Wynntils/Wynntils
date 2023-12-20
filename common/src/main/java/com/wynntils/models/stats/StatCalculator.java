@@ -108,6 +108,18 @@ public final class StatCalculator {
                 || Math.round(baseValue * higherRollBound / 100d)
                         != Math.round(baseValue * (higherRollBound + 1) / 100d);
 
+        // A stat with positve base value needs to be treated as negative when calculating the internal roll
+        // This is the opposite of normal stats, so we calculate the bounds by subtracting from the base range
+        if (possibleValues.statType().treatAsNegative()) {
+            return RangedValue.of(
+                    statCalculationInfo.range().high()
+                            - higherRollBound
+                            + statCalculationInfo.range().low(),
+                    statCalculationInfo.range().high()
+                            - lowerRollBound
+                            + statCalculationInfo.range().low());
+        }
+
         return RangedValue.of(lowerRollBound, higherRollBound);
     }
 
@@ -155,6 +167,12 @@ public final class StatCalculator {
     public static float getPercentage(StatActualValue actualValue, StatPossibleValues possibleValues) {
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
+
+        if (actualValue.statType().treatAsNegative()) {
+            // Inverted stats have the highest internal rolls when they have the worst effects
+            // This is the opposite of normal stats, so we calculate the percentage by subtracting from the base range
+            return 100 - MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+        }
 
         return MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
     }

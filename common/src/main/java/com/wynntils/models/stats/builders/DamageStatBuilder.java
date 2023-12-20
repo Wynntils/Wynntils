@@ -33,7 +33,8 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
                 "damageToMobs",
                 "DAMAGETOMOBS",
                 StatUnit.PERCENT,
-                StatType.SpecialStatType.TOME_BASE_STAT));
+                StatType.SpecialStatType.TOME_BASE_STAT,
+                true));
     }
 
     private static DamageStatType buildDamageStat(AttackType attackType, DamageType damageType, StatUnit unit) {

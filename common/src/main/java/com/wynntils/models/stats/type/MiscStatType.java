@@ -5,6 +5,10 @@
 package com.wynntils.models.stats.type;
 
 import com.wynntils.models.stats.builders.MiscStatKind;
+import com.wynntils.utils.type.RangedValue;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Optional;
 
 public final class MiscStatType extends StatType {
     private final MiscStatKind kind;
@@ -23,5 +27,20 @@ public final class MiscStatType extends StatType {
 
     public MiscStatKind getKind() {
         return kind;
+    }
+
+    @Override
+    public StatCalculationInfo getStatCalculationInfo(int baseValue) {
+        // Charm stats have a custom range
+        if (getSpecialStatType() == SpecialStatType.CHARM_LEVELED_STAT) {
+            return new StatCalculationInfo(
+                    RangedValue.of(80, 115),
+                    calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
+                    Optional.of(1),
+                    Optional.empty(),
+                    List.of());
+        }
+
+        return super.getStatCalculationInfo(baseValue);
     }
 }

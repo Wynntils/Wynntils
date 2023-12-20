@@ -6,6 +6,7 @@ package com.wynntils.models.stats.builders;
 
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.stats.type.DefenceStatType;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.StringUtils;
 import java.util.function.Consumer;
@@ -26,5 +27,26 @@ public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
 
         callback.accept(new DefenceStatType(
                 "DEFENCE_ELEMENTAL", "Elemental Defence", "elementalDefence", "ELEMENTALDEFENSE", StatUnit.PERCENT));
+
+        // Special case for the "defenceToMobs" tome stat
+        callback.accept(new DefenceStatType(
+                "DEFENCE_TO_MOBS",
+                "Mob Damage Resistance",
+                "defenceToMobs",
+                "DEFENCETOMOBS",
+                StatUnit.PERCENT,
+                StatType.SpecialStatType.TOME_BASE_STAT,
+                false));
+
+        // Special case for "damageFromMobs" charm stat
+        // "Damage from mobs" is technically a defence stat, not a damage stat
+        callback.accept(new DefenceStatType(
+                "DAMAGE_FROM_MOBS",
+                "Damage taken from mobs",
+                "damageFromMobs",
+                "DAMAGEFROMMOBS",
+                StatUnit.PERCENT,
+                StatType.SpecialStatType.CHARM_LEVELED_STAT,
+                true));
     }
 }

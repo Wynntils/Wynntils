@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.rewards.type;
 
-import com.google.common.collect.Streams;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -13,7 +12,6 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // A note about baseStats and variableStats:
 // baseStats are the stats that are only affected within the CharmRequirement's level range.
@@ -24,18 +22,13 @@ public record CharmInfo(
         GearTier tier,
         GearMetaInfo metaInfo,
         CharmRequirements requirements,
-        List<Pair<StatType, StatPossibleValues>> baseStats,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
     public Map<StatType, StatPossibleValues> getVariableStatsMap() {
         // Treat both baseStats and variableStats as item identifications.
-        return identificationStream().collect(Collectors.toMap(Pair::key, Pair::value));
+        return variableStats.stream().collect(Collectors.toMap(Pair::key, Pair::value));
     }
 
     public List<StatPossibleValues> getPossibleValueList() {
-        return identificationStream().map(Pair::value).toList();
-    }
-
-    public Stream<Pair<StatType, StatPossibleValues>> identificationStream() {
-        return Streams.concat(baseStats.stream(), variableStats().stream());
+        return variableStats.stream().map(Pair::value).toList();
     }
 }

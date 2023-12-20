@@ -18,7 +18,6 @@ import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
-import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -133,9 +132,6 @@ public class ItemStatInfoFeature extends Feature {
     private IdentifiableItemProperty getItemInfo(WynnItem wynnItem) {
         if (wynnItem instanceof IdentifiableItemProperty itemInfo) {
             return itemInfo;
-        }
-        if (wynnItem instanceof CharmItem charmItem) {
-            return CHARM_ITEM_INFO_FUNCTION.apply(charmItem);
         }
 
         return null;

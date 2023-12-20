@@ -189,9 +189,6 @@ public final class WynnItemParser {
                 String starString = statMatcher.group(5);
                 String statDisplayName = statMatcher.group(6);
 
-                // Skill bonuses looks like stats when parsing, ignore them
-                if (Skill.isSkill(statDisplayName)) continue;
-
                 StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                 if (statType == null) {
                     WynntilsMod.warn(

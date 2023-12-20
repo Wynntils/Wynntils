@@ -5,11 +5,11 @@
 package com.wynntils.models.stats.type;
 
 public final class DefenceStatType extends StatType {
-    private final boolean invertedStat;
+    private final boolean invertedDisplayStat;
 
     public DefenceStatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
         super(key, displayName, apiName, internalRollName, unit);
-        this.invertedStat = false;
+        this.invertedDisplayStat = false;
     }
 
     public DefenceStatType(
@@ -19,13 +19,18 @@ public final class DefenceStatType extends StatType {
             String internalRollName,
             StatUnit unit,
             SpecialStatType specialStatType,
-            boolean invertedStat) {
+            boolean invertedDisplayStat) {
         super(key, displayName, apiName, internalRollName, unit, specialStatType);
-        this.invertedStat = invertedStat;
+        this.invertedDisplayStat = invertedDisplayStat;
     }
 
     @Override
-    public boolean showAsInverted() {
-        return invertedStat;
+    public boolean treatAsNegative() {
+        return true;
+    }
+
+    @Override
+    public boolean displayAsInverted() {
+        return invertedDisplayStat;
     }
 }

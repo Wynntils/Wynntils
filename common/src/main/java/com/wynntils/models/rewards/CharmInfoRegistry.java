@@ -103,13 +103,10 @@ public class CharmInfoRegistry {
             GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName);
             CharmRequirements requirements = parseCharmRequirements(json);
 
-            JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
-
             // Base stats are parsed the same way as variable stats
-            List<Pair<StatType, StatPossibleValues>> baseStats = parseVariableStats(json, "base");
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
-            return new CharmInfo(displayName, tier, metaInfo, requirements, baseStats, variableStats);
+            return new CharmInfo(displayName, tier, metaInfo, requirements, variableStats);
         }
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName) {
