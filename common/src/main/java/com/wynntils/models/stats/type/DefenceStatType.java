@@ -26,7 +26,7 @@ public final class DefenceStatType extends StatType {
 
     @Override
     public boolean treatAsInverted() {
-        return true;
+        return invertedDisplayStat;
     }
 
     @Override
