@@ -25,7 +25,7 @@ public final class DamageStatType extends StatType {
     }
 
     @Override
-    public boolean treatAsNegative() {
+    public boolean treatAsInverted() {
         return invertedDisplayStat;
     }
 

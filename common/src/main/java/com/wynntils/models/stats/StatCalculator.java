@@ -108,18 +108,6 @@ public final class StatCalculator {
                 || Math.round(baseValue * higherRollBound / 100d)
                         != Math.round(baseValue * (higherRollBound + 1) / 100d);
 
-        // A stat with positve base value needs to be treated as negative when calculating the internal roll
-        // This is the opposite of normal stats, so we calculate the bounds by subtracting from the base range
-        if (possibleValues.statType().treatAsNegative()) {
-            return RangedValue.of(
-                    statCalculationInfo.range().high()
-                            - higherRollBound
-                            + statCalculationInfo.range().low(),
-                    statCalculationInfo.range().high()
-                            - lowerRollBound
-                            + statCalculationInfo.range().low());
-        }
-
         return RangedValue.of(lowerRollBound, higherRollBound);
     }
 
@@ -127,6 +115,14 @@ public final class StatCalculator {
         // Star calculation reference, from salted:
         // https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
         StatCalculationInfo statCalculationInfo = statType.getStatCalculationInfo(baseValue);
+
+        // If the stat is treated as inverted, we need to invert the base value
+        // Note: This behavior could not be tested as of writing,
+        //       since no stat is treated as inverted with a negative base value
+        if (baseValue < 0 && statType.treatAsInverted()) {
+            statCalculationInfo = statType.getStatCalculationInfo(-baseValue);
+        }
+
         for (int stars = 0; stars < statCalculationInfo.starInternalRollRanges().size(); stars++) {
             RangedValue rangedValue =
                     statCalculationInfo.starInternalRollRanges().get(stars);
@@ -168,7 +164,7 @@ public final class StatCalculator {
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
 
-        if (actualValue.statType().treatAsNegative()) {
+        if (actualValue.statType().treatAsInverted()) {
             // Inverted stats have the highest internal rolls when they have the worst effects
             // This is the opposite of normal stats, so we calculate the percentage by subtracting from the base range
             return 100 - MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
@@ -180,6 +176,7 @@ public final class StatCalculator {
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+        boolean treatAsNegative = possibleValues.statType().treatAsInverted();
 
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
@@ -187,7 +184,11 @@ public final class StatCalculator {
         // Internal roll range for maxiumum value
         // Do not confuse this with a "3 star" roll, aka perfect internal roll
         RangedValue perfectInternalRollRange = calculateInternalRollRange(
-                possibleValues, possibleValues.range().high(), -1);
+                possibleValues,
+                treatAsNegative
+                        ? possibleValues.range().low()
+                        : possibleValues.range().high(),
+                -1);
         int perfectCases = perfectInternalRollRange.high() - perfectInternalRollRange.low() + 1;
 
         return ((double) perfectCases) / allCases * 100;
@@ -198,6 +199,7 @@ public final class StatCalculator {
 
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+        boolean treatAsNegative = possibleValues.statType().treatAsInverted();
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it calculates the chance where we can get a lower roll
@@ -205,8 +207,9 @@ public final class StatCalculator {
 
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
-        int decreaseCases =
-                internalRollRange.low() - statCalculationInfo.range().low();
+        int decreaseCases = treatAsNegative
+                ? statCalculationInfo.range().high() - internalRollRange.high()
+                : internalRollRange.low() - statCalculationInfo.range().low();
 
         return ((double) decreaseCases) / allCases * 100;
     }
@@ -216,6 +219,7 @@ public final class StatCalculator {
 
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+        boolean treatAsNegative = possibleValues.statType().treatAsInverted();
 
         // This code finds the lowest possible and highest possible rolls that achieve the correct
         // result (inclusive). Then, it calculates the chance where we can get a higher roll
@@ -223,7 +227,9 @@ public final class StatCalculator {
 
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
-        int increaseCases = statCalculationInfo.range().high() - internalRollRange.high();
+        int increaseCases = treatAsNegative
+                ? internalRollRange.low() - statCalculationInfo.range().low()
+                : statCalculationInfo.range().high() - internalRollRange.high();
 
         return ((double) increaseCases) / allCases * 100;
     }

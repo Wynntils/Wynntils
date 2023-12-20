@@ -25,7 +25,7 @@ public final class DefenceStatType extends StatType {
     }
 
     @Override
-    public boolean treatAsNegative() {
+    public boolean treatAsInverted() {
         return true;
     }
 

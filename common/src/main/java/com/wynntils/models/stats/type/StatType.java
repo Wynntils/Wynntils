@@ -92,22 +92,27 @@ public abstract class StatType {
     }
 
     /**
-     * Whether the stat should be treated as negative when calculating the total stat value.
-     * This is used when calculating the internal roll and percentage of a stat.
-     * Use this if a stat with a positive sign has a negative effect.
-     * @return true if the stat should be treated as negative, false otherwise
+     * Whether the stat should be displayed as inverted.
+     * This should be true if a value with a positive sign should be displayed as negative.
+     * Usually this should be used in combination with {@link #calculateAsInverted()} or {@link #treatAsInverted()}.
+     * @return true if the stat should be displayed as inverted, false otherwise
      */
-    public boolean treatAsNegative() {
+    public boolean displayAsInverted() {
         return false;
     }
 
     /**
-     * Whether the stat should be displayed as inverted.
-     * This should be true if a value with a positive sign should be displayed as negative.
-     * Usually this should be used in combination with {@link #calculateAsInverted()} or {@link #treatAsNegative()}.
-     * @return true if the stat should be displayed as inverted, false otherwise
+     * Whether the stat should be treated as negative when calculating the total stat value.
+     * This is used when calculating the percentage values of a stat.
+     * <p><b>
+     *     Note that this does not modify the calculated internal roll, deliberately.
+     *     This means that the highest internal roll value will result in the "worst" stat value.
+     * </b></p>
+     *
+     * <p> Use this if a stat has an inverted effect, compared to a base stat, but needs to be treated according to the base stat's sign. </p>
+     * @return true if the stat should be treated as negative, false otherwise
      */
-    public boolean displayAsInverted() {
+    public boolean treatAsInverted() {
         return false;
     }
 
