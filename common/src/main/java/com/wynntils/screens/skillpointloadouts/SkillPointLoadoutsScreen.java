@@ -19,6 +19,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -38,12 +39,76 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     @Override
     protected void doInit() {
         super.doInit();
-        // TODO populate loadoutWidgets from model or smth
+
+        loadoutWidgets.clear();
+        Map<String, Map<Skill, Integer>> loadouts = Models.SkillPoint.getLoadouts();
+        loadouts.put(
+                "Test loadout",
+                Map.of(
+                        Skill.AGILITY,
+                        1,
+                        Skill.STRENGTH,
+                        2,
+                        Skill.DEFENCE,
+                        3,
+                        Skill.DEXTERITY,
+                        4,
+                        Skill.INTELLIGENCE,
+                        5));
+        loadouts.put(
+                "large loadout name oaogkagokagkagk",
+                Map.of(
+                        Skill.AGILITY,
+                        45,
+                        Skill.STRENGTH,
+                        15,
+                        Skill.DEFENCE,
+                        34,
+                        Skill.DEXTERITY,
+                        14,
+                        Skill.INTELLIGENCE,
+                        105));
+        loadouts.put(
+                "Test loadout 2",
+                Map.of(
+                        Skill.AGILITY,
+                        1,
+                        Skill.STRENGTH,
+                        100,
+                        Skill.DEFENCE,
+                        3,
+                        Skill.DEXTERITY,
+                        4,
+                        Skill.INTELLIGENCE,
+                        5));
+        loadouts.put(
+                "asdf asdf ",
+                Map.of(
+                        Skill.AGILITY,
+                        1,
+                        Skill.STRENGTH,
+                        2,
+                        Skill.DEFENCE,
+                        3,
+                        Skill.DEXTERITY,
+                        4,
+                        Skill.INTELLIGENCE,
+                        5));
+        for (int i = 0; i < loadouts.size(); i++) {
+            loadoutWidgets.add(new LoadoutWidget(
+                    (int) (dividedWidth * 4),
+                    (int) (dividedHeight * (9 + i * 4)),
+                    (int) (dividedWidth * 24),
+                    (int) (dividedHeight * 4),
+                    dividedWidth,
+                    loadouts.keySet().toArray()[i].toString(),
+                    loadouts.get(loadouts.keySet().toArray()[i].toString())));
+        }
 
         addRenderableWidget(
                 new WynntilsButton(
-                        (int) dividedWidth * 32,
-                        (int) dividedHeight * 32,
+                        (int) (dividedWidth * 32),
+                        (int) (dividedHeight * 32),
                         120,
                         20,
                         Component.literal("Refresh skill points")) {
@@ -54,14 +119,22 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 });
         addRenderableWidget(
                 new WynntilsButton(
-                        (int) dividedWidth * 40,
-                        (int) dividedHeight * 32,
-                        30,
-                        20,
-                        Component.literal("Clear")) {
+                        (int) (dividedWidth * 40), (int) (dividedHeight * 32), 30, 20, Component.literal("Clear")) {
                     @Override
                     public void onPress() {
-                        Models.SkillPoint.clear();
+                        Models.SkillPoint.clearCurrentPoints();
+                    }
+                });
+        addRenderableWidget(
+                new WynntilsButton(
+                        (int) (dividedWidth * 44),
+                        (int) (dividedHeight * 32),
+                        150,
+                        20,
+                        Component.literal("clear saved loadouts")) {
+                    @Override
+                    public void onPress() {
+                        Models.SkillPoint.getLoadouts().clear();
                     }
                 });
     }
@@ -90,6 +163,18 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
+                            dividedWidth * (20 + i * 2),
+                            dividedHeight * 8,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.RIGHT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
         // endregion
 
         for (int i = 0; i < 5; i++) {
@@ -99,7 +184,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getTotalSkillPoints(skill))),
                             dividedWidth * 4,
-                            dividedHeight * (10 + i),
+                            dividedHeight * (40 + i),
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -109,7 +194,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getGearSkillPoints(skill))),
                             dividedWidth * 6,
-                            dividedHeight * (10 + i),
+                            dividedHeight * (40 + i),
                             CommonColors.AQUA,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -119,7 +204,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getCraftedSkillPoints(skill))),
                             dividedWidth * 8,
-                            dividedHeight * (10 + i),
+                            dividedHeight * (40 + i),
                             CommonColors.DARK_AQUA,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -129,7 +214,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getTomeSkillPoints(skill))),
                             dividedWidth * 10,
-                            dividedHeight * (10 + i),
+                            dividedHeight * (40 + i),
                             CommonColors.YELLOW,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -139,7 +224,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(String.valueOf(Models.SkillPoint.getAssignedSkillPoints(skill))),
                             dividedWidth * 12,
-                            dividedHeight * (10 + i),
+                            dividedHeight * (40 + i),
                             CommonColors.GREEN,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,

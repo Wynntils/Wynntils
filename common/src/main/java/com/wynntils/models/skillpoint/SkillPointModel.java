@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -22,12 +24,16 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 
 public class SkillPointModel extends Model {
+    @Persisted
+    private final Storage<Map<String, Map<Skill, Integer>>> skillPointLoadouts = new Storage<>(new LinkedHashMap<>());
+
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
@@ -42,7 +48,25 @@ public class SkillPointModel extends Model {
         super(List.of());
     }
 
-    public void clear() {
+    /**
+     * Saves the current assigned skill points to the loadout list.
+     * @param name The name of the loadout to save.
+     * @return Whether the loadout was successfully saved. If false, the loadout already exists.
+     */
+    public boolean saveCurrentLoadout(String name) {
+        if (skillPointLoadouts.get().containsKey(name)) {
+            WynntilsMod.warn("Loadout with name " + name + " already exists!");
+            return false;
+        }
+        skillPointLoadouts.get().put(name, assignedSkillPoints);
+        return true;
+    }
+
+    public void deleteLoadout(String name) {
+        skillPointLoadouts.get().remove(name);
+    }
+
+    public void clearCurrentPoints() {
         totalSkillPoints.clear();
         gearSkillPoints.clear();
         craftedSkillPoints.clear();
@@ -191,5 +215,9 @@ public class SkillPointModel extends Model {
 
     public int getAssignedSkillPoints(Skill skill) {
         return assignedSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public Map<String, Map<Skill, Integer>> getLoadouts() {
+        return skillPointLoadouts.get();
     }
 }
