@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -16,6 +17,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Map;
+
+import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -25,13 +28,15 @@ public class LoadoutWidget extends AbstractWidget {
     private final float dividedWidth;
     private final String name;
     private final Map<Skill, Integer> loadout;
+    private final SkillPointLoadoutsScreen parent;
 
     public LoadoutWidget(
-            int x, int y, int width, int height, float dividedWidth, String name, Map<Skill, Integer> loadout) {
+            int x, int y, int width, int height, float dividedWidth, String name, Map<Skill, Integer> loadout, SkillPointLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal(name));
         this.dividedWidth = dividedWidth;
         this.name = name;
         this.loadout = loadout;
+        this.parent = parent;
     }
 
     @Override
@@ -66,6 +71,11 @@ public class LoadoutWidget extends AbstractWidget {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
+    }
+
+    @Override
+    public void onClick(double mouseX, double mouseY) {
+        parent.setSelectedLoadout(Pair.of(name, loadout));
     }
 
     @Override

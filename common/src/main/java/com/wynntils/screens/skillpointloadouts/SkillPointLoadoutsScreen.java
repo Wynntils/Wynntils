@@ -23,6 +23,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -33,6 +35,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private TextInputBoxWidget saveNameInput;
     private WynntilsButton saveAssignedButton;
     private WynntilsButton saveBuildButton;
+    private String selectedLoadoutName = "";
+    private Map<Skill, Integer> selectedLoadout = Map.of();
 
     private SkillPointLoadoutsScreen() {
         super(Component.literal("Skill Point Loadouts Screen"));
@@ -57,7 +61,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     (int) (dividedHeight * 4),
                     dividedWidth,
                     loadouts.keySet().toArray()[i].toString(),
-                    loadouts.get(loadouts.keySet().toArray()[i].toString())));
+                    loadouts.get(loadouts.keySet().toArray()[i].toString()),
+                    this));
         }
 
         saveNameInput = new TextInputBoxWidget(
@@ -298,6 +303,158 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // endregion
 
+        // region Selected loadout
+        RenderUtils.drawRectBorders(poseStack, CommonColors.WHITE, dividedWidth * 34, dividedHeight * 34, dividedWidth * 60, dividedHeight * 60, 1, 1);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(selectedLoadoutName),
+                        dividedWidth * 34,
+                        dividedHeight * 34,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 34,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.assigned", Models.SkillPoint.getAssignedSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 37,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + "" + selectedLoadout.get(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 37,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.gear")),
+                        dividedWidth * 35,
+                        dividedHeight * 39,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + ""),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 39,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.tomes")),
+                        dividedWidth * 35,
+                        dividedHeight * 41,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + ""),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 41,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.crafted")),
+                        dividedWidth * 35,
+                        dividedHeight * 43,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + ""),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 43,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.total")),
+                        dividedWidth * 35,
+                        dividedHeight * 45,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + ""),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 45,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        // endregion
+
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+    }
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        for (LoadoutWidget widget : loadoutWidgets) {
+            if (widget.isMouseOver(mouseX, mouseY)) {
+                widget.mouseClicked(mouseX, mouseY, button);
+                return true;
+            }
+        }
+        return super.doMouseClicked(mouseX, mouseY, button);
+    }
+
+    public void setSelectedLoadout(Pair<String, Map<Skill, Integer>> loadout) {
+        selectedLoadoutName = loadout.key();
+        selectedLoadout = loadout.value();
     }
 }
