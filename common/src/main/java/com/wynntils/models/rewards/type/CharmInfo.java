@@ -20,7 +20,6 @@ public record CharmInfo(
         CharmRequirements requirements,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
     public Map<StatType, StatPossibleValues> getVariableStatsMap() {
-        // Treat both baseStats and variableStats as item identifications.
         return variableStats.stream().collect(Collectors.toMap(Pair::key, Pair::value));
     }
 
