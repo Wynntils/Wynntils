@@ -63,7 +63,7 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
                 "SPELL_" + spellType.name() + "_COST_" + unit.name(),
                 getStatNameForSpell(spellType.getName()),
                 apiUnit + spellNumberString + "SpellCost",
-                "SPELL_COST_" + loreUnit + "_" + spellNumber,
+                "SPELL_COST_" + loreUnit + (loreUnit.isEmpty() ? "" : "_") + spellNumber,
                 unit,
                 spellType);
     }
