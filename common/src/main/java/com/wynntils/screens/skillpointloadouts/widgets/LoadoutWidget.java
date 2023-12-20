@@ -35,8 +35,6 @@ public class LoadoutWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
-        //        RenderUtils.drawRectBorders(poseStack, CommonColors.GREEN, this.getX(), this.getY(), this.getX() +
-        // width, this.getY() + height, 1, 1);
 
         if (this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
@@ -59,10 +57,10 @@ public class LoadoutWidget extends AbstractWidget {
                             poseStack,
                             StyledText.fromString(
                                     Skill.values()[i].getColorCode() + "" + loadout.get(Skill.values()[i])),
-                            dividedWidth * (20 + i * 2),
+                            dividedWidth * (19 + i * 2),
                             this.getY() + (float) this.getHeight() / 2,
                             CommonColors.WHITE,
-                            HorizontalAlignment.RIGHT,
+                            HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }

@@ -110,7 +110,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         (int) (dividedWidth * 32),
                         (int) (dividedHeight * 32),
                         120,
-                        20,
+                        BUTTON_HEIGHT,
                         Component.literal("Refresh skill points")) {
                     @Override
                     public void onPress() {
@@ -119,7 +119,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 });
         addRenderableWidget(
                 new WynntilsButton(
-                        (int) (dividedWidth * 40), (int) (dividedHeight * 32), 30, 20, Component.literal("Clear")) {
+                        (int) (dividedWidth * 40), (int) (dividedHeight * 32), 30, BUTTON_HEIGHT, Component.literal("Clear")) {
                     @Override
                     public void onPress() {
                         Models.SkillPoint.clearCurrentPoints();
@@ -130,7 +130,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         (int) (dividedWidth * 44),
                         (int) (dividedHeight * 32),
                         150,
-                        20,
+                        BUTTON_HEIGHT,
                         Component.literal("clear saved loadouts")) {
                     @Override
                     public void onPress() {
@@ -168,10 +168,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
-                            dividedWidth * (20 + i * 2),
+                            dividedWidth * (19 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
-                            HorizontalAlignment.RIGHT,
+                            HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
         }
