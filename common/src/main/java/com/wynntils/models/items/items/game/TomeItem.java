@@ -14,6 +14,7 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,12 @@ public class TomeItem extends GameItem implements GearTierItemProperty, Identifi
     @Override
     public List<StatPossibleValues> getPossibleValues() {
         return tomeInfo.variableStats().stream().map(Pair::b).toList();
+    }
+
+    @Override
+    public RangedValue getIdentificationLevelRange() {
+        // Tomes do not have level-specific stats
+        return RangedValue.NONE;
     }
 
     @Override
