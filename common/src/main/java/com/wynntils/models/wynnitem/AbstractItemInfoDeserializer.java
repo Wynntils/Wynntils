@@ -360,10 +360,17 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-            StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+            String statApiName = entry.getKey();
+
+            if (statApiName.equals("elementalDefense")) {
+                // The API is inconsistent, and rarely usese "elementalDefense" instead of "elementalDefence"
+                statApiName = "elementalDefence";
+            }
+
+            StatType statType = Models.Stat.fromApiRollId(statApiName);
 
             if (statType == null) {
-                WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
+                WynntilsMod.warn("Item DB contains invalid stat type " + statApiName);
                 continue;
             }
 
@@ -376,9 +383,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             RangedValue apiRange;
 
             // This is a pre-identified id, so there is no range
-            if (preIdentifiedItem
-                    || identificationsJson.get(statType.getApiName()).isJsonPrimitive()) {
-                baseValue = JsonUtils.getNullableJsonInt(identificationsJson, statType.getApiName());
+            if (preIdentifiedItem || identificationsJson.get(entry.getKey()).isJsonPrimitive()) {
+                baseValue = JsonUtils.getNullableJsonInt(identificationsJson, entry.getKey());
 
                 // We have a pre-identified item, so there is no range
                 preIdentified = true;
