@@ -49,6 +49,10 @@ public class RewardsModel extends Model {
         GearTier gearTier = GearTier.fromStyledText(name);
 
         TomeInfo tomeInfo = tomeInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
+        if (tomeInfo == null) {
+            WynntilsMod.warn("Could not find tome info for " + name.getStringWithoutFormatting());
+            return null;
+        }
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, tomeInfo.getVariableStatsMap());
         if (result.tier() != tomeInfo.tier()) {
