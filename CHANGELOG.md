@@ -1,9 +1,21 @@
+## [0.0.4-beta.98](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.97...v0.0.4-beta.98) (2023-12-20)
+
+
+### Bug Fixes
+
+* fix elemental defenses being treated as inverted ([#2288](https://github.com/Wynntils/Artemis/issues/2288)) ([c1d80be](https://github.com/Wynntils/Artemis/commit/c1d80be0e80bf138c417efd68b801defaae7e1bd))
+
 ## [0.0.4-beta.97](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.96...v0.0.4-beta.97) (2023-12-20)
 
 
 ### New Features
 
 * Parse charms as gears, show charm identification percentages  ([#2271](https://github.com/Wynntils/Artemis/issues/2271)) ([ff02a95](https://github.com/Wynntils/Artemis/commit/ff02a959640af633d42bfaebec653e9db7a7e72a)), closes [#2282](https://github.com/Wynntils/Artemis/issues/2282) [#2283](https://github.com/Wynntils/Artemis/issues/2283) [#2284](https://github.com/Wynntils/Artemis/issues/2284) [#2285](https://github.com/Wynntils/Artemis/issues/2285)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.97 [skip ci] ([9b6f8a7](https://github.com/Wynntils/Artemis/commit/9b6f8a767035a9be4b469c8cc51359bf12e0e618))
 
 ## [0.0.4-beta.96](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.95...v0.0.4-beta.96) (2023-12-20)
 
@@ -42,16 +54,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2284](https://github.com/Wynntils/Artemis/issues/2284)) ([5a6c0f9](https://github.com/Wynntils/Artemis/commit/5a6c0f961f332c62726d3d4e05b4eac0b8252c00))
 * **release:** v0.0.4-beta.94 [skip ci] ([06eab26](https://github.com/Wynntils/Artemis/commit/06eab262192e1f23075c98a4ba43e777f9f9e52c))
-
-## [0.0.4-beta.93](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.92...v0.0.4-beta.93) (2023-12-15)
-
-
-### Bug Fixes
-
-* fix legacy order not displaying skill stats ([#2283](https://github.com/Wynntils/Artemis/issues/2283)) ([1a72ac1](https://github.com/Wynntils/Artemis/commit/1a72ac16a455fbc171724cfcee5dd3ea5fbd9bb7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.93 [skip ci] ([945310d](https://github.com/Wynntils/Artemis/commit/945310d7391dd17ab53c3f3b5569010c569197e7))
 
