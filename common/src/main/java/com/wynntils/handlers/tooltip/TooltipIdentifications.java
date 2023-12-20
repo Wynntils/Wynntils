@@ -138,12 +138,13 @@ public final class TooltipIdentifications {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
-        int valueToShow = statType.showAsInverted() ? -value : value;
+        int valueToShow = statType.calculateAsInverted() ? -value : value;
+        boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
         String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
 
         MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
                         + statType.getUnit().getDisplayName())
-                .withStyle(Style.EMPTY.withColor((value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+                .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         if (!starString.isEmpty()) {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
@@ -161,15 +162,15 @@ public final class TooltipIdentifications {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
 
-        // Use value.low as representative; assume both high and low are either < or > 0.
-        boolean isGood = valueRange.low() > 0;
-        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
-        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-
         // Determine which value to show first and which to show last in the "A to B"
         // range displayed
         Pair<Integer, Integer> displayRange =
                 StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
+
+        // Use displayRange.a as representative; assume both a and b are either < or > 0.
+        boolean hasPositiveEffect = displayRange.a() > 0 ^ statType.displayAsInverted();
+        ChatFormatting colorCode = hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED;
+        ChatFormatting colorCodeDark = hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
         MutableComponent line =
                 Component.literal(StringUtils.toSignedString(displayRange.a())).withStyle(colorCode);
