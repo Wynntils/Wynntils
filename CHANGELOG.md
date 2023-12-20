@@ -1,3 +1,10 @@
+## [0.0.4-beta.96](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.95...v0.0.4-beta.96) (2023-12-20)
+
+
+### Code Refactoring
+
+* In preparation for charm identifications, add support for custom stat type ranges, rework the inverted stat system, other fixes to internal rolls ([#2282](https://github.com/Wynntils/Artemis/issues/2282)) ([0e4a664](https://github.com/Wynntils/Artemis/commit/0e4a6640dc4e37e6b5b8d79adb703e5baa7a6744)), closes [#2283](https://github.com/Wynntils/Artemis/issues/2283) [#2284](https://github.com/Wynntils/Artemis/issues/2284) [#2285](https://github.com/Wynntils/Artemis/issues/2285)
+
 ## [0.0.4-beta.95](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.94...v0.0.4-beta.95) (2023-12-17)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2286](https://github.com/Wynntils/Artemis/issues/2286)) ([6ecde5f](https://github.com/Wynntils/Artemis/commit/6ecde5fa37e97d582561b914f2772f9bd33b092b))
+* **release:** v0.0.4-beta.95 [skip ci] ([b22eb09](https://github.com/Wynntils/Artemis/commit/b22eb09b320a8fceb3ceb70e085f285611a4f2f0))
 
 ## [0.0.4-beta.94](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.93...v0.0.4-beta.94) (2023-12-17)
 
@@ -46,18 +54,4 @@
 ### Code Refactoring
 
 * Treat SkillStatType as a regular stat ([#2280](https://github.com/Wynntils/Artemis/issues/2280)) ([037d817](https://github.com/Wynntils/Artemis/commit/037d8174633d6dab81abc85aba2b5802a6fcf0d0))
-
-## [0.0.4-beta.91](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.90...v0.0.4-beta.91) (2023-12-11)
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2276](https://github.com/Wynntils/Artemis/issues/2276)) ([ebbe7dc](https://github.com/Wynntils/Artemis/commit/ebbe7dce594ab238e8fab8d7034de0e4f112542c))
-* [auto-generated] Update urls.json [ci skip] ([#2278](https://github.com/Wynntils/Artemis/issues/2278)) ([381fbf2](https://github.com/Wynntils/Artemis/commit/381fbf2b7ecb42c202d5b4b0112b60df5b77a9c3))
-* **release:** v0.0.4-beta.91 [skip ci] ([16bdfa1](https://github.com/Wynntils/Artemis/commit/16bdfa16f2aefb40a35f5672868d7c05e1048e12))
-
-
-### Code Refactoring
-
-* Make IdentifiableItemInfo be an item property ([#2275](https://github.com/Wynntils/Artemis/issues/2275)) ([4e2e62c](https://github.com/Wynntils/Artemis/commit/4e2e62ca4f2e4d686c414105acbdf926fdad66e5))
 
