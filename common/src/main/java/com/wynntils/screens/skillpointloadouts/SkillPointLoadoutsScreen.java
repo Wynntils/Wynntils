@@ -8,10 +8,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.widgets.LoadoutWidget;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -27,6 +30,9 @@ import net.minecraft.network.chat.Component;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private final List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
+    private TextInputBoxWidget saveNameInput;
+    private WynntilsButton saveAssignedButton;
+    private WynntilsButton saveBuildButton;
 
     private SkillPointLoadoutsScreen() {
         super(Component.literal("Skill Point Loadouts Screen"));
@@ -42,73 +48,64 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         loadoutWidgets.clear();
         Map<String, Map<Skill, Integer>> loadouts = Models.SkillPoint.getLoadouts();
-        loadouts.put(
-                "Test loadout",
-                Map.of(
-                        Skill.AGILITY,
-                        1,
-                        Skill.STRENGTH,
-                        2,
-                        Skill.DEFENCE,
-                        3,
-                        Skill.DEXTERITY,
-                        4,
-                        Skill.INTELLIGENCE,
-                        5));
-        loadouts.put(
-                "large loadout name oaogkagokagkagk",
-                Map.of(
-                        Skill.AGILITY,
-                        45,
-                        Skill.STRENGTH,
-                        15,
-                        Skill.DEFENCE,
-                        34,
-                        Skill.DEXTERITY,
-                        14,
-                        Skill.INTELLIGENCE,
-                        105));
-        loadouts.put(
-                "Test loadout 2",
-                Map.of(
-                        Skill.AGILITY,
-                        1,
-                        Skill.STRENGTH,
-                        100,
-                        Skill.DEFENCE,
-                        3,
-                        Skill.DEXTERITY,
-                        4,
-                        Skill.INTELLIGENCE,
-                        5));
-        loadouts.put(
-                "asdf asdf ",
-                Map.of(
-                        Skill.AGILITY,
-                        1,
-                        Skill.STRENGTH,
-                        2,
-                        Skill.DEFENCE,
-                        3,
-                        Skill.DEXTERITY,
-                        4,
-                        Skill.INTELLIGENCE,
-                        5));
+
         for (int i = 0; i < loadouts.size(); i++) {
             loadoutWidgets.add(new LoadoutWidget(
                     (int) (dividedWidth * 4),
                     (int) (dividedHeight * (9 + i * 4)),
-                    (int) (dividedWidth * 24),
+                    (int) (dividedWidth * 26),
                     (int) (dividedHeight * 4),
                     dividedWidth,
                     loadouts.keySet().toArray()[i].toString(),
                     loadouts.get(loadouts.keySet().toArray()[i].toString())));
         }
 
+        saveNameInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 35),
+                (int) (dividedHeight * 24),
+                (int) ((dividedWidth * 48) - (dividedWidth * 35)) - 1,
+                BUTTON_HEIGHT,
+                (x) -> {
+                    saveAssignedButton.active = !x.isBlank();
+                    saveBuildButton.active = !x.isBlank();
+                },
+                this,
+                saveNameInput);
+        this.addRenderableWidget(saveNameInput);
+
+        saveAssignedButton = new WynntilsButton(
+                (int) (dividedWidth * 48) + 1,
+                (int) (dividedHeight * 24),
+                (int) ((dividedWidth * 54) - (dividedWidth * 48)) - 1,
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.saveAssigned")) {
+            @Override
+            public void onPress() {
+                Models.SkillPoint.saveCurrentLoadout(saveNameInput.getTextBoxInput());
+            }
+        };
+        this.addRenderableWidget(saveAssignedButton);
+        saveAssignedButton.active = false;
+
+        saveBuildButton = new WynntilsButton(
+                (int) (dividedWidth * 54) + 1,
+                (int) (dividedHeight * 24),
+                (int) ((dividedWidth * 59) - (dividedWidth * 54)),
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild")) {
+            @Override
+            public void onPress() {
+                // TODO
+                McUtils.sendErrorToClient("not implemented");
+            }
+        };
+        this.addRenderableWidget(saveBuildButton);
+        saveBuildButton.active = false;
+
         addRenderableWidget(
                 new WynntilsButton(
-                        (int) (dividedWidth * 32),
-                        (int) (dividedHeight * 32),
+                        (int) (dividedWidth * 4),
+                        (int) (dividedHeight * 54),
                         120,
                         BUTTON_HEIGHT,
                         Component.literal("Refresh skill points")) {
@@ -119,22 +116,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 });
         addRenderableWidget(
                 new WynntilsButton(
-                        (int) (dividedWidth * 40), (int) (dividedHeight * 32), 30, BUTTON_HEIGHT, Component.literal("Clear")) {
+                        (int) (dividedWidth * 4), (int) (dividedHeight * 50), 30, BUTTON_HEIGHT, Component.literal("Clear")) {
                     @Override
                     public void onPress() {
                         Models.SkillPoint.clearCurrentPoints();
-                    }
-                });
-        addRenderableWidget(
-                new WynntilsButton(
-                        (int) (dividedWidth * 44),
-                        (int) (dividedHeight * 32),
-                        150,
-                        BUTTON_HEIGHT,
-                        Component.literal("clear saved loadouts")) {
-                    @Override
-                    public void onPress() {
-                        Models.SkillPoint.getLoadouts().clear();
                     }
                 });
     }
@@ -151,7 +136,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 dividedWidth * 4,
                 dividedHeight * 8,
                 0,
-                dividedWidth * 28 - dividedWidth * 4,
+                dividedWidth * 30 - dividedWidth * 4,
                 1);
         FontRenderer.getInstance()
                 .renderText(
@@ -168,7 +153,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
-                            dividedWidth * (19 + i * 2),
+                            dividedWidth * (21 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
@@ -177,59 +162,141 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // endregion
 
+        // region Summary
+        RenderUtils.drawRectBorders(poseStack, CommonColors.WHITE, dividedWidth * 34, dividedHeight * 8, dividedWidth * 60, dividedHeight * 28, 1, 1);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.summary")),
+                        dividedWidth * 34,
+                        dividedHeight * 8,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
         for (int i = 0; i < 5; i++) {
-            Skill skill = Skill.values()[i];
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(String.valueOf(Models.SkillPoint.getTotalSkillPoints(skill))),
-                            dividedWidth * 4,
-                            dividedHeight * (40 + i),
+                            StyledText.fromString(Skill.values()[i].getColorCode() + Skill.values()[i].getSymbol()),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 8,
                             CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(Models.SkillPoint.getGearSkillPoints(skill))),
-                            dividedWidth * 6,
-                            dividedHeight * (40 + i),
-                            CommonColors.AQUA,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(Models.SkillPoint.getCraftedSkillPoints(skill))),
-                            dividedWidth * 8,
-                            dividedHeight * (40 + i),
-                            CommonColors.DARK_AQUA,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(Models.SkillPoint.getTomeSkillPoints(skill))),
-                            dividedWidth * 10,
-                            dividedHeight * (40 + i),
-                            CommonColors.YELLOW,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(Models.SkillPoint.getAssignedSkillPoints(skill))),
-                            dividedWidth * 12,
-                            dividedHeight * (40 + i),
-                            CommonColors.GREEN,
-                            HorizontalAlignment.LEFT,
+                            HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
         }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.assigned", Models.SkillPoint.getAssignedSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 11,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + "" + Models.SkillPoint.getAssignedSkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 11,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.gear", Models.SkillPoint.getGearSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 13,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + "" + Models.SkillPoint.getGearSkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 13,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 15,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + "" + Models.SkillPoint.getTomeSkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 15,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.crafted", Models.SkillPoint.getCraftedSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 17,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + "" + Models.SkillPoint.getCraftedSkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 17,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.total", Models.SkillPoint.getTotalSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 19,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + "" + Models.SkillPoint.getTotalSkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 19,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        // endregion
 
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }

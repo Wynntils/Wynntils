@@ -5,8 +5,10 @@
 package com.wynntils.screens.skillpointloadouts.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -57,7 +59,7 @@ public class LoadoutWidget extends AbstractWidget {
                             poseStack,
                             StyledText.fromString(
                                     Skill.values()[i].getColorCode() + "" + loadout.get(Skill.values()[i])),
-                            dividedWidth * (19 + i * 2),
+                            dividedWidth * (21 + i * 2),
                             this.getY() + (float) this.getHeight() / 2,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
