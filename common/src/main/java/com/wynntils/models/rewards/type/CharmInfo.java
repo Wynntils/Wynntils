@@ -13,10 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// A note about baseStats and variableStats:
-// baseStats are the stats that are only affected within the CharmRequirement's level range.
-// baseStats looks just like variableStats, when displayed in-game.
-// variableStats are the stats that are regular identifications.
 public record CharmInfo(
         String name,
         GearTier tier,
