@@ -258,8 +258,8 @@ public class InventoryFunctions {
             Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
             if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
 
-            return new NamedValue(
-                    shinyStatOpt.get().statType().displayName(),
+            // FIXME: The function system can't handle longs, so we have to cast to int
+            return new NamedValue(shinyStatOpt.get().statType().displayName(), (int)
                     shinyStatOpt.get().value());
         }
     }

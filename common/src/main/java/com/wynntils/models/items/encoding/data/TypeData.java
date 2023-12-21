@@ -6,5 +6,10 @@ package com.wynntils.models.items.encoding.data;
 
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemType;
+import com.wynntils.utils.type.UnsignedByte;
 
-public record TypeData(ItemType itemType) implements ItemData {}
+public record TypeData(ItemType itemType) implements ItemData {
+    public static TypeData fromByte(UnsignedByte versionByte) {
+        return new TypeData(ItemType.fromId(versionByte.toByte()));
+    }
+}

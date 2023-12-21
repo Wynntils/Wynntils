@@ -7,6 +7,7 @@ package com.wynntils.models.items.encoding.impl.block;
 import com.wynntils.models.items.encoding.data.RerollData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
@@ -25,6 +26,13 @@ public class RerollDataTransformer extends DataTransformer<RerollData> {
     @Override
     protected boolean shouldEncodeData(ItemTransformingVersion version, RerollData data) {
         return data.rerolls() > 0;
+    }
+
+    @Override
+    public ErrorOr<RerollData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
+        return switch (version) {
+            case VERSION_1 -> ErrorOr.of(new RerollData(byteReader.read().value()));
+        };
     }
 
     @Override

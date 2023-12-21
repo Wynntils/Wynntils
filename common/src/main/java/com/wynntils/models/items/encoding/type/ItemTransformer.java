@@ -22,7 +22,7 @@ public abstract class ItemTransformer<T extends WynnItem> {
         return List.copyOf(dataList);
     }
 
-    public abstract ErrorOr<T> decodeItem(List<ItemData> itemData);
+    public abstract ErrorOr<T> decodeItem(ItemDataMap itemDataMap);
 
     protected abstract List<ItemData> encodeItem(T item);
 

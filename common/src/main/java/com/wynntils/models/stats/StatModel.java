@@ -103,6 +103,13 @@ public final class StatModel extends Model {
         return Optional.ofNullable(statTypeIdMap.get(statType));
     }
 
+    public Optional<StatType> getStatTypeForId(int id) {
+        return statTypeIdMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == id)
+                .map(Map.Entry::getKey)
+                .findFirst();
+    }
+
     public String getDisplayName(
             StatType statType, ClassType classReq, ClassType currentClass, RangedValue workingLevelRange) {
         if (statType instanceof SpellStatType spellStatType) {

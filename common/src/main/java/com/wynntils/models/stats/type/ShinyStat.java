@@ -4,4 +4,4 @@
  */
 package com.wynntils.models.stats.type;
 
-public record ShinyStat(ShinyStatType statType, int value) {}
+public record ShinyStat(ShinyStatType statType, long value) {}

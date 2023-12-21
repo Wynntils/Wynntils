@@ -6,6 +6,7 @@ package com.wynntils.utils;
 
 import com.wynntils.utils.type.UnsignedByte;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 // FIXME: Unit testing
 public final class UnsignedByteUtils {
@@ -23,6 +24,17 @@ public final class UnsignedByteUtils {
         return bytes;
     }
 
+    public static boolean[] toBitArray(UnsignedByte[] unsignedBytes) {
+        boolean[] values = new boolean[unsignedBytes.length * 8];
+        for (int i = 0; i < unsignedBytes.length; i++) {
+            byte value = unsignedBytes[i].toByte();
+            for (int j = 0; j < 8; j++) {
+                values[i * 8 + j] = ((value >> (7 - j)) & 1) == 1;
+            }
+        }
+        return values;
+    }
+
     public static UnsignedByte[] encodeString(String string) {
         // Strings are encoded by encoding the char's ASCII value
         // and is terminated by a 0 byte
@@ -37,6 +49,17 @@ public final class UnsignedByteUtils {
         bytes[bytes.length - 1] = UnsignedByte.of((byte) 0);
 
         return bytes;
+    }
+
+    public static String decodeString(List<UnsignedByte> byteReader) {
+        // Strings are encoded by encoding the char's ASCII value
+        byte[] asciiBytes = new byte[byteReader.size()];
+
+        for (int i = 0; i < byteReader.size(); i++) {
+            asciiBytes[i] = byteReader.get(i).toByte();
+        }
+
+        return new String(asciiBytes, StandardCharsets.US_ASCII);
     }
 
     public static UnsignedByte[] encodeVariableSizedInteger(long value) {
@@ -75,5 +98,36 @@ public final class UnsignedByteUtils {
         }
 
         return bytes;
+    }
+
+    public static long decodeVariableSizedInteger(UnsignedByte[] bytes) {
+        // Decode a variable sized integer value from a byte array.
+        // The first byte is the most significant byte.
+
+        // Do the decoding
+        long value;
+        if (bytes.length == 1) {
+            value = bytes[0].toByte();
+        } else if (bytes.length == 2) {
+            value = ((long) bytes[0].toByte() << 8) | bytes[1].value();
+        } else if (bytes.length == 3) {
+            value = ((long) bytes[0].toByte() << 16) | (bytes[1].value() << 8) | bytes[2].value();
+        } else if (bytes.length == 4) {
+            value = ((long) bytes[0].toByte() << 24)
+                    | (bytes[1].value() << 16)
+                    | (bytes[2].value() << 8)
+                    | bytes[3].value();
+        } else {
+            value = ((long) bytes[0].toByte() << 56)
+                    | ((long) bytes[1].value() << 48)
+                    | ((long) bytes[2].value() << 40)
+                    | ((long) bytes[3].value() << 32)
+                    | (bytes[4].value() << 24)
+                    | (bytes[5].value() << 16)
+                    | (bytes[6].value() << 8)
+                    | bytes[7].value();
+        }
+
+        return value;
     }
 }

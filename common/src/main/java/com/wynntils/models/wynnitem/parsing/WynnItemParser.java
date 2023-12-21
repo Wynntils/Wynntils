@@ -431,11 +431,7 @@ public final class WynnItemParser {
             }
             return null;
         }
-        int value = Math.round(possibleValue.baseValue() * (internalRoll / 100f));
-        if (value == 0) {
-            // If we get to 0, use 1 or -1 instead
-            value = (int) Math.signum(possibleValue.baseValue());
-        }
+        int value = StatCalculator.calculateStatValue(internalRoll, possibleValue);
 
         // Negative values can never show stars
         int stars = (value > 0)

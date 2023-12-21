@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.encoding;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
@@ -24,6 +25,7 @@ import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
@@ -59,9 +61,16 @@ public final class DataTransformerRegistry {
         return ErrorOr.of(EncodedByteBuffer.fromBytes(bytes.toArray(new UnsignedByte[0])));
     }
 
-    public ErrorOr<List<ItemData>> decodeData(EncodedByteBuffer encodedItem) {
-        // FIXME: Read version from start byte
-        return decodeData(ItemTransformingVersion.VERSION_1, encodedItem);
+    public ErrorOr<List<ItemData>> decodeData(EncodedByteBuffer encodedByteBuffer) {
+        ArrayReader<UnsignedByte> byteReader = encodedByteBuffer.getReader();
+
+        // Handle start data specially
+        ErrorOr<StartData> errorOrStartData = StartDataTransformer.decodeData(byteReader);
+        if (errorOrStartData.hasError()) {
+            return ErrorOr.error(errorOrStartData.getError());
+        }
+
+        return decodeData(errorOrStartData.getValue().version(), byteReader);
     }
 
     private ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, ItemData data) {
@@ -74,8 +83,34 @@ public final class DataTransformerRegistry {
         return dataTransformer.encode(version, data);
     }
 
-    private ErrorOr<List<ItemData>> decodeData(ItemTransformingVersion version, EncodedByteBuffer encodedItem) {
-        return null;
+    private ErrorOr<List<ItemData>> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
+        List<ItemData> dataList = new ArrayList<>();
+
+        while (byteReader.hasRemaining()) {
+            UnsignedByte dataBlockId = byteReader.read();
+
+            try {
+                ErrorOr<ItemData> errorOrData =
+                        dataTransformers.get(dataBlockId.toByte()).decodeData(version, byteReader);
+
+                if (errorOrData.hasError()) {
+                    return ErrorOr.error(errorOrData.getError());
+                }
+
+                dataList.add(errorOrData.getValue());
+            } catch (Exception e) {
+                WynntilsMod.error("Failed to decode data block with id " + dataBlockId.value() + "!", e);
+                return ErrorOr.error("Failed to decode data block with id " + dataBlockId.value() + "!");
+            }
+        }
+
+        boolean foundEndData = dataList.stream().anyMatch(data -> data instanceof EndData);
+        if (!foundEndData) {
+            return ErrorOr.error("No end data found in item data!");
+        }
+        dataList.removeIf(data -> data instanceof EndData);
+
+        return ErrorOr.of(dataList);
     }
 
     private <T extends ItemData> void registerDataTransformer(
@@ -116,6 +151,10 @@ public final class DataTransformerRegistry {
 
         public <T extends ItemData> DataTransformer<T> get(Class<T> dataClass) {
             return (DataTransformer<T>) dataTransformers.get(dataClass);
+        }
+
+        public <T extends ItemData> DataTransformer<T> get(byte id) {
+            return (DataTransformer<T>) idToTransformerMap.get(id);
         }
     }
 }

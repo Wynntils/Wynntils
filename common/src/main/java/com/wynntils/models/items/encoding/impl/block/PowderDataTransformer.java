@@ -9,9 +9,12 @@ import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.UnsignedByteUtils;
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.UnsignedByte;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class PowderDataTransformer extends DataTransformer<PowderData> {
@@ -27,6 +30,13 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
     @Override
     protected boolean shouldEncodeData(ItemTransformingVersion version, PowderData data) {
         return !data.powders().isEmpty();
+    }
+
+    @Override
+    public ErrorOr<PowderData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
+        return switch (version) {
+            case VERSION_1 -> decodePowderData(byteReader);
+        };
     }
 
     @Override
@@ -75,5 +85,54 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
         return ErrorOr.of(
                 Stream.concat(Stream.of(UnsignedByte.of((byte) data.powders().size())), Stream.of(dataBytes))
                         .toArray(UnsignedByte[]::new));
+    }
+
+    private ErrorOr<PowderData> decodePowderData(ArrayReader<UnsignedByte> byteReader) {
+        // The first byte is the number of powders
+        int powderCount = byteReader.read().value();
+
+        // The powder data is encoded as bits, a powder needs 5 bits to encode
+        // That means the total size is 5 * powderCount,
+        // which is padded to the nearest byte
+        int bitsNeeded = powderCount * 5;
+
+        // Pad to nearest byte
+        int totalBits = (bitsNeeded + 7) / 8 * 8;
+
+        // The remaining bytes are the powder data
+        UnsignedByte[] powderData = byteReader.read(totalBits / 8);
+
+        // Convert the powder data to a bit array
+        boolean[] powderBits = UnsignedByteUtils.toBitArray(powderData);
+
+        // Remove the padding
+        boolean[] powderDataBits = new boolean[bitsNeeded];
+        System.arraycopy(powderBits, 0, powderDataBits, 0, bitsNeeded);
+
+        // Decode the powder data
+        List<Pair<Powder, Integer>> data = new ArrayList<>();
+        for (int i = 0; i < powderCount; i++) {
+            int powderDataIndex = i * 5;
+
+            // Read the 5 bits for the powder
+            int powderValue = 0;
+            for (int j = 0; j < 5; j++) {
+                // The index is reversed because the bits are stored in reverse order
+                int index = powderDataIndex + (4 - j);
+                boolean value = powderDataBits[index];
+                if (value) {
+                    powderValue |= 1 << j;
+                }
+            }
+
+            // Decode the powder value
+            int element = powderValue / 6;
+            int tier = powderValue % 6;
+
+            // Add the powder to the data
+            data.add(new Pair<>(Powder.values()[element - 1], tier));
+        }
+
+        return ErrorOr.of(new PowderData(data));
     }
 }

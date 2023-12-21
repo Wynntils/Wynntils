@@ -137,6 +137,15 @@ public final class StatCalculator {
         return 0;
     }
 
+    public static int calculateStatValue(int internalRoll, StatPossibleValues possibleValues) {
+        int value = Math.round(possibleValues.baseValue() * (internalRoll / 100f));
+        if (value == 0) {
+            // If we get to 0, use 1 or -1 instead
+            value = (int) Math.signum(possibleValues.baseValue());
+        }
+        return value;
+    }
+
     public static Pair<Integer, Integer> getDisplayRange(
             StatPossibleValues possibleValues, boolean showBestValueLastAlways) {
         StatType statType = possibleValues.statType();
