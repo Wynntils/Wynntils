@@ -4,10 +4,13 @@
  */
 package com.wynntils.models.items.encoding.impl.block;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.items.encoding.data.ShinyData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.utils.UnsignedByteUtils;
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
@@ -27,6 +30,13 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
     }
 
     @Override
+    public ErrorOr<ShinyData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
+        return switch (version) {
+            case VERSION_1 -> decodeShinyData(byteReader);
+        };
+    }
+
+    @Override
     protected byte getId() {
         return ID;
     }
@@ -41,5 +51,18 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
         System.arraycopy(shinyStatValueBytes, 0, bytes, 2, shinyStatValueBytes.length);
 
         return bytes;
+    }
+
+    private ErrorOr<ShinyData> decodeShinyData(ArrayReader<UnsignedByte> byteReader) {
+        UnsignedByte statTypeId = byteReader.read();
+        UnsignedByte statValueLength = byteReader.read();
+
+        if (statValueLength == null) {
+            return ErrorOr.error("Failed to read shiny stat value length");
+        }
+
+        long statValue = UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(statValueLength.value()));
+
+        return ErrorOr.of(new ShinyData(new ShinyStat(Models.Shiny.getShinyStatType(statTypeId.value()), statValue)));
     }
 }

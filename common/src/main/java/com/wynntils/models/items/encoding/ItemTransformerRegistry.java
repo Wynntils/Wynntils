@@ -11,6 +11,7 @@ import com.wynntils.models.items.encoding.data.TypeData;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemData;
+import com.wynntils.models.items.encoding.type.ItemDataMap;
 import com.wynntils.models.items.encoding.type.ItemTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.items.encoding.type.ItemType;
@@ -57,8 +58,8 @@ public final class ItemTransformerRegistry {
         return encodeItem(wynnItem, transformer);
     }
 
-    public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedItem) {
-        ErrorOr<List<ItemData>> errorOrItemData = dataTransformerRegistry.decodeData(encodedItem);
+    public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer) {
+        ErrorOr<List<ItemData>> errorOrItemData = dataTransformerRegistry.decodeData(encodedByteBuffer);
         if (errorOrItemData.hasError()) {
             return ErrorOr.error(errorOrItemData.getError());
         }
@@ -89,7 +90,7 @@ public final class ItemTransformerRegistry {
     }
 
     private ErrorOr<WynnItem> decodeItem(List<ItemData> itemData, ItemTransformer<WynnItem> transformer) {
-        return transformer.decodeItem(itemData);
+        return transformer.decodeItem(new ItemDataMap(itemData));
     }
 
     private ItemTransformer<WynnItem> getTransformer(WynnItem wynnItem) {

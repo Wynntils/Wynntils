@@ -13,6 +13,13 @@ public enum ItemType {
         this.id = (byte) id;
     }
 
+    public static ItemType fromId(byte id) {
+        return switch (id) {
+            case 0 -> GEAR;
+            default -> null;
+        };
+    }
+
     public byte getId() {
         return id;
     }

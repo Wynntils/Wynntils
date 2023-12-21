@@ -57,6 +57,10 @@ public final class UnsignedByte {
         return value;
     }
 
+    public byte toByte() {
+        return (byte) value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

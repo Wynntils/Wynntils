@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils;
 
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,6 +118,10 @@ public final class EncodedByteBuffer {
 
     public UnsignedByte[] getBytes() {
         return bytes;
+    }
+
+    public ArrayReader<UnsignedByte> getReader() {
+        return new ArrayReader<>(bytes);
     }
 
     @Override

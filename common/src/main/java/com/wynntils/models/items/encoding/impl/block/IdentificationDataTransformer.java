@@ -9,13 +9,19 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.UnsignedByteUtils;
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class IdentificationDataTransformer extends DataTransformer<IdentificationData> {
@@ -44,6 +50,13 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                     });
                 }
             }
+        };
+    }
+
+    public ErrorOr<IdentificationData> decodeData(
+            ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
+        return switch (version) {
+            case VERSION_1 -> decodeIdentifications(byteReader);
         };
     }
 
@@ -173,6 +186,12 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                 int baseValue = possibleValues.baseValue();
                 UnsignedByte[] baseValueBytes = UnsignedByteUtils.encodeVariableSizedInteger(baseValue);
 
+                if (baseValueBytes.length > 4) {
+                    WynntilsMod.warn("Base value " + baseValue + " does not fit in an integer!");
+                    return ErrorOr.error("Unable to encode stat type, base value is too big: "
+                            + identification.statType().getDisplayName());
+                }
+
                 // The second byte is the length of the integer that the base value fits in, in bytes.
                 bytes.add(UnsignedByte.of((byte) baseValueBytes.length));
                 // The following bytes is are assembled into an integer,
@@ -195,5 +214,73 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
         }
 
         return ErrorOr.of(bytes);
+    }
+
+    private ErrorOr<IdentificationData> decodeIdentifications(ArrayReader<UnsignedByte> byteReader) {
+        List<StatActualValue> identifications = new ArrayList<>();
+        List<StatPossibleValues> possibleValues = new ArrayList<>();
+        Map<StatType, Integer> pendingCalculations = new HashMap<>();
+
+        // The first byte is the number of identifications
+        int identificationCount = byteReader.read().value();
+
+        // The second byte is whether extended data is encoded
+        boolean extendedData = byteReader.read().value() == 1;
+
+        // If extended data is encoded, the next byte is the number of pre-identified stats
+        int preIdentifiedCount = 0;
+        if (extendedData) {
+            preIdentifiedCount = byteReader.read().value();
+        }
+
+        for (int i = 0; i < preIdentifiedCount + identificationCount; i++) {
+            // The first byte is the numerical key of the ID.
+            int id = byteReader.read().value();
+
+            Optional<StatType> statTypeOpt = Models.Stat.getStatTypeForId(id);
+
+            if (statTypeOpt.isEmpty()) {
+                WynntilsMod.warn("No stat type found for id " + id);
+                return ErrorOr.error("Unable to decode stat type for id: " + id);
+            }
+
+            StatType statType = statTypeOpt.get();
+            boolean preIdentified = i < preIdentifiedCount;
+
+            // When extended data is encoded, we create our own StatPossibleValues
+            if (extendedData) {
+                // The second byte is the length of the integer that the base value fits in, in bytes.
+                int baseValueLength = byteReader.read().value();
+
+                if (baseValueLength > 4) {
+                    WynntilsMod.warn("Base value length " + baseValueLength + " does not fit in an integer!");
+                    return ErrorOr.error(
+                            "Unable to decode stat type, base value is too big: " + statType.getDisplayName());
+                }
+
+                // The following bytes is are assembled into an integer,
+                // representing the base value of the id, as of sharing.
+                UnsignedByte[] baseValueBytes = byteReader.read(baseValueLength);
+                int baseValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(baseValueBytes);
+
+                RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
+                StatPossibleValues possibleValue = new StatPossibleValues(statType, range, baseValue, preIdentified);
+                possibleValues.add(possibleValue);
+
+                // Pre-identified stats do not have an internal roll.
+                if (preIdentified) continue;
+            }
+
+            // The next byte is the calculated internal roll of the item.
+            int internalRoll = byteReader.read().value();
+
+            // We might not know the possible values yet, so we store the internal roll for later
+            pendingCalculations.put(statType, internalRoll);
+        }
+
+        HashMap<StatType, StatPossibleValues> possibleValuesMap = possibleValues.stream()
+                .collect(HashMap::new, (map, value) -> map.put(value.statType(), value), HashMap::putAll);
+
+        return ErrorOr.of(new IdentificationData(identifications, possibleValuesMap, pendingCalculations));
     }
 }

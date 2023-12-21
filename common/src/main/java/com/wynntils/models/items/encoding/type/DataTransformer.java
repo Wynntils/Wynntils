@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.encoding.type;
 
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
@@ -34,6 +35,8 @@ public abstract class DataTransformer<T> {
     protected boolean shouldEncodeData(ItemTransformingVersion version, T data) {
         return true;
     }
+
+    public abstract ErrorOr<T> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader);
 
     protected abstract byte getId();
 }

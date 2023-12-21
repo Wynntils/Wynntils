@@ -49,6 +49,13 @@ public class ShinyModel extends Model {
         });
     }
 
+    public ShinyStatType getShinyStatType(int id) {
+        return shinyStatTypes.values().stream()
+                .filter(statType -> statType.id() == id)
+                .findFirst()
+                .orElse(ShinyStatType.UNKNOWN);
+    }
+
     public Optional<ShinyStat> getShinyStat(ItemStack itemStack) {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return Optional.empty();

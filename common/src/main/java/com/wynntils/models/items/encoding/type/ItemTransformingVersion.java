@@ -13,6 +13,13 @@ public enum ItemTransformingVersion {
         this.id = (byte) id;
     }
 
+    public static ItemTransformingVersion fromId(byte id) {
+        return switch (id) {
+            case 0 -> VERSION_1;
+            default -> null;
+        };
+    }
+
     public byte getId() {
         return id;
     }
