@@ -18,11 +18,9 @@ public enum AccountType {
     SUPPORT(Component.literal("Wynntils Support").withStyle(ChatFormatting.GREEN)),
     MODERATOR(Component.literal("Wynntils Moderator").withStyle(ChatFormatting.BLUE)),
     DEVELOPER(Component.literal("Wynntils Developer")
-                    .withStyle(ChatFormatting.GOLD)
-                    .withStyle(ChatFormatting.BOLD)),
-    ADMIN(Component.literal("Wynntils Admin")
-            .withStyle(ChatFormatting.AQUA)
-            .withStyle(ChatFormatting.BOLD));
+            .withStyle(ChatFormatting.GOLD)
+            .withStyle(ChatFormatting.BOLD)),
+    ADMIN(Component.literal("Wynntils Admin").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD));
 
     private final MutableComponent component;
 
