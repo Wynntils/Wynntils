@@ -12,6 +12,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.CharmInfo;
+import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
     private final TomeInfoRegistry tomeInfoRegistry = new TomeInfoRegistry();
+    private final CharmInfoRegistry charmInfoRegistry = new CharmInfoRegistry();
 
     public RewardsModel() {
         super(List.of());
@@ -29,20 +31,20 @@ public class RewardsModel extends Model {
     @Override
     public void reloadData() {
         tomeInfoRegistry.reloadData();
+        charmInfoRegistry.reloadData();
     }
 
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromStyledText(name);
 
-        // TODO: replace with API lookup
-        CharmInfo charmInfo = new CharmInfo(displayName, tier, type);
+        CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (result.tier() != charmInfo.tier()) {
-            WynntilsMod.warn("Tier for " + charmInfo.displayName() + " is reported as " + result.tier());
+            WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, result.identifications(), result.rerolls());
+        return new CharmItem(charmInfo, CharmInstance.create(charmInfo, result.identifications()), result.rerolls());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name) {

@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 
 /**
@@ -23,6 +24,8 @@ public interface IdentifiableItemProperty {
     List<StatActualValue> getIdentifications();
 
     List<StatPossibleValues> getPossibleValues();
+
+    RangedValue getIdentificationLevelRange();
 
     boolean hasOverallValue();
 
