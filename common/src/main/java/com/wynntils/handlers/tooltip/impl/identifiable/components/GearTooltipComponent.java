@@ -128,6 +128,16 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
             header.add(Component.literal(""));
         }
 
+        if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
+            header.add(Component.literal(
+                            "⬡ " + gearInstance.shinyStat().get().statType().displayName() + ": ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(String.valueOf(
+                                    gearInstance.shinyStat().get().value()))
+                            .withStyle(ChatFormatting.WHITE)));
+            header.add(Component.literal(""));
+        }
+
         return header;
     }
 
