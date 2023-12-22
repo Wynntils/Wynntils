@@ -28,7 +28,7 @@ public record IdentificationData(
         Map<StatType, StatPossibleValues> possibleValues,
         Map<StatType, Integer> pendingCalculations)
         implements ItemData {
-    public static IdentificationData from(IdentifiableItemProperty property) {
+    public static IdentificationData from(IdentifiableItemProperty<?, ?> property) {
         return new IdentificationData(
                 property.getIdentifications(),
                 property.getPossibleValues().stream()
