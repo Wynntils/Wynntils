@@ -4,8 +4,11 @@
  */
 package com.wynntils.features.chat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
@@ -27,13 +30,17 @@ import com.wynntils.utils.type.IterationDecision;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,6 +48,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
 public class ChatItemFeature extends Feature {
+    @RegisterKeyBind
+    private final KeyBind shareItemKeybind =
+            new KeyBind("Share Item", GLFW.GLFW_KEY_F5, true, null, this::onInventoryPress);
+
     private final Map<String, String> chatItems = new HashMap<>();
 
     @SubscribeEvent
@@ -131,6 +142,10 @@ public class ChatItemFeature extends Feature {
         e.setMessage(modified.getComponent());
     }
 
+    private void onInventoryPress(Slot slot) {
+        makeChatPrompt(slot);
+    }
+
     private void decoodeChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
         Matcher matcher = Models.ItemEncoding.getEncodedDataPattern()
                 .matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
@@ -158,7 +173,7 @@ public class ChatItemFeature extends Feature {
             changes.add(last);
 
             partToReplace = last;
-            matcher = Models.Gear.gearChatEncodingMatcher(lastPart);
+            matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(lastPart);
         }
     }
 
@@ -220,5 +235,56 @@ public class ChatItemFeature extends Feature {
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
 
         return new StyledTextPart(name, style, null, Style.EMPTY);
+    }
+
+    private static void makeChatPrompt(Slot hoveredSlot) {
+        // chat item prompt
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
+
+        GearItem gearItem = gearItemOpt.get();
+        if (gearItem.isUnidentified()) {
+            // We can only send chat encoded gear of identified gear
+            WynntilsMod.warn("Cannot make chat link of unidentified gear");
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemUnidentifiedError"));
+            return;
+        }
+
+        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer = Models.ItemEncoding.encodeItem(gearItem);
+        if (errorOrEncodedByteBuffer.hasError()) {
+            WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatError"));
+            return;
+        }
+
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            WynntilsMod.info("Encoded item: " + errorOrEncodedByteBuffer.getValue());
+            WynntilsMod.info("Encoded item UTF-16: "
+                    + errorOrEncodedByteBuffer.getValue().toUtf16String());
+        }
+
+        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatItem.chatItemMessage")
+                .withStyle(ChatFormatting.DARK_GREEN)
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(s -> s.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.COPY_TO_CLIPBOARD,
+                        errorOrEncodedByteBuffer.getValue().toUtf16String())))
+                .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
+                                .withStyle(ChatFormatting.DARK_AQUA)))));
+
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            // Also encode the item using the old method for comparison
+            String encoded = Models.Gear.toEncodedString(gearItem);
+            McUtils.sendMessageToClient(Component.literal("[DEBUG] Click here to copy the old encoded item for chat!")
+                    .withStyle(ChatFormatting.DARK_GREEN)
+                    .withStyle(ChatFormatting.UNDERLINE)
+                    .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
+                    .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
+                                    .withStyle(ChatFormatting.DARK_AQUA)))));
+        }
     }
 }
