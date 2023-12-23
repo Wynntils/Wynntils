@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -138,8 +139,9 @@ public class GuildModel extends Model {
             Type type = new TypeToken<List<GuildProfile>>() {}.getType();
             List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
 
-            Map<String, GuildProfile> profileMap =
-                    guildProfiles.stream().collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
+            Map<String, GuildProfile> profileMap = guildProfiles.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
 
             guildProfileMap = profileMap;
         });
