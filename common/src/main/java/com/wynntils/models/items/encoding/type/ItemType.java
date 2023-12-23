@@ -5,7 +5,9 @@
 package com.wynntils.models.items.encoding.type;
 
 public enum ItemType {
-    GEAR(0);
+    GEAR(0),
+    TOME(1),
+    CHARM(2);
 
     private final byte id;
 
@@ -14,10 +16,13 @@ public enum ItemType {
     }
 
     public static ItemType fromId(byte id) {
-        return switch (id) {
-            case 0 -> GEAR;
-            default -> null;
-        };
+        for (ItemType itemType : values()) {
+            if (itemType.id == id) {
+                return itemType;
+            }
+        }
+
+        return null;
     }
 
     public byte getId() {
