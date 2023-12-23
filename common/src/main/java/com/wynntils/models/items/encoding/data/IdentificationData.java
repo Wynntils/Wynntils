@@ -36,12 +36,12 @@ public record IdentificationData(
                 Map.of());
     }
 
-    public ErrorOr<Void> processPendingCalculations() {
+    public ErrorOr<Void> processPendingCalculations(Map<StatType, StatPossibleValues> possibleValuesMap) {
         for (Map.Entry<StatType, Integer> entry : pendingCalculations.entrySet()) {
             StatType statType = entry.getKey();
             int internalRoll = entry.getValue();
 
-            StatPossibleValues possibleValues = possibleValues().get(statType);
+            StatPossibleValues possibleValues = possibleValuesMap.get(statType);
             if (possibleValues == null) {
                 return ErrorOr.error("No possible values for stat type: " + statType);
             }

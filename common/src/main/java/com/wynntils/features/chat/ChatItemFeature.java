@@ -238,22 +238,22 @@ public class ChatItemFeature extends Feature {
     }
 
     private static void makeChatPrompt(Slot hoveredSlot) {
-        // chat item prompt
+        // Special case for unidentified gear
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
-        if (gearItemOpt.isEmpty()) return;
-
-        GearItem gearItem = gearItemOpt.get();
-        if (gearItem.isUnidentified()) {
+        if (gearItemOpt.isPresent() && gearItemOpt.get().isUnidentified()) {
             // We can only send chat encoded gear of identified gear
             WynntilsMod.warn("Cannot make chat link of unidentified gear");
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemUnidentifiedError"));
             return;
         }
 
-        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer = Models.ItemEncoding.encodeItem(gearItem);
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
+        if (wynnItemOpt.isEmpty()) return;
+
+        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer = Models.ItemEncoding.encodeItem(wynnItemOpt.get());
         if (errorOrEncodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatError"));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemError"));
             return;
         }
 
@@ -274,9 +274,9 @@ public class ChatItemFeature extends Feature {
                         Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
                                 .withStyle(ChatFormatting.DARK_AQUA)))));
 
-        if (WynntilsMod.isDevelopmentEnvironment()) {
+        if (WynntilsMod.isDevelopmentEnvironment() && gearItemOpt.isPresent()) {
             // Also encode the item using the old method for comparison
-            String encoded = Models.Gear.toEncodedString(gearItem);
+            String encoded = Models.Gear.toEncodedString(gearItemOpt.get());
             McUtils.sendMessageToClient(Component.literal("[DEBUG] Click here to copy the old encoded item for chat!")
                     .withStyle(ChatFormatting.DARK_GREEN)
                     .withStyle(ChatFormatting.UNDERLINE)
