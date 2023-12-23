@@ -1,9 +1,26 @@
+## [0.0.4-beta.99](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.98...v0.0.4-beta.99) (2023-12-23)
+
+
+### New Features
+
+* Add new account types [skip ci] ([#2289](https://github.com/Wynntils/Artemis/issues/2289)) ([7bdb18c](https://github.com/Wynntils/Artemis/commit/7bdb18c4947f5ff6da2c9f8891b13e04d542bcbc))
+
+
+### Bug Fixes
+
+* Fix guild map crashing off-season (due to an Athena bug) ([#2290](https://github.com/Wynntils/Artemis/issues/2290)) ([038be2e](https://github.com/Wynntils/Artemis/commit/038be2ede880e6eaf6e259b86660bb20bee72130))
+
 ## [0.0.4-beta.98](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.97...v0.0.4-beta.98) (2023-12-20)
 
 
 ### Bug Fixes
 
 * fix elemental defenses being treated as inverted ([#2288](https://github.com/Wynntils/Artemis/issues/2288)) ([c1d80be](https://github.com/Wynntils/Artemis/commit/c1d80be0e80bf138c417efd68b801defaae7e1bd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.98 [skip ci] ([2a6b27e](https://github.com/Wynntils/Artemis/commit/2a6b27e0a9f7b5040f2a367896454f2ec4541d8f))
 
 ## [0.0.4-beta.97](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.96...v0.0.4-beta.97) (2023-12-20)
 
@@ -41,17 +58,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2286](https://github.com/Wynntils/Artemis/issues/2286)) ([6ecde5f](https://github.com/Wynntils/Artemis/commit/6ecde5fa37e97d582561b914f2772f9bd33b092b))
 * **release:** v0.0.4-beta.95 [skip ci] ([b22eb09](https://github.com/Wynntils/Artemis/commit/b22eb09b320a8fceb3ceb70e085f285611a4f2f0))
-
-## [0.0.4-beta.94](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.93...v0.0.4-beta.94) (2023-12-17)
-
-
-### New Features
-
-* Pet menu search ([#2285](https://github.com/Wynntils/Artemis/issues/2285)) ([73fa7bd](https://github.com/Wynntils/Artemis/commit/73fa7bd607be22fcbf5450126966800fcc15cbc8))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2284](https://github.com/Wynntils/Artemis/issues/2284)) ([5a6c0f9](https://github.com/Wynntils/Artemis/commit/5a6c0f961f332c62726d3d4e05b4eac0b8252c00))
-* **release:** v0.0.4-beta.94 [skip ci] ([06eab26](https://github.com/Wynntils/Artemis/commit/06eab262192e1f23075c98a4ba43e777f9f9e52c))
 
