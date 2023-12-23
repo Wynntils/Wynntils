@@ -28,7 +28,7 @@ public record IdentificationData(
         Map<StatType, StatPossibleValues> possibleValues,
         Map<StatType, Integer> pendingCalculations)
         implements ItemData {
-    public static IdentificationData from(IdentifiableItemProperty property) {
+    public static IdentificationData from(IdentifiableItemProperty<?, ?> property) {
         return new IdentificationData(
                 property.getIdentifications(),
                 property.getPossibleValues().stream()
@@ -36,12 +36,12 @@ public record IdentificationData(
                 Map.of());
     }
 
-    public ErrorOr<Void> processPendingCalculations() {
+    public ErrorOr<Void> processPendingCalculations(Map<StatType, StatPossibleValues> possibleValuesMap) {
         for (Map.Entry<StatType, Integer> entry : pendingCalculations.entrySet()) {
             StatType statType = entry.getKey();
             int internalRoll = entry.getValue();
 
-            StatPossibleValues possibleValues = possibleValues().get(statType);
+            StatPossibleValues possibleValues = possibleValuesMap.get(statType);
             if (possibleValues == null) {
                 return ErrorOr.error("No possible values for stat type: " + statType);
             }

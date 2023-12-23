@@ -8,14 +8,18 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
+import com.wynntils.models.items.encoding.impl.item.CharmItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
+import com.wynntils.models.items.encoding.impl.item.TomeItemTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemDataMap;
 import com.wynntils.models.items.encoding.type.ItemTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.items.encoding.type.ItemType;
+import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
@@ -104,6 +108,8 @@ public final class ItemTransformerRegistry {
 
     private void registerAllTransformers() {
         registerItemTransformer(GearItem.class, new GearItemTransformer());
+        registerItemTransformer(TomeItem.class, new TomeItemTransformer());
+        registerItemTransformer(CharmItem.class, new CharmItemTransformer());
     }
 
     private static final class ItemTransformerMap {

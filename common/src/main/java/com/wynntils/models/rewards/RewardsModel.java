@@ -35,6 +35,14 @@ public class RewardsModel extends Model {
         charmInfoRegistry.reloadData();
     }
 
+    public CharmInfo getCharmInfoFromDisplayName(String name) {
+        return charmInfoRegistry.getFromDisplayName(name);
+    }
+
+    public TomeInfo getTomeInfoFromDisplayName(String name) {
+        return tomeInfoRegistry.getFromDisplayName(name);
+    }
+
     public Stream<CharmInfo> getAllCharmInfos() {
         return charmInfoRegistry.getAllCharmInfos();
     }
