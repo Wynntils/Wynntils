@@ -38,6 +38,10 @@ public class RewardsModel extends Model {
         GearTier tier = GearTier.fromStyledText(name);
 
         CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
+        if (charmInfo == null) {
+            WynntilsMod.warn("Could not find charm info for " + name.getStringWithoutFormatting());
+            return null;
+        }
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (result.tier() != charmInfo.tier()) {
