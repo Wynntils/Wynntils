@@ -31,8 +31,9 @@ public final class ConnectionManager extends Manager {
         return isConnected;
     }
 
+    // ScreenOpenedEvent.Pre is used, because it is always posted
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent.Post e) {
+    public void onScreenOpened(ScreenOpenedEvent.Pre e) {
         if (e.getScreen() instanceof DisconnectedScreen) {
             disconnect();
         }

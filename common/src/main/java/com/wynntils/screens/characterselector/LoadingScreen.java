@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -17,6 +18,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -36,6 +38,16 @@ public final class LoadingScreen extends WynntilsScreen {
 
     public static LoadingScreen create() {
         return new LoadingScreen();
+    }
+
+    @Override
+    public void onClose() {
+        ClientPacketListener connection = McUtils.mc().getConnection();
+        if (connection != null) {
+            connection.close();
+        }
+
+        super.onClose();
     }
 
     public void setMessage(String message) {

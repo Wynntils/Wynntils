@@ -38,6 +38,6 @@ public abstract class ClientCommonPacketListenerImplMixin {
             at = @At("HEAD"))
     private void handleDisconnectPre(ClientboundDisconnectPacket packet, CallbackInfo ci) {
         // Unexpected disconnect
-        MixinHelper.post(new ConnectionEvent.DisconnectedEvent());
+        MixinHelper.postAlways(new ConnectionEvent.DisconnectedEvent());
     }
 }
