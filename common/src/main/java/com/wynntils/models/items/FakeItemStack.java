@@ -24,14 +24,14 @@ public class FakeItemStack extends ItemStack {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
         Handlers.Item.updateItem(
-                this, gearItem, StyledText.fromString(gearItem.getGearInfo().name()));
+                this, gearItem, StyledText.fromString(gearItem.getItemInfo().name()));
 
         this.gearItem = gearItem;
         this.source = source;
     }
 
     public FakeItemStack(GearItem gearItem, String source) {
-        this(gearItem, gearItem.getGearInfo().metaInfo().material().itemStack(), source);
+        this(gearItem, gearItem.getItemInfo().metaInfo().material().itemStack(), source);
     }
 
     @Override

@@ -18,27 +18,28 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
-public class CharmItem extends GameItem implements GearTierItemProperty, IdentifiableItemProperty {
+public class CharmItem extends GameItem
+        implements GearTierItemProperty, IdentifiableItemProperty<CharmInfo, CharmInstance> {
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
-    private final int rerolls;
 
-    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance, int rerolls) {
+    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance) {
         this.charmInfo = charmInfo;
         this.charmInstance = charmInstance;
-        this.rerolls = rerolls;
     }
 
-    public CharmInfo getCharmInfo() {
+    @Override
+    public CharmInfo getItemInfo() {
         return charmInfo;
     }
 
-    public Optional<CharmInstance> getCharmInstance() {
+    @Override
+    public Optional<CharmInstance> getItemInstance() {
         return Optional.ofNullable(charmInstance);
     }
 
     public int getRerolls() {
-        return rerolls;
+        return charmInstance != null ? charmInstance.rerolls() : 0;
     }
 
     @Override
@@ -64,6 +65,8 @@ public class CharmItem extends GameItem implements GearTierItemProperty, Identif
 
     @Override
     public List<StatActualValue> getIdentifications() {
+        if (charmInstance == null) return List.of();
+
         return charmInstance.identifications();
     }
 
@@ -99,9 +102,6 @@ public class CharmItem extends GameItem implements GearTierItemProperty, Identif
 
     @Override
     public String toString() {
-        return "CharmItem{" + "charmInfo="
-                + charmInfo + ", charmInstance="
-                + charmInstance + ", rerolls="
-                + rerolls + '}';
+        return "CharmItem{" + "charmInfo=" + charmInfo + ", charmInstance=" + charmInstance + '}';
     }
 }

@@ -18,6 +18,7 @@ import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
@@ -34,17 +35,29 @@ public class RewardsModel extends Model {
         charmInfoRegistry.reloadData();
     }
 
+    public Stream<CharmInfo> getAllCharmInfos() {
+        return charmInfoRegistry.getAllCharmInfos();
+    }
+
+    public Stream<TomeInfo> getAllTomeInfos() {
+        return tomeInfoRegistry.getAllTomeInfos();
+    }
+
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromStyledText(name);
 
         CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
+        if (charmInfo == null) {
+            WynntilsMod.warn("Could not find charm info for " + name.getStringWithoutFormatting());
+            return null;
+        }
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, CharmInstance.create(charmInfo, result.identifications()), result.rerolls());
+        return new CharmItem(charmInfo, CharmInstance.create(result.rerolls(), charmInfo, result.identifications()));
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name) {
@@ -61,6 +74,6 @@ public class RewardsModel extends Model {
             WynntilsMod.warn("Tier for " + tomeInfo.name() + " is reported as " + result.tier());
         }
 
-        return new TomeItem(tomeInfo, TomeInstance.create(tomeInfo, result.identifications()), result.rerolls());
+        return new TomeItem(tomeInfo, TomeInstance.create(result.rerolls(), tomeInfo, result.identifications()));
     }
 }

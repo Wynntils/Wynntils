@@ -24,7 +24,7 @@ public class ShinyModel extends Model {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return Optional.empty();
 
-        Optional<GearInstance> gearInstanceOpt = gearItemOpt.get().getGearInstance();
+        Optional<GearInstance> gearInstanceOpt = gearItemOpt.get().getItemInstance();
         if (gearInstanceOpt.isEmpty()) return Optional.empty();
 
         return gearInstanceOpt.get().shinyStat();
