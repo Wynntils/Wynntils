@@ -7,10 +7,12 @@ package com.wynntils.handlers.tooltip;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.tooltip.impl.charm.CharmTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.gear.GearTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.tome.TomeTooltipComponent;
 import com.wynntils.handlers.tooltip.type.TooltipComponent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +48,7 @@ public class TooltipHandler extends Handler {
     private void registerTooltipComponents() {
         registerTooltipComponent(CharmItem.class, new CharmTooltipComponent());
         registerTooltipComponent(GearItem.class, new GearTooltipComponent());
+        registerTooltipComponent(TomeItem.class, new TomeTooltipComponent());
     }
 
     private void registerTooltipComponent(Class<? extends WynnItem> itemClass, TooltipComponent tooltipComponent) {

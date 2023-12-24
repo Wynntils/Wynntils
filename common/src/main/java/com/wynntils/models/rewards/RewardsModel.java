@@ -39,6 +39,10 @@ public class RewardsModel extends Model {
         return charmInfoRegistry.getAllCharmInfos();
     }
 
+    public Stream<TomeInfo> getAllTomeInfos() {
+        return tomeInfoRegistry.getAllTomeInfos();
+    }
+
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromStyledText(name);
 

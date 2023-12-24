@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class TomeInfoRegistry {
     private List<TomeInfo> tomeInfoRegistry = List.of();
@@ -53,6 +54,10 @@ public class TomeInfoRegistry {
 
     public TomeInfo getFromDisplayName(String gearName) {
         return tomeInfoLookup.get(gearName);
+    }
+
+    public Stream<TomeInfo> getAllTomeInfos() {
+        return tomeInfoRegistry.stream();
     }
 
     private void loadTomeInfoRegistry() {

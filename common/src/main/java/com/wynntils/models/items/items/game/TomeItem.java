@@ -65,6 +65,8 @@ public class TomeItem extends GameItem
 
     @Override
     public List<StatActualValue> getIdentifications() {
+        if (tomeInstance == null) return List.of();
+
         return tomeInstance.identifications();
     }
 
