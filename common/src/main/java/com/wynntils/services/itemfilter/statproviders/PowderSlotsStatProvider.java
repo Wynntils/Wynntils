@@ -14,6 +14,6 @@ public class PowderSlotsStatProvider extends ItemStatProvider<Integer> {
     public List<Integer> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
-        return List.of(gearItem.getGearInfo().powderSlots());
+        return List.of(gearItem.getItemInfo().powderSlots());
     }
 }

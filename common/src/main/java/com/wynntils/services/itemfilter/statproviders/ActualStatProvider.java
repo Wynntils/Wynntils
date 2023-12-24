@@ -66,14 +66,14 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     }
 
     private List<StatValue> handleGearItem(GearItem gearItem) {
-        GearInfo gearInfo = gearItem.getGearInfo();
+        GearInfo gearInfo = gearItem.getItemInfo();
         StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
         if (possibleValues == null) {
             return List.of();
         }
 
-        Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
+        Optional<GearInstance> gearInstanceOpt = gearItem.getItemInstance();
 
         if (gearInstanceOpt.isEmpty()) {
             // Item guide item

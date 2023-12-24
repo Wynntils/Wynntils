@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class CharmInfoRegistry {
     private List<CharmInfo> charmInfoRegistry = List.of();
@@ -51,6 +52,10 @@ public class CharmInfoRegistry {
 
     public CharmInfo getFromDisplayName(String gearName) {
         return charmInfoLookup.get(gearName);
+    }
+
+    public Stream<CharmInfo> getAllCharmInfos() {
+        return charmInfoRegistry.stream();
     }
 
     private void loadCharmInfoRegistry() {
