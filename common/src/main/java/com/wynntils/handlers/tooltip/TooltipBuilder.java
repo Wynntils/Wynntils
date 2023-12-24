@@ -5,8 +5,8 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.tooltip.gear.GearTooltipFooter;
-import com.wynntils.handlers.tooltip.gear.GearTooltipHeader;
+import com.wynntils.handlers.tooltip.impl.gear.GearTooltipFooter;
+import com.wynntils.handlers.tooltip.impl.gear.GearTooltipHeader;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;

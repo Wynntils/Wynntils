@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.tooltip.gear;
+package com.wynntils.handlers.tooltip.impl.gear;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.activities.quests.QuestInfo;
