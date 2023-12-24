@@ -1,3 +1,10 @@
+## [0.0.4-beta.100](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.99...v0.0.4-beta.100) (2023-12-24)
+
+
+### New Features
+
+* Add charm and tome item guides ([#2291](https://github.com/Wynntils/Artemis/issues/2291)) ([6dfab4a](https://github.com/Wynntils/Artemis/commit/6dfab4ad7ca0dc83fb7c06f01d5c35636446dec6))
+
 ## [0.0.4-beta.99](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.98...v0.0.4-beta.99) (2023-12-23)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * Fix guild map crashing off-season (due to an Athena bug) ([#2290](https://github.com/Wynntils/Artemis/issues/2290)) ([038be2e](https://github.com/Wynntils/Artemis/commit/038be2ede880e6eaf6e259b86660bb20bee72130))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.99 [skip ci] ([db953d6](https://github.com/Wynntils/Artemis/commit/db953d6c439df308eab3ce3a57b9ac9ba3aa9527))
 
 ## [0.0.4-beta.98](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.97...v0.0.4-beta.98) (2023-12-20)
 
@@ -45,17 +57,4 @@
 ### Code Refactoring
 
 * In preparation for charm identifications, add support for custom stat type ranges, rework the inverted stat system, other fixes to internal rolls ([#2282](https://github.com/Wynntils/Artemis/issues/2282)) ([0e4a664](https://github.com/Wynntils/Artemis/commit/0e4a6640dc4e37e6b5b8d79adb703e5baa7a6744)), closes [#2283](https://github.com/Wynntils/Artemis/issues/2283) [#2284](https://github.com/Wynntils/Artemis/issues/2284) [#2285](https://github.com/Wynntils/Artemis/issues/2285)
-
-## [0.0.4-beta.95](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.94...v0.0.4-beta.95) (2023-12-17)
-
-
-### Bug Fixes
-
-* Fix occasional crashes when a tome info is not found ([#2287](https://github.com/Wynntils/Artemis/issues/2287)) ([d72cda5](https://github.com/Wynntils/Artemis/commit/d72cda5e287f65f3236de90cd6114fb838c6f46f))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2286](https://github.com/Wynntils/Artemis/issues/2286)) ([6ecde5f](https://github.com/Wynntils/Artemis/commit/6ecde5fa37e97d582561b914f2772f9bd33b092b))
-* **release:** v0.0.4-beta.95 [skip ci] ([b22eb09](https://github.com/Wynntils/Artemis/commit/b22eb09b320a8fceb3ceb70e085f285611a4f2f0))
 
