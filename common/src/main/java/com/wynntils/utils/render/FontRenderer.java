@@ -40,7 +40,7 @@ public final class FontRenderer {
         return font;
     }
 
-    private void renderText(
+    public void renderText(
             PoseStack poseStack,
             StyledText text,
             float x,

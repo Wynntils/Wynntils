@@ -23,6 +23,9 @@ import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,6 +42,7 @@ public class SkillPointModel extends Model {
     @Persisted
     private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new LinkedHashMap<>());
 
+    private static final int[] ACCESSORY_SLOTS = {9, 10, 11, 12};
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
@@ -53,13 +57,16 @@ public class SkillPointModel extends Model {
         super(List.of());
     }
 
+    public boolean hasLoadout(String name) {
+        return skillPointLoadouts.get().containsKey(name);
+    }
+
     /**
      * Saves the current assigned skill points to the loadout list.
      * @param name The name of the loadout to save.
      */
-    public void saveCurrentLoadout(String name) {
+    public void saveCurrentSkillPoints(String name) {
         SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
-                false,
                 getAssignedSkillPoints(Skill.STRENGTH),
                 getAssignedSkillPoints(Skill.DEXTERITY),
                 getAssignedSkillPoints(Skill.INTELLIGENCE),
@@ -68,6 +75,37 @@ public class SkillPointModel extends Model {
         );
         skillPointLoadouts.get().put(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
+    }
+
+    /**
+     * Saves the current assigned skill points and gear to the build list.
+     * @param name The name of the build to save.
+     */
+    public void saveCurrentBuild(String name) {
+        List<String> armourNames = new ArrayList<>();
+        McUtils.inventory().armor.stream().map(x -> x.getHoverName().getString()).forEach(armourNames::add);
+        Collections.reverse(armourNames); // helmet to boots order
+
+        List<String> accessoryNames = new ArrayList<>();
+        for (int i : ACCESSORY_SLOTS) {
+            ItemStack itemStack = McUtils.inventory().getItem(i);
+            if (!itemStack.isEmpty()) {
+                accessoryNames.add(itemStack.getHoverName().getString());
+            }
+        }
+
+        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
+                getAssignedSkillPoints(Skill.STRENGTH),
+                getAssignedSkillPoints(Skill.DEXTERITY),
+                getAssignedSkillPoints(Skill.INTELLIGENCE),
+                getAssignedSkillPoints(Skill.DEFENCE),
+                getAssignedSkillPoints(Skill.AGILITY),
+                armourNames,
+                accessoryNames
+        );
+
+        skillPointLoadouts.get().put(name, assignedSkillPointSet);
+        WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
 
     public void loadLoadout(String name) {
@@ -102,11 +140,16 @@ public class SkillPointModel extends Model {
             }
         }
 
+        // TODO go by 5's later
         AtomicBoolean confirmationDone = new AtomicBoolean(false);
         negatives.forEach((skill, difference) -> {
             for (int i = 0; i < Math.abs(difference) + (confirmationDone.get() ? 0 : 1); i++) {
                 ContainerUtils.clickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()], containerContent.containerId(), GLFW.GLFW_MOUSE_BUTTON_RIGHT, containerContent.items());
+                assignedSkillPoints.merge(skill, -1, Integer::sum);
+            }
+            if (!confirmationDone.get()) { // only do this once, account for the confirmation click
+                assignedSkillPoints.merge(skill, 1, Integer::sum);
             }
             confirmationDone.set(true);
         });
@@ -115,20 +158,13 @@ public class SkillPointModel extends Model {
             for (int i = 0; i < difference; i++) {
                 ContainerUtils.clickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()], containerContent.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, containerContent.items());
+                assignedSkillPoints.merge(skill, 1, Integer::sum);
             }
         });
     }
 
     public void deleteLoadout(String name) {
         skillPointLoadouts.get().remove(name);
-    }
-
-    public void clearCurrentPoints() {
-        totalSkillPoints.clear();
-        gearSkillPoints.clear();
-        craftedSkillPoints.clear();
-        tomeSkillPoints.clear();
-        assignedSkillPoints.clear();
     }
 
     public void populateSkillPoints() {
@@ -170,7 +206,7 @@ public class SkillPointModel extends Model {
             }
         });
 
-        for (int i = 9; i <= 12; i++) {
+        for (int i : ACCESSORY_SLOTS) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
             Optional<WynnItem> wynnItemOptional =
                     Models.Item.getWynnItem(itemStack);
@@ -188,7 +224,7 @@ public class SkillPointModel extends Model {
                         craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                     }
                 });
-            } else if (!itemStack.isEmpty()) {
+            } else if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals("§7Accessory Slot")) {
                 WynntilsMod.warn("Skill Point Model failed to parse accessory: "
                         + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
             }

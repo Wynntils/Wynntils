@@ -21,6 +21,8 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
+import java.util.stream.Collectors;
+
 public class LoadoutWidget extends AbstractWidget {
     private final float dividedWidth;
     private final String name;
@@ -49,12 +51,27 @@ public class LoadoutWidget extends AbstractWidget {
                     poseStack, CommonColors.WHITE, this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), 1, 0.5f);
         }
 
+        int nameYOffset = 2;
+        if (this.loadout.isBuild()) {
+            nameYOffset = 3;
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.join(", ", loadout.getArmourNames())),
+                            dividedWidth * 4,
+                            this.getY() + ((float) this.getHeight() / 4 * 3),
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            0.8f);
+        }
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(name),
+                        StyledText.fromString(name + " (" + loadout.getSkillPointsSum() + ")"),
                         dividedWidth * 4,
-                        this.getY() + (float) this.getHeight() / 2,
+                        this.getY() + (float) this.getHeight() / nameYOffset,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
