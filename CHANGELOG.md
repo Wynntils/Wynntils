@@ -1,9 +1,21 @@
+## [0.0.4-beta.101](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.100...v0.0.4-beta.101) (2023-12-24)
+
+
+### Bug Fixes
+
+* fix some cases where the custom loading screen got stuck ([#2292](https://github.com/Wynntils/Artemis/issues/2292)) ([7c92b7c](https://github.com/Wynntils/Artemis/commit/7c92b7cdc028386ed64506f1c067323c8e90dd70))
+
 ## [0.0.4-beta.100](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.99...v0.0.4-beta.100) (2023-12-24)
 
 
 ### New Features
 
 * Add charm and tome item guides ([#2291](https://github.com/Wynntils/Artemis/issues/2291)) ([6dfab4a](https://github.com/Wynntils/Artemis/commit/6dfab4ad7ca0dc83fb7c06f01d5c35636446dec6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.100 [skip ci] ([735cf65](https://github.com/Wynntils/Artemis/commit/735cf652117c00bc3b2d0f7346f972723f4050d2))
 
 ## [0.0.4-beta.99](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.98...v0.0.4-beta.99) (2023-12-23)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.97 [skip ci] ([9b6f8a7](https://github.com/Wynntils/Artemis/commit/9b6f8a767035a9be4b469c8cc51359bf12e0e618))
-
-## [0.0.4-beta.96](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.95...v0.0.4-beta.96) (2023-12-20)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.96 [skip ci] ([e19cc13](https://github.com/Wynntils/Artemis/commit/e19cc13c78317684f15476056a27acdab8cb08d0))
-
-
-### Code Refactoring
-
-* In preparation for charm identifications, add support for custom stat type ranges, rework the inverted stat system, other fixes to internal rolls ([#2282](https://github.com/Wynntils/Artemis/issues/2282)) ([0e4a664](https://github.com/Wynntils/Artemis/commit/0e4a6640dc4e37e6b5b8d79adb703e5baa7a6744)), closes [#2283](https://github.com/Wynntils/Artemis/issues/2283) [#2284](https://github.com/Wynntils/Artemis/issues/2284) [#2285](https://github.com/Wynntils/Artemis/issues/2285)
 
