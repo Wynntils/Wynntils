@@ -5,10 +5,9 @@
 package com.wynntils.screens.skillpointloadouts.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.models.skillpoint.SavableSkillPointSet;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -16,8 +15,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.Map;
-
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -27,11 +24,11 @@ import net.minecraft.network.chat.Component;
 public class LoadoutWidget extends AbstractWidget {
     private final float dividedWidth;
     private final String name;
-    private final Map<Skill, Integer> loadout;
+    private final SavableSkillPointSet loadout;
     private final SkillPointLoadoutsScreen parent;
 
     public LoadoutWidget(
-            int x, int y, int width, int height, float dividedWidth, String name, Map<Skill, Integer> loadout, SkillPointLoadoutsScreen parent) {
+            int x, int y, int width, int height, float dividedWidth, String name, SavableSkillPointSet loadout, SkillPointLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal(name));
         this.dividedWidth = dividedWidth;
         this.name = name;
@@ -46,6 +43,10 @@ public class LoadoutWidget extends AbstractWidget {
         if (this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
                     poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width, height);
+        }
+        if (parent.getSelectedLoadout() != null && parent.getSelectedLoadout().key().equals(this.name)) {
+            RenderUtils.drawRectBorders(
+                    poseStack, CommonColors.WHITE, this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), 1, 0.5f);
         }
 
         FontRenderer.getInstance()
@@ -63,7 +64,7 @@ public class LoadoutWidget extends AbstractWidget {
                     .renderText(
                             poseStack,
                             StyledText.fromString(
-                                    Skill.values()[i].getColorCode() + "" + loadout.get(Skill.values()[i])),
+                                    Skill.values()[i].getColorCode() + "" + loadout.getSkillPointsAsArray()[i]),
                             dividedWidth * (21 + i * 2),
                             this.getY() + (float) this.getHeight() / 2,
                             CommonColors.WHITE,

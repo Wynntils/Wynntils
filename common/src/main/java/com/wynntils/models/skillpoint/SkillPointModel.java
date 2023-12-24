@@ -28,11 +28,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
+import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 public class SkillPointModel extends Model {
     @Persisted
-    private final Storage<Map<String, Map<Skill, Integer>>> skillPointLoadouts = new Storage<>(new LinkedHashMap<>());
+    private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new LinkedHashMap<>());
 
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
@@ -51,15 +56,67 @@ public class SkillPointModel extends Model {
     /**
      * Saves the current assigned skill points to the loadout list.
      * @param name The name of the loadout to save.
-     * @return Whether the loadout was successfully saved. If false, the loadout already exists.
      */
-    public boolean saveCurrentLoadout(String name) {
-        if (skillPointLoadouts.get().containsKey(name)) {
-            WynntilsMod.warn("Loadout with name " + name + " already exists!");
-            return false;
+    public void saveCurrentLoadout(String name) {
+        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
+                false,
+                getAssignedSkillPoints(Skill.STRENGTH),
+                getAssignedSkillPoints(Skill.DEXTERITY),
+                getAssignedSkillPoints(Skill.INTELLIGENCE),
+                getAssignedSkillPoints(Skill.DEFENCE),
+                getAssignedSkillPoints(Skill.AGILITY)
+        );
+        skillPointLoadouts.get().put(name, assignedSkillPointSet);
+        WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
+    }
+
+    public void loadLoadout(String name) {
+        // No .closeContainer() here, we want the screen to remain open but close the inventory in the background
+        McUtils.player()
+                .connection
+                .send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        McUtils.player().containerMenu = McUtils.player().inventoryMenu;
+
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
+                .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
+                .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
+                        .expectContainerTitle("Character Info")
+                        .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
+                .build();
+        query.executeQuery();
+    }
+
+    private void loadSkillPointsOnServer(ContainerContent containerContent, String name) {
+        // we need to figure out which points we can subtract from first to actually allow assigning for positive points
+        Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> positives = new EnumMap<>(Skill.class);
+        for (int i = 0; i < 5; i++) {
+            int buildTarget = skillPointLoadouts.get().get(name).getSkillPointsAsArray()[i];
+            int difference = buildTarget - getAssignedSkillPoints(Skill.values()[i]);
+
+            // no difference automatically dropped here
+            if (difference > 0) {
+                positives.put(Skill.values()[i], difference);
+            } else if (difference < 0) {
+                negatives.put(Skill.values()[i], difference);
+            }
         }
-        skillPointLoadouts.get().put(name, assignedSkillPoints);
-        return true;
+
+        AtomicBoolean confirmationDone = new AtomicBoolean(false);
+        negatives.forEach((skill, difference) -> {
+            for (int i = 0; i < Math.abs(difference) + (confirmationDone.get() ? 0 : 1); i++) {
+                ContainerUtils.clickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()], containerContent.containerId(), GLFW.GLFW_MOUSE_BUTTON_RIGHT, containerContent.items());
+            }
+            confirmationDone.set(true);
+        });
+
+        positives.forEach((skill, difference) -> {
+            for (int i = 0; i < difference; i++) {
+                ContainerUtils.clickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()], containerContent.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, containerContent.items());
+            }
+        });
     }
 
     public void deleteLoadout(String name) {
@@ -108,14 +165,15 @@ public class SkillPointModel extends Model {
                         craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                     }
                 });
-            } else {
-                WynntilsMod.warn("Failed to parse armour: " + LoreUtils.getStringLore(itemStack));
+            } else if (!itemStack.isEmpty()) {
+                WynntilsMod.warn("Skill Point Model failed to parse armour: " + LoreUtils.getStringLore(itemStack));
             }
         });
 
         for (int i = 9; i <= 12; i++) {
+            ItemStack itemStack = McUtils.inventory().getItem(i);
             Optional<WynnItem> wynnItemOptional =
-                    Models.Item.getWynnItem(McUtils.inventory().getItem(i));
+                    Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isEmpty()) continue; // Empty slot
 
             if (wynnItemOptional.get() instanceof GearItem gear) {
@@ -130,8 +188,8 @@ public class SkillPointModel extends Model {
                         craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                     }
                 });
-            } else {
-                WynntilsMod.warn("Failed to parse accessory: "
+            } else if (!itemStack.isEmpty()) {
+                WynntilsMod.warn("Skill Point Model failed to parse accessory: "
                         + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
             }
         }
@@ -152,7 +210,6 @@ public class SkillPointModel extends Model {
     }
 
     private void processTotalSkillPoints(ContainerContent content) {
-        System.out.println("querying total skill points");
         totalSkillPoints.clear();
         for (Integer slot : SKILL_POINT_TOTAL_SLOTS) {
             Optional<WynnItem> wynnItemOptional =
@@ -160,16 +217,13 @@ public class SkillPointModel extends Model {
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof SkillPointItem skillPoint) {
                 totalSkillPoints.merge(skillPoint.getSkill(), skillPoint.getSkillPoints(), Integer::sum);
             } else {
-                WynntilsMod.warn("Failed to parse skill point item: "
+                WynntilsMod.warn("Skill Point Model failed to parse skill point item: "
                         + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
-
-        System.out.println("total skill points: " + totalSkillPoints);
     }
 
     private void processTomeSkillPoints(ContainerContent content) {
-        System.out.println("querying tomes");
         tomeSkillPoints.clear();
         for (Integer slot : SKILL_POINT_TOME_SLOTS) {
             Optional<WynnItem> wynnItemOptional =
@@ -181,11 +235,10 @@ public class SkillPointModel extends Model {
                     }
                 });
             } else {
-                WynntilsMod.warn("Failed to parse tome: "
+                WynntilsMod.warn("Skill Point Model failed to parse tome: "
                         + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
-        System.out.println("tome skill points: " + tomeSkillPoints);
 
         calculateAssignedSkillPoints();
     }
@@ -237,7 +290,7 @@ public class SkillPointModel extends Model {
         return assignedSkillPoints.values().stream().reduce(0, Integer::sum);
     }
 
-    public Map<String, Map<Skill, Integer>> getLoadouts() {
+    public Map<String, SavableSkillPointSet> getLoadouts() {
         return skillPointLoadouts.get();
     }
 }
