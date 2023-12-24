@@ -18,7 +18,8 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
-public class CharmItem extends GameItem implements GearTierItemProperty, IdentifiableItemProperty {
+public class CharmItem extends GameItem
+        implements GearTierItemProperty, IdentifiableItemProperty<CharmInfo, CharmInstance> {
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
     private final int rerolls;
@@ -29,11 +30,13 @@ public class CharmItem extends GameItem implements GearTierItemProperty, Identif
         this.rerolls = rerolls;
     }
 
-    public CharmInfo getCharmInfo() {
+    @Override
+    public CharmInfo getItemInfo() {
         return charmInfo;
     }
 
-    public Optional<CharmInstance> getCharmInstance() {
+    @Override
+    public Optional<CharmInstance> getItemInstance() {
         return Optional.ofNullable(charmInstance);
     }
 

@@ -18,7 +18,8 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
-public class TomeItem extends GameItem implements GearTierItemProperty, IdentifiableItemProperty {
+public class TomeItem extends GameItem
+        implements GearTierItemProperty, IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
     private final int rerolls;
@@ -29,11 +30,13 @@ public class TomeItem extends GameItem implements GearTierItemProperty, Identifi
         this.rerolls = rerolls;
     }
 
-    public TomeInfo getTomeInfo() {
+    @Override
+    public TomeInfo getItemInfo() {
         return tomeInfo;
     }
 
-    public Optional<TomeInstance> getTomeInstance() {
+    @Override
+    public Optional<TomeInstance> getItemInstance() {
         return Optional.ofNullable(tomeInstance);
     }
 

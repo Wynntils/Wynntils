@@ -15,7 +15,7 @@ public class MajorIdStatProvider extends ItemStatProvider<String> {
     public List<String> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
-        return gearItem.getGearInfo().fixedStats().majorIds().stream()
+        return gearItem.getItemInfo().fixedStats().majorIds().stream()
                 .map(GearMajorId::name)
                 .toList();
     }
