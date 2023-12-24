@@ -65,6 +65,8 @@ public class CharmItem extends GameItem
 
     @Override
     public List<StatActualValue> getIdentifications() {
+        if (charmInstance == null) return List.of();
+
         return charmInstance.identifications();
     }
 

@@ -18,6 +18,7 @@ import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 
 public class RewardsModel extends Model {
@@ -32,6 +33,10 @@ public class RewardsModel extends Model {
     public void reloadData() {
         tomeInfoRegistry.reloadData();
         charmInfoRegistry.reloadData();
+    }
+
+    public Stream<CharmInfo> getAllCharmInfos() {
+        return charmInfoRegistry.getAllCharmInfos();
     }
 
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {

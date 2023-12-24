@@ -1990,6 +1990,7 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundSecret.name": "Undiscovered Secret Discoveries",
   "screens.wynntils.wynntilsDiscoveries.showUnfoundTerritory.name": "Undiscovered Territory Discoveries",
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Undiscovered World Discoveries",
+  "screens.wynntils.wynntilsGuides.charmGuide.name": "Charm Guide",
   "screens.wynntils.wynntilsGuides.description": "See all the guides in Wynntils.",
   "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Emerald Pouch Guide",
   "screens.wynntils.wynntilsGuides.export.description": "Export favorites to your clipboard",
