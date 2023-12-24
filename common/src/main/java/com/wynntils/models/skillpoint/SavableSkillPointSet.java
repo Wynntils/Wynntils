@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.skillpoint;
 
 import java.util.ArrayList;
@@ -25,7 +29,14 @@ public class SavableSkillPointSet {
         this.accessoryNames = List.of();
     }
 
-    public SavableSkillPointSet(int strength, int dexterity, int intelligence, int defence, int agility, List<String> armourNames, List<String> accessoryNames) {
+    public SavableSkillPointSet(
+            int strength,
+            int dexterity,
+            int intelligence,
+            int defence,
+            int agility,
+            List<String> armourNames,
+            List<String> accessoryNames) {
         this.isBuild = true;
         this.strength = strength;
         this.dexterity = dexterity;
@@ -58,15 +69,14 @@ public class SavableSkillPointSet {
 
     @Override
     public String toString() {
-        return "SavableSkillPointSet{" +
-                "isBuild=" + isBuild +
-                ", strength=" + strength +
-                ", dexterity=" + dexterity +
-                ", intelligence=" + intelligence +
-                ", defence=" + defence +
-                ", agility=" + agility +
-                ", armourNames=" + armourNames +
-                ", accessoryNames=" + accessoryNames +
-                '}';
+        return "SavableSkillPointSet{" + "isBuild="
+                + isBuild + ", strength="
+                + strength + ", dexterity="
+                + dexterity + ", intelligence="
+                + intelligence + ", defence="
+                + defence + ", agility="
+                + agility + ", armourNames="
+                + armourNames + ", accessoryNames="
+                + accessoryNames + '}';
     }
 }

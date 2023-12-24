@@ -21,8 +21,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-import java.util.stream.Collectors;
-
 public class LoadoutWidget extends AbstractWidget {
     private final float dividedWidth;
     private final String name;
@@ -30,7 +28,14 @@ public class LoadoutWidget extends AbstractWidget {
     private final SkillPointLoadoutsScreen parent;
 
     public LoadoutWidget(
-            int x, int y, int width, int height, float dividedWidth, String name, SavableSkillPointSet loadout, SkillPointLoadoutsScreen parent) {
+            int x,
+            int y,
+            int width,
+            int height,
+            float dividedWidth,
+            String name,
+            SavableSkillPointSet loadout,
+            SkillPointLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal(name));
         this.dividedWidth = dividedWidth;
         this.name = name;
@@ -46,9 +51,17 @@ public class LoadoutWidget extends AbstractWidget {
             RenderUtils.drawRect(
                     poseStack, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), 0, width, height);
         }
-        if (parent.getSelectedLoadout() != null && parent.getSelectedLoadout().key().equals(this.name)) {
+        if (parent.getSelectedLoadout() != null
+                && parent.getSelectedLoadout().key().equals(this.name)) {
             RenderUtils.drawRectBorders(
-                    poseStack, CommonColors.WHITE, this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), 1, 0.5f);
+                    poseStack,
+                    CommonColors.WHITE,
+                    this.getX(),
+                    this.getY(),
+                    this.getX() + this.getWidth(),
+                    this.getY() + this.getHeight(),
+                    1,
+                    0.5f);
         }
 
         int nameYOffset = 2;
