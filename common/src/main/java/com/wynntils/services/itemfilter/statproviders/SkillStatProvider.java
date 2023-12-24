@@ -31,7 +31,7 @@ public class SkillStatProvider extends ItemStatProvider<Integer> {
 
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof IdentifiableItemProperty identifiableItemProperty)) return List.of();
+        if (!(wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty)) return List.of();
 
         return identifiableItemProperty.getIdentifications().stream()
                 .filter(id -> id.statType() instanceof SkillStatType)

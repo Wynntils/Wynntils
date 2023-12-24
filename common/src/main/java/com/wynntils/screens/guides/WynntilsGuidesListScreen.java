@@ -10,10 +10,12 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
+import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.guides.tome.WynntilsTomeGuideScreen;
 import com.wynntils.screens.guides.widgets.ExportButton;
 import com.wynntils.screens.guides.widgets.GuidesButton;
 import com.wynntils.screens.guides.widgets.ImportButton;
@@ -34,6 +36,8 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     private static final List<Screen> GUIDES = List.of(
             WynntilsItemGuideScreen.create(),
             WynntilsIngredientGuideScreen.create(),
+            WynntilsTomeGuideScreen.create(),
+            WynntilsCharmGuideScreen.create(),
             WynntilsEmeraldPouchGuideScreen.create(),
             WynntilsPowderGuideScreen.create());
 

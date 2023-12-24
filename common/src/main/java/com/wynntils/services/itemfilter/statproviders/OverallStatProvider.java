@@ -15,7 +15,7 @@ public class OverallStatProvider extends ItemStatProvider<Integer> {
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
-            Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
+            Optional<GearInstance> gearInstanceOpt = gearItem.getItemInstance();
 
             if (gearInstanceOpt.isEmpty()) {
                 return List.of();

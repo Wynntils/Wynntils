@@ -9,9 +9,10 @@ import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 import java.util.Optional;
 
-public record TomeInstance(List<StatActualValue> identifications, Optional<Float> overallQuality) {
-    public static TomeInstance create(TomeInfo tomeInfo, List<StatActualValue> identifications) {
+public record TomeInstance(int rerolls, List<StatActualValue> identifications, Optional<Float> overallQuality) {
+    public static TomeInstance create(int rerolls, TomeInfo tomeInfo, List<StatActualValue> identifications) {
         return new TomeInstance(
+                rerolls,
                 identifications,
                 StatCalculator.calculateOverallQuality(
                         tomeInfo.name(), tomeInfo.getPossibleValueList(), identifications));

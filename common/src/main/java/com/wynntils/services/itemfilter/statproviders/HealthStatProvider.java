@@ -15,7 +15,7 @@ public class HealthStatProvider extends ItemStatProvider<Integer> {
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
-            return List.of(gearItem.getGearInfo().fixedStats().healthBuff());
+            return List.of(gearItem.getItemInfo().fixedStats().healthBuff());
         }
 
         if (wynnItem instanceof CraftedGearItem craftedGearItem) {

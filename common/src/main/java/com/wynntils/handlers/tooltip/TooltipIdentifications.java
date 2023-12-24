@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Style;
 
 public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
-            IdentifiableItemProperty itemInfo,
+            IdentifiableItemProperty<?, ?> itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -79,7 +79,7 @@ public final class TooltipIdentifications {
 
     private static MutableComponent getStatLine(
             StatType statType,
-            IdentifiableItemProperty itemInfo,
+            IdentifiableItemProperty<?, ?> itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
