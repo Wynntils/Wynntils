@@ -22,12 +22,10 @@ public class TomeItem extends GameItem
         implements GearTierItemProperty, IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
-    private final int rerolls;
 
-    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance, int rerolls) {
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
         this.tomeInfo = tomeInfo;
         this.tomeInstance = tomeInstance;
-        this.rerolls = rerolls;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class TomeItem extends GameItem
     }
 
     public int getRerolls() {
-        return rerolls;
+        return tomeInstance != null ? tomeInstance.rerolls() : 0;
     }
 
     @Override
@@ -103,6 +101,6 @@ public class TomeItem extends GameItem
 
     @Override
     public String toString() {
-        return "TomeItem{" + "tomeInfo=" + tomeInfo + ", tomeInstance=" + tomeInstance + ", rerolls=" + rerolls + '}';
+        return "TomeItem{" + "tomeInfo=" + tomeInfo + ", tomeInstance=" + tomeInstance + '}';
     }
 }

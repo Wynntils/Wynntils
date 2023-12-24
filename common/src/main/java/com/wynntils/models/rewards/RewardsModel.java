@@ -44,7 +44,7 @@ public class RewardsModel extends Model {
             WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, CharmInstance.create(charmInfo, result.identifications()), result.rerolls());
+        return new CharmItem(charmInfo, CharmInstance.create(result.rerolls(), charmInfo, result.identifications()));
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name) {
@@ -61,6 +61,6 @@ public class RewardsModel extends Model {
             WynntilsMod.warn("Tier for " + tomeInfo.name() + " is reported as " + result.tier());
         }
 
-        return new TomeItem(tomeInfo, TomeInstance.create(tomeInfo, result.identifications()), result.rerolls());
+        return new TomeItem(tomeInfo, TomeInstance.create(result.rerolls(), tomeInfo, result.identifications()));
     }
 }

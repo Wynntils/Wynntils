@@ -22,12 +22,10 @@ public class CharmItem extends GameItem
         implements GearTierItemProperty, IdentifiableItemProperty<CharmInfo, CharmInstance> {
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
-    private final int rerolls;
 
-    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance, int rerolls) {
+    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance) {
         this.charmInfo = charmInfo;
         this.charmInstance = charmInstance;
-        this.rerolls = rerolls;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class CharmItem extends GameItem
     }
 
     public int getRerolls() {
-        return rerolls;
+        return charmInstance != null ? charmInstance.rerolls() : 0;
     }
 
     @Override
@@ -102,9 +100,6 @@ public class CharmItem extends GameItem
 
     @Override
     public String toString() {
-        return "CharmItem{" + "charmInfo="
-                + charmInfo + ", charmInstance="
-                + charmInstance + ", rerolls="
-                + rerolls + '}';
+        return "CharmItem{" + "charmInfo=" + charmInfo + ", charmInstance=" + charmInstance + '}';
     }
 }
