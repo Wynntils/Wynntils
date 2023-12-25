@@ -10,6 +10,6 @@ import com.wynntils.models.stats.type.ShinyStat;
 
 public record ShinyData(ShinyStat shinyStat) implements ItemData {
     public static ShinyData from(ShinyItemProperty property) {
-        return new ShinyData(property.getShinyStat());
+        return new ShinyData(property.getShinyStat().orElse(null));
     }
 }
