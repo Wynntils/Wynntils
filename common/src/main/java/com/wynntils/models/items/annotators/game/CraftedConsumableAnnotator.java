@@ -33,6 +33,7 @@ public final class CraftedConsumableAnnotator implements ItemAnnotator {
                 craftedName,
                 parseResult.level(),
                 parseResult.identifications(),
+                parseResult.namedEffects(),
                 parseResult.effects(),
                 new CappedValue(uses, maxUses));
     }

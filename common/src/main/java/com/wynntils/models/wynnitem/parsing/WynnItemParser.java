@@ -9,18 +9,26 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
+import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +42,14 @@ import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
     public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)$");
+
+    // Test suite: https://regexr.com/7pm84
+    private static final Pattern ITEM_DAMAGE_PATTERN =
+            Pattern.compile("^§.(?<symbol>[✤✦❉✹❋✣]+) (?<type>.+) Damage: (?<range>(\\d+)-(\\d+))$");
+
+    // Test suite: https://regexr.com/7pm8p
+    private static final Pattern ITEM_DEFENCE_PATTERN =
+            Pattern.compile("^§.(?<symbol>[✤✦❉✹❋]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)$");
 
     // Test suite: https://regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
@@ -53,6 +69,14 @@ public final class WynnItemParser {
     // Test suite: https://regexr.com/798o0
     private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§7 Combat Lv. Min: (\\d+)$");
 
+    // Test suite: https://regexr.com/7pm87
+    private static final Pattern CLASS_REQ_PATTERN =
+            Pattern.compile("^§(?:c✖|a✔)§7 Class Req: (?<name>.+)\\/(?<skinned>.+)$");
+
+    // Test suite: https://regexr.com/7pm8a
+    private static final Pattern SKILL_REQ_PATTERN =
+            Pattern.compile("^§(?:c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
+
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 
     private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
@@ -62,9 +86,14 @@ public final class WynnItemParser {
     // Test suite: https://regexr.com/7i5h5
     public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
 
+    // Crafted items
+    // Test suite: https://regexr.com/7pm7o
+    private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3(.+)§b \\[(\\d+)%\\]À*$");
+
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
         List<StatActualValue> identifications = new ArrayList<>();
+        List<NamedItemEffect> namedEffects = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
         int health = 0;
@@ -170,7 +199,12 @@ public final class WynnItemParser {
                         if (type.equals("Effect")) {
                             type = suffix;
                         }
-                        effects.add(new ItemEffect(type, value));
+                        ConsumableEffect consumableEffect = ConsumableEffect.fromString(type);
+                        if (consumableEffect != null) {
+                            namedEffects.add(new NamedItemEffect(consumableEffect, value));
+                        } else {
+                            effects.add(new ItemEffect(type, value));
+                        }
                         continue;
                     }
                 }
@@ -222,6 +256,7 @@ public final class WynnItemParser {
                 health,
                 level,
                 identifications,
+                namedEffects,
                 effects,
                 powders,
                 tierCount,
@@ -276,7 +311,84 @@ public final class WynnItemParser {
 
         // Shiny stats are not available from internal roll lore (on other players)
         return new WynnItemParseResult(
-                gearInfo.tier(), "", 0, 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
+                gearInfo.tier(),
+                "",
+                0,
+                0,
+                identifications,
+                List.of(),
+                List.of(),
+                powders,
+                rerolls,
+                0,
+                0,
+                Optional.empty());
+    }
+
+    public static CraftedItemParseResults parseCraftedItem(ItemStack itemStack) {
+        List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
+
+        String name = "";
+        List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
+        List<Pair<Element, Integer>> defences = new ArrayList<>();
+        // requirements
+        int levelReq = 0;
+        List<Pair<Skill, Integer>> skillReqs = new ArrayList<>();
+        ClassType classReq = null;
+
+        if (!lore.isEmpty()) {
+            Matcher nameMatcher = StyledText.fromComponent(lore.get(0)).getMatcher(CRAFTED_ITEM_NAME_PATTERN);
+            if (nameMatcher.matches()) {
+                name = nameMatcher.group(1);
+            }
+        }
+
+        for (Component loreLine : lore) {
+            StyledText coded = StyledText.fromComponent(loreLine);
+
+            Matcher damageMatcher = coded.getMatcher(ITEM_DAMAGE_PATTERN);
+            if (damageMatcher.matches()) {
+                String symbol = damageMatcher.group("symbol");
+                RangedValue range = RangedValue.fromString(damageMatcher.group("range"));
+                damages.add(Pair.of(DamageType.fromSymbol(symbol), range));
+            }
+
+            Matcher defenceMatcher = coded.getMatcher(ITEM_DEFENCE_PATTERN);
+            if (defenceMatcher.matches()) {
+                String symbol = defenceMatcher.group("symbol");
+                int value = Integer.parseInt(defenceMatcher.group("value"));
+                defences.add(Pair.of(Element.fromSymbol(symbol), value));
+            }
+
+            // Requirements
+            // Combat level
+            Matcher levelMatcher = coded.getMatcher(MIN_LEVEL_PATTERN);
+            if (levelMatcher.matches()) {
+                levelReq = Integer.parseInt(levelMatcher.group(1));
+            }
+
+            // Class
+            Matcher classMatcher = coded.getMatcher(CLASS_REQ_PATTERN);
+            if (classMatcher.matches()) {
+                String className = classMatcher.group("name");
+                classReq = ClassType.fromName(className);
+            }
+
+            // Skills
+            Matcher skillMatcher = coded.getMatcher(SKILL_REQ_PATTERN);
+            if (skillMatcher.matches()) {
+                String skillName = skillMatcher.group("skill");
+                Skill skill = Skill.fromString(skillName);
+                int value = Integer.parseInt(skillMatcher.group("value"));
+                skillReqs.add(Pair.of(skill, value));
+            }
+        }
+
+        return new CraftedItemParseResults(
+                name,
+                damages,
+                defences,
+                new GearRequirements(levelReq, Optional.ofNullable(classReq), skillReqs, Optional.empty()));
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

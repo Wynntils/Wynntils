@@ -15,6 +15,7 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.UnknownGearItem;
+import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
@@ -99,6 +100,7 @@ public final class GearModel extends Model {
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+        CraftedItemParseResults craftedResults = WynnItemParser.parseCraftedItem(itemStack);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         GearType gearType = GearType.fromItemStack(itemStack);
         if (gearType == null) {
@@ -106,18 +108,23 @@ public final class GearModel extends Model {
             // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
             gearType = GearType.fromString(result.itemType());
             if (gearType == null) {
-                // ... but if the item is signed, this will not work either. We're out of luck,
-                // fall back to a generic type, and assume it is a weapon
+                // If the item is signed, we can find the class type from the requirements
+                if (craftedResults.requirements().classType().isPresent()) {
+                    gearType = GearType.fromClassType(
+                            craftedResults.requirements().classType().get());
+                }
+                // If we failed to find the class type, fall back to weapon
                 gearType = GearType.WEAPON;
             }
         }
-        // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
+                craftedResults.name(),
                 gearType,
                 result.health(),
                 result.level(),
-                List.of(),
-                List.of(),
+                craftedResults.damages(),
+                craftedResults.defences(),
+                craftedResults.requirements(),
                 result.identifications(),
                 result.powders(),
                 durability);
