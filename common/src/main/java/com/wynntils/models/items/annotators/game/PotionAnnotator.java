@@ -38,7 +38,11 @@ public final class PotionAnnotator implements ItemAnnotator {
             int maxUses = Integer.parseInt(healingMatcher.group(2));
 
             return new PotionItem(
-                    PotionType.HEALING, parseResult.level(), parseResult.effects(), new CappedValue(uses, maxUses));
+                    PotionType.HEALING,
+                    parseResult.level(),
+                    parseResult.namedEffects(),
+                    parseResult.effects(),
+                    new CappedValue(uses, maxUses));
         }
 
         Matcher manaMatcher = MANA_PATTERN.matcher(potionType);
@@ -47,12 +51,21 @@ public final class PotionAnnotator implements ItemAnnotator {
             int maxUses = Integer.parseInt(manaMatcher.group(2));
 
             return new PotionItem(
-                    PotionType.MANA, parseResult.level(), parseResult.effects(), new CappedValue(uses, maxUses));
+                    PotionType.MANA,
+                    parseResult.level(),
+                    parseResult.namedEffects(),
+                    parseResult.effects(),
+                    new CappedValue(uses, maxUses));
         }
 
         Matcher xpMatcher = XP_PATTERN.matcher(potionType);
         if (xpMatcher.matches()) {
-            return new PotionItem(PotionType.XP, parseResult.level(), parseResult.effects(), new CappedValue(1, 1));
+            return new PotionItem(
+                    PotionType.XP,
+                    parseResult.level(),
+                    parseResult.namedEffects(),
+                    parseResult.effects(),
+                    new CappedValue(1, 1));
         }
 
         Matcher skillMatcher = SKILL_PATTERN.matcher(potionType);
@@ -65,6 +78,7 @@ public final class PotionAnnotator implements ItemAnnotator {
             return new PotionItem(
                     PotionType.fromSkill(skill),
                     parseResult.level(),
+                    parseResult.namedEffects(),
                     parseResult.effects(),
                     new CappedValue(uses, maxUses));
         }
