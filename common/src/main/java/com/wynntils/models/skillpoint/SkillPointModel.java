@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
+import com.wynntils.handlers.container.type.ContainerAction;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.elements.type.Skill;
@@ -49,6 +50,9 @@ public class SkillPointModel extends Model {
     private final Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
+
+    // Our "best guess" if tome unlock detection somehow fails - this is the level required to unlock the tome quest
+    private boolean tomesUnlocked = Models.CombatXp.getCombatLevel().current() >= 54;
 
     public SkillPointModel() {
         super(List.of());
@@ -194,12 +198,16 @@ public class SkillPointModel extends Model {
         skillPointLoadouts.get().remove(name);
     }
 
+    /**
+     * Closes any open containers (but not the screen shown) then queries compass (and tome menus) depending on if
+     * tomes have been unlocked.
+     */
     public void populateSkillPoints() {
         McUtils.closeBackgroundContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
             calculateGearSkillPoints();
-            querySkillPoints();
+            queryTotalAndTomeSkillPoints();
         });
     }
 
@@ -254,13 +262,16 @@ public class SkillPointModel extends Model {
         }
     }
 
-    private void querySkillPoints() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Skill Point Query")
+    /**
+     * Queries the compass (and tome) menu for skill point data.
+     */
+    private void queryTotalAndTomeSkillPoints() {
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
                 .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
                         .expectContainerTitle("Character Info")
                         .processIncomingContainer(this::processTotalSkillPoints))
-                .then(QueryStep.clickOnSlot(TOME_SLOT)
+                .conditionalThen(tomesUnlocked, QueryStep.clickOnSlot(TOME_SLOT)
                         .expectContainerTitle("Mastery Tomes")
                         .processIncomingContainer(this::processTomeSkillPoints))
                 .build();
@@ -280,6 +291,15 @@ public class SkillPointModel extends Model {
                         + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
+
+        tomesUnlocked = LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("§a✔");
+        if (!tomesUnlocked) {
+            tomeSkillPoints.clear();
+        }
+
+        // Required for when tomes are not unlocked.
+        // Does not matter when tomes are unlocked; that calculation is run later
+        calculateAssignedSkillPoints();
     }
 
     private void processTomeSkillPoints(ContainerContent content) {

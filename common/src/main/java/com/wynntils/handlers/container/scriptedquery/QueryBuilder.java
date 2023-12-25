@@ -43,6 +43,13 @@ public final class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder conditionalThen(boolean condition, QueryStep step) {
+        if (condition) {
+            steps.add(step);
+        }
+        return this;
+    }
+
     public QueryBuilder repeat(ContainerPredicate containerCheck, QueryStep step) {
         steps.add(new RepeatedQueryStep(containerCheck, step));
         return this;

@@ -1948,6 +1948,7 @@
   "screens.wynntils.skillPointLoadouts.summary": "Summary",
   "screens.wynntils.skillPointLoadouts.tomes": "From Tomes (%d)",
   "screens.wynntils.skillPointLoadouts.total": "Total (%d)",
+  "screens.wynntils.skillPointLoadouts.levelIncompatible": "Your combat level is too low to use this loadout. Parts of the loadout may not be fully loaded.",
   "screens.wynntils.statistics.average": "Average: %s",
   "screens.wynntils.statistics.count": "Count: %s",
   "screens.wynntils.statistics.description": "See all your statistics in one place.",

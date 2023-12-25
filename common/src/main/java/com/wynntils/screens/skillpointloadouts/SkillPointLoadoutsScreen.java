@@ -23,7 +23,10 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -151,6 +154,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         deleteButton.active = false;
         deleteButton.visible = false;
 
+        // todo remove this
         addRenderableWidget(
                 new WynntilsButton(
                         (int) (dividedWidth * 4),
@@ -467,6 +471,11 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         deleteButton.active = true;
         loadButton.visible = true;
         deleteButton.visible = true;
+
+        // -1 required because first level does not grant any skill points
+        if (Math.ceil(selectedLoadout.value().getSkillPointsSum() / 2d) > Models.CombatXp.getCombatLevel().current() - 1) {
+            loadButton.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.levelIncompatible").withStyle(ChatFormatting.RED)));
+        }
     }
 
     public Pair<String, SavableSkillPointSet> getSelectedLoadout() {
