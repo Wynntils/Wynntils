@@ -88,6 +88,13 @@ public enum GearType {
         return null;
     }
 
+    public static GearType fromClassType(ClassType classType) {
+        for (GearType gearType : values()) {
+            if (gearType.classReq == classType) return gearType;
+        }
+        return null;
+    }
+
     public ClassType getClassReq() {
         return classReq;
     }
