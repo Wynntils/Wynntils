@@ -14,7 +14,6 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.widgets.LoadoutWidget;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -140,7 +139,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     @Override
                     public void onPress() {
                         Models.SkillPoint.deleteLoadout(selectedLoadout.key());
-                        McUtils.mc().setScreen(SkillPointLoadoutsScreen.create());
+                        selectedLoadout = null;
+                        loadButton.active = false;
+                        deleteButton.active = false;
+                        loadButton.visible = false;
+                        deleteButton.visible = false;
+                        populateLoadouts();
                     }
                 };
         this.addRenderableWidget(deleteButton);

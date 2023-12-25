@@ -148,10 +148,7 @@ public class SkillPointModel extends Model {
                 if (!confirmationCompleted.getAndSet(true)) {
                     // confirmation required, force loop to repeat this iteration
                     i--;
-                    continue;
                 }
-
-                assignedSkillPoints.merge(skill, -5, Integer::sum);
             }
             for (int i = 0; i < difference1s; i++) {
                 ContainerUtils.clickOnSlot(
@@ -163,10 +160,7 @@ public class SkillPointModel extends Model {
                 if (!confirmationCompleted.getAndSet(true)) {
                     // needs to exist in both loops in case of 1s only
                     i--;
-                    continue;
                 }
-
-                assignedSkillPoints.merge(skill, -1, Integer::sum);
             }
         });
 
@@ -181,7 +175,6 @@ public class SkillPointModel extends Model {
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
                         containerContent.items(),
                         true);
-                assignedSkillPoints.merge(skill, 5, Integer::sum);
             }
             for (int i = 0; i < difference1s; i++) {
                 ContainerUtils.clickOnSlot(
@@ -190,9 +183,11 @@ public class SkillPointModel extends Model {
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
                         containerContent.items(),
                         false);
-                assignedSkillPoints.merge(skill, 1, Integer::sum);
             }
         });
+
+        // Server needs 2 ticks, give one extra to be safe
+        Managers.TickScheduler.scheduleLater(this::populateSkillPoints, 3);
     }
 
     public void deleteLoadout(String name) {
