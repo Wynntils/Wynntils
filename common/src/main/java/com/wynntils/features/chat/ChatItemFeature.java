@@ -23,10 +23,12 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.IterationDecision;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,14 +164,14 @@ public class ChatItemFeature extends Feature {
             PartStyle partStyle = partToReplace.getPartStyle();
 
             StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
-            StyledTextPart replacedPart = errorOrDecodedItem.hasError()
-                    ? createErrorPart(matcher.group(), errorOrDecodedItem.getError())
+            List<StyledTextPart> replacedParts = errorOrDecodedItem.hasError()
+                    ? List.of(createErrorPart(matcher.group(), errorOrDecodedItem.getError()))
                     : createItemPart(errorOrDecodedItem.getValue());
             StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
             changes.remove(partToReplace);
             changes.add(first);
-            changes.add(replacedPart);
+            changes.addAll(replacedParts);
             changes.add(last);
 
             partToReplace = last;
@@ -192,12 +194,12 @@ public class ChatItemFeature extends Feature {
             PartStyle partStyle = partToReplace.getPartStyle();
 
             StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
-            StyledTextPart item = createItemPart(decodedItem);
+            List<StyledTextPart> itemParts = createItemPart(decodedItem);
             StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
             changes.remove(partToReplace);
             changes.add(first);
-            changes.add(item);
+            changes.addAll(itemParts);
             changes.add(last);
 
             partToReplace = last;
@@ -216,11 +218,17 @@ public class ChatItemFeature extends Feature {
         return new StyledTextPart(originalString, style, null, Style.EMPTY);
     }
 
-    private StyledTextPart createItemPart(WynnItem wynnItem) {
+    private List<StyledTextPart> createItemPart(WynnItem wynnItem) {
+        List<StyledTextPart> parts = new ArrayList<>();
+
         String name = wynnItem.getClass().getSimpleName();
 
         if (wynnItem instanceof IdentifiableItemProperty identifiableItemProperty) {
             name = identifiableItemProperty.getName();
+        }
+        if (wynnItem instanceof ShinyItemProperty shinyItemProperty
+                && shinyItemProperty.getShinyStat().isPresent()) {
+            parts.add(new StyledTextPart("⬡ ", Style.EMPTY.withColor(ChatFormatting.WHITE), null, Style.EMPTY));
         }
 
         Style style = Style.EMPTY.applyFormat(ChatFormatting.UNDERLINE).withColor(ChatFormatting.GOLD);
@@ -234,7 +242,10 @@ public class ChatItemFeature extends Feature {
         ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
 
-        return new StyledTextPart(name, style, null, Style.EMPTY);
+        // Add the item name
+        parts.add(new StyledTextPart(name, style, null, Style.EMPTY));
+
+        return parts;
     }
 
     private static void makeChatPrompt(Slot hoveredSlot) {

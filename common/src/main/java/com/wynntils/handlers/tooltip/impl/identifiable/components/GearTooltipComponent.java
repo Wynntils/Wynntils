@@ -40,9 +40,18 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         List<Component> header = new ArrayList<>();
 
         // name
-        String prefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + gearInfo.name())
-                .withStyle(gearInfo.tier().getChatFormatting()));
+        String unidentifiedPrefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
+        Component shinyPrefix = gearInstance != null && gearInstance.shinyStat().isPresent()
+                ? Component.literal("⬡ ")
+                        .withStyle(ChatFormatting.WHITE)
+                        .append(Component.literal("Shiny ")
+                                .withStyle(gearInfo.tier().getChatFormatting()))
+                : Component.empty();
+        header.add(Component.empty()
+                .withStyle(gearInfo.tier().getChatFormatting())
+                .append(Component.literal(unidentifiedPrefix)
+                        .append(shinyPrefix)
+                        .append(Component.literal(gearInfo.name()))));
 
         // attack speed
         if (gearInfo.fixedStats().attackSpeed().isPresent())
