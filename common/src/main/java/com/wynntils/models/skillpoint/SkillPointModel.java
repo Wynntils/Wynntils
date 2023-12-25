@@ -203,6 +203,7 @@ public class SkillPointModel extends Model {
         McUtils.closeBackgroundContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
+            assignedSkillPoints.clear();
             calculateGearSkillPoints();
             queryTotalAndTomeSkillPoints();
         });
@@ -270,19 +271,15 @@ public class SkillPointModel extends Model {
                 .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
                         .expectContainerTitle("Character Info")
-                        .processIncomingContainer(this::processTotalSkillPoints)
-                        .saveContainer())
-                .thenIf(this::areTomesUnlocked,
+                        .processIncomingContainer(this::processTotalSkillPoints))
+                .thenIf(
+                        tomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
-                        .expectContainerTitle("Mastery Tomes")
-                        .processIncomingContainer(this::processTomeSkillPoints))
+                                .expectContainerTitle("Mastery Tomes")
+                                .processIncomingContainer(this::processTomeSkillPoints))
                 .build();
 
         query.executeQuery();
-    }
-
-    private boolean areTomesUnlocked(ContainerContent content) {
-        return LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
     }
 
     private void processTotalSkillPoints(ContainerContent content) {
@@ -297,9 +294,10 @@ public class SkillPointModel extends Model {
             }
         }
 
-        // Required for when tomes are not unlocked.
-        // Does not matter when tomes are unlocked; that calculation is run later
-        calculateAssignedSkillPoints();
+        tomesUnlocked = LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
+        if (!tomesUnlocked) {
+            calculateAssignedSkillPoints();
+        }
     }
 
     private void processTomeSkillPoints(ContainerContent content) {
