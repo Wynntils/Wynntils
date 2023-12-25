@@ -145,15 +145,10 @@ public class SkillPointModel extends Model {
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
                         containerContent.items(),
                         true);
-                if (!confirmationCompleted.get()) {
+                if (!confirmationCompleted.getAndSet(true)) {
                     // confirmation required, force loop to repeat this iteration
-                    ContainerUtils.clickOnSlot(
-                            SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
-                            containerContent.containerId(),
-                            GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                            containerContent.items(),
-                            true);
-                    confirmationCompleted.set(true);
+                    i--;
+                    continue;
                 }
 
                 assignedSkillPoints.merge(skill, -5, Integer::sum);
@@ -165,15 +160,10 @@ public class SkillPointModel extends Model {
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
                         containerContent.items(),
                         false);
-                if (!confirmationCompleted.get()) {
+                if (!confirmationCompleted.getAndSet(true)) {
                     // needs to exist in both loops in case of 1s only
-                    ContainerUtils.clickOnSlot(
-                            SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
-                            containerContent.containerId(),
-                            GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                            containerContent.items(),
-                            false);
-                    confirmationCompleted.set(true);
+                    i--;
+                    continue;
                 }
 
                 assignedSkillPoints.merge(skill, -1, Integer::sum);
