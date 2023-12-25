@@ -135,8 +135,8 @@ public class GearItem extends GameItem
     }
 
     @Override
-    public ShinyStat getShinyStat() {
-        return gearInstance != null ? gearInstance.shinyStat().orElse(null) : null;
+    public Optional<ShinyStat> getShinyStat() {
+        return gearInstance != null ? gearInstance.shinyStat() : Optional.empty();
     }
 
     @Override
