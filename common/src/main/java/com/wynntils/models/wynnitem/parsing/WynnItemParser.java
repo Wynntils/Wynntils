@@ -23,7 +23,9 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
+import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
@@ -91,6 +93,7 @@ public final class WynnItemParser {
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
         List<StatActualValue> identifications = new ArrayList<>();
+        List<NamedItemEffect> namedEffects = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
         int health = 0;
@@ -196,7 +199,12 @@ public final class WynnItemParser {
                         if (type.equals("Effect")) {
                             type = suffix;
                         }
-                        effects.add(new ItemEffect(type, value));
+                        ConsumableEffect consumableEffect = ConsumableEffect.fromString(type);
+                        if (consumableEffect != null) {
+                            namedEffects.add(new NamedItemEffect(consumableEffect, value));
+                        } else {
+                            effects.add(new ItemEffect(type, value));
+                        }
                         continue;
                     }
                 }
@@ -248,6 +256,7 @@ public final class WynnItemParser {
                 health,
                 level,
                 identifications,
+                namedEffects,
                 effects,
                 powders,
                 tierCount,
@@ -302,7 +311,18 @@ public final class WynnItemParser {
 
         // Shiny stats are not available from internal roll lore (on other players)
         return new WynnItemParseResult(
-                gearInfo.tier(), "", 0, 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
+                gearInfo.tier(),
+                "",
+                0,
+                0,
+                identifications,
+                List.of(),
+                List.of(),
+                powders,
+                rerolls,
+                0,
+                0,
+                Optional.empty());
     }
 
     public static CraftedItemParseResults parseCraftedItem(ItemStack itemStack) {

@@ -9,6 +9,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.wynnitem.type.ItemEffect;
+import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public record WynnItemParseResult(
         int health,
         int level,
         List<StatActualValue> identifications,
+        List<NamedItemEffect> namedEffects,
         List<ItemEffect> effects,
         List<Powder> powders,
         int rerolls,
