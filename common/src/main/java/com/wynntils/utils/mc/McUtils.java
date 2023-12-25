@@ -14,6 +14,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -103,5 +104,13 @@ public final class McUtils {
      */
     public static void sendChat(String message) {
         mc().getConnection().sendChat(message);
+    }
+
+    /**
+     * Closes invisible containers opened in the background, without closing the visible screen.
+     */
+    public static void closeBackgroundContainer() {
+        player().connection.send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        player().containerMenu = McUtils.player().inventoryMenu;
     }
 }

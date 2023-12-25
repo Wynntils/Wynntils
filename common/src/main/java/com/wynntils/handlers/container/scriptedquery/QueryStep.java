@@ -51,14 +51,15 @@ public class QueryStep {
     public static QueryStep clickOnSlot(int slotNum) {
         return new QueryStep(container -> {
             ContainerUtils.clickOnSlot(
-                    slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                    slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items(), false);
             return true;
         });
     }
 
     public static QueryStep clickOnSlot(int slotNum, Supplier<Integer> mouseButtonSupplier) {
         return new QueryStep(container -> {
-            ContainerUtils.clickOnSlot(slotNum, container.containerId(), mouseButtonSupplier.get(), container.items());
+            ContainerUtils.clickOnSlot(
+                    slotNum, container.containerId(), mouseButtonSupplier.get(), container.items(), false);
             return true;
         });
     }
@@ -69,7 +70,7 @@ public class QueryStep {
                 throw new ContainerQueryException("Cannot find matching slot");
 
             ContainerUtils.clickOnSlot(
-                    slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                    slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items(), false);
             return true;
         });
     }

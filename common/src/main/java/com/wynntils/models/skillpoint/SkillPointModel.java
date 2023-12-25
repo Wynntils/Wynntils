@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -107,11 +106,7 @@ public class SkillPointModel extends Model {
     }
 
     public void loadLoadout(String name) {
-        // No .closeContainer() here, we want the screen to remain open but close the inventory in the background
-        McUtils.player()
-                .connection
-                .send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
-        McUtils.player().containerMenu = McUtils.player().inventoryMenu;
+        McUtils.closeBackgroundContainer();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
@@ -138,30 +133,73 @@ public class SkillPointModel extends Model {
             }
         }
 
-        // TODO go by 5's later
-        AtomicBoolean confirmationDone = new AtomicBoolean(false);
+        AtomicBoolean confirmationCompleted = new AtomicBoolean(false);
         negatives.forEach((skill, difference) -> {
-            for (int i = 0; i < Math.abs(difference) + (confirmationDone.get() ? 0 : 1); i++) {
+            int difference5s = Math.abs(difference) / 5;
+            int difference1s = Math.abs(difference) % 5;
+
+            for (int i = 0; i < difference5s; i++) {
                 ContainerUtils.clickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items());
+                        containerContent.items(),
+                        true);
+                if (!confirmationCompleted.get()) {
+                    // confirmation required, force loop to repeat this iteration
+                    ContainerUtils.clickOnSlot(
+                            SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
+                            containerContent.containerId(),
+                            GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                            containerContent.items(),
+                            true);
+                    confirmationCompleted.set(true);
+                }
+
+                assignedSkillPoints.merge(skill, -5, Integer::sum);
+            }
+            for (int i = 0; i < difference1s; i++) {
+                ContainerUtils.clickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
+                        containerContent.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                        containerContent.items(),
+                        false);
+                if (!confirmationCompleted.get()) {
+                    // needs to exist in both loops in case of 1s only
+                    ContainerUtils.clickOnSlot(
+                            SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
+                            containerContent.containerId(),
+                            GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                            containerContent.items(),
+                            false);
+                    confirmationCompleted.set(true);
+                }
+
                 assignedSkillPoints.merge(skill, -1, Integer::sum);
             }
-            if (!confirmationDone.get()) { // only do this once, account for the confirmation click
-                assignedSkillPoints.merge(skill, 1, Integer::sum);
-            }
-            confirmationDone.set(true);
         });
 
         positives.forEach((skill, difference) -> {
-            for (int i = 0; i < difference; i++) {
+            int difference5s = difference / 5;
+            int difference1s = difference % 5;
+
+            for (int i = 0; i < difference5s; i++) {
                 ContainerUtils.clickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items());
+                        containerContent.items(),
+                        true);
+                assignedSkillPoints.merge(skill, 5, Integer::sum);
+            }
+            for (int i = 0; i < difference1s; i++) {
+                ContainerUtils.clickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
+                        containerContent.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        containerContent.items(),
+                        false);
                 assignedSkillPoints.merge(skill, 1, Integer::sum);
             }
         });
@@ -172,11 +210,7 @@ public class SkillPointModel extends Model {
     }
 
     public void populateSkillPoints() {
-        // No .closeContainer() here, we want the screen to remain open but close the inventory in the background
-        McUtils.player()
-                .connection
-                .send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
-        McUtils.player().containerMenu = McUtils.player().inventoryMenu;
+        McUtils.closeBackgroundContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
             calculateGearSkillPoints();
@@ -286,7 +320,11 @@ public class SkillPointModel extends Model {
     private void calculateAssignedSkillPoints() {
         for (Skill skill : Skill.values()) {
             assignedSkillPoints.put(
-                    skill, getTotalSkillPoints(skill) - getGearSkillPoints(skill) - getTomeSkillPoints(skill));
+                    skill,
+                    getTotalSkillPoints(skill)
+                            - getGearSkillPoints(skill)
+                            - getTomeSkillPoints(skill)
+                            - getCraftedSkillPoints(skill));
         }
     }
 

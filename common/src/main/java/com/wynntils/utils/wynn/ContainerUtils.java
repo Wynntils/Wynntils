@@ -39,7 +39,7 @@ public final class ContainerUtils {
 
         NonNullList<ItemStack> items = McUtils.containerMenu().getItems();
         // We need to offset the slot number so that it corresponds to the correct slot in the inventory
-        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items, false);
 
         return true;
     }
@@ -48,7 +48,8 @@ public final class ContainerUtils {
      * Clicks on a slot in the specified container. containerId and the list of items should correspond to the
      * same container!
      */
-    public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
+    public static void clickOnSlot(
+            int clickedSlot, int containerId, int mouseButton, List<ItemStack> items, boolean shiftClick) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
 
@@ -61,7 +62,7 @@ public final class ContainerUtils {
                 transactionId,
                 clickedSlot,
                 mouseButton,
-                ClickType.PICKUP,
+                shiftClick ? ClickType.QUICK_MOVE : ClickType.PICKUP,
                 items.get(clickedSlot),
                 changedSlots));
     }

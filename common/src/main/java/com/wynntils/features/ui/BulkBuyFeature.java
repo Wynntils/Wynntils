@@ -50,7 +50,7 @@ public class BulkBuyFeature extends Feature {
 
         if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left Click
             for (int i = 1; i < bulkBuyAmount.get(); i++) {
-                ContainerUtils.clickOnSlot(e.getSlotNum(), container.containerId, 10, container.getItems());
+                ContainerUtils.clickOnSlot(e.getSlotNum(), container.containerId, 10, container.getItems(), false);
             }
         }
     }

@@ -160,7 +160,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                         entry.getIntKey(),
                         wrappedScreenInfo.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        wrappedScreenInfo.containerMenu().getItems());
+                        wrappedScreenInfo.containerMenu().getItems(),
+                        false);
 
                 return;
             }
@@ -198,7 +199,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 BACK_TO_SEARCH_SLOT,
                 wrappedScreenInfo.containerId(),
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                wrappedScreenInfo.containerMenu().getItems());
+                wrappedScreenInfo.containerMenu().getItems(),
+                false);
     }
 
     public void loadNextPageBatch() {
@@ -213,7 +215,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 SORT_MODE_SLOT,
                 wrappedScreenInfo.containerId(),
                 mouseButton,
-                wrappedScreenInfo.containerMenu().getItems());
+                wrappedScreenInfo.containerMenu().getItems(),
+                false);
 
         // Reset the item map
         itemMap = new TreeMap<>();
@@ -365,7 +368,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                     slot,
                     wrappedScreenInfo.containerId(),
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    wrappedScreenInfo.containerMenu().getItems());
+                    wrappedScreenInfo.containerMenu().getItems(),
+                    false);
 
             startNextQueuedAction();
 
@@ -403,7 +407,8 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
                 clickSlot,
                 wrappedScreenInfo.containerId(),
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                wrappedScreenInfo.containerMenu().getItems());
+                wrappedScreenInfo.containerMenu().getItems(),
+                false);
     }
 
     private void startNextQueuedAction() {
