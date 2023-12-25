@@ -1,9 +1,26 @@
+## [0.0.4-beta.102](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.101...v0.0.4-beta.102) (2023-12-25)
+
+
+### New Features
+
+* In preparation for crafted chat items, parse CraftedGearItem damages, defences, requirements and name ([#2294](https://github.com/Wynntils/Artemis/issues/2294)) ([4621b4c](https://github.com/Wynntils/Artemis/commit/4621b4c4935212e55afd0c4a6db388b0e05dc21e))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2293](https://github.com/Wynntils/Artemis/issues/2293)) ([6cc81e2](https://github.com/Wynntils/Artemis/commit/6cc81e217ccfc54fc1f4809686de3a78b4927675))
+
 ## [0.0.4-beta.101](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.100...v0.0.4-beta.101) (2023-12-24)
 
 
 ### Bug Fixes
 
 * fix some cases where the custom loading screen got stuck ([#2292](https://github.com/Wynntils/Artemis/issues/2292)) ([7c92b7c](https://github.com/Wynntils/Artemis/commit/7c92b7cdc028386ed64506f1c067323c8e90dd70))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.101 [skip ci] ([be2ea3e](https://github.com/Wynntils/Artemis/commit/be2ea3e815c81666bc5edb798ca228689e481b1c))
 
 ## [0.0.4-beta.100](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.99...v0.0.4-beta.100) (2023-12-24)
 
@@ -45,16 +62,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.98 [skip ci] ([2a6b27e](https://github.com/Wynntils/Artemis/commit/2a6b27e0a9f7b5040f2a367896454f2ec4541d8f))
-
-## [0.0.4-beta.97](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.96...v0.0.4-beta.97) (2023-12-20)
-
-
-### New Features
-
-* Parse charms as gears, show charm identification percentages  ([#2271](https://github.com/Wynntils/Artemis/issues/2271)) ([ff02a95](https://github.com/Wynntils/Artemis/commit/ff02a959640af633d42bfaebec653e9db7a7e72a)), closes [#2282](https://github.com/Wynntils/Artemis/issues/2282) [#2283](https://github.com/Wynntils/Artemis/issues/2283) [#2284](https://github.com/Wynntils/Artemis/issues/2284) [#2285](https://github.com/Wynntils/Artemis/issues/2285)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.97 [skip ci] ([9b6f8a7](https://github.com/Wynntils/Artemis/commit/9b6f8a767035a9be4b469c8cc51359bf12e0e618))
 
