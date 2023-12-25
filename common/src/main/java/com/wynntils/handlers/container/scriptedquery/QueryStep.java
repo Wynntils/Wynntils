@@ -30,6 +30,7 @@ public class QueryStep {
     private ContainerVerification verification = EXPECT_SAME_MENU;
     private ContainerContentVerification contentVerification = WAIT_FOR_SET_CONTENT;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
+    private ContainerContent savedContainer;
 
     protected QueryStep(ContainerPredicate startAction) {
         this.startAction = startAction;
@@ -40,6 +41,7 @@ public class QueryStep {
         this.verification = queryStep.verification;
         this.contentVerification = queryStep.contentVerification;
         this.handleContent = queryStep.handleContent;
+        this.savedContainer = queryStep.savedContainer;
     }
 
     // region Builder API actions
@@ -97,6 +99,11 @@ public class QueryStep {
         return this;
     }
 
+    public QueryStep saveContainer() {
+        this.handleContent = c -> this.savedContainer = c;
+        return this;
+    }
+
     // endregion
 
     // region ScriptedContainerQuery support
@@ -111,6 +118,10 @@ public class QueryStep {
 
     ContainerAction getHandleContent() {
         return handleContent;
+    }
+
+    ContainerContent getSavedContainer() {
+        return savedContainer;
     }
 
     boolean startStep(ScriptedContainerQuery query, ContainerContent container) throws ContainerQueryException {

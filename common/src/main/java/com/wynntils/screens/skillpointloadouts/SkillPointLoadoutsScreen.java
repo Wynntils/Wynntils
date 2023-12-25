@@ -23,7 +23,6 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
@@ -473,8 +472,11 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         deleteButton.visible = true;
 
         // -1 required because first level does not grant any skill points
-        if (Math.ceil(selectedLoadout.value().getSkillPointsSum() / 2d) > Models.CombatXp.getCombatLevel().current() - 1) {
-            loadButton.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.levelIncompatible").withStyle(ChatFormatting.RED)));
+        if (selectedLoadout.value().getMinimumCombatLevel()
+                > Models.CombatXp.getCombatLevel().current()) {
+            loadButton.setTooltip(
+                    Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.levelIncompatible")
+                            .withStyle(ChatFormatting.RED)));
         }
     }
 

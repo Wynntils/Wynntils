@@ -55,6 +55,10 @@ public class SavableSkillPointSet {
         return strength + dexterity + intelligence + defence + agility;
     }
 
+    public int getMinimumCombatLevel() {
+        return (int) Math.ceil(getSkillPointsSum() / 2.0) + 1;
+    }
+
     public boolean isBuild() {
         return isBuild;
     }

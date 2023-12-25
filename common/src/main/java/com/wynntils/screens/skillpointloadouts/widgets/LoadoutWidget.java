@@ -5,6 +5,7 @@
 package com.wynntils.screens.skillpointloadouts.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.skillpoint.SavableSkillPointSet;
@@ -16,9 +17,11 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public class LoadoutWidget extends AbstractWidget {
@@ -82,7 +85,17 @@ public class LoadoutWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(name + " (" + loadout.getSkillPointsSum() + ")"),
+                        StyledText.fromString(name + " (" + loadout.getSkillPointsSum() + " - "
+                                + (loadout.getMinimumCombatLevel()
+                                                > Models.CombatXp.getCombatLevel()
+                                                        .current()
+                                        ? ChatFormatting.RED
+                                        : "")
+                                + I18n.get(
+                                        "screens.wynntils.skillPointLoadouts.widgetLevelText",
+                                        loadout.getMinimumCombatLevel())
+                                + ChatFormatting.WHITE
+                                + ")"),
                         dividedWidth * 4,
                         this.getY() + (float) this.getHeight() / nameYOffset,
                         CommonColors.WHITE,
