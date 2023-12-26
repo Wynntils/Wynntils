@@ -1,9 +1,21 @@
+## [0.0.4-beta.104](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.103...v0.0.4-beta.104) (2023-12-26)
+
+
+### Bug Fixes
+
+* Fix an edge case resulting in container queries timing out, if a packet is sent and received in the same tick ([#2297](https://github.com/Wynntils/Artemis/issues/2297)) ([b24dd0e](https://github.com/Wynntils/Artemis/commit/b24dd0e580edf5cf773b4e72c94c3822066519a3))
+
 ## [0.0.4-beta.103](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.102...v0.0.4-beta.103) (2023-12-26)
 
 
 ### Bug Fixes
 
 * Handle an edge case with inverted values in internal roll calculations, fix assertions to use correct rounding ([#2295](https://github.com/Wynntils/Artemis/issues/2295)) ([d9ed58b](https://github.com/Wynntils/Artemis/commit/d9ed58b6093b257411d160678b4563f531afb04f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.103 [skip ci] ([c8eeab0](https://github.com/Wynntils/Artemis/commit/c8eeab020416f2b5d0556778c55c643518834a8e))
 
 ## [0.0.4-beta.102](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.101...v0.0.4-beta.102) (2023-12-25)
 
@@ -41,21 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.100 [skip ci] ([735cf65](https://github.com/Wynntils/Artemis/commit/735cf652117c00bc3b2d0f7346f972723f4050d2))
-
-## [0.0.4-beta.99](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.98...v0.0.4-beta.99) (2023-12-23)
-
-
-### New Features
-
-* Add new account types [skip ci] ([#2289](https://github.com/Wynntils/Artemis/issues/2289)) ([7bdb18c](https://github.com/Wynntils/Artemis/commit/7bdb18c4947f5ff6da2c9f8891b13e04d542bcbc))
-
-
-### Bug Fixes
-
-* Fix guild map crashing off-season (due to an Athena bug) ([#2290](https://github.com/Wynntils/Artemis/issues/2290)) ([038be2e](https://github.com/Wynntils/Artemis/commit/038be2ede880e6eaf6e259b86660bb20bee72130))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.99 [skip ci] ([db953d6](https://github.com/Wynntils/Artemis/commit/db953d6c439df308eab3ce3a57b9ac9ba3aa9527))
 
