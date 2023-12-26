@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class PowderDataTransformer extends DataTransformer<PowderData> {
-    public static final byte ID = 4;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, PowderData data) {
         return switch (version) {
@@ -40,8 +38,8 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
     }
 
     @Override
-    protected byte getId() {
-        return ID;
+    public byte getId() {
+        return 4;
     }
 
     private ErrorOr<UnsignedByte[]> encodePowderData(PowderData data) {
