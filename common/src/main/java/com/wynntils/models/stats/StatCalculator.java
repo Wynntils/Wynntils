@@ -63,14 +63,23 @@ public final class StatCalculator {
     public static RangedValue calculateInternalRollRange(StatPossibleValues possibleValues, int value, int stars) {
         // This code finds the lowest possible and highest possible rolls that result in the current
         // value (inclusive).
-
         int baseValue = possibleValues.baseValue();
-        double lowerRawRollBound = (value * 100 - 50) / ((double) baseValue);
-        // .5 is rounded up, so we need to add .49
-        double higherRawRollBound = (value * 100 + 49) / ((double) baseValue);
 
+        // If the stat is calculated as inverted,
+        // invert the base value and the actual value
+        // (this weird edge case was relevaled by Wynn's star calculations)
+        if (possibleValues.statType().calculateAsInverted()) {
+            baseValue = -baseValue;
+            value = -value;
+        }
+
+        // It's important to use the non-inverted base value here,
+        // since getStatCalculationInfo() will invert the rounding mode if necessary
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+
+        double lowerRawRollBound = (value * 100 - 50) / ((double) baseValue);
+        double higherRawRollBound = (value * 100 + 49) / ((double) baseValue);
 
         if (baseValue < 0) {
             // Swap the bounds, since we are calculating using the negative range
@@ -96,17 +105,11 @@ public final class StatCalculator {
         int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
         int higherRollBound = (int) Math.max(lowerRollBound, Math.min(Math.floor(higherRawRollBound), starMax));
 
-        // Check if the bounds are in the correct order
-        assert lowerRollBound <= higherRollBound;
-        // Check if the bounds are valid
-        assert Math.round(baseValue * lowerRollBound / 100d) == Math.round(baseValue * higherRollBound / 100d);
-        // Check if the lowest bound is the actually lowest possible roll
-        assert lowerRollBound == starMin
-                || Math.round(baseValue * lowerRollBound / 100d) != Math.round(baseValue * (lowerRollBound - 1) / 100d);
-        // Check if the highest bound is the actually highest possible roll
-        assert higherRollBound == starMax
-                || Math.round(baseValue * higherRollBound / 100d)
-                        != Math.round(baseValue * (higherRollBound + 1) / 100d);
+        // This is a costly check, so we only do it in development environments
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            verifyCalculatedInternalRoll(
+                    baseValue, statCalculationInfo, lowerRollBound, higherRollBound, starMin, starMax);
+        }
 
         return RangedValue.of(lowerRollBound, higherRollBound);
     }
@@ -262,5 +265,47 @@ public final class StatCalculator {
         if (percents.getCount() == 0) return Optional.empty();
 
         return Optional.of((float) percents.getAverage());
+    }
+
+    private static void verifyCalculatedInternalRoll(
+            int baseValue,
+            StatCalculationInfo statCalculationInfo,
+            int lowerRollBound,
+            int higherRollBound,
+            int starMin,
+            int starMax) {
+        // Check if the bounds are in the correct order
+        assert lowerRollBound <= higherRollBound;
+
+        // Use BigDecimal to calculate using correct rounding
+
+        // Check if the bounds are valid
+        long lowerValue = new BigDecimal(baseValue)
+                .multiply(BigDecimal.valueOf(lowerRollBound))
+                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
+                .setScale(0, statCalculationInfo.roundingMode())
+                .longValue();
+        long higherValue = new BigDecimal(baseValue)
+                .multiply(BigDecimal.valueOf(higherRollBound))
+                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
+                .setScale(0, statCalculationInfo.roundingMode())
+                .longValue();
+        assert lowerValue == higherValue;
+
+        // Check if the lowest bound is the actually lowest possible roll
+        long oneBelowLowerValue = new BigDecimal(baseValue)
+                .multiply(BigDecimal.valueOf(lowerRollBound - 1))
+                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
+                .setScale(0, statCalculationInfo.roundingMode())
+                .longValue();
+        assert lowerRollBound == starMin || lowerValue != oneBelowLowerValue;
+
+        // Check if the highest bound is the actually highest possible roll
+        long oneAboveHigherValue = new BigDecimal(baseValue)
+                .multiply(BigDecimal.valueOf(higherRollBound + 1))
+                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
+                .setScale(0, statCalculationInfo.roundingMode())
+                .longValue();
+        assert higherRollBound == starMax || higherValue != oneAboveHigherValue;
     }
 }
