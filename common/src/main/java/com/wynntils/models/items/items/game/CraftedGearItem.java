@@ -6,6 +6,7 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
@@ -15,50 +16,73 @@ import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
+import java.util.Optional;
 
 public class CraftedGearItem extends GameItem
         implements GearTierItemProperty, GearTypeItemProperty, DurableItemProperty, LeveledItemProperty {
     private final String name;
+    private final int effectStrength;
     private final GearType gearType;
+    private final GearAttackSpeed attackSpeed;
     private final int health;
     private final int level;
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
     private final GearRequirements requirements;
+    private final List<StatPossibleValues> possibleValues;
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final CappedValue durability;
 
     public CraftedGearItem(
             String name,
+            int effectStrength,
             GearType gearType,
+            GearAttackSpeed attackSpeed,
             int health,
             int level,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
             GearRequirements requirements,
+            List<StatPossibleValues> possibleValues,
             List<StatActualValue> identifications,
             List<Powder> powders,
             CappedValue durability) {
         this.name = name;
+        this.effectStrength = effectStrength;
         this.gearType = gearType;
+        this.attackSpeed = attackSpeed;
         this.health = health;
         this.level = level;
         this.damages = damages;
         this.defences = defences;
         this.requirements = requirements;
+        this.possibleValues = possibleValues;
         this.identifications = identifications;
         this.powders = powders;
         this.durability = durability;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getEffectStrength() {
+        return effectStrength;
+    }
+
     @Override
     public GearType getGearType() {
         return gearType;
+    }
+
+    public Optional<GearAttackSpeed> getAttackSpeed() {
+        return Optional.ofNullable(attackSpeed);
     }
 
     public int getHealth() {
@@ -82,6 +106,10 @@ public class CraftedGearItem extends GameItem
         return requirements;
     }
 
+    public List<StatPossibleValues> getPossibleValues() {
+        return possibleValues;
+    }
+
     public List<StatActualValue> getIdentifications() {
         return identifications;
     }
@@ -103,13 +131,16 @@ public class CraftedGearItem extends GameItem
     @Override
     public String toString() {
         return "CraftedGearItem{" + "name='"
-                + name + '\'' + ", gearType="
-                + gearType + ", health="
+                + name + '\'' + ", effectStrength="
+                + effectStrength + ", gearType="
+                + gearType + ", attackSpeed="
+                + attackSpeed + ", health="
                 + health + ", level="
                 + level + ", damages="
                 + damages + ", defences="
                 + defences + ", requirements="
-                + requirements + ", identifications="
+                + requirements + ", possibleValues="
+                + possibleValues + ", identifications="
                 + identifications + ", powders="
                 + powders + ", durability="
                 + durability + '}';

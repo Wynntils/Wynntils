@@ -15,6 +15,8 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.UnknownGearItem;
+import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
@@ -99,7 +101,11 @@ public final class GearModel extends Model {
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+        // We pass this down to the parser, so it can populate it
+        // (gears don't have to parse possible values on the fly, since the api provides them)
+        Map<StatType, StatPossibleValues> possibleValuesMap = new HashMap<>();
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, possibleValuesMap);
+
         CraftedItemParseResults craftedResults = WynnItemParser.parseCraftedItem(itemStack);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         GearType gearType = GearType.fromItemStack(itemStack);
@@ -119,12 +125,15 @@ public final class GearModel extends Model {
         }
         return new CraftedGearItem(
                 craftedResults.name(),
+                craftedResults.effectStrength(),
                 gearType,
+                craftedResults.attackSpeed(),
                 result.health(),
                 result.level(),
                 craftedResults.damages(),
                 craftedResults.defences(),
                 craftedResults.requirements(),
+                possibleValuesMap.values().stream().toList(),
                 result.identifications(),
                 result.powders(),
                 durability);
