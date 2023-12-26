@@ -4,20 +4,22 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
-import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -29,7 +31,7 @@ public class CraftedGearItem extends GameItem
                 GearTypeItemProperty,
                 DurableItemProperty,
                 LeveledItemProperty,
-                NamedItemProperty {
+                CraftedItemProperty {
     private final String name;
     private final int effectStrength;
     private final GearType gearType;
@@ -112,12 +114,24 @@ public class CraftedGearItem extends GameItem
         return requirements;
     }
 
+    @Override
+    public List<StatType> getStatTypes() {
+        return identifications.stream().map(StatActualValue::statType).toList();
+    }
+
+    @Override
+    public List<StatActualValue> getIdentifications() {
+        return identifications;
+    }
+
+    @Override
     public List<StatPossibleValues> getPossibleValues() {
         return possibleValues;
     }
 
-    public List<StatActualValue> getIdentifications() {
-        return identifications;
+    @Override
+    public ClassType getRequiredClass() {
+        return requirements.classType().orElse(null);
     }
 
     public List<Powder> getPowders() {

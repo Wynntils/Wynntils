@@ -18,6 +18,7 @@ import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
@@ -83,6 +84,9 @@ public class ItemStatInfoFeature extends Feature {
     @Persisted
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> showMaxValues = new Config<>(true);
+
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) return;
@@ -95,11 +99,18 @@ public class ItemStatInfoFeature extends Feature {
 
         try {
             List<Component> tooltips = null;
+
             Optional<IdentifiableItemProperty> identifiableItemPropertyOpt =
                     Models.Item.asWynnItemProperty(event.getItemStack(), IdentifiableItemProperty.class);
             if (identifiableItemPropertyOpt.isPresent()) {
                 tooltips =
                         getIdentifiableItemTooltip(event.getItemStack(), wynnItem, identifiableItemPropertyOpt.get());
+            }
+
+            Optional<CraftedItemProperty> craftedItemPropertyOpt =
+                    Models.Item.asWynnItemProperty(event.getItemStack(), CraftedItemProperty.class);
+            if (craftedItemPropertyOpt.isPresent()) {
+                tooltips = getCraftedItemTooltip(event.getItemStack(), wynnItem, craftedItemPropertyOpt.get());
             }
 
             if (tooltips == null) return;
@@ -137,7 +148,9 @@ public class ItemStatInfoFeature extends Feature {
                 identificationsOrdering.get(),
                 groupIdentifications.get(),
                 showBestValueLastAlways.get(),
-                showStars.get());
+                showStars.get(),
+                false // this only applies to crafted items
+                );
         LinkedList<Component> tooltips = new LinkedList<>(
                 builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
 
@@ -146,6 +159,26 @@ public class ItemStatInfoFeature extends Feature {
         if (overallPercentageInName.get() && itemInfo.hasOverallValue()) {
             updateItemName(itemInfo, tooltips);
         }
+        return tooltips;
+    }
+
+    private List<Component> getCraftedItemTooltip(
+            ItemStack itemStack, WynnItem wynnItem, CraftedItemProperty craftedItemProperty) {
+        TooltipBuilder builder = wynnItem.getData()
+                .getOrCalculate(
+                        WynnItemData.TOOLTIP_KEY,
+                        () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
+        if (builder == null) return null;
+
+        TooltipStyle currentIdentificationStyle = new TooltipStyle(
+                identificationsOrdering.get(),
+                groupIdentifications.get(),
+                false, // irrelevant for crafted items
+                false, // irrelevant for crafted items
+                showMaxValues.get());
+        List<Component> tooltips = new LinkedList<>(
+                builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, null));
+
         return tooltips;
     }
 

@@ -5,6 +5,7 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Handler;
+import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipBuilder;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.CharmTooltipComponent;
@@ -14,6 +15,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +44,15 @@ public class TooltipHandler extends Handler {
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public IdentifiableTooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
+    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
         return IdentifiableTooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
+    }
+
+    /**
+     * Creates a tooltip builder that parses the header and footer from an existing tooltip
+     */
+    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {
+        return CraftedTooltipBuilder.fromParsedItemStack(itemStack, craftedItemProperty);
     }
 
     private void registerTooltipComponents() {

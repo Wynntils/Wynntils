@@ -55,9 +55,9 @@ public final class WynnItemParser {
     private static final Pattern ITEM_DEFENCE_PATTERN =
             Pattern.compile("^§.(?<symbol>[✤✦❉✹❋]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)$");
 
-    // Test suite: https://regexr.com/776qt
+    // Test suite: https://regexr.com/7pnj8
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|/[35]s)?(?:§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
+            "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§8\\/([-+]?\\d+)(?:%| tier|\\/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
 
     // Test suite: https://regexr.com/782rk
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(

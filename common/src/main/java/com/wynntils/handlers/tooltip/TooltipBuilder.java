@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
     protected static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
     protected final List<Component> header;
     protected final List<Component> footer;
 
