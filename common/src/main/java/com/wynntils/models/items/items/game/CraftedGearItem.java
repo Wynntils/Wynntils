@@ -37,7 +37,6 @@ public class CraftedGearItem extends GameItem
     private final GearType gearType;
     private final GearAttackSpeed attackSpeed;
     private final int health;
-    private final int level;
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
     private final GearRequirements requirements;
@@ -53,7 +52,6 @@ public class CraftedGearItem extends GameItem
             GearType gearType,
             GearAttackSpeed attackSpeed,
             int health,
-            int level,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
             GearRequirements requirements,
@@ -67,7 +65,6 @@ public class CraftedGearItem extends GameItem
         this.gearType = gearType;
         this.attackSpeed = attackSpeed;
         this.health = health;
-        this.level = level;
         this.damages = damages;
         this.defences = defences;
         this.requirements = requirements;
@@ -102,7 +99,7 @@ public class CraftedGearItem extends GameItem
 
     @Override
     public int getLevel() {
-        return level;
+        return requirements.level();
     }
 
     public List<Pair<DamageType, RangedValue>> getDamages() {
@@ -162,8 +159,7 @@ public class CraftedGearItem extends GameItem
                 + effectStrength + ", gearType="
                 + gearType + ", attackSpeed="
                 + attackSpeed + ", health="
-                + health + ", level="
-                + level + ", damages="
+                + health + ", damages="
                 + damages + ", defences="
                 + defences + ", requirements="
                 + requirements + ", possibleValues="
