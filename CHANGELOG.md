@@ -1,9 +1,21 @@
+## [0.0.4-beta.105](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.104...v0.0.4-beta.105) (2023-12-26)
+
+
+### New Features
+
+* Parse more missing CraftedGearItem values ([#2298](https://github.com/Wynntils/Artemis/issues/2298)) ([a186dfa](https://github.com/Wynntils/Artemis/commit/a186dfaa3378bd33901b0285c40924cc054f4dfc))
+
 ## [0.0.4-beta.104](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.103...v0.0.4-beta.104) (2023-12-26)
 
 
 ### Bug Fixes
 
 * Fix an edge case resulting in container queries timing out, if a packet is sent and received in the same tick ([#2297](https://github.com/Wynntils/Artemis/issues/2297)) ([b24dd0e](https://github.com/Wynntils/Artemis/commit/b24dd0e580edf5cf773b4e72c94c3822066519a3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.104 [skip ci] ([f0b0762](https://github.com/Wynntils/Artemis/commit/f0b076286f626c111e3f60a0c2d6f7e1fa974794))
 
 ## [0.0.4-beta.103](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.102...v0.0.4-beta.103) (2023-12-26)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.101 [skip ci] ([be2ea3e](https://github.com/Wynntils/Artemis/commit/be2ea3e815c81666bc5edb798ca228689e481b1c))
-
-## [0.0.4-beta.100](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.99...v0.0.4-beta.100) (2023-12-24)
-
-
-### New Features
-
-* Add charm and tome item guides ([#2291](https://github.com/Wynntils/Artemis/issues/2291)) ([6dfab4a](https://github.com/Wynntils/Artemis/commit/6dfab4ad7ca0dc83fb7c06f01d5c35636446dec6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.100 [skip ci] ([735cf65](https://github.com/Wynntils/Artemis/commit/735cf652117c00bc3b2d0f7346f972723f4050d2))
 
