@@ -1,3 +1,10 @@
+## [0.0.4-beta.103](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.102...v0.0.4-beta.103) (2023-12-26)
+
+
+### Bug Fixes
+
+* Handle an edge case with inverted values in internal roll calculations, fix assertions to use correct rounding ([#2295](https://github.com/Wynntils/Artemis/issues/2295)) ([d9ed58b](https://github.com/Wynntils/Artemis/commit/d9ed58b6093b257411d160678b4563f531afb04f))
+
 ## [0.0.4-beta.102](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.101...v0.0.4-beta.102) (2023-12-25)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2293](https://github.com/Wynntils/Artemis/issues/2293)) ([6cc81e2](https://github.com/Wynntils/Artemis/commit/6cc81e217ccfc54fc1f4809686de3a78b4927675))
+* **release:** v0.0.4-beta.102 [skip ci] ([56f7a6a](https://github.com/Wynntils/Artemis/commit/56f7a6ac8dc7ebfec4315f6a0877914112d9ad6f))
 
 ## [0.0.4-beta.101](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.100...v0.0.4-beta.101) (2023-12-24)
 
@@ -50,16 +58,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.99 [skip ci] ([db953d6](https://github.com/Wynntils/Artemis/commit/db953d6c439df308eab3ce3a57b9ac9ba3aa9527))
-
-## [0.0.4-beta.98](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.97...v0.0.4-beta.98) (2023-12-20)
-
-
-### Bug Fixes
-
-* fix elemental defenses being treated as inverted ([#2288](https://github.com/Wynntils/Artemis/issues/2288)) ([c1d80be](https://github.com/Wynntils/Artemis/commit/c1d80be0e80bf138c417efd68b801defaae7e1bd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.98 [skip ci] ([2a6b27e](https://github.com/Wynntils/Artemis/commit/2a6b27e0a9f7b5040f2a367896454f2ec4541d8f))
 
