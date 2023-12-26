@@ -7,7 +7,8 @@ package com.wynntils.models.items.encoding.type;
 public enum ItemType {
     GEAR(0),
     TOME(1),
-    CHARM(2);
+    CHARM(2),
+    CRAFTED_GEAR(3);
 
     private final byte id;
 

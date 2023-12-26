@@ -16,6 +16,7 @@ import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -31,6 +32,7 @@ public class CraftedGearItem extends GameItem
                 GearTypeItemProperty,
                 DurableItemProperty,
                 LeveledItemProperty,
+                PowderedItemProperty,
                 CraftedItemProperty {
     private final String name;
     private final int effectStrength;
@@ -134,10 +136,12 @@ public class CraftedGearItem extends GameItem
         return requirements.classType().orElse(null);
     }
 
+    @Override
     public List<Powder> getPowders() {
         return powders;
     }
 
+    @Override
     public int getPowderSlots() {
         return powderSlots;
     }

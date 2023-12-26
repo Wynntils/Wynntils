@@ -27,7 +27,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
 
     @Override
     protected boolean shouldEncodeData(ItemTransformingVersion version, PowderData data) {
-        return !data.powders().isEmpty();
+        return !data.powders().isEmpty() || data.powderSlots() > 0;
     }
 
     @Override
@@ -79,14 +79,24 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
         if (data.powders().size() > 255) {
             return ErrorOr.error("Too many powders on item.");
         }
+        if (data.powderSlots() > 255) {
+            return ErrorOr.error("Too many powder slots on item.");
+        }
 
-        return ErrorOr.of(
-                Stream.concat(Stream.of(UnsignedByte.of((byte) data.powders().size())), Stream.of(dataBytes))
-                        .toArray(UnsignedByte[]::new));
+        // The first byte is the powder slots on the item
+        // The second byte is the number of powders
+        return ErrorOr.of(Stream.concat(
+                        Stream.of(UnsignedByte.of((byte) data.powderSlots()), UnsignedByte.of((byte)
+                                data.powders().size())),
+                        Stream.of(dataBytes))
+                .toArray(UnsignedByte[]::new));
     }
 
     private ErrorOr<PowderData> decodePowderData(ArrayReader<UnsignedByte> byteReader) {
-        // The first byte is the number of powders
+        // The first byte is the powder slots on the item
+        int powderSlots = byteReader.read().value();
+
+        // The second byte is the number of powders
         int powderCount = byteReader.read().value();
 
         // The powder data is encoded as bits, a powder needs 5 bits to encode
@@ -131,6 +141,6 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
             data.add(new Pair<>(Powder.values()[element - 1], tier));
         }
 
-        return ErrorOr.of(new PowderData(data));
+        return ErrorOr.of(new PowderData(powderSlots, data));
     }
 }

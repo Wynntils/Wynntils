@@ -9,7 +9,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -26,8 +28,8 @@ public class FakeItemStack extends ItemStack {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
 
-        if (wynnItem instanceof IdentifiableItemProperty identifiableItemProperty) {
-            Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(identifiableItemProperty.getName()));
+        if (wynnItem instanceof NamedItemProperty namedItemProperty) {
+            Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));
         }
 
         this.wynnItem = wynnItem;
@@ -45,18 +47,19 @@ public class FakeItemStack extends ItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
+        TooltipBuilder tooltipBuilder = null;
         if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-            TooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(identifiableItem, false);
-            List<Component> tooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
-            // Add a line describing the source of this fake stack
-            tooltip.add(
-                    1,
-                    Component.literal(source)
-                            .withStyle(ChatFormatting.DARK_GRAY)
-                            .withStyle(ChatFormatting.ITALIC));
-            return tooltip;
+            tooltipBuilder = Handlers.Tooltip.buildNew(identifiableItem, false);
+        } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
+            tooltipBuilder = Handlers.Tooltip.buildNew(craftedItemProperty);
         }
 
-        return List.of();
+        if (tooltipBuilder == null) return List.of();
+
+        List<Component> tooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
+        // Add a line describing the source of this fake stack
+        tooltip.add(
+                1, Component.literal(source).withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+        return tooltip;
     }
 }

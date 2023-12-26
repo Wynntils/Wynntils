@@ -8,5 +8,7 @@ import com.wynntils.models.elements.type.Powder;
 import java.util.List;
 
 public interface PowderedItemProperty {
+    int getPowderSlots();
+
     List<Powder> getPowders();
 }

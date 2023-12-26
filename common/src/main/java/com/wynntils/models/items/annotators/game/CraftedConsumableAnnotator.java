@@ -7,6 +7,7 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
+import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
@@ -33,7 +34,7 @@ public final class CraftedConsumableAnnotator implements ItemAnnotator {
 
         return new CraftedConsumableItem(
                 craftedName,
-                craftedParseResults.consumableType(),
+                ConsumableType.fromString(parseResult.itemType()),
                 parseResult.level(),
                 parseResult.identifications(),
                 parseResult.namedEffects(),
