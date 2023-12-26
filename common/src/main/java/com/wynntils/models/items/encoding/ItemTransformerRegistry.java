@@ -9,6 +9,7 @@ import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
 import com.wynntils.models.items.encoding.impl.item.CharmItemTransformer;
+import com.wynntils.models.items.encoding.impl.item.CraftedGearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.TomeItemTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
@@ -18,6 +19,7 @@ import com.wynntils.models.items.encoding.type.ItemTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.CharmItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.EncodedByteBuffer;
@@ -101,8 +103,7 @@ public final class ItemTransformerRegistry {
         return (ItemTransformer<WynnItem>) itemTransformers.get(wynnItem.getClass());
     }
 
-    private void registerItemTransformer(
-            Class<? extends WynnItem> itemClass, ItemTransformer<? extends WynnItem> itemTransformer) {
+    private <T extends WynnItem> void registerItemTransformer(Class<T> itemClass, ItemTransformer<T> itemTransformer) {
         itemTransformers.put(itemClass, itemTransformer);
     }
 
@@ -110,6 +111,7 @@ public final class ItemTransformerRegistry {
         registerItemTransformer(GearItem.class, new GearItemTransformer());
         registerItemTransformer(TomeItem.class, new TomeItemTransformer());
         registerItemTransformer(CharmItem.class, new CharmItemTransformer());
+        registerItemTransformer(CraftedGearItem.class, new CraftedGearItemTransformer());
     }
 
     private static final class ItemTransformerMap {

@@ -5,18 +5,30 @@
 package com.wynntils.models.items.encoding;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.items.encoding.data.CustomGearTypeData;
+import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
+import com.wynntils.models.items.encoding.data.DamageData;
+import com.wynntils.models.items.encoding.data.DefenseData;
+import com.wynntils.models.items.encoding.data.DurabilityData;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
+import com.wynntils.models.items.encoding.data.RequirementsData;
 import com.wynntils.models.items.encoding.data.RerollData;
 import com.wynntils.models.items.encoding.data.ShinyData;
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
+import com.wynntils.models.items.encoding.impl.block.CustomGearTypeTransformer;
+import com.wynntils.models.items.encoding.impl.block.CustomIdentificationDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.DamageDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.DefenseDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.DurablityDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.EndDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.IdentificationDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.NameDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.PowderDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.RequirementsDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.RerollDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.ShinyDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.StartDataTransformer;
@@ -127,6 +139,12 @@ public final class DataTransformerRegistry {
         registerDataTransformer(PowderData.class, new PowderDataTransformer());
         registerDataTransformer(RerollData.class, new RerollDataTransformer());
         registerDataTransformer(ShinyData.class, new ShinyDataTransformer());
+        registerDataTransformer(CustomGearTypeData.class, new CustomGearTypeTransformer());
+        registerDataTransformer(DurabilityData.class, new DurablityDataTransformer());
+        registerDataTransformer(RequirementsData.class, new RequirementsDataTransformer());
+        registerDataTransformer(DamageData.class, new DamageDataTransformer());
+        registerDataTransformer(DefenseData.class, new DefenseDataTransformer());
+        registerDataTransformer(CustomIdentificationsData.class, new CustomIdentificationDataTransformer());
 
         registerDataTransformer(EndData.class, new EndDataTransformer());
     }
