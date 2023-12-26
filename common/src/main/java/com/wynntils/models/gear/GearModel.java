@@ -129,7 +129,6 @@ public final class GearModel extends Model {
                 gearType,
                 craftedResults.attackSpeed(),
                 result.health(),
-                result.level(),
                 craftedResults.damages(),
                 craftedResults.defences(),
                 craftedResults.requirements(),
