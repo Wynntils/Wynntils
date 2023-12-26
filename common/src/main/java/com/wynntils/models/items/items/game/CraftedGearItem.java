@@ -14,6 +14,7 @@ import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -24,7 +25,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class CraftedGearItem extends GameItem
-        implements GearTierItemProperty, GearTypeItemProperty, DurableItemProperty, LeveledItemProperty {
+        implements GearTierItemProperty,
+                GearTypeItemProperty,
+                DurableItemProperty,
+                LeveledItemProperty,
+                NamedItemProperty {
     private final String name;
     private final int effectStrength;
     private final GearType gearType;
@@ -68,6 +73,7 @@ public class CraftedGearItem extends GameItem
         this.durability = durability;
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -5,10 +5,11 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Handler;
-import com.wynntils.handlers.tooltip.impl.CharmTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.GearTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.TomeTooltipComponent;
-import com.wynntils.handlers.tooltip.type.TooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.impl.identifiable.TooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.CharmTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.GearTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.TomeTooltipComponent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -28,21 +29,21 @@ public class TooltipHandler extends Handler {
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */
-    public TooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, boolean hideUnidentified) {
+    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, boolean hideUnidentified) {
         TooltipComponent tooltipComponent = tooltipComponents.get(identifiableItem.getClass());
         if (tooltipComponent == null) {
             throw new IllegalArgumentException("No tooltip component registered for "
                     + identifiableItem.getClass().getName());
         }
 
-        return TooltipBuilder.buildNewItem(identifiableItem, tooltipComponent, hideUnidentified);
+        return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, tooltipComponent, hideUnidentified);
     }
 
     /**
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
-    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        return TooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
+    public IdentifiableTooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
+        return IdentifiableTooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
     }
 
     private void registerTooltipComponents() {

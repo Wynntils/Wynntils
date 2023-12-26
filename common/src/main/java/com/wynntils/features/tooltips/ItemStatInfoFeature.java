@@ -19,6 +19,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -31,12 +32,14 @@ import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -90,37 +93,30 @@ public class ItemStatInfoFeature extends Feature {
         WynnItem wynnItem = wynnItemOpt.get();
         if (brokenItems.contains(wynnItem)) return;
 
-        IdentifiableItemProperty itemInfo = getItemInfo(wynnItem);
-        if (itemInfo == null) return;
-
         try {
-            TooltipBuilder builder = wynnItem.getData()
-                    .getOrCalculate(
-                            WynnItemData.TOOLTIP_KEY,
-                            () -> Handlers.Tooltip.fromParsedItemStack(event.getItemStack(), itemInfo));
-            if (builder == null) return;
-
-            IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;
-            TooltipStyle currentIdentificationStyle = new TooltipStyle(
-                    identificationsOrdering.get(),
-                    groupIdentifications.get(),
-                    showBestValueLastAlways.get(),
-                    showStars.get());
-            LinkedList<Component> tooltips = new LinkedList<>(
-                    builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
-
-            // Update name depending on overall percentage; this needs to be done every rendering
-            // for rainbow/defective effects
-            if (overallPercentageInName.get() && itemInfo.hasOverallValue()) {
-                updateItemName(itemInfo, tooltips);
+            List<Component> tooltips = null;
+            Optional<IdentifiableItemProperty> identifiableItemPropertyOpt =
+                    Models.Item.asWynnItemProperty(event.getItemStack(), IdentifiableItemProperty.class);
+            if (identifiableItemPropertyOpt.isPresent()) {
+                tooltips =
+                        getIdentifiableItemTooltip(event.getItemStack(), wynnItem, identifiableItemPropertyOpt.get());
             }
 
+            if (tooltips == null) return;
             event.setTooltips(tooltips);
         } catch (Exception e) {
             brokenItems.add(wynnItem);
-            WynntilsMod.error("Exception when creating tooltips for item " + itemInfo.getName(), e);
+
+            String itemName = wynnItem.getClass().getSimpleName();
+            Optional<NamedItemProperty> namedItemPropertyOpt =
+                    Models.Item.asWynnItemProperty(event.getItemStack(), NamedItemProperty.class);
+            if (namedItemPropertyOpt.isPresent()) {
+                itemName = namedItemPropertyOpt.get().getName();
+            }
+
+            WynntilsMod.error("Exception when creating tooltips for item " + itemName, e);
             WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + wynnItem);
-            McUtils.sendErrorToClient("Wynntils error: Problem showing tooltip for item " + itemInfo.getName());
+            McUtils.sendErrorToClient("Wynntils error: Problem showing tooltip for item " + itemName);
 
             if (brokenItems.size() > 10) {
                 // Give up and disable feature
@@ -129,12 +125,28 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    private IdentifiableItemProperty getItemInfo(WynnItem wynnItem) {
-        if (wynnItem instanceof IdentifiableItemProperty itemInfo) {
-            return itemInfo;
-        }
+    private List<Component> getIdentifiableItemTooltip(
+            ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
+        TooltipBuilder builder = wynnItem.getData()
+                .getOrCalculate(
+                        WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
+        if (builder == null) return null;
 
-        return null;
+        IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;
+        TooltipStyle currentIdentificationStyle = new TooltipStyle(
+                identificationsOrdering.get(),
+                groupIdentifications.get(),
+                showBestValueLastAlways.get(),
+                showStars.get());
+        LinkedList<Component> tooltips = new LinkedList<>(
+                builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
+
+        // Update name depending on overall percentage; this needs to be done every rendering
+        // for rainbow/defective effects
+        if (overallPercentageInName.get() && itemInfo.hasOverallValue()) {
+            updateItemName(itemInfo, tooltips);
+        }
+        return tooltips;
     }
 
     private void updateItemName(IdentifiableItemProperty itemInfo, Deque<Component> tooltips) {

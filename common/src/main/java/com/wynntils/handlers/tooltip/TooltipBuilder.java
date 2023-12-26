@@ -1,76 +1,41 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.tooltip.type.TooltipComponent;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
-/**
- * A builder for tooltips.
- * @param <T> The type of the gear info
- * @param <U> The type of the gear instance
- */
-public final class TooltipBuilder<T, U> {
-    private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
+public abstract class TooltipBuilder {
+    protected static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
             new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true);
-    private final IdentifiableItemProperty<T, U> itemInfo;
-    private final List<Component> header;
-    private final List<Component> footer;
+    protected final List<Component> header;
+    protected final List<Component> footer;
 
     // The identificationsCache is only valid if the cached dependencies matchs
-    private ClassType cachedCurrentClass;
-    private TooltipStyle cachedStyle;
-    private TooltipIdentificationDecorator cachedDecorator;
-    private List<Component> identificationsCache;
+    protected ClassType cachedCurrentClass;
+    protected TooltipStyle cachedStyle;
+    protected TooltipIdentificationDecorator cachedDecorator;
+    protected List<Component> identificationsCache;
 
-    private TooltipBuilder(IdentifiableItemProperty<T, U> itemInfo, List<Component> header, List<Component> footer) {
-        this.itemInfo = itemInfo;
+    protected TooltipBuilder(List<Component> header, List<Component> footer) {
         this.header = header;
         this.footer = footer;
     }
 
-    /**
-     * Creates a tooltip builder that provides a synthetic header and footer
-     */
-    public static <T, U> TooltipBuilder<T, U> buildNewItem(
-            IdentifiableItemProperty<T, U> identifiableItem,
-            TooltipComponent<T, U> tooltipComponent,
-            boolean hideUnidentified) {
-        T itemInfo = identifiableItem.getItemInfo();
-        U itemInstance = identifiableItem.getItemInstance().orElse(null);
-
-        List<Component> header = tooltipComponent.buildHeaderTooltip(itemInfo, itemInstance, hideUnidentified);
-        List<Component> footer = tooltipComponent.buildFooterTooltip(itemInfo, itemInstance);
-        return new TooltipBuilder(identifiableItem, header, footer);
-    }
-
-    /**
-     * Creates a tooltip builder that parses the header and footer from an existing tooltip
-     */
-    public static TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
-
-        Pair<List<Component>, List<Component>> splitLore = extractHeaderAndFooter(tooltips);
-        List<Component> header = splitLore.a();
-        List<Component> footer = splitLore.b();
-
-        return new TooltipBuilder(itemInfo, header, footer);
+    public List<Component> getTooltipLines(ClassType currentClass) {
+        return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null);
     }
 
     public List<Component> getTooltipLines(
@@ -85,7 +50,7 @@ public final class TooltipBuilder<T, U> {
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
         if (currentClass != cachedCurrentClass || cachedStyle != style || cachedDecorator != decorator) {
-            identifications = TooltipIdentifications.buildTooltip(itemInfo, currentClass, decorator, style);
+            identifications = getIdentificationLines(currentClass, style, decorator);
             identificationsCache = identifications;
             cachedCurrentClass = currentClass;
             cachedStyle = style;
@@ -101,11 +66,10 @@ public final class TooltipBuilder<T, U> {
         return tooltip;
     }
 
-    public List<Component> getTooltipLines(ClassType currentClass) {
-        return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null);
-    }
+    protected abstract List<Component> getIdentificationLines(
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator);
 
-    private static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {
+    protected static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {
         List<Component> header = new ArrayList<>();
         List<Component> footer = new ArrayList<>();
 
