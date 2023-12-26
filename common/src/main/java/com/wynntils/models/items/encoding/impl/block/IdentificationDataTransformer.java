@@ -27,8 +27,6 @@ import java.util.Optional;
 public class IdentificationDataTransformer extends DataTransformer<IdentificationData> {
     private static final boolean ENCODE_EXTENDED_DATA = true;
 
-    public static final byte ID = 3;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
@@ -61,8 +59,8 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
     }
 
     @Override
-    protected byte getId() {
-        return ID;
+    public byte getId() {
+        return 3;
     }
 
     private ErrorOr<UnsignedByte[]> encodeIdentifications(IdentificationData data) {

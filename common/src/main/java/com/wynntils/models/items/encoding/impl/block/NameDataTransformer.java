@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NameDataTransformer extends DataTransformer<NameData> {
-    public static final byte ID = 2;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, NameData data) {
         return switch (version) {
@@ -53,7 +51,7 @@ public class NameDataTransformer extends DataTransformer<NameData> {
     }
 
     @Override
-    protected byte getId() {
-        return ID;
+    public byte getId() {
+        return 2;
     }
 }

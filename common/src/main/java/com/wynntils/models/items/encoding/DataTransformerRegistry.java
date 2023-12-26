@@ -113,24 +113,22 @@ public final class DataTransformerRegistry {
         return ErrorOr.of(dataList);
     }
 
-    private <T extends ItemData> void registerDataTransformer(
-            Class<T> dataClass, byte id, DataTransformer<T> dataTransformer) {
-        dataTransformers.put(dataClass, id, dataTransformer);
+    private <T extends ItemData> void registerDataTransformer(Class<T> dataClass, DataTransformer<T> dataTransformer) {
+        dataTransformers.put(dataClass, dataTransformer.getId(), dataTransformer);
     }
 
     private void registerAllTransformers() {
-        registerDataTransformer(StartData.class, StartDataTransformer.ID, new StartDataTransformer());
+        registerDataTransformer(StartData.class, new StartDataTransformer());
 
         // Order is irrelevant here, keep it ordered as the ids are
-        registerDataTransformer(TypeData.class, TypeDataTransformer.ID, new TypeDataTransformer());
-        registerDataTransformer(NameData.class, NameDataTransformer.ID, new NameDataTransformer());
-        registerDataTransformer(
-                IdentificationData.class, IdentificationDataTransformer.ID, new IdentificationDataTransformer());
-        registerDataTransformer(PowderData.class, PowderDataTransformer.ID, new PowderDataTransformer());
-        registerDataTransformer(RerollData.class, RerollDataTransformer.ID, new RerollDataTransformer());
-        registerDataTransformer(ShinyData.class, ShinyDataTransformer.ID, new ShinyDataTransformer());
+        registerDataTransformer(TypeData.class, new TypeDataTransformer());
+        registerDataTransformer(NameData.class, new NameDataTransformer());
+        registerDataTransformer(IdentificationData.class, new IdentificationDataTransformer());
+        registerDataTransformer(PowderData.class, new PowderDataTransformer());
+        registerDataTransformer(RerollData.class, new RerollDataTransformer());
+        registerDataTransformer(ShinyData.class, new ShinyDataTransformer());
 
-        registerDataTransformer(EndData.class, EndDataTransformer.ID, new EndDataTransformer());
+        registerDataTransformer(EndData.class, new EndDataTransformer());
     }
 
     private static final class DataTransformerMap {

@@ -15,8 +15,6 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
 public class ShinyDataTransformer extends DataTransformer<ShinyData> {
-    public static final byte ID = 6;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, ShinyData data) {
         return switch (version) {
@@ -37,8 +35,8 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
     }
 
     @Override
-    protected byte getId() {
-        return ID;
+    public byte getId() {
+        return 6;
     }
 
     private static UnsignedByte[] encodeShinyData(ShinyData data) {

@@ -12,8 +12,6 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
 public class EndDataTransformer extends DataTransformer<EndData> {
-    public static final byte ID = (byte) 255;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, EndData data) {
         // End data is always empty
@@ -27,7 +25,7 @@ public class EndDataTransformer extends DataTransformer<EndData> {
     }
 
     @Override
-    protected byte getId() {
-        return ID;
+    public byte getId() {
+        return (byte) 255;
     }
 }

@@ -51,7 +51,7 @@ public class StartDataTransformer extends DataTransformer<StartData> {
     }
 
     @Override
-    protected byte getId() {
+    public byte getId() {
         return ID;
     }
 }
