@@ -12,8 +12,6 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
 public class TypeDataTransformer extends DataTransformer<TypeData> {
-    public static final byte ID = 1;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, TypeData data) {
         return switch (version) {
@@ -39,7 +37,7 @@ public class TypeDataTransformer extends DataTransformer<TypeData> {
     }
 
     @Override
-    protected byte getId() {
-        return ID;
+    public byte getId() {
+        return 1;
     }
 }

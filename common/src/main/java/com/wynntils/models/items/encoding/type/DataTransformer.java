@@ -12,7 +12,7 @@ import com.wynntils.utils.type.UnsignedByte;
  * Interface for transforming data into bytes.
  * @param <T> The type of data to transform.
  */
-public abstract class DataTransformer<T> {
+public abstract class DataTransformer<T extends ItemData> {
     public final ErrorOr<UnsignedByte[]> encode(ItemTransformingVersion version, T data) {
         if (!shouldEncodeData(version, data)) return ErrorOr.of(new UnsignedByte[0]);
 
@@ -38,5 +38,5 @@ public abstract class DataTransformer<T> {
 
     public abstract ErrorOr<T> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader);
 
-    protected abstract byte getId();
+    public abstract byte getId();
 }
