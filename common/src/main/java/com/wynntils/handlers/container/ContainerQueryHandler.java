@@ -121,6 +121,8 @@ public final class ContainerQueryHandler extends Handler {
 
             if (ticksUntilNextOperation == 0) {
                 try {
+                    // Reset the timer for the next operation
+                    ticksUntilNextOperation = -1;
                     // Return true iff taking the next step succeeded
                     if (currentStep.startStep(currentContent)) return;
                 } catch (Throwable t) {
