@@ -13,6 +13,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
@@ -42,6 +43,9 @@ import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
     public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)$");
+
+    // Test suite: https://regexr.com/7pn75
+    private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed$");
 
     // Test suite: https://regexr.com/7pm84
     private static final Pattern ITEM_DAMAGE_PATTERN =
@@ -88,7 +92,7 @@ public final class WynnItemParser {
 
     // Crafted items
     // Test suite: https://regexr.com/7pm7o
-    private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3(.+)§b \\[(\\d+)%\\]À*$");
+    private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -236,7 +240,23 @@ public final class WynnItemParser {
 
                 int stars = starString == null ? 0 : starString.length();
 
+                // Load the possible values for this stat
+                // If we are parsing a crafted item, we want this to be null
                 StatPossibleValues possibleValues = possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
+
+                // group 4 is only present for crafted gear, as the top value for that stat
+                // parse possible values for this stat
+                if (statMatcher.group(4) != null && possibleValuesMap != null) {
+                    int maxValue = Integer.parseInt(statMatcher.group(4));
+                    // minimum value is 10% of maximum value, rounded
+                    int minValue = (int) Math.round(maxValue * 0.1);
+
+                    // Add possible values for this stat
+                    StatPossibleValues calculatedPossibleValues =
+                            new StatPossibleValues(statType, RangedValue.of(minValue, maxValue), maxValue, false);
+                    possibleValuesMap.put(statType, calculatedPossibleValues);
+                }
+
                 StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
                 identifications.add(actualValue);
             }
@@ -329,6 +349,8 @@ public final class WynnItemParser {
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
 
         String name = "";
+        int effectStrength = 0;
+        GearAttackSpeed attackSpeed = null;
         List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
         List<Pair<Element, Integer>> defences = new ArrayList<>();
         // requirements
@@ -340,11 +362,18 @@ public final class WynnItemParser {
             Matcher nameMatcher = StyledText.fromComponent(lore.get(0)).getMatcher(CRAFTED_ITEM_NAME_PATTERN);
             if (nameMatcher.matches()) {
                 name = nameMatcher.group(1);
+                effectStrength = Integer.parseInt(nameMatcher.group(2));
             }
         }
 
         for (Component loreLine : lore) {
             StyledText coded = StyledText.fromComponent(loreLine);
+
+            Matcher attackSpeedMatcher = coded.getMatcher(ITEM_ATTACK_SPEED_PATTERN);
+            if (attackSpeedMatcher.matches()) {
+                String speedName = attackSpeedMatcher.group(1);
+                attackSpeed = GearAttackSpeed.fromString(speedName.replaceAll(" ", "_"));
+            }
 
             Matcher damageMatcher = coded.getMatcher(ITEM_DAMAGE_PATTERN);
             if (damageMatcher.matches()) {
@@ -386,6 +415,8 @@ public final class WynnItemParser {
 
         return new CraftedItemParseResults(
                 name,
+                effectStrength,
+                attackSpeed,
                 damages,
                 defences,
                 new GearRequirements(levelReq, Optional.ofNullable(classReq), skillReqs, Optional.empty()));

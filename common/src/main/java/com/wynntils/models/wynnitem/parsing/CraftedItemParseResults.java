@@ -5,6 +5,7 @@
 package com.wynntils.models.wynnitem.parsing;
 
 import com.wynntils.models.elements.type.Element;
+import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.type.Pair;
@@ -13,6 +14,8 @@ import java.util.List;
 
 public record CraftedItemParseResults(
         String name,
+        int effectStrength,
+        GearAttackSpeed attackSpeed,
         List<Pair<DamageType, RangedValue>> damages,
         List<Pair<Element, Integer>> defences,
         GearRequirements requirements) {}
