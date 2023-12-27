@@ -6,13 +6,15 @@ package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipBuilder;
+import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.crafted.components.CraftedGearTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
-import com.wynntils.handlers.tooltip.impl.identifiable.TooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.CharmTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.GearTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.TomeTooltipComponent;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CharmItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
@@ -22,7 +24,10 @@ import java.util.Map;
 import net.minecraft.world.item.ItemStack;
 
 public class TooltipHandler extends Handler {
-    private final Map<Class<? extends WynnItem>, TooltipComponent> tooltipComponents = new HashMap<>();
+    private final Map<Class<? extends IdentifiableItemProperty>, IdentifiableTooltipComponent>
+            identifiableTooltipComponents = new HashMap<>();
+    private final Map<Class<? extends CraftedItemProperty>, CraftedTooltipComponent> craftedTooltipComponents =
+            new HashMap<>();
 
     public TooltipHandler() {
         registerTooltipComponents();
@@ -32,13 +37,26 @@ public class TooltipHandler extends Handler {
      * Creates a tooltip builder that provides a synthetic header and footer
      */
     public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, boolean hideUnidentified) {
-        TooltipComponent tooltipComponent = tooltipComponents.get(identifiableItem.getClass());
+        IdentifiableTooltipComponent tooltipComponent = identifiableTooltipComponents.get(identifiableItem.getClass());
         if (tooltipComponent == null) {
             throw new IllegalArgumentException("No tooltip component registered for "
                     + identifiableItem.getClass().getName());
         }
 
         return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, tooltipComponent, hideUnidentified);
+    }
+
+    /**
+     * Creates a tooltip builder that provides a synthetic header and footer
+     */
+    public CraftedTooltipBuilder buildNew(CraftedItemProperty craftedItemProperty) {
+        CraftedTooltipComponent tooltipComponent = craftedTooltipComponents.get(craftedItemProperty.getClass());
+        if (tooltipComponent == null) {
+            throw new IllegalArgumentException("No tooltip component registered for "
+                    + craftedItemProperty.getClass().getName());
+        }
+
+        return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, tooltipComponent);
     }
 
     /**
@@ -59,9 +77,17 @@ public class TooltipHandler extends Handler {
         registerTooltipComponent(CharmItem.class, new CharmTooltipComponent());
         registerTooltipComponent(GearItem.class, new GearTooltipComponent());
         registerTooltipComponent(TomeItem.class, new TomeTooltipComponent());
+
+        registerTooltipComponent(CraftedGearItem.class, new CraftedGearTooltipComponent());
     }
 
-    private void registerTooltipComponent(Class<? extends WynnItem> itemClass, TooltipComponent tooltipComponent) {
-        tooltipComponents.put(itemClass, tooltipComponent);
+    private void registerTooltipComponent(
+            Class<? extends IdentifiableItemProperty> itemClass, IdentifiableTooltipComponent<?, ?> tooltipComponent) {
+        identifiableTooltipComponents.put(itemClass, tooltipComponent);
+    }
+
+    private void registerTooltipComponent(
+            Class<? extends CraftedItemProperty> itemClass, CraftedTooltipComponent<?> tooltipComponent) {
+        craftedTooltipComponents.put(itemClass, tooltipComponent);
     }
 }

@@ -24,6 +24,7 @@ public record WynnItemParseResult(
         List<NamedItemEffect> namedEffects,
         List<ItemEffect> effects,
         List<Powder> powders,
+        int powderSlots,
         int rerolls,
         int durabilityCurrent,
         int durabilityMax,

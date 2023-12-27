@@ -23,6 +23,13 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         this.craftedItem = craftedItem;
     }
 
+    public static <T extends CraftedItemProperty> CraftedTooltipBuilder buildNewItem(
+            T craftedItem, CraftedTooltipComponent<T> tooltipComponent) {
+        List<Component> header = tooltipComponent.buildHeaderTooltip(craftedItem);
+        List<Component> footer = tooltipComponent.buildFooterTooltip(craftedItem);
+        return new CraftedTooltipBuilder(craftedItem, header, footer);
+    }
+
     public static CraftedTooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItem) {
         List<Component> tooltips = LoreUtils.getTooltipLines(itemStack);
 

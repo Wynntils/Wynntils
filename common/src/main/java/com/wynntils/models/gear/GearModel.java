@@ -136,6 +136,7 @@ public final class GearModel extends Model {
                 possibleValuesMap.values().stream().toList(),
                 result.identifications(),
                 result.powders(),
+                result.powderSlots(),
                 durability);
     }
 

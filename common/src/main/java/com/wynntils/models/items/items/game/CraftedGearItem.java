@@ -44,6 +44,7 @@ public class CraftedGearItem extends GameItem
     private final List<StatPossibleValues> possibleValues;
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
+    private final int powderSlots;
     private final CappedValue durability;
 
     public CraftedGearItem(
@@ -59,6 +60,7 @@ public class CraftedGearItem extends GameItem
             List<StatPossibleValues> possibleValues,
             List<StatActualValue> identifications,
             List<Powder> powders,
+            int powderSlots,
             CappedValue durability) {
         this.name = name;
         this.effectStrength = effectStrength;
@@ -72,6 +74,7 @@ public class CraftedGearItem extends GameItem
         this.possibleValues = possibleValues;
         this.identifications = identifications;
         this.powders = powders;
+        this.powderSlots = powderSlots;
         this.durability = durability;
     }
 
@@ -138,6 +141,10 @@ public class CraftedGearItem extends GameItem
         return powders;
     }
 
+    public int getPowderSlots() {
+        return powderSlots;
+    }
+
     @Override
     public CappedValue getDurability() {
         return durability;
@@ -162,7 +169,8 @@ public class CraftedGearItem extends GameItem
                 + requirements + ", possibleValues="
                 + possibleValues + ", identifications="
                 + identifications + ", powders="
-                + powders + ", durability="
+                + powders + ", powderSlots="
+                + powderSlots + ", durability="
                 + durability + '}';
     }
 }

@@ -100,6 +100,7 @@ public final class WynnItemParser {
         List<NamedItemEffect> namedEffects = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
+        int powderSlots = 0;
         int health = 0;
         int level = 0;
         int tierCount = 0;
@@ -123,6 +124,7 @@ public final class WynnItemParser {
             Matcher powderMatcher = normalizedCoded.getMatcher(POWDER_PATTERN);
             if (powderMatcher.matches()) {
                 int usedSlots = Integer.parseInt(powderMatcher.group(1));
+                powderSlots = Integer.parseInt(powderMatcher.group(2));
                 String codedPowders = powderMatcher.group(3);
                 if (codedPowders == null) continue;
 
@@ -279,6 +281,7 @@ public final class WynnItemParser {
                 namedEffects,
                 effects,
                 powders,
+                powderSlots,
                 tierCount,
                 tierCount,
                 durabilityMax,
@@ -339,6 +342,7 @@ public final class WynnItemParser {
                 List.of(),
                 List.of(),
                 powders,
+                powders.size(),
                 rerolls,
                 0,
                 0,

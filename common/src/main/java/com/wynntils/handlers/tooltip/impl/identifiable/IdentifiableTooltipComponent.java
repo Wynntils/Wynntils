@@ -14,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
  * @param <T> The type of the gear info
  * @param <U> The type of the gear instance
  */
-public abstract class TooltipComponent<T, U> {
+public abstract class IdentifiableTooltipComponent<T, U> {
     public abstract List<Component> buildHeaderTooltip(T itemInfo, U itemInstance, boolean hideUnidentified);
 
     public abstract List<Component> buildFooterTooltip(T itemInfo, U itemInstance);

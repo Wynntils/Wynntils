@@ -34,7 +34,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
      */
     public static <T, U> IdentifiableTooltipBuilder<T, U> buildNewItem(
             IdentifiableItemProperty<T, U> identifiableItem,
-            TooltipComponent<T, U> tooltipComponent,
+            IdentifiableTooltipComponent<T, U> tooltipComponent,
             boolean hideUnidentified) {
         T itemInfo = identifiableItem.getItemInfo();
         U itemInstance = identifiableItem.getItemInstance().orElse(null);

@@ -5,7 +5,7 @@
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.TooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
@@ -20,7 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class TomeTooltipComponent extends TooltipComponent<TomeInfo, TomeInstance> {
+public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo, TomeInstance> {
     @Override
     public List<Component> buildHeaderTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified) {
         List<Component> header = new ArrayList<>();
