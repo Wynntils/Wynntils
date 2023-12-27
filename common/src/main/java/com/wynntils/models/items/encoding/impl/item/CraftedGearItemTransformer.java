@@ -17,6 +17,7 @@ import com.wynntils.models.items.encoding.data.DurabilityData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.data.RequirementsData;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemDataMap;
 import com.wynntils.models.items.encoding.type.ItemTransformer;
@@ -129,7 +130,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
     }
 
     @Override
-    protected List<ItemData> encodeItem(CraftedGearItem item) {
+    protected List<ItemData> encodeItem(CraftedGearItem item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
 
         // Required blocks
@@ -138,8 +139,9 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         dataList.add(new RequirementsData(item.getRequirements()));
 
         // Optional blocks
-        // FIXME: Enabled by WIP transformer settings
-        // dataList.add(new NameData(item.getName()));
+        if (encodingSettings.shareItemName()) {
+            dataList.add(new NameData(item.getName()));
+        }
 
         dataList.add(new DamageData(item.getAttackSpeed(), item.getDamages()));
         dataList.add(new DefenseData(item.getHealth(), item.getDefences()));

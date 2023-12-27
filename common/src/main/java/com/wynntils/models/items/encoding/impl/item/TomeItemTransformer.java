@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.RerollData;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemDataMap;
 import com.wynntils.models.items.encoding.type.ItemTransformer;
@@ -54,11 +55,11 @@ public class TomeItemTransformer extends ItemTransformer<TomeItem> {
     }
 
     @Override
-    protected List<ItemData> encodeItem(TomeItem item) {
+    protected List<ItemData> encodeItem(TomeItem item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
 
         dataList.add(NameData.from(item));
-        dataList.add(IdentificationData.from(item));
+        dataList.add(IdentificationData.from(item, encodingSettings.extendedIdentificationEncoding()));
         dataList.add(RerollData.from(item));
 
         return dataList;

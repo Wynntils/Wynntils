@@ -6,6 +6,7 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
@@ -26,8 +27,8 @@ public class ItemEncodingModel extends Model {
         super(List.of());
     }
 
-    public ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem) {
-        return itemTransformerRegistry.encodeItem(wynnItem);
+    public ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem, EncodingSettings encodingSettings) {
+        return itemTransformerRegistry.encodeItem(wynnItem, encodingSettings);
     }
 
     public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer) {

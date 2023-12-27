@@ -25,12 +25,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public class IdentificationDataTransformer extends DataTransformer<IdentificationData> {
-    private static final boolean ENCODE_EXTENDED_DATA = true;
-
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
-            case VERSION_1 -> encodeIdentifications(data);
+            case VERSION_1 -> encodeIdentifications(data, data.extendedEncoding());
         };
     }
 
@@ -38,7 +36,7 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
     protected boolean shouldEncodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
             case VERSION_1 -> {
-                if (ENCODE_EXTENDED_DATA) {
+                if (data.extendedEncoding()) {
                     yield !data.identifications().isEmpty();
                 } else {
                     yield data.identifications().stream().anyMatch(stat -> {
@@ -63,7 +61,7 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
         return 3;
     }
 
-    private ErrorOr<UnsignedByte[]> encodeIdentifications(IdentificationData data) {
+    private ErrorOr<UnsignedByte[]> encodeIdentifications(IdentificationData data, boolean extendedEncoding) {
         List<UnsignedByte> bytes = new ArrayList<>();
 
         if (data.identifications().size() > 255) {
@@ -79,10 +77,10 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                 })
                 .count();
         bytes.add(UnsignedByte.of(encodedSize));
-        bytes.add(UnsignedByte.of((byte) (ENCODE_EXTENDED_DATA ? 1 : 0)));
+        bytes.add(UnsignedByte.of((byte) (extendedEncoding ? 1 : 0)));
 
         ErrorOr<List<UnsignedByte>> errorOrData;
-        errorOrData = encodeIdentifications(data, bytes, ENCODE_EXTENDED_DATA);
+        errorOrData = encodeIdentifications(data, bytes, extendedEncoding);
 
         if (errorOrData.hasError()) {
             return ErrorOr.error(errorOrData.getError());
@@ -279,6 +277,7 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
         HashMap<StatType, StatPossibleValues> possibleValuesMap = possibleValues.stream()
                 .collect(HashMap::new, (map, value) -> map.put(value.statType(), value), HashMap::putAll);
 
-        return ErrorOr.of(new IdentificationData(identifications, possibleValuesMap, pendingCalculations));
+        return ErrorOr.of(
+                new IdentificationData(identifications, possibleValuesMap, extendedData, pendingCalculations));
     }
 }
