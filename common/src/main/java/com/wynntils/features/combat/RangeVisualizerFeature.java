@@ -122,7 +122,7 @@ public class RangeVisualizerFeature extends Feature {
         List<Pair<CustomColor, Float>> circles = validGear.stream()
                 .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
                     case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
-                    case "Saviour's Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
+                    case "Saviour’s Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
                     case "Heart of the Pack" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
                     case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
                     default -> null;
