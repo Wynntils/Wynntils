@@ -35,11 +35,15 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
     private TextInputBoxWidget saveNameInput;
     private WynntilsButton saveAssignedButton;
+    private boolean saveAssignedButtonConfirm = false;
     private WynntilsButton saveBuildButton;
+    private boolean saveBuildButtonConfirm = false;
+    private boolean hasSaveNameConflict = false;
 
     private Pair<String, SavableSkillPointSet> selectedLoadout;
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
+    private WynntilsButton convertButton;
 
     private SkillPointLoadoutsScreen() {
         super(Component.literal("Skill Point Loadouts Screen"));
@@ -52,6 +56,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     @Override
     protected void doInit() {
         super.doInit();
+        selectedLoadout = null;
         Models.SkillPoint.populateSkillPoints();
 
         populateLoadouts();
@@ -64,6 +69,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (x) -> {
                     saveAssignedButton.active = !x.isBlank();
                     saveBuildButton.active = !x.isBlank();
+                    hasSaveNameConflict = false;
+                    saveAssignedButtonConfirm = false;
+                    saveBuildButtonConfirm = false;
                 },
                 this,
                 saveNameInput);
@@ -71,22 +79,27 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         saveAssignedButton =
                 new WynntilsButton(
-                        (int) (dividedWidth * 48) + 1,
+                        (int) (dividedWidth * 49),
                         (int) (dividedHeight * 24),
-                        (int) ((dividedWidth * 54) - (dividedWidth * 48)) - 1,
+                        (int) ((dividedWidth * 53) - (dividedWidth * 49)),
                         BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.saveAssigned")) {
+                        Component.translatable("screens.wynntils.skillPointLoadouts.save")) {
                     @Override
                     public void onPress() {
                         String name = saveNameInput.getTextBoxInput();
-                        if (Models.SkillPoint.hasLoadout(name)) {
-                            // todo deal with
+                        if (Models.SkillPoint.hasLoadout(name) && !saveAssignedButtonConfirm) {
+                            hasSaveNameConflict = true;
+                            saveAssignedButtonConfirm = true;
+                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.confirm")
+                                    .withStyle(ChatFormatting.RED));
+                        } else {
+                            Models.SkillPoint.saveCurrentSkillPoints(name);
+                            populateLoadouts();
+                            setSelectedLoadout(new Pair<>(
+                                    name, Models.SkillPoint.getLoadouts().get(name)));
+                            saveNameInput.setTextBoxInput("");
+                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.save"));
                         }
-                        Models.SkillPoint.saveCurrentSkillPoints(name);
-                        populateLoadouts();
-                        setSelectedLoadout(
-                                new Pair<>(name, Models.SkillPoint.getLoadouts().get(name)));
-                        saveNameInput.setTextBoxInput("");
                     }
                 };
         this.addRenderableWidget(saveAssignedButton);
@@ -94,7 +107,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         saveBuildButton =
                 new WynntilsButton(
-                        (int) (dividedWidth * 54) + 1,
+                        (int) (dividedWidth * 54),
                         (int) (dividedHeight * 24),
                         (int) ((dividedWidth * 59) - (dividedWidth * 54)),
                         BUTTON_HEIGHT,
@@ -102,14 +115,19 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     @Override
                     public void onPress() {
                         String name = saveNameInput.getTextBoxInput();
-                        if (Models.SkillPoint.hasLoadout(name)) {
-                            // todo deal with
+                        if (Models.SkillPoint.hasLoadout(name) && !saveBuildButtonConfirm) {
+                            hasSaveNameConflict = true;
+                            saveBuildButtonConfirm = true;
+                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.confirm")
+                                    .withStyle(ChatFormatting.RED));
+                        } else {
+                            Models.SkillPoint.saveCurrentBuild(name);
+                            populateLoadouts();
+                            setSelectedLoadout(new Pair<>(
+                                    name, Models.SkillPoint.getLoadouts().get(name)));
+                            saveNameInput.setTextBoxInput("");
+                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
                         }
-                        Models.SkillPoint.saveCurrentBuild(name);
-                        populateLoadouts();
-                        setSelectedLoadout(
-                                new Pair<>(name, Models.SkillPoint.getLoadouts().get(name)));
-                        saveNameInput.setTextBoxInput("");
                     }
                 };
         this.addRenderableWidget(saveBuildButton);
@@ -118,8 +136,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         loadButton =
                 new WynntilsButton(
                         (int) (dividedWidth * 35),
-                        (int) (dividedHeight * 56),
-                        (int) ((dividedWidth * 48) - (dividedWidth * 35)) - 1,
+                        (int) (dividedHeight * 52),
+                        (int) ((dividedWidth * 47) - (dividedWidth * 35)),
                         BUTTON_HEIGHT,
                         Component.translatable("screens.wynntils.skillPointLoadouts.load")) {
                     @Override
@@ -133,9 +151,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         deleteButton =
                 new WynntilsButton(
-                        (int) (dividedWidth * 48) + 1,
-                        (int) (dividedHeight * 56),
-                        (int) ((dividedWidth * 54) - (dividedWidth * 48)) - 1,
+                        (int) (dividedWidth * 48),
+                        (int) (dividedHeight * 52),
+                        (int) ((dividedWidth * 54) - (dividedWidth * 48)),
                         BUTTON_HEIGHT,
                         Component.translatable("screens.wynntils.skillPointLoadouts.delete")) {
                     @Override
@@ -146,6 +164,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         deleteButton.active = false;
                         loadButton.visible = false;
                         deleteButton.visible = false;
+                        convertButton.active = false;
+                        convertButton.visible = false;
                         populateLoadouts();
                     }
                 };
@@ -153,19 +173,27 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         deleteButton.active = false;
         deleteButton.visible = false;
 
-        // todo remove this
-        addRenderableWidget(
+        convertButton =
                 new WynntilsButton(
-                        (int) (dividedWidth * 4),
-                        (int) (dividedHeight * 54),
-                        120,
+                        (int) (dividedWidth * 35),
+                        (int) (dividedHeight * 43),
+                        (int) ((dividedWidth * 42) - (dividedWidth * 35)),
                         BUTTON_HEIGHT,
-                        Component.literal("Refresh skill points")) {
+                        Component.translatable("screens.wynntils.skillPointLoadouts.convert")) {
                     @Override
                     public void onPress() {
-                        Models.SkillPoint.populateSkillPoints();
+                        Models.SkillPoint.convertLoadoutToBuild(selectedLoadout.key());
+                        populateLoadouts();
+                        setSelectedLoadout(new Pair<>(
+                                selectedLoadout.key(),
+                                Models.SkillPoint.getLoadouts().get(selectedLoadout.key())));
                     }
-                });
+                };
+        convertButton.setTooltip(
+                Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.convertTooltip")));
+        this.addRenderableWidget(convertButton);
+        convertButton.active = false;
+        convertButton.visible = false;
     }
 
     @Override
@@ -358,6 +386,19 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
         }
+
+        if (hasSaveNameConflict) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.saveNameConflict")),
+                            dividedWidth * 35,
+                            dividedHeight * 23,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
         // endregion
 
         // region Selected loadout
@@ -368,7 +409,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     dividedWidth * 34,
                     dividedHeight * 34,
                     dividedWidth * 60,
-                    dividedHeight * 60,
+                    dividedHeight * 56,
                     1,
                     1);
             FontRenderer.getInstance()
@@ -418,7 +459,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
             }
-            if (selectedLoadout.value().isBuild()) {
+            if (!selectedLoadout.value().isBuild()) {
                 for (int i = 0; i < selectedLoadout.value().getArmourNames().size(); i++) {
                     String armour = selectedLoadout.value().getArmourNames().get(i);
                     FontRenderer.getInstance()
@@ -426,7 +467,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     poseStack,
                                     StyledText.fromString(armour),
                                     dividedWidth * 35,
-                                    dividedHeight * (40 + i * 2),
+                                    dividedHeight * (42 + i * 2),
                                     CommonColors.WHITE,
                                     HorizontalAlignment.LEFT,
                                     VerticalAlignment.BOTTOM,
@@ -440,12 +481,23 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     poseStack,
                                     StyledText.fromString(accessory),
                                     dividedWidth * 44,
-                                    dividedHeight * (40 + i * 2),
+                                    dividedHeight * (42 + i * 2),
                                     CommonColors.WHITE,
                                     HorizontalAlignment.LEFT,
                                     VerticalAlignment.BOTTOM,
                                     TextShadow.NORMAL);
                 }
+            } else {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.notBuild")),
+                                dividedWidth * 35,
+                                dividedHeight * 42,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
             }
         }
         // endregion
@@ -477,6 +529,14 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             loadButton.setTooltip(
                     Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.levelIncompatible")
                             .withStyle(ChatFormatting.RED)));
+        }
+
+        if (loadout.value().isBuild()) {
+            convertButton.active = true;
+            convertButton.visible = true;
+        } else {
+            convertButton.active = false;
+            convertButton.visible = false;
         }
     }
 

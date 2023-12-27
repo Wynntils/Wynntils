@@ -106,6 +106,33 @@ public class SkillPointModel extends Model {
         WynntilsMod.info("Saved skill point build: " + name + " - " + assignedSkillPointSet);
     }
 
+    public void convertLoadoutToBuild(String name) {
+        SavableSkillPointSet loadout = skillPointLoadouts.get().get(name);
+        List<String> armourNames = new ArrayList<>();
+        McUtils.inventory().armor.stream()
+                .map(x -> x.getHoverName().getString())
+                .forEach(armourNames::add);
+        Collections.reverse(armourNames); // helmet to boots order
+
+        List<String> accessoryNames = new ArrayList<>();
+        for (int i : ACCESSORY_SLOTS) {
+            ItemStack itemStack = McUtils.inventory().getItem(i);
+            if (!itemStack.isEmpty()) {
+                accessoryNames.add(itemStack.getHoverName().getString());
+            }
+        }
+        SavableSkillPointSet build = new SavableSkillPointSet(
+                loadout.getSkillPointsAsArray()[0],
+                loadout.getSkillPointsAsArray()[1],
+                loadout.getSkillPointsAsArray()[2],
+                loadout.getSkillPointsAsArray()[3],
+                loadout.getSkillPointsAsArray()[4],
+                armourNames,
+                accessoryNames);
+
+        skillPointLoadouts.get().put(name, build);
+    }
+
     public void loadLoadout(String name) {
         McUtils.closeBackgroundContainer();
 

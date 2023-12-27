@@ -25,8 +25,8 @@ public class SavableSkillPointSet {
         this.intelligence = intelligence;
         this.defence = defence;
         this.agility = agility;
-        this.armourNames = List.of();
-        this.accessoryNames = List.of();
+        this.armourNames = new ArrayList<>();
+        this.accessoryNames = new ArrayList<>();
     }
 
     public SavableSkillPointSet(
@@ -60,7 +60,7 @@ public class SavableSkillPointSet {
     }
 
     public boolean isBuild() {
-        return isBuild;
+        return !isBuild;
     }
 
     public List<String> getArmourNames() {

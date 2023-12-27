@@ -68,7 +68,7 @@ public class LoadoutWidget extends AbstractWidget {
         }
 
         int nameYOffset = 2;
-        if (this.loadout.isBuild()) {
+        if (!this.loadout.isBuild()) {
             nameYOffset = 3;
             FontRenderer.getInstance()
                     .renderText(
