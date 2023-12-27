@@ -171,7 +171,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         Component.translatable("screens.wynntils.skillPointLoadouts.convert")) {
                     @Override
                     public void onPress() {
-                        Models.SkillPoint.saveBuild(selectedLoadout.key(), selectedLoadout.value().getSkillPointsAsArray());
+                        Models.SkillPoint.saveBuild(
+                                selectedLoadout.key(), selectedLoadout.value().getSkillPointsAsArray());
                         populateLoadouts();
                         setSelectedLoadout(new Pair<>(
                                 selectedLoadout.key(),
@@ -523,7 +524,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         loadButton.visible = true;
         deleteButton.visible = true;
 
-        // -1 required because first level does not grant any skill points
         if (selectedLoadout.value().getMinimumCombatLevel()
                 > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(

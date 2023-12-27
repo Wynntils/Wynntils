@@ -18,6 +18,9 @@ public class SavableSkillPointSet {
     private final List<String> armourNames;
     private final List<String> accessoryNames;
 
+    /**
+     * Constructs a new SavableSkillPointSet representing just a loadout.
+     */
     public SavableSkillPointSet(int strength, int dexterity, int intelligence, int defence, int agility) {
         this.isBuild = false;
         this.strength = strength;
@@ -29,10 +32,10 @@ public class SavableSkillPointSet {
         this.accessoryNames = new ArrayList<>();
     }
 
-    public SavableSkillPointSet(
-            int[] skillPoints,
-            List<String> armourNames,
-            List<String> accessoryNames) {
+    /**
+     * Constructs a new SavableSkillPointSet representing a full build with gear.
+     */
+    public SavableSkillPointSet(int[] skillPoints, List<String> armourNames, List<String> accessoryNames) {
         this.isBuild = true;
         this.strength = skillPoints[0];
         this.dexterity = skillPoints[1];

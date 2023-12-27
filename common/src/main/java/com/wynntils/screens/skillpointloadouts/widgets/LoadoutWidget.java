@@ -82,6 +82,7 @@ public class LoadoutWidget extends AbstractWidget {
                             TextShadow.NORMAL,
                             0.8f);
         }
+        // Renders "name (skillPointsSum - Level minLevel)". Level is red if minLevel is higher than current level.
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,

@@ -94,21 +94,18 @@ public class SkillPointModel extends Model {
             }
         }
 
-        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
-                skillPoints,
-                armourNames,
-                accessoryNames);
+        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints, armourNames, accessoryNames);
         skillPointLoadouts.get().put(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
 
     public void saveCurrentBuild(String name) {
-        saveBuild(name, new int[]{
-                getAssignedSkillPoints(Skill.STRENGTH),
-                getAssignedSkillPoints(Skill.DEXTERITY),
-                getAssignedSkillPoints(Skill.INTELLIGENCE),
-                getAssignedSkillPoints(Skill.DEFENCE),
-                getAssignedSkillPoints(Skill.AGILITY)
+        saveBuild(name, new int[] {
+            getAssignedSkillPoints(Skill.STRENGTH),
+            getAssignedSkillPoints(Skill.DEXTERITY),
+            getAssignedSkillPoints(Skill.INTELLIGENCE),
+            getAssignedSkillPoints(Skill.DEFENCE),
+            getAssignedSkillPoints(Skill.AGILITY)
         });
     }
 
