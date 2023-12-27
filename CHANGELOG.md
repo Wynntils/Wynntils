@@ -1,9 +1,26 @@
+## [0.0.4-beta.106](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.105...v0.0.4-beta.106) (2023-12-27)
+
+
+### Bug Fixes
+
+* Hero range visualizer not detecting ([#2301](https://github.com/Wynntils/Artemis/issues/2301)) ([afe1aa3](https://github.com/Wynntils/Artemis/commit/afe1aa33ae647da15abe0565102437603ce1f6fc))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2300](https://github.com/Wynntils/Artemis/issues/2300)) ([8b1ac87](https://github.com/Wynntils/Artemis/commit/8b1ac87d6f217e1acd3a7ec2d14d55dba5b64011))
+
 ## [0.0.4-beta.105](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.104...v0.0.4-beta.105) (2023-12-26)
 
 
 ### New Features
 
 * Parse more missing CraftedGearItem values ([#2298](https://github.com/Wynntils/Artemis/issues/2298)) ([a186dfa](https://github.com/Wynntils/Artemis/commit/a186dfaa3378bd33901b0285c40924cc054f4dfc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.105 [skip ci] ([29397f5](https://github.com/Wynntils/Artemis/commit/29397f5d3cf957e06d9fe0655ce54ce153d8d44f))
 
 ## [0.0.4-beta.104](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.103...v0.0.4-beta.104) (2023-12-26)
 
@@ -41,16 +58,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2293](https://github.com/Wynntils/Artemis/issues/2293)) ([6cc81e2](https://github.com/Wynntils/Artemis/commit/6cc81e217ccfc54fc1f4809686de3a78b4927675))
 * **release:** v0.0.4-beta.102 [skip ci] ([56f7a6a](https://github.com/Wynntils/Artemis/commit/56f7a6ac8dc7ebfec4315f6a0877914112d9ad6f))
-
-## [0.0.4-beta.101](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.100...v0.0.4-beta.101) (2023-12-24)
-
-
-### Bug Fixes
-
-* fix some cases where the custom loading screen got stuck ([#2292](https://github.com/Wynntils/Artemis/issues/2292)) ([7c92b7c](https://github.com/Wynntils/Artemis/commit/7c92b7cdc028386ed64506f1c067323c8e90dd70))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.101 [skip ci] ([be2ea3e](https://github.com/Wynntils/Artemis/commit/be2ea3e815c81666bc5edb798ca228689e481b1c))
 
