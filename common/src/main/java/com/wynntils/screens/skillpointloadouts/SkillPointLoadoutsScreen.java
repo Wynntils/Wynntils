@@ -98,6 +98,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     name, Models.SkillPoint.getLoadouts().get(name)));
                             saveNameInput.setTextBoxInput("");
                             this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.save"));
+                            // in case user pressed on both buttons
+                            saveBuildButton.setMessage(
+                                    Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
                         }
                     }
                 };
@@ -126,6 +129,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     name, Models.SkillPoint.getLoadouts().get(name)));
                             saveNameInput.setTextBoxInput("");
                             this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
+                            // in case user pressed on both buttons
+                            saveAssignedButton.setMessage(
+                                    Component.translatable("screens.wynntils.skillPointLoadouts.save"));
                         }
                     }
                 };
