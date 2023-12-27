@@ -13,6 +13,7 @@ import com.wynntils.models.items.encoding.impl.item.CraftedGearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.TomeItemTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemDataMap;
 import com.wynntils.models.items.encoding.type.ItemTransformer;
@@ -55,13 +56,13 @@ public final class ItemTransformerRegistry {
         registerAllTransformers();
     }
 
-    public ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem) {
+    public ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem, EncodingSettings encodingSettings) {
         ItemTransformer<WynnItem> transformer = getTransformer(wynnItem);
         if (transformer == null) {
             return ErrorOr.error(
                     "No item transformer found for " + wynnItem.getClass().getSimpleName());
         }
-        return encodeItem(wynnItem, transformer);
+        return encodeItem(wynnItem, encodingSettings, transformer);
     }
 
     public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer) {
@@ -85,11 +86,12 @@ public final class ItemTransformerRegistry {
         return decodeItem(itemData, transformer);
     }
 
-    private ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem, ItemTransformer<WynnItem> transformer) {
+    private ErrorOr<EncodedByteBuffer> encodeItem(
+            WynnItem wynnItem, EncodingSettings encodingSettings, ItemTransformer<WynnItem> transformer) {
         List<ItemData> encodedData = new ArrayList<>();
 
         encodedData.add(new StartData(CURRENT_VERSION));
-        encodedData.addAll(transformer.encode(wynnItem));
+        encodedData.addAll(transformer.encode(wynnItem, encodingSettings));
         encodedData.add(new EndData());
 
         return dataTransformerRegistry.encodeData(CURRENT_VERSION, encodedData);

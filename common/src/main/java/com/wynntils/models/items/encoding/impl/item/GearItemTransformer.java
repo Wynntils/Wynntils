@@ -13,6 +13,7 @@ import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.data.RerollData;
 import com.wynntils.models.items.encoding.data.ShinyData;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemDataMap;
 import com.wynntils.models.items.encoding.type.ItemTransformer;
@@ -73,11 +74,11 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
     }
 
     @Override
-    public List<ItemData> encodeItem(GearItem item) {
+    public List<ItemData> encodeItem(GearItem item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
 
         dataList.add(NameData.from(item));
-        dataList.add(IdentificationData.from(item));
+        dataList.add(IdentificationData.from(item, encodingSettings.extendedIdentificationEncoding()));
         dataList.add(PowderData.from(item));
         dataList.add(RerollData.from(item));
         dataList.add(ShinyData.from(item));

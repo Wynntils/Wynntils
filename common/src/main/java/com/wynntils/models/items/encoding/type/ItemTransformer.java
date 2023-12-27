@@ -24,16 +24,16 @@ import java.util.stream.Collectors;
  * @param <T> The type of item to transform.
  */
 public abstract class ItemTransformer<T extends WynnItem> {
-    public final List<ItemData> encode(T item) {
+    public final List<ItemData> encode(T item, EncodingSettings encodingSettings) {
         List<ItemData> dataList = new ArrayList<>();
         dataList.add(new TypeData(getType()));
-        dataList.addAll(encodeItem(item));
+        dataList.addAll(encodeItem(item, encodingSettings));
         return List.copyOf(dataList);
     }
 
     public abstract ErrorOr<T> decodeItem(ItemDataMap itemDataMap);
 
-    protected abstract List<ItemData> encodeItem(T item);
+    protected abstract List<ItemData> encodeItem(T item, EncodingSettings encodingSettings);
 
     public abstract ItemType getType();
 

@@ -26,13 +26,15 @@ import java.util.Map;
 public record IdentificationData(
         List<StatActualValue> identifications,
         Map<StatType, StatPossibleValues> possibleValues,
+        boolean extendedEncoding,
         Map<StatType, Integer> pendingCalculations)
         implements ItemData {
-    public static IdentificationData from(IdentifiableItemProperty<?, ?> property) {
+    public static IdentificationData from(IdentifiableItemProperty<?, ?> property, boolean extendedEncoding) {
         return new IdentificationData(
                 property.getIdentifications(),
                 property.getPossibleValues().stream()
                         .collect(HashMap::new, (map, value) -> map.put(value.statType(), value), HashMap::putAll),
+                extendedEncoding,
                 Map.of());
     }
 
