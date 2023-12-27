@@ -30,19 +30,15 @@ public class SavableSkillPointSet {
     }
 
     public SavableSkillPointSet(
-            int strength,
-            int dexterity,
-            int intelligence,
-            int defence,
-            int agility,
+            int[] skillPoints,
             List<String> armourNames,
             List<String> accessoryNames) {
         this.isBuild = true;
-        this.strength = strength;
-        this.dexterity = dexterity;
-        this.intelligence = intelligence;
-        this.defence = defence;
-        this.agility = agility;
+        this.strength = skillPoints[0];
+        this.dexterity = skillPoints[1];
+        this.intelligence = skillPoints[2];
+        this.defence = skillPoints[3];
+        this.agility = skillPoints[4];
         this.armourNames = new ArrayList<>(armourNames);
         this.accessoryNames = new ArrayList<>(accessoryNames);
     }

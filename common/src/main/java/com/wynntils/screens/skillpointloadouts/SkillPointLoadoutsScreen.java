@@ -56,7 +56,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     @Override
     protected void doInit() {
         super.doInit();
-        selectedLoadout = null;
         Models.SkillPoint.populateSkillPoints();
 
         populateLoadouts();
@@ -64,7 +63,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         saveNameInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 35),
                 (int) (dividedHeight * 24),
-                (int) ((dividedWidth * 48) - (dividedWidth * 35)) - 1,
+                (int) ((dividedWidth * 48) - (dividedWidth * 35)),
                 BUTTON_HEIGHT,
                 (x) -> {
                     saveAssignedButton.active = !x.isBlank();
@@ -146,8 +145,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     }
                 };
         this.addRenderableWidget(loadButton);
-        loadButton.active = false;
-        loadButton.visible = false;
 
         deleteButton =
                 new WynntilsButton(
@@ -159,19 +156,11 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     @Override
                     public void onPress() {
                         Models.SkillPoint.deleteLoadout(selectedLoadout.key());
-                        selectedLoadout = null;
-                        loadButton.active = false;
-                        deleteButton.active = false;
-                        loadButton.visible = false;
-                        deleteButton.visible = false;
-                        convertButton.active = false;
-                        convertButton.visible = false;
+                        setSelectedLoadout(null);
                         populateLoadouts();
                     }
                 };
         this.addRenderableWidget(deleteButton);
-        deleteButton.active = false;
-        deleteButton.visible = false;
 
         convertButton =
                 new WynntilsButton(
@@ -182,7 +171,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         Component.translatable("screens.wynntils.skillPointLoadouts.convert")) {
                     @Override
                     public void onPress() {
-                        Models.SkillPoint.convertLoadoutToBuild(selectedLoadout.key());
+                        Models.SkillPoint.saveBuild(selectedLoadout.key(), selectedLoadout.value().getSkillPointsAsArray());
                         populateLoadouts();
                         setSelectedLoadout(new Pair<>(
                                 selectedLoadout.key(),
@@ -192,8 +181,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         convertButton.setTooltip(
                 Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.convertTooltip")));
         this.addRenderableWidget(convertButton);
-        convertButton.active = false;
-        convertButton.visible = false;
+
+        setSelectedLoadout(null);
     }
 
     @Override
@@ -517,6 +506,17 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     public void setSelectedLoadout(Pair<String, SavableSkillPointSet> loadout) {
+        if (loadout == null) {
+            selectedLoadout = null;
+            loadButton.active = false;
+            deleteButton.active = false;
+            loadButton.visible = false;
+            deleteButton.visible = false;
+            convertButton.active = false;
+            convertButton.visible = false;
+            return;
+        }
+
         selectedLoadout = loadout;
         loadButton.active = true;
         deleteButton.active = true;

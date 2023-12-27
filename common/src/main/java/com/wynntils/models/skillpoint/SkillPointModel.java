@@ -75,10 +75,11 @@ public class SkillPointModel extends Model {
     }
 
     /**
-     * Saves the current assigned skill points and gear to the build list.
-     * @param name The name of the build to save.
+     * Saves the current equipped gear and provided skill points.
+     * @param name
+     * @param skillPoints
      */
-    public void saveCurrentBuild(String name) {
+    public void saveBuild(String name, int[] skillPoints) {
         List<String> armourNames = new ArrayList<>();
         McUtils.inventory().armor.stream()
                 .map(x -> x.getHoverName().getString())
@@ -94,43 +95,21 @@ public class SkillPointModel extends Model {
         }
 
         SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
+                skillPoints,
+                armourNames,
+                accessoryNames);
+        skillPointLoadouts.get().put(name, assignedSkillPointSet);
+        WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
+    }
+
+    public void saveCurrentBuild(String name) {
+        saveBuild(name, new int[]{
                 getAssignedSkillPoints(Skill.STRENGTH),
                 getAssignedSkillPoints(Skill.DEXTERITY),
                 getAssignedSkillPoints(Skill.INTELLIGENCE),
                 getAssignedSkillPoints(Skill.DEFENCE),
-                getAssignedSkillPoints(Skill.AGILITY),
-                armourNames,
-                accessoryNames);
-
-        skillPointLoadouts.get().put(name, assignedSkillPointSet);
-        WynntilsMod.info("Saved skill point build: " + name + " - " + assignedSkillPointSet);
-    }
-
-    public void convertLoadoutToBuild(String name) {
-        SavableSkillPointSet loadout = skillPointLoadouts.get().get(name);
-        List<String> armourNames = new ArrayList<>();
-        McUtils.inventory().armor.stream()
-                .map(x -> x.getHoverName().getString())
-                .forEach(armourNames::add);
-        Collections.reverse(armourNames); // helmet to boots order
-
-        List<String> accessoryNames = new ArrayList<>();
-        for (int i : ACCESSORY_SLOTS) {
-            ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty()) {
-                accessoryNames.add(itemStack.getHoverName().getString());
-            }
-        }
-        SavableSkillPointSet build = new SavableSkillPointSet(
-                loadout.getSkillPointsAsArray()[0],
-                loadout.getSkillPointsAsArray()[1],
-                loadout.getSkillPointsAsArray()[2],
-                loadout.getSkillPointsAsArray()[3],
-                loadout.getSkillPointsAsArray()[4],
-                armourNames,
-                accessoryNames);
-
-        skillPointLoadouts.get().put(name, build);
+                getAssignedSkillPoints(Skill.AGILITY)
+        });
     }
 
     public void loadLoadout(String name) {
