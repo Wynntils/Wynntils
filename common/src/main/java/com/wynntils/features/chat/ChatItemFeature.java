@@ -20,6 +20,7 @@ import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -261,7 +262,10 @@ public class ChatItemFeature extends Feature {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
         if (wynnItemOpt.isEmpty()) return;
 
-        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer = Models.ItemEncoding.encodeItem(wynnItemOpt.get());
+        // TODO: These settings should be persisted, and changeable in the custom share GUI
+        EncodingSettings encodingSettings = new EncodingSettings(false, true);
+        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
+                Models.ItemEncoding.encodeItem(wynnItemOpt.get(), encodingSettings);
         if (errorOrEncodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemError"));
