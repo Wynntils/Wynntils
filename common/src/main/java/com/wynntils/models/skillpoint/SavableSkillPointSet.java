@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class SavableSkillPointSet {
-    private final boolean isBuild;
     private final int strength;
     private final int dexterity;
     private final int intelligence;
@@ -21,13 +20,12 @@ public class SavableSkillPointSet {
     /**
      * Constructs a new SavableSkillPointSet representing just a loadout.
      */
-    public SavableSkillPointSet(int strength, int dexterity, int intelligence, int defence, int agility) {
-        this.isBuild = false;
-        this.strength = strength;
-        this.dexterity = dexterity;
-        this.intelligence = intelligence;
-        this.defence = defence;
-        this.agility = agility;
+    public SavableSkillPointSet(int[] skillPoints) {
+        this.strength = skillPoints[0];
+        this.dexterity = skillPoints[1];
+        this.intelligence = skillPoints[2];
+        this.defence = skillPoints[3];
+        this.agility = skillPoints[4];
         this.armourNames = new ArrayList<>();
         this.accessoryNames = new ArrayList<>();
     }
@@ -36,7 +34,6 @@ public class SavableSkillPointSet {
      * Constructs a new SavableSkillPointSet representing a full build with gear.
      */
     public SavableSkillPointSet(int[] skillPoints, List<String> armourNames, List<String> accessoryNames) {
-        this.isBuild = true;
         this.strength = skillPoints[0];
         this.dexterity = skillPoints[1];
         this.intelligence = skillPoints[2];
@@ -59,7 +56,7 @@ public class SavableSkillPointSet {
     }
 
     public boolean isBuild() {
-        return !isBuild;
+        return !armourNames.isEmpty() || !accessoryNames.isEmpty();
     }
 
     public List<String> getArmourNames() {
@@ -73,7 +70,7 @@ public class SavableSkillPointSet {
     @Override
     public String toString() {
         return "SavableSkillPointSet{" + "isBuild="
-                + isBuild + ", strength="
+                + isBuild() + ", strength="
                 + strength + ", dexterity="
                 + dexterity + ", intelligence="
                 + intelligence + ", defence="

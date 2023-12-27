@@ -68,12 +68,16 @@ public class LoadoutWidget extends AbstractWidget {
         }
 
         int nameYOffset = 2;
-        if (!this.loadout.isBuild()) {
+        if (loadout.isBuild()) {
             nameYOffset = 3;
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(String.join(", ", loadout.getArmourNames())),
+                            StyledText.fromString(String.join(
+                                    ", ",
+                                    (loadout.getArmourNames().isEmpty()
+                                            ? loadout.getAccessoryNames()
+                                            : loadout.getArmourNames()))),
                             dividedWidth * 4,
                             this.getY() + ((float) this.getHeight() / 4 * 3),
                             CommonColors.WHITE,

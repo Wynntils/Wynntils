@@ -136,7 +136,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 new WynntilsButton(
                         (int) (dividedWidth * 35),
                         (int) (dividedHeight * 52),
-                        (int) ((dividedWidth * 47) - (dividedWidth * 35)),
+                        (int) ((dividedWidth * 44) - (dividedWidth * 35)),
                         BUTTON_HEIGHT,
                         Component.translatable("screens.wynntils.skillPointLoadouts.load")) {
                     @Override
@@ -148,11 +148,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         deleteButton =
                 new WynntilsButton(
-                        (int) (dividedWidth * 48),
+                        (int) (dividedWidth * 45),
                         (int) (dividedHeight * 52),
-                        (int) ((dividedWidth * 54) - (dividedWidth * 48)),
+                        (int) ((dividedWidth * 51) - (dividedWidth * 45)),
                         BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.delete")) {
+                        Component.translatable("screens.wynntils.skillPointLoadouts.delete")
+                                .withStyle(ChatFormatting.RED)) {
                     @Override
                     public void onPress() {
                         Models.SkillPoint.deleteLoadout(selectedLoadout.key());
@@ -164,15 +165,24 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         convertButton =
                 new WynntilsButton(
-                        (int) (dividedWidth * 35),
-                        (int) (dividedHeight * 43),
-                        (int) ((dividedWidth * 42) - (dividedWidth * 35)),
+                        (int) (dividedWidth * 52),
+                        (int) (dividedHeight * 52),
+                        (int) ((dividedWidth * 59) - (dividedWidth * 52)),
                         BUTTON_HEIGHT,
                         Component.translatable("screens.wynntils.skillPointLoadouts.convert")) {
                     @Override
                     public void onPress() {
-                        Models.SkillPoint.saveBuild(
-                                selectedLoadout.key(), selectedLoadout.value().getSkillPointsAsArray());
+                        System.out.println("Converting " + selectedLoadout.key() + " currently a build?"
+                                + selectedLoadout.value().isBuild());
+                        if (selectedLoadout.value().isBuild()) {
+                            Models.SkillPoint.saveSkillPoints(
+                                    selectedLoadout.key(),
+                                    selectedLoadout.value().getSkillPointsAsArray());
+                        } else {
+                            Models.SkillPoint.saveBuild(
+                                    selectedLoadout.key(),
+                                    selectedLoadout.value().getSkillPointsAsArray());
+                        }
                         populateLoadouts();
                         setSelectedLoadout(new Pair<>(
                                 selectedLoadout.key(),
@@ -449,7 +459,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
             }
-            if (!selectedLoadout.value().isBuild()) {
+            if (selectedLoadout.value().isBuild()) {
                 for (int i = 0; i < selectedLoadout.value().getArmourNames().size(); i++) {
                     String armour = selectedLoadout.value().getArmourNames().get(i);
                     FontRenderer.getInstance()
@@ -470,7 +480,13 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             .renderText(
                                     poseStack,
                                     StyledText.fromString(accessory),
-                                    dividedWidth * 44,
+                                    dividedWidth
+                                            * (selectedLoadout
+                                                            .value()
+                                                            .getArmourNames()
+                                                            .isEmpty()
+                                                    ? 35
+                                                    : 44), // left align accessories if no armour
                                     dividedHeight * (42 + i * 2),
                                     CommonColors.WHITE,
                                     HorizontalAlignment.LEFT,
@@ -486,7 +502,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 dividedHeight * 42,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
-                                VerticalAlignment.MIDDLE,
+                                VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
             }
         }
@@ -510,8 +526,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         if (loadout == null) {
             selectedLoadout = null;
             loadButton.active = false;
-            deleteButton.active = false;
             loadButton.visible = false;
+            deleteButton.active = false;
             deleteButton.visible = false;
             convertButton.active = false;
             convertButton.visible = false;
@@ -520,23 +536,16 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         selectedLoadout = loadout;
         loadButton.active = true;
-        deleteButton.active = true;
         loadButton.visible = true;
+        deleteButton.active = true;
         deleteButton.visible = true;
-
+        convertButton.active = true;
+        convertButton.visible = true;
         if (selectedLoadout.value().getMinimumCombatLevel()
                 > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(
                     Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.levelIncompatible")
                             .withStyle(ChatFormatting.RED)));
-        }
-
-        if (loadout.value().isBuild()) {
-            convertButton.active = true;
-            convertButton.visible = true;
-        } else {
-            convertButton.active = false;
-            convertButton.visible = false;
         }
     }
 

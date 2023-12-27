@@ -59,19 +59,24 @@ public class SkillPointModel extends Model {
         return skillPointLoadouts.get().containsKey(name);
     }
 
+    public void saveSkillPoints(String name, int[] skillPoints) {
+        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints);
+        skillPointLoadouts.get().put(name, assignedSkillPointSet);
+        WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
+    }
+
     /**
      * Saves the current assigned skill points to the loadout list.
      * @param name The name of the loadout to save.
      */
     public void saveCurrentSkillPoints(String name) {
-        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
-                getAssignedSkillPoints(Skill.STRENGTH),
-                getAssignedSkillPoints(Skill.DEXTERITY),
-                getAssignedSkillPoints(Skill.INTELLIGENCE),
-                getAssignedSkillPoints(Skill.DEFENCE),
-                getAssignedSkillPoints(Skill.AGILITY));
-        skillPointLoadouts.get().put(name, assignedSkillPointSet);
-        WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
+        saveSkillPoints(name, new int[] {
+            getAssignedSkillPoints(Skill.STRENGTH),
+            getAssignedSkillPoints(Skill.DEXTERITY),
+            getAssignedSkillPoints(Skill.INTELLIGENCE),
+            getAssignedSkillPoints(Skill.DEFENCE),
+            getAssignedSkillPoints(Skill.AGILITY)
+        });
     }
 
     /**
@@ -82,6 +87,7 @@ public class SkillPointModel extends Model {
     public void saveBuild(String name, int[] skillPoints) {
         List<String> armourNames = new ArrayList<>();
         McUtils.inventory().armor.stream()
+                .filter(x -> !x.isEmpty())
                 .map(x -> x.getHoverName().getString())
                 .forEach(armourNames::add);
         Collections.reverse(armourNames); // helmet to boots order
@@ -89,7 +95,7 @@ public class SkillPointModel extends Model {
         List<String> accessoryNames = new ArrayList<>();
         for (int i : ACCESSORY_SLOTS) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty()) {
+            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals("§7Accessory Slot")) {
                 accessoryNames.add(itemStack.getHoverName().getString());
             }
         }
