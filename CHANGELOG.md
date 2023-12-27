@@ -1,3 +1,10 @@
+## [0.0.4-beta.107](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.106...v0.0.4-beta.107) (2023-12-27)
+
+
+### Bug Fixes
+
+* Item screenshots failing on shinies and missing folders ([#2302](https://github.com/Wynntils/Artemis/issues/2302)) ([b1f6cd0](https://github.com/Wynntils/Artemis/commit/b1f6cd004d89980f31e75a9d81dbbc662993bd45))
+
 ## [0.0.4-beta.106](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.105...v0.0.4-beta.106) (2023-12-27)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2300](https://github.com/Wynntils/Artemis/issues/2300)) ([8b1ac87](https://github.com/Wynntils/Artemis/commit/8b1ac87d6f217e1acd3a7ec2d14d55dba5b64011))
+* **release:** v0.0.4-beta.106 [skip ci] ([7628e7d](https://github.com/Wynntils/Artemis/commit/7628e7d294c0f185c00471d9e1458610d7fd11e0))
 
 ## [0.0.4-beta.105](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.104...v0.0.4-beta.105) (2023-12-26)
 
@@ -45,17 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.103 [skip ci] ([c8eeab0](https://github.com/Wynntils/Artemis/commit/c8eeab020416f2b5d0556778c55c643518834a8e))
-
-## [0.0.4-beta.102](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.101...v0.0.4-beta.102) (2023-12-25)
-
-
-### New Features
-
-* In preparation for crafted chat items, parse CraftedGearItem damages, defences, requirements and name ([#2294](https://github.com/Wynntils/Artemis/issues/2294)) ([4621b4c](https://github.com/Wynntils/Artemis/commit/4621b4c4935212e55afd0c4a6db388b0e05dc21e))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2293](https://github.com/Wynntils/Artemis/issues/2293)) ([6cc81e2](https://github.com/Wynntils/Artemis/commit/6cc81e217ccfc54fc1f4809686de3a78b4927675))
-* **release:** v0.0.4-beta.102 [skip ci] ([56f7a6a](https://github.com/Wynntils/Artemis/commit/56f7a6ac8dc7ebfec4315f6a0877914112d9ad6f))
 
