@@ -13,6 +13,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -55,9 +56,9 @@ public final class WynnItemParser {
     private static final Pattern ITEM_DEFENCE_PATTERN =
             Pattern.compile("^§.(?<symbol>[✤✦❉✹❋]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)$");
 
-    // Test suite: https://regexr.com/776qt
+    // Test suite: https://regexr.com/7pnj8
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|/[35]s)?(?:§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
+            "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§8\\/([-+]?\\d+)(?:%| tier|\\/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
 
     // Test suite: https://regexr.com/782rk
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
@@ -93,6 +94,7 @@ public final class WynnItemParser {
     // Crafted items
     // Test suite: https://regexr.com/7pm7o
     private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
+    private static final Pattern CRAFTED_CONSUMABLE_TYPE_PATTERN = Pattern.compile("^§3Crafted (.+)$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -100,6 +102,7 @@ public final class WynnItemParser {
         List<NamedItemEffect> namedEffects = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
+        int powderSlots = 0;
         int health = 0;
         int level = 0;
         int tierCount = 0;
@@ -123,6 +126,7 @@ public final class WynnItemParser {
             Matcher powderMatcher = normalizedCoded.getMatcher(POWDER_PATTERN);
             if (powderMatcher.matches()) {
                 int usedSlots = Integer.parseInt(powderMatcher.group(1));
+                powderSlots = Integer.parseInt(powderMatcher.group(2));
                 String codedPowders = powderMatcher.group(3);
                 if (codedPowders == null) continue;
 
@@ -279,6 +283,7 @@ public final class WynnItemParser {
                 namedEffects,
                 effects,
                 powders,
+                powderSlots,
                 tierCount,
                 tierCount,
                 durabilityMax,
@@ -339,6 +344,7 @@ public final class WynnItemParser {
                 List.of(),
                 List.of(),
                 powders,
+                powders.size(),
                 rerolls,
                 0,
                 0,
@@ -349,6 +355,7 @@ public final class WynnItemParser {
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
 
         String name = "";
+        ConsumableType consumableType = null;
         int effectStrength = 0;
         GearAttackSpeed attackSpeed = null;
         List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
@@ -411,10 +418,18 @@ public final class WynnItemParser {
                 int value = Integer.parseInt(skillMatcher.group("value"));
                 skillReqs.add(Pair.of(skill, value));
             }
+
+            // Consumable type
+            Matcher consumableTypeMatcher = coded.getMatcher(CRAFTED_CONSUMABLE_TYPE_PATTERN);
+            if (consumableTypeMatcher.matches()) {
+                String typeName = consumableTypeMatcher.group(1);
+                consumableType = ConsumableType.fromString(typeName.toUpperCase(Locale.ROOT));
+            }
         }
 
         return new CraftedItemParseResults(
                 name,
+                consumableType,
                 effectStrength,
                 attackSpeed,
                 damages,

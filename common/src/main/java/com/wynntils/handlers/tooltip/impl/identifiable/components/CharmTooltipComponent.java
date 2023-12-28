@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.tooltip.impl;
+package com.wynntils.handlers.tooltip.impl.identifiable.components;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.type.TooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.CharmInfo;
@@ -18,7 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class CharmTooltipComponent extends TooltipComponent<CharmInfo, CharmInstance> {
+public class CharmTooltipComponent extends IdentifiableTooltipComponent<CharmInfo, CharmInstance> {
     @Override
     public List<Component> buildHeaderTooltip(
             CharmInfo charmInfo, CharmInstance charmInstance, boolean hideUnidentified) {
