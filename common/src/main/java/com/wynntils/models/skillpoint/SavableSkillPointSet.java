@@ -8,39 +8,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SavableSkillPointSet {
-    private final int strength;
-    private final int dexterity;
-    private final int intelligence;
-    private final int defence;
-    private final int agility;
-    private final List<String> armourNames;
-    private final List<String> accessoryNames;
+public record SavableSkillPointSet(int strength, int dexterity, int intelligence, int defence, int agility, List<String> armourNames, List<String> accessoryNames) {
 
     /**
      * Constructs a new SavableSkillPointSet representing just a loadout.
      */
     public SavableSkillPointSet(int[] skillPoints) {
-        this.strength = skillPoints[0];
-        this.dexterity = skillPoints[1];
-        this.intelligence = skillPoints[2];
-        this.defence = skillPoints[3];
-        this.agility = skillPoints[4];
-        this.armourNames = new ArrayList<>();
-        this.accessoryNames = new ArrayList<>();
+        this(skillPoints[0], skillPoints[1], skillPoints[2], skillPoints[3], skillPoints[4], new ArrayList<>(), new ArrayList<>());
     }
 
     /**
      * Constructs a new SavableSkillPointSet representing a full build with gear.
      */
     public SavableSkillPointSet(int[] skillPoints, List<String> armourNames, List<String> accessoryNames) {
-        this.strength = skillPoints[0];
-        this.dexterity = skillPoints[1];
-        this.intelligence = skillPoints[2];
-        this.defence = skillPoints[3];
-        this.agility = skillPoints[4];
-        this.armourNames = new ArrayList<>(armourNames);
-        this.accessoryNames = new ArrayList<>(accessoryNames);
+        this(skillPoints[0], skillPoints[1], skillPoints[2], skillPoints[3], skillPoints[4], armourNames, accessoryNames);
     }
 
     public int[] getSkillPointsAsArray() {

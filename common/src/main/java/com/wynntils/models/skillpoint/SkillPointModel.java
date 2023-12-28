@@ -31,18 +31,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 public class SkillPointModel extends Model {
     @Persisted
-    private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new LinkedHashMap<>());
+    private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new TreeMap<>());
 
     private static final int[] ACCESSORY_SLOTS = {9, 10, 11, 12};
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
+    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
 
     private final Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private final Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -66,8 +68,7 @@ public class SkillPointModel extends Model {
     }
 
     /**
-     * Saves the current assigned skill points to the loadout list.
-     * @param name The name of the loadout to save.
+     * Saves only the current assigned skill points to the loadout list.
      */
     public void saveCurrentSkillPoints(String name) {
         saveSkillPoints(name, new int[] {
@@ -81,8 +82,6 @@ public class SkillPointModel extends Model {
 
     /**
      * Saves the current equipped gear and provided skill points.
-     * @param name
-     * @param skillPoints
      */
     public void saveBuild(String name, int[] skillPoints) {
         List<String> armourNames = new ArrayList<>();
@@ -95,7 +94,7 @@ public class SkillPointModel extends Model {
         List<String> accessoryNames = new ArrayList<>();
         for (int i : ACCESSORY_SLOTS) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals("§7Accessory Slot")) {
+            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
                 accessoryNames.add(itemStack.getHoverName().getString());
             }
         }
@@ -262,7 +261,7 @@ public class SkillPointModel extends Model {
                     }
                 });
             } else if (!itemStack.isEmpty()
-                    && !itemStack.getHoverName().getString().equals("§7Accessory Slot")) {
+                    && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
                 WynntilsMod.warn("Skill Point Model failed to parse accessory: "
                         + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
             }
