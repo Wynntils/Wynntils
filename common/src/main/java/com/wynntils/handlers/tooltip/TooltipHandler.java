@@ -7,6 +7,7 @@ package com.wynntils.handlers.tooltip;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipBuilder;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.crafted.components.CraftedConsumableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.crafted.components.CraftedGearTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
@@ -14,6 +15,7 @@ import com.wynntils.handlers.tooltip.impl.identifiable.components.CharmTooltipCo
 import com.wynntils.handlers.tooltip.impl.identifiable.components.GearTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.TomeTooltipComponent;
 import com.wynntils.models.items.items.game.CharmItem;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
@@ -79,15 +81,16 @@ public class TooltipHandler extends Handler {
         registerTooltipComponent(TomeItem.class, new TomeTooltipComponent());
 
         registerTooltipComponent(CraftedGearItem.class, new CraftedGearTooltipComponent());
+        registerTooltipComponent(CraftedConsumableItem.class, new CraftedConsumableTooltipComponent());
     }
 
-    private void registerTooltipComponent(
-            Class<? extends IdentifiableItemProperty> itemClass, IdentifiableTooltipComponent<?, ?> tooltipComponent) {
+    private <T, U, I extends IdentifiableItemProperty<T, U>> void registerTooltipComponent(
+            Class<I> itemClass, IdentifiableTooltipComponent<T, U> tooltipComponent) {
         identifiableTooltipComponents.put(itemClass, tooltipComponent);
     }
 
-    private void registerTooltipComponent(
-            Class<? extends CraftedItemProperty> itemClass, CraftedTooltipComponent<?> tooltipComponent) {
+    private <T extends CraftedItemProperty> void registerTooltipComponent(
+            Class<T> itemClass, CraftedTooltipComponent<T> tooltipComponent) {
         craftedTooltipComponents.put(itemClass, tooltipComponent);
     }
 }

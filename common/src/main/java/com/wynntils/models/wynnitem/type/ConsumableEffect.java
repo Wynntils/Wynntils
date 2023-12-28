@@ -5,9 +5,15 @@
 package com.wynntils.models.wynnitem.type;
 
 public enum ConsumableEffect {
-    HEAL,
-    MANA,
-    DURATION;
+    HEAL("§c❤"),
+    MANA("§b✺"),
+    DURATION("Seconds");
+
+    private final String suffix;
+
+    ConsumableEffect(String suffix) {
+        this.suffix = suffix;
+    }
 
     public static ConsumableEffect fromString(String type) {
         for (ConsumableEffect value : values()) {
@@ -17,5 +23,9 @@ public enum ConsumableEffect {
         }
 
         return null;
+    }
+
+    public String getSuffix() {
+        return suffix;
     }
 }

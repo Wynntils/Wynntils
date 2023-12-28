@@ -81,7 +81,9 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
                         .withStyle(ChatFormatting.GRAY));
                 header.add(defense);
             }
+        }
 
+        if (health != 0 || !craftedItem.getDefences().isEmpty()) {
             header.add(Component.literal(""));
         }
 

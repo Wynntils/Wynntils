@@ -88,7 +88,9 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                         .withStyle(ChatFormatting.GRAY));
                 header.add(defense);
             }
+        }
 
+        if (health != 0 || !gearInfo.fixedStats().defences().isEmpty()) {
             header.add(Component.literal(""));
         }
 

@@ -13,6 +13,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -93,6 +94,7 @@ public final class WynnItemParser {
     // Crafted items
     // Test suite: https://regexr.com/7pm7o
     private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
+    private static final Pattern CRAFTED_CONSUMABLE_TYPE_PATTERN = Pattern.compile("^§3Crafted (.+)$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -353,6 +355,7 @@ public final class WynnItemParser {
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
 
         String name = "";
+        ConsumableType consumableType = null;
         int effectStrength = 0;
         GearAttackSpeed attackSpeed = null;
         List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
@@ -415,10 +418,18 @@ public final class WynnItemParser {
                 int value = Integer.parseInt(skillMatcher.group("value"));
                 skillReqs.add(Pair.of(skill, value));
             }
+
+            // Consumable type
+            Matcher consumableTypeMatcher = coded.getMatcher(CRAFTED_CONSUMABLE_TYPE_PATTERN);
+            if (consumableTypeMatcher.matches()) {
+                String typeName = consumableTypeMatcher.group(1);
+                consumableType = ConsumableType.fromString(typeName.toUpperCase(Locale.ROOT));
+            }
         }
 
         return new CraftedItemParseResults(
                 name,
+                consumableType,
                 effectStrength,
                 attackSpeed,
                 damages,
