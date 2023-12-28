@@ -681,6 +681,8 @@
   "feature.wynntils.itemStatInfo.perfect.name": "Rainbow Perfect Items",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "Should we consistently keep the order [worst, best] in identification ranges?",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Always Show Best Value Last",
+  "feature.wynntils.itemStatInfo.showMaxValues.description": "Should the maximum values of identifications be displayed?",
+  "feature.wynntils.itemStatInfo.showMaxValues.name": "Show Max Values (Crafted)",
   "feature.wynntils.itemStatInfo.showStars.description": "Should IDs have stars (*, ** or ***) printed?",
   "feature.wynntils.itemStatInfo.showStars.name": "Show Stars",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Should we draw an item overlay showing corkian amplifier tier?",

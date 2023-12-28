@@ -29,6 +29,7 @@ import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -147,12 +148,14 @@ public class ItemScreenshotFeature extends Feature {
             // First try to save it to disk
             String itemNameForFile = StyledText.fromComponent(itemStack.getHoverName())
                     .trim()
+                    .replaceAll("⬡ ", "") // remove shiny indicator
                     .replaceAll("[/ ]", "_")
                     .getNormalized()
                     .getString(PartStyle.StyleType.NONE);
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
             try {
+                Files.createDirectories(screenshotDir.toPath()); // create dir if it doesn't exist, ignore if it does
                 File outputfile = new File(screenshotDir, filename);
                 ImageIO.write(bi, "png", outputfile);
 
