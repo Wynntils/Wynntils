@@ -71,6 +71,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     hasSaveNameConflict = false;
                     saveAssignedButtonConfirm = false;
                     saveBuildButtonConfirm = false;
+                    saveAssignedButton.setMessage(
+                            Component.translatable("screens.wynntils.skillPointLoadouts.save"));
+                    saveBuildButton.setMessage(
+                            Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
                 },
                 this,
                 saveNameInput);
