@@ -1,9 +1,21 @@
+## [0.0.4-beta.108](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.107...v0.0.4-beta.108) (2023-12-28)
+
+
+### New Features
+
+* Add support for custom crafted tooltips ([#2299](https://github.com/Wynntils/Artemis/issues/2299)) ([9b00c4b](https://github.com/Wynntils/Artemis/commit/9b00c4bb1a75b5a3a94ab3cd372b73073cd71f3a))
+
 ## [0.0.4-beta.107](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.106...v0.0.4-beta.107) (2023-12-27)
 
 
 ### Bug Fixes
 
 * Item screenshots failing on shinies and missing folders ([#2302](https://github.com/Wynntils/Artemis/issues/2302)) ([b1f6cd0](https://github.com/Wynntils/Artemis/commit/b1f6cd004d89980f31e75a9d81dbbc662993bd45))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.107 [skip ci] ([6b4f5b3](https://github.com/Wynntils/Artemis/commit/6b4f5b31d7891e6cbfbfc556cbde367d68d92e88))
 
 ## [0.0.4-beta.106](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.105...v0.0.4-beta.106) (2023-12-27)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.104 [skip ci] ([f0b0762](https://github.com/Wynntils/Artemis/commit/f0b076286f626c111e3f60a0c2d6f7e1fa974794))
-
-## [0.0.4-beta.103](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.102...v0.0.4-beta.103) (2023-12-26)
-
-
-### Bug Fixes
-
-* Handle an edge case with inverted values in internal roll calculations, fix assertions to use correct rounding ([#2295](https://github.com/Wynntils/Artemis/issues/2295)) ([d9ed58b](https://github.com/Wynntils/Artemis/commit/d9ed58b6093b257411d160678b4563f531afb04f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.103 [skip ci] ([c8eeab0](https://github.com/Wynntils/Artemis/commit/c8eeab020416f2b5d0556778c55c643518834a8e))
 
