@@ -43,7 +43,7 @@ public class ContainerScrollFeature extends Feature {
                 slot.get(),
                 gui.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                gui.getMenu().getItems(),
-                false);
+                gui.getMenu().getItems()
+        );
     }
 }

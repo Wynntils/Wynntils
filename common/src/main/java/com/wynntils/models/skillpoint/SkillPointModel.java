@@ -116,7 +116,7 @@ public class SkillPointModel extends Model {
     }
 
     public void loadLoadout(String name) {
-        McUtils.closeBackgroundContainer();
+        ContainerUtils.closeBackgroundContainer();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
@@ -149,12 +149,12 @@ public class SkillPointModel extends Model {
             int difference1s = Math.abs(difference) % 5;
 
             for (int i = 0; i < difference5s; i++) {
-                ContainerUtils.clickOnSlot(
+                ContainerUtils.shiftClickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items(),
-                        true);
+                        containerContent.items()
+                );
                 if (!confirmationCompleted.getAndSet(true)) {
                     // confirmation required, force loop to repeat this iteration
                     i--;
@@ -165,8 +165,8 @@ public class SkillPointModel extends Model {
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items(),
-                        false);
+                        containerContent.items()
+                );
                 if (!confirmationCompleted.getAndSet(true)) {
                     // needs to exist in both loops in case of 1s only
                     i--;
@@ -179,25 +179,25 @@ public class SkillPointModel extends Model {
             int difference1s = difference % 5;
 
             for (int i = 0; i < difference5s; i++) {
-                ContainerUtils.clickOnSlot(
+                ContainerUtils.shiftClickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items(),
-                        true);
+                        containerContent.items()
+                );
             }
             for (int i = 0; i < difference1s; i++) {
                 ContainerUtils.clickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items(),
-                        false);
+                        containerContent.items()
+                );
             }
         });
 
-        // Server needs 2 ticks, give one extra to be safe
-        Managers.TickScheduler.scheduleLater(this::populateSkillPoints, 3);
+        // Server needs 2 ticks, give a couple extra to be safe
+        Managers.TickScheduler.scheduleLater(this::populateSkillPoints, 4);
     }
 
     public void deleteLoadout(String name) {
@@ -209,7 +209,7 @@ public class SkillPointModel extends Model {
      * tomes have been unlocked.
      */
     public void populateSkillPoints() {
-        McUtils.closeBackgroundContainer();
+        ContainerUtils.closeBackgroundContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
             assignedSkillPoints.clear();

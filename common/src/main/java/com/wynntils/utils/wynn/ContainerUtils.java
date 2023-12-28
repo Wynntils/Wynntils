@@ -39,7 +39,7 @@ public final class ContainerUtils {
 
         NonNullList<ItemStack> items = McUtils.containerMenu().getItems();
         // We need to offset the slot number so that it corresponds to the correct slot in the inventory
-        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items, false);
+        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
 
         return true;
     }
@@ -49,7 +49,7 @@ public final class ContainerUtils {
      * same container!
      */
     public static void clickOnSlot(
-            int clickedSlot, int containerId, int mouseButton, List<ItemStack> items, boolean shiftClick) {
+            int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
 
@@ -62,12 +62,36 @@ public final class ContainerUtils {
                 transactionId,
                 clickedSlot,
                 mouseButton,
-                shiftClick ? ClickType.QUICK_MOVE : ClickType.PICKUP,
+                ClickType.PICKUP,
+                items.get(clickedSlot),
+                changedSlots));
+    }
+
+    public static void shiftClickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
+        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
+
+        int transactionId = 0;
+
+        McUtils.sendPacket(new ServerboundContainerClickPacket(
+                containerId,
+                transactionId,
+                clickedSlot,
+                mouseButton,
+                ClickType.QUICK_MOVE,
                 items.get(clickedSlot),
                 changedSlots));
     }
 
     public static void closeContainer(int containerId) {
         McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+    }
+
+    /**
+     * Closes invisible containers opened in the background, without closing the visible screen.
+     */
+    public static void closeBackgroundContainer() {
+        McUtils.player().connection.send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        McUtils.player().containerMenu = McUtils.player().inventoryMenu;
     }
 }

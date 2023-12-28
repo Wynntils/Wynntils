@@ -6,6 +6,8 @@ package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
@@ -14,12 +16,12 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@ConfigCategory(Category.UTILITIES)
 public class SkillPointLoadoutsFeature extends Feature {
     @SubscribeEvent
-    public void onCharacterInfoScreenOpened(ScreenOpenedEvent e) {
+    public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
         if (!Models.Container.isCharacterInfoScreen(screen)) return;
-        if (screen.topPos == 0 || screen.width == 0) return; // Not done loading
 
         screen.addRenderableWidget(
                 new LoadoutScreenButton(screen.width / 2 - LoadoutScreenButton.BUTTON_WIDTH / 2, screen.topPos - 24));

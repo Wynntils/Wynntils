@@ -128,8 +128,8 @@ public final class SeaskipperModel extends Model {
                 boatSlot,
                 containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems(),
-                false);
+                McUtils.containerMenu().getItems()
+        );
     }
 
     public void purchasePass(SeaskipperDestination destination) {
@@ -139,8 +139,8 @@ public final class SeaskipperModel extends Model {
                 destination.slot(),
                 containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems(),
-                false);
+                McUtils.containerMenu().getItems()
+        );
     }
 
     public boolean isProfileLoaded() {

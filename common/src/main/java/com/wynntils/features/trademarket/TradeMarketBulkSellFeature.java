@@ -177,8 +177,8 @@ public class TradeMarketBulkSellFeature extends Feature {
                     AMOUNT_ITEM_SLOT,
                     McUtils.containerMenu().containerId,
                     0,
-                    McUtils.containerMenu().getItems(),
-                    false);
+                    McUtils.containerMenu().getItems()
+            );
         }
     }
 }

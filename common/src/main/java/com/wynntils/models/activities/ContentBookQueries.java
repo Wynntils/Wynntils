@@ -330,7 +330,7 @@ public class ContentBookQueries {
 
                             // Found it, now click it
                             ContainerUtils.clickOnSlot(
-                                    slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items(), false);
+                                    slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
                             return false;
                         },
                         QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
