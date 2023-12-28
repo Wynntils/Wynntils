@@ -9,6 +9,7 @@ import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
 import com.wynntils.models.items.encoding.impl.item.CharmItemTransformer;
+import com.wynntils.models.items.encoding.impl.item.CraftedConsumableItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.CraftedGearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.TomeItemTransformer;
@@ -20,6 +21,7 @@ import com.wynntils.models.items.encoding.type.ItemTransformer;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.CharmItem;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
@@ -114,6 +116,7 @@ public final class ItemTransformerRegistry {
         registerItemTransformer(TomeItem.class, new TomeItemTransformer());
         registerItemTransformer(CharmItem.class, new CharmItemTransformer());
         registerItemTransformer(CraftedGearItem.class, new CraftedGearItemTransformer());
+        registerItemTransformer(CraftedConsumableItem.class, new CraftedConsumableItemTransformer());
     }
 
     private static final class ItemTransformerMap {
