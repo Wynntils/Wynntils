@@ -51,10 +51,6 @@ public record SavableSkillPointSet(
         return (int) Math.ceil(getSkillPointsSum() / 2.0) + 1;
     }
 
-    public boolean isBuild() {
-        return isBuild;
-    }
-
     public List<String> getArmourNames() {
         return Collections.unmodifiableList(armourNames);
     }
