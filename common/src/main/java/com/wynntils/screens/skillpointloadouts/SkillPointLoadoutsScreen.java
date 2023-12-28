@@ -13,6 +13,7 @@ import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.widgets.LoadoutWidget;
+import com.wynntils.screens.skillpointloadouts.widgets.SaveButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -33,12 +34,10 @@ import net.minecraft.network.chat.Component;
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
 
-    private TextInputBoxWidget saveNameInput;
-    private WynntilsButton saveAssignedButton;
-    private boolean saveAssignedButtonConfirm = false;
-    private WynntilsButton saveBuildButton;
-    private boolean saveBuildButtonConfirm = false;
-    private boolean hasSaveNameConflict = false;
+    private SaveButton saveAssignedButton;
+    private SaveButton saveBuildButton;
+    public TextInputBoxWidget saveNameInput;
+    public boolean hasSaveNameConflict = false;
 
     private Pair<String, SavableSkillPointSet> selectedLoadout;
     private WynntilsButton loadButton;
@@ -69,78 +68,31 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     saveAssignedButton.active = !x.isBlank();
                     saveBuildButton.active = !x.isBlank();
                     hasSaveNameConflict = false;
-                    saveAssignedButtonConfirm = false;
-                    saveBuildButtonConfirm = false;
-                    saveAssignedButton.setMessage(
-                            Component.translatable("screens.wynntils.skillPointLoadouts.save"));
-                    saveBuildButton.setMessage(
-                            Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
+                    resetSaveButtons();
                 },
                 this,
                 saveNameInput);
         this.addRenderableWidget(saveNameInput);
 
-        saveAssignedButton =
-                new WynntilsButton(
-                        (int) (dividedWidth * 49),
-                        (int) (dividedHeight * 24),
-                        (int) ((dividedWidth * 53) - (dividedWidth * 49)),
-                        BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.save")) {
-                    @Override
-                    public void onPress() {
-                        String name = saveNameInput.getTextBoxInput();
-                        if (Models.SkillPoint.hasLoadout(name) && !saveAssignedButtonConfirm) {
-                            hasSaveNameConflict = true;
-                            saveAssignedButtonConfirm = true;
-                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.confirm")
-                                    .withStyle(ChatFormatting.RED));
-                        } else {
-                            Models.SkillPoint.saveCurrentSkillPoints(name);
-                            populateLoadouts();
-                            setSelectedLoadout(new Pair<>(
-                                    name, Models.SkillPoint.getLoadouts().get(name)));
-                            saveNameInput.setTextBoxInput("");
-                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.save"));
-                            // in case user pressed on both buttons
-                            saveBuildButton.setMessage(
-                                    Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
-                        }
-                    }
-                };
+        saveAssignedButton = new SaveButton(
+                (int) (dividedWidth * 49),
+                (int) (dividedHeight * 24),
+                (int) ((dividedWidth * 53) - (dividedWidth * 49)),
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.save"),
+                this,
+                Models.SkillPoint::saveCurrentSkillPoints);
         this.addRenderableWidget(saveAssignedButton);
-        saveAssignedButton.active = false;
 
-        saveBuildButton =
-                new WynntilsButton(
-                        (int) (dividedWidth * 54),
-                        (int) (dividedHeight * 24),
-                        (int) ((dividedWidth * 59) - (dividedWidth * 54)),
-                        BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild")) {
-                    @Override
-                    public void onPress() {
-                        String name = saveNameInput.getTextBoxInput();
-                        if (Models.SkillPoint.hasLoadout(name) && !saveBuildButtonConfirm) {
-                            hasSaveNameConflict = true;
-                            saveBuildButtonConfirm = true;
-                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.confirm")
-                                    .withStyle(ChatFormatting.RED));
-                        } else {
-                            Models.SkillPoint.saveCurrentBuild(name);
-                            populateLoadouts();
-                            setSelectedLoadout(new Pair<>(
-                                    name, Models.SkillPoint.getLoadouts().get(name)));
-                            saveNameInput.setTextBoxInput("");
-                            this.setMessage(Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"));
-                            // in case user pressed on both buttons
-                            saveAssignedButton.setMessage(
-                                    Component.translatable("screens.wynntils.skillPointLoadouts.save"));
-                        }
-                    }
-                };
+        saveBuildButton = new SaveButton(
+                (int) (dividedWidth * 54),
+                (int) (dividedHeight * 24),
+                (int) ((dividedWidth * 59) - (dividedWidth * 54)),
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"),
+                this,
+                Models.SkillPoint::saveCurrentBuild);
         this.addRenderableWidget(saveBuildButton);
-        saveBuildButton.active = false;
 
         loadButton =
                 new WynntilsButton(
@@ -563,7 +515,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         return selectedLoadout;
     }
 
-    private void populateLoadouts() {
+    public void resetSaveButtons() {
+        saveAssignedButton.reset();
+        saveBuildButton.reset();
+    }
+
+    public void populateLoadouts() {
         loadoutWidgets = new ArrayList<>();
         Map<String, SavableSkillPointSet> loadouts = Models.SkillPoint.getLoadouts();
         for (Map.Entry<String, SavableSkillPointSet> entry : loadouts.entrySet()) {

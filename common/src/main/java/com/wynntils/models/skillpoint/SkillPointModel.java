@@ -26,6 +26,8 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.wynntils.utils.wynn.InventoryUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -33,9 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-
-import com.wynntils.utils.wynn.InventoryUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -323,14 +322,20 @@ public class SkillPointModel extends Model {
         query.executeQuery();
     }
 
-    private boolean verifyCharacterInfo(ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
+    private boolean verifyCharacterInfo(
+            ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
         // soul points resent last for both containers
-        return changeType == ContainerContentChangeType.SET_SLOT && changes.containsKey(CHARACTER_INFO_SOUL_POINT_SLOT) && content.items().get(CHARACTER_INFO_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
+        return changeType == ContainerContentChangeType.SET_SLOT
+                && changes.containsKey(CHARACTER_INFO_SOUL_POINT_SLOT)
+                && content.items().get(CHARACTER_INFO_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
     }
 
-    private boolean verifyTomeMenu(ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
+    private boolean verifyTomeMenu(
+            ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
         // soul points resent last for both containers
-        return changeType == ContainerContentChangeType.SET_SLOT && changes.containsKey(TOME_MENU_SOUL_POINT_SLOT) && content.items().get(TOME_MENU_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
+        return changeType == ContainerContentChangeType.SET_SLOT
+                && changes.containsKey(TOME_MENU_SOUL_POINT_SLOT)
+                && content.items().get(TOME_MENU_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
     }
 
     private void processTotalSkillPoints(ContainerContent content) {
