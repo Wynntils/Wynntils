@@ -13,7 +13,9 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -31,10 +33,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.wynntils.utils.wynn.InventoryUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public class SkillPointModel extends Model {
@@ -46,6 +49,8 @@ public class SkillPointModel extends Model {
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
+    private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
+    private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -125,7 +130,8 @@ public class SkillPointModel extends Model {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle("Character Info")
+                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                        .verifyContentChange(this::verifyCharacterInfo)
                         .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
                 .build();
         query.executeQuery();
@@ -277,16 +283,28 @@ public class SkillPointModel extends Model {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
                 .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
-                        .expectContainerTitle("Character Info")
+                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                        .verifyContentChange(this::verifyCharacterInfo)
                         .processIncomingContainer(this::processTotalSkillPoints))
                 .thenIf(
                         tomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
-                                .expectContainerTitle("Mastery Tomes")
+                                .expectContainerTitle(ContainerModel.MASTERY_TOMES_NAME)
+                                .verifyContentChange(this::verifyTomeMenu)
                                 .processIncomingContainer(this::processTomeSkillPoints))
                 .build();
 
         query.executeQuery();
+    }
+
+    private boolean verifyCharacterInfo(ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
+        // soul points resent last for both containers
+        return changeType == ContainerContentChangeType.SET_SLOT && changes.containsKey(CHARACTER_INFO_SOUL_POINT_SLOT) && content.items().get(CHARACTER_INFO_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
+    }
+
+    private boolean verifyTomeMenu(ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
+        // soul points resent last for both containers
+        return changeType == ContainerContentChangeType.SET_SLOT && changes.containsKey(TOME_MENU_SOUL_POINT_SLOT) && content.items().get(TOME_MENU_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
     }
 
     private void processTotalSkillPoints(ContainerContent content) {

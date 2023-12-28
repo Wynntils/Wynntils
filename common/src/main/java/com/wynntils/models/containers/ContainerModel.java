@@ -44,6 +44,7 @@ public final class ContainerModel extends Model {
     private static final String MISC_BUCKET_NAME = "Misc. Bucket";
     public static final String CHARACTER_INFO_NAME = "Character Info";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
+    public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
     private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
