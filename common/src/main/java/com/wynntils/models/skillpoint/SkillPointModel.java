@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -113,89 +115,20 @@ public class SkillPointModel extends Model {
         });
     }
 
+    public void deleteLoadout(String name) {
+        skillPointLoadouts.get().remove(name);
+    }
+
     public void loadLoadout(String name) {
         ContainerUtils.closeBackgroundContainer();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
-                .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainerTitle("Character Info")
                         .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
                 .build();
         query.executeQuery();
-    }
-
-    private void loadSkillPointsOnServer(ContainerContent containerContent, String name) {
-        // we need to figure out which points we can subtract from first to actually allow assigning for positive points
-        Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
-        Map<Skill, Integer> positives = new EnumMap<>(Skill.class);
-        for (int i = 0; i < 5; i++) {
-            int buildTarget = skillPointLoadouts.get().get(name).getSkillPointsAsArray()[i];
-            int difference = buildTarget - getAssignedSkillPoints(Skill.values()[i]);
-
-            // no difference automatically dropped here
-            if (difference > 0) {
-                positives.put(Skill.values()[i], difference);
-            } else if (difference < 0) {
-                negatives.put(Skill.values()[i], difference);
-            }
-        }
-
-        AtomicBoolean confirmationCompleted = new AtomicBoolean(false);
-        negatives.forEach((skill, difference) -> {
-            int difference5s = Math.abs(difference) / 5;
-            int difference1s = Math.abs(difference) % 5;
-
-            for (int i = 0; i < difference5s; i++) {
-                ContainerUtils.shiftClickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items());
-                if (!confirmationCompleted.getAndSet(true)) {
-                    // confirmation required, force loop to repeat this iteration
-                    i--;
-                }
-            }
-            for (int i = 0; i < difference1s; i++) {
-                ContainerUtils.clickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items());
-                if (!confirmationCompleted.getAndSet(true)) {
-                    // needs to exist in both loops in case of 1s only
-                    i--;
-                }
-            }
-        });
-
-        positives.forEach((skill, difference) -> {
-            int difference5s = difference / 5;
-            int difference1s = difference % 5;
-
-            for (int i = 0; i < difference5s; i++) {
-                ContainerUtils.shiftClickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items());
-            }
-            for (int i = 0; i < difference1s; i++) {
-                ContainerUtils.clickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items());
-            }
-        });
-
-        // Server needs 2 ticks, give a couple extra to be safe
-        Managers.TickScheduler.scheduleLater(this::populateSkillPoints, 4);
-    }
-
-    public void deleteLoadout(String name) {
-        skillPointLoadouts.get().remove(name);
     }
 
     /**
@@ -210,6 +143,77 @@ public class SkillPointModel extends Model {
             calculateGearSkillPoints();
             queryTotalAndTomeSkillPoints();
         });
+    }
+
+    private void loadSkillPointsOnServer(ContainerContent containerContent, String name) {
+        // we need to figure out which points we can subtract from first to actually allow assigning for positive points
+        Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> positives = new EnumMap<>(Skill.class);
+        for (int i = 0; i < Skill.values().length; i++) {
+            int buildTarget = skillPointLoadouts.get().get(name).getSkillPointsAsArray()[i];
+            int difference = buildTarget - getAssignedSkillPoints(Skill.values()[i]);
+
+            // no difference automatically dropped here
+            if (difference > 0) {
+                positives.put(Skill.values()[i], difference);
+            } else if (difference < 0) {
+                negatives.put(Skill.values()[i], difference);
+            }
+        }
+
+        boolean confirmationCompleted = false;
+        for (Map.Entry<Skill, Integer> entry : negatives.entrySet()) {
+            int difference5s = Math.abs(entry.getValue()) / 5;
+            int difference1s = Math.abs(entry.getValue()) % 5;
+
+            for (int i = 0; i < difference5s; i++) {
+                ContainerUtils.shiftClickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
+                        containerContent.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                        containerContent.items());
+                if (!confirmationCompleted) {
+                    // confirmation required, force loop to repeat this iteration
+                    i--;
+                    confirmationCompleted = true;
+                }
+            }
+            for (int i = 0; i < difference1s; i++) {
+                ContainerUtils.clickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
+                        containerContent.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                        containerContent.items());
+                if (!confirmationCompleted) {
+                    // needs to exist in both loops in case of 1s only
+                    i--;
+                    confirmationCompleted = true;
+                }
+            }
+        }
+
+        for (Map.Entry<Skill, Integer> entry : positives.entrySet()) {
+            int difference5s = Math.abs(entry.getValue()) / 5;
+            int difference1s = Math.abs(entry.getValue()) % 5;
+
+            for (int i = 0; i < difference5s; i++) {
+                ContainerUtils.shiftClickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
+                        containerContent.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        containerContent.items());
+            }
+            for (int i = 0; i < difference1s; i++) {
+                ContainerUtils.clickOnSlot(
+                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
+                        containerContent.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        containerContent.items());
+            }
+        }
+
+        // Server needs 2 ticks, give a couple extra to be safe
+        Managers.TickScheduler.scheduleLater(this::populateSkillPoints, 4);
     }
 
     private void calculateGearSkillPoints() {

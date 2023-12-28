@@ -90,9 +90,7 @@ public final class ContainerUtils {
      * Closes invisible containers opened in the background, without closing the visible screen.
      */
     public static void closeBackgroundContainer() {
-        McUtils.player()
-                .connection
-                .send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        McUtils.sendPacket(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
         McUtils.player().containerMenu = McUtils.player().inventoryMenu;
     }
 }
