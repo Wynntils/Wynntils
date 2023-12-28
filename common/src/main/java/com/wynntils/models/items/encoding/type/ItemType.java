@@ -8,7 +8,8 @@ public enum ItemType {
     GEAR(0),
     TOME(1),
     CHARM(2),
-    CRAFTED_GEAR(3);
+    CRAFTED_GEAR(3),
+    CRAFTED_CONSUMABLE(4);
 
     private final byte id;
 

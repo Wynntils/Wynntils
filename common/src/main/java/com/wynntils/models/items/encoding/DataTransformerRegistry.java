@@ -5,11 +5,13 @@
 package com.wynntils.models.items.encoding;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.items.encoding.data.CustomConsumableTypeData;
 import com.wynntils.models.items.encoding.data.CustomGearTypeData;
 import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.data.DamageData;
 import com.wynntils.models.items.encoding.data.DefenseData;
 import com.wynntils.models.items.encoding.data.DurabilityData;
+import com.wynntils.models.items.encoding.data.EffectsData;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
@@ -19,11 +21,14 @@ import com.wynntils.models.items.encoding.data.RerollData;
 import com.wynntils.models.items.encoding.data.ShinyData;
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.data.TypeData;
+import com.wynntils.models.items.encoding.data.UsesData;
+import com.wynntils.models.items.encoding.impl.block.CustomConsumableTypeDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.CustomGearTypeTransformer;
 import com.wynntils.models.items.encoding.impl.block.CustomIdentificationDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.DamageDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.DefenseDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.DurablityDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.EffectsDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.EndDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.IdentificationDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.NameDataTransformer;
@@ -33,6 +38,7 @@ import com.wynntils.models.items.encoding.impl.block.RerollDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.ShinyDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.StartDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.TypeDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.UsesDataTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.ItemData;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
@@ -145,6 +151,9 @@ public final class DataTransformerRegistry {
         registerDataTransformer(DamageData.class, new DamageDataTransformer());
         registerDataTransformer(DefenseData.class, new DefenseDataTransformer());
         registerDataTransformer(CustomIdentificationsData.class, new CustomIdentificationDataTransformer());
+        registerDataTransformer(CustomConsumableTypeData.class, new CustomConsumableTypeDataTransformer());
+        registerDataTransformer(UsesData.class, new UsesDataTransformer());
+        registerDataTransformer(EffectsData.class, new EffectsDataTransformer());
 
         registerDataTransformer(EndData.class, new EndDataTransformer());
     }
