@@ -151,6 +151,50 @@ public class SkillPointModel extends Model {
         });
     }
 
+    public int getTotalSkillPoints(Skill skill) {
+        return totalSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getTotalSum() {
+        return totalSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public int getGearSkillPoints(Skill skill) {
+        return gearSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getGearSum() {
+        return gearSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public int getCraftedSkillPoints(Skill skill) {
+        return craftedSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getCraftedSum() {
+        return craftedSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public int getTomeSkillPoints(Skill skill) {
+        return tomeSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getTomeSum() {
+        return tomeSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public int getAssignedSkillPoints(Skill skill) {
+        return assignedSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getAssignedSum() {
+        return assignedSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public Map<String, SavableSkillPointSet> getLoadouts() {
+        return skillPointLoadouts.get();
+    }
+
     private void loadSkillPointsOnServer(ContainerContent containerContent, String name) {
         // we need to figure out which points we can subtract from first to actually allow assigning for positive points
         Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
@@ -353,49 +397,5 @@ public class SkillPointModel extends Model {
                             - getTomeSkillPoints(skill)
                             - getCraftedSkillPoints(skill));
         }
-    }
-
-    public int getTotalSkillPoints(Skill skill) {
-        return totalSkillPoints.getOrDefault(skill, 0);
-    }
-
-    public int getTotalSum() {
-        return totalSkillPoints.values().stream().reduce(0, Integer::sum);
-    }
-
-    public int getGearSkillPoints(Skill skill) {
-        return gearSkillPoints.getOrDefault(skill, 0);
-    }
-
-    public int getGearSum() {
-        return gearSkillPoints.values().stream().reduce(0, Integer::sum);
-    }
-
-    public int getCraftedSkillPoints(Skill skill) {
-        return craftedSkillPoints.getOrDefault(skill, 0);
-    }
-
-    public int getCraftedSum() {
-        return craftedSkillPoints.values().stream().reduce(0, Integer::sum);
-    }
-
-    public int getTomeSkillPoints(Skill skill) {
-        return tomeSkillPoints.getOrDefault(skill, 0);
-    }
-
-    public int getTomeSum() {
-        return tomeSkillPoints.values().stream().reduce(0, Integer::sum);
-    }
-
-    public int getAssignedSkillPoints(Skill skill) {
-        return assignedSkillPoints.getOrDefault(skill, 0);
-    }
-
-    public int getAssignedSum() {
-        return assignedSkillPoints.values().stream().reduce(0, Integer::sum);
-    }
-
-    public Map<String, SavableSkillPointSet> getLoadouts() {
-        return skillPointLoadouts.get();
     }
 }
