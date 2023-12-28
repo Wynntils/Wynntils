@@ -125,6 +125,11 @@ public class GearItem extends GameItem
     }
 
     @Override
+    public int getPowderSlots() {
+        return gearInfo.powderSlots();
+    }
+
+    @Override
     public List<Powder> getPowders() {
         return gearInstance != null ? gearInstance.powders() : List.of();
     }

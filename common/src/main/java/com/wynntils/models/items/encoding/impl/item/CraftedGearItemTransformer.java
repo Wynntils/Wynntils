@@ -49,6 +49,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         List<Pair<Element, Integer>> defences = new ArrayList<>();
         List<StatPossibleValues> possibleValues = new ArrayList<>();
         List<StatActualValue> identifications = new ArrayList<>();
+        int powderSlots = 0;
         List<Powder> powders = new ArrayList<>();
 
         // Required blocks
@@ -108,6 +109,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         PowderData powderData = itemDataMap.get(PowderData.class);
         if (powderData != null) {
+            powderSlots = powderData.powderSlots();
             powders = powderData.powders().stream().map(Pair::a).toList();
         }
 
@@ -123,6 +125,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                 possibleValues,
                 identifications,
                 powders,
+                powderSlots,
                 durability));
     }
 

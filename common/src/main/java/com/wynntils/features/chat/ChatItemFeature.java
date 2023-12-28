@@ -24,6 +24,7 @@ import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
@@ -102,8 +103,8 @@ public class ChatItemFeature extends Feature {
 
                 name = decodedItem.getClass().getSimpleName();
 
-                if (decodedItem instanceof IdentifiableItemProperty identifiableItemProperty) {
-                    name = identifiableItemProperty.getName();
+                if (decodedItem instanceof NamedItemProperty namedItemProperty) {
+                    name = namedItemProperty.getName();
                 }
             }
 
@@ -224,8 +225,8 @@ public class ChatItemFeature extends Feature {
 
         String name = wynnItem.getClass().getSimpleName();
 
-        if (wynnItem instanceof IdentifiableItemProperty identifiableItemProperty) {
-            name = identifiableItemProperty.getName();
+        if (wynnItem instanceof NamedItemProperty namedItemProperty) {
+            name = namedItemProperty.getName();
         }
         if (wynnItem instanceof ShinyItemProperty shinyItemProperty
                 && shinyItemProperty.getShinyStat().isPresent()) {

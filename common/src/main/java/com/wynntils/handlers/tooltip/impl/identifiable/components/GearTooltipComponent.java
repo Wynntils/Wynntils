@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.tooltip.impl;
+package com.wynntils.handlers.tooltip.impl.identifiable.components;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.tooltip.type.TooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.character.type.ClassType;
@@ -32,7 +32,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public final class GearTooltipComponent extends TooltipComponent<GearInfo, GearInstance> {
+public final class GearTooltipComponent extends IdentifiableTooltipComponent<GearInfo, GearInstance> {
     private static final int PIXEL_WIDTH = 150;
 
     @Override
@@ -97,7 +97,9 @@ public final class GearTooltipComponent extends TooltipComponent<GearInfo, GearI
                         .withStyle(ChatFormatting.GRAY));
                 header.add(defense);
             }
+        }
 
+        if (health != 0 || !gearInfo.fixedStats().defences().isEmpty()) {
             header.add(Component.literal(""));
         }
 
@@ -135,7 +137,7 @@ public final class GearTooltipComponent extends TooltipComponent<GearInfo, GearI
             header.add(Component.literal(""));
         }
 
-        if (gearInstance.shinyStat().isPresent()) {
+        if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
             header.add(Component.literal(
                             "⬡ " + gearInstance.shinyStat().get().statType().displayName() + ": ")
                     .withStyle(ChatFormatting.GRAY)

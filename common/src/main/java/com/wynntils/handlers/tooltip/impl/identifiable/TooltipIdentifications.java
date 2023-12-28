@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.tooltip;
+package com.wynntils.handlers.tooltip.impl.identifiable;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;

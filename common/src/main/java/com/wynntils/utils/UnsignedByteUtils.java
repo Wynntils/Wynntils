@@ -8,7 +8,6 @@ import com.wynntils.utils.type.UnsignedByte;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-// FIXME: Unit testing
 public final class UnsignedByteUtils {
     public static UnsignedByte[] fromBitArray(boolean[] values) {
         assert values.length % 8 == 0;
@@ -51,12 +50,12 @@ public final class UnsignedByteUtils {
         return bytes;
     }
 
-    public static String decodeString(List<UnsignedByte> byteReader) {
+    public static String decodeString(List<UnsignedByte> bytes) {
         // Strings are encoded by encoding the char's ASCII value
-        byte[] asciiBytes = new byte[byteReader.size()];
+        byte[] asciiBytes = new byte[bytes.size()];
 
-        for (int i = 0; i < byteReader.size(); i++) {
-            asciiBytes[i] = byteReader.get(i).toByte();
+        for (int i = 0; i < bytes.size(); i++) {
+            asciiBytes[i] = bytes.get(i).toByte();
         }
 
         return new String(asciiBytes, StandardCharsets.US_ASCII);

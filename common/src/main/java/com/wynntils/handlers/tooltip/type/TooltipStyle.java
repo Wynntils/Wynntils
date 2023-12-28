@@ -10,4 +10,6 @@ public record TooltipStyle(
         StatListOrdering identificationOrdering,
         boolean useDelimiters,
         boolean showBestValueLastAlways,
-        boolean showStars) {}
+        boolean showStars,
+        boolean showMaxValue // this only applies to crafted items
+        ) {}
