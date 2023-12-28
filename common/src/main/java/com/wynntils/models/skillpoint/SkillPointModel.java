@@ -271,49 +271,31 @@ public class SkillPointModel extends Model {
         craftedSkillPoints = new EnumMap<>(Skill.class);
 
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
-        McUtils.inventory().armor.forEach(itemStack -> {
-            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOptional.isEmpty()) return; // Empty slot
-
-            if (wynnItemOptional.get() instanceof GearItem gear) {
-                gear.getIdentifications().forEach(x -> {
-                    if (x.statType() instanceof SkillStatType skillStat) {
-                        gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
-                    }
-                });
-            } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
-                craftedGear.getIdentifications().forEach(x -> {
-                    if (x.statType() instanceof SkillStatType skillStat) {
-                        craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
-                    }
-                });
-            } else if (!itemStack.isEmpty()) {
-                WynntilsMod.warn("Skill Point Model failed to parse armour: " + LoreUtils.getStringLore(itemStack));
-            }
-        });
+        McUtils.inventory().armor.forEach(this::calculateSingleGearSkillPoints);
 
         for (int i : ACCESSORY_SLOTS) {
-            ItemStack itemStack = McUtils.inventory().getItem(i);
-            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOptional.isEmpty()) continue; // Empty slot
+            calculateSingleGearSkillPoints(McUtils.inventory().getItem(i));
+        }
+    }
 
-            if (wynnItemOptional.get() instanceof GearItem gear) {
-                gear.getIdentifications().forEach(x -> {
-                    if (x.statType() instanceof SkillStatType skillStat) {
-                        gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
-                    }
-                });
-            } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
-                craftedGear.getIdentifications().forEach(x -> {
-                    if (x.statType() instanceof SkillStatType skillStat) {
-                        craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
-                    }
-                });
-            } else if (!itemStack.isEmpty()
-                    && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
-                WynntilsMod.warn("Skill Point Model failed to parse accessory: "
-                        + LoreUtils.getStringLore(McUtils.inventory().getItem(i)));
-            }
+    private void calculateSingleGearSkillPoints(ItemStack itemStack) {
+        Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
+        if (wynnItemOptional.isEmpty()) return; // Empty slot
+
+        if (wynnItemOptional.get() instanceof GearItem gear) {
+            gear.getIdentifications().forEach(x -> {
+                if (x.statType() instanceof SkillStatType skillStat) {
+                    gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                }
+            });
+        } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
+            craftedGear.getIdentifications().forEach(x -> {
+                if (x.statType() instanceof SkillStatType skillStat) {
+                    craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
+                }
+            });
+        } else if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
+            WynntilsMod.warn("Skill Point Model failed to parse gear: " + LoreUtils.getStringLore(itemStack));
         }
     }
 
