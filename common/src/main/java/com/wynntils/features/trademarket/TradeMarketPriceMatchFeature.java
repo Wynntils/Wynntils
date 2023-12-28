@@ -186,8 +186,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                     PRICE_SET_ITEM_SLOT,
                     McUtils.containerMenu().containerId,
                     0,
-                    McUtils.containerMenu().getItems()
-            );
+                    McUtils.containerMenu().getItems());
         }
     }
 }

@@ -213,8 +213,7 @@ public class ContainerSearchFeature extends Feature {
                 currentSearchableContainerType.getNextItemSlot(),
                 abstractContainerScreen.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                abstractContainerScreen.getMenu().getItems()
-        );
+                abstractContainerScreen.getMenu().getItems());
     }
 
     private SearchableContainerType getCurrentSearchableContainerType(StyledText title) {

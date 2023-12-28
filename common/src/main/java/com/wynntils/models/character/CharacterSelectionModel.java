@@ -148,8 +148,7 @@ public final class CharacterSelectionModel extends Model {
                 slot,
                 currentScreen.getActualClassSelectionScreen().getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                currentScreen.getActualClassSelectionScreen().getMenu().getItems()
-        );
+                currentScreen.getActualClassSelectionScreen().getMenu().getItems());
     }
 
     public void deleteCharacter(int slot) {
@@ -157,13 +156,11 @@ public final class CharacterSelectionModel extends Model {
                 slot,
                 currentScreen.getActualClassSelectionScreen().getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                currentScreen.getActualClassSelectionScreen().getMenu().getItems()
-        );
+                currentScreen.getActualClassSelectionScreen().getMenu().getItems());
     }
 
     public void editCharacters(AbstractContainerMenu menu) {
-        ContainerUtils.clickOnSlot(
-                EDIT_BUTTON_SLOT, menu.containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, menu.getItems());
+        ContainerUtils.clickOnSlot(EDIT_BUTTON_SLOT, menu.containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, menu.getItems());
     }
 
     public void createNewClass() {
@@ -171,7 +168,6 @@ public final class CharacterSelectionModel extends Model {
                 currentScreen.getFirstNewCharacterSlot(),
                 currentScreen.getActualClassSelectionScreen().getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                currentScreen.getActualClassSelectionScreen().getMenu().getItems()
-        );
+                currentScreen.getActualClassSelectionScreen().getMenu().getItems());
     }
 }

@@ -48,8 +48,7 @@ public final class ContainerUtils {
      * Clicks on a slot in the specified container. containerId and the list of items should correspond to the
      * same container!
      */
-    public static void clickOnSlot(
-            int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
+    public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
 
@@ -91,7 +90,9 @@ public final class ContainerUtils {
      * Closes invisible containers opened in the background, without closing the visible screen.
      */
     public static void closeBackgroundContainer() {
-        McUtils.player().connection.send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        McUtils.player()
+                .connection
+                .send(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
         McUtils.player().containerMenu = McUtils.player().inventoryMenu;
     }
 }

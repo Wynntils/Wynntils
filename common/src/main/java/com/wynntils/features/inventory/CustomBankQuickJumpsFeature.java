@@ -302,8 +302,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
                     BUTTON_SLOTS.get(QUICK_JUMP_DESTINATIONS.indexOf(closest)),
                     McUtils.containerMenu().containerId,
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    McUtils.containerMenu().getItems()
-            );
+                    McUtils.containerMenu().getItems());
 
             return true;
         }
@@ -316,8 +315,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
                 NEXT_PAGE_SLOT,
                 McUtils.containerMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems()
-        );
+                McUtils.containerMenu().getItems());
     }
 
     private void clickPreviousPage() {
@@ -325,8 +323,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
                 PREVIOUS_PAGE_SLOT,
                 McUtils.containerMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems()
-        );
+                McUtils.containerMenu().getItems());
     }
 
     private void getCustomJumpDestinations() {

@@ -329,8 +329,7 @@ public class ContentBookQueries {
                             if (slot == -1) return true;
 
                             // Found it, now click it
-                            ContainerUtils.clickOnSlot(
-                                    slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
+                            ContainerUtils.clickOnSlot(slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
                             return false;
                         },
                         QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))

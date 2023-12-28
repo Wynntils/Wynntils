@@ -27,7 +27,6 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -152,8 +151,7 @@ public class SkillPointModel extends Model {
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items()
-                );
+                        containerContent.items());
                 if (!confirmationCompleted.getAndSet(true)) {
                     // confirmation required, force loop to repeat this iteration
                     i--;
@@ -164,8 +162,7 @@ public class SkillPointModel extends Model {
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items()
-                );
+                        containerContent.items());
                 if (!confirmationCompleted.getAndSet(true)) {
                     // needs to exist in both loops in case of 1s only
                     i--;
@@ -182,16 +179,14 @@ public class SkillPointModel extends Model {
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items()
-                );
+                        containerContent.items());
             }
             for (int i = 0; i < difference1s; i++) {
                 ContainerUtils.clickOnSlot(
                         SKILL_POINT_TOTAL_SLOTS[skill.ordinal()],
                         containerContent.containerId(),
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items()
-                );
+                        containerContent.items());
             }
         });
 
