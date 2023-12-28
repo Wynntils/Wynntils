@@ -17,9 +17,7 @@ import java.util.Optional;
  * @param <T> The type of the item info
  * @param <U> The type of the item instance
  */
-public interface IdentifiableItemProperty<T, U> {
-    String getName();
-
+public interface IdentifiableItemProperty<T, U> extends NamedItemProperty {
     T getItemInfo();
 
     Optional<U> getItemInstance();
