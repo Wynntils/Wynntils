@@ -31,7 +31,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
-    private final List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
+    private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
 
     private TextInputBoxWidget saveNameInput;
     private WynntilsButton saveAssignedButton;
@@ -560,7 +560,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     private void populateLoadouts() {
-        loadoutWidgets.clear();
+        loadoutWidgets = new ArrayList<>();
         Map<String, SavableSkillPointSet> loadouts = Models.SkillPoint.getLoadouts();
         for (Map.Entry<String, SavableSkillPointSet> entry : loadouts.entrySet()) {
             loadoutWidgets.add(new LoadoutWidget(

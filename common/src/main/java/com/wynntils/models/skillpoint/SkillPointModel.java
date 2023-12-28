@@ -47,11 +47,11 @@ public class SkillPointModel extends Model {
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
 
-    private final Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
-    private final Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
-    private final Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
-    private final Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
-    private final Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
     private boolean tomesUnlocked = true;
 
     public SkillPointModel() {
@@ -139,7 +139,7 @@ public class SkillPointModel extends Model {
         ContainerUtils.closeBackgroundContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
-            assignedSkillPoints.clear();
+            assignedSkillPoints = new EnumMap<>(Skill.class);
             calculateGearSkillPoints();
             queryTotalAndTomeSkillPoints();
         });
@@ -217,8 +217,8 @@ public class SkillPointModel extends Model {
     }
 
     private void calculateGearSkillPoints() {
-        gearSkillPoints.clear();
-        craftedSkillPoints.clear();
+        gearSkillPoints = new EnumMap<>(Skill.class);
+        craftedSkillPoints = new EnumMap<>(Skill.class);
 
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
         McUtils.inventory().armor.forEach(itemStack -> {
@@ -271,8 +271,8 @@ public class SkillPointModel extends Model {
      * Queries the compass (and tome) menu for skill point data.
      */
     private void queryTotalAndTomeSkillPoints() {
-        totalSkillPoints.clear();
-        tomeSkillPoints.clear();
+        totalSkillPoints = new EnumMap<>(Skill.class);
+        tomeSkillPoints = new EnumMap<>(Skill.class);
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
                 .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
@@ -308,7 +308,6 @@ public class SkillPointModel extends Model {
     }
 
     private void processTomeSkillPoints(ContainerContent content) {
-        tomeSkillPoints.clear();
         for (Integer slot : SKILL_POINT_TOME_SLOTS) {
             Optional<WynnItem> wynnItemOptional =
                     Models.Item.getWynnItem(content.items().get(slot));
