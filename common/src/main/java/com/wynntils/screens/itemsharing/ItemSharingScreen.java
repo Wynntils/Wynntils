@@ -29,9 +29,11 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -46,6 +48,7 @@ public class ItemSharingScreen extends WynntilsScreen {
     private int backgroundY;
     private int tooltipX;
     private ItemStack previewItemStack;
+    private List<AbstractWidget> options = new ArrayList<>();
 
     private ItemSharingScreen(WynnItem wynnItem) {
         super(Component.literal("Item Sharing Screen"));
@@ -60,79 +63,8 @@ public class ItemSharingScreen extends WynntilsScreen {
     @Override
     protected void doInit() {
         super.doInit();
-        refreshPreview();
         backgroundY = (this.height - Texture.ITEM_SHARING_BACKGROUND.height()) / 2;
-
-        // region Checkbox options
-        if (wynnItem instanceof GearItem) {
-            this.addRenderableWidget(new WynntilsCheckbox(
-                    backgroundX + 15,
-                    backgroundY + 45,
-                    10,
-                    10,
-                    Component.translatable("screens.wynntils.itemSharing.extended.name"),
-                    Models.ItemEncoding.extendedIdentificationEncoding.get(),
-                    Texture.ITEM_SHARING_BACKGROUND.width() - 30,
-                    (b) -> {
-                        if (b == 0) {
-                            Models.ItemEncoding.extendedIdentificationEncoding.store(
-                                    !Models.ItemEncoding.extendedIdentificationEncoding.get());
-                            refreshPreview();
-                        }
-                    },
-                    ComponentUtils.wrapTooltips(
-                            List.of(
-                                    Component.translatable("screens.wynntils.itemSharing.extended.description1"),
-                                    Component.translatable("screens.wynntils.itemSharing.extended.description2")),
-                            150)));
-        } else if (wynnItem instanceof CraftedGearItem || wynnItem instanceof CraftedConsumableItem) {
-            this.addRenderableWidget(new WynntilsCheckbox(
-                    backgroundX + 15,
-                    backgroundY + 45,
-                    10,
-                    10,
-                    Component.translatable("screens.wynntils.itemSharing.itemName.name"),
-                    Models.ItemEncoding.shareItemName.get(),
-                    Texture.ITEM_SHARING_BACKGROUND.width() - 30,
-                    (b) -> {
-                        if (b == 0) {
-                            Models.ItemEncoding.shareItemName.store(!Models.ItemEncoding.shareItemName.get());
-                            refreshPreview();
-                        }
-                    },
-                    ComponentUtils.wrapTooltips(
-                            List.of(Component.translatable("screens.wynntils.itemSharing.itemName.description")),
-                            150)));
-        }
-        // endregion
-
-        // region Share buttons
-        int shareButtonWidth = (Texture.ITEM_SHARING_BACKGROUND.width() - 20) / 2 - 5;
-
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.itemSharing.shareParty"), (b) -> shareItem("party"))
-                .pos(backgroundX + 10, backgroundY + 90)
-                .size(shareButtonWidth, 20)
-                .build());
-
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.itemSharing.shareGuild"), (b) -> shareItem("guild"))
-                .pos(backgroundX + 20 + shareButtonWidth, backgroundY + 90)
-                .size(shareButtonWidth, 20)
-                .build());
-
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.itemSharing.save"), (b) -> shareItem("save"))
-                .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
-                .size(shareButtonWidth, 20)
-                .build());
-
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.itemSharing.copy"), (b) -> shareItem("clipboard"))
-                .pos(backgroundX + 20 + shareButtonWidth, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
-                .size(shareButtonWidth, 20)
-                .build());
-        // endregion
+        refreshPreview();
     }
 
     @Override
@@ -204,13 +136,22 @@ public class ItemSharingScreen extends WynntilsScreen {
                 .orElse(0);
 
         // Total area the tooltip + sharing options panel + gap should cover
-        int totalRenderWidth = tooltipWidth + Texture.ITEM_SHARING_BACKGROUND.width() + 70;
+        int totalRenderWidth = tooltipWidth + Texture.ITEM_SHARING_BACKGROUND.width() + 10;
 
         // Blank space to the side of each element
-        int sideGap = (this.width - totalRenderWidth) / 2;
+        int sideGap = Math.abs((this.width - totalRenderWidth) / 2);
 
-        tooltipX = this.width - sideGap - tooltipWidth - 30;
-        backgroundX = sideGap + 30;
+        tooltipX = this.width - sideGap - tooltipWidth - 20;
+        backgroundX = Math.max(0, sideGap - 10);
+
+        // Widgets need to be remade in case backgroundX has changed and the options will be misalligned
+        for (AbstractWidget widget : options) {
+            this.removeWidget(widget);
+        }
+
+        options = new ArrayList<>();
+
+        addSharingOptions();
     }
 
     private void shareItem(String target) {
@@ -226,5 +167,78 @@ public class ItemSharingScreen extends WynntilsScreen {
         } else {
             // TODO: Save item to storage
         }
+    }
+
+    private void addSharingOptions() {
+        // region Checkbox options
+        if (wynnItem instanceof GearItem) {
+            options.add(this.addRenderableWidget(new WynntilsCheckbox(
+                    backgroundX + 15,
+                    backgroundY + 25,
+                    10,
+                    10,
+                    Component.translatable("screens.wynntils.itemSharing.extended.name"),
+                    Models.ItemEncoding.extendedIdentificationEncoding.get(),
+                    Texture.ITEM_SHARING_BACKGROUND.width() - 30,
+                    (b) -> {
+                        if (b == 0) {
+                            Models.ItemEncoding.extendedIdentificationEncoding.store(
+                                    !Models.ItemEncoding.extendedIdentificationEncoding.get());
+                            refreshPreview();
+                        }
+                    },
+                    ComponentUtils.wrapTooltips(
+                            List.of(
+                                    Component.translatable("screens.wynntils.itemSharing.extended.description1"),
+                                    Component.translatable("screens.wynntils.itemSharing.extended.description2")),
+                            150))));
+        } else if (wynnItem instanceof CraftedGearItem || wynnItem instanceof CraftedConsumableItem) {
+            options.add(this.addRenderableWidget(new WynntilsCheckbox(
+                    backgroundX + 15,
+                    backgroundY + 25,
+                    10,
+                    10,
+                    Component.translatable("screens.wynntils.itemSharing.itemName.name"),
+                    Models.ItemEncoding.shareItemName.get(),
+                    Texture.ITEM_SHARING_BACKGROUND.width() - 30,
+                    (b) -> {
+                        if (b == 0) {
+                            Models.ItemEncoding.shareItemName.store(!Models.ItemEncoding.shareItemName.get());
+                            refreshPreview();
+                        }
+                    },
+                    ComponentUtils.wrapTooltips(
+                            List.of(Component.translatable("screens.wynntils.itemSharing.itemName.description")),
+                            150))));
+        }
+        // endregion
+
+        // region Share buttons
+        int shareButtonWidth = (Texture.ITEM_SHARING_BACKGROUND.width() - 20) / 2 - 5;
+
+        options.add(this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.itemSharing.shareParty"), (b) -> shareItem("party"))
+                .pos(backgroundX + 10, backgroundY + 45)
+                .size(shareButtonWidth, 20)
+                .build()));
+
+        options.add(this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.itemSharing.shareGuild"), (b) -> shareItem("guild"))
+                .pos(backgroundX + 20 + shareButtonWidth, backgroundY + 45)
+                .size(shareButtonWidth, 20)
+                .build()));
+
+        options.add(this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.itemSharing.save"), (b) -> shareItem("save"))
+                .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
+                .size(shareButtonWidth, 20)
+                .build()));
+
+        options.add(this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.itemSharing.copy"), (b) -> shareItem("clipboard"))
+                .pos(backgroundX + 20 + shareButtonWidth, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
+                .size(shareButtonWidth, 20)
+                .build()));
+        // endregion
     }
 }
