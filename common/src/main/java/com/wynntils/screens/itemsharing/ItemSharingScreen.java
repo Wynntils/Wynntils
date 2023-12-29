@@ -51,7 +51,7 @@ public class ItemSharingScreen extends WynntilsScreen {
     }
 
     public static Screen create(WynnItem wynnItem) {
-        return new com.wynntils.screens.itemsharing.ItemSharingScreen(wynnItem);
+        return new ItemSharingScreen(wynnItem);
     }
 
     @Override
