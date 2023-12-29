@@ -112,13 +112,13 @@ public class ChatItemFeature extends Feature {
     private StyledTextPart createItemPart(GearItem gearItem) {
         Style style = Style.EMPTY
                 .applyFormat(ChatFormatting.UNDERLINE)
-                .withColor(gearItem.getGearInfo().tier().getChatFormatting());
+                .withColor(gearItem.getItemInfo().tier().getChatFormatting());
 
         ItemStack itemStack = new FakeItemStack(gearItem, "From chat");
         HoverEvent.ItemStackInfo itemHoverEvent = new HoverEvent.ItemStackInfo(itemStack);
         ((ItemStackInfoAccessor) itemHoverEvent).setItemStack(itemStack);
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
 
-        return new StyledTextPart(gearItem.getGearInfo().name(), style, null, Style.EMPTY);
+        return new StyledTextPart(gearItem.getItemInfo().name(), style, null, Style.EMPTY);
     }
 }

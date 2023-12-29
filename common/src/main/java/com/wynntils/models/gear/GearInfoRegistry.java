@@ -128,7 +128,7 @@ public class GearInfoRegistry {
             GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
-            List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json);
+            List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
             return new GearInfo(
                     displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);

@@ -10,7 +10,7 @@ public enum GearRestrictions {
     NONE(""),
     UNTRADABLE("Untradable Item"),
     QUEST_ITEM("Quest Item"),
-    SOULBOUND("Soulbound");
+    SOULBOUND("Soulbound Item");
 
     private final String description;
 

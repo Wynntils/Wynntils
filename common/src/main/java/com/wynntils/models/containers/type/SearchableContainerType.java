@@ -39,7 +39,12 @@ public enum SearchableContainerType {
             27,
             new ContainerBounds(0, 2, 4, 8)),
     MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28, new ContainerBounds(0, 2, 4, 8)),
-    SCRAP_MENU(Pattern.compile("Scrap Rewards"), Pattern.compile("§7Next Page"), 8, new ContainerBounds(1, 0, 5, 8));
+    SCRAP_MENU(Pattern.compile("Scrap Rewards"), Pattern.compile("§7Next Page"), 8, new ContainerBounds(1, 0, 5, 8)),
+    PET_MENU(
+            Pattern.compile("Pet Menu"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            8,
+            new ContainerBounds(1, 0, 5, 8));
 
     private final Pattern titlePattern;
     private final Pattern nextItemPattern;

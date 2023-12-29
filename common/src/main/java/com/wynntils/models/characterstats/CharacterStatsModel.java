@@ -129,7 +129,7 @@ public final class CharacterStatsModel extends Model {
         List<GearInfo> wornGear = new ArrayList<>();
         Optional<GearItem> mainHandGearItem = Models.Item.asWynnItem(player.getMainHandItem(), GearItem.class);
         if (mainHandGearItem.isPresent()) {
-            GearInfo gearInfo = mainHandGearItem.get().getGearInfo();
+            GearInfo gearInfo = mainHandGearItem.get().getItemInfo();
             if (gearInfo.type().isValidWeapon(Models.Character.getClassType())
                     && Models.CombatXp.getCombatLevel().current()
                             >= gearInfo.requirements().level()) {
@@ -143,7 +143,7 @@ public final class CharacterStatsModel extends Model {
         player.getArmorSlots().forEach(itemStack -> {
             Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (armorGearItem.isPresent()) {
-                GearInfo gearInfo = armorGearItem.get().getGearInfo();
+                GearInfo gearInfo = armorGearItem.get().getItemInfo();
                 wornGear.add(gearInfo);
             }
         });
@@ -152,7 +152,7 @@ public final class CharacterStatsModel extends Model {
         InventoryUtils.getAccessories(player).forEach(itemStack -> {
             Optional<GearItem> accessoryGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (accessoryGearItem.isPresent()) {
-                GearInfo gearInfo = accessoryGearItem.get().getGearInfo();
+                GearInfo gearInfo = accessoryGearItem.get().getItemInfo();
                 wornGear.add(gearInfo);
             }
         });

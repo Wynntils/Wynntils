@@ -23,7 +23,6 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.FixedStats;
-import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
@@ -285,7 +284,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
 
         int healthBuff = JsonUtils.getNullableJsonInt(baseStats, "health");
-        List<Pair<Skill, Integer>> skillBonuses = parseSkillBonuses(identifications);
         String attackSpeedStr = JsonUtils.getNullableJsonString(json, "attackSpeed");
         Optional<GearAttackSpeed> attackSpeed = Optional.ofNullable(GearAttackSpeed.fromString(attackSpeedStr));
 
@@ -293,7 +291,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         List<Pair<DamageType, RangedValue>> damages = parseDamages(baseStats);
         List<Pair<Element, Integer>> defences = parseDefences(baseStats);
 
-        return new FixedStats(healthBuff, skillBonuses, attackSpeed, majorIds, damages, defences);
+        return new FixedStats(healthBuff, attackSpeed, majorIds, damages, defences);
     }
 
     protected Optional<GearMajorId> parseMajorIds(JsonObject json) {
@@ -304,22 +302,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 majorIdsJson.get("name").getAsString(),
                 StyledText.fromString(
                         majorIdsJson.get("description").getAsString().replaceAll("&", "§"))));
-    }
-
-    protected List<Pair<Skill, Integer>> parseSkillBonuses(JsonObject json) {
-        if (json.isEmpty()) return List.of();
-
-        List<Pair<Skill, Integer>> list = new ArrayList<>();
-        for (Skill skill : Skill.values()) {
-            String skillBonusApiName = "raw" + com.wynntils.utils.StringUtils.capitalizeFirst(skill.getApiName());
-            int minPoints = JsonUtils.getNullableJsonInt(json, skillBonusApiName);
-            if (minPoints == 0) continue;
-
-            list.add(Pair.of(skill, minPoints));
-        }
-
-        // Return an immutable list
-        return List.copyOf(list);
     }
 
     protected List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
@@ -365,59 +347,82 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(list);
     }
 
-    protected List<Pair<StatType, StatPossibleValues>> parseVariableStats(JsonObject json) {
+    protected List<Pair<StatType, StatPossibleValues>> parseVariableStats(
+            JsonObject json, String identificationsObjectKey) {
         List<Pair<StatType, StatPossibleValues>> list = new ArrayList<>();
 
-        if (!json.has("identifications")) {
+        if (!json.has(identificationsObjectKey)) {
             // No identifications, so no variable stats
             return List.of();
         }
 
-        JsonObject identificationsJson = json.get("identifications").getAsJsonObject();
+        JsonObject identificationsJson = json.get(identificationsObjectKey).getAsJsonObject();
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-            StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+            String statApiName = entry.getKey();
 
-            if (statType == null) {
-                WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
-                continue;
+            if (statApiName.equals("elementalDefense")) {
+                // The API is inconsistent, and rarely usese "elementalDefense" instead of "elementalDefence"
+                statApiName = "elementalDefence";
             }
 
-            if (statType instanceof SkillStatType) {
-                // Skill stats are not variable for gear
+            StatType statType = Models.Stat.fromApiRollId(statApiName);
+
+            if (statType == null) {
+                WynntilsMod.warn("Item DB contains invalid stat type " + statApiName);
                 continue;
             }
 
             int baseValue;
             boolean preIdentified;
 
+            // The new API has a range for each stat,
+            // we still like to manually calculate,
+            // but it is great for verification
+            RangedValue apiRange;
+
             // This is a pre-identified id, so there is no range
-            if (preIdentifiedItem
-                    || identificationsJson.get(statType.getApiName()).isJsonPrimitive()) {
-                baseValue = JsonUtils.getNullableJsonInt(identificationsJson, statType.getApiName());
+            if (preIdentifiedItem || identificationsJson.get(entry.getKey()).isJsonPrimitive()) {
+                baseValue = JsonUtils.getNullableJsonInt(identificationsJson, entry.getKey());
 
                 // We have a pre-identified item, so there is no range
                 preIdentified = true;
+
+                apiRange = RangedValue.of(baseValue, baseValue);
             } else {
                 JsonObject statObject = entry.getValue().getAsJsonObject();
 
                 baseValue = JsonUtils.getNullableJsonInt(statObject, "raw");
                 preIdentified = false;
+
+                apiRange = RangedValue.of(
+                        statObject.get("min").getAsInt(), statObject.get("max").getAsInt());
             }
 
             // If the base value is 0, this stat is not present on the item
             if (baseValue == 0) continue;
 
-            // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
-            // and only converted to negative at display time.
-            if (statType.showAsInverted()) {
+            // "Inverted" stats (i.e. spell costs) are calculated
+            // as inverted, but are later changed back
+            if (statType.calculateAsInverted()) {
                 baseValue = -baseValue;
+
+                // If the stat is inverted, the API range is also inverted,
+                // so the check below does not fail
+                apiRange = RangedValue.of(-apiRange.low(), -apiRange.high());
             }
+
             // Range will always be stored such as "low" means "worst possible value" and
             // "high" means "best possible value".
-            RangedValue range = StatCalculator.calculatePossibleValuesRange(
-                    baseValue, preIdentifiedItem, statType.showAsInverted());
+            RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
+
+            // Verify that the calculated range matches the API's range
+            if (!apiRange.equals(range)) {
+                WynntilsMod.warn(
+                        "Stat " + statType.getApiName() + " has a range mismatch: " + apiRange + " vs " + range);
+            }
+
             StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);
             list.add(Pair.of(statType, possibleValues));
         }

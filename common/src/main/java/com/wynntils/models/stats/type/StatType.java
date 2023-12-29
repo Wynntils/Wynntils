@@ -4,16 +4,29 @@
  */
 package com.wynntils.models.stats.type;
 
+import com.wynntils.utils.type.RangedValue;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 // The key is strictly not necessary, but is internally useful
 // The "internalRollName" is what is used in the json lore of other player's items
 public abstract class StatType {
+    // These ranges are used everywhere, except charms
+    private static final List<RangedValue> STAR_INTERNAL_ROLL_RANGES = List.of(
+            RangedValue.of(30, 100), // 0 stars
+            RangedValue.of(101, 124), // 1 star
+            RangedValue.of(125, 129), // 2 stars
+            RangedValue.of(130, 130) // 3 stars
+            );
+
     private final String key;
     private final String displayName;
     private final String apiName;
     private final String internalRollName;
     private final StatUnit unit;
+    private final SpecialStatType specialStatType;
 
     protected StatType(String key, String displayName, String apiName, String internalRollName, StatUnit unit) {
         this.key = key;
@@ -21,6 +34,22 @@ public abstract class StatType {
         this.apiName = apiName;
         this.internalRollName = internalRollName;
         this.unit = unit;
+        this.specialStatType = SpecialStatType.NONE;
+    }
+
+    protected StatType(
+            String key,
+            String displayName,
+            String apiName,
+            String internalRollName,
+            StatUnit unit,
+            SpecialStatType specialStatType) {
+        this.key = key;
+        this.displayName = displayName;
+        this.apiName = apiName;
+        this.internalRollName = internalRollName;
+        this.unit = unit;
+        this.specialStatType = specialStatType;
     }
 
     public String getKey() {
@@ -45,8 +74,58 @@ public abstract class StatType {
         return unit;
     }
 
-    public boolean showAsInverted() {
+    public StatCalculationInfo getStatCalculationInfo(int baseValue) {
+        boolean usePostiveRange = baseValue > 0;
+        return usePostiveRange
+                ? new StatCalculationInfo(
+                        RangedValue.of(30, 130),
+                        calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
+                        Optional.of(1),
+                        Optional.empty(),
+                        treatAsInverted() ? List.of() : STAR_INTERNAL_ROLL_RANGES)
+                : new StatCalculationInfo(
+                        RangedValue.of(70, 130),
+                        calculateAsInverted() ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN,
+                        Optional.empty(),
+                        Optional.of(-1),
+                        List.of());
+    }
+
+    /**
+     * Whether the stat should be displayed as inverted.
+     * This should be true if a value with a positive sign should be displayed as negative.
+     * Usually this should be used in combination with {@link #calculateAsInverted()} or {@link #treatAsInverted()}.
+     * @return true if the stat should be displayed as inverted, false otherwise
+     */
+    public boolean displayAsInverted() {
         return false;
+    }
+
+    /**
+     * Whether the stat should be treated as negative when calculating the total stat value.
+     * This is used when calculating the percentage values of a stat.
+     * <p><b>
+     *     Note that this does not modify the calculated internal roll, deliberately.
+     *     This means that the highest internal roll value will result in the "worst" stat value.
+     * </b></p>
+     *
+     * <p> Use this if a stat has an inverted effect, compared to a base stat, but needs to be treated according to the base stat's sign. </p>
+     * @return true if the stat should be treated as negative, false otherwise
+     */
+    public boolean treatAsInverted() {
+        return false;
+    }
+
+    /**
+     * Whether the stat should be calculated as inverted (the base value is given a negative sign before being used in calculations).
+     * @return true if the stat should be calculated as inverted, false otherwise
+     */
+    public boolean calculateAsInverted() {
+        return false;
+    }
+
+    public SpecialStatType getSpecialStatType() {
+        return specialStatType;
     }
 
     @Override
@@ -74,5 +153,16 @@ public abstract class StatType {
                 + apiName + ", " + "internalRollName="
                 + internalRollName + ", " + "unit="
                 + unit + ']';
+    }
+
+    public enum SpecialStatType {
+        NONE,
+
+        // Tomes have a special stats that are not variable,
+        // and are not displayed as regular stats
+        TOME_BASE_STAT,
+
+        // Some stats on charms only apply to a level range of mobs/players
+        CHARM_LEVELED_STAT
     }
 }

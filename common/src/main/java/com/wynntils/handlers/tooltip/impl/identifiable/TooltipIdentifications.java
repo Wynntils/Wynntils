@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.tooltip;
+package com.wynntils.handlers.tooltip.impl.identifiable;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Style;
 
 public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
-            IdentifiableItemProperty itemInfo,
+            IdentifiableItemProperty<?, ?> itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -79,7 +79,7 @@ public final class TooltipIdentifications {
 
     private static MutableComponent getStatLine(
             StatType statType,
-            IdentifiableItemProperty itemInfo,
+            IdentifiableItemProperty<?, ?> itemInfo,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
             TooltipStyle style) {
@@ -138,20 +138,25 @@ public final class TooltipIdentifications {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
-        int valueToShow = statType.showAsInverted() ? -value : value;
+        int valueToShow = statType.calculateAsInverted() ? -value : value;
+        boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
         String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
 
         MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
                         + statType.getUnit().getDisplayName())
-                .withStyle(Style.EMPTY.withColor((value > 0) ? ChatFormatting.GREEN : ChatFormatting.RED));
+                .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         if (!starString.isEmpty()) {
             line.append(Component.literal(starString).withStyle(ChatFormatting.DARK_GREEN));
         }
 
-        line.append(
-                Component.literal(" " + Models.Stat.getDisplayName(statType, itemInfo.getRequiredClass(), currentClass))
-                        .withStyle(ChatFormatting.GRAY));
+        line.append(Component.literal(" "
+                        + Models.Stat.getDisplayName(
+                                statType,
+                                itemInfo.getRequiredClass(),
+                                currentClass,
+                                itemInfo.getIdentificationLevelRange()))
+                .withStyle(ChatFormatting.GRAY));
 
         return line;
     }
@@ -161,15 +166,15 @@ public final class TooltipIdentifications {
         StatType statType = possibleValues.statType();
         RangedValue valueRange = possibleValues.range();
 
-        // Use value.low as representative; assume both high and low are either < or > 0.
-        boolean isGood = valueRange.low() > 0;
-        ChatFormatting colorCode = isGood ? ChatFormatting.GREEN : ChatFormatting.RED;
-        ChatFormatting colorCodeDark = isGood ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-
         // Determine which value to show first and which to show last in the "A to B"
         // range displayed
         Pair<Integer, Integer> displayRange =
                 StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
+
+        // Use displayRange.a as representative; assume both a and b are either < or > 0.
+        boolean hasPositiveEffect = displayRange.a() > 0 ^ statType.displayAsInverted();
+        ChatFormatting colorCode = hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED;
+        ChatFormatting colorCodeDark = hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
         MutableComponent line =
                 Component.literal(StringUtils.toSignedString(displayRange.a())).withStyle(colorCode);
@@ -179,7 +184,10 @@ public final class TooltipIdentifications {
 
         line.append(Component.literal(" "
                         + Models.Stat.getDisplayName(
-                                statType, itemInfo.getRequiredClass(), Models.Character.getClassType()))
+                                statType,
+                                itemInfo.getRequiredClass(),
+                                Models.Character.getClassType(),
+                                itemInfo.getIdentificationLevelRange()))
                 .withStyle(ChatFormatting.GRAY));
 
         return line;

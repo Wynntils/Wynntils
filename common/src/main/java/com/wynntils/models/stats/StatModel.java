@@ -30,30 +30,28 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class StatModel extends Model {
     private final List<StatType> statTypeRegistry = new ArrayList<>();
     private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;
-    private final List<SkillStatType> skillStats;
 
     public StatModel() {
         super(List.of());
 
         // First build stats of all kinds
+        List<SkillStatType> skillStats = buildStats(new SkillStatBuilder());
         List<MiscStatType> miscStats = buildStats(new MiscStatBuilder());
         List<DefenceStatType> defenceStats = buildStats(new DefenceStatBuilder());
         List<DamageStatType> damageStats = buildStats(new DamageStatBuilder());
         List<SpellStatType> spellStats = buildStats(new SpellStatBuilder());
 
-        // Skill stats is special, they are not variable for gear
-        skillStats = buildStats(new SkillStatBuilder());
-
         // Then put them all in the registry
-        initRegistry(miscStats, defenceStats, damageStats, spellStats);
+        initRegistry(skillStats, miscStats, defenceStats, damageStats, spellStats);
 
         // Finally create ordered lists for sorting
-        orderingLists = StatListOrderer.createOrderingMap(miscStats, defenceStats, damageStats, spellStats);
+        orderingLists = StatListOrderer.createOrderingMap(skillStats, miscStats, defenceStats, damageStats, spellStats);
     }
 
     public StatActualValue buildActualValue(
@@ -73,10 +71,6 @@ public final class StatModel extends Model {
             if (statType.getInternalRollName().equals(id)) return statType;
         }
 
-        for (StatType statType : skillStats) {
-            if (statType.getInternalRollName().equals(id)) return statType;
-        }
-
         return null;
     }
 
@@ -85,14 +79,11 @@ public final class StatModel extends Model {
             if (statType.getApiName().equals(id)) return statType;
         }
 
-        for (StatType statType : skillStats) {
-            if (statType.getApiName().equals(id)) return statType;
-        }
-
         return null;
     }
 
-    public String getDisplayName(StatType statType, ClassType classReq, ClassType currentClass) {
+    public String getDisplayName(
+            StatType statType, ClassType classReq, ClassType currentClass, RangedValue workingLevelRange) {
         if (statType instanceof SpellStatType spellStatType) {
             // If there is no class associated with the gear (i.e. it is not
             // a weapon), chose our current class
@@ -101,6 +92,12 @@ public final class StatModel extends Model {
             SpellType spellType = spellStatType.getSpellType().forOtherClass(classToUse);
             return SpellStatBuilder.getStatNameForSpell(spellType.getName());
         }
+
+        // Inject level range into charm leveled stats
+        if (statType.getSpecialStatType() == StatType.SpecialStatType.CHARM_LEVELED_STAT) {
+            return statType.getDisplayName().replace("${}", workingLevelRange.low() + "-" + workingLevelRange.high());
+        }
+
         return statType.getDisplayName();
     }
 
@@ -129,10 +126,12 @@ public final class StatModel extends Model {
     }
 
     private void initRegistry(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
+        statTypeRegistry.addAll(skillStats);
         statTypeRegistry.addAll(miscStats);
         statTypeRegistry.addAll(defenceStats);
         statTypeRegistry.addAll(damageStats);
@@ -152,13 +151,39 @@ public final class StatModel extends Model {
 
     private static class StatLookupTable {
         private final Map<String, StatType> lookupTable = new HashMap<>();
+        private final Map<Pattern, StatType> regexLookupTable = new HashMap<>();
 
         private StatType get(String displayName, String unit) {
             String lookupName = displayName + (unit == null ? "" : unit);
-            return lookupTable.get(lookupName);
+            StatType statType = lookupTable.get(lookupName);
+
+            if (statType != null) return statType;
+
+            for (Map.Entry<Pattern, StatType> entry : regexLookupTable.entrySet()) {
+                if (entry.getKey().matcher(displayName).matches()) {
+                    statType = entry.getValue();
+                    break;
+                }
+            }
+
+            return statType;
         }
 
         private void put(String displayName, StatUnit unit, StatType statType) {
+            // If the stat is a tome base stat,
+            // we don't want to add it to the lookup table,
+            // as we won't look it up in a regular way
+            if (statType.getSpecialStatType() == StatType.SpecialStatType.TOME_BASE_STAT) return;
+
+            // If the stat is a charm leveled stat,
+            // we want to add it to the regex lookup table
+            // because the stat name will have a level range in it
+            if (statType.getSpecialStatType() == StatType.SpecialStatType.CHARM_LEVELED_STAT) {
+                regexLookupTable.put(
+                        Pattern.compile(statType.getDisplayName().replace("${}", "(\\d+)-(\\d+)")), statType);
+                return;
+            }
+
             String lookupName = displayName + unit.getDisplayName();
             lookupTable.put(lookupName, statType);
         }

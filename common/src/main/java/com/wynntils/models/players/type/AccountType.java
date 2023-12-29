@@ -13,10 +13,14 @@ public enum AccountType {
     BANNED(null),
     DONATOR(Component.literal("Wynntils Donator").withStyle(ChatFormatting.LIGHT_PURPLE)),
     CONTENT_TEAM(Component.literal("Wynntils CT").withStyle(ChatFormatting.DARK_AQUA)),
+    TRANSLATOR(Component.literal("Wynntils Translator").withStyle(ChatFormatting.DARK_AQUA)),
     HELPER(Component.literal("Wynntils Helper").withStyle(ChatFormatting.GREEN)),
-    MODERATOR(Component.literal("Wynntils Developer")
+    SUPPORT(Component.literal("Wynntils Support").withStyle(ChatFormatting.GREEN)),
+    MODERATOR(Component.literal("Wynntils Moderator").withStyle(ChatFormatting.BLUE)),
+    DEVELOPER(Component.literal("Wynntils Developer")
             .withStyle(ChatFormatting.GOLD)
-            .withStyle(ChatFormatting.BOLD));
+            .withStyle(ChatFormatting.BOLD)),
+    ADMIN(Component.literal("Wynntils Admin").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD));
 
     private final MutableComponent component;
 

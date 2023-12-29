@@ -14,30 +14,32 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
-public class TomeItem extends GameItem implements GearTierItemProperty, IdentifiableItemProperty {
+public class TomeItem extends GameItem
+        implements GearTierItemProperty, IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
-    private final int rerolls;
 
-    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance, int rerolls) {
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
         this.tomeInfo = tomeInfo;
         this.tomeInstance = tomeInstance;
-        this.rerolls = rerolls;
     }
 
-    public TomeInfo getTomeInfo() {
+    @Override
+    public TomeInfo getItemInfo() {
         return tomeInfo;
     }
 
-    public Optional<TomeInstance> getTomeInstance() {
+    @Override
+    public Optional<TomeInstance> getItemInstance() {
         return Optional.ofNullable(tomeInstance);
     }
 
     public int getRerolls() {
-        return rerolls;
+        return tomeInstance != null ? tomeInstance.rerolls() : 0;
     }
 
     @Override
@@ -63,12 +65,20 @@ public class TomeItem extends GameItem implements GearTierItemProperty, Identifi
 
     @Override
     public List<StatActualValue> getIdentifications() {
+        if (tomeInstance == null) return List.of();
+
         return tomeInstance.identifications();
     }
 
     @Override
     public List<StatPossibleValues> getPossibleValues() {
         return tomeInfo.variableStats().stream().map(Pair::b).toList();
+    }
+
+    @Override
+    public RangedValue getIdentificationLevelRange() {
+        // Tomes do not have level-specific stats
+        return RangedValue.NONE;
     }
 
     @Override
@@ -93,6 +103,6 @@ public class TomeItem extends GameItem implements GearTierItemProperty, Identifi
 
     @Override
     public String toString() {
-        return "TomeItem{" + "tomeInfo=" + tomeInfo + ", tomeInstance=" + tomeInstance + ", rerolls=" + rerolls + '}';
+        return "TomeItem{" + "tomeInfo=" + tomeInfo + ", tomeInstance=" + tomeInstance + '}';
     }
 }

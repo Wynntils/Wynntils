@@ -2,48 +2,51 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.tooltip.gear;
+package com.wynntils.handlers.tooltip.impl.crafted.components;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearRequirements;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 
-public final class GearTooltipHeader {
-    public static List<Component> buildTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
+public class CraftedGearTooltipComponent extends CraftedTooltipComponent<CraftedGearItem> {
+    @Override
+    public List<Component> buildHeaderTooltip(CraftedGearItem craftedItem) {
         List<Component> header = new ArrayList<>();
 
         // name
-        String prefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + gearInfo.name())
-                .withStyle(gearInfo.tier().getChatFormatting()));
+        header.add(Component.literal(craftedItem.getName())
+                .withStyle(ChatFormatting.DARK_AQUA)
+                .append(Component.literal(" [" + craftedItem.getEffectStrength() + "%]")
+                        .withStyle(ChatFormatting.AQUA)));
 
         // attack speed
-        if (gearInfo.fixedStats().attackSpeed().isPresent())
-            header.add(Component.literal(ChatFormatting.GRAY
-                    + gearInfo.fixedStats().attackSpeed().get().getName()));
+        if (craftedItem.getAttackSpeed().isPresent())
+            header.add(Component.literal(
+                    ChatFormatting.GRAY + craftedItem.getAttackSpeed().get().getName()));
 
         header.add(Component.literal(""));
 
         // elemental damages
-        if (!gearInfo.fixedStats().damages().isEmpty()) {
-            List<Pair<DamageType, RangedValue>> damages = gearInfo.fixedStats().damages();
+        if (!craftedItem.getDamages().isEmpty()) {
+            List<Pair<DamageType, RangedValue>> damages = craftedItem.getDamages();
             for (Pair<DamageType, RangedValue> damageStat : damages) {
                 DamageType type = damageStat.key();
                 MutableComponent damage = Component.literal(type.getSymbol() + " " + type.getDisplayName())
@@ -60,7 +63,7 @@ public final class GearTooltipHeader {
         }
 
         // health
-        int health = gearInfo.fixedStats().healthBuff();
+        int health = craftedItem.getHealth();
         if (health != 0) {
             MutableComponent healthComp = Component.literal("❤ Health: " + StringUtils.toSignedString(health))
                     .withStyle(ChatFormatting.DARK_RED);
@@ -68,8 +71,8 @@ public final class GearTooltipHeader {
         }
 
         // elemental defenses
-        if (!gearInfo.fixedStats().defences().isEmpty()) {
-            List<Pair<Element, Integer>> defenses = gearInfo.fixedStats().defences();
+        if (!craftedItem.getDefences().isEmpty()) {
+            List<Pair<Element, Integer>> defenses = craftedItem.getDefences();
             for (Pair<Element, Integer> defenceStat : defenses) {
                 Element element = defenceStat.key();
                 MutableComponent defense = Component.literal(element.getSymbol() + " " + element.getDisplayName())
@@ -78,13 +81,15 @@ public final class GearTooltipHeader {
                         .withStyle(ChatFormatting.GRAY));
                 header.add(defense);
             }
+        }
 
+        if (health != 0 || !craftedItem.getDefences().isEmpty()) {
             header.add(Component.literal(""));
         }
 
         // requirements
         int requirementsCount = 0;
-        GearRequirements requirements = gearInfo.requirements();
+        GearRequirements requirements = craftedItem.getRequirements();
         if (requirements.classType().isPresent()) {
             ClassType classType = requirements.classType().get();
             boolean fulfilled = Models.Character.getClassType() == classType;
@@ -116,39 +121,42 @@ public final class GearTooltipHeader {
             header.add(Component.literal(""));
         }
 
-        // skill bonuses
-        List<Pair<Skill, Integer>> skillBonuses = gearInfo.fixedStats().skillBonuses();
-        if (!skillBonuses.isEmpty()) {
-            for (Skill skill : Models.Element.getGearSkillOrder()) {
-                int skillBonusValue = gearInfo.fixedStats().getSkillBonus(skill);
-                if (skillBonusValue == 0) continue;
-
-                Component line = buildSkillBonusLine(skill, skillBonusValue);
-                header.add(line);
-            }
-            header.add(Component.literal(""));
-        }
-
         return header;
     }
 
-    private static Component buildSkillBonusLine(Skill skill, int value) {
-        boolean isGood = (value > 0);
+    @Override
+    public List<Component> buildFooterTooltip(CraftedGearItem craftedItem) {
+        List<Component> footer = new ArrayList<>();
 
-        MutableComponent skillBonusLine = Component.literal(StringUtils.toSignedString(value))
-                .withStyle(Style.EMPTY.withColor(isGood ? ChatFormatting.GREEN : ChatFormatting.RED));
-        skillBonusLine.append(Component.literal(" " + skill.getDisplayName()).withStyle(ChatFormatting.GRAY));
+        footer.add(Component.empty());
 
-        return skillBonusLine;
-    }
+        // powder slots
+        if (!craftedItem.getPowders().isEmpty()) {
+            MutableComponent powderLine = Component.literal("["
+                            + craftedItem.getPowders().size() + "/" + craftedItem.getPowderSlots() + "] Powder Slots ")
+                    .withStyle(ChatFormatting.GRAY);
+            if (!craftedItem.getPowders().isEmpty()) {
+                MutableComponent powderList = Component.literal("[");
+                for (Powder p : craftedItem.getPowders()) {
+                    String symbol = p.getColoredSymbol();
+                    if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
+                    powderList.append(Component.literal(symbol));
+                }
+                powderList.append(Component.literal("]"));
+                powderLine.append(powderList);
+            }
+            footer.add(powderLine);
+        }
 
-    private static MutableComponent buildRequirementLine(String requirementName, boolean fulfilled) {
-        MutableComponent requirement;
+        // item type + durability
+        footer.add(Component.literal("Crafted "
+                        + StringUtils.capitalizeFirst(
+                                craftedItem.getGearType().name().toLowerCase(Locale.ROOT)))
+                .withStyle(ChatFormatting.DARK_AQUA)
+                .append(Component.literal(" [" + craftedItem.getDurability().current() + "/"
+                                + craftedItem.getDurability().max() + " Durability]")
+                        .withStyle(ChatFormatting.DARK_GRAY)));
 
-        requirement = fulfilled
-                ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
-                : Component.literal("✖ ").withStyle(ChatFormatting.RED);
-        requirement.append(Component.literal(requirementName).withStyle(ChatFormatting.GRAY));
-        return requirement;
+        return footer;
     }
 }
