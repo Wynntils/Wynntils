@@ -13,6 +13,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -61,39 +64,45 @@ public class ItemSharingScreen extends WynntilsScreen {
         backgroundY = (this.height - Texture.ITEM_SHARING_BACKGROUND.height()) / 2;
 
         // region Checkbox options
-        this.addRenderableWidget(new WynntilsCheckbox(
-                backgroundX + 15,
-                backgroundY + 30,
-                10,
-                10,
-                Component.translatable("screens.wynntils.itemSharing.extended.name"),
-                Models.ItemEncoding.extendedIdentificationEncoding.get(),
-                Texture.ITEM_SHARING_BACKGROUND.width() - 30,
-                (b) -> {
-                    if (b == 0) {
-                        Models.ItemEncoding.toggleSetting(Models.ItemEncoding.extendedIdentificationEncoding);
-                        refreshPreview();
-                    }
-                },
-                ComponentUtils.wrapTooltips(
-                        List.of(Component.translatable("screens.wynntils.itemSharing.extended.description")), 150)));
-
-        this.addRenderableWidget(new WynntilsCheckbox(
-                backgroundX + 15,
-                backgroundY + 60,
-                10,
-                10,
-                Component.translatable("screens.wynntils.itemSharing.itemName.name"),
-                Models.ItemEncoding.shareItemName.get(),
-                Texture.ITEM_SHARING_BACKGROUND.width() - 30,
-                (b) -> {
-                    if (b == 0) {
-                        Models.ItemEncoding.toggleSetting(Models.ItemEncoding.shareItemName);
-                        refreshPreview();
-                    }
-                },
-                ComponentUtils.wrapTooltips(
-                        List.of(Component.translatable("screens.wynntils.itemSharing.itemName.description")), 150)));
+        if (wynnItem instanceof GearItem) {
+            this.addRenderableWidget(new WynntilsCheckbox(
+                    backgroundX + 15,
+                    backgroundY + 45,
+                    10,
+                    10,
+                    Component.translatable("screens.wynntils.itemSharing.extended.name"),
+                    Models.ItemEncoding.extendedIdentificationEncoding.get(),
+                    Texture.ITEM_SHARING_BACKGROUND.width() - 30,
+                    (b) -> {
+                        if (b == 0) {
+                            Models.ItemEncoding.toggleSetting(Models.ItemEncoding.extendedIdentificationEncoding);
+                            refreshPreview();
+                        }
+                    },
+                    ComponentUtils.wrapTooltips(
+                            List.of(
+                                    Component.translatable("screens.wynntils.itemSharing.extended.description1"),
+                                    Component.translatable("screens.wynntils.itemSharing.extended.description2")),
+                            150)));
+        } else if (wynnItem instanceof CraftedGearItem || wynnItem instanceof CraftedConsumableItem) {
+            this.addRenderableWidget(new WynntilsCheckbox(
+                    backgroundX + 15,
+                    backgroundY + 45,
+                    10,
+                    10,
+                    Component.translatable("screens.wynntils.itemSharing.itemName.name"),
+                    Models.ItemEncoding.shareItemName.get(),
+                    Texture.ITEM_SHARING_BACKGROUND.width() - 30,
+                    (b) -> {
+                        if (b == 0) {
+                            Models.ItemEncoding.toggleSetting(Models.ItemEncoding.shareItemName);
+                            refreshPreview();
+                        }
+                    },
+                    ComponentUtils.wrapTooltips(
+                            List.of(Component.translatable("screens.wynntils.itemSharing.itemName.description")),
+                            150)));
+        }
         // endregion
 
         // region Share buttons
