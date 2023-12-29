@@ -94,7 +94,6 @@ public final class WynnItemParser {
     // Crafted items
     // Test suite: https://regexr.com/7pm7o
     private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
-    private static final Pattern CRAFTED_CONSUMABLE_TYPE_PATTERN = Pattern.compile("^§3Crafted (.+)$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -418,18 +417,10 @@ public final class WynnItemParser {
                 int value = Integer.parseInt(skillMatcher.group("value"));
                 skillReqs.add(Pair.of(skill, value));
             }
-
-            // Consumable type
-            Matcher consumableTypeMatcher = coded.getMatcher(CRAFTED_CONSUMABLE_TYPE_PATTERN);
-            if (consumableTypeMatcher.matches()) {
-                String typeName = consumableTypeMatcher.group(1);
-                consumableType = ConsumableType.fromString(typeName.toUpperCase(Locale.ROOT));
-            }
         }
 
         return new CraftedItemParseResults(
                 name,
-                consumableType,
                 effectStrength,
                 attackSpeed,
                 damages,

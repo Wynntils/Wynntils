@@ -56,7 +56,7 @@ import org.lwjgl.glfw.GLFW;
 public class ChatItemFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind shareItemKeybind =
-            new KeyBind("Share Item", GLFW.GLFW_KEY_F5, true, null, this::onInventoryPress);
+            new KeyBind("Share Item", GLFW.GLFW_KEY_F3, true, null, this::onInventoryPress);
 
     @Persisted
     public final Config<Boolean> showSharingScreen = new Config<>(true);
@@ -132,7 +132,7 @@ public class ChatItemFeature extends Feature {
         StyledText modified = styledText.iterate((part, changes) -> {
             StyledTextPart partToReplace = part;
 
-            decoodeDeprecatedChatEncoding(changes, partToReplace);
+            decodeDeprecatedChatEncoding(changes, partToReplace);
 
             return IterationDecision.CONTINUE;
         });
@@ -141,7 +141,7 @@ public class ChatItemFeature extends Feature {
         modified = modified.iterate((part, changes) -> {
             StyledTextPart partToReplace = part;
 
-            decoodeChatEncoding(changes, partToReplace);
+            decodeChatEncoding(changes, partToReplace);
 
             return IterationDecision.CONTINUE;
         });
@@ -173,7 +173,7 @@ public class ChatItemFeature extends Feature {
         }
     }
 
-    private void decoodeChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
+    private void decodeChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
         Matcher matcher = Models.ItemEncoding.getEncodedDataPattern()
                 .matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
@@ -204,7 +204,7 @@ public class ChatItemFeature extends Feature {
         }
     }
 
-    private void decoodeDeprecatedChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
+    private void decodeDeprecatedChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
         Matcher matcher = Models.Gear.gearChatEncodingMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
         while (matcher.find()) {
