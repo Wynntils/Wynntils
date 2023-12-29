@@ -9,7 +9,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
@@ -25,6 +27,7 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.screens.itemsharing.ItemSharingScreen;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
@@ -54,6 +57,9 @@ public class ChatItemFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind shareItemKeybind =
             new KeyBind("Share Item", GLFW.GLFW_KEY_F3, true, null, this::onInventoryPress);
+
+    @Persisted
+    public final Config<Boolean> showSharingScreen = new Config<>(true);
 
     private final Map<String, String> chatItems = new HashMap<>();
 
@@ -145,8 +151,26 @@ public class ChatItemFeature extends Feature {
         e.setMessage(modified.getComponent());
     }
 
-    private void onInventoryPress(Slot slot) {
-        makeChatPrompt(slot);
+    private void onInventoryPress(Slot hoveredSlot) {
+        if (hoveredSlot == null) return;
+
+        // Special case for unidentified gear
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
+        if (gearItemOpt.isPresent() && gearItemOpt.get().isUnidentified()) {
+            // We can only send chat encoded gear of identified gear
+            WynntilsMod.warn("Cannot make chat link of unidentified gear");
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemUnidentifiedError"));
+            return;
+        }
+
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
+        if (wynnItemOpt.isEmpty()) return;
+
+        if (showSharingScreen.get()) {
+            McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get()));
+        } else {
+            makeChatPrompt(wynnItemOpt.get());
+        }
     }
 
     private void decodeChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
@@ -249,26 +273,14 @@ public class ChatItemFeature extends Feature {
         return parts;
     }
 
-    private static void makeChatPrompt(Slot hoveredSlot) {
-        // Special case for unidentified gear
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
-        if (gearItemOpt.isPresent() && gearItemOpt.get().isUnidentified()) {
-            // We can only send chat encoded gear of identified gear
-            WynntilsMod.warn("Cannot make chat link of unidentified gear");
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemUnidentifiedError"));
-            return;
-        }
-
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
-        if (wynnItemOpt.isEmpty()) return;
-
-        // TODO: These settings should be persisted, and changeable in the custom share GUI
-        EncodingSettings encodingSettings = new EncodingSettings(false, true);
+    private void makeChatPrompt(WynnItem wynnItem) {
+        EncodingSettings encodingSettings = new EncodingSettings(
+                Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
         ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
-                Models.ItemEncoding.encodeItem(wynnItemOpt.get(), encodingSettings);
+                Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
         if (errorOrEncodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemError"));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemErrorEncode"));
             return;
         }
 
@@ -289,9 +301,9 @@ public class ChatItemFeature extends Feature {
                         Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
                                 .withStyle(ChatFormatting.DARK_AQUA)))));
 
-        if (WynntilsMod.isDevelopmentEnvironment() && gearItemOpt.isPresent()) {
+        if (WynntilsMod.isDevelopmentEnvironment() && wynnItem instanceof GearItem gearItem) {
             // Also encode the item using the old method for comparison
-            String encoded = Models.Gear.toEncodedString(gearItemOpt.get());
+            String encoded = Models.Gear.toEncodedString(gearItem);
             McUtils.sendMessageToClient(Component.literal("[DEBUG] Click here to copy the old encoded item for chat!")
                     .withStyle(ChatFormatting.DARK_GREEN)
                     .withStyle(ChatFormatting.UNDERLINE)

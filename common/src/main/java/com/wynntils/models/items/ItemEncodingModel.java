@@ -5,6 +5,8 @@
 package com.wynntils.models.items;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.utils.EncodedByteBuffer;
@@ -13,6 +15,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class ItemEncodingModel extends Model {
+    @Persisted
+    public final Storage<Boolean> extendedIdentificationEncoding = new Storage<>(false);
+
+    @Persisted
+    public final Storage<Boolean> shareItemName = new Storage<>(true);
+
     // Encoded data consists of characters from Unicode Supplementary Private Use Area-A and B
     // (U+F0000..U+FFFFD and U+100000..U+10FFFD)
     private static final String RANGE_A =
