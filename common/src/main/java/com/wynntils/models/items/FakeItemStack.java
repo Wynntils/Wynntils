@@ -8,7 +8,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.List;
