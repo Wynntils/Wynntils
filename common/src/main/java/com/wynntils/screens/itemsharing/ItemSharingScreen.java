@@ -75,7 +75,8 @@ public class ItemSharingScreen extends WynntilsScreen {
                     Texture.ITEM_SHARING_BACKGROUND.width() - 30,
                     (b) -> {
                         if (b == 0) {
-                            Models.ItemEncoding.toggleSetting(Models.ItemEncoding.extendedIdentificationEncoding);
+                            Models.ItemEncoding.extendedIdentificationEncoding.store(
+                                    !Models.ItemEncoding.extendedIdentificationEncoding.get());
                             refreshPreview();
                         }
                     },
@@ -95,7 +96,7 @@ public class ItemSharingScreen extends WynntilsScreen {
                     Texture.ITEM_SHARING_BACKGROUND.width() - 30,
                     (b) -> {
                         if (b == 0) {
-                            Models.ItemEncoding.toggleSetting(Models.ItemEncoding.shareItemName);
+                            Models.ItemEncoding.shareItemName.store(!Models.ItemEncoding.shareItemName.get());
                             refreshPreview();
                         }
                     },

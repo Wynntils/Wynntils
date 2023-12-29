@@ -46,8 +46,4 @@ public class ItemEncodingModel extends Model {
     public Pattern getEncodedDataPattern() {
         return ENCODED_DATA_PATTERN;
     }
-
-    public void toggleSetting(Storage<Boolean> setting) {
-        setting.store(!setting.get());
-    }
 }
