@@ -166,6 +166,9 @@ public class ChatItemFeature extends Feature {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
         if (wynnItemOpt.isEmpty()) return;
 
+        // Don't try to encode unsupported items
+        if (!Models.ItemEncoding.canEncodeItem(wynnItemOpt.get())) return;
+
         if (showSharingScreen.get()) {
             McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get()));
         } else {

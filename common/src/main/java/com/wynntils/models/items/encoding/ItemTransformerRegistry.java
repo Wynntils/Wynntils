@@ -88,6 +88,10 @@ public final class ItemTransformerRegistry {
         return decodeItem(itemData, transformer);
     }
 
+    public boolean canEncodeItem(WynnItem wynnItem) {
+        return itemTransformers.get(wynnItem.getClass()) != null;
+    }
+
     private ErrorOr<EncodedByteBuffer> encodeItem(
             WynnItem wynnItem, EncodingSettings encodingSettings, ItemTransformer<WynnItem> transformer) {
         List<ItemData> encodedData = new ArrayList<>();

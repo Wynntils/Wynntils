@@ -43,6 +43,10 @@ public class ItemEncodingModel extends Model {
         return itemTransformerRegistry.decodeItem(encodedByteBuffer);
     }
 
+    public boolean canEncodeItem(WynnItem wynnItem) {
+        return itemTransformerRegistry.canEncodeItem(wynnItem);
+    }
+
     public Pattern getEncodedDataPattern() {
         return ENCODED_DATA_PATTERN;
     }
