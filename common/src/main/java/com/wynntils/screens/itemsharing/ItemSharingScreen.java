@@ -213,11 +213,6 @@ public class ItemSharingScreen extends WynntilsScreen {
     }
 
     private void shareItem(String target) {
-        if (WynntilsMod.isDevelopmentEnvironment()) {
-            WynntilsMod.info("Encoded item: " + encodedItem);
-            WynntilsMod.info("Encoded item UTF-16: " + encodedItem.toUtf16String());
-        }
-
         if (target.equals("guild")) {
             Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
         } else if (target.equals("party")) {
