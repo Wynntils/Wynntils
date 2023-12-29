@@ -169,7 +169,7 @@ public class ChatItemFeature extends Feature {
         if (showSharingScreen.get()) {
             McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get()));
         } else {
-            makeChatPrompt(wynnItemOpt.get(), gearItemOpt);
+            makeChatPrompt(wynnItemOpt.get());
         }
     }
 
@@ -273,7 +273,7 @@ public class ChatItemFeature extends Feature {
         return parts;
     }
 
-    private void makeChatPrompt(WynnItem wynnItem, Optional<GearItem> gearItemOpt) {
+    private void makeChatPrompt(WynnItem wynnItem) {
         EncodingSettings encodingSettings = new EncodingSettings(
                 Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
         ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
@@ -301,9 +301,9 @@ public class ChatItemFeature extends Feature {
                         Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
                                 .withStyle(ChatFormatting.DARK_AQUA)))));
 
-        if (WynntilsMod.isDevelopmentEnvironment() && gearItemOpt.isPresent()) {
+        if (WynntilsMod.isDevelopmentEnvironment() && wynnItem instanceof GearItem gearItem) {
             // Also encode the item using the old method for comparison
-            String encoded = Models.Gear.toEncodedString(gearItemOpt.get());
+            String encoded = Models.Gear.toEncodedString(gearItem);
             McUtils.sendMessageToClient(Component.literal("[DEBUG] Click here to copy the old encoded item for chat!")
                     .withStyle(ChatFormatting.DARK_GREEN)
                     .withStyle(ChatFormatting.UNDERLINE)
