@@ -5,6 +5,7 @@
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
+import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.actionbar.ActionBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
@@ -627,5 +628,17 @@ public class TestRegex {
         p.shouldMatch("§7 - §f8 §7x §f127§7² §8(1²½ 63²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
+    }
+
+    @Test
+    public void TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "HIGHEST_BUY_PATTERN");
+        p.shouldMatch("§7Highest Buy Offer: §a100000²§8 (24¼² 26²½ 32²)");
+    }
+
+    @Test
+    public void TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
+        p.shouldMatch("§7Lowest Sell Offer: §a1050000²§8 (4stx 0.35¼²)");
     }
 }
