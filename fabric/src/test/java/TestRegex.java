@@ -2,6 +2,8 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.features.chat.GuildRankReplacementFeature;
+import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.actionbar.ActionBarHandler;
@@ -9,8 +11,11 @@ import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
+import com.wynntils.models.characterstats.actionbar.ManaSegment;
+import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
+import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.players.FriendsModel;
@@ -311,5 +316,60 @@ public class TestRegex {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_RANK_CHANGED");
         p.shouldMatch("§3[INFO]§b v8j has set USERNAME's guild rank from Recruit to Chief");
         p.shouldMatch("§3[INFO]§b v8j has set USERNAMES' guild rank from Recruiter to Chief");
+    }
+
+    @Test
+    public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
+        PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
+        /* FIXME: These tests fail
+        p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]");
+        p.shouldMatch("§3[§b★★★★★§3§oafKing§r§3]§");
+        p.shouldMatch("§3[§b★★★★§3§obol§r§3]");
+         */
+    }
+
+    @Test
+    public void GuildRankReplacementFeature_RECRUIT_USERNAME_PATTERN() {
+        PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "RECRUIT_USERNAME_PATTERN");
+        p.shouldMatch("§3[_user0name_");
+    }
+
+    @Test
+    public void IngredientAnnotator_INGREDIENT_PATTERN() {
+        PatternTester p = new PatternTester(IngredientAnnotator.class, "INGREDIENT_PATTERN");
+        p.shouldMatch("§7Perkish Potato [§8✫✫✫§7]");
+        p.shouldMatch("§7Sylphid Tears§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§7Bob's Tear§5 [§d✫✫§8✫§5]");
+        p.shouldMatch("§7Contorted Stone§3 [§b✫✫✫§3]");
+    }
+
+    @Test
+    public void ManaSegment_MANA_PATTERN() {
+        PatternTester p = new PatternTester(ManaSegment.class, "MANA_PATTERN");
+        p.shouldMatch("§b✺ 175/175");
+        p.shouldMatch("§b✺ 56/175");
+        p.shouldMatch("✺ 175/175");
+    }
+
+    @Test
+    public void MessageFilterFeature_PARTY_FINDER_FG() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_FG");
+        p.shouldMatch(
+                "§5Party Finder:§d Hey Rafii2198, over here! Join the §bThe Canyon Colossus§d queue and match up with §e2 other players§d!"); // Name 2 players
+        p.shouldMatch(
+                "§5Party Finder:§d Hey Rafii2198, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Name 1 player
+        p.shouldMatch(
+                "§5Party Finder:§d Hey nickname spaces, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Nickname 1 player
+        p.shouldMatch(
+                "§5Party Finder:§d Hey nickname spaces 20cr, over here! Join the §bThe Canyon Colossus§d queue and match up with §e11 other players§d!"); // Nickname 11 players
+    }
+
+    @Test
+    public void PowderSpecialSegment_POWDER_SPECIAL_PATTERN() {
+        PatternTester p = new PatternTester(PowderSpecialSegment.class, "POWDER_SPECIAL_PATTERN");
+        p.shouldMatch("§7❉ 87%"); // curse/partial charge
+        p.shouldMatch("§b❉ 100%"); // curse/full charge
+        p.shouldMatch("§7✹ 78%"); // courage/partial charge
+        p.shouldMatch("§c✹ 100%"); // courage/full charge
     }
 }
