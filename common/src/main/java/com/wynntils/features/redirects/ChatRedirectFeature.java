@@ -531,10 +531,10 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
-    private class LoginRedirector extends SimpleRedirector {
-        // Test suite: https://regexr.com/7khdo
+    public class LoginRedirector extends SimpleRedirector {
         private static final String RANK_STRING =
                 Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
+        // Test in ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
                 "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{6,8}(?:§o)?(?<name>[\\w ]{1,20})§. has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>["

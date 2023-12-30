@@ -2,13 +2,19 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.actionbar.ActionBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
+import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
+import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
+import com.wynntils.models.players.FriendsModel;
+import com.wynntils.models.players.GuildModel;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 import net.minecraft.SharedConstants;
@@ -155,5 +161,155 @@ public class TestRegex {
         PatternTester p = new PatternTester(ChatHandler.class, "NPC_SELECT_PATTERN");
         p.shouldMatch("§7Select §fan option §7to continue");
         p.shouldMatch("§cCLICK §4an option to continue");
+    }
+
+    @Test
+    public void ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN() {
+        PatternTester p = new PatternTester(ChatRedirectFeature.LoginRedirector.class, "FOREGROUND_PATTERN");
+        p.shouldMatch("\uE017 §#ffe60000v8j§6 has just logged in!"); // champion
+        p.shouldMatch("\uE01B §#a344aa00v8j§d has just logged in!"); // hero
+        p.shouldMatch("\uE024 §#8a99ee00v8j§3 has just logged in!"); // vip+
+        p.shouldMatch("\uE023 §#44aa3300v8j§a has just logged in!"); // vip
+        p.shouldMatch("\uE017 §#ffe60000§ocharlie268IsAWizard§6 has just logged in!"); // champion nickname
+    }
+
+    @Test
+    public void ContainerModel_ABILITY_TREE_PATTERN() {
+        PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
+        p.shouldMatch("Warrior Abilities"); // Warrior
+        p.shouldMatch("Shaman Abilities"); // Shaman
+        p.shouldMatch("Mage Abilities"); // Mage
+        p.shouldMatch("Assassin Abilities"); // Assassin
+        p.shouldMatch("Archer Abilities"); // Archer
+    }
+
+    @Test
+    public void ContainerModel_GUILD_BANK_PATTERN() {
+        PatternTester p = new PatternTester(ContainerModel.class, "GUILD_BANK_PATTERN");
+        p.shouldMatch("Very Cool Guild Name: Bank (Everyone)");
+        p.shouldMatch("Other very cool guild name: Bank (High Ranked)");
+    }
+
+    @Test
+    public void ContainerModel_LOOT_CHEST_PATTERN() {
+        PatternTester p = new PatternTester(ContainerModel.class, "LOOT_CHEST_PATTERN");
+        p.shouldMatch("Loot Chest §7[§f✫§8✫✫✫§7]"); // Tier 1
+        p.shouldMatch("Loot Chest §e[§6✫✫§8✫✫§e]"); // Tier 2
+        p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]"); // Tier 3
+        p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]"); // Tier 4
+    }
+
+    @Test
+    public void ContainerModel_PERSONAL_STORAGE_PATTERN() {
+        PatternTester p = new PatternTester(ContainerModel.class, "PERSONAL_STORAGE_PATTERN");
+        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Bank");
+        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Bank");
+        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Bank");
+        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Block Bank");
+        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
+        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
+        p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
+    }
+
+    @Test
+    public void ContainerModel_TRADE_MARKET_FILTER_TITLE() {
+        PatternTester p = new PatternTester(ContainerModel.class, "TRADE_MARKET_FILTER_TITLE");
+        p.shouldMatch("[Pg. 1] Filter Items"); // Page 1
+        p.shouldMatch("[Pg. 7] Filter Items"); // Page 7
+    }
+
+    @Test
+    public void CoordinatesSegment_COORDINATES_PATTERN() {
+        PatternTester p = new PatternTester(CoordinatesSegment.class, "COORDINATES_PATTERN");
+        p.shouldMatch("§7457§f N§7 -1576");
+        p.shouldMatch("§7-1§f NW§7 154");
+        p.shouldMatch("§7-736§f S§7 -1575");
+    }
+
+    @Test
+    public void DamageModel_DAMAGE_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(DamageModel.class, "DAMAGE_LABEL_PATTERN");
+        p.shouldMatch("§4-13 ❤ ");
+        p.shouldMatch("§4-10 ❤ ");
+        p.shouldMatch("§c-8 ✹ ");
+        p.shouldMatch("§e-30 ✦ ");
+        p.shouldMatch("§2-41 ✤ ");
+        p.shouldMatch("§b-21 ❉ ");
+        p.shouldMatch("§f-32 ❋ ");
+        p.shouldMatch("§c-28 ✹ ");
+    }
+
+    @Test
+    public void DamageModel_DAMAGE_BAR_PATTERN() {
+        PatternTester p = new PatternTester(DamageModel.class, "DAMAGE_BAR_PATTERN");
+        p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
+        p.shouldMatch("§aGrook§r - §c23§4❤");
+        p.shouldMatch("§cZombie§r - §c43§4❤");
+        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤ - §7§e✦Weak §c✹Dam §c✹Def§7");
+    }
+
+    @Test
+    public void FriendsModel_ONLINE_FRIENDS_HEADER() {
+        PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIENDS_HEADER");
+        p.shouldMatch("§2Online §aFriends:");
+    }
+
+    @Test
+    public void FriendsModel_ONLINE_FRIEND() {
+        PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIEND");
+        p.shouldMatch("§2 - §auserName914__§2 [Server: §aWC3§2]");
+        p.shouldMatch("§2 - §av8j§2 [Server: §aWC103§2]");
+        p.shouldMatch("§2 - §a__asdf__§2 [Server: §aWC91§2]");
+    }
+
+    @Test
+    public void FriendsModel_JOIN_PATTERN() {
+        PatternTester p = new PatternTester(FriendsModel.class, "JOIN_PATTERN");
+        p.shouldMatch("§aMirvun§2 has logged into server §aWC1§2 as §aan Archer");
+        p.shouldMatch("§aMirvun§2 has logged into server §aWC27§2 as §aa Mage");
+    }
+
+    @Test
+    public void FriendsModel_LEAVE_PATTERN() {
+        PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
+        p.shouldMatch("§aMirvun left the game.");
+    }
+
+    @Test
+    public void GuildModel_GUILD_NAME_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "GUILD_NAME_MATCHER");
+        p.shouldMatch("§3guildName§b [aAaA]");
+        p.shouldMatch("§3guild Name§b [aaaa]");
+        p.shouldMatch("§3GUILD NAME§b [wynn]");
+    }
+
+    @Test
+    public void GuildModel_GUILD_RANK_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "GUILD_RANK_MATCHER");
+        p.shouldMatch("§7Rank: §fRecruit");
+        p.shouldMatch("§7Rank: §fRecruiter");
+        p.shouldMatch("§7Rank: §fCaptain");
+        p.shouldMatch("§7Rank: §fStrategist");
+        p.shouldMatch("§7Rank: §fChief");
+        p.shouldMatch("§7Rank: §fOwner");
+    }
+
+    @Test
+    public void GuildModel_MSG_LEFT_GUILD() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_LEFT_GUILD");
+        p.shouldMatch("§3You have left §bExample Guild§3!");
+    }
+
+    @Test
+    public void GuildModel_MSG_JOINED_GUILD() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_JOINED_GUILD");
+        p.shouldMatch("§3You have joined §bExample Guild§3!");
+    }
+
+    @Test
+    public void GuildModel_MSG_RANK_CHANGED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_RANK_CHANGED");
+        p.shouldMatch("§3[INFO]§b v8j has set USERNAME's guild rank from Recruit to Chief");
+        p.shouldMatch("§3[INFO]§b v8j has set USERNAMES' guild rank from Recruiter to Chief");
     }
 }

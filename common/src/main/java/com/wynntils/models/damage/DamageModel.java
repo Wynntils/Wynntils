@@ -23,10 +23,10 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
-    // https://regexr.com/7968a
+    // Test in DamageModel_DAMAGE_LABEL_PATTERN
     private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[245bcef](?:§l)?-(\\d+) ([❤✦✤❉❋✹☠]) )");
 
-    // https://regexr.com/7965g
+    // Test in DamageModel_DAMAGE_BAR_PATTERN
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*) - §c(\\d+)§4❤(?: - §7(.*)§7)?$");
 
     private final DamageBar damageBar = new DamageBar();
