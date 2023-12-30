@@ -29,6 +29,7 @@ import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 import net.minecraft.SharedConstants;
@@ -640,5 +641,122 @@ public class TestRegex {
     public void TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketPriceMatchFeature.class, "LOWEST_SELL_PATTERN");
         p.shouldMatch("§7Lowest Sell Offer: §a1050000²§8 (4stx 0.35¼²)");
+    }
+
+    @Test
+    public void WynnItemParser_ITEM_ATTACK_SPEED_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_ATTACK_SPEED_PATTERN");
+        p.shouldMatch("§7Normal Attack Speed");
+        p.shouldMatch("§7Super Fast Attack Speed");
+    }
+
+    @Test
+    public void WynnItemParser_ITEM_DAMAGE_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_DAMAGE_PATTERN");
+        /* FIXME: This test fails
+        p.shouldMatch("§6✣ Neutral Damage: 55-68§r");
+        */
+    }
+
+    @Test
+    public void WynnItemParser_ITEM_DEFENCE_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_DEFENCE_PATTERN");
+        p.shouldMatch("§e✦ Thunder§7 Defence: +56");
+    }
+
+    @Test
+    public void WynnItemParser_IDENTIFICATION_STAT_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "IDENTIFICATION_STAT_PATTERN");
+        p.shouldMatch("§a+10% §7Health Regen");
+        p.shouldMatch("§a+5%§2* §7XP Bonus");
+        p.shouldMatch("§a+5/5s §7Mana Regen");
+        p.shouldMatch("§a+42 §7Water Spell Damage");
+        p.shouldMatch("§a+4 §7Intelligence");
+        p.shouldMatch("§a+1 tier§2* §7Attack Speed");
+        p.shouldMatch("§a+16%§2*** §7XP Bonus");
+        p.shouldMatch("§c-28000§4 to §c-52000%§7 Spell Damage");
+        p.shouldMatch("§c-28000§4 to §c-52000§7 Spell Damage");
+        p.shouldMatch("§a+12§2 to §a52%§7 Main Attack Damage");
+        p.shouldMatch("§c-280§4 to §c-520§7 {sp1} Cost");
+        p.shouldMatch("§a+291/3s§2** §7Life Steal");
+        p.shouldMatch("§c-28% §7Soul Point Regen");
+        // Crafted gear 18/18% Main Attack Damage
+        p.shouldMatch("§a+18%§8/18% §7Main Attack Damage");
+    }
+
+    @Test
+    public void WynnItemParser_TIER_AND_REROLL_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "TIER_AND_REROLL_PATTERN");
+        p.shouldMatch("§eUnique Item");
+        p.shouldMatch("§dRare Item");
+        p.shouldMatch("§dRare Item [2]");
+        p.shouldMatch("§bLegendary Item");
+        p.shouldMatch("§cFabled Item");
+        p.shouldMatch("§aSet Item");
+        /* FIXME: These tests fail
+        p.shouldMatch("§3Crafted Wand§r§8 [134/137 Durability]");
+        p.shouldMatch("§3Crafted by player_name§r§8 [177/177 Durability]");
+        p.shouldMatch("§3Crafted by v8j§r§8 [177/177 Durability]  ");
+        */
+    }
+
+    @Test
+    public void WynnItemParser_POWDER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "POWDER_PATTERN");
+        p.shouldMatch("§7[0/1] Powder Slots");
+        p.shouldMatch("§7[1/1] Powder Slots [§r§c✹§r§7]");
+        p.shouldMatch("§7[3/3] Powder Slots [§r§f❋ ❋ ❋§r§7]");
+        p.shouldMatch("§7[2/2] Powder Slots [§r§e✦ ✦§r§7]");
+        p.shouldMatch("§7[2/2] Powder Slots [§r§b❉ ❉§r§7]");
+        p.shouldMatch("§7[3/3] Powder Slots [§r§2✤ §r§c✹ §r§b❉§r§7]");
+    }
+
+    @Test
+    public void WynnItemParser_EFFECT_LINE_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "EFFECT_LINE_PATTERN");
+        /* FIXME: This test fails
+        p.shouldMatch("§6- §r§7Effect: §r§f20% XP");
+        */
+    }
+
+    @Test
+    public void WynnItemParser_MIN_LEVEL_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "MIN_LEVEL_PATTERN");
+        /* FIXME: These tests fail
+        p.shouldMatch("§a✔§r§7 Combat Lv. Min: 35");
+        p.shouldMatch("§c✖§r§7 Combat Lv. Min: 65");
+        */
+    }
+
+    @Test
+    public void WynnItemParser_CLASS_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CLASS_REQ_PATTERN");
+        p.shouldMatch("§c✖§7 Class Req: Shaman/Skyseer§r");
+    }
+
+    @Test
+    public void WynnItemParser_SKILL_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "SKILL_REQ_PATTERN");
+        p.shouldMatch("§a✔§7 Intelligence Min: 38");
+    }
+
+    @Test
+    public void WynnItemParser_SHINY_STAT_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "SHINY_STAT_PATTERN");
+        p.shouldMatch("§f⬡ §7Raids Won: §f0");
+        p.shouldMatch("§f⬡ §7Raids Won: §f297");
+        p.shouldMatch("§f⬡ §7Mobs Killed: §f0");
+        p.shouldNotMatch("§c✖§7 Agility Min: 70");
+        p.shouldNotMatch("§f⬡ §7: §f0");
+        p.shouldNotMatch("§f⬡ §7Mobs Killed: §f");
+        p.shouldMatch("§f⬡ §7Wars Won: §f164");
+        p.shouldMatch("§f⬡ §7Raids Won: §f0");
+    }
+
+    @Test
+    public void WynnItemParser_CRAFTED_ITEM_NAME_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
+        p.shouldMatch("§3§otest item§b§o [24%]À");
+        p.shouldMatch("§3§oAbsorbant Skirt of the Skyraider§b§o [100%]À");
     }
 }

@@ -45,40 +45,40 @@ import net.minecraft.world.item.ItemStack;
 public final class WynnItemParser {
     public static final Pattern HEALTH_PATTERN = Pattern.compile("^§4❤ Health: ([+-]\\d+)$");
 
-    // Test suite: https://regexr.com/7pn75
+    // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
     private static final Pattern ITEM_ATTACK_SPEED_PATTERN = Pattern.compile("^§7(.+) Attack Speed$");
 
-    // Test suite: https://regexr.com/7pm84
+    // Test in WynnItemParser_ITEM_DAMAGE_PATTERN
     private static final Pattern ITEM_DAMAGE_PATTERN =
             Pattern.compile("^§.(?<symbol>[✤✦❉✹❋✣]+) (?<type>.+) Damage: (?<range>(\\d+)-(\\d+))$");
 
-    // Test suite: https://regexr.com/7pm8p
+    // Test in WynnItemParser_ITEM_DEFENCE_PATTERN
     private static final Pattern ITEM_DEFENCE_PATTERN =
             Pattern.compile("^§.(?<symbol>[✤✦❉✹❋]+) (?<type>.+)§7 Defence: (?<value>[+-]?\\d+)$");
 
-    // Test suite: https://regexr.com/7pnj8
+    // Test in WynnItemParser_IDENTIFICATION_STAT_PATTERN
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
             "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|\\/[35]s)?(?:§8\\/([-+]?\\d+)(?:%| tier|\\/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
 
-    // Test suite: https://regexr.com/782rk
+    // Test in WynnItemParser_TIER_AND_REROLL_PATTERN
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
             "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+)(?:§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
 
-    // Test suite: https://regexr.com/778gk
+    // Test in WynnItemParser_POWDER_PATTERN
     private static final Pattern POWDER_PATTERN =
             Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§(.*)§7\\])?$");
 
-    // Test suite: https://regexr.com/79atu
+    // Test in WynnItemParser_EFFECT_LINE_PATTERN
     private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
 
-    // Test suite: https://regexr.com/798o0
+    // Test in WynnItemParser_MIN_LEVEL_PATTERN
     private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§7 Combat Lv. Min: (\\d+)$");
 
-    // Test suite: https://regexr.com/7pm87
+    // Test in WynnItemParser_CLASS_REQ_PATTERN
     private static final Pattern CLASS_REQ_PATTERN =
             Pattern.compile("^§(?:c✖|a✔)§7 Class Req: (?<name>.+)\\/(?<skinned>.+)$");
 
-    // Test suite: https://regexr.com/7pm8a
+    // Test in WynnItemParser_SKILL_REQ_PATTERN
     private static final Pattern SKILL_REQ_PATTERN =
             Pattern.compile("^§(?:c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
 
@@ -88,11 +88,11 @@ public final class WynnItemParser {
 
     public static final Pattern SET_BONUS_PATTEN = Pattern.compile("^§aSet Bonus:$");
 
-    // Test suite: https://regexr.com/7i5h5
+    // Test in WynnItemParser_SHINY_STAT_PATTERN
     public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
 
     // Crafted items
-    // Test suite: https://regexr.com/7pm7o
+    // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
     private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
     private static final Pattern CRAFTED_CONSUMABLE_TYPE_PATTERN = Pattern.compile("^§3Crafted (.+)$");
 
