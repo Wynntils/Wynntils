@@ -26,9 +26,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    // If you modify please test with link below
-    // If you pass the tests and it still doesn't work, please resync tests with the game and update the link here
-    // https://regexr.com/76ijo
+    // Test in SpellModel_SPELL_TITLE_PATTERN
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");

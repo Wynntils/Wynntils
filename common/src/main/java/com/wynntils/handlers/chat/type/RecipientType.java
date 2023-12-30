@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 public enum RecipientType {
     INFO(null, null, "Info"),
     CLIENTSIDE(null, null, "Clientside"),
-    // https://regexr.com/7b14s
+    // Test in RecipientType_NPC_foregroundPattern
     NPC("^§7\\[\\d+\\/\\d+\\](?:§.)? ?§[25] ?.+: ?§..*$", "^§8\\[\\d+\\/\\d+\\] .+: ?§..*$", "NPC"),
-    // https://regexr.com/7kbao
+    // Test in RecipientType_GLOBAL_foregroundPattern
     GLOBAL("^§7\uE056\uE042[\uE060-\uE069]{1,3}§r .+", "^(§8)?\uE056\uE042[\uE060-\uE069]{1,3}§r .+", "Global"),
-    // https://regexr.com/7kbac
+    // Test in RecipientType_LOCAL_foregroundPattern
     LOCAL("^§f[-]{1,3}§r .+", "^(§8)?\uE056\uE042[\uE060-\uE069]{1,3}§r .+", "Local"),
-    // https://regexr.com/7f8ma
+    // Test in RecipientType_GUILD_foregroundPattern
     GUILD(
             "^§3\\[(§b)?(★{0,5})?(§3)?(§o)?(?!INFO).+(§3)?](§.)? .+$",
             "^(§8)?\\[(§7)?(★{0,5})?(§8)?(§o)?(?!INFO).+]§7 .+$",

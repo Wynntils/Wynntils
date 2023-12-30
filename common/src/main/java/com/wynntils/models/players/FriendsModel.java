@@ -47,15 +47,15 @@ public final class FriendsModel extends Model {
             Pattern.compile("§e(.+) has been removed from your friends!");
     private static final Pattern FRIEND_ADD_MESSAGE_PATTERN = Pattern.compile("§e(.+) has been added to your friends!");
 
-    // https://regexr.com/7ihc9
+    // Test in FriendsModel_ONLINE_FRIENDS_HEADER
     private static final Pattern ONLINE_FRIENDS_HEADER = Pattern.compile("§2Online §aFriends:");
-    // https://regexr.com/7ihcc
+    // Test in FriendsModel_ONLINE_FRIEND
     private static final Pattern ONLINE_FRIEND = Pattern.compile("§2 - §a(\\w{1,16})§2 \\[Server: §aWC(\\d{1,3})§2]");
 
-    // https://regexr.com/7ihci
+    // Test in FriendsModel_JOIN_PATTERN
     private static final Pattern JOIN_PATTERN = Pattern.compile(
             "§a(?<username>\\w{1,16})§2 has logged into server §aWC(?<server>\\d{1,3})§2 as §aan? (?<class>[A-Z][a-z]+)");
-    // https://regexr.com/7ihcl
+    // Test in FriendsModel_LEAVE_PATTERN
     private static final Pattern LEAVE_PATTERN = Pattern.compile("§a(?<username>\\w{1,16}) left the game\\.");
     // endregion
 

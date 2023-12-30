@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class RuneAnnotator implements ItemAnnotator {
-    // https://regexr.com/7lhjd
+    // Test in RuneAnnotator_RUNE_PATTERN
     private static final Pattern RUNE_PATTERN = Pattern.compile("§[b432]([A-Z][a-z]{1,2}) Rune");
 
     @Override

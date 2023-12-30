@@ -44,12 +44,12 @@ public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
-    // Test suite: https://regexr.com/7i87d
+    // Test in CharacterModel_SILVERBULL_PATTERN
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
-    // Test suite: https://regexr.com/7irg0
+    // Test in CharacterModel_SILVERBULL_DURATION_PATTERN
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
-    // Test suite: https://regexr.com/7ntns
+    // Test in CharacterModel_VETERAN_PATTERN
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
