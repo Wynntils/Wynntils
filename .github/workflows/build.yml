@@ -50,3 +50,8 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: buildDependents -x spotlessCheck
+
+      - name: Test with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test -x spotlessCheck
