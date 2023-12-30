@@ -30,7 +30,6 @@ public final class StatusEffectModel extends Model {
      * Buffs like "17% Frenzy" will have the 17% be considered as part of the prefix.
      * This is because the 17% in Frenzy (and certain other buffs) can change, but the static scroll buffs cannot.
      * <p>
-     * https://regexr.com/7999h
      *
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
@@ -44,6 +43,7 @@ public final class StatusEffectModel extends Model {
      *
      * */
 
+    // Test in StatusEffectModel_STATUS_EFFECT_PATTERN
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
             "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
 

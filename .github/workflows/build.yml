@@ -49,4 +49,9 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: buildDependents -x spotlessCheck
+          arguments: buildDependents -x spotlessCheck -x test
+
+      - name: Test with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test -x spotlessCheck

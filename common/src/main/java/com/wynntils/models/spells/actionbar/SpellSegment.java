@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SpellSegment implements ActionBarSegment {
-    // https://regexr.com/7kkpu
+    // Test in SpellSegment_SPELL_PATTERN
     private static final Pattern SPELL_PATTERN =
             Pattern.compile("§a([RL])§7-(?:§[a7n])?([RL?])(?:§r)?§7-(?:§[a7n])?([LR?])(?:§r)?");
 

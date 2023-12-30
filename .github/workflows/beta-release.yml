@@ -84,7 +84,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: buildDependents -x spotlessCheck
+          arguments: buildDependents -x spotlessCheck -x test
 
       - name: Upload files to release
         uses: softprops/action-gh-release@v1

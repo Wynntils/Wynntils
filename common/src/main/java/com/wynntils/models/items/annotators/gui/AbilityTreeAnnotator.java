@@ -20,7 +20,7 @@ public final class AbilityTreeAnnotator implements ItemAnnotator {
 
     // Deals with the reset button in the ability tree screen
     private static final StyledText TREE_ABILITY_POINTS_NAME = StyledText.fromString("§3§lAbility Points");
-    // Test suite: https://regexr.com/7h12b
+    // Test in AbilityTreeAnnotator_TREE_ABILITY_POINTS_PATTERN
     private static final Pattern TREE_ABILITY_POINTS_PATTERN =
             Pattern.compile("^§b✦ Available Points: §f(\\d+)§7/\\d+$");
 
