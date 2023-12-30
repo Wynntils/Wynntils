@@ -14,13 +14,20 @@ import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
+import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
+import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
+import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
+import com.wynntils.models.spells.SpellModel;
+import com.wynntils.models.spells.actionbar.SpellSegment;
+import com.wynntils.models.statuseffects.StatusEffectModel;
+import com.wynntils.models.trademarket.TradeMarketModel;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 import net.minecraft.SharedConstants;
@@ -493,5 +500,132 @@ public class TestRegex {
         p.shouldMatch("§3[§b★★★★§3§obol§r§3]§b test ");
         p.shouldMatch("§3[kristof345]§b test");
         p.shouldNotMatch("§3[INFO]§b bolyai has kicked kristof345 from the guild");
+    }
+
+    @Test
+    public void RuneAnnotator_RUNE_PATTERN() {
+        PatternTester p = new PatternTester(RuneAnnotator.class, "RUNE_PATTERN");
+        p.shouldMatch("§bAz Rune");
+        p.shouldMatch("§4Nii Rune");
+        p.shouldMatch("§3Uth Rune");
+        p.shouldMatch("§2Tol Rune");
+    }
+
+    @Test
+    public void SkillPointAnnotator_SKILL_POINT_PATTERN() {
+        PatternTester p = new PatternTester(SkillPointAnnotator.class, "SKILL_POINT_PATTERN");
+        p.shouldMatch("§dUpgrade your §2✤ Strength§d skill");
+        p.shouldMatch("§dUpgrade your §e✦ Dexterity§d skill");
+        p.shouldMatch("§dUpgrade your §b❉ Intelligence§d skill");
+        p.shouldMatch("§dUpgrade your §c✹ Defence§d skill");
+        p.shouldMatch("§dUpgrade your §f❋ Agility§d skill");
+    }
+
+    @Test
+    public void SkillPointAnnotator_LORE_PATTERN() {
+        PatternTester p = new PatternTester(SkillPointAnnotator.class, "LORE_PATTERN");
+        p.shouldMatch(" ÀÀ§740 points§r    ÀÀÀ           ÀÀÀ§641 points");
+        p.shouldMatch(" ÀÀ§763 points§r    ÀÀÀ           ÀÀÀ§664 points");
+        p.shouldMatch("ÀÀÀ§7131 points§r               §6132 points");
+        p.shouldMatch(" ÀÀ§790 points§r    ÀÀÀ           ÀÀÀ§691 points");
+        p.shouldMatch(" ÀÀ§762 points§r    ÀÀÀ           ÀÀÀ§663 points");
+    }
+
+    @Test
+    public void SpellModel_SPELL_TITLE_PATTERN() {
+        PatternTester p = new PatternTester(SpellModel.class, "SPELL_TITLE_PATTERN");
+        // Lv1 R??
+        p.shouldMatch("§aRight§7-§7§n?§7-§r§7?§r");
+        // Lv1 RL?
+        p.shouldMatch("§aRight§7-§aLeft§7-§r§7§n?§r");
+        // Lv1 RLR
+        p.shouldMatch("§aRight§7-§aLeft§7-§r§aRight§r");
+        // Lv1 RR?
+        p.shouldMatch("§aRight§7-§aRight§7-§r§7§n?§r");
+        // Lv1 RRL
+        p.shouldMatch("§aRight§7-§aRight§7-§r§aLeft§r");
+        // Lv1 RRR
+        p.shouldMatch("§aRight§7-§aRight§7-§r§aRight§r");
+        // Lv1 RLL
+        p.shouldMatch("§aRight§7-§aLeft§7-§r§aLeft§r");
+        // L??
+        p.shouldMatch("§aL§7-§7§n?§7-§r§7?§r");
+        // LL?
+        p.shouldMatch("§aL§7-§aL§7-§r§7§n?§r");
+        // LLL
+        p.shouldMatch("§aL§7-§aL§7-§r§aL§r");
+        // LR?
+        p.shouldMatch("§aL§7-§aR§7-§r§7§n?§r");
+        // LRL
+        p.shouldMatch("§aL§7-§aR§7-§r§aL§r");
+        // R??
+        p.shouldMatch("§aR§7-§7§n?§7-§r§7?§r");
+        // RL?
+        p.shouldMatch("§aR§7-§aL§7-§r§7§n?§r");
+        // RRL
+        p.shouldMatch("§aR§7-§aR§7-§r§aL§r");
+    }
+
+    @Test
+    public void SpellSegment_SPELL_PATTERN() {
+        PatternTester p = new PatternTester(SpellSegment.class, "SPELL_PATTERN");
+        // L??
+        p.shouldMatch("§aL§7-§n?§r§7-?§r");
+        // LR?
+        p.shouldMatch("§aL§7-§aR§7-§n?§r");
+        // LRL
+        p.shouldMatch("§aL§7-§aR§7-§aL§r");
+        // LLR
+        p.shouldMatch("§aL§7-§aL§7-§aR§r");
+        // R??
+        p.shouldMatch("§aR§7-§n?§r§7-?§r");
+        // RR?
+        p.shouldMatch("§aR§7-§aR§7-§n?§r");
+        // RRR
+        p.shouldMatch("§aR§7-§aR§7-§aR§r");
+    }
+
+    @Test
+    public void SprintSegment_SPRINT_PATTERN() {
+        PatternTester p = new PatternTester(SprintSegment.class, "SPRINT_PATTERN");
+        // green sprint bar
+        p.shouldMatch("§2[§a|||Sprint|§8||§2]");
+        // green sprint text 1
+        p.shouldMatch("§2[§a|||Sprin§8t|||§2]");
+        // green sprint text 2
+        p.shouldMatch("§6[§e|||S§8print|||§6]");
+        // yellow sprint text
+        p.shouldMatch("§6[§e|||§8Sprint|||§6]");
+        // yellow sprint bar
+        p.shouldMatch("§6[§e|§8||Sprint|||§6]");
+        // no sprint grey
+        p.shouldMatch("§4[§8|||Sprint|||§4]");
+        // no sprint red
+        p.shouldMatch("§4[§c|||Sprint|||§4]");
+        // max sprint
+        p.shouldMatch("§2[§a|||Sprint|||§2]");
+    }
+
+    @Test
+    public void StatusEffectModel_STATUS_EFFECT_PATTERN() {
+        PatternTester p = new PatternTester(StatusEffectModel.class, "STATUS_EFFECT_PATTERN");
+        p.shouldMatch("§fⒺ§7 +198 Main Attack Damage §8(00:41)");
+        p.shouldMatch("§f§b❤§7 Windy Feet §8(02:57)");
+        p.shouldMatch("§a❉ §776.5% Concentration §4(00:13)");
+        p.shouldMatch("§b➲ §718% Frenzy §8(**:**)");
+        p.shouldMatch("§fⒺ§7 +54% Spell Damage §8(00:41)");
+        p.shouldMatch("§8⬤ §7Vanish §a(00:04)");
+        p.shouldMatch("§fⒺ§7 +250/3s Life Steal §8(00:41)");
+        p.shouldMatch("§8⬤ §7Boiling Blood §a(00:02)");
+    }
+
+    @Test
+    public void TradeMarketModel_PRICE_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_PATTERN");
+        p.shouldMatch("§7 - §f525§7² §8(8²½ 13²)");
+        p.shouldMatch("§7 - §f21,111§7² §8(5¼² 9²½ 55²)");
+        p.shouldMatch("§7 - §f8 §7x §f127§7² §8(1²½ 63²)");
+        p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
+        p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
     }
 }
