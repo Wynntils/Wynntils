@@ -19,22 +19,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class ContainerModel extends Model {
-    // Test suite: https://regexr.com/7jh15
+    // Test in ContainerModel_ABILITY_TREE_PATTERN
     public static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
-    // Test suite: https://regexr.com/7b4lf
+    // Test in ContainerModel_GUILD_BANK_PATTERN
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
-    // Test suite: https://regexr.com/7jh1e
+    // Test in ContainerModel_LOOT_CHEST_PATTERN
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
-    // Test suite: https://regexr.com/7hcl7
+    // Test in ContainerModel_PERSONAL_STORAGE_PATTERN
     private static final Pattern PERSONAL_STORAGE_PATTERN =
             Pattern.compile("^§0\\[Pg\\. (\\d+)\\] §8[a-zA-Z0-9_ ]+'s?§0 (.*)$");
 
-    // Test suite: https://regexr.com/7jh0s
+    // Test in ContainerModel_TRADE_MARKET_FILTER_TITLE
     private static final Pattern TRADE_MARKET_FILTER_TITLE = Pattern.compile("\\[Pg\\. \\d] Filter Items");
 
     private static final String ACCOUNT_BANK_NAME = "Account Bank";

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    // https://regexr.com/7kfrm
+    // Test in ActionBarHandler_ACTIONBAR_PATTERN
     private static final Pattern ACTIONBAR_PATTERN =
             Pattern.compile("(?<LEFT>.+[^ ]) {4,}(?<CENTER>.+[^ ]) {4,}(?<RIGHT>.+)");
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
