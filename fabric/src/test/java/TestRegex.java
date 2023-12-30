@@ -368,11 +368,9 @@ public class TestRegex {
     @Test
     public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
-        /* FIXME: These tests fail
-        p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]");
-        p.shouldMatch("§3[§b★★★★★§3§oafKing§r§3]§");
-        p.shouldMatch("§3[§b★★★★§3§obol§r§3]");
-        */
+        p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]§b");
+        p.shouldMatch("§3[§b★★★★★§3§oafKing§3]§b");
+        p.shouldMatch("§3[§b★★★★§3§obol§3]§b");
     }
 
     @Test
@@ -427,14 +425,12 @@ public class TestRegex {
     @Test
     public void RecipientType_NPC_foregroundPattern() {
         PatternTester p = new PatternTester(RecipientType.NPC, "foregroundPattern");
-        p.shouldMatch("§7[3/5]§r§2 Jesp:§r§a Keep fighting! We're almost halfway to the other side!");
-        /* FIXME: These tests fail
-        p.shouldMatch("§7[1/11]§r§0 §r§2Scientist Ynnos:§r§a *Ahem* Welcome, everyone.");
+        p.shouldMatch("§7[3/5]§2 Jesp:§a Keep fighting! We're almost halfway to the other side!");
+        p.shouldMatch("§7[1/11]§0 §2Scientist Ynnos:§a *Ahem* Welcome, everyone.");
         p.shouldMatch(
-                "§7[3/11]§r§0 §r§2Scientist Ynnos:§r§0 §r§aAllow me to explain the situation we’re in. It’s a series of unfortunate events. I study the amazing properties of crystals and other geodes.");
+                "§7[3/11]§0 §2Scientist Ynnos:§0 §r§aAllow me to explain the situation we’re in. It’s a series of unfortunate events. I study the amazing properties of crystals and other geodes.");
         p.shouldMatch(
-                "§7[6/6] §r§5Aster: §r§dSo remember, find a balance in elements! Whether you invest in one, or select many to excell in, I trust you may succeed. Thank you for you time.§r");
-        */
+                "§7[6/6] §5Aster: §dSo remember, find a balance in elements! Whether you invest in one, or select many to excell in, I trust you may succeed. Thank you for you time.");
     }
 
     @Test
@@ -653,9 +649,7 @@ public class TestRegex {
     @Test
     public void WynnItemParser_ITEM_DAMAGE_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_DAMAGE_PATTERN");
-        /* FIXME: This test fails
-        p.shouldMatch("§6✣ Neutral Damage: 55-68§r");
-        */
+        p.shouldMatch("§6✣ Neutral Damage: 55-68");
     }
 
     @Test
@@ -693,11 +687,11 @@ public class TestRegex {
         p.shouldMatch("§bLegendary Item");
         p.shouldMatch("§cFabled Item");
         p.shouldMatch("§aSet Item");
-        /* FIXME: These tests fail
-        p.shouldMatch("§3Crafted Wand§r§8 [134/137 Durability]");
-        p.shouldMatch("§3Crafted by player_name§r§8 [177/177 Durability]");
-        p.shouldMatch("§3Crafted by v8j§r§8 [177/177 Durability]  ");
-        */
+
+        // Crafted gear
+        p.shouldMatch("§3Crafted Wand§8 [134/137 Durability]");
+        p.shouldMatch("§3Crafted by player_name§8 [177/177 Durability]");
+        p.shouldMatch("§3Crafted by v8j§8 [177/177 Durability]");
     }
 
     @Test
@@ -714,18 +708,14 @@ public class TestRegex {
     @Test
     public void WynnItemParser_EFFECT_LINE_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "EFFECT_LINE_PATTERN");
-        /* FIXME: This test fails
-        p.shouldMatch("§6- §r§7Effect: §r§f20% XP");
-        */
+        p.shouldMatch("§6- §7Effect: §f20% XP");
     }
 
     @Test
     public void WynnItemParser_MIN_LEVEL_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "MIN_LEVEL_PATTERN");
-        /* FIXME: These tests fail
-        p.shouldMatch("§a✔§r§7 Combat Lv. Min: 35");
-        p.shouldMatch("§c✖§r§7 Combat Lv. Min: 65");
-        */
+        p.shouldMatch("§a✔§7 Combat Lv. Min: 35");
+        p.shouldMatch("§c✖§7 Combat Lv. Min: 65");
     }
 
     @Test
