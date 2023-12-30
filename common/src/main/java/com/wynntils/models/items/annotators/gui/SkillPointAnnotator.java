@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkillPointAnnotator implements ItemAnnotator {
-    // Test suite: https://regexr.com/7h0tl
+    // Test in SkillPointAnnotator_SKILL_POINT_PATTERN
     private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
-    // Test suite: https://regexr.com/7h0to
+    // Test in SkillPointAnnotator_LORE_PATTERN
     private static final Pattern LORE_PATTERN = Pattern.compile("^[ À]+§7(-?\\d+) points?§r[ À]+§6-?\\d+ points?$");
 
     @Override

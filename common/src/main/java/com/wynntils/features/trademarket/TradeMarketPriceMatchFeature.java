@@ -38,9 +38,9 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private static final StyledText TYPE_SELL_PRICE =
             StyledText.fromString("§6Type the price in emeralds or type 'cancel' to cancel:");
 
-    // Test suite: https://regexr.com/7h631
+    // Test in TradeMarketPriceMatchFeature_HIGHEST_BUY_PATTERN
     private static final Pattern HIGHEST_BUY_PATTERN = Pattern.compile("§7Highest Buy Offer: §a(\\d+)²§8 \\(.+\\)");
-    // Test suite: https://regexr.com/7h62u
+    // Test in TradeMarketPriceMatchFeature_LOWEST_SELL_PATTERN
     private static final Pattern LOWEST_SELL_PATTERN = Pattern.compile("§7Lowest Sell Offer: §a(\\d+)²§8 \\(.+\\)");
 
     private static final int PRICE_SET_ITEM_SLOT = 12;

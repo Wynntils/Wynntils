@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class IngredientAnnotator implements ItemAnnotator {
-    // Test suite: https://regexr.com/7co3b
+    // Test in IngredientAnnotator_INGREDIENT_PATTERN
     private static final Pattern INGREDIENT_PATTERN =
             Pattern.compile("^§7(.+?)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 

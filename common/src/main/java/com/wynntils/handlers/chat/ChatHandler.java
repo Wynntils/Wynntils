@@ -76,11 +76,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * importantly, a way to update already printed chat lines.
  */
 public final class ChatHandler extends Handler {
-    // Test suite: https://regexr.com/7esj7
+    // Test in ChatHandler_NPC_CONFIRM_PATTERN
     private static final Pattern NPC_CONFIRM_PATTERN =
             Pattern.compile("^ *§[47]Press §[cf](SNEAK|SHIFT) §[47]to continue$");
 
-    // Test suite: https://regexr.com/7esjd
+    // Test in ChatHandler_NPC_SELECT_PATTERN
     private static final Pattern NPC_SELECT_PATTERN =
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
