@@ -143,24 +143,37 @@ public class TestRegex {
     @Test
     public void CharacterModel_VETERAN_PATTERN() {
         PatternTester p = new PatternTester(CharacterModel.class, "VETERAN_PATTERN");
-        p.shouldMatch("§7Rank: §6Vet"); // Champion
-        p.shouldMatch("§7Rank: §dVet"); // Hero
-        p.shouldMatch("§7Rank: §bVet"); // VIP+
-        p.shouldMatch("§7Rank: §aVet"); // VIP
+        // Champion
+        p.shouldMatch("§7Rank: §6Vet");
+        // Hero
+        p.shouldMatch("§7Rank: §dVet");
+        // VIP+
+        p.shouldMatch("§7Rank: §bVet");
+        // VIP
+        p.shouldMatch("§7Rank: §aVet");
     }
 
     @Test
     public void CharacterSelectionModel_CLASS_ITEM_CLASS_PATTERN() {
         PatternTester p = new PatternTester(CharacterSelectionModel.class, "CLASS_ITEM_CLASS_PATTERN");
-        p.shouldMatch("§e- §7Class: §fHunter"); // Hunter
-        p.shouldMatch("§e- §7Class: §fMage"); // Mage
-        p.shouldMatch("§e- §7Class: §3\uE026§r §fDark Wizard"); // Craftsman Dark Wizard
-        p.shouldMatch("§e- §7Class: §c\uE027§r §fAssassin"); // Hardcore Assassin
-        p.shouldMatch("§e- §7Class: §5\uE028§r §fNinja"); // Hunted Ninja
-        p.shouldMatch("§e- §7Class: §b\uE083§r §fShaman"); // Ultimate Ironman Shaman
-        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§5\uE028§r §fWarrior"); // Ultimate HIC Warrior
-        p.shouldMatch("§e- §7Class: §c\uE027§6\uE029§3\uE026§5\uE028§r §fSkyseer"); // HIC Skyseer
-        p.shouldMatch("§e- §7Class: §6\uE029§r §fArcher"); // Ironman Archer
+        // Hunter
+        p.shouldMatch("§e- §7Class: §fHunter");
+        // Mage
+        p.shouldMatch("§e- §7Class: §fMage");
+        // Craftsman Dark Wizard
+        p.shouldMatch("§e- §7Class: §3\uE026§r §fDark Wizard");
+        // Hardcore Assassin
+        p.shouldMatch("§e- §7Class: §c\uE027§r §fAssassin");
+        // Hunted Ninja
+        p.shouldMatch("§e- §7Class: §5\uE028§r §fNinja");
+        // Ultimate Ironman Shaman
+        p.shouldMatch("§e- §7Class: §b\uE083§r §fShaman");
+        // Ultimate HIC Warrior
+        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§5\uE028§r §fWarrior");
+        // HIC Skyseer
+        p.shouldMatch("§e- §7Class: §c\uE027§6\uE029§3\uE026§5\uE028§r §fSkyseer");
+        // Ironman Archer
+        p.shouldMatch("§e- §7Class: §6\uE029§r §fArcher");
     }
 
     @Test
@@ -180,21 +193,31 @@ public class TestRegex {
     @Test
     public void ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN() {
         PatternTester p = new PatternTester(ChatRedirectFeature.LoginRedirector.class, "FOREGROUND_PATTERN");
-        p.shouldMatch("\uE017 §#ffe60000v8j§6 has just logged in!"); // champion
-        p.shouldMatch("\uE01B §#a344aa00v8j§d has just logged in!"); // hero
-        p.shouldMatch("\uE024 §#8a99ee00v8j§3 has just logged in!"); // vip+
-        p.shouldMatch("\uE023 §#44aa3300v8j§a has just logged in!"); // vip
-        p.shouldMatch("\uE017 §#ffe60000§ocharlie268IsAWizard§6 has just logged in!"); // champion nickname
+        // champion
+        p.shouldMatch("\uE017 §#ffe60000v8j§6 has just logged in!");
+        // hero
+        p.shouldMatch("\uE01B §#a344aa00v8j§d has just logged in!");
+        // vip+
+        p.shouldMatch("\uE024 §#8a99ee00v8j§3 has just logged in!");
+        // vip
+        p.shouldMatch("\uE023 §#44aa3300v8j§a has just logged in!");
+        // champion nickname
+        p.shouldMatch("\uE017 §#ffe60000§ocharlie268IsAWizard§6 has just logged in!");
     }
 
     @Test
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
-        p.shouldMatch("Warrior Abilities"); // Warrior
-        p.shouldMatch("Shaman Abilities"); // Shaman
-        p.shouldMatch("Mage Abilities"); // Mage
-        p.shouldMatch("Assassin Abilities"); // Assassin
-        p.shouldMatch("Archer Abilities"); // Archer
+        // Warrior
+        p.shouldMatch("Warrior Abilities");
+        // Shaman
+        p.shouldMatch("Shaman Abilities");
+        // Mage
+        p.shouldMatch("Mage Abilities");
+        // Assassin
+        p.shouldMatch("Assassin Abilities");
+        // Archer
+        p.shouldMatch("Archer Abilities");
     }
 
     @Test
@@ -207,10 +230,14 @@ public class TestRegex {
     @Test
     public void ContainerModel_LOOT_CHEST_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "LOOT_CHEST_PATTERN");
-        p.shouldMatch("Loot Chest §7[§f✫§8✫✫✫§7]"); // Tier 1
-        p.shouldMatch("Loot Chest §e[§6✫✫§8✫✫§e]"); // Tier 2
-        p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]"); // Tier 3
-        p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]"); // Tier 4
+        // Tier 1
+        p.shouldMatch("Loot Chest §7[§f✫§8✫✫✫§7]");
+        // Tier 2
+        p.shouldMatch("Loot Chest §e[§6✫✫§8✫✫§e]");
+        // Tier 3
+        p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]");
+        // Tier 4
+        p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]");
     }
 
     @Test
@@ -228,8 +255,10 @@ public class TestRegex {
     @Test
     public void ContainerModel_TRADE_MARKET_FILTER_TITLE() {
         PatternTester p = new PatternTester(ContainerModel.class, "TRADE_MARKET_FILTER_TITLE");
-        p.shouldMatch("[Pg. 1] Filter Items"); // Page 1
-        p.shouldMatch("[Pg. 7] Filter Items"); // Page 7
+        // Page 1
+        p.shouldMatch("[Pg. 1] Filter Items");
+        // Page 7
+        p.shouldMatch("[Pg. 7] Filter Items");
     }
 
     @Test
@@ -376,10 +405,14 @@ public class TestRegex {
     @Test
     public void PowderSpecialSegment_POWDER_SPECIAL_PATTERN() {
         PatternTester p = new PatternTester(PowderSpecialSegment.class, "POWDER_SPECIAL_PATTERN");
-        p.shouldMatch("§7❉ 87%"); // curse/partial charge
-        p.shouldMatch("§b❉ 100%"); // curse/full charge
-        p.shouldMatch("§7✹ 78%"); // courage/partial charge
-        p.shouldMatch("§c✹ 100%"); // courage/full charge
+        // curse/partial charge
+        p.shouldMatch("§7❉ 87%");
+        // curse/full charge
+        p.shouldMatch("§b❉ 100%");
+        // courage/partial charge
+        p.shouldMatch("§7✹ 78%");
+        // courage/full charge
+        p.shouldMatch("§c✹ 100%");
     }
 
     @Test
