@@ -8,6 +8,7 @@ import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.actionbar.ActionBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
@@ -36,39 +37,47 @@ public class TestRegex {
     }
 
     public static final class PatternTester {
-        private final Class<?> clazz;
-        private final String fieldName;
+        private final String regexName;
         private final Pattern pattern;
 
-        public PatternTester(Class<?> clazz, String fieldName) {
-            this.clazz = clazz;
-            this.fieldName = fieldName;
+        private PatternTester(String regexName, Class<?> clazz, Object obj, String fieldName) {
+            this.regexName = regexName;
             Pattern pattern = null;
 
             try {
                 Field field = clazz.getDeclaredField(fieldName);
                 field.setAccessible(true);
-                pattern = (Pattern) field.get(null);
+                pattern = (Pattern) field.get(obj);
             } catch (NoSuchFieldException e) {
-                Assertions.fail("Pattern field " + clazz.getSimpleName() + "." + fieldName + " does not exist");
+                Assertions.fail("Pattern field " + regexName + " does not exist");
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
             this.pattern = pattern;
         }
 
+        public PatternTester(Class<?> clazz, String fieldName) {
+            this(clazz.getSimpleName() + "." + fieldName, clazz, null, fieldName);
+        }
+
+        public PatternTester(Enum<?> enumType, String fieldName) {
+            this(
+                    enumType.getDeclaringClass().getSimpleName() + "." + enumType.name() + "." + fieldName,
+                    enumType.getDeclaringClass(),
+                    enumType,
+                    fieldName);
+        }
+
         public void shouldMatch(String s) {
             Assertions.assertTrue(
                     pattern.matcher(s).matches(),
-                    "Regex failure: " + clazz.getSimpleName() + "." + fieldName + " should have matched " + s
-                            + ", but it did not.");
+                    "Regex failure: " + regexName + " should have matched " + s + ", but it did not.");
         }
 
         public void shouldNotMatch(String s) {
             Assertions.assertFalse(
                     pattern.matcher(s).matches(),
-                    "Regex failure: " + clazz.getSimpleName() + "." + fieldName + " should NOT have matched " + s
-                            + ", but it did.");
+                    "Regex failure: " + regexName + " should NOT have matched " + s + ", but it did.");
         }
     }
 
@@ -325,7 +334,7 @@ public class TestRegex {
         p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]");
         p.shouldMatch("§3[§b★★★★★§3§oafKing§r§3]§");
         p.shouldMatch("§3[§b★★★★§3§obol§r§3]");
-         */
+        */
     }
 
     @Test
@@ -371,5 +380,85 @@ public class TestRegex {
         p.shouldMatch("§b❉ 100%"); // curse/full charge
         p.shouldMatch("§7✹ 78%"); // courage/partial charge
         p.shouldMatch("§c✹ 100%"); // courage/full charge
+    }
+
+    @Test
+    public void RecipientType_NPC_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.NPC, "foregroundPattern");
+        p.shouldMatch("§7[3/5]§r§2 Jesp:§r§a Keep fighting! We're almost halfway to the other side!");
+        /* FIXME: These tests fail
+        p.shouldMatch("§7[1/11]§r§0 §r§2Scientist Ynnos:§r§a *Ahem* Welcome, everyone.");
+        p.shouldMatch(
+                "§7[3/11]§r§0 §r§2Scientist Ynnos:§r§0 §r§aAllow me to explain the situation we’re in. It’s a series of unfortunate events. I study the amazing properties of crystals and other geodes.");
+        p.shouldMatch(
+                "§7[6/6] §r§5Aster: §r§dSo remember, find a balance in elements! Whether you invest in one, or select many to excell in, I trust you may succeed. Thank you for you time.§r");
+        */
+    }
+
+    @Test
+    public void RecipientType_GLOBAL_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.GLOBAL, "foregroundPattern");
+        // wc5 106(archer)VAI CHAMPION v8j: test
+        p.shouldNotMatch(
+                "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE017\uE013\u2064\u2064§#ffe60000v8j: §ftest");
+        // wc5 106(archer)VAI VIP v8j: hello 2
+        p.shouldNotMatch(
+                "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE023\uE013\u2064\u2064§#44aa3300v8j: §fhello 2");
+        // REMOTE wc6 105(mage) UNVERIFIED Sebastiankungen: 4
+        p.shouldMatch(
+                "§7\uE056\uE042\uE066§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00F§f\uE012\uE013\uE013\u2064\u2064\u2064\u2064§8\uE011§f\uE012\u2064\uE030\u2064\u2064\u2064§r\uE013\uE013\u2064\u2064\u2064§7Sebastiankungen: §f4");
+        // wc37 104(skyseer)VAI silverbullVIP+ v8j: test
+        p.shouldNotMatch(
+                "§f\uE056\uE042\uE063\uE067§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE064§8\uE00E§f\uE012\uE012\uE013\uE02F§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r  \u2064\u2064\u2064§f\uE02B\u2064\u2064§r\uE024\uE013\u2064\u2064§#8a99ee00v8j: §ftest");
+        // REMOTE wc3 105(archer)BXP VERIFIED moumbear: oblivion
+        p.shouldMatch(
+                "§7\uE056\uE042\uE063§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE041§8\uE00F§f\uE012\uE057§8\uE00F§f\uE012\uE04F§8\uE011\u2064§r\uE013\uE013\u2064\u2064\u2064§fmoumbear: oblivion");
+        // REMOTE wc1 105(archer)SEQ GuildMilestone2 VERIFIED warpo: i love bolt
+        p.shouldMatch(
+                "§7\uE056\uE042\uE061§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE052§8\uE00F§f\uE012\uE044§8\uE00F§f\uE012\uE050§8\uE011\u2064§r §#54fcfc00\uE07C \u2064§r\uE013\u2064\u2064\u2064§fwarpo: i love bolt");
+        // REMOTE wc25 106(warrior)FURS GuildMilestone1 silverbullCHAMPION angycathy: 6500
+        p.shouldMatch(
+                "§7\uE056\uE042\uE062\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE030§8\uE00F§f\uE012\uE045§8\uE00F§f\uE012\uE054§8\uE00F§f\uE012\uE051§8\uE00F§f\uE012\uE052§8\uE011\u2064§r §#54fcfc00\uE07B \u2064\u2064\u2064§f\uE02B\u2064\u2064§r\uE017\uE013\u2064\u2064§#ffe60000angycathy: §f6500");
+        // REMOTE wc1 105(warrior)MAG GuildMilestone2 HERO Mythicized: gaming
+        p.shouldMatch(
+                "§7\uE056\uE042\uE061§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00E§f\uE012\uE012\uE013\uE030§8\uE00F§f\uE012\uE04C§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE046§8\uE011\u2064§r §#54fcfc00\uE07C \u2064§r\uE01B\uE013\u2064\u2064§#a344aa00Mythicized: §fgaming");
+    }
+
+    @Test
+    public void RecipientType_LOCAL_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.LOCAL, "foregroundPattern");
+        // wc5 106(archer)VAI CHAMPION v8j: test
+        p.shouldMatch(
+                "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE017\uE013\u2064\u2064§#ffe60000v8j: §ftest");
+        // wc5 (friend)58(mage)VAI UNVERIFIED Mirvun: test
+        p.shouldMatch(
+                "§f\uE056\uE042\uE065§r §#00a80000\uE010\u2064\uE00F§f\uE012\uE065§#00a80000\uE00F§f\uE012\uE068§#00a80000\uE00E§f\uE012\uE012\uE013\uE02E§#00a80000\uE00F§f\uE012\uE055§#00a80000\uE00F§f\uE012\uE040§#00a80000\uE00F§f\uE012\uE048§#00a80000\uE011\u2064§r\uE013\uE013\u2064\u2064\u2064§7Mirvun: §f.");
+        // wc5 (guild)58(mage)VAI UNVERIFIED Mirvun: bingbing
+        p.shouldMatch(
+                "§f\uE056\uE042\uE065§r §#4ec7c700\uE010\u2064\uE00F§f\uE012\uE065§#4ec7c700\uE00F§f\uE012\uE068§#4ec7c700\uE00E§f\uE012\uE012\uE013\uE02E§#4ec7c700\uE00F§f\uE012\uE055§#4ec7c700\uE00F§f\uE012\uE040§#4ec7c700\uE00F§f\uE012\uE048§#4ec7c700\uE011\u2064§r\uE013\uE013\u2064\u2064\u2064§7Mirvun: §fbingbing)");
+        // wc5 106(archer)VAI VIP v8j: hello 2
+        p.shouldMatch(
+                "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE023\uE013\u2064\u2064§#44aa3300v8j: §fhello 2");
+        // wc5 105(warrior)VAI HERO v8j: 4
+        p.shouldMatch(
+                "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00E§f\uE012\uE012\uE013\uE030§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE01B\uE013\u2064\u2064§#a344aa00v8j: §f4");
+        // wc37 105(assassin)VAI VIP+ v8j: 5test4
+        p.shouldMatch(
+                "§f\uE056\uE042\uE063\uE067§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00E§f\uE012\uE012\uE013\uE02D§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE024\uE013\u2064\u2064§#8a99ee00v8j: §f5test4");
+        // REMOTE wc6 105(mage) UNVERIFIED Sebastiankungen: 4
+        p.shouldNotMatch(
+                "§7\uE056\uE042\uE066§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE065§8\uE00F§f\uE012\uE013\uE013\u2064\u2064\u2064\u2064§8\uE011§f\uE012\u2064\uE030\u2064\u2064\u2064§r\uE013\uE013\u2064\u2064\u2064§7Sebastiankungen: §f4");
+        // wc37 104(skyseer)VAI silverbullVIP+ v8j: test
+        p.shouldMatch(
+                "§f\uE056\uE042\uE063\uE067§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE064§8\uE00E§f\uE012\uE012\uE013\uE02F§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r  \u2064\u2064\u2064§f\uE02B\u2064\u2064§r\uE024\uE013\u2064\u2064§#8a99ee00v8j: §ftest");
+    }
+
+    @Test
+    public void RecipientType_GUILD_foregroundPattern() {
+        PatternTester p = new PatternTester(RecipientType.GUILD, "foregroundPattern");
+        p.shouldMatch("§3[§b★★★★§3bolyai§3] test 3");
+        p.shouldMatch("§3[§b★★★★§3§obol§r§3]§b test ");
+        p.shouldMatch("§3[kristof345]§b test");
+        p.shouldNotMatch("§3[INFO]§b bolyai has kicked kristof345 from the guild");
     }
 }
