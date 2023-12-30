@@ -1,9 +1,21 @@
+## [0.0.4-beta.109](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.108...v0.0.4-beta.109) (2023-12-30)
+
+
+### Miscellaneous Chores
+
+* Don't run tests on "build" ([#2307](https://github.com/Wynntils/Artemis/issues/2307)) ([cffdad9](https://github.com/Wynntils/Artemis/commit/cffdad9c922f5a38cc268fbb12f65b8296c069e7))
+
 ## [0.0.4-beta.108](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.107...v0.0.4-beta.108) (2023-12-28)
 
 
 ### New Features
 
 * Add support for custom crafted tooltips ([#2299](https://github.com/Wynntils/Artemis/issues/2299)) ([9b00c4b](https://github.com/Wynntils/Artemis/commit/9b00c4bb1a75b5a3a94ab3cd372b73073cd71f3a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.4-beta.108 [skip ci] ([0d008d1](https://github.com/Wynntils/Artemis/commit/0d008d16c62d0571988878e7768bb3c0b7665980))
 
 ## [0.0.4-beta.107](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.106...v0.0.4-beta.107) (2023-12-27)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.4-beta.105 [skip ci] ([29397f5](https://github.com/Wynntils/Artemis/commit/29397f5d3cf957e06d9fe0655ce54ce153d8d44f))
-
-## [0.0.4-beta.104](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.103...v0.0.4-beta.104) (2023-12-26)
-
-
-### Bug Fixes
-
-* Fix an edge case resulting in container queries timing out, if a packet is sent and received in the same tick ([#2297](https://github.com/Wynntils/Artemis/issues/2297)) ([b24dd0e](https://github.com/Wynntils/Artemis/commit/b24dd0e580edf5cf773b4e72c94c3822066519a3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.104 [skip ci] ([f0b0762](https://github.com/Wynntils/Artemis/commit/f0b076286f626c111e3f60a0c2d6f7e1fa974794))
 
