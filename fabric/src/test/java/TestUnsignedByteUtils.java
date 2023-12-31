@@ -3,6 +3,7 @@
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.utils.UnsignedByteUtils;
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.Arrays;
 import java.util.List;
@@ -73,30 +74,30 @@ public class TestUnsignedByteUtils {
 
     @Test
     public void encodeVariableSizedIntegerReturnsCorrectUnsignedBytes_works() {
-        long value = 1234567890L;
-
+        long input = 123456789L;
         UnsignedByte[] expected = {
-            UnsignedByte.of((byte) (value >> 24)),
-            UnsignedByte.of((byte) (value >> 16)),
-            UnsignedByte.of((byte) (value >> 8)),
-            UnsignedByte.of((byte) value)
+            UnsignedByte.of((byte) 149),
+            UnsignedByte.of((byte) 154),
+            UnsignedByte.of((byte) 239),
+            UnsignedByte.of((byte) 58)
         };
 
-        UnsignedByte[] actual = UnsignedByteUtils.encodeVariableSizedInteger(value);
+        UnsignedByte[] actual = UnsignedByteUtils.encodeVariableSizedInteger(input);
+
         Assertions.assertArrayEquals(expected, actual, "encodeVariableSizedInteger did not return the expected value");
     }
 
     @Test
     public void decodeVariableSizedIntegerReturnsCorrectLong_works() {
         UnsignedByte[] bytes = {
-            UnsignedByte.of((byte) 0x49),
-            UnsignedByte.of((byte) 0x96),
-            UnsignedByte.of((byte) 0x02),
-            UnsignedByte.of((byte) 0xD2)
+            UnsignedByte.of((byte) 149),
+            UnsignedByte.of((byte) 154),
+            UnsignedByte.of((byte) 239),
+            UnsignedByte.of((byte) 58)
         };
 
-        long expected = 1234567890L;
-        long actual = UnsignedByteUtils.decodeVariableSizedInteger(bytes);
+        long expected = 123456789L;
+        long actual = UnsignedByteUtils.decodeVariableSizedInteger(new ArrayReader<>(bytes));
 
         Assertions.assertEquals(expected, actual, "decodeVariableSizedInteger did not return the expected value");
     }

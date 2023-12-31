@@ -283,7 +283,8 @@ public class ChatItemFeature extends Feature {
                 Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
         if (errorOrEncodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemErrorEncode"));
+            McUtils.sendErrorToClient(
+                    I18n.get("feature.wynntils.chatItem.chatItemErrorEncode", errorOrEncodedByteBuffer.getError()));
             return;
         }
 

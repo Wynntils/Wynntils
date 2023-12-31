@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.encoding;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.StartData;
@@ -64,7 +65,13 @@ public final class ItemTransformerRegistry {
             return ErrorOr.error(
                     "No item transformer found for " + wynnItem.getClass().getSimpleName());
         }
-        return encodeItem(wynnItem, encodingSettings, transformer);
+
+        try {
+            return encodeItem(wynnItem, encodingSettings, transformer);
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to encode item!", e);
+            return ErrorOr.error("Failed to encode item!");
+        }
     }
 
     public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer) {
@@ -85,7 +92,12 @@ public final class ItemTransformerRegistry {
         TypeData typeData = typeDataOpt.get();
         ItemTransformer<WynnItem> transformer = itemTransformers.get(typeData.itemType());
 
-        return decodeItem(itemData, transformer);
+        try {
+            return decodeItem(itemData, transformer);
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to decode item!", e);
+            return ErrorOr.error("Failed to decode item!");
+        }
     }
 
     public boolean canEncodeItem(WynnItem wynnItem) {

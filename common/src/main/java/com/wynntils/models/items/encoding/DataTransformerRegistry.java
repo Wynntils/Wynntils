@@ -64,16 +64,22 @@ public final class DataTransformerRegistry {
     }
 
     public ErrorOr<EncodedByteBuffer> encodeData(ItemTransformingVersion version, List<ItemData> data) {
-        // FIXME: Explore using some kind of "ByteBuilder" instead of List<UnsignedByte>
         List<UnsignedByte> bytes = new ArrayList<>();
 
         for (ItemData itemData : data) {
-            ErrorOr<UnsignedByte[]> errorOrEncodedData = encodeData(version, itemData);
-            if (errorOrEncodedData.hasError()) {
-                return ErrorOr.error(errorOrEncodedData.getError());
-            }
+            try {
+                ErrorOr<UnsignedByte[]> errorOrEncodedData = encodeData(version, itemData);
+                if (errorOrEncodedData.hasError()) {
+                    return ErrorOr.error(errorOrEncodedData.getError());
+                }
 
-            bytes.addAll(Arrays.asList(errorOrEncodedData.getValue()));
+                bytes.addAll(Arrays.asList(errorOrEncodedData.getValue()));
+            } catch (Exception e) {
+                WynntilsMod.error(
+                        "Failed to encode data class " + itemData.getClass().getSimpleName() + "!", e);
+                return ErrorOr.error(
+                        "Failed to encode data class " + itemData.getClass().getSimpleName() + "!");
+            }
         }
 
         return ErrorOr.of(EncodedByteBuffer.fromBytes(bytes.toArray(new UnsignedByte[0])));
@@ -108,8 +114,13 @@ public final class DataTransformerRegistry {
             UnsignedByte dataBlockId = byteReader.read();
 
             try {
-                ErrorOr<ItemData> errorOrData =
-                        dataTransformers.get(dataBlockId.toByte()).decodeData(version, byteReader);
+                DataTransformer<ItemData> dataTransformer = dataTransformers.get(dataBlockId.toByte());
+
+                if (dataTransformer == null) {
+                    return ErrorOr.error("No data transformer found for id " + dataBlockId.value());
+                }
+
+                ErrorOr<ItemData> errorOrData = dataTransformer.decodeData(version, byteReader);
 
                 if (errorOrData.hasError()) {
                     return ErrorOr.error(errorOrData.getError());

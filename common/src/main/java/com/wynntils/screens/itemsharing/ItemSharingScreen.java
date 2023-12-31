@@ -35,12 +35,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemSharingScreen extends WynntilsScreen {
+public final class ItemSharingScreen extends WynntilsScreen {
     private final WynnItem wynnItem;
 
     private EncodedByteBuffer encodedItem;
@@ -95,6 +95,8 @@ public class ItemSharingScreen extends WynntilsScreen {
     }
 
     private void renderPreview(GuiGraphics guiGraphics) {
+        if (previewItemStack == null) return;
+
         guiGraphics.renderTooltip(
                 FontRenderer.getInstance().getFont(),
                 previewItemStack,
@@ -110,8 +112,10 @@ public class ItemSharingScreen extends WynntilsScreen {
                 Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
         if (errorOrEncodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemErrorEncode"));
-            McUtils.mc().setScreen(null);
+            previewItemStack = null;
+            backgroundX = (width - Texture.ITEM_SHARING_BACKGROUND.width()) / 2;
+            clearWidgets();
+            addError(errorOrEncodedByteBuffer.getError());
             return;
         }
 
@@ -121,8 +125,11 @@ public class ItemSharingScreen extends WynntilsScreen {
         ErrorOr<WynnItem> errorOrDecodedByteBuffer = Models.ItemEncoding.decodeItem(encodedItem);
         if (errorOrDecodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to decode item: " + errorOrDecodedByteBuffer.getError());
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemErrorDecode"));
-            McUtils.mc().setScreen(null);
+            previewItemStack = null;
+            backgroundX = (width - Texture.ITEM_SHARING_BACKGROUND.width()) / 2;
+            clearWidgets();
+            addError(errorOrDecodedByteBuffer.getError());
+            return;
         }
 
         WynnItem renderedItem = errorOrDecodedByteBuffer.getValue();
@@ -240,5 +247,14 @@ public class ItemSharingScreen extends WynntilsScreen {
                 .size(shareButtonWidth, 20)
                 .build()));
         // endregion
+    }
+
+    private void addError(String error) {
+        this.addRenderableWidget(
+                new Button.Builder(Component.translatable("screens.wynntils.itemSharing.error"), (b) -> {})
+                        .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
+                        .size(Texture.ITEM_SHARING_BACKGROUND.width() - 20, 20)
+                        .tooltip(Tooltip.create(Component.literal(error)))
+                        .build());
     }
 }
