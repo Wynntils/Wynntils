@@ -35,6 +35,13 @@ public final class UnsignedByteUtils {
     }
 
     public static UnsignedByte[] encodeString(String string) {
+        // Check if the string only contains ASCII characters
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) > 127) {
+                throw new IllegalArgumentException("String contains non-ASCII characters");
+            }
+        }
+
         // Strings are encoded by encoding the char's ASCII value
         // and is terminated by a 0 byte
         UnsignedByte[] bytes = new UnsignedByte[string.length() + 1];

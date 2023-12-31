@@ -19,7 +19,7 @@ public class NameDataTransformer extends DataTransformer<NameData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, NameData data) {
         return switch (version) {
-            case VERSION_1 -> ErrorOr.of(encodeName(data.name()));
+            case VERSION_1 -> encodeName(data.name());
         };
     }
 
@@ -30,8 +30,12 @@ public class NameDataTransformer extends DataTransformer<NameData> {
         };
     }
 
-    private UnsignedByte[] encodeName(String name) {
-        return UnsignedByteUtils.encodeString(name);
+    private ErrorOr<UnsignedByte[]> encodeName(String name) {
+        try {
+            return ErrorOr.of(UnsignedByteUtils.encodeString(name));
+        } catch (IllegalArgumentException e) {
+            return ErrorOr.error("Name contains non-ASCII characters");
+        }
     }
 
     private ErrorOr<NameData> decodeName(ArrayReader<UnsignedByte> byteReader) {
