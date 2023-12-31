@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils;
 
+import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.UnsignedByte;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -69,71 +70,55 @@ public final class UnsignedByteUtils {
     }
 
     public static UnsignedByte[] encodeVariableSizedInteger(long value) {
-        // Encode an signed integer value with a variable number of bytes.
+        // Use zig-zag encoding to encode negative numbers
+        // (this gets rid of the sign bit, so we only work with positive numbers)
+        value = (value << 1) ^ (value >> 63);
 
-        // Do the encoding
-        UnsignedByte[] bytes;
-        if (value >= -128 && value <= 127) {
-            bytes = new UnsignedByte[1];
-            bytes[0] = UnsignedByte.of((byte) value);
-        } else if (value >= -32768 && value <= 32767) {
-            bytes = new UnsignedByte[2];
-            bytes[0] = UnsignedByte.of((byte) (value >> 8));
-            bytes[1] = UnsignedByte.of((byte) value);
-        } else if (value >= -8388608 && value <= 8388607) {
-            bytes = new UnsignedByte[3];
-            bytes[0] = UnsignedByte.of((byte) (value >> 16));
-            bytes[1] = UnsignedByte.of((byte) (value >> 8));
-            bytes[2] = UnsignedByte.of((byte) value);
-        } else if (value >= -2147483648 && value <= 2147483647) {
-            bytes = new UnsignedByte[4];
-            bytes[0] = UnsignedByte.of((byte) (value >> 24));
-            bytes[1] = UnsignedByte.of((byte) (value >> 16));
-            bytes[2] = UnsignedByte.of((byte) (value >> 8));
-            bytes[3] = UnsignedByte.of((byte) value);
-        } else {
-            bytes = new UnsignedByte[8];
-            bytes[0] = UnsignedByte.of((byte) (value >> 56));
-            bytes[1] = UnsignedByte.of((byte) (value >> 48));
-            bytes[2] = UnsignedByte.of((byte) (value >> 40));
-            bytes[3] = UnsignedByte.of((byte) (value >> 32));
-            bytes[4] = UnsignedByte.of((byte) (value >> 24));
-            bytes[5] = UnsignedByte.of((byte) (value >> 16));
-            bytes[6] = UnsignedByte.of((byte) (value >> 8));
-            bytes[7] = UnsignedByte.of((byte) value);
+        // Store 7 bits of the source data in the target byte. Use the highest bit to mark if we're done.
+        // If it is 0, then we're done, and the byte is exactly the value we wanted.
+        // If it is 1, use the 7 bits we have, and grab the next 7 bits from the next byte.
+        // If that byte's highest bit is 0, then we're done (the value could be stored in 14 bits), otherwise continue.
+
+        // Calculate the number of bytes we need
+        int numBytes = 1;
+        long temp = value;
+        while ((temp >>>= 7) != 0) {
+            numBytes++;
+        }
+
+        // Encode the value
+        UnsignedByte[] bytes = new UnsignedByte[numBytes];
+        for (int i = 0; i < numBytes; i++) {
+            // Grab the next 7 bits
+            byte nextByte = (byte) (value & 0x7F);
+            value >>>= 7;
+
+            // If we're not done, set the highest bit
+            if (i != numBytes - 1) {
+                nextByte |= 0x80;
+            }
+
+            // Store the byte
+            bytes[i] = UnsignedByte.of(nextByte);
         }
 
         return bytes;
     }
 
-    public static long decodeVariableSizedInteger(UnsignedByte[] bytes) {
-        // Decode a variable sized integer value from a byte array.
-        // The first byte is the most significant byte.
+    public static long decodeVariableSizedInteger(ArrayReader<UnsignedByte> byteReader) {
+        long value = 0;
 
-        // Do the decoding
-        long value;
-        if (bytes.length == 1) {
-            value = bytes[0].toByte();
-        } else if (bytes.length == 2) {
-            value = ((long) bytes[0].toByte() << 8) | bytes[1].value();
-        } else if (bytes.length == 3) {
-            value = ((long) bytes[0].toByte() << 16) | (bytes[1].value() << 8) | bytes[2].value();
-        } else if (bytes.length == 4) {
-            value = ((long) bytes[0].toByte() << 24)
-                    | (bytes[1].value() << 16)
-                    | (bytes[2].value() << 8)
-                    | bytes[3].value();
-        } else {
-            value = ((long) bytes[0].toByte() << 56)
-                    | ((long) bytes[1].value() << 48)
-                    | ((long) bytes[2].value() << 40)
-                    | ((long) bytes[3].value() << 32)
-                    | (bytes[4].value() << 24)
-                    | (bytes[5].value() << 16)
-                    | (bytes[6].value() << 8)
-                    | bytes[7].value();
+        // If the highest bit is set, read the next byte
+        int numBytes = 0;
+        while ((byteReader.peek().toByte() & 0x80) != 0) {
+            value |= (long) (byteReader.read().toByte() & 0x7F) << (7 * numBytes);
+            numBytes++;
         }
 
-        return value;
+        // Read the last byte
+        value |= (long) (byteReader.read().toByte() & 0x7F) << (7 * numBytes);
+
+        // Use zig-zag encoding to decode negative numbers
+        return (value >>> 1) ^ -(value & 1);
     }
 }

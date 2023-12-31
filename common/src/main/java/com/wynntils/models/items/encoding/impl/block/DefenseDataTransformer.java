@@ -45,10 +45,8 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
     private ErrorOr<UnsignedByte[]> encodeDefenseData(DefenseData data) {
         List<UnsignedByte> bytes = new ArrayList<>();
 
-        // The first byte is the length of the integer that the health can fit in.
-        // The next bytes are the health bytes, which are assembled into an integer.
+        // The first bytes are the health bytes, which are assembled into an integer.
         UnsignedByte[] unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(data.health());
-        bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
         bytes.addAll(List.of(unsignedBytes));
 
         // The next byte is the number of defense stats present on the item.
@@ -59,10 +57,8 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
             // The first byte is the id of the skill (`ETFWA`).
             bytes.add(UnsignedByte.of((byte) defence.a().ordinal()));
 
-            // The next byte is the length of the integer that the defense can fit in.
             // The next bytes are the defense bytes, which are assembled into an integer.
             unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(defence.b());
-            bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
             bytes.addAll(List.of(unsignedBytes));
         }
 
@@ -70,10 +66,8 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
     }
 
     private ErrorOr<DefenseData> decodeDefenseData(ArrayReader<UnsignedByte> byteReader) {
-        // The first byte is the length of the integer that the health can fit in.
-        // The next bytes are the health bytes, which are assembled into an integer.
-        int length = byteReader.read().value();
-        int health = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(length));
+        // The first bytes are the health bytes, which are assembled into an integer.
+        int health = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
         // The next byte is the number of defense stats present on the item.
         int defencesCount = byteReader.read().value();
@@ -84,10 +78,8 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
             // The first byte is the id of the skill (`ETFWA`).
             Element element = Element.values()[byteReader.read().value()];
 
-            // The next byte is the length of the integer that the defense can fit in.
             // The next bytes are the defense bytes, which are assembled into an integer.
-            length = byteReader.read().value();
-            int defence = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(length));
+            int defence = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
             defences.add(Pair.of(element, defence));
         }

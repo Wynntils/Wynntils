@@ -78,11 +78,9 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
             int id = skillPair.a().getAssociatedElement().ordinal();
             bytes.add(UnsignedByte.of((byte) id));
 
-            // The next byte is the length of the integer that the skill requirement can fit in.
             // The next bytes are the skill requirement bytes, which are assembled into an integer.
             int skillRequirement = skillPair.b();
             UnsignedByte[] encodedRequirement = UnsignedByteUtils.encodeVariableSizedInteger(skillRequirement);
-            bytes.add(UnsignedByte.of((byte) encodedRequirement.length));
             bytes.addAll(List.of(encodedRequirement));
         }
 
@@ -115,10 +113,8 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
             int id = byteReader.read().value();
             Skill skill = Skill.values()[id];
 
-            // The next byte is the length of the integer that the skill requirement can fit in.
             // The next bytes are the skill requirement bytes, which are assembled into an integer.
-            int requirementLength = byteReader.read().value();
-            int requirement = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(requirementLength));
+            int requirement = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
             skills.add(Pair.of(skill, requirement));
         }

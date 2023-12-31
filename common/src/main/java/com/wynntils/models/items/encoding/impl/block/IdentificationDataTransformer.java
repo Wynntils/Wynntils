@@ -103,7 +103,6 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
         // The first byte is the number of pre-identified stats.
         // Encoding an identification:
         // The first byte is the numerical key of the ID.
-        // The second byte is the length of the integer that the base value fits in, in bytes.
         // The following bytes is are assembled into an integer representing the base value of the id, as of sharing.
         // Pre-identified stats do not have an internal roll.
 
@@ -136,13 +135,10 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                 // The first byte is the numerical key of the ID.
                 bytes.add(UnsignedByte.of((byte) id));
 
-                // The second byte is the length of the integer that the base value fits in, in bytes.
                 // The base value is the value of the stat as of sharing.
                 int baseValue = possibleValues.baseValue();
                 UnsignedByte[] baseValueBytes = UnsignedByteUtils.encodeVariableSizedInteger(baseValue);
 
-                // The second byte is the length of the integer that the base value fits in, in bytes.
-                bytes.add(UnsignedByte.of((byte) baseValueBytes.length));
                 // The following bytes is are assembled into an integer,
                 // representing the base value of the id, as of sharing.
                 bytes.addAll(List.of(baseValueBytes));
@@ -178,19 +174,10 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
             bytes.add(UnsignedByte.of((byte) id));
 
             if (encodeExtendedData) {
-                // The second byte is the length of the integer that the base value fits in, in bytes.
                 // The base value is the value of the stat as of sharing.
                 int baseValue = possibleValues.baseValue();
                 UnsignedByte[] baseValueBytes = UnsignedByteUtils.encodeVariableSizedInteger(baseValue);
 
-                if (baseValueBytes.length > 4) {
-                    WynntilsMod.warn("Base value " + baseValue + " does not fit in an integer!");
-                    return ErrorOr.error("Unable to encode stat type, base value is too big: "
-                            + identification.statType().getDisplayName());
-                }
-
-                // The second byte is the length of the integer that the base value fits in, in bytes.
-                bytes.add(UnsignedByte.of((byte) baseValueBytes.length));
                 // The following bytes is are assembled into an integer,
                 // representing the base value of the id, as of sharing.
                 bytes.addAll(List.of(baseValueBytes));
@@ -246,19 +233,9 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
 
             // When extended data is encoded, we create our own StatPossibleValues
             if (extendedData) {
-                // The second byte is the length of the integer that the base value fits in, in bytes.
-                int baseValueLength = byteReader.read().value();
-
-                if (baseValueLength > 4) {
-                    WynntilsMod.warn("Base value length " + baseValueLength + " does not fit in an integer!");
-                    return ErrorOr.error(
-                            "Unable to decode stat type, base value is too big: " + statType.getDisplayName());
-                }
-
                 // The following bytes is are assembled into an integer,
                 // representing the base value of the id, as of sharing.
-                UnsignedByte[] baseValueBytes = byteReader.read(baseValueLength);
-                int baseValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(baseValueBytes);
+                int baseValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
                 RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
                 StatPossibleValues possibleValue = new StatPossibleValues(statType, range, baseValue, preIdentified);

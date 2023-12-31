@@ -61,11 +61,9 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             int id = idOpt.get();
             bytes.add(UnsignedByte.of((byte) id));
 
-            // The next byte is the length of the integer that the identification's max value can fit in.
             // The next bytes are the identification's max value bytes, which are assembled into an integer.
             UnsignedByte[] unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(
                     statPossibleValues.range().high());
-            bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
             bytes.addAll(List.of(unsignedBytes));
         }
 
@@ -87,10 +85,8 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             }
             StatType statType = statTypeOpt.get();
 
-            // The next byte is the length of the integer that the identification's max value can fit in.
             // The next bytes are the identification's max value bytes, which are assembled into an integer.
-            int numBytes = byteReader.read().value();
-            int maxValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(numBytes));
+            int maxValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
             //  For crafted items, the max values can be used to calculate the minimum values (10% of the maximum,
             // rounded).

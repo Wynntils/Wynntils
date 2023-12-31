@@ -46,18 +46,14 @@ public class DurablityDataTransformer extends DataTransformer<DurabilityData> {
         }
         bytes.add(UnsignedByte.of((byte) data.effectStrength()));
 
-        // The next byte is the length of the integer that the maximum durability can fit in.
         // The next bytes are the maximum durability bytes, which are assembled into an integer.
         int max = data.durability().max();
         UnsignedByte[] unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(max);
-        bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
         bytes.addAll(List.of(unsignedBytes));
 
-        // The next byte is the length of the integer that the current durability can fit in.
         // The next bytes are the current durability bytes, which are assembled into an integer.
         int current = data.durability().current();
         unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(current);
-        bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
         bytes.addAll(List.of(unsignedBytes));
 
         return ErrorOr.of(bytes.toArray(new UnsignedByte[0]));
@@ -68,15 +64,11 @@ public class DurablityDataTransformer extends DataTransformer<DurabilityData> {
         // crafted items).
         int effectStrength = byteReader.read().value();
 
-        // The next byte is the length of the integer that the maximum durability can fit in.
         // The next bytes are the maximum durability bytes, which are assembled into an integer.
-        int length = byteReader.read().value();
-        int max = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(length));
+        int max = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-        // The next byte is the length of the integer that the current durability can fit in.
         // The next bytes are the current durability bytes, which are assembled into an integer.
-        length = byteReader.read().value();
-        int current = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(length));
+        int current = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
         return ErrorOr.of(new DurabilityData(effectStrength, new CappedValue(current, max)));
     }

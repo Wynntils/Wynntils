@@ -44,16 +44,13 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
         UnsignedByte[] shinyStatValueBytes =
                 UnsignedByteUtils.encodeVariableSizedInteger(data.shinyStat().value());
 
-        UnsignedByte[] bytes = new UnsignedByte[shinyStatValueBytes.length + 2];
+        UnsignedByte[] bytes = new UnsignedByte[shinyStatValueBytes.length + 1];
 
         // The first byte is the id of the shiny stat.
         bytes[0] = UnsignedByte.of((byte) data.shinyStat().statType().id());
 
-        // The second byte is the length of the integer that the shiny value fits in, in bytes.
-        bytes[1] = UnsignedByte.of((byte) shinyStatValueBytes.length);
-
         // The following bytes is are assembled into an integer representing the shiny value.
-        System.arraycopy(shinyStatValueBytes, 0, bytes, 2, shinyStatValueBytes.length);
+        System.arraycopy(shinyStatValueBytes, 0, bytes, 1, shinyStatValueBytes.length);
 
         return bytes;
     }
@@ -62,15 +59,8 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
         // The first byte is the id of the shiny stat.
         UnsignedByte statTypeId = byteReader.read();
 
-        // The second byte is the length of the integer that the shiny value fits in, in bytes.
-        UnsignedByte statValueLength = byteReader.read();
-
-        if (statValueLength == null) {
-            return ErrorOr.error("Failed to read shiny stat value length");
-        }
-
         // The following bytes is are assembled into an integer representing the shiny value.
-        long statValue = UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(statValueLength.value()));
+        long statValue = UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
         return ErrorOr.of(new ShinyData(new ShinyStat(Models.Shiny.getShinyStatType(statTypeId.value()), statValue)));
     }

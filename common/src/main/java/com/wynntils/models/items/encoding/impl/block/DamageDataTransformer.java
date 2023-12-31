@@ -72,18 +72,14 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
             }
             bytes.add(UnsignedByte.of(damageTypeId));
 
-            // The next byte is the length of the integer that the minimum damage can fit in.
             // The next bytes are the minimum damage bytes, which are assembled into an integer.
             UnsignedByte[] unsignedBytes =
                     UnsignedByteUtils.encodeVariableSizedInteger(damage.b().low());
-            bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
             bytes.addAll(List.of(unsignedBytes));
 
-            // The next byte is the length of the integer that the maximum damage can fit in.
             // The next bytes are the maximum damage bytes, which are assembled into an integer.
             unsignedBytes =
                     UnsignedByteUtils.encodeVariableSizedInteger(damage.b().high());
-            bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
             bytes.addAll(List.of(unsignedBytes));
         }
 
@@ -111,15 +107,11 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
                 damageType = DamageType.fromElement(Element.values()[damageTypeId]);
             }
 
-            // The next byte is the length of the integer that the minimum damage can fit in.
             // The next bytes are the minimum damage bytes, which are assembled into an integer.
-            int minDamageLength = byteReader.read().value();
-            int minDamage = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(minDamageLength));
+            int minDamage = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-            // The next byte is the length of the integer that the maximum damage can fit in.
             // The next bytes are the maximum damage bytes, which are assembled into an integer.
-            int maxDamageLength = byteReader.read().value();
-            int maxDamage = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader.read(maxDamageLength));
+            int maxDamage = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
             damages.add(new Pair<>(damageType, new RangedValue(minDamage, maxDamage)));
         }

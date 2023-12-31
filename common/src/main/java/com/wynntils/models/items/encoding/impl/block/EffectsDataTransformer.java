@@ -66,11 +66,8 @@ public class EffectsDataTransformer extends DataTransformer<EffectsData> {
 
             bytes.add(id);
 
-            // The next byte is the length of the integer that the effect's value can fit in.
             // The next bytes are the effect's value bytes, which are assembled into an integer
-
             UnsignedByte[] unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(namedEffect.value());
-            bytes.add(UnsignedByte.of((byte) unsignedBytes.length));
             bytes.addAll(List.of(unsignedBytes));
         }
 
@@ -87,12 +84,8 @@ public class EffectsDataTransformer extends DataTransformer<EffectsData> {
             // The first byte is the id of the effect.
             int effectId = byteReader.read().value();
 
-            // The next byte is the length of the integer that the effect's value can fit in.
-            int valueLength = byteReader.read().value();
-
             // The next bytes are the effect's value bytes, which are assembled into an integer
-            UnsignedByte[] valueBytes = byteReader.read(valueLength);
-            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(valueBytes);
+            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
             NamedItemEffect namedEffect = null;
             for (Pair<ConsumableEffect, Integer> consumableEffectId : CONSUMABLE_EFFECT_IDS) {
