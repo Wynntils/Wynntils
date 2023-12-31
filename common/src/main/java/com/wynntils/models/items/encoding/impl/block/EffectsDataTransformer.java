@@ -6,6 +6,7 @@ package com.wynntils.models.items.encoding.impl.block;
 
 import com.wynntils.models.items.encoding.data.EffectsData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
@@ -39,7 +40,7 @@ public class EffectsDataTransformer extends DataTransformer<EffectsData> {
 
     @Override
     public byte getId() {
-        return 15;
+        return DataTransformerType.EFFECTS_DATA_TRANSFORMER.getId();
     }
 
     private ErrorOr<UnsignedByte[]> encodeEffectsData(EffectsData data) {

@@ -6,14 +6,13 @@ package com.wynntils.models.items.encoding.impl.block;
 
 import com.wynntils.models.items.encoding.data.StartData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.UnsignedByte;
 
 public class StartDataTransformer extends DataTransformer<StartData> {
-    public static final byte ID = 0;
-
     /**
      * Decodes the start data block. This is specially handled by the {@link ItemTransformerRegistry}.
      * @param byteReader The byte reader to read the data from.
@@ -21,7 +20,7 @@ public class StartDataTransformer extends DataTransformer<StartData> {
      */
     public static ErrorOr<StartData> decodeData(ArrayReader<UnsignedByte> byteReader) {
         UnsignedByte idByte = byteReader.read();
-        if (idByte.value() != ID) {
+        if (idByte.value() != DataTransformerType.START_DATA_TRANSFORMER.getId()) {
             return ErrorOr.error("Encoded data does not start with a start data block.");
         }
 
@@ -52,6 +51,6 @@ public class StartDataTransformer extends DataTransformer<StartData> {
 
     @Override
     public byte getId() {
-        return ID;
+        return DataTransformerType.START_DATA_TRANSFORMER.getId();
     }
 }

@@ -6,6 +6,7 @@ package com.wynntils.models.items.encoding.impl.block;
 
 import com.wynntils.models.items.encoding.data.DurabilityData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.UnsignedByteUtils;
 import com.wynntils.utils.type.ArrayReader;
@@ -32,7 +33,7 @@ public class DurablityDataTransformer extends DataTransformer<DurabilityData> {
 
     @Override
     public byte getId() {
-        return 8;
+        return DataTransformerType.DURABILITY_DATA_TRANSFORMER.getId();
     }
 
     private ErrorOr<UnsignedByte[]> encodeDurablityData(DurabilityData data) {

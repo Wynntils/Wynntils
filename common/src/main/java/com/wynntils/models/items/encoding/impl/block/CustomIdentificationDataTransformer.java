@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -38,7 +39,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
 
     @Override
     public byte getId() {
-        return 12;
+        return DataTransformerType.CUSTOM_IDENTIFICATION_DATA_TRANSFORMER.getId();
     }
 
     private ErrorOr<UnsignedByte[]> encodeCustomIdentificationData(CustomIdentificationsData data) {

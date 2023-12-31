@@ -7,6 +7,7 @@ package com.wynntils.models.items.encoding.impl.block;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.items.encoding.data.ShinyData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.utils.UnsignedByteUtils;
@@ -36,7 +37,7 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
 
     @Override
     public byte getId() {
-        return 6;
+        return DataTransformerType.SHINY_DATA_TRANSFORMER.getId();
     }
 
     private static UnsignedByte[] encodeShinyData(ShinyData data) {

@@ -7,6 +7,7 @@ package com.wynntils.models.items.encoding.impl.block;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.items.encoding.data.DefenseData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.UnsignedByteUtils;
 import com.wynntils.utils.type.ArrayReader;
@@ -33,7 +34,7 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
 
     @Override
     public byte getId() {
-        return 11;
+        return DataTransformerType.DEFENSE_DATA_TRANSFORMER.getId();
     }
 
     @Override

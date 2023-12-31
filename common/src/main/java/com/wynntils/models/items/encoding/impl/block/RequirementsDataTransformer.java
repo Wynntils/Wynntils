@@ -9,6 +9,7 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.items.encoding.data.RequirementsData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.UnsignedByteUtils;
 import com.wynntils.utils.type.ArrayReader;
@@ -44,7 +45,7 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
 
     @Override
     public byte getId() {
-        return 9;
+        return DataTransformerType.REQUIREMENTS_DATA_TRANSFORMER.getId();
     }
 
     private ErrorOr<UnsignedByte[]> encodeRequirementsData(RequirementsData data) {

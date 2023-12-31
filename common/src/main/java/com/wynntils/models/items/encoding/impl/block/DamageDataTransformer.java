@@ -8,6 +8,7 @@ import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.items.encoding.data.DamageData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.UnsignedByteUtils;
@@ -37,7 +38,7 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
 
     @Override
     public byte getId() {
-        return 10;
+        return DataTransformerType.DAMAGE_DATA_TRANSFORMER.getId();
     }
 
     @Override

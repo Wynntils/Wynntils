@@ -7,6 +7,7 @@ package com.wynntils.models.items.encoding.impl.block;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.UnsignedByteUtils;
 import com.wynntils.utils.type.ArrayReader;
@@ -39,7 +40,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
 
     @Override
     public byte getId() {
-        return 4;
+        return DataTransformerType.POWDER_DATA_TRANSFORMER.getId();
     }
 
     private ErrorOr<UnsignedByte[]> encodePowderData(PowderData data) {

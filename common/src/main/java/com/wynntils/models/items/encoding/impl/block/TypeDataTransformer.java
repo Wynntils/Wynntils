@@ -6,6 +6,7 @@ package com.wynntils.models.items.encoding.impl.block;
 
 import com.wynntils.models.items.encoding.data.TypeData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
@@ -38,6 +39,6 @@ public class TypeDataTransformer extends DataTransformer<TypeData> {
 
     @Override
     public byte getId() {
-        return 1;
+        return DataTransformerType.TYPE_DATA_TRANSFORMER.getId();
     }
 }

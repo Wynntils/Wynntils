@@ -6,6 +6,7 @@ package com.wynntils.models.items.encoding.impl.block;
 
 import com.wynntils.models.items.encoding.data.RerollData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
+import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
@@ -35,6 +36,6 @@ public class RerollDataTransformer extends DataTransformer<RerollData> {
 
     @Override
     public byte getId() {
-        return 5;
+        return DataTransformerType.REROLL_DATA_TRANSFORMER.getId();
     }
 }
