@@ -11,16 +11,9 @@ import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
 import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.UnsignedByte;
-import java.util.List;
 
 public class CustomConsumableTypeDataTransformer extends DataTransformer<CustomConsumableTypeData> {
-    private static final List<Pair<ConsumableType, Integer>> CONSUMABLE_TYPE_IDS = List.of(
-            new Pair<>(ConsumableType.POTION, 0),
-            new Pair<>(ConsumableType.FOOD, 1),
-            new Pair<>(ConsumableType.SCROLL, 2));
-
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomConsumableTypeData data) {
         return switch (version) {
@@ -43,25 +36,18 @@ public class CustomConsumableTypeDataTransformer extends DataTransformer<CustomC
 
     private ErrorOr<UnsignedByte[]> encodeCustomConsumableTypeData(CustomConsumableTypeData data) {
         // The data is a single byte, containing the id of the type of the item.
-        for (Pair<ConsumableType, Integer> consumableTypeId : CONSUMABLE_TYPE_IDS) {
-            if (consumableTypeId.key() == data.consumableType()) {
-                int id = consumableTypeId.value();
-                return ErrorOr.of(new UnsignedByte[] {new UnsignedByte((byte) id)});
-            }
-        }
-
-        return ErrorOr.error("Cannot encode consumable type: " + data.consumableType());
+        return ErrorOr.of(
+                new UnsignedByte[] {UnsignedByte.of((byte) data.consumableType().getId())});
     }
 
     private ErrorOr<CustomConsumableTypeData> decodeCustomConsumableTypeData(ArrayReader<UnsignedByte> byteReader) {
         // The data is a single byte, containing the id of the type of the item.
         int typeId = byteReader.read().value();
-        for (Pair<ConsumableType, Integer> consumableTypeId : CONSUMABLE_TYPE_IDS) {
-            if (consumableTypeId.value() == typeId) {
-                return ErrorOr.of(new CustomConsumableTypeData(consumableTypeId.key()));
-            }
+        ConsumableType type = ConsumableType.fromId(typeId);
+        if (type == null) {
+            return ErrorOr.error("Unknown consumable type id: " + typeId);
         }
 
-        return ErrorOr.error("Cannot decode consumable type: " + typeId);
+        return ErrorOr.of(new CustomConsumableTypeData(type));
     }
 }

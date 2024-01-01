@@ -13,17 +13,11 @@ import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.UnsignedByteUtils;
 import com.wynntils.utils.type.ArrayReader;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EffectsDataTransformer extends DataTransformer<EffectsData> {
-    private static final List<Pair<ConsumableEffect, Integer>> CONSUMABLE_EFFECT_IDS = List.of(
-            new Pair<>(ConsumableEffect.HEAL, 0),
-            new Pair<>(ConsumableEffect.MANA, 1),
-            new Pair<>(ConsumableEffect.DURATION, 2));
-
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, EffectsData data) {
         return switch (version) {
@@ -51,19 +45,7 @@ public class EffectsDataTransformer extends DataTransformer<EffectsData> {
         // An effect is encoded the following way:
         for (NamedItemEffect namedEffect : data.namedEffects()) {
             // The first byte is the id of the effect.
-
-            UnsignedByte id = null;
-            for (Pair<ConsumableEffect, Integer> consumableEffectId : CONSUMABLE_EFFECT_IDS) {
-                if (consumableEffectId.key() == namedEffect.type()) {
-                    id = UnsignedByte.of((byte) consumableEffectId.value().intValue());
-                    break;
-                }
-            }
-
-            if (id == null) {
-                return ErrorOr.error("Cannot encode consumable effect: " + namedEffect.type());
-            }
-
+            UnsignedByte id = UnsignedByte.of((byte) namedEffect.type().getId());
             bytes.add(id);
 
             // The next bytes are the effect's value bytes, which are assembled into an integer
@@ -84,20 +66,14 @@ public class EffectsDataTransformer extends DataTransformer<EffectsData> {
             // The first byte is the id of the effect.
             int effectId = byteReader.read().value();
 
-            // The next bytes are the effect's value bytes, which are assembled into an integer
-            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
-
-            NamedItemEffect namedEffect = null;
-            for (Pair<ConsumableEffect, Integer> consumableEffectId : CONSUMABLE_EFFECT_IDS) {
-                if (consumableEffectId.value() == effectId) {
-                    namedEffect = new NamedItemEffect(consumableEffectId.key(), value);
-                    break;
-                }
-            }
-
-            if (namedEffect == null) {
+            ConsumableEffect consumableEffect = ConsumableEffect.fromId(effectId);
+            if (consumableEffect == null) {
                 return ErrorOr.error("Cannot decode consumable effect: " + effectId);
             }
+
+            // The next bytes are the effect's value bytes, which are assembled into an integer
+            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+            NamedItemEffect namedEffect = new NamedItemEffect(consumableEffect, value);
 
             namedEffects.add(namedEffect);
         }
