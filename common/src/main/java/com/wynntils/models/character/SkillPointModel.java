@@ -56,7 +56,6 @@ public class SkillPointModel extends Model {
     private Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
-    private boolean tomesUnlocked = true;
 
     public SkillPointModel() {
         super(List.of());
@@ -311,15 +310,20 @@ public class SkillPointModel extends Model {
                         .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                         .verifyContentChange(this::verifyCharacterInfo)
                         .processIncomingContainer(this::processTotalSkillPoints))
-                .thenIf(
-                        tomesUnlocked,
+                .conditionalThen(
+                        this::checkTomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
                                 .expectContainerTitle(ContainerModel.MASTERY_TOMES_NAME)
                                 .verifyContentChange(this::verifyTomeMenu)
                                 .processIncomingContainer(this::processTomeSkillPoints))
+                .execute(this::calculateAssignedSkillPoints)
                 .build();
 
         query.executeQuery();
+    }
+
+    private boolean checkTomesUnlocked(ContainerContent content) {
+        return LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
     }
 
     private boolean verifyCharacterInfo(
@@ -349,11 +353,6 @@ public class SkillPointModel extends Model {
                         + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
-
-        tomesUnlocked = LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
-        if (!tomesUnlocked) {
-            calculateAssignedSkillPoints();
-        }
     }
 
     private void processTomeSkillPoints(ContainerContent content) {
@@ -371,8 +370,6 @@ public class SkillPointModel extends Model {
                         + LoreUtils.getStringLore(content.items().get(slot)));
             }
         }
-
-        calculateAssignedSkillPoints();
     }
 
     private void calculateAssignedSkillPoints() {

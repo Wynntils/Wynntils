@@ -43,10 +43,8 @@ public final class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder thenIf(boolean condition, QueryStep step) {
-        if (condition) {
-            steps.add(step);
-        }
+    public QueryBuilder conditionalThen(ContainerPredicate predicate, QueryStep step) {
+        steps.add(new ConditionalQueryStep(predicate, step));
         return this;
     }
 
