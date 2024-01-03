@@ -16,6 +16,7 @@ import com.wynntils.models.activities.quests.QuestModel;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
+import com.wynntils.models.character.SkillPointModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.characterstats.ShinyModel;
@@ -99,6 +100,7 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final ShinyModel Shiny = new ShinyModel();
+    public static final SkillPointModel SkillPoint = new SkillPointModel();
     public static final SpellModel Spell = new SpellModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();

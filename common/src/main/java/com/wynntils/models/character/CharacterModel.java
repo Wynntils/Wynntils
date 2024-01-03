@@ -53,7 +53,7 @@ public final class CharacterModel extends Model {
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
-    private static final int CHARACTER_INFO_SLOT = 7;
+    public static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int GUILD_INFO_SLOT = 26;

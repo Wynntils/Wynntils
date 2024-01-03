@@ -227,13 +227,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     }
 
     private boolean isExcludedContainer(Screen screen) {
-        if (screen instanceof GearViewerScreen) return true;
-
-        if (StyledText.fromComponent(screen.getTitle())
-                .getStringWithoutFormatting()
-                .equals("Character Info")) return true;
-
-        return false;
+        return Models.Container.isCharacterInfoScreen(screen) || screen instanceof GearViewerScreen;
     }
 
     public enum EmeraldCountType {
