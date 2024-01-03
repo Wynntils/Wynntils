@@ -71,7 +71,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
             }
         }
 
-        // Pad the data to the nearest byte with '1' bits
+        // Pad the data to the nearest byte with '0' bits
         // (the array is initialized with '0' bits, but we do this for clarity)
         for (int i = bitsNeeded; i < totalBits; i++) {
             powderData[i] = false;
