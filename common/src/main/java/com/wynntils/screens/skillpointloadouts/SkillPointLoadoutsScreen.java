@@ -12,6 +12,9 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.skillpointloadouts.widgets.ConvertButton;
+import com.wynntils.screens.skillpointloadouts.widgets.DeleteButton;
+import com.wynntils.screens.skillpointloadouts.widgets.LoadButton;
 import com.wynntils.screens.skillpointloadouts.widgets.LoadoutWidget;
 import com.wynntils.screens.skillpointloadouts.widgets.SaveButton;
 import com.wynntils.utils.colors.CommonColors;
@@ -39,7 +42,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     public TextInputBoxWidget saveNameInput;
     public boolean hasSaveNameConflict = false;
 
-    private Pair<String, SavableSkillPointSet> selectedLoadout;
+    public Pair<String, SavableSkillPointSet> selectedLoadout;
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
     private WynntilsButton convertButton;
@@ -94,65 +97,32 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 Models.SkillPoint::saveCurrentBuild);
         this.addRenderableWidget(saveBuildButton);
 
-        loadButton =
-                new WynntilsButton(
-                        (int) (dividedWidth * 35),
-                        (int) (dividedHeight * 52),
-                        (int) ((dividedWidth * 44) - (dividedWidth * 35)),
-                        BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.load")) {
-                    @Override
-                    public void onPress() {
-                        Models.SkillPoint.loadLoadout(selectedLoadout.key());
-                    }
-                };
+        loadButton = new LoadButton(
+                (int) (dividedWidth * 35),
+                (int) (dividedHeight * 52),
+                (int) ((dividedWidth * 44) - (dividedWidth * 35)),
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.load"),
+                this);
         this.addRenderableWidget(loadButton);
 
-        deleteButton =
-                new WynntilsButton(
-                        (int) (dividedWidth * 45),
-                        (int) (dividedHeight * 52),
-                        (int) ((dividedWidth * 51) - (dividedWidth * 45)),
-                        BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.delete")
-                                .withStyle(ChatFormatting.RED)) {
-                    @Override
-                    public void onPress() {
-                        Models.SkillPoint.deleteLoadout(selectedLoadout.key());
-                        setSelectedLoadout(null);
-                        populateLoadouts();
-                    }
-                };
+        deleteButton = new DeleteButton(
+                (int) (dividedWidth * 45),
+                (int) (dividedHeight * 52),
+                (int) ((dividedWidth * 51) - (dividedWidth * 45)),
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.delete")
+                        .withStyle(ChatFormatting.RED),
+                this);
         this.addRenderableWidget(deleteButton);
 
-        convertButton =
-                new WynntilsButton(
-                        (int) (dividedWidth * 52),
-                        (int) (dividedHeight * 52),
-                        (int) ((dividedWidth * 59) - (dividedWidth * 52)),
-                        BUTTON_HEIGHT,
-                        Component.translatable("screens.wynntils.skillPointLoadouts.convert")) {
-                    @Override
-                    public void onPress() {
-                        System.out.println("Converting " + selectedLoadout.key() + " currently a build?"
-                                + selectedLoadout.value().isBuild());
-                        if (selectedLoadout.value().isBuild()) {
-                            Models.SkillPoint.saveSkillPoints(
-                                    selectedLoadout.key(),
-                                    selectedLoadout.value().getSkillPointsAsArray());
-                        } else {
-                            Models.SkillPoint.saveBuild(
-                                    selectedLoadout.key(),
-                                    selectedLoadout.value().getSkillPointsAsArray());
-                        }
-                        populateLoadouts();
-                        setSelectedLoadout(new Pair<>(
-                                selectedLoadout.key(),
-                                Models.SkillPoint.getLoadouts().get(selectedLoadout.key())));
-                    }
-                };
-        convertButton.setTooltip(
-                Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.convertTooltip")));
+        convertButton = new ConvertButton(
+                (int) (dividedWidth * 52),
+                (int) (dividedHeight * 52),
+                (int) ((dividedWidth * 59) - (dividedWidth * 52)),
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.skillPointLoadouts.convert"),
+                this);
         this.addRenderableWidget(convertButton);
 
         setSelectedLoadout(null);
