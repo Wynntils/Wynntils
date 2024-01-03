@@ -15,8 +15,7 @@ public record SavableSkillPointSet(
         int defence,
         int agility,
         List<String> armourNames,
-        List<String> accessoryNames,
-        boolean isBuild) {
+        List<String> accessoryNames) {
     /**
      * Constructs a new SavableSkillPointSet representing just a loadout.
      */
@@ -35,8 +34,7 @@ public record SavableSkillPointSet(
                 skillPoints[3],
                 skillPoints[4],
                 Collections.unmodifiableList(armourNames),
-                Collections.unmodifiableList(accessoryNames),
-                !armourNames.isEmpty() || !accessoryNames.isEmpty());
+                Collections.unmodifiableList(accessoryNames));
     }
 
     public int[] getSkillPointsAsArray() {
@@ -59,10 +57,14 @@ public record SavableSkillPointSet(
         return Collections.unmodifiableList(accessoryNames);
     }
 
+    public boolean isBuild() {
+        return !armourNames.isEmpty() || !accessoryNames.isEmpty();
+    }
+
     @Override
     public String toString() {
         return "SavableSkillPointSet{" + "isBuild="
-                + isBuild + ", strength="
+                + isBuild() + ", strength="
                 + strength + ", dexterity="
                 + dexterity + ", intelligence="
                 + intelligence + ", defence="
