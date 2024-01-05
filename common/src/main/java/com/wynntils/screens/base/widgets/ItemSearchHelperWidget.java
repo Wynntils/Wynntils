@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -9,6 +9,7 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,5 +129,8 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
                             .append(")"))
                     .withStyle(ChatFormatting.GRAY));
         }
+
+        // Wrap all tooltips pages for a maximum width
+        tooltipPages.replaceAll((tooltipPage) -> ComponentUtils.wrapTooltips(tooltipPage, TOOLTIP_WIDTH));
     }
 }
