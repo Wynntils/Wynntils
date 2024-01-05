@@ -49,14 +49,6 @@ public record SavableSkillPointSet(
         return (int) Math.ceil(getSkillPointsSum() / 2.0) + 1;
     }
 
-    public List<String> getArmourNames() {
-        return Collections.unmodifiableList(armourNames);
-    }
-
-    public List<String> getAccessoryNames() {
-        return Collections.unmodifiableList(accessoryNames);
-    }
-
     public boolean isBuild() {
         return !armourNames.isEmpty() || !accessoryNames.isEmpty();
     }

@@ -75,9 +75,9 @@ public class LoadoutWidget extends AbstractWidget {
                             poseStack,
                             StyledText.fromString(String.join(
                                     ", ",
-                                    (loadout.getArmourNames().isEmpty()
-                                            ? loadout.getAccessoryNames()
-                                            : loadout.getArmourNames()))),
+                                    (loadout.armourNames().isEmpty()
+                                            ? loadout.accessoryNames()
+                                            : loadout.armourNames()))),
                             dividedWidth * 4,
                             this.getY() + ((float) this.getHeight() / 4 * 3),
                             CommonColors.WHITE,

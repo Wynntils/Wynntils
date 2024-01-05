@@ -392,8 +392,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 TextShadow.NORMAL);
             }
             if (selectedLoadout.value().isBuild()) {
-                for (int i = 0; i < selectedLoadout.value().getArmourNames().size(); i++) {
-                    String armour = selectedLoadout.value().getArmourNames().get(i);
+                for (int i = 0; i < selectedLoadout.value().armourNames().size(); i++) {
+                    String armour = selectedLoadout.value().armourNames().get(i);
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
@@ -405,9 +405,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     VerticalAlignment.BOTTOM,
                                     TextShadow.NORMAL);
                 }
-                for (int i = 0; i < selectedLoadout.value().getAccessoryNames().size(); i++) {
-                    String accessory =
-                            selectedLoadout.value().getAccessoryNames().get(i);
+                for (int i = 0; i < selectedLoadout.value().accessoryNames().size(); i++) {
+                    String accessory = selectedLoadout.value().accessoryNames().get(i);
                     FontRenderer.getInstance()
                             .renderText(
                                     poseStack,
@@ -415,7 +414,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     dividedWidth
                                             * (selectedLoadout
                                                             .value()
-                                                            .getArmourNames()
+                                                            .armourNames()
                                                             .isEmpty()
                                                     ? 35
                                                     : 44), // left align accessories if no armour
