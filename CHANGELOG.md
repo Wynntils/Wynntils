@@ -1,9 +1,17 @@
+## [0.0.4-beta.110](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.109...v0.0.4-beta.110) (2024-01-05)
+
+
+### Bug Fixes
+
+* More fixes for guild map crashing at season reset ([#2311](https://github.com/Wynntils/Artemis/issues/2311)) ([383a9de](https://github.com/Wynntils/Artemis/commit/383a9de86308d5a91767d4116f83ab829fcf283b))
+
 ## [0.0.4-beta.109](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.108...v0.0.4-beta.109) (2023-12-30)
 
 
 ### Miscellaneous Chores
 
 * Don't run tests on "build" ([#2307](https://github.com/Wynntils/Artemis/issues/2307)) ([cffdad9](https://github.com/Wynntils/Artemis/commit/cffdad9c922f5a38cc268fbb12f65b8296c069e7))
+* **release:** v0.0.4-beta.109 [skip ci] ([df3bcda](https://github.com/Wynntils/Artemis/commit/df3bcda547b746e757d351d4bca642a290da0ffa))
 
 ## [0.0.4-beta.108](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.107...v0.0.4-beta.108) (2023-12-28)
 
@@ -41,16 +49,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2300](https://github.com/Wynntils/Artemis/issues/2300)) ([8b1ac87](https://github.com/Wynntils/Artemis/commit/8b1ac87d6f217e1acd3a7ec2d14d55dba5b64011))
 * **release:** v0.0.4-beta.106 [skip ci] ([7628e7d](https://github.com/Wynntils/Artemis/commit/7628e7d294c0f185c00471d9e1458610d7fd11e0))
-
-## [0.0.4-beta.105](https://github.com/Wynntils/Artemis/compare/v0.0.4-beta.104...v0.0.4-beta.105) (2023-12-26)
-
-
-### New Features
-
-* Parse more missing CraftedGearItem values ([#2298](https://github.com/Wynntils/Artemis/issues/2298)) ([a186dfa](https://github.com/Wynntils/Artemis/commit/a186dfaa3378bd33901b0285c40924cc054f4dfc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.4-beta.105 [skip ci] ([29397f5](https://github.com/Wynntils/Artemis/commit/29397f5d3cf957e06d9fe0655ce54ce153d8d44f))
 
