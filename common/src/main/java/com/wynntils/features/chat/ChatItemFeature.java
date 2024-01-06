@@ -170,7 +170,7 @@ public class ChatItemFeature extends Feature {
         if (!Models.ItemEncoding.canEncodeItem(wynnItemOpt.get())) return;
 
         if (showSharingScreen.get()) {
-            McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get()));
+            McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get(), hoveredSlot.getItem()));
         } else {
             makeChatPrompt(wynnItemOpt.get());
         }

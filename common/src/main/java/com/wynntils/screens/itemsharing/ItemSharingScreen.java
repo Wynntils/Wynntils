@@ -16,6 +16,7 @@ import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.type.SavedItemStack;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -30,7 +31,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -38,11 +41,15 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public final class ItemSharingScreen extends WynntilsScreen {
+    private final ItemStack itemStack;
     private final WynnItem wynnItem;
 
+    private boolean savedItem = false;
+    private Button saveButton;
     private EncodedByteBuffer encodedItem;
     private int backgroundX;
     private int backgroundY;
@@ -50,14 +57,29 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private ItemStack previewItemStack;
     private List<AbstractWidget> options = new ArrayList<>();
 
-    private ItemSharingScreen(WynnItem wynnItem) {
+    private ItemSharingScreen(WynnItem wynnItem, ItemStack itemStack) {
         super(Component.literal("Item Sharing Screen"));
 
         this.wynnItem = wynnItem;
+        this.itemStack = itemStack;
     }
 
-    public static Screen create(WynnItem wynnItem) {
-        return new ItemSharingScreen(wynnItem);
+    private ItemSharingScreen(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
+        super(Component.literal("Item Sharing Screen"));
+
+        this.wynnItem = wynnItem;
+        this.itemStack = itemStack;
+        this.savedItem = savedItem;
+    }
+
+    // Creating screen from an item
+    public static Screen create(WynnItem wynnItem, ItemStack itemStack) {
+        return new ItemSharingScreen(wynnItem, itemStack);
+    }
+
+    // Creating screen from vault
+    public static Screen create(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
+        return new ItemSharingScreen(wynnItem, itemStack, savedItem);
     }
 
     @Override
@@ -162,17 +184,67 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     private void shareItem(String target) {
-        if (target.equals("guild")) {
-            Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
-        } else if (target.equals("party")) {
-            Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
-        } else if (target.equals("clipboard")) {
-            McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
+        switch (target) {
+            case "guild" -> Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
+            case "party" -> Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
+            case "save" -> {
+                Map<String, Map<String, SavedItemStack>> savedItems = Models.ItemEncoding.savedItems.get();
+                Map<String, SavedItemStack> uncategorisedItems =
+                        savedItems.getOrDefault("Uncategorized", new HashMap<>());
 
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
-                    .withStyle(ChatFormatting.GREEN));
-        } else {
-            // TODO: Save item to storage
+                String encodedBase64 = encodedItem.toBase64String();
+
+                // Check if the item is already saved, loop through categories then check keys (encoded item)
+                for (Map.Entry<String, Map<String, SavedItemStack>> entry : savedItems.entrySet()) {
+                    if (entry.getValue().containsKey(encodedBase64)) {
+                        McUtils.sendMessageToClient(Component.translatable(
+                                        "screens.wynntils.itemSharing.alreadySaved", itemStack.getHoverName())
+                                .withStyle(ChatFormatting.RED));
+                        return;
+                    }
+                }
+
+                ItemStack itemStackToSave = itemStack;
+
+                // Gear items can have their item changed by cosmetics so we need to get their original item
+                // FIXME: Does not work for crafted gear
+                if (wynnItem instanceof GearItem gearItem) {
+                    itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s vault");
+                }
+
+                // Leather armor can be dyed, we need to store the color
+                int color = itemStackToSave.getTag().getCompound("display").contains("color")
+                        ? itemStackToSave.getTag().getCompound("display").getInt("color")
+                        : -1;
+
+                // Regular ItemStack can't be converted to json so store the tags needed
+                // to recreate it
+                SavedItemStack savedItemStack = new SavedItemStack(
+                        Item.getId(itemStackToSave.getItem()),
+                        itemStackToSave.getTag().getInt("Damage"),
+                        itemStackToSave.getTag().getInt("HideFlags"),
+                        itemStackToSave.getTag().getBoolean("Unbreakable"),
+                        color);
+
+                uncategorisedItems.put(encodedBase64, savedItemStack);
+                savedItems.put("Uncategorized", uncategorisedItems);
+
+                Models.ItemEncoding.savedItems.store(savedItems);
+                Models.ItemEncoding.savedItems.touched();
+
+                McUtils.sendMessageToClient(
+                        Component.translatable("screens.wynntils.itemSharing.savedToVault", itemStack.getHoverName())
+                                .withStyle(ChatFormatting.GREEN));
+
+                savedItem = true;
+                saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openVault"));
+            }
+            default -> {
+                McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
+
+                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
+                        .withStyle(ChatFormatting.GREEN));
+            }
         }
     }
 
@@ -235,11 +307,25 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 .size(shareButtonWidth, 20)
                 .build()));
 
-        options.add(this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.itemSharing.save"), (b) -> shareItem("save"))
+        // If an item has already been saved then this button will act as easy access to their saved items
+        Component saveButtonMessage = savedItem
+                ? Component.translatable("screens.wynntils.itemSharing.openVault")
+                : Component.translatable("screens.wynntils.itemSharing.save");
+
+        saveButton = new Button.Builder(saveButtonMessage, (b) -> {
+                    if (!savedItem) {
+                        shareItem("save");
+                    } else {
+                        McUtils.mc().setScreen(SavedItemsScreen.create());
+                    }
+                })
                 .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
                 .size(shareButtonWidth, 20)
-                .build()));
+                .build();
+
+        this.addRenderableWidget(saveButton);
+
+        options.add(saveButton);
 
         options.add(this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.itemSharing.copy"), (b) -> shareItem("clipboard"))

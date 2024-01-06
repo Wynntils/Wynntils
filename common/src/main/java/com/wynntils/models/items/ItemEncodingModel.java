@@ -9,12 +9,18 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.type.SavedItemStack;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public class ItemEncodingModel extends Model {
+    @Persisted
+    public final Storage<Map<String, Map<String, SavedItemStack>>> savedItems = new Storage<>(new TreeMap<>());
+
     @Persisted
     public final Storage<Boolean> extendedIdentificationEncoding = new Storage<>(false);
 
@@ -33,6 +39,8 @@ public class ItemEncodingModel extends Model {
 
     public ItemEncodingModel() {
         super(List.of());
+
+        savedItems.get().putIfAbsent("Uncategorized", new TreeMap<>());
     }
 
     public ErrorOr<EncodedByteBuffer> encodeItem(WynnItem wynnItem, EncodingSettings encodingSettings) {

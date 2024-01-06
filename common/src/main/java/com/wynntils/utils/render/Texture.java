@@ -151,6 +151,16 @@ public enum Texture {
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
     // endregion
 
+    // region Item Storage
+    VAULT("item_storage/vault.png", 170, 172),
+    VAULT_ADD("item_storage/vault_add.png", 11, 22),
+    VAULT_BUTTON_LEFT("item_storage/vault_button_left.png", 11, 20),
+    VAULT_BUTTON_RIGHT("item_storage/vault_button_right.png", 11, 20),
+    VAULT_CONFIRM("item_storage/vault_confirm.png", 11, 22),
+    VAULT_DELETE("item_storage/vault_delete.png", 11, 22),
+    VAULT_SCROLL("item_storage/vault_scroll_button.png", 8, 9),
+    // endregion
+
     // region Lootrun
     LOOTRUN_LINE("lootrun/path_arrow.png", 16, 16),
 
