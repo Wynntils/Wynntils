@@ -357,14 +357,17 @@ public class SkillPointModel extends Model {
 
     private void processTomeSkillPoints(ContainerContent content) {
         for (Integer slot : SKILL_POINT_TOME_SLOTS) {
+            ItemStack itemStack = content.items().get(slot);
             Optional<WynnItem> wynnItemOptional =
-                    Models.Item.getWynnItem(content.items().get(slot));
+                    Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof TomeItem tome) {
                 tome.getIdentifications().forEach(x -> {
                     if (x.statType() instanceof SkillStatType skillStat) {
                         tomeSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                     }
                 });
+            } else if (LoreUtils.getStringLore(itemStack).contains("§6Requirements:")) {
+                // no-op, this is a tome that has not been unlocked or is not used by the player
             } else {
                 WynntilsMod.warn("Skill Point Model failed to parse tome: "
                         + LoreUtils.getStringLore(content.items().get(slot)));
