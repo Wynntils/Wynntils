@@ -1,9 +1,9 @@
-name: Publish Beta Release
+name: Publish Alpha Release
 
 on:
   push:
     branches:
-      - beta
+      - alpha
 
 jobs:
   changelog:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v4.1.1
+        uses: TriPSs/conventional-changelog-action@v3.17.0
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
@@ -38,8 +38,7 @@ jobs:
           skip-version-file: true
           skip-git-pull: true
           pre-release: true
-          pre-release-identifier: beta
-          release-count: 5
+          pre-release-identifier: alpha
 
       - name: Create release
         if: ${{ steps.changelog.outputs.skipped != 'true' }}
@@ -96,51 +95,6 @@ jobs:
           files: |
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
-
-      - name: Upload build
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: |
-            **/build/libs/*-fabric+MC-*.jar
-            **/build/libs/*-forge+MC-*.jar
-          if-no-files-found: error
-
-  release:
-    name: Release to Modrinth and CurseForge
-    if: ${{ needs.changelog.outputs.skipped != 'true' }}
-    strategy:
-      matrix:
-        modloader: [fabric, forge]
-    runs-on: ubuntu-latest
-    needs: [build, changelog]
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-
-      - uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          modrinth-id: dU5Gb9Ab
-          modrinth-featured: true
-          modrinth-unfeature-mode: subset
-          modrinth-token: ${{ secrets.MODRINTH_API_TOKEN }}
-
-          curseforge-id: 303451
-          curseforge-token: ${{ secrets.CF_API_TOKEN }}
-
-          files-primary: "**/build/libs/*-${{ matrix.modloader }}*.jar"
-          files-secondary: ""
-
-          name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
-          version: ${{ needs.changelog.outputs.tag }}
-          version-type: beta
-          game-versions: 1.20.2
-          changelog: ${{ needs.changelog.outputs.changelog }}
-
-          loaders: ${{ matrix.modloader }}
-          java: 17
-
 
   release-gh:
     name: Release Github
