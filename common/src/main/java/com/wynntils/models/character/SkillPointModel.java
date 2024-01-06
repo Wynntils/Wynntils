@@ -358,8 +358,7 @@ public class SkillPointModel extends Model {
     private void processTomeSkillPoints(ContainerContent content) {
         for (Integer slot : SKILL_POINT_TOME_SLOTS) {
             ItemStack itemStack = content.items().get(slot);
-            Optional<WynnItem> wynnItemOptional =
-                    Models.Item.getWynnItem(itemStack);
+            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof TomeItem tome) {
                 tome.getIdentifications().forEach(x -> {
                     if (x.statType() instanceof SkillStatType skillStat) {
