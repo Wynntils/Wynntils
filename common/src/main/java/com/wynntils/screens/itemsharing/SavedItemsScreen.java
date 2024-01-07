@@ -82,12 +82,14 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 8,
                 this.topPos + 22,
                 (b) -> {
-                    // Deselect an item if any was selected
-                    originalCategory = "";
-                    selectedItem = "";
-                    selectedItemSlot = null;
+                    if (b == 0) {
+                        // Deselect an item if any was selected
+                        originalCategory = "";
+                        selectedItem = "";
+                        selectedItemSlot = null;
 
-                    addCategory();
+                        addCategory();
+                    }
                 },
                 List.of(
                         Component.translatable("screens.wynntils.savedItems.addTooltip1"),
