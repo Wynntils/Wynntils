@@ -262,7 +262,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!draggingScroll) return false;
+        if (!draggingScroll) return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
 
         int renderY = this.topPos + 18;
         int newValue = Math.round(
