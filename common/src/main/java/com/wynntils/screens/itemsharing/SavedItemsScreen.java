@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -348,7 +350,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         if (addingCategory) {
             if (!categoryInput.getTextBoxInput().isEmpty()) {
                 // Save new category
-                Services.ItemVault.savedItems.get().put(categoryInput.getTextBoxInput(), new HashMap<>());
+                Services.ItemVault.savedItems.get().put(categoryInput.getTextBoxInput(), new TreeMap<>());
                 Services.ItemVault.savedItems.touched();
             }
 
