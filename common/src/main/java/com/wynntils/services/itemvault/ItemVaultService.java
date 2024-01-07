@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ItemVaultService extends Service {
+    private static final String DEFAULT_CATEGORY = "Uncategorized";
+
     @Persisted
     public final Storage<Map<String, Map<String, SavedItemStack>>> savedItems = new Storage<>(new TreeMap<>());
 
@@ -20,5 +22,9 @@ public class ItemVaultService extends Service {
         super(List.of());
 
         savedItems.get().putIfAbsent("Uncategorized", new TreeMap<>());
+    }
+
+    public String getDefaultCategory() {
+        return DEFAULT_CATEGORY;
     }
 }

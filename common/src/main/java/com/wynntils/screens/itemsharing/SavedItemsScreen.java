@@ -51,14 +51,13 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private static final int ITEMS_PER_ROW = 7;
     private static final int MAX_ITEMS = 49;
     private static final int SCROLL_AREA_HEIGHT = 128;
-    private static final String DEFAULT_CATEGORY = "Uncategorized";
 
     private boolean addingCategory = false;
     private boolean draggingScroll = false;
     private int itemScrollOffset = 0;
     private List<String> encodedItems = new ArrayList<>();
     private Slot selectedItemSlot;
-    private String currentCategory = DEFAULT_CATEGORY;
+    private String currentCategory = Services.ItemVault.getDefaultCategory();
     private String originalCategory;
     private String selectedItem;
     private TextInputBoxWidget categoryInput;
@@ -369,22 +368,22 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             // Delete all items from category
             Services.ItemVault.savedItems.get().remove(currentCategory);
             Services.ItemVault.savedItems.touched();
-        } else if (!currentCategory.equals(DEFAULT_CATEGORY)) {
+        } else if (!currentCategory.equals(Services.ItemVault.getDefaultCategory())) {
             // Move all items to "Uncategorized" category, then delete category
             Map<String, SavedItemStack> uncategorisedItems =
-                    Services.ItemVault.savedItems.get().get(DEFAULT_CATEGORY);
+                    Services.ItemVault.savedItems.get().get(Services.ItemVault.getDefaultCategory());
             Map<String, SavedItemStack> currentCategoryItems =
                     Services.ItemVault.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
 
             uncategorisedItems.putAll(currentCategoryItems);
 
-            Services.ItemVault.savedItems.get().put(DEFAULT_CATEGORY, uncategorisedItems);
+            Services.ItemVault.savedItems.get().put(Services.ItemVault.getDefaultCategory(), uncategorisedItems);
             Services.ItemVault.savedItems.get().remove(currentCategory);
             Services.ItemVault.savedItems.touched();
         }
 
         // Reset to default category
-        currentCategory = DEFAULT_CATEGORY;
+        currentCategory = Services.ItemVault.getDefaultCategory();
 
         populateItems();
     }

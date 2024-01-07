@@ -191,7 +191,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
             case "save" -> {
                 Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
                 Map<String, SavedItemStack> uncategorisedItems =
-                        savedItems.getOrDefault("Uncategorized", new HashMap<>());
+                        savedItems.getOrDefault(Services.ItemVault.getDefaultCategory(), new HashMap<>());
 
                 String encodedBase64 = encodedItem.toBase64String();
 
@@ -228,7 +228,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                         color);
 
                 uncategorisedItems.put(encodedBase64, savedItemStack);
-                savedItems.put("Uncategorized", uncategorisedItems);
+                savedItems.put(Services.ItemVault.getDefaultCategory(), uncategorisedItems);
 
                 Services.ItemVault.savedItems.store(savedItems);
                 Services.ItemVault.savedItems.touched();
