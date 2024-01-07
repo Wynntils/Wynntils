@@ -17,7 +17,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.itemsharing.widgets.SavedCategoryButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsHelpButton;
-import com.wynntils.services.itemvault.type.SavedItemStack;
+import com.wynntils.services.itemvault.type.SavedItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -30,12 +30,12 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -57,11 +57,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private boolean draggingScroll = false;
     private boolean editingCategory = false;
     private int itemScrollOffset = 0;
-    private List<String> encodedItems = new ArrayList<>();
-    private Slot selectedItemSlot;
+    private List<Integer> selectedSlots = new ArrayList<>();
+    private List<SavedItem> encodedItems = new ArrayList<>();
+    private List<Pair<Pair<String, Boolean>, String>> selectedItems = new ArrayList<>();
     private String currentCategory = Services.ItemVault.getDefaultCategory();
-    private String originalCategory;
-    private String selectedItem;
     private TextInputBoxWidget categoryInput;
 
     private SavedItemsScreen(SavedItemsMenu abstractContainerMenu) {
@@ -84,11 +83,6 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.topPos + 22,
                 (b) -> {
                     if (b == 0) {
-                        // Deselect an item if any was selected
-                        originalCategory = "";
-                        selectedItem = "";
-                        selectedItemSlot = null;
-
                         if (!addingCategory) {
                             addingCategory = true;
                             addCategoryInput();
@@ -107,10 +101,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 8,
                 this.topPos + 36,
                 (b) -> {
-                    // Deselect an item if any was selected
-                    originalCategory = "";
-                    selectedItem = "";
-                    selectedItemSlot = null;
+                    selectedItems = new ArrayList<>();
 
                     deleteCategory();
                 },
@@ -123,15 +114,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 8,
                 this.topPos + 50,
                 (b) -> {
-                    if (selectedItemSlot == null) return;
-
                     if (b == 0) {
-                        moveItemCategory();
+                        moveSelectedItems();
                     } else if (b == 1) {
-                        // Deselect an item if any was selected
-                        originalCategory = "";
-                        selectedItem = "";
-                        selectedItemSlot = null;
+                        selectedItems = new ArrayList<>();
                     }
                 },
                 List.of(
@@ -147,7 +133,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                                 .withStyle(ChatFormatting.UNDERLINE),
                         Component.translatable("screens.wynntils.savedItems.help1"),
                         Component.translatable("screens.wynntils.savedItems.help2"),
-                        Component.translatable("screens.wynntils.savedItems.help3"))));
+                        Component.translatable("screens.wynntils.savedItems.help3"),
+                        Component.translatable("screens.wynntils.savedItems.help4"),
+                        Component.translatable("screens.wynntils.savedItems.help5"))));
         // endregion
 
         // region Category navigation buttons
@@ -184,9 +172,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         // Left click goes to sharing menu
         // Left+Shift deletes the item from storage
         // Right click selects it for category change
+        // Right+Shift will also deletes it from the current category when moved
         if (mouseButton == 0) {
             if (KeyboardUtils.isShiftDown()) {
-                deleteItem(encodedItems.get(slot.index));
+                deleteItem(encodedItems.get(slot.index).base64());
             } else {
                 Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(slot.getItem());
 
@@ -197,9 +186,17 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 }
             }
         } else if (mouseButton == 1) {
-            originalCategory = currentCategory;
-            selectedItem = encodedItems.get(slot.index);
-            selectedItemSlot = slot;
+            Pair<Pair<String, Boolean>, String> selectedItem = new Pair<>(
+                    new Pair<>(currentCategory, !KeyboardUtils.isShiftDown()),
+                    encodedItems.get(slot.index).base64());
+
+            if (selectedItems.contains(selectedItem)) {
+                selectedItems.remove(selectedItem);
+                selectedSlots.remove(slot.index);
+            } else {
+                selectedItems.add(selectedItem);
+                selectedSlots.add(slot.index);
+            }
         }
     }
 
@@ -226,15 +223,14 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                             TextShadow.NONE);
         }
 
-        // Draw a box around the selected item to let the user know which item they are moving
-        if (selectedItemSlot != null && currentCategory.equals(originalCategory)) {
+        for (int selectedSlot : selectedSlots) {
             RenderUtils.drawRectBorders(
                     poseStack,
                     CommonColors.WHITE,
-                    this.leftPos + selectedItemSlot.x,
-                    this.topPos + selectedItemSlot.y,
-                    this.leftPos + selectedItemSlot.x + 16,
-                    this.topPos + selectedItemSlot.y + 16,
+                    this.leftPos + this.getMenu().getSlot(selectedSlot).x,
+                    this.topPos + this.getMenu().getSlot(selectedSlot).y,
+                    this.leftPos + this.getMenu().getSlot(selectedSlot).x + 16,
+                    this.topPos + this.getMenu().getSlot(selectedSlot).y + 16,
                     0,
                     1);
         }
@@ -337,8 +333,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     public void scrollCategories(int scrollDirection) {
-        List<String> categories =
-                new ArrayList<>(Services.ItemVault.savedItems.get().keySet());
+        List<String> categories = new ArrayList<>(Services.ItemVault.categories.get());
 
         int currentIndex = categories.indexOf(currentCategory);
         int newIndex = currentIndex + scrollDirection;
@@ -382,158 +377,181 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void addCategory() {
-        if (addingCategory) {
-            if (!categoryInput.getTextBoxInput().isEmpty()) {
-                // Save new category
-                Services.ItemVault.savedItems.get().put(categoryInput.getTextBoxInput(), new TreeMap<>());
-                Services.ItemVault.savedItems.touched();
-            }
-        } else if (editingCategory) {
-            if (!categoryInput.getTextBoxInput().isEmpty()) {
-                Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
-                Map<String, SavedItemStack> items = savedItems.get(currentCategory);
-
-                // Add the new category with items from current then remove current category
-                savedItems.put(categoryInput.getTextBoxInput(), items);
-                savedItems.remove(currentCategory);
-
-                // Save renamed category
-                Services.ItemVault.savedItems.store(savedItems);
-                Services.ItemVault.savedItems.touched();
-
-                // Change to new category
-                currentCategory = categoryInput.getTextBoxInput();
-
-                populateItems();
-            }
-        }
+        String newCategory = categoryInput.getTextBoxInput();
 
         // Remove the input widget
         this.removeWidget(categoryInput);
         categoryInput = null;
+
+        if (newCategory.isEmpty()) return;
+
+        if (addingCategory) {
+            // Save new category
+            Services.ItemVault.categories.get().add(newCategory);
+            Services.ItemVault.categories.touched();
+
+            if (!selectedItems.isEmpty()) {
+                currentCategory = newCategory;
+                moveSelectedItems();
+            }
+        } else if (editingCategory) {
+            // Add renamed category and remove previous name
+            Services.ItemVault.categories.get().add(newCategory);
+            Services.ItemVault.categories.get().remove(currentCategory);
+            Services.ItemVault.categories.touched();
+
+            for (SavedItem savedItem : Services.ItemVault.savedItems.get()) {
+                // If an item is in the current category, add it to the renamed and remove previous name
+                if (savedItem.categories().contains(currentCategory)) {
+                    savedItem.categories().add(newCategory);
+                    savedItem.categories().remove(currentCategory);
+                }
+            }
+
+            Services.ItemVault.savedItems.touched();
+
+            // Change to new category
+            currentCategory = newCategory;
+
+            populateItems();
+        }
     }
 
     private void deleteCategory() {
+        Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
+
         if (KeyboardUtils.isShiftDown()) {
-            // Delete all items from category
-            Services.ItemVault.savedItems.get().remove(currentCategory);
+            Set<SavedItem> newSavedItems = new HashSet<>();
+
+            // Remove category from all items
+            for (SavedItem savedItem : savedItems) {
+                savedItem.categories().remove(currentCategory);
+
+                // If the item is no longer in any categories then it should be deleted
+                if (!savedItem.categories().isEmpty()) {
+                    newSavedItems.add(savedItem);
+                }
+            }
+
+            Services.ItemVault.savedItems.store(newSavedItems);
             Services.ItemVault.savedItems.touched();
         } else if (!currentCategory.equals(Services.ItemVault.getDefaultCategory())) {
-            // Move all items to "Uncategorized" category, then delete category
-            Map<String, SavedItemStack> uncategorisedItems =
-                    Services.ItemVault.savedItems.get().get(Services.ItemVault.getDefaultCategory());
-            Map<String, SavedItemStack> currentCategoryItems =
-                    Services.ItemVault.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
+            // Remove category from all items and add default
+            for (SavedItem savedItem : savedItems) {
+                savedItem.categories().remove(currentCategory);
+                savedItem.categories().add(Services.ItemVault.getDefaultCategory());
+            }
 
-            uncategorisedItems.putAll(currentCategoryItems);
-
-            Services.ItemVault.savedItems.get().put(Services.ItemVault.getDefaultCategory(), uncategorisedItems);
-            Services.ItemVault.savedItems.get().remove(currentCategory);
+            Services.ItemVault.savedItems.store(savedItems);
             Services.ItemVault.savedItems.touched();
         }
 
+        // If current category is not the default, delete it
+        if (!currentCategory.equals(Services.ItemVault.getDefaultCategory())) {
+            Services.ItemVault.categories.get().remove(currentCategory);
+            Services.ItemVault.categories.touched();
+        }
         // Reset to default category
         currentCategory = Services.ItemVault.getDefaultCategory();
 
         populateItems();
     }
 
-    private void moveItemCategory() {
-        Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
-        Map<String, SavedItemStack> originalCategoryItems = savedItems.get(originalCategory);
-        Map<String, SavedItemStack> newCategoryItems = savedItems.get(currentCategory);
+    private void moveSelectedItems() {
+        for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
+            SavedItem savedItem = Services.ItemVault.getItem(selectedItem.b());
 
-        // Get the item to move
-        SavedItemStack savedItemStack = originalCategoryItems.get(selectedItem);
+            if (selectedItem != null) {
+                moveItemCategory(
+                        savedItem, selectedItem.a().a(), selectedItem.a().b());
+            }
+        }
 
-        // Remove from original and put in new
-        originalCategoryItems.remove(selectedItem);
-        newCategoryItems.put(selectedItem, savedItemStack);
+        selectedItems = new ArrayList<>();
+    }
 
-        // Update categories
-        savedItems.put(originalCategory, originalCategoryItems);
-        savedItems.put(currentCategory, newCategoryItems);
+    private void moveItemCategory(SavedItem savedItem, String originalCategory, boolean keepOriginal) {
+        Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
+        savedItems.remove(savedItem);
 
+        savedItem.categories().add(currentCategory);
+
+        if (!keepOriginal) {
+            savedItem.categories().remove(originalCategory);
+        }
+
+        savedItems.add(savedItem);
         Services.ItemVault.savedItems.store(savedItems);
         Services.ItemVault.savedItems.touched();
 
-        // Deselect item
-        originalCategory = "";
-        selectedItem = "";
-        selectedItemSlot = null;
+        selectedItems = new ArrayList<>();
 
         populateItems();
     }
 
     private void deleteItem(String base64) {
-        Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
-        Map<String, SavedItemStack> categoryItems = savedItems.get(currentCategory);
+        Set<SavedItem> savedItems = new HashSet<>(Services.ItemVault.savedItems.get());
 
-        // Remove item from category
-        categoryItems.remove(base64);
-        savedItems.put(currentCategory, categoryItems);
-
-        Services.ItemVault.savedItems.store(savedItems);
-        Services.ItemVault.savedItems.touched();
-
-        // Scroll up if there is now an empty row
-        if ((categoryItems.size() % ITEMS_PER_ROW) == 0) {
-            itemScrollOffset--;
+        for (SavedItem savedItem : savedItems) {
+            if (savedItem.base64().equals(base64)) {
+                Services.ItemVault.savedItems.get().remove(savedItem);
+                Services.ItemVault.savedItems.touched();
+                break;
+            }
         }
+
+        // TODO
+        // Scroll up if there is now an empty row
+        //        if ((categoryItems.size() % ITEMS_PER_ROW) == 0) {
+        //            itemScrollOffset--;
+        //        }
 
         populateItems();
     }
 
     private void populateItems() {
-        encodedItems = new ArrayList<>();
         List<ItemStack> items = new ArrayList<>();
+        List<ItemStack> selected = new ArrayList<>();
+        encodedItems = new ArrayList<>();
+        selectedSlots = new ArrayList<>();
 
         // Clear current items
         for (int i = 0; i < MAX_ITEMS; i++) {
             this.menu.setItem(i, 0, ItemStack.EMPTY);
         }
 
-        Map<String, SavedItemStack> savedItems =
-                Services.ItemVault.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
+        List<SavedItem> savedItems = Services.ItemVault.savedItems.get().stream()
+                .filter(savedItem -> savedItem.categories().contains(currentCategory))
+                .toList();
 
         // No items in current category
         if (savedItems.isEmpty()) return;
 
-        int itemIndex = 0;
-        // So that we don't need to re-encode items when they are clicked to be shared
-        // we can keep a list of them and use the slot index to get their encoded string.
-        // Since we're looping through a map, we need to skip to ensure that the item that
-        // will be in index 0 of the list, will be index 0 in the menu etc.
-        int itemsToSkip = ITEMS_PER_ROW * itemScrollOffset;
+        for (int i = ITEMS_PER_ROW * itemScrollOffset; i < MAX_ITEMS; i++) {
+            if (i >= savedItems.size()) break;
 
-        for (Map.Entry<String, SavedItemStack> entry : savedItems.entrySet()) {
-            if (itemIndex < itemsToSkip) {
-                itemIndex++;
-                continue;
-            }
-
-            String base64Item = entry.getKey();
-            encodedItems.add(base64Item);
+            SavedItem savedItem = savedItems.get(i);
+            encodedItems.add(savedItem);
 
             // Create the ItemStack from the store tag values
             ItemStack itemStack;
-            itemStack = new ItemStack(Item.byId(entry.getValue().itemID()), 1);
+            itemStack = new ItemStack(Item.byId(savedItem.itemID()), 1);
             CompoundTag compoundTag = new CompoundTag();
             CompoundTag displayTag = new CompoundTag();
-            compoundTag.putInt("Damage", entry.getValue().damage());
-            compoundTag.putInt("HideFlags", entry.getValue().hideFlags());
-            compoundTag.putBoolean("Unbreakable", entry.getValue().unbreakable());
+            compoundTag.putInt("Damage", savedItem.damage());
+            compoundTag.putInt("HideFlags", savedItem.hideFlags());
+            compoundTag.putBoolean("Unbreakable", savedItem.unbreakable());
 
             // If there is a color value that isn't the default, then add that too
-            if (entry.getValue().color() != -1) {
-                displayTag.putInt("color", entry.getValue().color());
+            if (savedItem.color() != -1) {
+                displayTag.putInt("color", savedItem.color());
             }
 
             compoundTag.put("display", displayTag);
             itemStack.setTag(compoundTag);
 
             ErrorOr<WynnItem> errorOrWynnItem =
-                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(base64Item));
+                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(savedItem.base64()));
             if (errorOrWynnItem.hasError()) {
                 WynntilsMod.error("Failed to encode item: " + errorOrWynnItem.getError());
                 McUtils.sendErrorToClient(
@@ -544,9 +562,14 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         errorOrWynnItem.getValue(), itemStack, "From " + McUtils.playerName() + "'s vault");
             }
 
-            items.add(itemStack);
+            for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
+                if (selectedItem.b().equals(savedItem.base64())) {
+                    selected.add(itemStack);
+                    break;
+                }
+            }
 
-            itemIndex++;
+            items.add(itemStack);
         }
 
         // Update items in menu
@@ -554,6 +577,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             if (i > items.size() - 1) break;
 
             this.menu.setItem(i, 0, items.get(i));
+
+            if (selected.contains(items.get(i))) {
+                selectedSlots.add(i);
+            }
         }
     }
 
@@ -568,9 +595,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private int getMaxScrollOffset() {
         int maxItemOffset = Math.max(
                 0,
-                Services.ItemVault.savedItems
-                                .get()
-                                .getOrDefault(currentCategory, new HashMap<>())
+                Services.ItemVault.savedItems.get().stream()
+                                .filter(savedItem -> savedItem.categories().contains(currentCategory))
+                                .toList()
                                 .size()
                         - MAX_ITEMS);
         return maxItemOffset / ITEMS_PER_ROW + (maxItemOffset % ITEMS_PER_ROW > 0 ? 1 : 0);

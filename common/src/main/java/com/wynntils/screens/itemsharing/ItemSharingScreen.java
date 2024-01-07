@@ -18,7 +18,7 @@ import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
-import com.wynntils.services.itemvault.type.SavedItemStack;
+import com.wynntils.services.itemvault.type.SavedItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -32,9 +32,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -189,21 +189,9 @@ public final class ItemSharingScreen extends WynntilsScreen {
             case "guild" -> Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
             case "party" -> Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
             case "save" -> {
-                Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
-                Map<String, SavedItemStack> uncategorisedItems =
-                        savedItems.getOrDefault(Services.ItemVault.getDefaultCategory(), new HashMap<>());
+                Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
 
                 String encodedBase64 = encodedItem.toBase64String();
-
-                // Check if the item is already saved, loop through categories then check keys (encoded item)
-                for (Map.Entry<String, Map<String, SavedItemStack>> entry : savedItems.entrySet()) {
-                    if (entry.getValue().containsKey(encodedBase64)) {
-                        McUtils.sendMessageToClient(Component.translatable(
-                                        "screens.wynntils.itemSharing.alreadySaved", itemStack.getHoverName())
-                                .withStyle(ChatFormatting.RED));
-                        return;
-                    }
-                }
 
                 ItemStack itemStackToSave = itemStack;
 
@@ -220,15 +208,26 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
                 // Regular ItemStack can't be converted to json so store the tags needed
                 // to recreate it
-                SavedItemStack savedItemStack = new SavedItemStack(
+                SavedItem itemToSave = new SavedItem(
+                        encodedBase64,
+                        new HashSet<>(List.of(Services.ItemVault.getDefaultCategory())),
                         Item.getId(itemStackToSave.getItem()),
                         itemStackToSave.getTag().getInt("Damage"),
                         itemStackToSave.getTag().getInt("HideFlags"),
                         itemStackToSave.getTag().getBoolean("Unbreakable"),
                         color);
 
-                uncategorisedItems.put(encodedBase64, savedItemStack);
-                savedItems.put(Services.ItemVault.getDefaultCategory(), uncategorisedItems);
+                // Check if the item is already saved
+                if (savedItems.contains(itemToSave)) {
+                    McUtils.sendMessageToClient(Component.translatable(
+                                    "screens.wynntils.itemSharing.alreadySaved", itemStack.getHoverName())
+                            .withStyle(ChatFormatting.RED));
+                    savedItem = true;
+                    saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openVault"));
+                    return;
+                }
+
+                savedItems.add(itemToSave);
 
                 Services.ItemVault.savedItems.store(savedItems);
                 Services.ItemVault.savedItems.touched();
