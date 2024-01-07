@@ -4,7 +4,7 @@ const config = require("conventional-changelog-conventionalcommits");
 function whatBump(commits) {
     let releaseType = 2;
 
-    // chore(bump-mc) -> major (0)
+    // chore(bump-mc) or chore! -> major (0)
     // feat! or fix! -> minor (1)
     // otherwise -> patch (2)
 
@@ -12,7 +12,7 @@ function whatBump(commits) {
         if (commit == null || !commit.header) continue;
 
         // We want to select the highest release type
-        if (commit.header.startsWith("chore(bump-mc)")) {
+        if (commit.header.startsWith("chore(bump-mc)") || commit.header.startsWith("chore!")) {
             releaseType = 0;
             break;
         }
