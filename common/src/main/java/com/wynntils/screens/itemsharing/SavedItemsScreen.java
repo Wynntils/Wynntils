@@ -192,7 +192,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
             if (selectedItems.contains(selectedItem)) {
                 selectedItems.remove(selectedItem);
-                selectedSlots.remove(slot.index);
+                selectedSlots.remove((Integer) slot.index);
             } else {
                 selectedItems.add(selectedItem);
                 selectedSlots.add(slot.index);
