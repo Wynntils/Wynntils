@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
@@ -188,7 +189,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
             case "guild" -> Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
             case "party" -> Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
             case "save" -> {
-                Map<String, Map<String, SavedItemStack>> savedItems = Models.ItemEncoding.savedItems.get();
+                Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
                 Map<String, SavedItemStack> uncategorisedItems =
                         savedItems.getOrDefault("Uncategorized", new HashMap<>());
 
@@ -229,8 +230,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 uncategorisedItems.put(encodedBase64, savedItemStack);
                 savedItems.put("Uncategorized", uncategorisedItems);
 
-                Models.ItemEncoding.savedItems.store(savedItems);
-                Models.ItemEncoding.savedItems.touched();
+                Services.ItemVault.savedItems.store(savedItems);
+                Services.ItemVault.savedItems.touched();
 
                 McUtils.sendMessageToClient(
                         Component.translatable("screens.wynntils.itemSharing.savedToVault", itemStack.getHoverName())

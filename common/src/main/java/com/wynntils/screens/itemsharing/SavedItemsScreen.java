@@ -7,6 +7,7 @@ package com.wynntils.screens.itemsharing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
@@ -306,7 +307,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     public void scrollCategories(int scrollDirection) {
         List<String> categories =
-                new ArrayList<>(Models.ItemEncoding.savedItems.get().keySet());
+                new ArrayList<>(Services.ItemVault.savedItems.get().keySet());
 
         int currentIndex = categories.indexOf(currentCategory);
         int newIndex = currentIndex + scrollDirection;
@@ -348,8 +349,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         if (addingCategory) {
             if (!categoryInput.getTextBoxInput().isEmpty()) {
                 // Save new category
-                Models.ItemEncoding.savedItems.get().put(categoryInput.getTextBoxInput(), new HashMap<>());
-                Models.ItemEncoding.savedItems.touched();
+                Services.ItemVault.savedItems.get().put(categoryInput.getTextBoxInput(), new HashMap<>());
+                Services.ItemVault.savedItems.touched();
             }
 
             // Remove the input widget
@@ -366,20 +367,20 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private void deleteCategory() {
         if (KeyboardUtils.isShiftDown()) {
             // Delete all items from category
-            Models.ItemEncoding.savedItems.get().remove(currentCategory);
-            Models.ItemEncoding.savedItems.touched();
+            Services.ItemVault.savedItems.get().remove(currentCategory);
+            Services.ItemVault.savedItems.touched();
         } else if (!currentCategory.equals(DEFAULT_CATEGORY)) {
             // Move all items to "Uncategorized" category, then delete category
             Map<String, SavedItemStack> uncategorisedItems =
-                    Models.ItemEncoding.savedItems.get().get(DEFAULT_CATEGORY);
+                    Services.ItemVault.savedItems.get().get(DEFAULT_CATEGORY);
             Map<String, SavedItemStack> currentCategoryItems =
-                    Models.ItemEncoding.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
+                    Services.ItemVault.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
 
             uncategorisedItems.putAll(currentCategoryItems);
 
-            Models.ItemEncoding.savedItems.get().put(DEFAULT_CATEGORY, uncategorisedItems);
-            Models.ItemEncoding.savedItems.get().remove(currentCategory);
-            Models.ItemEncoding.savedItems.touched();
+            Services.ItemVault.savedItems.get().put(DEFAULT_CATEGORY, uncategorisedItems);
+            Services.ItemVault.savedItems.get().remove(currentCategory);
+            Services.ItemVault.savedItems.touched();
         }
 
         // Reset to default category
@@ -389,7 +390,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void moveItemCategory() {
-        Map<String, Map<String, SavedItemStack>> savedItems = Models.ItemEncoding.savedItems.get();
+        Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
         Map<String, SavedItemStack> originalCategoryItems = savedItems.get(originalCategory);
         Map<String, SavedItemStack> newCategoryItems = savedItems.get(currentCategory);
 
@@ -404,8 +405,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         savedItems.put(originalCategory, originalCategoryItems);
         savedItems.put(currentCategory, newCategoryItems);
 
-        Models.ItemEncoding.savedItems.store(savedItems);
-        Models.ItemEncoding.savedItems.touched();
+        Services.ItemVault.savedItems.store(savedItems);
+        Services.ItemVault.savedItems.touched();
 
         // Deselect item
         originalCategory = "";
@@ -416,15 +417,15 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void deleteItem(String base64) {
-        Map<String, Map<String, SavedItemStack>> savedItems = Models.ItemEncoding.savedItems.get();
+        Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
         Map<String, SavedItemStack> categoryItems = savedItems.get(currentCategory);
 
         // Remove item from category
         categoryItems.remove(base64);
         savedItems.put(currentCategory, categoryItems);
 
-        Models.ItemEncoding.savedItems.store(savedItems);
-        Models.ItemEncoding.savedItems.touched();
+        Services.ItemVault.savedItems.store(savedItems);
+        Services.ItemVault.savedItems.touched();
 
         // Scroll up if there is now an empty row
         if ((categoryItems.size() % ITEMS_PER_ROW) == 0) {
@@ -444,7 +445,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         Map<String, SavedItemStack> savedItems =
-                Models.ItemEncoding.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
+                Services.ItemVault.savedItems.get().getOrDefault(currentCategory, new HashMap<>());
 
         // No items in current category
         if (savedItems.isEmpty()) return;
@@ -518,7 +519,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private int getMaxScrollOffset() {
         int maxItemOffset = Math.max(
                 0,
-                Models.ItemEncoding.savedItems
+                Services.ItemVault.savedItems
                                 .get()
                                 .getOrDefault(currentCategory, new HashMap<>())
                                 .size()
