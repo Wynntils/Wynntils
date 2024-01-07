@@ -1822,7 +1822,7 @@
   "screens.wynntils.itemSharing.itemName.description": "Share the custom name of the crafted item?",
   "screens.wynntils.itemSharing.itemName.name": "Share Item Name",
   "screens.wynntils.itemSharing.openVault": "Open item vault",
-  "screens.wynntils.itemSharing.save": "Save Item",
+  "screens.wynntils.itemSharing.save": "Save to Vault",
   "screens.wynntils.itemSharing.savedToVault": "Saved %s to your vault",
   "screens.wynntils.itemSharing.shareGuild": "Share with guild",
   "screens.wynntils.itemSharing.shareParty": "Share with party",
