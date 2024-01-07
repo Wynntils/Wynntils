@@ -11,13 +11,13 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemvault.type.SavedItemStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.itemsharing.widgets.SavedCategoryButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsHelpButton;
+import com.wynntils.services.itemvault.type.SavedItemStack;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -55,6 +55,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     private boolean addingCategory = false;
     private boolean draggingScroll = false;
+    private boolean editingCategory = false;
     private int itemScrollOffset = 0;
     private List<String> encodedItems = new ArrayList<>();
     private Slot selectedItemSlot;
@@ -88,7 +89,13 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         selectedItem = "";
                         selectedItemSlot = null;
 
-                        addCategory();
+                        if (!addingCategory) {
+                            addingCategory = true;
+                            addCategoryInput();
+                        } else {
+                            addCategory();
+                            addingCategory = false;
+                        }
                     }
                 },
                 List.of(
@@ -203,7 +210,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        if (!addingCategory) {
+        if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
@@ -252,6 +259,30 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             return true;
         }
 
+        float categoryRenderX = this.leftPos + 36;
+        float categoryRenderY = this.topPos + 10;
+
+        // Click the area where the category title is rendered to edit it
+        if (!currentCategory.equals(Services.ItemVault.getDefaultCategory())
+                && !editingCategory
+                && !addingCategory
+                && MathUtils.isInside(
+                        (int) mouseX,
+                        (int) mouseY,
+                        (int) categoryRenderX,
+                        (int) (categoryRenderX + 99),
+                        (int) categoryRenderY,
+                        (int) (categoryRenderY + 8))) {
+            if (!editingCategory) {
+                editingCategory = true;
+                addCategoryInput();
+            } else {
+                addCategory();
+                editingCategory = false;
+            }
+            return true;
+        }
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -291,8 +322,14 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // Enter can also be used to submit name for new category title
-        if (addingCategory && keyCode == GLFW.GLFW_KEY_ENTER) {
+        if ((addingCategory || editingCategory) && keyCode == GLFW.GLFW_KEY_ENTER) {
             addCategory();
+
+            if (addingCategory) {
+                addingCategory = false;
+            } else if (editingCategory) {
+                editingCategory = false;
+            }
             return false;
         }
 
@@ -336,6 +373,11 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         categoryInput = new TextInputBoxWidget(
                 this.leftPos + 36, this.topPos + 5, 99, 16, null, (TextboxScreen) McUtils.mc().screen, categoryInput);
 
+        // Get the current category name and add if we are editing
+        if (editingCategory) {
+            categoryInput.setTextBoxInput(currentCategory);
+        }
+
         this.addRenderableWidget(categoryInput);
     }
 
@@ -346,16 +388,29 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 Services.ItemVault.savedItems.get().put(categoryInput.getTextBoxInput(), new TreeMap<>());
                 Services.ItemVault.savedItems.touched();
             }
+        } else if (editingCategory) {
+            if (!categoryInput.getTextBoxInput().isEmpty()) {
+                Map<String, Map<String, SavedItemStack>> savedItems = Services.ItemVault.savedItems.get();
+                Map<String, SavedItemStack> items = savedItems.get(currentCategory);
 
-            // Remove the input widget
-            this.removeWidget(categoryInput);
-            categoryInput = null;
-        } else {
-            addCategoryInput();
+                // Add the new category with items from current then remove current category
+                savedItems.put(categoryInput.getTextBoxInput(), items);
+                savedItems.remove(currentCategory);
+
+                // Save renamed category
+                Services.ItemVault.savedItems.store(savedItems);
+                Services.ItemVault.savedItems.touched();
+
+                // Change to new category
+                currentCategory = categoryInput.getTextBoxInput();
+
+                populateItems();
+            }
         }
 
-        // Toggle state
-        addingCategory = !addingCategory;
+        // Remove the input widget
+        this.removeWidget(categoryInput);
+        categoryInput = null;
     }
 
     private void deleteCategory() {
