@@ -32,9 +32,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -210,7 +210,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 // to recreate it
                 SavedItem itemToSave = new SavedItem(
                         encodedBase64,
-                        new HashSet<>(List.of(Services.ItemVault.getDefaultCategory())),
+                        new TreeSet<>(List.of(Services.ItemVault.getDefaultCategory())),
                         Item.getId(itemStackToSave.getItem()),
                         itemStackToSave.getTag().getInt("Damage"),
                         itemStackToSave.getTag().getInt("HideFlags"),

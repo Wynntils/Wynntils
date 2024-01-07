@@ -32,10 +32,10 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -421,7 +421,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
 
         if (KeyboardUtils.isShiftDown()) {
-            Set<SavedItem> newSavedItems = new HashSet<>();
+            Set<SavedItem> newSavedItems = new TreeSet<>();
 
             // Remove category from all items
             for (SavedItem savedItem : savedItems) {
@@ -490,7 +490,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void deleteItem(String base64) {
-        Set<SavedItem> savedItems = new HashSet<>(Services.ItemVault.savedItems.get());
+        Set<SavedItem> savedItems = new TreeSet<>(Services.ItemVault.savedItems.get());
 
         for (SavedItem savedItem : savedItems) {
             if (savedItem.base64().equals(base64)) {

@@ -8,18 +8,18 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.itemvault.type.SavedItem;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class ItemVaultService extends Service {
     private static final String DEFAULT_CATEGORY = "Uncategorized";
 
     @Persisted
-    public final Storage<Set<SavedItem>> savedItems = new Storage<>(new HashSet<>());
+    public final Storage<Set<SavedItem>> savedItems = new Storage<>(new TreeSet<>());
 
     @Persisted
-    public final Storage<Set<String>> categories = new Storage<>(new HashSet<>(List.of(DEFAULT_CATEGORY)));
+    public final Storage<Set<String>> categories = new Storage<>(new TreeSet<>(List.of(DEFAULT_CATEGORY)));
 
     public ItemVaultService() {
         super(List.of());
