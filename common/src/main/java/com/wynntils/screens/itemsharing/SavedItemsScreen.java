@@ -206,8 +206,6 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         PoseStack poseStack = guiGraphics.pose();
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
-
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -237,6 +235,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         renderScrollButton(poseStack);
+
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
