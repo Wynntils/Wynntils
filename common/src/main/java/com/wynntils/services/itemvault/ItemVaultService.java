@@ -7,7 +7,7 @@ package com.wynntils.services.itemvault;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.models.items.type.SavedItemStack;
+import com.wynntils.services.itemvault.type.SavedItemStack;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;

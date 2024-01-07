@@ -11,7 +11,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.type.SavedItemStack;
+import com.wynntils.services.itemvault.type.SavedItemStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
