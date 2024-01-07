@@ -158,6 +158,7 @@ public enum Texture {
     VAULT_BUTTON_RIGHT("item_storage/vault_button_right.png", 11, 20),
     VAULT_CONFIRM("item_storage/vault_confirm.png", 11, 22),
     VAULT_DELETE("item_storage/vault_delete.png", 11, 22),
+    VAULT_HELP("item_storage/vault_help.png", 11, 22),
     VAULT_SCROLL("item_storage/vault_scroll_button.png", 8, 9),
     // endregion
 

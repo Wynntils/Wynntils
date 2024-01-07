@@ -14,10 +14,10 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.type.SavedItemStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsContainerScreen;
-import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.itemsharing.widgets.SavedCategoryButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsButton;
+import com.wynntils.screens.itemsharing.widgets.SavedItemsHelpButton;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -130,30 +129,22 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip1"),
                         Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip2")),
                 Texture.VAULT_CONFIRM));
+
+        this.addRenderableWidget(new SavedItemsHelpButton(
+                this.leftPos + 8,
+                this.topPos + 140,
+                List.of(
+                        Component.translatable("screens.wynntils.savedItems.help")
+                                .withStyle(ChatFormatting.UNDERLINE),
+                        Component.translatable("screens.wynntils.savedItems.help1"),
+                        Component.translatable("screens.wynntils.savedItems.help2"),
+                        Component.translatable("screens.wynntils.savedItems.help3"))));
         // endregion
 
         // region Category navigation buttons
         this.addRenderableWidget(new SavedCategoryButton(this.leftPos + 19, this.topPos + 9, this, false));
 
         this.addRenderableWidget(new SavedCategoryButton(this.leftPos + 139, this.topPos + 9, this, true));
-        // endregion
-
-        // region Info button
-        this.addRenderableWidget(new InfoButton(
-                15,
-                15,
-                Component.literal("")
-                        .append(Component.translatable("screens.wynntils.savedItems.help")
-                                .withStyle(ChatFormatting.UNDERLINE))
-                        .append(Component.literal("\n"))
-                        .append(Component.translatable("screens.wynntils.savedItems.help1")
-                                .withStyle(ChatFormatting.GRAY))
-                        .append(Component.literal("\n"))
-                        .append(Component.translatable("screens.wynntils.savedItems.help2")
-                                .withStyle(ChatFormatting.GRAY))
-                        .append(Component.literal("\n"))
-                        .append(Component.translatable("screens.wynntils.savedItems.help3")
-                                .withStyle(ChatFormatting.GRAY))));
         // endregion
 
         // Re add input box if screen resized during input
