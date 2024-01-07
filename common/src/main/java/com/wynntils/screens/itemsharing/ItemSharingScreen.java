@@ -211,11 +211,12 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 SavedItem itemToSave = new SavedItem(
                         encodedBase64,
                         new TreeSet<>(List.of(Services.ItemVault.getDefaultCategory())),
-                        Item.getId(itemStackToSave.getItem()),
-                        itemStackToSave.getTag().getInt("Damage"),
-                        itemStackToSave.getTag().getInt("HideFlags"),
-                        itemStackToSave.getTag().getBoolean("Unbreakable"),
-                        color);
+                        new SavedItem.ItemStackInfo(
+                                Item.getId(itemStackToSave.getItem()),
+                                itemStackToSave.getTag().getInt("Damage"),
+                                itemStackToSave.getTag().getInt("HideFlags"),
+                                itemStackToSave.getTag().getBoolean("Unbreakable"),
+                                color));
 
                 // Check if the item is already saved
                 if (savedItems.contains(itemToSave)) {

@@ -537,16 +537,16 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
             // Create the ItemStack from the store tag values
             ItemStack itemStack;
-            itemStack = new ItemStack(Item.byId(savedItem.itemID()), 1);
+            itemStack = new ItemStack(Item.byId(savedItem.itemStackInfo().itemID()), 1);
             CompoundTag compoundTag = new CompoundTag();
             CompoundTag displayTag = new CompoundTag();
-            compoundTag.putInt("Damage", savedItem.damage());
-            compoundTag.putInt("HideFlags", savedItem.hideFlags());
-            compoundTag.putBoolean("Unbreakable", savedItem.unbreakable());
+            compoundTag.putInt("Damage", savedItem.itemStackInfo().damage());
+            compoundTag.putInt("HideFlags", savedItem.itemStackInfo().hideFlags());
+            compoundTag.putBoolean("Unbreakable", savedItem.itemStackInfo().unbreakable());
 
             // If there is a color value that isn't the default, then add that too
-            if (savedItem.color() != -1) {
-                displayTag.putInt("color", savedItem.color());
+            if (savedItem.itemStackInfo().color() != -1) {
+                displayTag.putInt("color", savedItem.itemStackInfo().color());
             }
 
             compoundTag.put("display", displayTag);
