@@ -41,7 +41,10 @@ public class SavedItemsButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        onClick.accept(button);
+        if (onClick != null) {
+            onClick.accept(button);
+        }
+
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

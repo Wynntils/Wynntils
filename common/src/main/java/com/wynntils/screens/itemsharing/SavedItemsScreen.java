@@ -16,7 +16,6 @@ import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.itemsharing.widgets.SavedCategoryButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsButton;
-import com.wynntils.screens.itemsharing.widgets.SavedItemsHelpButton;
 import com.wynntils.services.itemvault.type.SavedItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.MathUtils;
@@ -125,9 +124,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip2")),
                 Texture.VAULT_CONFIRM));
 
-        this.addRenderableWidget(new SavedItemsHelpButton(
+        this.addRenderableWidget(new SavedItemsButton(
                 this.leftPos + 8,
                 this.topPos + 140,
+                null,
                 List.of(
                         Component.translatable("screens.wynntils.savedItems.help")
                                 .withStyle(ChatFormatting.UNDERLINE),
@@ -135,7 +135,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         Component.translatable("screens.wynntils.savedItems.help2"),
                         Component.translatable("screens.wynntils.savedItems.help3"),
                         Component.translatable("screens.wynntils.savedItems.help4"),
-                        Component.translatable("screens.wynntils.savedItems.help5"))));
+                        Component.translatable("screens.wynntils.savedItems.help5")),
+                Texture.VAULT_HELP));
         // endregion
 
         // region Category navigation buttons
