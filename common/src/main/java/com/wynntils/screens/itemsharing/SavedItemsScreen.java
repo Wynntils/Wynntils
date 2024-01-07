@@ -500,11 +500,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             }
         }
 
-        // TODO
         // Scroll up if there is now an empty row
-        //        if ((categoryItems.size() % ITEMS_PER_ROW) == 0) {
-        //            itemScrollOffset--;
-        //        }
+        if (((encodedItems.size() - 1) % ITEMS_PER_ROW) == 0) {
+            itemScrollOffset--;
+        }
 
         populateItems();
     }
@@ -527,7 +526,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         // No items in current category
         if (savedItems.isEmpty()) return;
 
-        for (int i = ITEMS_PER_ROW * itemScrollOffset; i < MAX_ITEMS; i++) {
+        int rowOffset = ITEMS_PER_ROW * itemScrollOffset;
+
+        for (int i = rowOffset; i < (MAX_ITEMS + rowOffset); i++) {
             if (i >= savedItems.size()) break;
 
             SavedItem savedItem = savedItems.get(i);
