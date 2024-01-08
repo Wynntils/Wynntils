@@ -510,9 +510,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         selectedSlots = new ArrayList<>();
 
         // Clear current items
-        for (int i = 0; i < MAX_ITEMS; i++) {
-            this.menu.setItem(i, 0, ItemStack.EMPTY);
-        }
+        this.menu.clear();
 
         List<SavedItem> savedItems = Services.ItemVault.savedItems.get().stream()
                 .filter(savedItem -> savedItem.categories().contains(currentCategory))

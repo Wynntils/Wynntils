@@ -39,6 +39,12 @@ public final class SavedItemsMenu extends AbstractContainerMenu {
         return new SavedItemsMenu(new SimpleContainer(MAX_ITEMS));
     }
 
+    public void clear() {
+        for (int i = 0; i < MAX_ITEMS; i++) {
+            this.setItem(i, 0, ItemStack.EMPTY);
+        }
+    }
+
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         return null;
