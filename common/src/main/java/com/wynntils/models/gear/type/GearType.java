@@ -60,18 +60,18 @@ public enum GearType {
     private final Item defaultItem;
     private final int defaultDamage;
     private final List<Item> otherItems;
-    private final int id;
+    private final int encodingId;
 
-    GearType(ClassType classReq, Item defaultItem, int defaultDamage, List<Item> otherItems, int id) {
+    GearType(ClassType classReq, Item defaultItem, int defaultDamage, List<Item> otherItems, int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
         this.defaultDamage = defaultDamage;
         this.otherItems = otherItems;
-        this.id = id;
+        this.encodingId = encodingId;
     }
 
-    GearType(ClassType classReq, Item defaultItem, int defaultDamage, int id) {
-        this(classReq, defaultItem, defaultDamage, List.of(), id);
+    GearType(ClassType classReq, Item defaultItem, int defaultDamage, int encodingId) {
+        this(classReq, defaultItem, defaultDamage, List.of(), encodingId);
     }
 
     public static GearType fromString(String typeStr) {
@@ -103,7 +103,7 @@ public enum GearType {
 
     public static GearType fromId(int id) {
         for (GearType gearType : values()) {
-            if (gearType.id == id) return gearType;
+            if (gearType.encodingId == id) return gearType;
         }
         return null;
     }
@@ -120,8 +120,8 @@ public enum GearType {
         return defaultDamage;
     }
 
-    public int getId() {
-        return id;
+    public int getEncodingId() {
+        return encodingId;
     }
 
     public boolean isReward() {
