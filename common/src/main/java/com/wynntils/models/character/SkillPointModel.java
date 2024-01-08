@@ -23,7 +23,6 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.stats.type.SkillStatType;
-import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -390,7 +389,10 @@ public class SkillPointModel extends Model {
         Models.StatusEffect.getStatusEffects().forEach(statusEffect -> {
             for (Skill skill : Skill.values()) {
                 if (statusEffect.getName().contains(skill.getDisplayName())) {
-                    temporarySkillPoints.merge(skill, Integer.parseInt(statusEffect.getModifier().getStringWithoutFormatting()), Integer::sum);
+                    temporarySkillPoints.merge(
+                            skill,
+                            Integer.parseInt(statusEffect.getModifier().getStringWithoutFormatting()),
+                            Integer::sum);
                 }
             }
         });
