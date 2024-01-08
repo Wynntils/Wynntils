@@ -16,9 +16,9 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
-import com.wynntils.services.itemvault.type.SavedItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -33,8 +33,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -188,10 +186,6 @@ public final class ItemSharingScreen extends WynntilsScreen {
             case "guild" -> Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
             case "party" -> Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
             case "save" -> {
-                Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
-
-                String encodedBase64 = encodedItem.toBase64String();
-
                 ItemStack itemStackToSave = itemStack;
 
                 // Gear items can have their item changed by cosmetics so we need to get their original item
@@ -200,32 +194,13 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s vault");
                 }
 
-                // Regular ItemStack can't be converted to json so store the tags needed
-                // to recreate it
-                SavedItem itemToSave = SavedItem.create(
-                        wynnItem, new TreeSet<>(List.of(Services.ItemVault.getDefaultCategory())), itemStackToSave);
+                // Item name is passed in since it is lost in the instanceof check above and looks nicer
+                // saying "Saved Gale's Force to your vault" than "Saved Bow to your vault"
+                savedItem = Services.ItemVault.saveItem(wynnItem, itemStackToSave, itemStack.getHoverName());
 
-                // Check if the item is already saved
-                if (savedItems.contains(itemToSave)) {
-                    McUtils.sendMessageToClient(Component.translatable(
-                                    "screens.wynntils.itemSharing.alreadySaved", itemStack.getHoverName())
-                            .withStyle(ChatFormatting.RED));
-                    savedItem = true;
+                if (savedItem) {
                     saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openVault"));
-                    return;
                 }
-
-                savedItems.add(itemToSave);
-
-                Services.ItemVault.savedItems.store(savedItems);
-                Services.ItemVault.savedItems.touched();
-
-                McUtils.sendMessageToClient(
-                        Component.translatable("screens.wynntils.itemSharing.savedToVault", itemStack.getHoverName())
-                                .withStyle(ChatFormatting.GREEN));
-
-                savedItem = true;
-                saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openVault"));
             }
             default -> {
                 McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
