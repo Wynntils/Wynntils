@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.encoding;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.items.encoding.data.CustomConsumableTypeData;
 import com.wynntils.models.items.encoding.data.CustomGearTypeData;
 import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
@@ -75,10 +74,9 @@ public final class DataTransformerRegistry {
 
                 bytes.addAll(Arrays.asList(errorOrEncodedData.getValue()));
             } catch (Exception e) {
-                WynntilsMod.error(
-                        "Failed to encode data class " + itemData.getClass().getSimpleName() + "!", e);
-                return ErrorOr.error(
-                        "Failed to encode data class " + itemData.getClass().getSimpleName() + "!");
+                return ErrorOr.error("Failed to encode data class "
+                                + itemData.getClass().getSimpleName() + "!")
+                        .logged();
             }
         }
 
@@ -101,7 +99,8 @@ public final class DataTransformerRegistry {
         DataTransformer<ItemData> dataTransformer = (DataTransformer<ItemData>) dataTransformers.get(data.getClass());
         if (dataTransformer == null) {
             return ErrorOr.error(
-                    "No data transformer found for " + data.getClass().getSimpleName());
+                            "No data transformer found for " + data.getClass().getSimpleName())
+                    .logged();
         }
 
         return dataTransformer.encode(version, data);
@@ -117,7 +116,8 @@ public final class DataTransformerRegistry {
                 DataTransformer<ItemData> dataTransformer = dataTransformers.get(dataBlockId.toByte());
 
                 if (dataTransformer == null) {
-                    return ErrorOr.error("No data transformer found for id " + dataBlockId.value());
+                    return ErrorOr.error("No data transformer found for id " + dataBlockId.value())
+                            .logged();
                 }
 
                 ErrorOr<ItemData> errorOrData = dataTransformer.decodeData(version, byteReader);
@@ -128,8 +128,8 @@ public final class DataTransformerRegistry {
 
                 dataList.add(errorOrData.getValue());
             } catch (Exception e) {
-                WynntilsMod.error("Failed to decode data block with id " + dataBlockId.value() + "!", e);
-                return ErrorOr.error("Failed to decode data block with id " + dataBlockId.value() + "!");
+                return ErrorOr.error("Failed to decode data block with id " + dataBlockId.value() + "!")
+                        .logged();
             }
         }
 

@@ -17,8 +17,15 @@ public class CustomGearTypeTransformer extends DataTransformer<CustomGearTypeDat
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomGearTypeData data) {
         return switch (version) {
-            case VERSION_1 -> ErrorOr.of(
-                    new UnsignedByte[] {new UnsignedByte((byte) data.gearType().getId())});
+            case VERSION_1 -> {
+                if (data.gearType().getEncodingId() == -1) {
+                    yield ErrorOr.error("Gear type cannot be encoded.");
+                }
+
+                yield ErrorOr.of(new UnsignedByte[] {
+                    new UnsignedByte((byte) data.gearType().getEncodingId())
+                });
+            }
         };
     }
 

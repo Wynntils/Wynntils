@@ -16,7 +16,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.services.itemvault.type.SavedItem;
 import com.wynntils.utils.EncodedByteBuffer;
@@ -238,7 +238,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     private void addSharingOptions() {
         // region Checkbox options
-        if (wynnItem instanceof GearItem) {
+        if (wynnItem instanceof IdentifiableItemProperty<?, ?>) {
             options.add(this.addRenderableWidget(new WynntilsCheckbox(
                     backgroundX + 15,
                     backgroundY + 25,
