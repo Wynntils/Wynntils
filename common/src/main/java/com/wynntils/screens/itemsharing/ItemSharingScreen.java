@@ -42,7 +42,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public final class ItemSharingScreen extends WynntilsScreen {
@@ -201,22 +200,10 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s vault");
                 }
 
-                // Leather armor can be dyed, we need to store the color
-                int color = itemStackToSave.getTag().getCompound("display").contains("color")
-                        ? itemStackToSave.getTag().getCompound("display").getInt("color")
-                        : -1;
-
                 // Regular ItemStack can't be converted to json so store the tags needed
                 // to recreate it
-                SavedItem itemToSave = new SavedItem(
-                        encodedBase64,
-                        new TreeSet<>(List.of(Services.ItemVault.getDefaultCategory())),
-                        new SavedItem.ItemStackInfo(
-                                Item.getId(itemStackToSave.getItem()),
-                                itemStackToSave.getTag().getInt("Damage"),
-                                itemStackToSave.getTag().getInt("HideFlags"),
-                                itemStackToSave.getTag().getBoolean("Unbreakable"),
-                                color));
+                SavedItem itemToSave = SavedItem.create(
+                        wynnItem, new TreeSet<>(List.of(Services.ItemVault.getDefaultCategory())), itemStackToSave);
 
                 // Check if the item is already saved
                 if (savedItems.contains(itemToSave)) {

@@ -5,7 +5,6 @@
 package com.wynntils.screens.itemsharing;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -17,7 +16,6 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.itemsharing.widgets.SavedCategoryButton;
 import com.wynntils.screens.itemsharing.widgets.SavedItemsButton;
 import com.wynntils.services.itemvault.type.SavedItem;
-import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -28,7 +26,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +35,9 @@ import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
@@ -535,34 +529,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             SavedItem savedItem = savedItems.get(i);
             encodedItems.add(savedItem);
 
-            // Create the ItemStack from the store tag values
-            ItemStack itemStack;
-            itemStack = new ItemStack(Item.byId(savedItem.itemStackInfo().itemID()), 1);
-            CompoundTag compoundTag = new CompoundTag();
-            CompoundTag displayTag = new CompoundTag();
-            compoundTag.putInt("Damage", savedItem.itemStackInfo().damage());
-            compoundTag.putInt("HideFlags", savedItem.itemStackInfo().hideFlags());
-            compoundTag.putBoolean("Unbreakable", savedItem.itemStackInfo().unbreakable());
+            ItemStack itemStack = savedItem.itemStack();
 
-            // If there is a color value that isn't the default, then add that too
-            if (savedItem.itemStackInfo().color() != -1) {
-                displayTag.putInt("color", savedItem.itemStackInfo().color());
-            }
-
-            compoundTag.put("display", displayTag);
-            itemStack.setTag(compoundTag);
-
-            ErrorOr<WynnItem> errorOrWynnItem =
-                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(savedItem.base64()));
-            if (errorOrWynnItem.hasError()) {
-                WynntilsMod.error("Failed to encode item: " + errorOrWynnItem.getError());
-                McUtils.sendErrorToClient(
-                        I18n.get("feature.wynntils.chatItem.chatItemErrorEncode", errorOrWynnItem.getError()));
-                continue;
-            } else {
-                itemStack = new FakeItemStack(
-                        errorOrWynnItem.getValue(), itemStack, "From " + McUtils.playerName() + "'s vault");
-            }
+            itemStack = new FakeItemStack(savedItem.wynnItem(), itemStack, "From " + McUtils.playerName() + "'s vault");
 
             for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
                 if (selectedItem.b().equals(savedItem.base64())) {
