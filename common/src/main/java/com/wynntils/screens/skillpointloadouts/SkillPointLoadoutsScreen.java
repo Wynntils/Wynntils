@@ -201,7 +201,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get(
+                        StyledText.fromString((Models.SkillPoint.hasIllegalAssigned() ? ChatFormatting.RED : "") + I18n.get(
                                 "screens.wynntils.skillPointLoadouts.assigned", Models.SkillPoint.getAssignedSum())),
                         dividedWidth * 35,
                         dividedHeight * 11,

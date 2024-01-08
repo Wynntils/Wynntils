@@ -204,6 +204,18 @@ public class SkillPointModel extends Model {
         return skillPointLoadouts.get();
     }
 
+    /**
+     * @return true if any skills are assigned outside of the 0-100 range.
+     */
+    public boolean hasIllegalAssigned() {
+        for (Skill skill : Skill.values()) {
+            if (getAssignedSkillPoints(skill) < 0 || getAssignedSkillPoints(skill) > 100) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void loadSkillPointsOnServer(ContainerContent containerContent, String name) {
         // we need to figure out which points we can subtract from first to actually allow assigning for positive points
         Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
