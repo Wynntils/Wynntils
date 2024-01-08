@@ -167,8 +167,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
         // Left click goes to sharing menu
         // Left+Shift deletes the item from storage
-        // Right click selects it for category change
-        // Right+Shift will also deletes it from the current category when moved
+        // Right click toggles the selection of the item
         if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (KeyboardUtils.isShiftDown()) {
                 deleteItem(encodedItems.get(slot.index).base64());
@@ -458,7 +457,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             itemStack = new FakeItemStack(savedItem.wynnItem(), itemStack, "From " + McUtils.playerName() + "'s vault");
 
             for (Pair<String, String> selectedItem : selectedItems) {
-                if (selectedItem.b().equals(savedItem.base64())) {
+                if (selectedItem.a().equals(currentCategory) && selectedItem.b().equals(savedItem.base64())) {
                     selected.add(itemStack);
                     break;
                 }
