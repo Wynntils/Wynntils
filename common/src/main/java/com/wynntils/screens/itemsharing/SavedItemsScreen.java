@@ -50,7 +50,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private int itemScrollOffset = 0;
     private List<Integer> selectedSlots = new ArrayList<>();
     private List<SavedItem> encodedItems = new ArrayList<>();
-    private List<Pair<Pair<String, Boolean>, String>> selectedItems = new ArrayList<>();
+    private List<Pair<String, String>> selectedItems = new ArrayList<>();
     private String currentCategory = Services.ItemVault.getDefaultCategory();
     private TextInputBoxWidget categoryInput;
 
@@ -78,7 +78,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                             addingCategory = true;
                             addCategoryInput();
                         } else {
-                            addCategory();
+                            addCategory(KeyboardUtils.isShiftDown());
                             addingCategory = false;
                         }
                     }
@@ -86,7 +86,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 List.of(
                         Component.translatable("screens.wynntils.savedItems.addTooltip1"),
                         Component.translatable("screens.wynntils.savedItems.addTooltip2"),
-                        Component.translatable("screens.wynntils.savedItems.addTooltip3")),
+                        Component.translatable("screens.wynntils.savedItems.addTooltip3"),
+                        Component.translatable("screens.wynntils.savedItems.addTooltip4")),
                 Texture.VAULT_ADD));
 
         this.addRenderableWidget(new SavedItemsButton(
@@ -115,7 +116,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 },
                 List.of(
                         Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip1"),
-                        Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip2")),
+                        Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip2"),
+                        Component.translatable("screens.wynntils.savedItems.changeCategoryTooltip3")),
                 Texture.VAULT_CONFIRM));
 
         this.addRenderableWidget(new SavedItemsButton(
@@ -128,8 +130,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         Component.translatable("screens.wynntils.savedItems.help1"),
                         Component.translatable("screens.wynntils.savedItems.help2"),
                         Component.translatable("screens.wynntils.savedItems.help3"),
-                        Component.translatable("screens.wynntils.savedItems.help4"),
-                        Component.translatable("screens.wynntils.savedItems.help5")),
+                        Component.translatable("screens.wynntils.savedItems.help4")),
                 Texture.VAULT_HELP));
         // endregion
 
@@ -181,9 +182,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 }
             }
         } else if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Pair<Pair<String, Boolean>, String> selectedItem = new Pair<>(
-                    new Pair<>(currentCategory, !KeyboardUtils.isShiftDown()),
-                    encodedItems.get(slot.index).base64());
+            Pair<String, String> selectedItem =
+                    new Pair<>(currentCategory, encodedItems.get(slot.index).base64());
 
             if (selectedItems.contains(selectedItem)) {
                 selectedItems.remove(selectedItem);
@@ -267,10 +267,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             if (!editingCategory) {
                 editingCategory = true;
                 addCategoryInput();
-            } else {
-                addCategory();
-                editingCategory = false;
             }
+
             return true;
         }
 
@@ -314,7 +312,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // Enter can also be used to submit name for new category title
         if ((addingCategory || editingCategory) && keyCode == GLFW.GLFW_KEY_ENTER) {
-            addCategory();
+            addCategory(KeyboardUtils.isShiftDown());
 
             if (addingCategory) {
                 addingCategory = false;
@@ -371,7 +369,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         this.addRenderableWidget(categoryInput);
     }
 
-    private void addCategory() {
+    private void addCategory(boolean keepOriginals) {
         String newCategory = categoryInput.getTextBoxInput();
 
         // Remove the input widget
@@ -381,7 +379,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         if (newCategory.isEmpty()) return;
 
         if (addingCategory) {
-            Services.ItemVault.addCategory(newCategory, selectedItems);
+            Services.ItemVault.addCategory(newCategory, selectedItems, keepOriginals);
 
             if (!selectedItems.isEmpty()) {
                 currentCategory = newCategory;
@@ -408,7 +406,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void moveSelectedItems() {
-        Services.ItemVault.moveSelectedItems(selectedItems, currentCategory);
+        Services.ItemVault.moveSelectedItems(selectedItems, currentCategory, KeyboardUtils.isShiftDown());
 
         selectedItems = new ArrayList<>();
 
@@ -454,7 +452,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
             itemStack = new FakeItemStack(savedItem.wynnItem(), itemStack, "From " + McUtils.playerName() + "'s vault");
 
-            for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
+            for (Pair<String, String> selectedItem : selectedItems) {
                 if (selectedItem.b().equals(savedItem.base64())) {
                     selected.add(itemStack);
                     break;

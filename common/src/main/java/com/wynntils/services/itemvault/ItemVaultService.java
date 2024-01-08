@@ -56,16 +56,12 @@ public class ItemVaultService extends Service {
         return true;
     }
 
-    public void moveSelectedItems(List<Pair<Pair<String, Boolean>, String>> selectedItems, String category) {
-        for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
+    public void moveSelectedItems(List<Pair<String, String>> selectedItems, String category, boolean keepOriginal) {
+        for (Pair<String, String> selectedItem : selectedItems) {
             SavedItem savedItem = Services.ItemVault.getItem(selectedItem.b());
 
             if (selectedItem != null) {
-                moveItemCategory(
-                        savedItem,
-                        category,
-                        selectedItem.a().a(),
-                        selectedItem.a().b());
+                moveItemCategory(savedItem, category, selectedItem.a(), keepOriginal);
             }
         }
     }
@@ -91,13 +87,13 @@ public class ItemVaultService extends Service {
         }
     }
 
-    public void addCategory(String newCategory, List<Pair<Pair<String, Boolean>, String>> selectedItems) {
+    public void addCategory(String newCategory, List<Pair<String, String>> selectedItems, boolean keepOriginals) {
         // Save new category
         Services.ItemVault.categories.get().add(newCategory);
         Services.ItemVault.categories.touched();
 
         if (!selectedItems.isEmpty()) {
-            moveSelectedItems(selectedItems, newCategory);
+            moveSelectedItems(selectedItems, newCategory, keepOriginals);
         }
     }
 
