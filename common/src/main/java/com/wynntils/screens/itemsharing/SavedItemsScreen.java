@@ -328,6 +328,11 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     public void scrollCategories(int scrollDirection) {
         List<String> categories = new ArrayList<>(Services.ItemVault.categories.get());
 
+        addingCategory = false;
+        editingCategory = false;
+        this.removeWidget(categoryInput);
+        categoryInput = null;
+
         int currentIndex = categories.indexOf(currentCategory);
         int newIndex = currentIndex + scrollDirection;
 
