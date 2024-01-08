@@ -295,12 +295,36 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
         }
         FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(
+                                        I18n.get("screens.wynntils.skillPointLoadouts.temporary", Models.SkillPoint.getTemporarySum())),
+                                dividedWidth * 35,
+                                dividedHeight * 19,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
+                                    + Models.SkillPoint.getTemporarySkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 19,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.skillPointLoadouts.total", Models.SkillPoint.getTotalSum())),
                         dividedWidth * 35,
-                        dividedHeight * 19,
+                        dividedHeight * 21,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
@@ -312,7 +336,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromString(Skill.values()[i].getColorCode() + ""
                                     + Models.SkillPoint.getTotalSkillPoints(Skill.values()[i])),
                             dividedWidth * (51 + i * 2),
-                            dividedHeight * 19,
+                            dividedHeight * 21,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,

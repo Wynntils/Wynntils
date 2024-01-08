@@ -23,6 +23,7 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.stats.type.SkillStatType;
+import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -56,6 +57,7 @@ public class SkillPointModel extends Model {
     private Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> temporarySkillPoints = new EnumMap<>(Skill.class);
 
     public SkillPointModel() {
         super(List.of());
@@ -145,6 +147,7 @@ public class SkillPointModel extends Model {
         Managers.TickScheduler.scheduleNextTick(() -> {
             assignedSkillPoints = new EnumMap<>(Skill.class);
             calculateGearSkillPoints();
+            calculateTemporarySkillPoints();
             queryTotalAndTomeSkillPoints();
         });
     }
@@ -179,6 +182,14 @@ public class SkillPointModel extends Model {
 
     public int getTomeSum() {
         return tomeSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public int getTemporarySkillPoints(Skill skill) {
+        return temporarySkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getTemporarySum() {
+        return temporarySkillPoints.values().stream().reduce(0, Integer::sum);
     }
 
     public int getAssignedSkillPoints(Skill skill) {
@@ -374,6 +385,17 @@ public class SkillPointModel extends Model {
         }
     }
 
+    private void calculateTemporarySkillPoints() {
+        temporarySkillPoints = new EnumMap<>(Skill.class);
+        Models.StatusEffect.getStatusEffects().forEach(statusEffect -> {
+            for (Skill skill : Skill.values()) {
+                if (statusEffect.getName().contains(skill.getDisplayName())) {
+                    temporarySkillPoints.merge(skill, Integer.parseInt(statusEffect.getModifier().getStringWithoutFormatting()), Integer::sum);
+                }
+            }
+        });
+    }
+
     private void calculateAssignedSkillPoints() {
         for (Skill skill : Skill.values()) {
             assignedSkillPoints.put(
@@ -381,7 +403,8 @@ public class SkillPointModel extends Model {
                     getTotalSkillPoints(skill)
                             - getGearSkillPoints(skill)
                             - getTomeSkillPoints(skill)
-                            - getCraftedSkillPoints(skill));
+                            - getCraftedSkillPoints(skill)
+                            - getTemporarySkillPoints(skill));
         }
     }
 }
