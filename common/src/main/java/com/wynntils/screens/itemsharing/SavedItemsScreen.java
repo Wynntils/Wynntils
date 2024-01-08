@@ -75,7 +75,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 8,
                 this.topPos + 22,
                 (b) -> {
-                    if (b == 0) {
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         if (!addingCategory) {
                             addingCategory = true;
                             addCategoryInput();
@@ -107,9 +107,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.leftPos + 8,
                 this.topPos + 50,
                 (b) -> {
-                    if (b == 0) {
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         moveSelectedItems();
-                    } else if (b == 1) {
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                         selectedItems = new ArrayList<>();
                     }
                 },
@@ -168,7 +168,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         // Left+Shift deletes the item from storage
         // Right click selects it for category change
         // Right+Shift will also deletes it from the current category when moved
-        if (mouseButton == 0) {
+        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (KeyboardUtils.isShiftDown()) {
                 deleteItem(encodedItems.get(slot.index).base64());
             } else {
@@ -180,7 +180,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                     McUtils.sendMessageToClient(Component.translatable("screens.wynntils.savedItems.unableToShare"));
                 }
             }
-        } else if (mouseButton == 1) {
+        } else if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Pair<Pair<String, Boolean>, String> selectedItem = new Pair<>(
                     new Pair<>(currentCategory, !KeyboardUtils.isShiftDown()),
                     encodedItems.get(slot.index).base64());
