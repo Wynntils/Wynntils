@@ -422,7 +422,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         Services.ItemVault.deleteItem(base64);
 
         // Scroll up if there is now an empty row
-        if (((encodedItems.size() - 1) % ITEMS_PER_ROW) == 0) {
+        if (((encodedItems.size() - 1) % ITEMS_PER_ROW) == 0 && itemScrollOffset > 0) {
             itemScrollOffset--;
         }
 
