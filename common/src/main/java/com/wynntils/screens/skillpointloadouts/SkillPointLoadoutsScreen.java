@@ -295,16 +295,16 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
         }
         FontRenderer.getInstance()
-                        .renderText(
-                                poseStack,
-                                StyledText.fromString(
-                                        I18n.get("screens.wynntils.skillPointLoadouts.temporary", Models.SkillPoint.getTemporarySum())),
-                                dividedWidth * 35,
-                                dividedHeight * 19,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.BOTTOM,
-                                TextShadow.NORMAL);
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get(
+                                "screens.wynntils.skillPointLoadouts.temporary", Models.SkillPoint.getTemporarySum())),
+                        dividedWidth * 35,
+                        dividedHeight * 19,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
         for (int i = 0; i < 5; i++) {
             FontRenderer.getInstance()
                     .renderText(
