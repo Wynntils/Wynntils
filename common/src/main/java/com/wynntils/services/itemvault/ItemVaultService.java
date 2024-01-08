@@ -10,7 +10,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.services.itemvault.type.SavedItem;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -52,6 +54,102 @@ public class ItemVaultService extends Service {
                 .withStyle(ChatFormatting.GREEN));
 
         return true;
+    }
+
+    public void moveSelectedItems(List<Pair<Pair<String, Boolean>, String>> selectedItems, String category) {
+        for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
+            SavedItem savedItem = Services.ItemVault.getItem(selectedItem.b());
+
+            if (selectedItem != null) {
+                moveItemCategory(
+                        savedItem,
+                        category,
+                        selectedItem.a().a(),
+                        selectedItem.a().b());
+            }
+        }
+    }
+
+    public void moveItemCategory(
+            SavedItem savedItem, String currentCategory, String originalCategory, boolean keepOriginal) {
+        savedItem.categories().add(currentCategory);
+
+        if (!keepOriginal) {
+            savedItem.categories().remove(originalCategory);
+        }
+
+        Services.ItemVault.savedItems.touched();
+    }
+
+    public void deleteItem(String base64) {
+        for (SavedItem savedItem : savedItems.get()) {
+            if (savedItem.base64().equals(base64)) {
+                Services.ItemVault.savedItems.get().remove(savedItem);
+                Services.ItemVault.savedItems.touched();
+                break;
+            }
+        }
+    }
+
+    public void addCategory(String newCategory, List<Pair<Pair<String, Boolean>, String>> selectedItems) {
+        // Save new category
+        Services.ItemVault.categories.get().add(newCategory);
+        Services.ItemVault.categories.touched();
+
+        if (!selectedItems.isEmpty()) {
+            moveSelectedItems(selectedItems, newCategory);
+        }
+    }
+
+    public void renameCategory(String originalName, String newName) {
+        // Add renamed category and remove previous name
+        categories.get().add(newName);
+        categories.get().remove(originalName);
+        categories.touched();
+
+        for (SavedItem savedItem : savedItems.get()) {
+            // If an item is in the current category, add it to the renamed and remove previous name
+            if (savedItem.categories().contains(originalName)) {
+                savedItem.categories().add(newName);
+                savedItem.categories().remove(originalName);
+            }
+        }
+
+        savedItems.touched();
+    }
+
+    public void deleteCategory(String categoryToDelete) {
+        if (KeyboardUtils.isShiftDown()) {
+            Set<SavedItem> newSavedItems = new TreeSet<>();
+
+            // Remove category from all items
+            for (SavedItem savedItem : savedItems.get()) {
+                savedItem.categories().remove(categoryToDelete);
+
+                // If the item is no longer in any categories then it should be deleted
+                if (!savedItem.categories().isEmpty()) {
+                    newSavedItems.add(savedItem);
+                }
+            }
+
+            Services.ItemVault.savedItems.store(newSavedItems);
+            Services.ItemVault.savedItems.touched();
+        } else if (!categoryToDelete.equals(Services.ItemVault.getDefaultCategory())) {
+            // Remove category from all items and add default
+            for (SavedItem savedItem : savedItems.get()) {
+                savedItem.categories().remove(categoryToDelete);
+                savedItem.categories().add(Services.ItemVault.getDefaultCategory());
+            }
+
+            Services.ItemVault.savedItems.store(savedItems.get());
+            Services.ItemVault.savedItems.touched();
+        }
+
+        // If current category is not the default, delete it
+        if (!categoryToDelete.equals(Services.ItemVault.getDefaultCategory())) {
+            Services.ItemVault.categories.get().remove(categoryToDelete);
+            Services.ItemVault.categories.touched();
+        }
     }
 
     public String getDefaultCategory() {

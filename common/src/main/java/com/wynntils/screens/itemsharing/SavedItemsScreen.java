@@ -30,8 +30,6 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -381,29 +379,15 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         if (newCategory.isEmpty()) return;
 
         if (addingCategory) {
-            // Save new category
-            Services.ItemVault.categories.get().add(newCategory);
-            Services.ItemVault.categories.touched();
+            Services.ItemVault.addCategory(newCategory, selectedItems);
 
             if (!selectedItems.isEmpty()) {
                 currentCategory = newCategory;
-                moveSelectedItems();
+                selectedItems = new ArrayList<>();
+                populateItems();
             }
         } else if (editingCategory) {
-            // Add renamed category and remove previous name
-            Services.ItemVault.categories.get().add(newCategory);
-            Services.ItemVault.categories.get().remove(currentCategory);
-            Services.ItemVault.categories.touched();
-
-            for (SavedItem savedItem : Services.ItemVault.savedItems.get()) {
-                // If an item is in the current category, add it to the renamed and remove previous name
-                if (savedItem.categories().contains(currentCategory)) {
-                    savedItem.categories().add(newCategory);
-                    savedItem.categories().remove(currentCategory);
-                }
-            }
-
-            Services.ItemVault.savedItems.touched();
+            Services.ItemVault.renameCategory(currentCategory, newCategory);
 
             // Change to new category
             currentCategory = newCategory;
@@ -413,39 +397,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void deleteCategory() {
-        Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
+        Services.ItemVault.deleteCategory(currentCategory);
 
-        if (KeyboardUtils.isShiftDown()) {
-            Set<SavedItem> newSavedItems = new TreeSet<>();
-
-            // Remove category from all items
-            for (SavedItem savedItem : savedItems) {
-                savedItem.categories().remove(currentCategory);
-
-                // If the item is no longer in any categories then it should be deleted
-                if (!savedItem.categories().isEmpty()) {
-                    newSavedItems.add(savedItem);
-                }
-            }
-
-            Services.ItemVault.savedItems.store(newSavedItems);
-            Services.ItemVault.savedItems.touched();
-        } else if (!currentCategory.equals(Services.ItemVault.getDefaultCategory())) {
-            // Remove category from all items and add default
-            for (SavedItem savedItem : savedItems) {
-                savedItem.categories().remove(currentCategory);
-                savedItem.categories().add(Services.ItemVault.getDefaultCategory());
-            }
-
-            Services.ItemVault.savedItems.store(savedItems);
-            Services.ItemVault.savedItems.touched();
-        }
-
-        // If current category is not the default, delete it
-        if (!currentCategory.equals(Services.ItemVault.getDefaultCategory())) {
-            Services.ItemVault.categories.get().remove(currentCategory);
-            Services.ItemVault.categories.touched();
-        }
         // Reset to default category
         currentCategory = Services.ItemVault.getDefaultCategory();
 
@@ -453,31 +406,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void moveSelectedItems() {
-        for (Pair<Pair<String, Boolean>, String> selectedItem : selectedItems) {
-            SavedItem savedItem = Services.ItemVault.getItem(selectedItem.b());
-
-            if (selectedItem != null) {
-                moveItemCategory(
-                        savedItem, selectedItem.a().a(), selectedItem.a().b());
-            }
-        }
-
-        selectedItems = new ArrayList<>();
-    }
-
-    private void moveItemCategory(SavedItem savedItem, String originalCategory, boolean keepOriginal) {
-        Set<SavedItem> savedItems = Services.ItemVault.savedItems.get();
-        savedItems.remove(savedItem);
-
-        savedItem.categories().add(currentCategory);
-
-        if (!keepOriginal) {
-            savedItem.categories().remove(originalCategory);
-        }
-
-        savedItems.add(savedItem);
-        Services.ItemVault.savedItems.store(savedItems);
-        Services.ItemVault.savedItems.touched();
+        Services.ItemVault.moveSelectedItems(selectedItems, currentCategory);
 
         selectedItems = new ArrayList<>();
 
@@ -485,15 +414,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void deleteItem(String base64) {
-        Set<SavedItem> savedItems = new TreeSet<>(Services.ItemVault.savedItems.get());
-
-        for (SavedItem savedItem : savedItems) {
-            if (savedItem.base64().equals(base64)) {
-                Services.ItemVault.savedItems.get().remove(savedItem);
-                Services.ItemVault.savedItems.touched();
-                break;
-            }
-        }
+        Services.ItemVault.deleteItem(base64);
 
         // Scroll up if there is now an empty row
         if (((encodedItems.size() - 1) % ITEMS_PER_ROW) == 0) {
