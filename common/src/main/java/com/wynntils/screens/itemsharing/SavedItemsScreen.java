@@ -85,7 +85,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 },
                 List.of(
                         Component.translatable("screens.wynntils.savedItems.addTooltip1"),
-                        Component.translatable("screens.wynntils.savedItems.addTooltip2")),
+                        Component.translatable("screens.wynntils.savedItems.addTooltip2"),
+                        Component.translatable("screens.wynntils.savedItems.addTooltip3")),
                 Texture.VAULT_ADD));
 
         this.addRenderableWidget(new SavedItemsButton(
@@ -109,6 +110,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         moveSelectedItems();
                     } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                         selectedItems = new ArrayList<>();
+                        selectedSlots = new ArrayList<>();
                     }
                 },
                 List.of(
