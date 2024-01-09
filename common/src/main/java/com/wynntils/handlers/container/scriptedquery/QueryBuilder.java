@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container.scriptedquery;
@@ -40,6 +40,11 @@ public final class QueryBuilder {
 
     public QueryBuilder then(QueryStep step) {
         steps.add(step);
+        return this;
+    }
+
+    public QueryBuilder conditionalThen(ContainerPredicate predicate, QueryStep step) {
+        steps.add(new ConditionalQueryStep(predicate, step));
         return this;
     }
 

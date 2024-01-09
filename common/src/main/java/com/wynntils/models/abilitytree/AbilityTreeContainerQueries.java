@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree;
@@ -17,6 +17,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -55,7 +56,8 @@ public class AbilityTreeContainerQueries {
                 })
 
                 // Open character/compass menu
-                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainerTitle("Character Info"))
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME))
 
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT)

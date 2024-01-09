@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -66,7 +66,31 @@ public final class ContainerUtils {
                 changedSlots));
     }
 
+    public static void shiftClickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
+        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
+
+        int transactionId = 0;
+
+        McUtils.sendPacket(new ServerboundContainerClickPacket(
+                containerId,
+                transactionId,
+                clickedSlot,
+                mouseButton,
+                ClickType.QUICK_MOVE,
+                items.get(clickedSlot),
+                changedSlots));
+    }
+
     public static void closeContainer(int containerId) {
         McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+    }
+
+    /**
+     * Closes invisible containers opened in the background, without closing the visible screen.
+     */
+    public static void closeBackgroundContainer() {
+        McUtils.sendPacket(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
+        McUtils.player().containerMenu = McUtils.player().inventoryMenu;
     }
 }
