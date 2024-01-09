@@ -199,7 +199,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 savedItem = Services.ItemVault.saveItem(wynnItem, itemStackToSave, itemStack.getHoverName());
 
                 if (savedItem) {
-                    saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openVault"));
+                    saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openRecord"));
                 }
             }
             default -> {
@@ -272,7 +272,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         // If an item has already been saved then this button will act as easy access to their saved items
         Component saveButtonMessage = savedItem
-                ? Component.translatable("screens.wynntils.itemSharing.openVault")
+                ? Component.translatable("screens.wynntils.itemSharing.openRecord")
                 : Component.translatable("screens.wynntils.itemSharing.save");
 
         saveButton = new Button.Builder(saveButtonMessage, (b) -> {

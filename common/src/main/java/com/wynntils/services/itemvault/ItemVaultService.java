@@ -50,7 +50,7 @@ public class ItemVaultService extends Service {
 
         Services.ItemVault.savedItems.touched();
 
-        McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.savedToVault", itemName)
+        McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.savedToRecord", itemName)
                 .withStyle(ChatFormatting.GREEN));
 
         return true;
