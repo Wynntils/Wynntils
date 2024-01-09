@@ -29,6 +29,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.itemsharing.ItemSharingScreen;
+import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
@@ -61,7 +62,11 @@ public class ChatItemFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind saveItemKeybind =
-            new KeyBind("Save Item to Vault", GLFW.GLFW_KEY_F6, true, null, slot -> shareItem(slot, false));
+            new KeyBind("Save Item to Item Record", GLFW.GLFW_KEY_F6, true, null, slot -> shareItem(slot, false));
+
+    @RegisterKeyBind
+    private final KeyBind itemRecordKeybind = new KeyBind(
+            "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc().setScreen(SavedItemsScreen.create()));
 
     @Persisted
     public final Config<Boolean> showSharingScreen = new Config<>(true);
