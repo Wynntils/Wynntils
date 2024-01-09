@@ -33,8 +33,8 @@ public class CustomGearTypeTransformer extends DataTransformer<CustomGearTypeDat
     public ErrorOr<CustomGearTypeData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> ErrorOr.of(
-                    new CustomGearTypeData(GearType.fromId(byteReader.read().value())));
+            case VERSION_1 -> ErrorOr.of(new CustomGearTypeData(
+                    GearType.fromEncodingId(byteReader.read().value())));
         };
     }
 

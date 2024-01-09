@@ -11,15 +11,15 @@ public enum ItemType {
     CRAFTED_GEAR(3),
     CRAFTED_CONSUMABLE(4);
 
-    private final byte id;
+    private final byte encodingId;
 
-    ItemType(int id) {
-        this.id = (byte) id;
+    ItemType(int encodingId) {
+        this.encodingId = (byte) encodingId;
     }
 
-    public static ItemType fromId(byte id) {
+    public static ItemType fromEncodingId(byte id) {
         for (ItemType itemType : values()) {
-            if (itemType.id == id) {
+            if (itemType.encodingId == id) {
                 return itemType;
             }
         }
@@ -27,7 +27,7 @@ public enum ItemType {
         return null;
     }
 
-    public byte getId() {
-        return id;
+    public byte getEncodingId() {
+        return encodingId;
     }
 }

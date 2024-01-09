@@ -75,7 +75,7 @@ public final class EncodedByteBuffer {
             assert codePoint < 0xFFFFE : "Invalid code point: " + codePoint;
         }
 
-        return fromBytes(bytes.toArray(new UnsignedByte[0]));
+        return fromBytes(bytes.toArray(UnsignedByte[]::new));
     }
 
     public static EncodedByteBuffer fromBase64String(String string) {
