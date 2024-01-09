@@ -101,7 +101,7 @@ public enum GearType {
         return null;
     }
 
-    public static GearType fromId(int id) {
+    public static GearType fromEncodingId(int id) {
         for (GearType gearType : values()) {
             if (gearType.encodingId == id) return gearType;
         }

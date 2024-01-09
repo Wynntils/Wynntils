@@ -9,10 +9,10 @@ public enum ConsumableType {
     FOOD(1),
     SCROLL(2);
 
-    private final int id;
+    private final int encodingId;
 
-    ConsumableType(int id) {
-        this.id = id;
+    ConsumableType(int encodingId) {
+        this.encodingId = encodingId;
     }
 
     public static ConsumableType fromString(String name) {
@@ -25,9 +25,9 @@ public enum ConsumableType {
         return null;
     }
 
-    public static ConsumableType fromId(int id) {
+    public static ConsumableType fromEncodingId(int id) {
         for (ConsumableType value : values()) {
-            if (value.id == id) {
+            if (value.encodingId == id) {
                 return value;
             }
         }
@@ -35,7 +35,7 @@ public enum ConsumableType {
         return null;
     }
 
-    public int getId() {
-        return id;
+    public int getEncodingId() {
+        return encodingId;
     }
 }

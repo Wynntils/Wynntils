@@ -17,7 +17,7 @@ public class TypeDataTransformer extends DataTransformer<TypeData> {
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, TypeData data) {
         return switch (version) {
             case VERSION_1 -> ErrorOr.of(
-                    new UnsignedByte[] {UnsignedByte.of(data.itemType().getId())});
+                    new UnsignedByte[] {UnsignedByte.of(data.itemType().getEncodingId())});
         };
     }
 

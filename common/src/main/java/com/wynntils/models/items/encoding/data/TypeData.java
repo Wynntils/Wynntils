@@ -10,6 +10,6 @@ import com.wynntils.utils.type.UnsignedByte;
 
 public record TypeData(ItemType itemType) implements ItemData {
     public static TypeData fromByte(UnsignedByte versionByte) {
-        return new TypeData(ItemType.fromId(versionByte.toByte()));
+        return new TypeData(ItemType.fromEncodingId(versionByte.toByte()));
     }
 }
