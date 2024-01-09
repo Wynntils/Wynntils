@@ -1,13 +1,17 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
@@ -18,11 +22,31 @@ public class WynntilsCheckbox extends Checkbox {
     private final int maxTextWidth;
     private final int color;
 
+    private Consumer<Integer> onClick;
+    private List<Component> tooltip;
+
     public WynntilsCheckbox(
             int x, int y, int width, int height, Component message, boolean selected, int maxTextWidth) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
         this.color = CommonColors.WHITE.asInt();
+    }
+
+    public WynntilsCheckbox(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component message,
+            boolean selected,
+            int maxTextWidth,
+            Consumer<Integer> onClick,
+            List<Component> tooltip) {
+        super(x, y, width, height, message, selected);
+        this.maxTextWidth = maxTextWidth;
+        this.color = CommonColors.WHITE.asInt();
+        this.onClick = onClick;
+        this.tooltip = tooltip;
     }
 
     public WynntilsCheckbox(
@@ -52,7 +76,7 @@ public class WynntilsCheckbox extends Checkbox {
             resourceLocation = this.isFocused() ? CHECKBOX_HIGHLIGHTED_SPRITE : CHECKBOX_SPRITE;
         }
 
-        guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), 20, this.height);
+        guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), this.width, this.height);
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.showLabel) {
             int start = this.getX() + this.width + 2;
@@ -69,5 +93,20 @@ public class WynntilsCheckbox extends Checkbox {
                     this.getY() + this.getHeight(),
                     this.color);
         }
+
+        if (isHovered && tooltip != null) {
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
+
+        if (onClick != null) {
+            onClick.accept(button);
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -18,7 +18,6 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.characterstats.ShinyModel;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
@@ -30,6 +29,7 @@ import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
+import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
@@ -44,6 +44,7 @@ import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
 import com.wynntils.models.spells.SpellModel;
+import com.wynntils.models.stats.ShinyModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
@@ -82,6 +83,7 @@ public final class Models {
     public static final GuildModel Guild = new GuildModel();
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();
+    public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();

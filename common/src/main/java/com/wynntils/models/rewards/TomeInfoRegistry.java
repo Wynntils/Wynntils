@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -134,7 +134,7 @@ public class TomeInfoRegistry {
 
             List<Pair<StatType, Integer>> list = new ArrayList<>();
             for (Map.Entry<String, JsonElement> entry : baseJson.entrySet()) {
-                StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+                StatType statType = Models.Stat.fromApiName(entry.getKey());
 
                 if (statType == null) {
                     WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
