@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.parsing;
@@ -94,7 +94,6 @@ public final class WynnItemParser {
     // Crafted items
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
     private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
-    private static final Pattern CRAFTED_CONSUMABLE_TYPE_PATTERN = Pattern.compile("^§3Crafted (.+)$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -270,7 +269,7 @@ public final class WynnItemParser {
             if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                 String shinyName = shinyStatMatcher.group(1);
                 int shinyValue = Integer.parseInt(shinyStatMatcher.group(2));
-                shinyStat = Optional.of(new ShinyStat(shinyName, shinyValue));
+                shinyStat = Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue));
             }
         }
 
@@ -418,18 +417,10 @@ public final class WynnItemParser {
                 int value = Integer.parseInt(skillMatcher.group("value"));
                 skillReqs.add(Pair.of(skill, value));
             }
-
-            // Consumable type
-            Matcher consumableTypeMatcher = coded.getMatcher(CRAFTED_CONSUMABLE_TYPE_PATTERN);
-            if (consumableTypeMatcher.matches()) {
-                String typeName = consumableTypeMatcher.group(1);
-                consumableType = ConsumableType.fromString(typeName.toUpperCase(Locale.ROOT));
-            }
         }
 
         return new CraftedItemParseResults(
                 name,
-                consumableType,
                 effectStrength,
                 attackSpeed,
                 damages,
@@ -446,11 +437,7 @@ public final class WynnItemParser {
             }
             return null;
         }
-        int value = Math.round(possibleValue.baseValue() * (internalRoll / 100f));
-        if (value == 0) {
-            // If we get to 0, use 1 or -1 instead
-            value = (int) Math.signum(possibleValue.baseValue());
-        }
+        int value = StatCalculator.calculateStatValue(internalRoll, possibleValue);
 
         // Negative values can never show stars
         int stars = (value > 0)

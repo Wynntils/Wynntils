@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class TomeItem extends GameItem
-        implements GearTierItemProperty, IdentifiableItemProperty<TomeInfo, TomeInstance> {
+        implements GearTierItemProperty, RerollableItemProperty, IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
 
@@ -38,7 +39,8 @@ public class TomeItem extends GameItem
         return Optional.ofNullable(tomeInstance);
     }
 
-    public int getRerolls() {
+    @Override
+    public int getRerollCount() {
         return tomeInstance != null ? tomeInstance.rerolls() : 0;
     }
 

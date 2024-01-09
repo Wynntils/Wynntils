@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -44,6 +44,7 @@ public final class ContainerModel extends Model {
     private static final String MISC_BUCKET_NAME = "Misc. Bucket";
     public static final String CHARACTER_INFO_NAME = "Character Info";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
+    public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
     private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
@@ -89,6 +90,12 @@ public final class ContainerModel extends Model {
 
         String type = matcher.group(2);
         return type.equals(CHARACTER_BANK_NAME);
+    }
+
+    public boolean isCharacterInfoScreen(Screen screen) {
+        return StyledText.fromComponent(screen.getTitle())
+                .getStringWithoutFormatting()
+                .equals(CHARACTER_INFO_NAME);
     }
 
     public int getCurrentBankPage(Screen screen) {

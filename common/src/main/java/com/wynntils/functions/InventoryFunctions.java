@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -50,7 +50,9 @@ public class InventoryFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
-            return allShinyStats.stream().map(s -> s.name() + ": " + s.value()).collect(Collectors.joining("\n"));
+            return allShinyStats.stream()
+                    .map(s -> s.statType().displayName() + ": " + s.value())
+                    .collect(Collectors.joining("\n"));
         }
     }
 
@@ -256,7 +258,9 @@ public class InventoryFunctions {
             Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
             if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
 
-            return new NamedValue(shinyStatOpt.get().name(), shinyStatOpt.get().value());
+            // FIXME: The function system can't handle longs, so we have to cast to int
+            return new NamedValue(shinyStatOpt.get().statType().displayName(), (int)
+                    shinyStatOpt.get().value());
         }
     }
 

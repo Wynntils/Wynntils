@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -20,7 +20,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -32,7 +31,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
@@ -46,7 +44,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -85,7 +82,6 @@ public class ItemScreenshotFeature extends Feature {
 
         // has to be called during a render period
         takeScreenshot(screen, screenshotSlot, e.getTooltips());
-        makeChatPrompt(screenshotSlot);
         screenshotSlot = null;
     }
 
@@ -198,30 +194,6 @@ public class ItemScreenshotFeature extends Feature {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
         }
-    }
-
-    private static void makeChatPrompt(Slot hoveredSlot) {
-        // chat item prompt
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
-        if (gearItemOpt.isEmpty()) return;
-
-        GearItem gearItem = gearItemOpt.get();
-        if (gearItem.isUnidentified()) {
-            // We can only send chat encoded gear of identified gear
-            WynntilsMod.warn("Cannot make chat link of unidentified gear");
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.chatItemError"));
-            return;
-        }
-        String encoded = Models.Gear.toEncodedString(gearItem);
-
-        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
-                .withStyle(ChatFormatting.DARK_GREEN)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.translatable("feature.wynntils.itemScreenshot.chatItemTooltip")
-                                .withStyle(ChatFormatting.DARK_AQUA)))));
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem;
@@ -367,7 +367,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 statApiName = "elementalDefence";
             }
 
-            StatType statType = Models.Stat.fromApiRollId(statApiName);
+            StatType statType = Models.Stat.fromApiName(statApiName);
 
             if (statType == null) {
                 WynntilsMod.warn("Item DB contains invalid stat type " + statApiName);

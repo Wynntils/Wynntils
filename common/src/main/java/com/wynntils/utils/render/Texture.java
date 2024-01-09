@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -151,6 +151,17 @@ public enum Texture {
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
     // endregion
 
+    // region Item Storage
+    ITEM_RECORD("item_storage/record.png", 170, 172),
+    ITEM_RECORD_ADD("item_storage/record_add.png", 11, 22),
+    ITEM_RECORD_BUTTON_LEFT("item_storage/record_button_left.png", 11, 20),
+    ITEM_RECORD_BUTTON_RIGHT("item_storage/record_button_right.png", 11, 20),
+    ITEM_RECORD_CONFIRM("item_storage/record_confirm.png", 11, 22),
+    ITEM_RECORD_DELETE("item_storage/record_delete.png", 11, 22),
+    ITEM_RECORD_HELP("item_storage/record_help.png", 11, 22),
+    ITEM_RECORD_SCROLL("item_storage/record_scroll_button.png", 8, 9),
+    // endregion
+
     // region Lootrun
     LOOTRUN_LINE("lootrun/path_arrow.png", 16, 16),
 
@@ -209,6 +220,7 @@ public enum Texture {
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
+    ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
