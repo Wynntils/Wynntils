@@ -15,7 +15,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.crowdsource.CrowdSourcedData;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.services.itemvault.type.SavedItem;
+import com.wynntils.services.itemrecord.type.SavedItem;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;

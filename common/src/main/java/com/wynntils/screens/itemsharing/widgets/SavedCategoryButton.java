@@ -20,7 +20,7 @@ public class SavedCategoryButton extends WynntilsButton {
         super(x, y, 11, 10, Component.literal("Saved Items Button"));
         this.next = next;
         this.savedItemsScreen = screen;
-        this.buttonTexture = next ? Texture.VAULT_BUTTON_LEFT : Texture.VAULT_BUTTON_RIGHT;
+        this.buttonTexture = next ? Texture.ITEM_RECORD_BUTTON_LEFT : Texture.ITEM_RECORD_BUTTON_RIGHT;
     }
 
     @Override

@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.itemvault;
+package com.wynntils.services.itemrecord;
 
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemvault.type.SavedItem;
+import com.wynntils.services.itemrecord.type.SavedItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
@@ -20,7 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class ItemVaultService extends Service {
+public class ItemRecordService extends Service {
     private static final String DEFAULT_CATEGORY = "Uncategorized";
 
     @Persisted
@@ -29,7 +29,7 @@ public class ItemVaultService extends Service {
     @Persisted
     public final Storage<Set<String>> categories = new Storage<>(new TreeSet<>(List.of(DEFAULT_CATEGORY)));
 
-    public ItemVaultService() {
+    public ItemRecordService() {
         super(List.of());
     }
 
@@ -37,7 +37,7 @@ public class ItemVaultService extends Service {
         // Regular ItemStack can't be converted to json so store the tags needed
         // to recreate it
         SavedItem itemToSave =
-                SavedItem.create(wynnItem, new TreeSet<>(List.of(Services.ItemVault.getDefaultCategory())), itemStack);
+                SavedItem.create(wynnItem, new TreeSet<>(List.of(Services.ItemRecord.getDefaultCategory())), itemStack);
 
         // Check if the item is already saved
         if (savedItems.get().contains(itemToSave)) {
@@ -48,7 +48,7 @@ public class ItemVaultService extends Service {
 
         savedItems.get().add(itemToSave);
 
-        Services.ItemVault.savedItems.touched();
+        Services.ItemRecord.savedItems.touched();
 
         McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.savedToRecord", itemName)
                 .withStyle(ChatFormatting.GREEN));
@@ -58,7 +58,7 @@ public class ItemVaultService extends Service {
 
     public void moveSelectedItems(List<Pair<String, String>> selectedItems, String category, boolean keepOriginal) {
         for (Pair<String, String> selectedItem : selectedItems) {
-            SavedItem savedItem = Services.ItemVault.getItem(selectedItem.b());
+            SavedItem savedItem = Services.ItemRecord.getItem(selectedItem.b());
 
             if (selectedItem != null) {
                 moveItemCategory(savedItem, category, selectedItem.a(), keepOriginal);
@@ -74,14 +74,14 @@ public class ItemVaultService extends Service {
             savedItem.categories().remove(originalCategory);
         }
 
-        Services.ItemVault.savedItems.touched();
+        Services.ItemRecord.savedItems.touched();
     }
 
     public void deleteItem(String base64) {
         for (SavedItem savedItem : savedItems.get()) {
             if (savedItem.base64().equals(base64)) {
-                Services.ItemVault.savedItems.get().remove(savedItem);
-                Services.ItemVault.savedItems.touched();
+                Services.ItemRecord.savedItems.get().remove(savedItem);
+                Services.ItemRecord.savedItems.touched();
                 break;
             }
         }
@@ -89,8 +89,8 @@ public class ItemVaultService extends Service {
 
     public void addCategory(String newCategory, List<Pair<String, String>> selectedItems, boolean keepOriginals) {
         // Save new category
-        Services.ItemVault.categories.get().add(newCategory);
-        Services.ItemVault.categories.touched();
+        Services.ItemRecord.categories.get().add(newCategory);
+        Services.ItemRecord.categories.touched();
 
         if (!selectedItems.isEmpty()) {
             moveSelectedItems(selectedItems, newCategory, keepOriginals);
@@ -128,23 +128,23 @@ public class ItemVaultService extends Service {
                 }
             }
 
-            Services.ItemVault.savedItems.store(newSavedItems);
-            Services.ItemVault.savedItems.touched();
-        } else if (!categoryToDelete.equals(Services.ItemVault.getDefaultCategory())) {
+            Services.ItemRecord.savedItems.store(newSavedItems);
+            Services.ItemRecord.savedItems.touched();
+        } else if (!categoryToDelete.equals(Services.ItemRecord.getDefaultCategory())) {
             // Remove category from all items and add default
             for (SavedItem savedItem : savedItems.get()) {
                 savedItem.categories().remove(categoryToDelete);
-                savedItem.categories().add(Services.ItemVault.getDefaultCategory());
+                savedItem.categories().add(Services.ItemRecord.getDefaultCategory());
             }
 
-            Services.ItemVault.savedItems.store(savedItems.get());
-            Services.ItemVault.savedItems.touched();
+            Services.ItemRecord.savedItems.store(savedItems.get());
+            Services.ItemRecord.savedItems.touched();
         }
 
         // If current category is not the default, delete it
-        if (!categoryToDelete.equals(Services.ItemVault.getDefaultCategory())) {
-            Services.ItemVault.categories.get().remove(categoryToDelete);
-            Services.ItemVault.categories.touched();
+        if (!categoryToDelete.equals(Services.ItemRecord.getDefaultCategory())) {
+            Services.ItemRecord.categories.get().remove(categoryToDelete);
+            Services.ItemRecord.categories.touched();
         }
     }
 

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.itemvault.type;
+package com.wynntils.services.itemrecord.type;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

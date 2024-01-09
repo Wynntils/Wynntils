@@ -196,7 +196,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
                 // Item name is passed in since it is lost in the instanceof check above and looks nicer
                 // saying "Saved Gale's Force to your vault" than "Saved Bow to your vault"
-                savedItem = Services.ItemVault.saveItem(wynnItem, itemStackToSave, itemStack.getHoverName());
+                savedItem = Services.ItemRecord.saveItem(wynnItem, itemStackToSave, itemStack.getHoverName());
 
                 if (savedItem) {
                     saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openRecord"));
