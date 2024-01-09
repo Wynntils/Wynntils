@@ -300,7 +300,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get(
-                                "screens.wynntils.skillPointLoadouts.statusEffects", Models.SkillPoint.getStatusEffectsSum())),
+                                "screens.wynntils.skillPointLoadouts.statusEffects",
+                                Models.SkillPoint.getStatusEffectsSum())),
                         dividedWidth * 35,
                         dividedHeight * 19,
                         CommonColors.WHITE,
