@@ -300,7 +300,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get(
-                                "screens.wynntils.skillPointLoadouts.temporary", Models.SkillPoint.getTemporarySum())),
+                                "screens.wynntils.skillPointLoadouts.statusEffects", Models.SkillPoint.getStatusEffectsSum())),
                         dividedWidth * 35,
                         dividedHeight * 19,
                         CommonColors.WHITE,
@@ -312,7 +312,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getTemporarySkillPoints(Skill.values()[i])),
+                                    + Models.SkillPoint.getStatusEffectSkillPoints(Skill.values()[i])),
                             dividedWidth * (51 + i * 2),
                             dividedHeight * 19,
                             CommonColors.WHITE,
