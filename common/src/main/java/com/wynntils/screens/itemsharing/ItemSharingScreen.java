@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
@@ -15,6 +16,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EncodedByteBuffer;
@@ -41,8 +43,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class ItemSharingScreen extends WynntilsScreen {
+    private final ItemStack itemStack;
     private final WynnItem wynnItem;
 
+    private boolean savedItem = false;
+    private Button saveButton;
     private EncodedByteBuffer encodedItem;
     private int backgroundX;
     private int backgroundY;
@@ -50,14 +55,29 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private ItemStack previewItemStack;
     private List<AbstractWidget> options = new ArrayList<>();
 
-    private ItemSharingScreen(WynnItem wynnItem) {
+    private ItemSharingScreen(WynnItem wynnItem, ItemStack itemStack) {
         super(Component.literal("Item Sharing Screen"));
 
         this.wynnItem = wynnItem;
+        this.itemStack = itemStack;
     }
 
-    public static Screen create(WynnItem wynnItem) {
-        return new ItemSharingScreen(wynnItem);
+    private ItemSharingScreen(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
+        super(Component.literal("Item Sharing Screen"));
+
+        this.wynnItem = wynnItem;
+        this.itemStack = itemStack;
+        this.savedItem = savedItem;
+    }
+
+    // Creating screen from an item
+    public static Screen create(WynnItem wynnItem, ItemStack itemStack) {
+        return new ItemSharingScreen(wynnItem, itemStack);
+    }
+
+    // Creating screen from item record
+    public static Screen create(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
+        return new ItemSharingScreen(wynnItem, itemStack, savedItem);
     }
 
     @Override
@@ -162,17 +182,32 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     private void shareItem(String target) {
-        if (target.equals("guild")) {
-            Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
-        } else if (target.equals("party")) {
-            Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
-        } else if (target.equals("clipboard")) {
-            McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
+        switch (target) {
+            case "guild" -> Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
+            case "party" -> Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
+            case "save" -> {
+                ItemStack itemStackToSave = itemStack;
 
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
-                    .withStyle(ChatFormatting.GREEN));
-        } else {
-            // TODO: Save item to storage
+                // Gear items can have their item changed by cosmetics so we need to get their original item
+                // FIXME: Does not work for crafted gear
+                if (wynnItem instanceof GearItem gearItem) {
+                    itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s Item Record");
+                }
+
+                // Item name is passed in since it is lost in the instanceof check above and looks nicer
+                // saying "Saved Gale's Force to your item record" than "Saved Bow to your item record"
+                savedItem = Services.ItemRecord.saveItem(wynnItem, itemStackToSave, itemStack.getHoverName());
+
+                if (savedItem) {
+                    saveButton.setMessage(Component.translatable("screens.wynntils.itemSharing.openRecord"));
+                }
+            }
+            default -> {
+                McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
+
+                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
+                        .withStyle(ChatFormatting.GREEN));
+            }
         }
     }
 
@@ -235,11 +270,25 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 .size(shareButtonWidth, 20)
                 .build()));
 
-        options.add(this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.itemSharing.save"), (b) -> shareItem("save"))
+        // If an item has already been saved then this button will act as easy access to their saved items
+        Component saveButtonMessage = savedItem
+                ? Component.translatable("screens.wynntils.itemSharing.openRecord")
+                : Component.translatable("screens.wynntils.itemSharing.save");
+
+        saveButton = new Button.Builder(saveButtonMessage, (b) -> {
+                    if (!savedItem) {
+                        shareItem("save");
+                    } else {
+                        McUtils.mc().setScreen(SavedItemsScreen.create());
+                    }
+                })
                 .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
                 .size(shareButtonWidth, 20)
-                .build()));
+                .build();
+
+        this.addRenderableWidget(saveButton);
+
+        options.add(saveButton);
 
         options.add(this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.itemSharing.copy"), (b) -> shareItem("clipboard"))

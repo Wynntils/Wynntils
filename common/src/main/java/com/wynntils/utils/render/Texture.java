@@ -151,6 +151,17 @@ public enum Texture {
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
     // endregion
 
+    // region Item Storage
+    ITEM_RECORD("item_storage/record.png", 170, 172),
+    ITEM_RECORD_ADD("item_storage/record_add.png", 11, 22),
+    ITEM_RECORD_BUTTON_LEFT("item_storage/record_button_left.png", 11, 20),
+    ITEM_RECORD_BUTTON_RIGHT("item_storage/record_button_right.png", 11, 20),
+    ITEM_RECORD_CONFIRM("item_storage/record_confirm.png", 11, 22),
+    ITEM_RECORD_DELETE("item_storage/record_delete.png", 11, 22),
+    ITEM_RECORD_HELP("item_storage/record_help.png", 11, 22),
+    ITEM_RECORD_SCROLL("item_storage/record_scroll_button.png", 8, 9),
+    // endregion
+
     // region Lootrun
     LOOTRUN_LINE("lootrun/path_arrow.png", 16, 16),
 

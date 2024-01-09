@@ -24,7 +24,7 @@ public class FakeItemStack extends ItemStack {
     private final WynnItem wynnItem;
     private final String source;
 
-    private FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source) {
+    public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
 

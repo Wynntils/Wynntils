@@ -6,6 +6,7 @@ package com.wynntils.features.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -28,6 +29,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.itemsharing.ItemSharingScreen;
+import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
@@ -56,7 +58,15 @@ import org.lwjgl.glfw.GLFW;
 public class ChatItemFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind shareItemKeybind =
-            new KeyBind("Share Item", GLFW.GLFW_KEY_F3, true, null, this::onInventoryPress);
+            new KeyBind("Share Item", GLFW.GLFW_KEY_F3, true, null, slot -> shareItem(slot, true));
+
+    @RegisterKeyBind
+    private final KeyBind saveItemKeybind =
+            new KeyBind("Save Item to Item Record", GLFW.GLFW_KEY_F6, true, null, slot -> shareItem(slot, false));
+
+    @RegisterKeyBind
+    private final KeyBind itemRecordKeybind = new KeyBind(
+            "Open Item Record", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc().setScreen(SavedItemsScreen.create()));
 
     @Persisted
     public final Config<Boolean> showSharingScreen = new Config<>(true);
@@ -151,7 +161,7 @@ public class ChatItemFeature extends Feature {
         e.setMessage(modified.getComponent());
     }
 
-    private void onInventoryPress(Slot hoveredSlot) {
+    private void shareItem(Slot hoveredSlot, boolean share) {
         if (hoveredSlot == null) return;
 
         // Special case for unidentified gear
@@ -169,10 +179,25 @@ public class ChatItemFeature extends Feature {
         // Don't try to encode unsupported items
         if (!Models.ItemEncoding.canEncodeItem(wynnItemOpt.get())) return;
 
-        if (showSharingScreen.get()) {
-            McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get()));
+        if (share) {
+            if (showSharingScreen.get()) {
+                McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get(), hoveredSlot.getItem()));
+            } else {
+                makeChatPrompt(wynnItemOpt.get());
+            }
         } else {
-            makeChatPrompt(wynnItemOpt.get());
+            ItemStack itemStackToSave = hoveredSlot.getItem();
+
+            // Gear items can have their item changed by cosmetics so we need to get their original item
+            // FIXME: Does not work for crafted gear
+            if (wynnItemOpt.get() instanceof GearItem gearItem) {
+                itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s Item Recorf");
+            }
+
+            // Item name is passed in since it is lost in the instanceof check above and looks nicer
+            // saying "Saved Gale's Force to your Item Record" than "Saved Bow to your Item Record"
+            Services.ItemRecord.saveItem(
+                    wynnItemOpt.get(), itemStackToSave, hoveredSlot.getItem().getHoverName());
         }
     }
 
