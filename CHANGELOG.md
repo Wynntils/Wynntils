@@ -1,3 +1,20 @@
+## [1.0.0](https://github.com/Wynntils/Artemis/compare/v0.0.1...v1.0.0) (2024-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Release Artemis 1.0.0
+
+### New Features
+
+* Add the new chat gear encoding, gear sharing GUI, item record GUI ([#2253](https://github.com/Wynntils/Artemis/issues/2253)) ([5038916](https://github.com/Wynntils/Artemis/commit/50389162562633f1093c73d0fc15086bf6a83d44))
+* Skill point loadouts ([#2310](https://github.com/Wynntils/Artemis/issues/2310)) ([f5a8615](https://github.com/Wynntils/Artemis/commit/f5a8615421acfae506ab316b78f720b439268b7f))
+
+
+### Miscellaneous Chores
+
+* Release Artemis 1.0.0 ([44df4bf](https://github.com/Wynntils/Artemis/commit/44df4bf225fe386fbc11f7990fd4e96a7a490bfa))
+
 ## [0.0.1](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.0...v0.0.1) (2024-01-09)
 
 
@@ -133,6 +150,7 @@
 * Re-release, fix quilt causing release issues ([c0d2bef](https://github.com/Wynntils/Artemis/commit/c0d2bef76502a0a478832b3204c6bd8ab076c06c))
 * Release 1.20.2 port [#2](https://github.com/Wynntils/Artemis/issues/2) ([c4581ff](https://github.com/Wynntils/Artemis/commit/c4581ffedfe0dcf71b4d30806ee7c262a2597a79))
 * Release new version for Wynncraft 2.0.4 ([c88b994](https://github.com/Wynntils/Artemis/commit/c88b994c181dd18abf95bf33fc8a9def30c52e7a))
+* **release:** v0.0.1 [skip ci] ([d410d0f](https://github.com/Wynntils/Artemis/commit/d410d0fed815dfebf488bf5a1e1cd4183c39158c))
 * remove Debugify from the incompatible mod list (experimentally) ([#2247](https://github.com/Wynntils/Artemis/issues/2247)) ([410a210](https://github.com/Wynntils/Artemis/commit/410a210778844172585033e4eae1a61597021988))
 * update conventional-changelog-action ([31ea48e](https://github.com/Wynntils/Artemis/commit/31ea48e24cac281b4773f9d8ae4349d2597cfbd2))
 
