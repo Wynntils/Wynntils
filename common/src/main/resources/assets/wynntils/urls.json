@@ -199,11 +199,6 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
   },
   {
-    "id": "dataStaticShinyStats",
-    "md5": "2dbc0fdde50512b64828d5642bb480b6",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/shiny_stats.json"
-  },
-  {
     "id": "dataStaticUrls",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/urls.json"
   },
