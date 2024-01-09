@@ -15,6 +15,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -227,7 +228,9 @@ public class InventoryEmeraldCountFeature extends Feature {
     }
 
     private boolean isExcludedContainer(Screen screen) {
-        return Models.Container.isCharacterInfoScreen(screen) || screen instanceof GearViewerScreen;
+        return Models.Container.isCharacterInfoScreen(screen)
+                || screen instanceof GearViewerScreen
+                || screen instanceof SavedItemsScreen;
     }
 
     public enum EmeraldCountType {

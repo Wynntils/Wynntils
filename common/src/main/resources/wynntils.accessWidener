@@ -12,9 +12,9 @@ accessible field net/minecraft/client/OptionInstance value Ljava/lang/Object;
 accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
+accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_HIGHLIGHTED_SPRITE Lnet/minecraft/resources/ResourceLocation;
 accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE Lnet/minecraft/resources/ResourceLocation;
 accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_SELECTED_SPRITE Lnet/minecraft/resources/ResourceLocation;
-accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_HIGHLIGHTED_SPRITE Lnet/minecraft/resources/ResourceLocation;
 accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_SPRITE Lnet/minecraft/resources/ResourceLocation;
 accessible field net/minecraft/client/gui/components/Checkbox selected Z
 accessible field net/minecraft/client/gui/components/Checkbox showLabel Z
@@ -47,6 +47,7 @@ accessible method net/minecraft/client/gui/screens/Screen clearWidgets ()V
 accessible method net/minecraft/client/gui/screens/Screen init ()V
 accessible method net/minecraft/client/gui/screens/Screen removeWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)V
 accessible method net/minecraft/client/gui/screens/Screen$DeferredTooltipRendering <init> (Ljava/util/List;Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V
+accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen findSlot (DD)Lnet/minecraft/world/inventory/Slot;
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen renderTooltip (Lnet/minecraft/client/gui/GuiGraphics;II)V
 accessible method net/minecraft/client/multiplayer/MultiPlayerGameMode startPrediction (Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/prediction/PredictiveAction;)V
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;

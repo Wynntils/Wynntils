@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.profile;
@@ -169,10 +169,14 @@ public class TerritoryProfile {
             String friendlyName = territoryName.replace('’', '\'');
 
             GuildInfo guild;
-            if (territory.get("guild").isJsonNull()) {
+            JsonElement guildJson = territory.get("guild");
+            if (guildJson.isJsonNull()
+                    || !guildJson.isJsonObject()
+                    || guildJson.getAsJsonObject().get("name").isJsonNull()
+                    || guildJson.getAsJsonObject().get("prefix").isJsonNull()) {
                 guild = GuildInfo.NONE;
             } else {
-                guild = context.deserialize(territory.get("guild"), GuildInfo.class);
+                guild = context.deserialize(guildJson, GuildInfo.class);
             }
 
             Date acquired = null;
