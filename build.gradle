@@ -1,7 +1,6 @@
 plugins {
     id "architectury-plugin" version "${architectury_plugin_version}"
     id "dev.architectury.loom" version "${architectury_loom_version}" apply false
-    id "io.github.juuxel.loom-vineflower" version "${loom_vineflower_version}" apply false
     id "com.diffplug.spotless" version "${spotless_version}"
 }
 
@@ -16,11 +15,10 @@ def usingHotswapAgent = project.hasProperty("wynntils.hotswap") ? project.getPro
 
 // On the release branches, this string will be automatically updated by the bots
 // Do not change this in the main branch!
-version = "0.0.3-SNAPSHOT"
+version = "0.0.4-SNAPSHOT"
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: "io.github.juuxel.loom-vineflower"
 
     repositories {
         maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }

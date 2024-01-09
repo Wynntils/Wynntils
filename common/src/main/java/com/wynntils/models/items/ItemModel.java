@@ -115,7 +115,7 @@ public class ItemModel extends Model {
         return Optional.of((T) wynnItem);
     }
 
-    public <T> Optional<T> asWynnItemPropery(ItemStack itemStack, Class<T> clazz) {
+    public <T> Optional<T> asWynnItemProperty(ItemStack itemStack, Class<T> clazz) {
         Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();

@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class ArchetypeAbilitiesAnnotator implements ItemAnnotator {
-    // Test suite: https://regexr.com/7h12h
+    // Test in ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME
     private static final Pattern ARCHETYPE_NAME = Pattern.compile("^§([a-r0-9])§l[A-Za-z ]+ Archetype$");
-    // Test suite: https://regexr.com/7h133
+    // Test in ArchetypeAbilitiesAnnotator_ARCHETYPE_PATTERN
     private static final Pattern ARCHETYPE_PATTERN = Pattern.compile("^§a✔ §7Unlocked Abilities: §f(\\d+)§7/(\\d+)$");
 
     @Override

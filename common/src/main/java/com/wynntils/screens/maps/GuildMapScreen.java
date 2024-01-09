@@ -6,6 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -157,6 +158,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
                         Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        if (firstInit) {
+            // When outside of the main map, center to the middle of the map
+            if (!isPlayerInsideMainArea()) {
+                centerMap();
+            }
+
+            firstInit = false;
+        }
     }
 
     @Override
@@ -271,7 +281,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            McUtils.sendCommand("gu territory " + territoryPoi.getName());
+            Handlers.Command.sendCommand("gu territory " + territoryPoi.getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
             int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);

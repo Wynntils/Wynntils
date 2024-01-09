@@ -71,7 +71,7 @@ public class PartyMemberWidget extends AbstractWidget {
                         20)
                 .build();
         this.moveUpButton = new Button.Builder(
-                        Component.literal("ʌ"), (button) -> Models.Party.increasePlayerPriority(playerName))
+                        Component.literal("🠝"), (button) -> Models.Party.increasePlayerPriority(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)) + 1, this.getY())
                 .size(
                         (int) ((this.getX() + (this.width / this.gridDivisions * 25))
@@ -80,7 +80,7 @@ public class PartyMemberWidget extends AbstractWidget {
                         20)
                 .build();
         this.moveDownButton = new Button.Builder(
-                        Component.literal("v"), (button) -> Models.Party.decreasePlayerPriority(playerName))
+                        Component.literal("🠟"), (button) -> Models.Party.decreasePlayerPriority(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 25)) + 1, this.getY())
                 .size(
                         (int) ((this.getX() + (this.width / this.gridDivisions * 26))

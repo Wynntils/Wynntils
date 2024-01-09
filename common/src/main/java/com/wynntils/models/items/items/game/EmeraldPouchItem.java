@@ -14,8 +14,7 @@ public class EmeraldPouchItem extends GameItem implements NumberedTierItemProper
 
     private final int capacity;
 
-    public EmeraldPouchItem(int emeraldPrice, int tier, int value) {
-        super(emeraldPrice);
+    public EmeraldPouchItem(int tier, int value) {
         this.tier = tier;
         this.value = value;
 
@@ -56,10 +55,6 @@ public class EmeraldPouchItem extends GameItem implements NumberedTierItemProper
 
     @Override
     public String toString() {
-        return "EmeraldPouchItem{" + "tier="
-                + tier + ", value="
-                + value + ", capacity="
-                + capacity + ", emeraldPrice="
-                + emeraldPrice + '}';
+        return "EmeraldPouchItem{" + "tier=" + tier + ", value=" + value + '}';
     }
 }

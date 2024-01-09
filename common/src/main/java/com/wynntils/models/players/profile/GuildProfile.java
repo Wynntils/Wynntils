@@ -19,6 +19,11 @@ public record GuildProfile(String prefix, String name, CustomColor color) {
                 throws JsonParseException {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
+            // Temporary fix for Athena bug
+            if (jsonObject.get("_id").isJsonNull() || jsonObject.get("prefix").isJsonNull()) {
+                return null;
+            }
+
             String name = jsonObject.getAsJsonPrimitive("_id").getAsString();
             String prefix = jsonObject.getAsJsonPrimitive("prefix").getAsString();
 

@@ -5,6 +5,7 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.net.ApiResponse;
@@ -52,7 +53,7 @@ public class ChangelogFeature extends Feature {
                     lastShownVersion.store(WynntilsMod.getVersion());
 
                     if (autoClassMenu.get()) {
-                        McUtils.sendCommand("class");
+                        Handlers.Command.sendCommand("class");
                         waitForScreen = true;
                         changelogData = changelog;
                     } else {

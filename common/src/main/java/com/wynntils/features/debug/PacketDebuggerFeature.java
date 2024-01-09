@@ -41,6 +41,7 @@ import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -86,11 +87,13 @@ public class PacketDebuggerFeature extends Feature {
             ClientboundContainerSetContentPacket.class,
             ClientboundContainerSetSlotPacket.class,
             ClientboundContainerSetDataPacket.class,
+            ClientboundContainerSetSlotPacket.class,
 
             // C2S
             ServerboundContainerClickPacket.class,
             ServerboundContainerClickPacket.class,
-            ServerboundContainerButtonClickPacket.class);
+            ServerboundContainerButtonClickPacket.class,
+            ServerboundContainerClosePacket.class);
 
     private static final Class<? extends Packet<?>> PARTICLE_PACKET_CLASS = ClientboundLevelParticlesPacket.class;
 
@@ -122,7 +125,7 @@ public class PacketDebuggerFeature extends Feature {
         ALL(packetClass -> false),
         FILTERED(IGNORE_LIST::contains),
         CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
-        PARTICLE_ONLY(packetClas -> !PARTICLE_PACKET_CLASS.equals(packetClas));
+        PARTICLE_ONLY(packetClass -> !PARTICLE_PACKET_CLASS.equals(packetClass));
 
         private final Predicate<Class<? extends Packet>> filterPredicate;
 

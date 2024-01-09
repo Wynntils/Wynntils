@@ -4,18 +4,27 @@
  */
 package com.wynntils.services.itemfilter.statproviders;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.GameItem;
+import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
 public class PriceStatProvider extends ItemStatProvider<Integer> {
     @Override
     public List<Integer> getValue(WynnItem wynnItem) {
-        if (wynnItem instanceof GameItem gameItem && gameItem.hasEmeraldPrice()) {
-            return List.of(gameItem.getEmeraldPrice());
+        TradeMarketPriceInfo priceInfo = wynnItem.getData().getOrCalculate(WynnItemData.EMERALD_PRICE_KEY, () -> {
+            TradeMarketPriceInfo calculatedInfo =
+                    Models.TradeMarket.calculateItemPriceInfo(wynnItem.getData().get(WynnItemData.ITEMSTACK_KEY));
+            return calculatedInfo;
+        });
+
+        if (priceInfo == TradeMarketPriceInfo.EMPTY) {
+            return List.of();
         }
 
-        return List.of();
+        // Silverbull price is the normal price if the item is not discounted
+        return List.of(priceInfo.silverbullPrice());
     }
 }

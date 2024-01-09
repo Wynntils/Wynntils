@@ -86,12 +86,20 @@ public class TerritoryPoi implements Poi {
 
         TerritoryProfile territoryProfile = getTerritoryProfile();
 
-        CustomColor color = isTerritoryInfoUsable()
-                        && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
-                        && guildMapScreen.isResourceMode()
-                ? territoryInfo.getResourceColor()
-                : Models.Guild.getColor(
-                        isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild());
+        CustomColor color;
+        if (isTerritoryInfoUsable()
+                && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
+                && guildMapScreen.isResourceMode()) {
+            color = territoryInfo.getResourceColor();
+        } else if ((isTerritoryInfoUsable()
+                        && territoryInfo.getGuildName().equals(TerritoryProfile.GuildInfo.NONE.name()))
+                || territoryProfile.getGuildInfo() == TerritoryProfile.GuildInfo.NONE) {
+            // Uncaptured territory at season reset
+            color = CommonColors.WHITE;
+        } else {
+            color = Models.Guild.getColor(
+                    isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild());
+        }
 
         BufferedRenderUtils.drawRect(
                 poseStack,
@@ -139,32 +147,32 @@ public class TerritoryPoi implements Poi {
                             TextShadow.OUTLINE);
         }
 
-        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getFriendlyName();
-        Models.GuildAttackTimer.getAttackTimerForTerritory(guildName).ifPresent(attackTimer -> {
-            final String timeLeft = attackTimer.timerString();
+        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
+                .ifPresent(attackTimer -> {
+                    final String timeLeft = attackTimer.timerString();
 
-            BufferedFontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
-                            StyledText.fromString(timeLeft),
-                            actualRenderX,
-                            actualRenderX + renderWidth,
-                            actualRenderZ,
-                            actualRenderZ + renderHeight,
-                            0,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.OUTLINE);
-        });
+                    BufferedFontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    poseStack,
+                                    bufferSource,
+                                    StyledText.fromString(timeLeft),
+                                    actualRenderX,
+                                    actualRenderX + renderWidth,
+                                    actualRenderZ,
+                                    actualRenderZ + renderHeight,
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.OUTLINE);
+                });
 
         if (hovered) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText.fromString(guildName),
+                            StyledText.fromString(territoryProfile.getFriendlyName()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,

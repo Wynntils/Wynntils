@@ -8,19 +8,26 @@ import com.wynntils.models.elements.type.PotionType;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.models.wynnitem.type.ItemEffect;
+import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class PotionItem extends GameItem implements UsesItemProperty, LeveledItemProperty {
     private final PotionType type;
     private final int level;
+    private final List<NamedItemEffect> namedEffects;
     private final List<ItemEffect> effects;
     private final CappedValue uses;
 
-    public PotionItem(int emeraldPrice, PotionType type, int level, List<ItemEffect> effects, CappedValue uses) {
-        super(emeraldPrice);
+    public PotionItem(
+            PotionType type,
+            int level,
+            List<NamedItemEffect> namedEffects,
+            List<ItemEffect> effects,
+            CappedValue uses) {
         this.type = type;
         this.level = level;
+        this.namedEffects = namedEffects;
         this.effects = effects;
         this.uses = uses;
     }
@@ -32,6 +39,10 @@ public class PotionItem extends GameItem implements UsesItemProperty, LeveledIte
     @Override
     public int getLevel() {
         return level;
+    }
+
+    public List<NamedItemEffect> getNamedEffects() {
+        return namedEffects;
     }
 
     public List<ItemEffect> getEffects() {
@@ -47,9 +58,9 @@ public class PotionItem extends GameItem implements UsesItemProperty, LeveledIte
     public String toString() {
         return "PotionItem{" + "type="
                 + type + ", level="
-                + level + ", effects="
+                + level + ", namedEffects="
+                + namedEffects + ", effects="
                 + effects + ", uses="
-                + uses + ", emeraldPrice="
-                + emeraldPrice + '}';
+                + uses + '}';
     }
 }

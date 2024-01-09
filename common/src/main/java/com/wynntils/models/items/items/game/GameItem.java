@@ -5,17 +5,5 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.properties.EmeraldPricedItemProperty;
 
-public abstract class GameItem extends WynnItem implements EmeraldPricedItemProperty {
-    protected final int emeraldPrice;
-
-    protected GameItem(int emeraldPrice) {
-        this.emeraldPrice = emeraldPrice;
-    }
-
-    @Override
-    public int getEmeraldPrice() {
-        return emeraldPrice;
-    }
-}
+public class GameItem extends WynnItem {}

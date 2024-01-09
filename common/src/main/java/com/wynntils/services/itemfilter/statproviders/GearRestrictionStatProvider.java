@@ -14,6 +14,6 @@ public class GearRestrictionStatProvider extends ItemStatProvider<String> {
     public List<String> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
-        return List.of(gearItem.getGearInfo().metaInfo().restrictions().name());
+        return List.of(gearItem.getItemInfo().metaInfo().restrictions().name());
     }
 }

@@ -6,12 +6,11 @@ package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
-import com.wynntils.screens.partymanagement.widgets.LegendButton;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
@@ -34,27 +33,21 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PartyManagementScreen extends WynntilsScreen implements TextboxScreen {
+public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
-    private static final float GRID_DIVISIONS = 64.0f;
     private static final int PARTY_LIST_DIV_HEIGHT = 8;
     private static final int SUGGESTION_LIST_DIV_HEIGHT = 22;
     private static final int MGMT_ROW_DIV_HEIGHT = 14;
-
-    private float dividedHeight;
-    private float dividedWidth;
     private int mgmtButtonWidth;
 
-    private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget inviteInput;
-
     private Button inviteButton;
     private Button kickOfflineButton;
     private CreateLeaveButton createLeaveButton;
-    private final List<AbstractWidget> suggestedPlayersWidgets = new ArrayList<>();
-    private final List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
+    private List<AbstractWidget> suggestedPlayersWidgets = new ArrayList<>();
+    private List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
 
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
@@ -64,38 +57,18 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         return new PartyManagementScreen();
     }
 
-    /*
-    Some notes on element alignment and sizing:
-    All elements should be positioned dynamically relative to window size. That is; you must use this.height and
-    this.width, plus any multiplier and optionally, +/- 1 to make small tweaks. For example, these are valid:
-    (int) (dividedWidth * 36)
-    (int) (dividedWidth * 57) - 1
-    (this.width / 2)
-    (end of another element) + x
-    And these are invalid:
-    100
-    (int) (dividedWidth * 36) + 4
-    (int) (this.width / 2 + 199)
-    The reason for all of this is gui scale. Height and width will be different depending on the gui scale, and
-    the above method will ensure that the gui is always aligned somewhat correctly.
-
-    Also note that button height (and related elements), must be 20 or the texture will break.
-    Element sizing isn't nearly as picky as alignment, but it'll still be better to keep static modifiers (eg. +2) to a
-    minimum.
-     */
-
     @Override
     public void doInit() {
-        dividedWidth = this.width / GRID_DIVISIONS;
-        dividedHeight = this.height / GRID_DIVISIONS;
+        super.doInit();
         mgmtButtonWidth = (int) (dividedWidth * 8) - 2; // -2 for spacing
         refreshAll();
+
         // region Invite input and button
         inviteInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 36),
                 (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1,
                 (int) ((dividedWidth * 57) - (dividedWidth * 36)) - 1,
-                20, // height is static 20 to match the button below
+                BUTTON_HEIGHT,
                 null,
                 this,
                 inviteInput);
@@ -105,7 +78,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> inviteFromField())
                 .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
-                .size((int) (dividedWidth * 3) - 1, 20) // height must be static 20 or the texture will break
+                .size((int) (dividedWidth * 3) - 1, BUTTON_HEIGHT)
                 .build();
         this.addRenderableWidget(inviteButton);
         // endregion
@@ -116,7 +89,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                                 .withStyle(ChatFormatting.GREEN),
                         (button) -> refreshAll())
                 .pos((int) (dividedWidth * 36) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
-                .size(mgmtButtonWidth, 20)
+                .size(mgmtButtonWidth, BUTTON_HEIGHT)
                 .build());
 
         kickOfflineButton = new Button.Builder(
@@ -124,21 +97,37 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                                 .withStyle(ChatFormatting.RED),
                         (button) -> Models.Party.partyKickOffline())
                 .pos((int) (dividedWidth * 44) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
-                .size(mgmtButtonWidth, 20)
+                .size(mgmtButtonWidth, BUTTON_HEIGHT)
                 .build();
         this.addRenderableWidget(kickOfflineButton);
         // endregion
 
-        this.addRenderableWidget(new LegendButton((int) (dividedWidth * 2), (int) (dividedHeight * 58)));
+        // region info button
+        this.addRenderableWidget(new InfoButton(
+                (int) (dividedWidth * 2),
+                (int) (dividedHeight * 58),
+                Component.literal("")
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.legend")
+                                .withStyle(ChatFormatting.UNDERLINE))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.self")
+                                .withStyle(ChatFormatting.BOLD))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.leader")
+                                .withStyle(ChatFormatting.YELLOW))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.offline")
+                                .withStyle(ChatFormatting.STRIKETHROUGH))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.friend")
+                                .withStyle(ChatFormatting.GREEN))));
+        // endregion
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        dividedWidth = this.width / GRID_DIVISIONS;
-        dividedHeight = this.height / GRID_DIVISIONS;
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        PoseStack poseStack = guiGraphics.pose();
 
         boolean inParty = Models.Party.isInParty();
 
@@ -150,9 +139,6 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
-
-        // uncomment when changing gui elements
-        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
         // region Invite field header
         FontRenderer.getInstance()
@@ -173,8 +159,6 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         // endregion
 
         // region Party list
-        // if you enable the debug dividers, we want to render this on the 4nd line from the left (this.width / 64 * 4)
-        // and the 8th line from the top (this.height / 64 * 8)
         RenderUtils.drawRect(
                 poseStack,
                 CommonColors.WHITE,
@@ -302,31 +286,12 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         return super.doMouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
-    }
-
     public void reloadCreateLeaveButton() {
         createLeaveButton = new CreateLeaveButton(
-                (int) (dividedWidth * 52) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT), mgmtButtonWidth, 20);
+                (int) (dividedWidth * 52) + 1,
+                (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT),
+                mgmtButtonWidth,
+                BUTTON_HEIGHT);
     }
 
     /**
@@ -335,7 +300,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
      * This should be called when the party list is updated or when the refresh button is pressed
      */
     public void reloadMembersWidgets() {
-        partyMembersWidgets.clear();
+        partyMembersWidgets = new ArrayList<>();
         List<String> partyMembers = new ArrayList<>(Models.Party.getPartyMembers());
         for (int i = 0; i < partyMembers.size(); i++) {
             String playerName = partyMembers.get(i);
@@ -345,7 +310,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                     dividedWidth * 4,
                     dividedHeight * (9 + i * 3),
                     (int) (dividedWidth * 28) - (int) (dividedWidth * 2),
-                    20,
+                    BUTTON_HEIGHT,
                     playerName,
                     Models.Party.getOfflineMembers().contains(playerName),
                     28 - 2));
@@ -363,7 +328,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
         suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
 
-        suggestedPlayersWidgets.clear();
+        suggestedPlayersWidgets = new ArrayList<>();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
             String playerName = suggestedPlayers.get(i);
             if (playerName == null) continue;
@@ -372,7 +337,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                     dividedWidth * 36,
                     dividedHeight * (23 + i * 3),
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
-                    20,
+                    BUTTON_HEIGHT,
                     playerName,
                     60 - 36));
         }

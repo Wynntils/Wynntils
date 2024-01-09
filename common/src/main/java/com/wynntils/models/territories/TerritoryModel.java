@@ -4,9 +4,10 @@
  */
 package com.wynntils.models.territories;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -17,7 +18,6 @@ import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -154,10 +154,20 @@ public final class TerritoryModel extends Model {
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
                 json -> {
-                    if (!json.has("territories")) return;
+                    Map<String, TerritoryProfile> tempMap = new HashMap<>();
+                    for (Map.Entry<String, JsonElement> entry :
+                            json.getAsJsonObject().entrySet()) {
+                        JsonObject territoryObject = entry.getValue().getAsJsonObject();
 
-                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-                    territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
+                        // Inject back the name for the deserializer
+                        territoryObject.addProperty("name", entry.getKey());
+
+                        TerritoryProfile territoryProfile =
+                                TERRITORY_PROFILE_GSON.fromJson(territoryObject, TerritoryProfile.class);
+                        tempMap.put(entry.getKey(), territoryProfile);
+                    }
+
+                    territoryProfileMap = tempMap;
                     allTerritoryPois = territoryProfileMap.values().stream()
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());

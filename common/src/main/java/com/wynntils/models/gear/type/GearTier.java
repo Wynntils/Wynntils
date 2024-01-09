@@ -13,7 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum GearTier {
-    NORMAL(ChatFormatting.WHITE, 0, 0.0f),
+    NORMAL(ChatFormatting.WHITE, 0, 0.0f, "common"),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
     SET(ChatFormatting.GREEN, 8, 1.2f),
@@ -25,19 +25,30 @@ public enum GearTier {
     private final ChatFormatting chatFormatting;
     private final int baseCost;
     private final float costMultiplier;
+    private final String apiName;
 
     GearTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier) {
         this.chatFormatting = chatFormatting;
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
+        this.apiName = name().toLowerCase(Locale.ROOT);
+    }
+
+    GearTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier, String apiName) {
+        this.chatFormatting = chatFormatting;
+        this.baseCost = baseCost;
+        this.costMultiplier = costMultiplier;
+        this.apiName = apiName;
     }
 
     public static GearTier fromString(String typeStr) {
-        try {
-            return GearTier.valueOf(typeStr.toUpperCase(Locale.ROOT));
-        } catch (IllegalArgumentException e) {
-            return null;
+        for (GearTier type : GearTier.values()) {
+            if (type.apiName.equals(typeStr.toLowerCase(Locale.ROOT))) {
+                return type;
+            }
         }
+
+        return null;
     }
 
     public static GearTier fromStyledText(StyledText text) {

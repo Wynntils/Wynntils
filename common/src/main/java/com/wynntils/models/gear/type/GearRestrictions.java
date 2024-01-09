@@ -10,7 +10,7 @@ public enum GearRestrictions {
     NONE(""),
     UNTRADABLE("Untradable Item"),
     QUEST_ITEM("Quest Item"),
-    SOULBOUND("Soulbound");
+    SOULBOUND("Soulbound Item");
 
     private final String description;
 
@@ -19,11 +19,13 @@ public enum GearRestrictions {
     }
 
     public static GearRestrictions fromString(String typeStr) {
-        try {
-            return GearRestrictions.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_"));
-        } catch (IllegalArgumentException e) {
-            return null;
+        for (GearRestrictions type : GearRestrictions.values()) {
+            if (type.name().replaceAll("_", " ").toLowerCase(Locale.ROOT).equals(typeStr.toLowerCase(Locale.ROOT))) {
+                return type;
+            }
         }
+
+        return null;
     }
 
     public String getDescription() {

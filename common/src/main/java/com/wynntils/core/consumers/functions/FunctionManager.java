@@ -406,6 +406,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
+        registerFunction(new WorldFunctions.InMappedAreaFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemFunction());

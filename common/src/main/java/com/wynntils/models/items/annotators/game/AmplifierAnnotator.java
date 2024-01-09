@@ -5,23 +5,24 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.AmplifierItem;
-import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.utils.MathUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class AmplifierAnnotator extends GameItemAnnotator {
+public final class AmplifierAnnotator implements ItemAnnotator {
     private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("^§bCorkian Amplifier (I{1,3})$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher ampMatcher = name.getMatcher(AMPLIFIER_PATTERN);
         if (!ampMatcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(ampMatcher.group(1));
 
-        return new AmplifierItem(emeraldPrice, tier);
+        return new AmplifierItem(tier);
     }
 }

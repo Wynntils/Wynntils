@@ -65,8 +65,8 @@ public class GearChatEncoding {
     private static final boolean ENCODE_NAME = false;
 
     public String toEncodedString(GearItem gearItem) {
-        String itemName = gearItem.getGearInfo().name();
-        Optional<GearInstance> gearInstanceOpt = gearItem.getGearInstance();
+        String itemName = gearItem.getItemInfo().name();
+        Optional<GearInstance> gearInstanceOpt = gearItem.getItemInstance();
         if (gearInstanceOpt.isEmpty()) {
             WynntilsMod.error("Internal error: toEncodedString called with unidentified gear");
             return "";
@@ -74,7 +74,7 @@ public class GearChatEncoding {
         GearInstance gearInstance = gearInstanceOpt.get();
 
         // We must use Legacy ordering for compatibility reasons
-        List<StatType> sortedStats = Models.Stat.getSortedStats(gearItem.getGearInfo(), StatListOrdering.LEGACY);
+        List<StatType> sortedStats = Models.Stat.getSortedStats(gearItem.getItemInfo(), StatListOrdering.LEGACY);
 
         // name
         StringBuilder encoded = new StringBuilder(START);
@@ -84,7 +84,7 @@ public class GearChatEncoding {
         // ids
         for (StatType statType : sortedStats) {
             StatActualValue actualValue = gearInstance.getActualValue(statType);
-            StatPossibleValues possibleValues = gearItem.getGearInfo().getPossibleValues(statType);
+            StatPossibleValues possibleValues = gearItem.getItemInfo().getPossibleValues(statType);
             if (actualValue == null || possibleValues == null) {
                 return "<mismatched stats: cannot encode item>";
             }
@@ -156,7 +156,12 @@ public class GearChatEncoding {
         for (StatType statType : sortedStats) {
             StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
-            if (possibleValues.isPreIdentified()) continue;
+            // Pre-identified stats are not encoded, but need to be added
+            if (possibleValues.isPreIdentified()) {
+                identifications.add(
+                        Models.Stat.buildActualValue(statType, possibleValues.baseValue(), 0, possibleValues));
+                continue;
+            }
 
             if (counter >= ids.length) return null; // some kind of mismatch, abort
 
@@ -204,7 +209,7 @@ public class GearChatEncoding {
         // Note that the chat procotol does not allow for shiny stats to be transferred
         GearInstance gearInstance =
                 GearInstance.create(gearInfo, identifications, powderList, rerolls, Optional.empty());
-        return new GearItem(0, gearInfo, gearInstance);
+        return new GearItem(gearInfo, gearInstance);
     }
 
     public Matcher gearChatEncodingMatcher(String str) {

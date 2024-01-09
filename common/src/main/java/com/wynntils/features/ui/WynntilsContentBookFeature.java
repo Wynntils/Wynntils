@@ -98,6 +98,9 @@ public class WynntilsContentBookFeature extends Feature {
     @Persisted
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> cancelAllQueriesOnScreenClose = new Config<>(true);
+
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;

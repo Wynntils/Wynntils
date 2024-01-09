@@ -327,7 +327,7 @@ public final class ActivityModel extends Model {
 
     public void scanOverallProgress() {
         CONTAINER_QUERIES.queryContentBook(
-                ActivityType.ALL,
+                ActivityType.RECOMMENDED,
                 (ignored, progress) -> {
                     for (StyledText line : progress) {
                         Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);

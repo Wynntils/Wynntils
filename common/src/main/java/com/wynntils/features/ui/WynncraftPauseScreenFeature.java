@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -48,7 +49,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                 (button) -> {
                     McUtils.mc().setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
-                    McUtils.sendCommand("class");
+                    Handlers.Command.sendCommand("class");
                 });
 
         renderables.set(3, classSelection);
@@ -61,7 +62,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                     (button) -> {
                         McUtils.mc().setScreen(null);
                         McUtils.mc().mouseHandler.grabMouse();
-                        McUtils.sendCommand("hub");
+                        Handlers.Command.sendCommand("hub");
                     });
 
             renderables.set(4, hub);

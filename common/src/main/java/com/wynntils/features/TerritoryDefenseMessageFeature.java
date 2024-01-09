@@ -4,6 +4,7 @@
  */
 package com.wynntils.features;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -36,7 +37,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
             Matcher matcher = StyledText.fromComponent(tooltipLine)
                     .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
             if (matcher.matches()) {
-                McUtils.sendCommand("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
+                Handlers.Command.sendCommand("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
                 return;
             }
         }

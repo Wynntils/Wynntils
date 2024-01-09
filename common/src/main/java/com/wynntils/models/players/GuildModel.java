@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,22 +38,20 @@ public class GuildModel extends Model {
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
             .create();
 
-    // Test suite: https://regexr.com/7hob9
+    // Test in GuildModel_GUILD_NAME_MATCHER
     private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("§3([a-zA-Z ]*?)§b \\[[a-zA-Z]{3,4}]");
 
-    // Test suite: https://regexr.com/7hobf
-    // Recruiter is intentionally first, otherwise Recruit will incorrectly match first
-    // This applies to all other patterns in this class involving guild ranks
+    // Test in GuildModel_GUILD_RANK_MATCHER
     private static final Pattern GUILD_RANK_MATCHER =
             Pattern.compile("^§7Rank: §f(Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
-    // Test suite: https://regexr.com/7hoae
+    // Test in GuildModel_MSG_LEFT_GUILD
     private static final Pattern MSG_LEFT_GUILD = Pattern.compile("§3You have left §b[a-zA-Z ]*§3!");
 
-    // Test suite: https://regexr.com/7hoah
+    // Test in GuildModel_MSG_JOINED_GUILD
     private static final Pattern MSG_JOINED_GUILD = Pattern.compile("§3You have joined §b([a-zA-Z ]*)§3!");
 
-    // Test suite: https://regexr.com/7hra2
+    // Test in GuildModel_MSG_RANK_CHANGED
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(
             "^§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
@@ -138,8 +137,9 @@ public class GuildModel extends Model {
             Type type = new TypeToken<List<GuildProfile>>() {}.getType();
             List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
 
-            Map<String, GuildProfile> profileMap =
-                    guildProfiles.stream().collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
+            Map<String, GuildProfile> profileMap = guildProfiles.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
 
             guildProfileMap = profileMap;
         });

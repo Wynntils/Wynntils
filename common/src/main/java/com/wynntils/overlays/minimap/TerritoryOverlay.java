@@ -17,7 +17,7 @@ public class TerritoryOverlay extends TextOverlay {
     public TerritoryOverlay() {
         super(
                 new OverlayPosition(
-                        136 + McUtils.mc().font.lineHeight,
+                        140 + McUtils.mc().font.lineHeight,
                         6,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,

@@ -7,11 +7,12 @@ package com.wynntils.screens.maps;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
 import com.wynntils.screens.maps.widgets.PoiSortButton;
@@ -44,9 +45,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PoiManagementScreen extends WynntilsScreen implements TextboxScreen {
+public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     // Constants
-    private static final float GRID_DIVISIONS = 64.0f;
     private static final int GRID_ROWS_PER_PAGE = 43;
     private static final int HEADER_HEIGHT = 12;
 
@@ -64,7 +64,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private Button downButton;
     private Button exportButton;
     private Button filterButton;
+    private Button removeMarkersButton;
     private Button selectAllButton;
+    private Button setMarkersButton;
     private Button undoDeleteButton;
     private Button upButton;
     private PoiSortButton activeSortButton;
@@ -82,8 +84,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
     private float backgroundWidth;
     private float backgroundX;
     private float backgroundY;
-    private float dividedHeight;
-    private float dividedWidth;
     private float scrollButtonHeight;
     private float scrollButtonRenderX;
     private float scrollButtonRenderY;
@@ -119,8 +119,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     @Override
     protected void doInit() {
-        dividedWidth = this.width / GRID_DIVISIONS;
-        dividedHeight = this.height / GRID_DIVISIONS;
+        super.doInit();
         // How many pois can fit on the background
         maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
         backgroundX = dividedWidth * 10;
@@ -139,11 +138,31 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         int importExportButtonWidth = (int) (dividedWidth * 6);
 
+        // region exit button
         this.addRenderableWidget(
                 new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
                         .pos((int) (dividedWidth * 60), (int) (dividedHeight * 4))
                         .size(20, 20)
                         .build());
+        // endregion
+
+        // region info button
+        this.addRenderableWidget(new InfoButton(
+                (int) (dividedWidth * 3),
+                (int) (dividedHeight * 4),
+                Component.literal("")
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help")
+                                .withStyle(ChatFormatting.UNDERLINE))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help1")
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help2")
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.poiManagementGui.help3")
+                                .withStyle(ChatFormatting.GRAY))));
+        // endregion
 
         // region import/export
         this.addRenderableWidget(new Button.Builder(
@@ -186,6 +205,33 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         this.addRenderableWidget(deleteSelectedButton);
         // endregion
 
+        // region marker buttons
+        setMarkersButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.poiManagementGui.setMarkers"),
+                        (button) -> toggleMarkers(true))
+                .pos((int) dividedWidth, (int) (dividedHeight * 58) - 75)
+                .size((int) (dividedWidth * 8), 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.setMarkers.tooltip")))
+                .build();
+
+        setMarkersButton.active = false;
+
+        this.addRenderableWidget(setMarkersButton);
+
+        removeMarkersButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.poiManagementGui.removeMarkers"),
+                        (button) -> toggleMarkers(false))
+                .pos((int) dividedWidth, (int) (dividedHeight * 58) - 50)
+                .size((int) (dividedWidth * 8), 20)
+                .tooltip(Tooltip.create(
+                        Component.translatable("screens.wynntils.poiManagementGui.removeMarkers.tooltip")))
+                .build();
+
+        removeMarkersButton.active = false;
+
+        this.addRenderableWidget(removeMarkersButton);
+        // endregion
+
         // region select buttons
         deselectAllButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.deselectAll"),
@@ -209,7 +255,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         // endregion
 
         // region up/down buttons
-        upButton = new Button.Builder(Component.literal("ʌ"), (button) -> updateSelectedPoiPositions(-1))
+        upButton = new Button.Builder(Component.literal("🠝"), (button) -> updateSelectedPoiPositions(-1))
                 .pos((width / 2) - 22, (int) (dividedHeight * 58))
                 .size(20, 20)
                 .build();
@@ -218,7 +264,7 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
         this.addRenderableWidget(upButton);
 
-        downButton = new Button.Builder(Component.literal("v"), (button) -> updateSelectedPoiPositions(1))
+        downButton = new Button.Builder(Component.literal("🠟"), (button) -> updateSelectedPoiPositions(1))
                 .pos((width / 2) + 2, (int) (dividedHeight * 58))
                 .size(20, 20)
                 .build();
@@ -339,12 +385,9 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        PoseStack poseStack = guiGraphics.pose();
         renderScrollButton(poseStack);
-
-        // Uncomment when editing UI
-        //        RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -468,28 +511,6 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         return true;
     }
 
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
-    }
-
     public void selectPoi(CustomPoi selectedPoi) {
         boolean addedPoi = true;
 
@@ -509,6 +530,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
 
             deselectAllButton.active = addedPoi;
             deleteSelectedButton.active = addedPoi;
+            setMarkersButton.active = addedPoi;
+            removeMarkersButton.active = addedPoi;
 
             upButton.visible = addedPoi;
             downButton.visible = addedPoi;
@@ -662,6 +685,8 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
         exportButton.active = !pois.isEmpty();
         selectAllButton.active = !pois.isEmpty();
         deselectAllButton.active = !selectedPois.isEmpty();
+        setMarkersButton.active = !selectedPois.isEmpty();
+        removeMarkersButton.active = !selectedPois.isEmpty();
 
         // Only hide search bar & filter button if no pois at all
         // Can't check if filtered pois is empty as they may be empty due to the filters
@@ -740,6 +765,16 @@ public final class PoiManagementScreen extends WynntilsScreen implements Textbox
                     Comparator.comparing(poi -> poi.getLocation().getZ()));
             case Z_DESC -> pois.sort(
                     Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+        }
+    }
+
+    private void toggleMarkers(boolean addMarkers) {
+        if (addMarkers) {
+            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor()));
+        } else {
+            selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+                    poi.getLocation().asLocation()));
         }
     }
 

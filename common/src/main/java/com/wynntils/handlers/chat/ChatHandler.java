@@ -76,11 +76,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * importantly, a way to update already printed chat lines.
  */
 public final class ChatHandler extends Handler {
-    // Test suite: https://regexr.com/7esj7
+    // Test in ChatHandler_NPC_CONFIRM_PATTERN
     private static final Pattern NPC_CONFIRM_PATTERN =
             Pattern.compile("^ *§[47]Press §[cf](SNEAK|SHIFT) §[47]to continue$");
 
-    // Test suite: https://regexr.com/7esjd
+    // Test in ChatHandler_NPC_SELECT_PATTERN
     private static final Pattern NPC_SELECT_PATTERN =
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
@@ -367,7 +367,7 @@ public final class ChatHandler extends Handler {
         // But it can weirdly enough actually also be a foreground NPC chat message, or
         // a game message; similar to a dialogue but not uttered by an NPC.
         RecipientType recipientType = getRecipientType(styledText, MessageType.FOREGROUND);
-        if (recipientType == RecipientType.NPC || recipientType == RecipientType.GAME_MESSAGE) {
+        if (recipientType == RecipientType.NPC) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
             postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
@@ -399,7 +399,7 @@ public final class ChatHandler extends Handler {
         WynntilsMod.info("[CHAT] " + styledText.getString().replace("§", "&"));
         RecipientType recipientType = getRecipientType(styledText, messageType);
 
-        if (recipientType == RecipientType.NPC || recipientType == RecipientType.GAME_MESSAGE) {
+        if (recipientType == RecipientType.NPC) {
             if (shouldSeparateNPC()) {
                 postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                 // We need to cancel the original chat event, if any

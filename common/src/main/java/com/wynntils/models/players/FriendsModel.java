@@ -5,6 +5,7 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -46,15 +47,15 @@ public final class FriendsModel extends Model {
             Pattern.compile("§e(.+) has been removed from your friends!");
     private static final Pattern FRIEND_ADD_MESSAGE_PATTERN = Pattern.compile("§e(.+) has been added to your friends!");
 
-    // https://regexr.com/7ihc9
+    // Test in FriendsModel_ONLINE_FRIENDS_HEADER
     private static final Pattern ONLINE_FRIENDS_HEADER = Pattern.compile("§2Online §aFriends:");
-    // https://regexr.com/7ihcc
+    // Test in FriendsModel_ONLINE_FRIEND
     private static final Pattern ONLINE_FRIEND = Pattern.compile("§2 - §a(\\w{1,16})§2 \\[Server: §aWC(\\d{1,3})§2]");
 
-    // https://regexr.com/7ihci
+    // Test in FriendsModel_JOIN_PATTERN
     private static final Pattern JOIN_PATTERN = Pattern.compile(
             "§a(?<username>\\w{1,16})§2 has logged into server §aWC(?<server>\\d{1,3})§2 as §aan? (?<class>[A-Z][a-z]+)");
-    // https://regexr.com/7ihcl
+    // Test in FriendsModel_LEAVE_PATTERN
     private static final Pattern LEAVE_PATTERN = Pattern.compile("§a(?<username>\\w{1,16}) left the game\\.");
     // endregion
 
@@ -234,8 +235,7 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {
             friendMessageStatus = ListStatus.EXPECTING;
             lastFriendRequest = System.currentTimeMillis();
-            McUtils.sendCommand("friend list");
-            WynntilsMod.info("Requested friend list from Wynncraft.");
+            Handlers.Command.sendCommand("friend list");
         } else {
             WynntilsMod.info("Skipping friend list request because it was requested very recently.");
         }
@@ -243,8 +243,7 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
             onlineMessageStatus = ListStatus.EXPECTING;
             lastOnlineRequest = System.currentTimeMillis();
-            McUtils.sendCommand("friend online");
-            WynntilsMod.info("Requested online friend list from Wynncraft.");
+            Handlers.Command.sendCommand("friend online");
         } else {
             WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
         }

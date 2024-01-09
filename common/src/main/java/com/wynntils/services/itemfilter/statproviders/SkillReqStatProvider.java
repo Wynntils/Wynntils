@@ -32,7 +32,7 @@ public class SkillReqStatProvider extends ItemStatProvider<Integer> {
     public List<Integer> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
-        return gearItem.getGearInfo().requirements().skills().stream()
+        return gearItem.getItemInfo().requirements().skills().stream()
                 .filter(pair -> pair.key() == skill)
                 .map(Pair::value)
                 .toList();

@@ -31,7 +31,7 @@ public class MythicBlockerFeature extends Feature {
         for (int i = 0; i < 27; i++) {
             ItemStack itemStack = items.get(i);
             Optional<GearTierItemProperty> tieredItem =
-                    Models.Item.asWynnItemPropery(itemStack, GearTierItemProperty.class);
+                    Models.Item.asWynnItemProperty(itemStack, GearTierItemProperty.class);
             if (tieredItem.isPresent() && tieredItem.get().getGearTier() == GearTier.MYTHIC) {
                 McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.closingBlocked")
                         .withStyle(ChatFormatting.RED));

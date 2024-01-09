@@ -4,11 +4,12 @@
  */
 package com.wynntils.screens.guides.gear;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public final class GuideGearItemStack extends GuideItemStack {
     private List<Component> generatedTooltip;
 
     public GuideGearItemStack(GearInfo gearInfo) {
-        super(gearInfo.metaInfo().material().itemStack(), new GearItem(0, gearInfo, null), gearInfo.name());
+        super(gearInfo.metaInfo().material().itemStack(), new GearItem(gearInfo, null), gearInfo.name());
 
         this.gearInfo = gearInfo;
         this.name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
@@ -63,12 +64,12 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        GearTooltipBuilder gearTooltipBuilder = Models.GearTooltip.buildNew(gearInfo, null, true);
-        this.generatedTooltip = gearTooltipBuilder.getTooltipLines(Models.Character.getClassType());
+        IdentifiableTooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new GearItem(gearInfo, null), true);
+        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(this, GearItem.class);
         if (gearItemOpt.isEmpty()) return;
-        gearItemOpt.get().getCache().clear(WynnItemCache.TOOLTIP_KEY);
+        gearItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
     }
 }

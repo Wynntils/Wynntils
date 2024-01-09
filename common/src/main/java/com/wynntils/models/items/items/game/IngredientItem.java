@@ -15,8 +15,7 @@ public class IngredientItem extends GameItem
         implements QualityTierItemProperty, LeveledItemProperty, ProfessionItemProperty {
     private final IngredientInfo ingredientInfo;
 
-    public IngredientItem(int emeraldPrice, IngredientInfo ingredientInfo) {
-        super(emeraldPrice);
+    public IngredientItem(IngredientInfo ingredientInfo) {
         this.ingredientInfo = ingredientInfo;
     }
 
@@ -35,12 +34,12 @@ public class IngredientItem extends GameItem
     }
 
     @Override
-    public List<ProfessionType> getProfessionTypes() {
-        return ingredientInfo.professions();
+    public String toString() {
+        return "IngredientItem{" + "ingredientInfo=" + ingredientInfo + '}';
     }
 
     @Override
-    public String toString() {
-        return "IngredientItem{" + "ingredientInfo=" + ingredientInfo + ", emeraldPrice=" + emeraldPrice + '}';
+    public List<ProfessionType> getProfessionTypes() {
+        return ingredientInfo.professions();
     }
 }

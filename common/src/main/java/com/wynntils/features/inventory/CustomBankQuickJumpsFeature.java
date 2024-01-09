@@ -75,68 +75,12 @@ public class CustomBankQuickJumpsFeature extends Feature {
         getCustomJumpDestinations();
 
         currentPage = Models.Bank.getCurrentPage();
-
-        if (!quickJumping) return;
-
-        if (pageDestination > lastPage) {
-            quickJumping = false;
-            pageDestination = currentPage;
-        } else if (pageDestination != currentPage) {
-            jumpToDestination();
-        } else {
-            quickJumping = false;
-        }
-    }
-
-    private void getCustomJumpDestinations() {
-        String configDestinations;
-
-        switch (Models.Bank.getCurrentContainer()) {
-            case ACCOUNT_BANK -> configDestinations = accountBankDestinations.get();
-            case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
-            case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
-            case CHARACTER_BANK -> configDestinations = characterBankDestinations.get();
-            case MISC_BUCKET -> configDestinations = miscBucketDestinations.get();
-            default -> {
-                return;
-            }
-        }
-
-        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getCurrentContainer());
-
-        if (customJumpDestinations == null) {
-            customJumpDestinations = getDefaultJumpDestinations();
-        }
-    }
-
-    private List<Integer> getDefaultJumpDestinations() {
-        return switch (Models.Bank.getCurrentContainer()) {
-            case ACCOUNT_BANK -> QUICK_JUMP_DESTINATIONS;
-            case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
-            default -> DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
-        };
     }
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
         pageDestination = 1;
-    }
-
-    @SubscribeEvent
-    public void onSlotClicked(ContainerClickEvent e) {
-        if (Models.Bank.getCurrentContainer() == null) return;
-
-        int slotIndex = e.getSlotNum();
-
-        if (BUTTON_SLOTS.contains(slotIndex)) {
-            int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
-            pageDestination = customJumpDestinations.get(buttonIndex);
-            int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
-            if (pageDestination != wynnDestination) {
-                e.setCanceled(true);
-                jumpToDestination();
-            }
-        }
+        quickJumping = false;
     }
 
     @SubscribeEvent
@@ -174,6 +118,22 @@ public class CustomBankQuickJumpsFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onSetSlotPost(SetSlotEvent.Post e) {
+        if (!quickJumping) return;
+
+        if (pageDestination > lastPage) {
+            quickJumping = false;
+            pageDestination = currentPage;
+        } else if (pageDestination != currentPage
+                && ((e.getSlot() == NEXT_PAGE_SLOT && pageDestination > currentPage)
+                        || (e.getSlot() == PREVIOUS_PAGE_SLOT && pageDestination < currentPage))) {
+            jumpToDestination();
+        } else if (pageDestination == currentPage) {
+            quickJumping = false;
+        }
+    }
+
+    @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
         SearchableContainerType currentContainer = Models.Bank.getCurrentContainer();
         if (currentContainer == null) return;
@@ -185,73 +145,21 @@ public class CustomBankQuickJumpsFeature extends Feature {
         }
     }
 
-    private void jumpToDestination() {
-        quickJumping = true;
+    @SubscribeEvent
+    public void onSlotClicked(ContainerClickEvent e) {
+        if (Models.Bank.getCurrentContainer() == null) return;
 
-        if (currentPage == pageDestination || pageDestination > lastPage) return;
+        int slotIndex = e.getSlotNum();
 
-        int pageDifference = pageDestination - currentPage;
-
-        switch (pageDifference) {
-            case 1 -> {
-                if (currentPage != lastPage) {
-                    clickNextPage();
-                }
-            }
-            case -1 -> clickPreviousPage();
-            default -> {
-                if (!tryUsingJumpButtons()) {
-                    if (currentPage > pageDestination) {
-                        clickPreviousPage();
-                    } else if (currentPage != lastPage) {
-                        clickNextPage();
-                    }
-                }
+        if (BUTTON_SLOTS.contains(slotIndex)) {
+            int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
+            pageDestination = customJumpDestinations.get(buttonIndex);
+            int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
+            if (pageDestination != wynnDestination) {
+                e.setCanceled(true);
+                jumpToDestination();
             }
         }
-    }
-
-    private boolean tryUsingJumpButtons() {
-        int closest = QUICK_JUMP_DESTINATIONS.get(0);
-        int closestDistance = Math.abs(closest - pageDestination);
-        int currentDistance = Math.abs(currentPage - pageDestination);
-
-        for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
-            int jumpDistance = Math.abs(jumpDestination - pageDestination);
-
-            if (jumpDistance < closestDistance && jumpDestination <= lastPage) {
-                closest = jumpDestination;
-                closestDistance = jumpDistance;
-            }
-        }
-
-        if (closestDistance < currentDistance) {
-            ContainerUtils.clickOnSlot(
-                    BUTTON_SLOTS.get(QUICK_JUMP_DESTINATIONS.indexOf(closest)),
-                    McUtils.containerMenu().containerId,
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    McUtils.containerMenu().getItems());
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private void clickNextPage() {
-        ContainerUtils.clickOnSlot(
-                NEXT_PAGE_SLOT,
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
-    }
-
-    private void clickPreviousPage() {
-        ContainerUtils.clickOnSlot(
-                PREVIOUS_PAGE_SLOT,
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
     }
 
     @Override
@@ -347,5 +255,103 @@ public class CustomBankQuickJumpsFeature extends Feature {
         }
 
         return newValues;
+    }
+
+    private void jumpToDestination() {
+        quickJumping = true;
+
+        if (currentPage == pageDestination || pageDestination > lastPage) return;
+
+        int pageDifference = pageDestination - currentPage;
+
+        switch (pageDifference) {
+            case 1 -> {
+                if (currentPage != lastPage) {
+                    clickNextPage();
+                }
+            }
+            case -1 -> clickPreviousPage();
+            default -> {
+                if (!tryUsingJumpButtons()) {
+                    if (currentPage > pageDestination) {
+                        clickPreviousPage();
+                    } else if (currentPage != lastPage) {
+                        clickNextPage();
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean tryUsingJumpButtons() {
+        int closest = QUICK_JUMP_DESTINATIONS.get(0);
+        int closestDistance = Math.abs(closest - pageDestination);
+        int currentDistance = Math.abs(currentPage - pageDestination);
+
+        for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
+            int jumpDistance = Math.abs(jumpDestination - pageDestination);
+
+            if (jumpDistance < closestDistance && jumpDestination <= lastPage) {
+                closest = jumpDestination;
+                closestDistance = jumpDistance;
+            }
+        }
+
+        if (closestDistance < currentDistance) {
+            ContainerUtils.clickOnSlot(
+                    BUTTON_SLOTS.get(QUICK_JUMP_DESTINATIONS.indexOf(closest)),
+                    McUtils.containerMenu().containerId,
+                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    McUtils.containerMenu().getItems());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void clickNextPage() {
+        ContainerUtils.clickOnSlot(
+                NEXT_PAGE_SLOT,
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
+    }
+
+    private void clickPreviousPage() {
+        ContainerUtils.clickOnSlot(
+                PREVIOUS_PAGE_SLOT,
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
+    }
+
+    private void getCustomJumpDestinations() {
+        String configDestinations;
+
+        switch (Models.Bank.getCurrentContainer()) {
+            case ACCOUNT_BANK -> configDestinations = accountBankDestinations.get();
+            case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
+            case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
+            case CHARACTER_BANK -> configDestinations = characterBankDestinations.get();
+            case MISC_BUCKET -> configDestinations = miscBucketDestinations.get();
+            default -> {
+                return;
+            }
+        }
+
+        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getCurrentContainer());
+
+        if (customJumpDestinations == null) {
+            customJumpDestinations = getDefaultJumpDestinations();
+        }
+    }
+
+    private List<Integer> getDefaultJumpDestinations() {
+        return switch (Models.Bank.getCurrentContainer()) {
+            case ACCOUNT_BANK -> QUICK_JUMP_DESTINATIONS;
+            case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
+            default -> DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
+        };
     }
 }

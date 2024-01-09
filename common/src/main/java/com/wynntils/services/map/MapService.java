@@ -11,7 +11,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingCircle;
+import com.wynntils.utils.type.BoundingShape;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -37,7 +40,22 @@ public final class MapService extends Service {
     }
 
     public List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
-        return maps.stream().filter(map -> box.intersects(map.getBox())).toList();
+        return maps.stream()
+                .filter(map -> BoundingShape.intersects(box, map.getBox()))
+                .toList();
+    }
+
+    public List<MapTexture> getMapsForBoundingCircle(BoundingCircle circle) {
+        return maps.stream()
+                .filter(map -> BoundingShape.intersects(map.getBox(), circle))
+                .toList();
+    }
+
+    public boolean isPlayerInMappedArea(float width, float height, float scale) {
+        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
+                (float) McUtils.player().getX(), (float) McUtils.player().getZ(), width * scale, height * scale));
+
+        return !getMapsForBoundingCircle(textureBoundingCircle).isEmpty();
     }
 
     private void loadMaps() {

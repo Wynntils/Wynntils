@@ -4,17 +4,14 @@
  */
 package com.wynntils.models.activities.discoveries;
 
-import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
-import com.wynntils.models.activities.profile.DiscoveryProfile;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
@@ -24,7 +21,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -36,9 +32,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DiscoveryModel extends Model {
-    // From json
-    private List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
-
     // From container query updates
     private List<DiscoveryInfo> territoryDiscoveries = List.of();
     private List<DiscoveryInfo> worldDiscoveries = List.of();
@@ -49,11 +42,6 @@ public final class DiscoveryModel extends Model {
 
     public DiscoveryModel() {
         super(List.of());
-    }
-
-    @Override
-    public void reloadData() {
-        updateDiscoveriesResource();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -195,10 +183,6 @@ public final class DiscoveryModel extends Model {
         return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::isDiscovered);
     }
 
-    public List<DiscoveryInfo> getDiscoveryInfoList() {
-        return discoveryInfoList;
-    }
-
     private void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
@@ -247,17 +231,7 @@ public final class DiscoveryModel extends Model {
         });
     }
 
-    private void updateDiscoveriesResource() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_DISCOVERIES);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<ArrayList<DiscoveryProfile>>() {}.getType();
-            List<DiscoveryProfile> discoveries = WynntilsMod.GSON.fromJson(reader, type);
-            discoveryInfoList = discoveries.stream().map(DiscoveryInfo::new).toList();
-        });
-    }
-
     public void reloadDiscoveries() {
-        updateDiscoveriesResource();
         queryDiscoveries();
     }
 

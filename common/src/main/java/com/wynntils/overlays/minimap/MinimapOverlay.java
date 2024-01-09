@@ -38,6 +38,8 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingCircle;
+import com.wynntils.utils.type.BoundingShape;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
@@ -57,6 +59,9 @@ public class MinimapOverlay extends Overlay {
 
     @Persisted
     public final Config<Boolean> followPlayerRotation = new Config<>(true);
+
+    @Persisted
+    public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.MINIMAP_AND_COORDS);
 
     @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
@@ -85,7 +90,7 @@ public class MinimapOverlay extends Overlay {
     public MinimapOverlay() {
         super(
                 new OverlayPosition(
-                        5.25f,
+                        20.25f,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
@@ -117,8 +122,12 @@ public class MinimapOverlay extends Overlay {
         double playerX = McUtils.player().getX();
         double playerZ = McUtils.player().getZ();
 
-        BoundingBox textureBoundingBox =
-                BoundingBox.centered((float) playerX, (float) playerZ, width * scale.get(), height * scale.get());
+        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(
+                BoundingBox.centered((float) playerX, (float) playerZ, width * scale.get(), height * scale.get()));
+
+        List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
+
+        if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
         // enable mask
         switch (maskType.get()) {
@@ -152,7 +161,6 @@ public class MinimapOverlay extends Overlay {
             }
         }
 
-        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(playerX);
             float textureZ = map.getTextureZPosition(playerZ);
@@ -173,7 +181,7 @@ public class MinimapOverlay extends Overlay {
             poseStack.popPose();
         }
 
-        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, textureBoundingBox);
+        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, textureBoundingCircle);
 
         // cursor
         MapRenderer.renderCursor(
@@ -206,7 +214,7 @@ public class MinimapOverlay extends Overlay {
             float height,
             double playerX,
             double playerZ,
-            BoundingBox textureBoundingBox) {
+            BoundingCircle textureBoundingCircle) {
         float sinRotationRadians;
         float cosRotationRadians;
 
@@ -260,7 +268,7 @@ public class MinimapOverlay extends Overlay {
             BoundingBox box = BoundingBox.centered(
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
-            if (box.intersects(textureBoundingBox)) {
+            if (BoundingShape.intersects(box, textureBoundingCircle)) {
                 poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom);
             }
         }
@@ -487,6 +495,12 @@ public class MinimapOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {}
+
+    public enum UnmappedOption {
+        MINIMAP,
+        MINIMAP_AND_COORDS,
+        NEITHER
+    }
 
     private enum CompassRenderType {
         NONE,

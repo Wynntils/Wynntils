@@ -8,6 +8,7 @@ import com.wynntils.models.stats.builders.MiscStatKind;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
 import com.wynntils.models.stats.type.MiscStatType;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -18,104 +19,108 @@ import java.util.List;
 import java.util.Map;
 
 public final class StatListOrderer {
-    // Legacy order was defined by Athena as a fixed list. This was missing several stat types; I have
-    // tried filling them in into "logical" places
+    // Legacy order was defined by Athena as a fixed list.
+    // This was missing several stat types;
+    // I have tried filling them in into "logical" places.
+    // NOTE: This list was changed to use Artemis keys,
+    //       as a hotfix to support Item API V3.
+    //       This will be removed once the new encoding is implemented.
     private static final List<String> LEGACY_ORDER = List.of(
-            "attackSpeedBonus",
-            "mainAttackDamageBonusRaw",
-            "mainAttackDamageBonus",
-            "mainAttackNeutralDamageBonusRaw",
-            "mainAttackNeutralDamageBonus",
-            "mainAttackEarthDamageBonusRaw",
-            "mainAttackEarthDamageBonus",
-            "mainAttackThunderDamageBonusRaw",
-            "mainAttackThunderDamageBonus",
-            "mainAttackWaterDamageBonusRaw",
-            "mainAttackWaterDamageBonus",
-            "mainAttackFireDamageBonusRaw",
-            "mainAttackFireDamageBonus",
-            "mainAttackAirDamageBonusRaw",
-            "mainAttackAirDamageBonus",
-            "mainAttackElementalDamageBonusRaw",
-            "mainAttackElementalDamageBonus",
-            "spellDamageBonusRaw",
-            "spellDamageBonus",
-            "spellNeutralDamageBonusRaw",
-            "spellNeutralDamageBonus",
-            "spellEarthDamageBonusRaw",
-            "spellEarthDamageBonus",
-            "spellThunderDamageBonusRaw",
-            "spellThunderDamageBonus",
-            "spellWaterDamageBonusRaw",
-            "spellWaterDamageBonus",
-            "spellFireDamageBonusRaw",
-            "spellFireDamageBonus",
-            "spellAirDamageBonusRaw",
-            "spellAirDamageBonus",
-            "spellElementalDamageBonusRaw",
-            "spellElementalDamageBonus",
+            "MISC_ATTACK_SPEED",
+            "DAMAGE_MAIN_ATTACK_ALL_RAW",
+            "DAMAGE_MAIN_ATTACK_ALL_PERCENT",
+            "DAMAGE_MAIN_ATTACK_NEUTRAL_RAW",
+            "DAMAGE_MAIN_ATTACK_NEUTRAL_PERCENT",
+            "DAMAGE_MAIN_ATTACK_EARTH_RAW",
+            "DAMAGE_MAIN_ATTACK_EARTH_PERCENT",
+            "DAMAGE_MAIN_ATTACK_THUNDER_RAW",
+            "DAMAGE_MAIN_ATTACK_THUNDER_PERCENT",
+            "DAMAGE_MAIN_ATTACK_WATER_RAW",
+            "DAMAGE_MAIN_ATTACK_WATER_PERCENT",
+            "DAMAGE_MAIN_ATTACK_FIRE_RAW",
+            "DAMAGE_MAIN_ATTACK_FIRE_PERCENT",
+            "DAMAGE_MAIN_ATTACK_AIR_RAW",
+            "DAMAGE_MAIN_ATTACK_AIR_PERCENT",
+            "DAMAGE_MAIN_ATTACK_RAINBOW_RAW",
+            "DAMAGE_MAIN_ATTACK_RAINBOW_PERCENT",
+            "DAMAGE_SPELL_ALL_RAW",
+            "DAMAGE_SPELL_ALL_PERCENT",
+            "DAMAGE_SPELL_NEUTRAL_RAW",
+            "DAMAGE_SPELL_NEUTRAL_PERCENT",
+            "DAMAGE_SPELL_EARTH_RAW",
+            "DAMAGE_SPELL_EARTH_PERCENT",
+            "DAMAGE_SPELL_THUNDER_RAW",
+            "DAMAGE_SPELL_THUNDER_PERCENT",
+            "DAMAGE_SPELL_WATER_RAW",
+            "DAMAGE_SPELL_WATER_PERCENT",
+            "DAMAGE_SPELL_FIRE_RAW",
+            "DAMAGE_SPELL_FIRE_PERCENT",
+            "DAMAGE_SPELL_AIR_RAW",
+            "DAMAGE_SPELL_AIR_PERCENT",
+            "DAMAGE_SPELL_RAINBOW_RAW",
+            "DAMAGE_SPELL_RAINBOW_PERCENT",
             "", // delimiter
-            "healthBonus",
-            "healthRegenRaw",
-            "healthRegen",
-            "lifeSteal",
-            "manaRegen",
-            "manaSteal",
+            "MISC_HEALTH",
+            "MISC_HEALTH_REGEN_RAW",
+            "MISC_HEALTH_REGEN_PERCENT",
+            "MISC_LIFE_STEAL",
+            "MISC_MANA_REGEN",
+            "MISC_MANA_STEAL",
             "", // delimiter
-            "damageBonusRaw",
-            "damageBonus",
-            "neutralDamageBonusRaw",
-            "neutralDamageBonus",
-            "earthDamageBonusRaw",
-            "earthDamageBonus",
-            "thunderDamageBonusRaw",
-            "thunderDamageBonus",
-            "waterDamageBonusRaw",
-            "waterDamageBonus",
-            "fireDamageBonusRaw",
-            "fireDamageBonus",
-            "airDamageBonusRaw",
-            "airDamageBonus",
-            "elementalDamageBonusRaw",
-            "elementalDamageBonus",
+            "DAMAGE_ANY_ALL_RAW",
+            "DAMAGE_ANY_ALL_PERCENT",
+            "DAMAGE_ANY_NEUTRAL_RAW",
+            "DAMAGE_ANY_NEUTRAL_PERCENT",
+            "DAMAGE_ANY_EARTH_RAW",
+            "DAMAGE_ANY_EARTH_PERCENT",
+            "DAMAGE_ANY_THUNDER_RAW",
+            "DAMAGE_ANY_THUNDER_PERCENT",
+            "DAMAGE_ANY_WATER_RAW",
+            "DAMAGE_ANY_WATER_PERCENT",
+            "DAMAGE_ANY_FIRE_RAW",
+            "DAMAGE_ANY_FIRE_PERCENT",
+            "DAMAGE_ANY_AIR_RAW",
+            "DAMAGE_ANY_AIR_PERCENT",
+            "DAMAGE_ANY_RAINBOW_RAW",
+            "DAMAGE_ANY_RAINBOW_PERCENT",
             "", // delimiter
-            "bonusEarthDefense",
-            "bonusThunderDefense",
-            "bonusWaterDefense",
-            "bonusFireDefense",
-            "bonusAirDefense",
+            "DEFENCE_EARTH",
+            "DEFENCE_THUNDER",
+            "DEFENCE_WATER",
+            "DEFENCE_FIRE",
+            "DEFENCE_AIR",
             "", // delimiter
-            "exploding",
-            "poison",
-            "thorns",
-            "reflection",
+            "MISC_EXPLODING",
+            "MISC_POISON",
+            "MISC_THORNS",
+            "MISC_REFLECTION",
             "", // delimiter
-            "speed",
-            "sprint",
-            "sprintRegen",
-            "jumpHeight",
+            "MISC_WALK_SPEED",
+            "MISC_SPRINT",
+            "MISC_SPRINT_REGEN",
+            "MISC_JUMP_HEIGHT",
             "", // delimiter
-            "soulPoints",
-            "lootBonus",
-            "lootQuality",
-            "emeraldStealing",
-            "xpBonus",
-            "gatherXpBonus",
-            "gatherSpeed",
+            "MISC_SOUL_POINT_REGEN",
+            "MISC_LOOT_BONUS",
+            "MISC_LOOT_QUALITY",
+            "MISC_STEALING",
+            "MISC_XP_BONUS",
+            "MISC_GATHER_XP_BONUS",
+            "MISC_GATHER_SPEED",
             "", // delimiter
-            "spellCostRaw1",
-            "spellCostPct1",
-            "spellCostRaw2",
-            "spellCostPct2",
-            "spellCostRaw3",
-            "spellCostPct3",
-            "spellCostRaw4",
-            "spellCostPct4",
+            "SPELL_FIRST_SPELL_COST_RAW",
+            "SPELL_FIRST_SPELL_COST_PERCENT",
+            "SPELL_SECOND_SPELL_COST_RAW",
+            "SPELL_SECOND_SPELL_COST_PERCENT",
+            "SPELL_THIRD_SPELL_COST_RAW",
+            "SPELL_THIRD_SPELL_COST_PERCENT",
+            "SPELL_FOURTH_SPELL_COST_RAW",
+            "SPELL_FOURTH_SPELL_COST_PERCENT",
             // These were added in 2.0.3 and is not present in Legacy
-            "healingEfficiency",
-            "knockback",
-            "slowEnemy",
-            "weakenEnemy");
+            "MISC_HEALING_EFFICIENCY",
+            "MISC_KNOCKBACK",
+            "MISC_SLOW_ENEMY",
+            "MISC_WEAKEN_ENEMY");
 
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_1 = List.of(
             MiscStatKind.KNOCKBACK,
@@ -147,20 +152,22 @@ public final class StatListOrderer {
             MiscStatKind.LOOT_QUALITY);
 
     public static Map<StatListOrdering, List<StatType>> createOrderingMap(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
         return Map.of(
                 StatListOrdering.DEFAULT,
-                createDefaultOrdering(miscStats, defenceStats, damageStats, spellStats),
+                createDefaultOrdering(skillStats, miscStats, defenceStats, damageStats, spellStats),
                 StatListOrdering.WYNNCRAFT,
-                createWynncraftOrdering(miscStats, defenceStats, damageStats, spellStats),
+                createWynncraftOrdering(skillStats, miscStats, defenceStats, damageStats, spellStats),
                 StatListOrdering.LEGACY,
-                createLegacyOrdering(miscStats, defenceStats, damageStats, spellStats));
+                createLegacyOrdering(skillStats, miscStats, defenceStats, damageStats, spellStats));
     }
 
     private static List<StatType> createDefaultOrdering(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
@@ -168,6 +175,8 @@ public final class StatListOrderer {
         List<StatType> defaultOrdering = new ArrayList<>();
 
         // Default ordering is a lightly curated version of the Wynncraft vanilla ordering
+        defaultOrdering.addAll(skillStats);
+        defaultOrdering.add(new StatListDelimiter());
         defaultOrdering.addAll(miscStats);
         defaultOrdering.add(new StatListDelimiter());
         defaultOrdering.addAll(defenceStats);
@@ -179,6 +188,7 @@ public final class StatListOrderer {
     }
 
     private static List<StatType> createWynncraftOrdering(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
@@ -186,6 +196,8 @@ public final class StatListOrderer {
         List<StatType> wynncraftOrdering = new ArrayList<>();
 
         // Wynncraft order seem to have grown a bit haphazardly
+        wynncraftOrdering.addAll(skillStats);
+        wynncraftOrdering.add(new StatListDelimiter());
         addMiscStats(wynncraftOrdering, miscStats, WYNNCRAFT_MISC_ORDER_1);
         wynncraftOrdering.add(new StatListDelimiter());
         wynncraftOrdering.addAll(damageStats);
@@ -222,11 +234,16 @@ public final class StatListOrderer {
     }
 
     private static List<StatType> createLegacyOrdering(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
         List<StatType> allStats = new ArrayList<>();
+        // We add skill stats in a special way
+        // The legacy order is defined by Athena, and is missing all skill stats
+        // We can add them here, since they are guranteed to be fixed stats,
+        // so it doesn't break the encoding order
         allStats.addAll(miscStats);
         allStats.addAll(defenceStats);
         allStats.addAll(damageStats);
@@ -234,14 +251,17 @@ public final class StatListOrderer {
 
         List<StatType> legacyOrdering = new ArrayList<>();
 
+        // We add skill stats separately, as they are not present in the legacy order
+        legacyOrdering.addAll(skillStats);
+
         // Legacy ordering is determined by a hard-coded list in Athena, which is
         // by LEGACY_ORDER
-        for (String apiName : LEGACY_ORDER) {
-            if (apiName.isEmpty()) {
+        for (String keyName : LEGACY_ORDER) {
+            if (keyName.isEmpty()) {
                 legacyOrdering.add(new StatListDelimiter());
             } else {
                 allStats.stream()
-                        .filter(statType -> statType.getApiName().equals(apiName))
+                        .filter(statType -> statType.getKey().equals(keyName))
                         .findFirst()
                         .ifPresent(legacyOrdering::add);
             }

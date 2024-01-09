@@ -101,6 +101,6 @@ public class LootrunScoreboardPart extends ScoreboardPart {
 
     @Override
     public String toString() {
-        return null;
+        return "LootrunScoreboardPart{}";
     }
 }

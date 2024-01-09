@@ -6,20 +6,21 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.items.items.game.GameItem;
 import com.wynntils.models.items.items.game.GearItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class GearAnnotator extends GameItemAnnotator {
+public final class GearAnnotator implements ItemAnnotator {
     private static final Pattern GEAR_PATTERN =
             Pattern.compile("^(?:§f⬡ )?(?<rarity>§[5abcdef])(?<unidentified>Unidentified )?(?:Shiny )?(?<name>.+)$");
 
     @Override
-    public GameItem getAnnotation(ItemStack itemStack, StyledText name, int emeraldPrice) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -33,6 +34,6 @@ public final class GearAnnotator extends GameItemAnnotator {
 
         GearInstance gearInstance =
                 matcher.group("unidentified") != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
-        return new GearItem(emeraldPrice, gearInfo, gearInstance);
+        return new GearItem(gearInfo, gearInstance);
     }
 }
