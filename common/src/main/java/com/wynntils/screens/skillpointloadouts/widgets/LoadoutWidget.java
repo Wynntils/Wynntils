@@ -11,6 +11,7 @@ import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -70,14 +71,15 @@ public class LoadoutWidget extends AbstractWidget {
         int nameYOffset = 2;
         if (loadout.isBuild()) {
             nameYOffset = 3;
+            String text = RenderedStringUtils.getMaxFittingText(
+                    String.join(
+                            ", ", (loadout.armourNames().isEmpty() ? loadout.accessoryNames() : loadout.armourNames())),
+                    this.getWidth(),
+                    FontRenderer.getInstance().getFont());
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(String.join(
-                                    ", ",
-                                    (loadout.armourNames().isEmpty()
-                                            ? loadout.accessoryNames()
-                                            : loadout.armourNames()))),
+                            StyledText.fromString(text),
                             dividedWidth * 4,
                             this.getY() + ((float) this.getHeight() / 4 * 3),
                             CommonColors.WHITE,

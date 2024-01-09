@@ -20,6 +20,8 @@ import com.wynntils.screens.skillpointloadouts.widgets.SaveButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.TextRenderSetting;
+import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -419,38 +421,60 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 TextShadow.NORMAL);
             }
             if (selectedLoadout.value().isBuild()) {
+                List<TextRenderTask> tasks = new ArrayList<>();
                 for (int i = 0; i < selectedLoadout.value().armourNames().size(); i++) {
                     String armour = selectedLoadout.value().armourNames().get(i);
-                    FontRenderer.getInstance()
-                            .renderText(
-                                    poseStack,
-                                    StyledText.fromString(armour),
-                                    dividedWidth * 35,
-                                    dividedHeight * (42 + i * 2),
+
+                    tasks.add(new TextRenderTask(
+                            StyledText.fromString(armour),
+                            new TextRenderSetting(
+                                    dividedWidth * 9,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.LEFT,
                                     VerticalAlignment.BOTTOM,
-                                    TextShadow.NORMAL);
+                                    TextShadow.NORMAL)));
+                    tasks.add(new TextRenderTask(
+                            StyledText.EMPTY,
+                            new TextRenderSetting(
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.LEFT,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.NORMAL)));
                 }
+                FontRenderer.getInstance().renderTexts(poseStack, dividedWidth * 35, dividedHeight * 41, tasks);
+
+                tasks = new ArrayList<>();
                 for (int i = 0; i < selectedLoadout.value().accessoryNames().size(); i++) {
                     String accessory = selectedLoadout.value().accessoryNames().get(i);
-                    FontRenderer.getInstance()
-                            .renderText(
-                                    poseStack,
-                                    StyledText.fromString(accessory),
-                                    dividedWidth
-                                            * (selectedLoadout
-                                                            .value()
-                                                            .armourNames()
-                                                            .isEmpty()
-                                                    ? 35
-                                                    : 44), // left align accessories if no armour
-                                    dividedHeight * (42 + i * 2),
+
+                    tasks.add(new TextRenderTask(
+                            StyledText.fromString(accessory),
+                            new TextRenderSetting(
+                                    dividedWidth * 9,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.LEFT,
                                     VerticalAlignment.BOTTOM,
-                                    TextShadow.NORMAL);
+                                    TextShadow.NORMAL)));
+                    tasks.add(new TextRenderTask(
+                            StyledText.EMPTY,
+                            new TextRenderSetting(
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.LEFT,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.NORMAL)));
                 }
+
+                FontRenderer.getInstance()
+                        .renderTexts(
+                                poseStack,
+                                dividedWidth
+                                        * (selectedLoadout.value().armourNames().isEmpty()
+                                                ? 35
+                                                : 44), // left align accessories if no armour
+                                dividedHeight * 41,
+                                tasks);
             } else {
                 FontRenderer.getInstance()
                         .renderText(
