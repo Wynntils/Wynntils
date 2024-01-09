@@ -1,22 +1,21 @@
-## [1.0.0](https://github.com/Wynntils/Artemis/compare/v0.0.1...v1.0.0) (2024-01-09)
+## [1.0.1](https://github.com/Wynntils/Artemis/compare/v1.0.0...v1.0.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* Fix issues with encoding crafted signed accessories ([#2316](https://github.com/Wynntils/Artemis/issues/2316)) ([a37a103](https://github.com/Wynntils/Artemis/commit/a37a103fccef7fe53adf2fd146e214142743a3a5))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2315](https://github.com/Wynntils/Artemis/issues/2315)) ([5dbfc58](https://github.com/Wynntils/Artemis/commit/5dbfc58446bcb2745ffaffc051401a446053c712))
+
+## [1.0.0](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.0...v1.0.0) (2024-01-09)
 
 
 ### ⚠ BREAKING CHANGES
 
 * Release Artemis 1.0.0
-
-### New Features
-
-* Add the new chat gear encoding, gear sharing GUI, item record GUI ([#2253](https://github.com/Wynntils/Artemis/issues/2253)) ([5038916](https://github.com/Wynntils/Artemis/commit/50389162562633f1093c73d0fc15086bf6a83d44))
-* Skill point loadouts ([#2310](https://github.com/Wynntils/Artemis/issues/2310)) ([f5a8615](https://github.com/Wynntils/Artemis/commit/f5a8615421acfae506ab316b78f720b439268b7f))
-
-
-### Miscellaneous Chores
-
-* Release Artemis 1.0.0 ([44df4bf](https://github.com/Wynntils/Artemis/commit/44df4bf225fe386fbc11f7990fd4e96a7a490bfa))
-
-## [0.0.1](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.0...v0.0.1) (2024-01-09)
-
 
 ### New Features
 
@@ -29,6 +28,7 @@
 * Add StyledText[#separate](https://github.com/Wynntils/Artemis/issues/separate), support substring formatted-index splitting and use it ([#2138](https://github.com/Wynntils/Artemis/issues/2138)) ([8a449d1](https://github.com/Wynntils/Artemis/commit/8a449d1d26b643c5f1f7367b981000aae0dad64f))
 * Add support for custom crafted tooltips ([#2299](https://github.com/Wynntils/Artemis/issues/2299)) ([9b00c4b](https://github.com/Wynntils/Artemis/commit/9b00c4bb1a75b5a3a94ab3cd372b73073cd71f3a))
 * Add support for Wynn's default sorting button in Trade Market screen ([#2192](https://github.com/Wynntils/Artemis/issues/2192)) ([bb0fd51](https://github.com/Wynntils/Artemis/commit/bb0fd513d33c07ae5df0827926426e8aa5e7fdd2))
+* Add the new chat gear encoding, gear sharing GUI, item record GUI ([#2253](https://github.com/Wynntils/Artemis/issues/2253)) ([5038916](https://github.com/Wynntils/Artemis/commit/50389162562633f1093c73d0fc15086bf6a83d44))
 * Annotate runes properly ([#2189](https://github.com/Wynntils/Artemis/issues/2189)) ([dbecef7](https://github.com/Wynntils/Artemis/commit/dbecef71ffdc2b78646d75bf5445a8176c03adaf))
 * Center guild map when outside main area ([#2216](https://github.com/Wynntils/Artemis/issues/2216)) ([e008aa6](https://github.com/Wynntils/Artemis/commit/e008aa674a7ad4cf9281fe2b0b48ed2e55d92447))
 * Crowd source NPC and profession locations ([#2157](https://github.com/Wynntils/Artemis/issues/2157)) ([edd4691](https://github.com/Wynntils/Artemis/commit/edd46918cbd508cf8990bef772de14c2500fee1f))
@@ -48,6 +48,7 @@
 * Process and show "unknown" lootrun locations ([#2169](https://github.com/Wynntils/Artemis/issues/2169)) ([cb0c268](https://github.com/Wynntils/Artemis/commit/cb0c268c90848f9cc0f89aff5229e1bb424283c0))
 * Rewrite CommandManager to handle command suggestions and auto-completion better  ([#2182](https://github.com/Wynntils/Artemis/issues/2182)) ([8aa368c](https://github.com/Wynntils/Artemis/commit/8aa368cf805b2d16d95366280010fc21b4112dff))
 * Set markers from waypoint manager ([#2218](https://github.com/Wynntils/Artemis/issues/2218)) ([c58e1d1](https://github.com/Wynntils/Artemis/commit/c58e1d135ed544280ebe92da60f0dbdf96aa2391))
+* Skill point loadouts ([#2310](https://github.com/Wynntils/Artemis/issues/2310)) ([f5a8615](https://github.com/Wynntils/Artemis/commit/f5a8615421acfae506ab316b78f720b439268b7f))
 * Waypoint manager redesign ([#2154](https://github.com/Wynntils/Artemis/issues/2154)) ([eb50fa0](https://github.com/Wynntils/Artemis/commit/eb50fa00c35e59c72411bf9811553b6fac8e3dba)), closes [/github.com/Wynntils/Artemis/pull/2140#discussion_r1342006394](https://github.com/Wynntils//github.com/Wynntils/Artemis/pull/2140/issues/discussion_r1342006394)
 * Wynncraft 2.0.4 support ([#2141](https://github.com/Wynntils/Artemis/issues/2141)) ([af465ed](https://github.com/Wynntils/Artemis/commit/af465ed479b74989e00343695bdd7c1505146cd3)), closes [#1955](https://github.com/Wynntils/Artemis/issues/1955)
 
@@ -149,8 +150,10 @@
 * Move to using Wynntils/Static-Storage ([#2258](https://github.com/Wynntils/Artemis/issues/2258)) ([30a882d](https://github.com/Wynntils/Artemis/commit/30a882db8bc5a2d348c66b36a468578cfd2d721d))
 * Re-release, fix quilt causing release issues ([c0d2bef](https://github.com/Wynntils/Artemis/commit/c0d2bef76502a0a478832b3204c6bd8ab076c06c))
 * Release 1.20.2 port [#2](https://github.com/Wynntils/Artemis/issues/2) ([c4581ff](https://github.com/Wynntils/Artemis/commit/c4581ffedfe0dcf71b4d30806ee7c262a2597a79))
+* Release Artemis 1.0.0 ([44df4bf](https://github.com/Wynntils/Artemis/commit/44df4bf225fe386fbc11f7990fd4e96a7a490bfa))
 * Release new version for Wynncraft 2.0.4 ([c88b994](https://github.com/Wynntils/Artemis/commit/c88b994c181dd18abf95bf33fc8a9def30c52e7a))
 * **release:** v0.0.1 [skip ci] ([d410d0f](https://github.com/Wynntils/Artemis/commit/d410d0fed815dfebf488bf5a1e1cd4183c39158c))
+* **release:** v1.0.0 [skip ci] ([09a47e5](https://github.com/Wynntils/Artemis/commit/09a47e59da12eecd585b2f0db81bdf96b90afe64))
 * remove Debugify from the incompatible mod list (experimentally) ([#2247](https://github.com/Wynntils/Artemis/issues/2247)) ([410a210](https://github.com/Wynntils/Artemis/commit/410a210778844172585033e4eae1a61597021988))
 * update conventional-changelog-action ([31ea48e](https://github.com/Wynntils/Artemis/commit/31ea48e24cac281b4773f9d8ae4349d2597cfbd2))
 
