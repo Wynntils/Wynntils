@@ -75,7 +75,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
         return new ItemSharingScreen(wynnItem, itemStack);
     }
 
-    // Creating screen from vault
+    // Creating screen from item record
     public static Screen create(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
         return new ItemSharingScreen(wynnItem, itemStack, savedItem);
     }
@@ -191,11 +191,11 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 // Gear items can have their item changed by cosmetics so we need to get their original item
                 // FIXME: Does not work for crafted gear
                 if (wynnItem instanceof GearItem gearItem) {
-                    itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s vault");
+                    itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s Item Record");
                 }
 
                 // Item name is passed in since it is lost in the instanceof check above and looks nicer
-                // saying "Saved Gale's Force to your vault" than "Saved Bow to your vault"
+                // saying "Saved Gale's Force to your item record" than "Saved Bow to your item record"
                 savedItem = Services.ItemRecord.saveItem(wynnItem, itemStackToSave, itemStack.getHoverName());
 
                 if (savedItem) {
