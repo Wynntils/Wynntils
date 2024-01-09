@@ -39,6 +39,8 @@ import net.minecraft.network.chat.Component;
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
 
+    private boolean firstInit = true;
+
     private SaveButton saveAssignedButton;
     private SaveButton saveBuildButton;
     public TextInputBoxWidget saveNameInput;
@@ -60,7 +62,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     @Override
     protected void doInit() {
         super.doInit();
-        Models.SkillPoint.populateSkillPoints();
+        if (firstInit) {
+            firstInit = false;
+            Models.SkillPoint.populateSkillPoints();
+        }
 
         populateLoadouts();
 
