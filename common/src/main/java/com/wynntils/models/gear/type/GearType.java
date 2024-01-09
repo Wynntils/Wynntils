@@ -18,10 +18,10 @@ public enum GearType {
     BOW(ClassType.ARCHER, Items.BOW, 0, 3),
     RELIK(ClassType.SHAMAN, Items.STONE_SHOVEL, 7, 4),
     // This is a fallback for signed, crafted gear with a skin
-    WEAPON(null, Items.DIAMOND_SHOVEL, 0, -1),
+    WEAPON(null, Items.DIAMOND_SHOVEL, 0, 12),
     // FIXME: We need a complete mapping of damage values for ring, bracelet and necklace to be able
     // to get rid of this (needed for crafted and unknown gear)
-    ACCESSORY(null, Items.FLINT_AND_STEEL, 0, -1),
+    ACCESSORY(null, Items.FLINT_AND_STEEL, 0, 13),
     RING(null, Items.FLINT_AND_STEEL, 2, 5),
     BRACELET(null, Items.FLINT_AND_STEEL, 19, 6),
     NECKLACE(null, Items.FLINT_AND_STEEL, 36, 7),

@@ -33,8 +33,15 @@ public class CustomGearTypeTransformer extends DataTransformer<CustomGearTypeDat
     public ErrorOr<CustomGearTypeData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1 -> ErrorOr.of(new CustomGearTypeData(
-                    GearType.fromEncodingId(byteReader.read().value())));
+            case VERSION_1 -> {
+                GearType gearType = GearType.fromEncodingId(byteReader.read().value());
+
+                if (gearType == null) {
+                    yield ErrorOr.error("Gear type cannot be decoded.");
+                }
+
+                yield ErrorOr.of(new CustomGearTypeData(gearType));
+            }
         };
     }
 
