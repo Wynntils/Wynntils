@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -296,6 +297,9 @@ public class SkillPointModel extends Model {
         for (int i : ACCESSORY_SLOTS) {
             calculateSingleGearSkillPoints(McUtils.inventory().getItem(i));
         }
+
+        // held item
+        calculateSingleGearSkillPoints(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {
