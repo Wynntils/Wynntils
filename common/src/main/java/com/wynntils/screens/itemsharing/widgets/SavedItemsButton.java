@@ -21,7 +21,7 @@ public class SavedItemsButton extends WynntilsButton {
     private final Texture buttonTexture;
 
     public SavedItemsButton(int x, int y, Consumer<Integer> onClick, List<Component> tooltip, Texture buttonTexture) {
-        super(x, y, 11, 11, Component.literal("Saved Items Button"));
+        super(x, y, 9, 9, Component.literal("Saved Items Button"));
         this.onClick = onClick;
         this.tooltip = ComponentUtils.wrapTooltips(tooltip, 200);
         this.buttonTexture = buttonTexture;

@@ -44,7 +44,7 @@ import org.lwjgl.glfw.GLFW;
 public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMenu> {
     private static final int ITEMS_PER_ROW = 7;
     private static final int MAX_ITEMS = 49;
-    private static final int SCROLL_AREA_HEIGHT = 128;
+    private static final int SCROLL_AREA_HEIGHT = 129;
 
     private boolean addingCategory = false;
     private boolean draggingScroll = false;
@@ -76,8 +76,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
         // region Side buttons
         this.addRenderableWidget(new SavedItemsButton(
-                this.leftPos + 8,
-                this.topPos + 22,
+                this.leftPos + 9,
+                this.topPos + 20,
                 (b) -> {
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         if (!addingCategory) {
@@ -97,8 +97,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 Texture.ITEM_RECORD_ADD));
 
         this.addRenderableWidget(new SavedItemsButton(
-                this.leftPos + 8,
-                this.topPos + 36,
+                this.leftPos + 9,
+                this.topPos + 31,
                 (b) -> {
                     selectedItems = new ArrayList<>();
 
@@ -110,8 +110,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 Texture.ITEM_RECORD_DELETE));
 
         this.addRenderableWidget(new SavedItemsButton(
-                this.leftPos + 8,
-                this.topPos + 50,
+                this.leftPos + 9,
+                this.topPos + 42,
                 (b) -> {
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         moveSelectedItems();
@@ -127,8 +127,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 Texture.ITEM_RECORD_CONFIRM));
 
         this.addRenderableWidget(new SavedItemsButton(
-                this.leftPos + 8,
-                this.topPos + 140,
+                this.leftPos + 9,
+                this.topPos + 144,
                 null,
                 List.of(
                         Component.translatable("screens.wynntils.savedItems.help")
@@ -142,7 +142,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         // endregion
 
         // region Category navigation buttons
-        this.addRenderableWidget(new SavedCategoryButton(this.leftPos + 19, this.topPos + 9, this, false));
+        this.addRenderableWidget(new SavedCategoryButton(this.leftPos + 21, this.topPos + 9, this, false));
 
         this.addRenderableWidget(new SavedCategoryButton(this.leftPos + 139, this.topPos + 9, this, true));
         // endregion
@@ -204,11 +204,11 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                     .renderAlignedTextInBox(
                             poseStack,
                             StyledText.fromString(currentCategory),
-                            this.leftPos + 36,
-                            this.leftPos + 36 + 99,
+                            this.leftPos + 37,
+                            this.leftPos + 37 + 97,
                             this.topPos + 10,
                             this.topPos + 10 + 8,
-                            99,
+                            97,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
@@ -234,7 +234,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        float scrollButtonRenderX = this.leftPos + 152;
+        float scrollButtonRenderX = this.leftPos + 155;
         float scrollButtonRenderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
@@ -260,7 +260,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                         (int) mouseX,
                         (int) mouseY,
                         (int) categoryRenderX,
-                        (int) (categoryRenderX + 99),
+                        (int) (categoryRenderX + 97),
                         (int) categoryRenderY,
                         (int) (categoryRenderY + 8))) {
             if (!editingCategory) {
@@ -375,7 +375,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     private void renderScrollButton(PoseStack poseStack) {
-        float renderX = this.leftPos + 153;
+        float renderX = this.leftPos + 155;
         float renderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
@@ -389,7 +389,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         categoryInput = new TextInputBoxWidget(
-                this.leftPos + 36, this.topPos + 5, 99, 16, null, (TextboxScreen) McUtils.mc().screen, categoryInput);
+                this.leftPos + 37, this.topPos + 5, 97, 16, null, (TextboxScreen) McUtils.mc().screen, categoryInput);
 
         // Get the current category name and add if we are editing
         if (editingCategory) {
