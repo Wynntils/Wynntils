@@ -158,6 +158,7 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, partyfinderNode);
 
         addAlias(root, partyfinderNode, "pfinder", AliasCommandLevel.SHORT_FORMS);
+        addAlias(root, partyfinderNode, "pf", AliasCommandLevel.SHORT_FORMS);
 
         // "silverbull" aliases
         CommandNode<CommandSourceStack> silverbullNode = literal("silverbull").build();
