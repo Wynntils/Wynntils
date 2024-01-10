@@ -416,7 +416,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 selectedItems = new ArrayList<>();
                 populateItems();
             }
-        } else if (editingCategory) {
+        } else if (editingCategory && !currentCategory.equals(newCategory)) {
             Services.ItemRecord.renameCategory(currentCategory, newCategory);
 
             // Change to new category
