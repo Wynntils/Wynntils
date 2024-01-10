@@ -31,7 +31,7 @@ public class CommandAliasesFeature extends Feature {
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")),
-            new CommandAlias("partyfinder", List.of("pf", "pfinder")))));
+            new CommandAlias("partyfinder", List.of("pf")))));
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {
