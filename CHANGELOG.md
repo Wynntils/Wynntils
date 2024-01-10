@@ -1,3 +1,16 @@
+## [1.0.2](https://github.com/Wynntils/Artemis/compare/v1.0.1...v1.0.2) (2024-01-10)
+
+
+### New Features
+
+* Partyfinder shorter alias [skip ci] ([#2318](https://github.com/Wynntils/Artemis/issues/2318)) ([6aa6bc0](https://github.com/Wynntils/Artemis/commit/6aa6bc03c89a60cb5abba5e715f05b32f371a2c4)), closes [#2](https://github.com/Wynntils/Artemis/issues/2)
+
+
+### Bug Fixes
+
+* Fix saved gear items rarely making the game not load ([#2320](https://github.com/Wynntils/Artemis/issues/2320)) ([eaaca04](https://github.com/Wynntils/Artemis/commit/eaaca049572645ae50dc30aacb85928494e57c50))
+* Held weapon not counted in gear skill points [skip ci] ([#2319](https://github.com/Wynntils/Artemis/issues/2319)) ([872ebc8](https://github.com/Wynntils/Artemis/commit/872ebc85dece1c1fd578beda52c6d8eead699336))
+
 ## [1.0.1](https://github.com/Wynntils/Artemis/compare/v1.0.0...v1.0.1) (2024-01-09)
 
 
@@ -9,6 +22,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2315](https://github.com/Wynntils/Artemis/issues/2315)) ([5dbfc58](https://github.com/Wynntils/Artemis/commit/5dbfc58446bcb2745ffaffc051401a446053c712))
+* **release:** v1.0.1 [skip ci] ([5da5959](https://github.com/Wynntils/Artemis/commit/5da5959e975a53040a9f96c37e02c77c6991363a))
 
 ## [1.0.0](https://github.com/Wynntils/Artemis/compare/v0.0.4-alpha.0...v1.0.0) (2024-01-09)
 
@@ -1446,6 +1460,4 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 ### Build System
 
 * **gradle:** ignore changelog file from spotless [skip ci] ([8d532f4](https://github.com/Wynntils/Artemis/commit/8d532f4ad2864d4c11959688fd78cecdc927c374))
-
-## 0.0.0 (2021-12-09)
 
