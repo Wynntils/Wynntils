@@ -21,8 +21,7 @@ import java.util.Set;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public record SavedItem(WynnItem wynnItem, String base64, Set<String> categories, ItemStack itemStack)
-        implements Comparable<SavedItem> {
+public record SavedItem(String base64, Set<String> categories, ItemStack itemStack) implements Comparable<SavedItem> {
     public static SavedItem create(WynnItem wynnItem, Set<String> categories, ItemStack itemStack) {
         EncodingSettings encodingSettings = new EncodingSettings(
                 Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
@@ -34,7 +33,22 @@ public record SavedItem(WynnItem wynnItem, String base64, Set<String> categories
                     "Tried to construct a SavedItem with unencodable WynnItem: " + errorOrEncodedByteBuffer.getError());
         }
 
-        return new SavedItem(wynnItem, errorOrEncodedByteBuffer.getValue().toBase64String(), categories, itemStack);
+        return new SavedItem(errorOrEncodedByteBuffer.getValue().toBase64String(), categories, itemStack);
+    }
+
+    /**
+     * @return The wynnItem represented by this SavedItem
+     * Note that this can't be done during deserialization because the models might not have finished loading yet
+     */
+    public WynnItem wynnItem() {
+        ErrorOr<WynnItem> errorOrWynnItem = Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(base64));
+
+        if (errorOrWynnItem.hasError()) {
+            throw new IllegalStateException(
+                    "Tried to decode a SavedItem with unencodable WynnItem: " + errorOrWynnItem.getError());
+        }
+
+        return errorOrWynnItem.getValue();
     }
 
     @Override
@@ -66,15 +80,7 @@ public record SavedItem(WynnItem wynnItem, String base64, Set<String> categories
                 itemStack.getOrCreateTag().getCompound("display").putInt("color", itemStackInfo.color);
             }
 
-            // Decode base64 to wynnItem
-            ErrorOr<WynnItem> errorOrWynnItem =
-                    Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(base64));
-
-            if (errorOrWynnItem.hasError()) {
-                throw new JsonParseException("Failed to decode base64 to WynnItem: " + errorOrWynnItem.getError());
-            }
-
-            return new SavedItem(errorOrWynnItem.getValue(), base64, categories, itemStack);
+            return new SavedItem(base64, categories, itemStack);
         }
 
         @Override
