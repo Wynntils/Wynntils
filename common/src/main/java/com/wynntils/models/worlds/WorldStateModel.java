@@ -164,6 +164,9 @@ public final class WorldStateModel extends Model {
         return false;
     }
 
+    /**
+     * @return Full name of the current world, such as "WC32"
+     */
     public String getCurrentWorldName() {
         return currentWorldName;
     }
