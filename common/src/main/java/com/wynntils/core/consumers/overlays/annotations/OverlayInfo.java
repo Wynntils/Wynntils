@@ -19,8 +19,5 @@ public @interface OverlayInfo {
 
     RenderEvent.ElementType renderType();
 
-    RenderState renderAt() default RenderState.PRE;
-    /*
-    POST does not render overlays behind the chat
-     */
+    RenderState renderAt() default RenderState.POST;
 }
