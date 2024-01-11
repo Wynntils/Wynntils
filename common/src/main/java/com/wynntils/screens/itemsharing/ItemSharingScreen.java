@@ -45,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 public final class ItemSharingScreen extends WynntilsScreen {
     private final ItemStack itemStack;
     private final WynnItem wynnItem;
+    private final Screen previousScreen;
 
     private boolean savedItem = false;
     private Button saveButton;
@@ -60,6 +61,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         this.wynnItem = wynnItem;
         this.itemStack = itemStack;
+        this.previousScreen = McUtils.mc().screen;
     }
 
     private ItemSharingScreen(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
@@ -68,6 +70,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
         this.wynnItem = wynnItem;
         this.itemStack = itemStack;
         this.savedItem = savedItem;
+        this.previousScreen = McUtils.mc().screen;
     }
 
     // Creating screen from an item
@@ -112,6 +115,12 @@ public final class ItemSharingScreen extends WynntilsScreen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        McUtils.mc().setScreen(previousScreen);
     }
 
     private void renderPreview(GuiGraphics guiGraphics) {
