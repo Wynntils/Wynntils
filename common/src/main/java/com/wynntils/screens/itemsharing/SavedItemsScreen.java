@@ -80,12 +80,13 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.topPos + 22,
                 (b) -> {
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        if (!addingCategory) {
+                        if (!addingCategory && !editingCategory) {
                             addingCategory = true;
                             addCategoryInput();
                         } else {
                             addCategory(KeyboardUtils.isShiftDown());
                             addingCategory = false;
+                            editingCategory = false;
                         }
                     }
                 },
@@ -101,6 +102,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 this.topPos + 36,
                 (b) -> {
                     selectedItems = new ArrayList<>();
+                    addingCategory = false;
+                    editingCategory = false;
 
                     deleteCategory();
                 },
@@ -416,7 +419,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 selectedItems = new ArrayList<>();
                 populateItems();
             }
-        } else if (editingCategory) {
+        } else if (editingCategory && !currentCategory.equals(newCategory)) {
             Services.ItemRecord.renameCategory(currentCategory, newCategory);
 
             // Change to new category
@@ -428,6 +431,11 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     private void deleteCategory() {
         Services.ItemRecord.deleteCategory(currentCategory);
+
+        if (categoryInput != null) {
+            this.removeWidget(categoryInput);
+            categoryInput = null;
+        }
 
         // Reset to default category
         currentCategory = Services.ItemRecord.getDefaultCategory();
