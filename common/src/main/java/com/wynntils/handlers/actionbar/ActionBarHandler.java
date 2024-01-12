@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.actionbar;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
@@ -25,6 +26,7 @@ public final class ActionBarHandler extends Handler {
     private static final Pattern ACTIONBAR_PATTERN =
             Pattern.compile("(?<LEFT>.+[^ ]) {4,}(?<CENTER>.+[^ ]) {4,}(?<RIGHT>.+)");
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
+    private static final String STANDARD_PADDING = "   ";
 
     private static final Map<ActionBarPosition, List<ActionBarSegment>> ALL_SEGMENTS = Map.of(
             ActionBarPosition.LEFT,
@@ -70,18 +72,31 @@ public final class ActionBarHandler extends Handler {
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
         StyledText newContentBuilder = StyledText.EMPTY;
+        // vanilla segments have three spaces between each segment, regardless of content
+        //
         if (!lastSegments.get(ActionBarPosition.LEFT).isHidden()) {
             newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.LEFT));
         }
         if (!lastSegments.get(ActionBarPosition.CENTER).isHidden()) {
+            newContentBuilder = newContentBuilder.append(STANDARD_PADDING);
             newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.CENTER));
+            newContentBuilder = newContentBuilder.append(STANDARD_PADDING);
         } else {
             // Add padding
             newContentBuilder = newContentBuilder.append(CENTER_PADDING);
         }
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
-            newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
+            StyledText right = positionMatches.get(ActionBarPosition.RIGHT);
+
+            // Rare case where the user has 100% curse charge, which makes StyledText remove the color code
+            // For mana, since it is the same color as the curse charge. So we add it back here
+            if (!right.startsWith(ChatFormatting.AQUA.toString())) {
+                right = StyledText.fromString(ChatFormatting.AQUA + right.getString());
+            }
+
+            newContentBuilder = newContentBuilder.append(right);
         }
+        newContentBuilder = newContentBuilder.trim(); // In case either left or right is hidden
         previousProcessedContent = newContentBuilder;
         if (!content.equals(newContentBuilder)) {
             event.setMessage(newContentBuilder.getComponent());
