@@ -4,7 +4,6 @@
  */
 package com.wynntils.handlers.actionbar;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -18,15 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    // Test in ActionBarHandler_ACTIONBAR_PATTERN
-    private static final Pattern ACTIONBAR_PATTERN =
-            Pattern.compile("(?<LEFT>.+[^ ]) {4,}(?<CENTER>.+[^ ]) {4,}(?<RIGHT>.+)");
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
-    private static final String STANDARD_PADDING = "   ";
+    private static final String STANDARD_PADDING = "    ";
 
     private static final Map<ActionBarPosition, List<ActionBarSegment>> ALL_SEGMENTS = Map.of(
             ActionBarPosition.LEFT,
@@ -58,16 +53,12 @@ public final class ActionBarHandler extends Handler {
         }
         previousRawContent = content;
 
-        Matcher matcher = content.getMatcher(ACTIONBAR_PATTERN);
-        if (!matcher.matches()) {
-            WynntilsMod.warn("ActionBarHandler pattern failed to match: " + content);
-            return;
-        }
+        StyledText[] contentGroups = content.split(" {4,}");
 
         // Create map of position -> matching part of the content
         Map<ActionBarPosition, StyledText> positionMatches = new EnumMap<>(ActionBarPosition.class);
         Arrays.stream(ActionBarPosition.values())
-                .forEach(pos -> positionMatches.put(pos, StyledText.fromString(matcher.group(pos.name()))));
+                .forEach(pos -> positionMatches.put(pos, contentGroups[pos.ordinal()]));
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
@@ -85,15 +76,7 @@ public final class ActionBarHandler extends Handler {
             newContentBuilder = newContentBuilder.append(CENTER_PADDING);
         }
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
-            StyledText right = positionMatches.get(ActionBarPosition.RIGHT);
-
-            // Rare case where the user has 100% curse charge, which makes StyledText remove the color code
-            // For mana, since it is the same color as the curse charge. So we add it back here
-            if (!right.startsWith(ChatFormatting.AQUA.toString())) {
-                right = StyledText.fromString(ChatFormatting.AQUA + right.getString());
-            }
-
-            newContentBuilder = newContentBuilder.append(right);
+            newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
         }
         newContentBuilder = newContentBuilder.trim(); // In case either left or right is hidden
         previousProcessedContent = newContentBuilder;

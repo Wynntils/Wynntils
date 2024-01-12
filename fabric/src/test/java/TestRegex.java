@@ -98,14 +98,6 @@ public class TestRegex {
     }
 
     @Test
-    public void ActionBarHandler_ACTIONBAR_PATTERN() {
-        PatternTester p = new PatternTester(ActionBarHandler.class, "ACTIONBAR_PATTERN");
-        p.shouldMatch("§c❤ 14930/14930§0      §b❉ 100%      ✺ 175/175");
-        p.shouldMatch("§c❤ 14930/14930§0      §7❉ 48%      §b✺ 175/175");
-        p.shouldMatch("§c❤ 14930/14930§0      §7❉ 48%      §b✺ 175/175");
-    }
-
-    @Test
     public void ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME() {
         PatternTester p = new PatternTester(ArchetypeAbilitiesAnnotator.class, "ARCHETYPE_NAME");
         p.shouldMatch("§e§lBoltslinger Archetype");
