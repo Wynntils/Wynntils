@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
@@ -56,7 +57,7 @@ public class StopwatchFeature extends Feature {
             })
             .build();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final Overlay stopwatchOverlay = new StopwatchOverlay();
 
     private void toggleStopwatch() {
