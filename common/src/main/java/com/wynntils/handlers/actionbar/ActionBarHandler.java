@@ -73,7 +73,6 @@ public final class ActionBarHandler extends Handler {
 
         StyledText newContentBuilder = StyledText.EMPTY;
         // vanilla segments have three spaces between each segment, regardless of content
-        //
         if (!lastSegments.get(ActionBarPosition.LEFT).isHidden()) {
             newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.LEFT));
         }
