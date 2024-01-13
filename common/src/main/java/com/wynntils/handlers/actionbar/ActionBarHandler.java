@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.actionbar;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -57,8 +58,27 @@ public final class ActionBarHandler extends Handler {
 
         // Create map of position -> matching part of the content
         Map<ActionBarPosition, StyledText> positionMatches = new EnumMap<>(ActionBarPosition.class);
-        Arrays.stream(ActionBarPosition.values())
-                .forEach(pos -> positionMatches.put(pos, contentGroups[pos.ordinal()]));
+        switch (positionMatches.size()) {
+            case 3:
+                // normal case
+                Arrays.stream(ActionBarPosition.values())
+                        .forEach(pos -> positionMatches.put(pos, contentGroups[pos.ordinal()]));
+                break;
+            case 2:
+                // missing center
+                WynntilsMod.warn("Only 2 segments in action bar: " + content);
+                positionMatches.put(ActionBarPosition.LEFT, contentGroups[0]);
+                positionMatches.put(ActionBarPosition.RIGHT, contentGroups[1]);
+                break;
+            case 1:
+                // only center
+                WynntilsMod.warn("Only 1 segment in action bar: " + content);
+                positionMatches.put(ActionBarPosition.CENTER, contentGroups[0]);
+                break;
+            default:
+                WynntilsMod.warn("0 or more than 3 segments in action bar: " + content);
+                return;
+        }
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
