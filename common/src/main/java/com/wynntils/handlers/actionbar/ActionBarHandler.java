@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
+    private static final String VANILLA_PADDING = "\\s{4,}";
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
     private static final String STANDARD_PADDING = "    ";
 
@@ -52,7 +53,7 @@ public final class ActionBarHandler extends Handler {
         }
         previousRawContent = content;
 
-        StyledText[] contentGroups = content.split(" {4,}");
+        StyledText[] contentGroups = content.split(VANILLA_PADDING);
 
         // Create map of position -> matching part of the content
         Map<ActionBarPosition, StyledText> positionMatches = new EnumMap<>(ActionBarPosition.class);
