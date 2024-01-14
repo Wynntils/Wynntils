@@ -7,7 +7,9 @@ package com.wynntils.models.gear.type;
 public enum ConsumableType {
     POTION(0),
     FOOD(1),
-    SCROLL(2);
+    SCROLL(2),
+    // This is a fallback for when the type is unknown and can't be parsed.
+    CONSUMABLE(3);
 
     private final int encodingId;
 
@@ -22,7 +24,7 @@ public enum ConsumableType {
             }
         }
 
-        return null;
+        return ConsumableType.CONSUMABLE;
     }
 
     public static ConsumableType fromEncodingId(int id) {
