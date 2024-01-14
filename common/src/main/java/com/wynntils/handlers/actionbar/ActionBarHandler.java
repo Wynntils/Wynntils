@@ -58,7 +58,7 @@ public final class ActionBarHandler extends Handler {
 
         // Create map of position -> matching part of the content
         Map<ActionBarPosition, StyledText> positionMatches = new EnumMap<>(ActionBarPosition.class);
-        switch (positionMatches.size()) {
+        switch (contentGroups.length) {
             case 3:
                 // normal case
                 Arrays.stream(ActionBarPosition.values())
