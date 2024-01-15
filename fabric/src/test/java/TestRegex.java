@@ -7,7 +7,6 @@ import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
-import com.wynntils.handlers.actionbar.ActionBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.character.CharacterModel;
@@ -95,14 +94,6 @@ public class TestRegex {
         PatternTester p = new PatternTester(AbilityTreeAnnotator.class, "TREE_ABILITY_POINTS_PATTERN");
         p.shouldMatch("§b✦ Available Points: §f0§7/45");
         p.shouldMatch("§b✦ Available Points: §f15§7/45");
-    }
-
-    @Test
-    public void ActionBarHandler_ACTIONBAR_PATTERN() {
-        PatternTester p = new PatternTester(ActionBarHandler.class, "ACTIONBAR_PATTERN");
-        p.shouldMatch("§c❤ 14930/14930§0      §b❉ 100%      ✺ 175/175");
-        p.shouldMatch("§c❤ 14930/14930§0      §7❉ 48%      §b✺ 175/175");
-        p.shouldMatch("§c❤ 14930/14930§0      §7❉ 48%      §b✺ 175/175");
     }
 
     @Test

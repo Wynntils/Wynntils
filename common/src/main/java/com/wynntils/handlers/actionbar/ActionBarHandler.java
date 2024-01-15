@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.actionbar;
@@ -17,14 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
-    // Test in ActionBarHandler_ACTIONBAR_PATTERN
-    private static final Pattern ACTIONBAR_PATTERN =
-            Pattern.compile("(?<LEFT>.+[^ ]) {4,}(?<CENTER>.+[^ ]) {4,}(?<RIGHT>.+)");
+    private static final String VANILLA_PADDING = "\\s{4,}";
     private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
+    private static final String STANDARD_PADDING = "    ";
 
     private static final Map<ActionBarPosition, List<ActionBarSegment>> ALL_SEGMENTS = Map.of(
             ActionBarPosition.LEFT,
@@ -56,25 +54,43 @@ public final class ActionBarHandler extends Handler {
         }
         previousRawContent = content;
 
-        Matcher matcher = content.getMatcher(ACTIONBAR_PATTERN);
-        if (!matcher.matches()) {
-            WynntilsMod.warn("ActionBarHandler pattern failed to match: " + content);
-            return;
-        }
+        StyledText[] contentGroups = content.split(VANILLA_PADDING);
 
         // Create map of position -> matching part of the content
         Map<ActionBarPosition, StyledText> positionMatches = new EnumMap<>(ActionBarPosition.class);
-        Arrays.stream(ActionBarPosition.values())
-                .forEach(pos -> positionMatches.put(pos, StyledText.fromString(matcher.group(pos.name()))));
+        switch (contentGroups.length) {
+            case 3:
+                // normal case
+                Arrays.stream(ActionBarPosition.values())
+                        .forEach(pos -> positionMatches.put(pos, contentGroups[pos.ordinal()]));
+                break;
+            case 2:
+                // missing center
+                WynntilsMod.warn("Only 2 segments in action bar: " + content);
+                positionMatches.put(ActionBarPosition.LEFT, contentGroups[0]);
+                positionMatches.put(ActionBarPosition.RIGHT, contentGroups[1]);
+                break;
+            case 1:
+                // only center
+                WynntilsMod.warn("Only 1 segment in action bar: " + content);
+                positionMatches.put(ActionBarPosition.CENTER, contentGroups[0]);
+                break;
+            default:
+                WynntilsMod.warn("0 or more than 3 segments in action bar: " + content);
+                return;
+        }
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
         StyledText newContentBuilder = StyledText.EMPTY;
+        // vanilla segments have three spaces between each segment, regardless of content
         if (!lastSegments.get(ActionBarPosition.LEFT).isHidden()) {
             newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.LEFT));
         }
         if (!lastSegments.get(ActionBarPosition.CENTER).isHidden()) {
+            newContentBuilder = newContentBuilder.append(STANDARD_PADDING);
             newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.CENTER));
+            newContentBuilder = newContentBuilder.append(STANDARD_PADDING);
         } else {
             // Add padding
             newContentBuilder = newContentBuilder.append(CENTER_PADDING);
@@ -82,6 +98,7 @@ public final class ActionBarHandler extends Handler {
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
             newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
         }
+        newContentBuilder = newContentBuilder.trim(); // In case either left or right is hidden
         previousProcessedContent = newContentBuilder;
         if (!content.equals(newContentBuilder)) {
             event.setMessage(newContentBuilder.getComponent());
