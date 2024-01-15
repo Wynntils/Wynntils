@@ -24,6 +24,8 @@ accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/Lis
 accessible field net/minecraft/client/gui/screens/Screen deferredTooltipRendering Lnet/minecraft/client/gui/screens/Screen$DeferredTooltipRendering;
 accessible field net/minecraft/client/gui/screens/Screen narratables Ljava/util/List;
 accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
+accessible field net/minecraft/client/gui/screens/Screen title Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/DisconnectedScreen reason Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageWidth I

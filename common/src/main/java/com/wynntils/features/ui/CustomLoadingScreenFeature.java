@@ -5,6 +5,7 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
@@ -16,6 +17,8 @@ import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.characterselector.LoadingScreen;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -25,16 +28,35 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomLoadingScreenFeature extends Feature {
     private LoadingScreen loadingScreen;
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpenPre(ScreenOpenedEvent.Pre event) {
         if (loadingScreen == null) return;
 
+        System.out.println("onScreenOpenPre: " + event.getScreen().getClass().getSimpleName());
+        if (event.getScreen().title.getString().equals("Failed to connect to the server")) {
+            System.out.println(event.getScreen().getClass().getSimpleName());
+        }
+
+        if (event.getScreen() instanceof ConnectScreen) {
+            event.setCanceled(true); // this is very sketchy
+            // connectscreen usually makes a new DisconnectedScreen when there is a problem connecting
+            // consider not
+
+            loadingScreen.setMessage("Connecting...");
+        }
         if (event.getScreen() instanceof ProgressScreen) {
             event.setCanceled(true);
+            loadingScreen.setMessage("Working...");
         }
         if (event.getScreen() instanceof ReceivingLevelScreen) {
             event.setCanceled(true);
             loadingScreen.setMessage("Receiving terrain...");
+        }
+
+        if (event.getScreen() instanceof DisconnectedScreen disconnected) {
+            event.setCanceled(true);
+            loadingScreen.setMessage(disconnected.reason.getString());
+            System.out.println("DisconnectedScreen: " + disconnected.reason.getString());
         }
     }
 

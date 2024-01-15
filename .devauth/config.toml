@@ -1,4 +1,4 @@
-defaultEnabled = true
+defaultEnabled = false
 defaultAccount = "main"
 
 [accounts.main]
