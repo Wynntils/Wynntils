@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -126,42 +126,43 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(Config<?> config) {
-        if (this.isEnabled()) {
-            // This isReady() check is required for Linux to not crash on config change.
-            if (!Services.Discord.isReady()) {
-                // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
-                if (!Services.Discord.load()) {
-                    // happens when wrong version of GLIBC is installed and Discord SDK fails to load
-                    Managers.Feature.crashFeature(this);
-                }
+    public void onEnable() {
+        // This isReady() check is required for Linux to not crash on config change.
+        if (!Services.Discord.isReady()) {
+            // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
+            if (!Services.Discord.load()) {
+                // happens when wrong version of GLIBC is installed and Discord SDK fails to load
+                Managers.Feature.crashFeature(this);
             }
+        }
 
-            if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
+        if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
 
-            if (displayLocation.get()) {
-                if (lastTerritoryProfile == null) {
-                    stopTerritoryCheck = false;
-                    checkTerritory();
-                }
-            } else {
-                stopTerritoryCheck = true;
-                Services.Discord.setDetails("");
-            }
-
-            if (displayCharacterInfo.get()) {
-                displayCharacterDetails();
-            } else {
-                Services.Discord.setWynncraftLogo();
-            }
-
-            if (displayWorld.get()) {
-                Services.Discord.setState(Models.WorldState.getCurrentWorldName());
-            } else {
-                Services.Discord.setState("");
+        if (displayLocation.get()) {
+            if (lastTerritoryProfile == null) {
+                stopTerritoryCheck = false;
+                checkTerritory();
             }
         } else {
-            Services.Discord.unload();
+            stopTerritoryCheck = true;
+            Services.Discord.setDetails("");
         }
+
+        if (displayCharacterInfo.get()) {
+            displayCharacterDetails();
+        } else {
+            Services.Discord.setWynncraftLogo();
+        }
+
+        if (displayWorld.get()) {
+            Services.Discord.setState(Models.WorldState.getCurrentWorldName());
+        } else {
+            Services.Discord.setState("");
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        Services.Discord.unload();
     }
 }
