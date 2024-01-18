@@ -126,6 +126,11 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @Override
+    protected void onConfigUpdate(Config<?> config) {
+        tryUpdateDisplayedInfo();
+    }
+
+    @Override
     public void onEnable() {
         // This isReady() check is required for Linux to not crash on config change.
         if (!Services.Discord.isReady()) {
@@ -133,9 +138,18 @@ public class DiscordRichPresenceFeature extends Feature {
             if (!Services.Discord.load()) {
                 // happens when wrong version of GLIBC is installed and Discord SDK fails to load
                 Managers.Feature.crashFeature(this);
+            } else {
+                tryUpdateDisplayedInfo();
             }
         }
+    }
 
+    @Override
+    public void onDisable() {
+        Services.Discord.unload();
+    }
+
+    private void tryUpdateDisplayedInfo() {
         if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
 
         if (displayLocation.get()) {
@@ -159,10 +173,5 @@ public class DiscordRichPresenceFeature extends Feature {
         } else {
             Services.Discord.setState("");
         }
-    }
-
-    @Override
-    public void onDisable() {
-        Services.Discord.unload();
     }
 }
