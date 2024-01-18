@@ -41,6 +41,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
+        if (!Services.Discord.isReady()) return;
         if (!Models.WorldState.onWorld()) return;
 
         if (displayCharacterInfo.get()) {
@@ -50,6 +51,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onXpChange(SetXpEvent event) {
+        if (!Services.Discord.isReady()) return;
         if (!Models.WorldState.onWorld()) return;
 
         if (displayCharacterInfo.get()) {
@@ -59,6 +61,8 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
+        if (!Services.Discord.isReady()) return;
+
         if (displayWorld.get()) {
             switch (event.getNewState()) {
                 case WORLD -> {
@@ -88,43 +92,6 @@ public class DiscordRichPresenceFeature extends Feature {
         Services.Discord.unload();
     }
 
-    private void displayCharacterDetails() {
-        if (McUtils.player() == null) return;
-
-        CappedValue combatLevel = Models.CombatXp.getCombatLevel();
-        int level = combatLevel.current();
-        ClassType classType = Models.Character.getClassType();
-
-        if (classType == null) return;
-        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
-        Services.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
-        Services.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
-    }
-
-    private void checkTerritory() {
-        if (stopTerritoryCheck || !Models.WorldState.onWorld()) {
-            lastTerritoryProfile = null;
-            stopTerritoryCheck = false;
-            return;
-        }
-
-        // Player is not on world, skip territory check
-        if (McUtils.player() == null) return;
-
-        Position position = McUtils.player().position();
-        if (position != null) {
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
-                    McUtils.player().position());
-            if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
-                lastTerritoryProfile = territoryProfile;
-                String location = territoryProfile.getName();
-                Services.Discord.setDetails(location);
-            }
-        }
-
-        Managers.TickScheduler.scheduleLater(this::checkTerritory, TERRITORY_TICKS_DELAY);
-    }
-
     @Override
     protected void onConfigUpdate(Config<?> config) {
         tryUpdateDisplayedInfo();
@@ -150,7 +117,8 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void tryUpdateDisplayedInfo() {
-        if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
+        if (!Services.Discord.isReady()) return;
+        if (!Models.WorldState.onWorld()) return;
 
         if (displayLocation.get()) {
             if (lastTerritoryProfile == null) {
@@ -173,5 +141,42 @@ public class DiscordRichPresenceFeature extends Feature {
         } else {
             Services.Discord.setState("");
         }
+    }
+
+    private void displayCharacterDetails() {
+        if (McUtils.player() == null) return;
+
+        CappedValue combatLevel = Models.CombatXp.getCombatLevel();
+        int level = combatLevel.current();
+        ClassType classType = Models.Character.getClassType();
+
+        if (classType == null) return;
+        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
+        Services.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
+        Services.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
+    }
+
+    private void checkTerritory() {
+        if (stopTerritoryCheck || !Models.WorldState.onWorld()) {
+            lastTerritoryProfile = null;
+            stopTerritoryCheck = false;
+            return;
+        }
+
+        // Player is not on world, or the feature is disabled, skip territory check, and stop scheduling
+        if (McUtils.player() == null) return;
+
+        Position position = McUtils.player().position();
+        if (position != null) {
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
+            if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
+                lastTerritoryProfile = territoryProfile;
+                String location = territoryProfile.getName();
+                Services.Discord.setDetails(location);
+            }
+        }
+
+        Managers.TickScheduler.scheduleLater(this::checkTerritory, TERRITORY_TICKS_DELAY);
     }
 }
