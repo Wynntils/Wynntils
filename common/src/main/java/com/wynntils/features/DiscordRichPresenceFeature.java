@@ -36,7 +36,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     private static final int TERRITORY_TICKS_DELAY = 10;
 
-    private boolean stopTerritoryCheck = false;
+    private boolean territoryChecking = false;
     private TerritoryProfile lastTerritoryProfile = null;
 
     @SubscribeEvent
@@ -67,12 +67,13 @@ public class DiscordRichPresenceFeature extends Feature {
             switch (event.getNewState()) {
                 case WORLD -> {
                     Services.Discord.setState(Models.WorldState.getCurrentWorldName());
-                    checkTerritory();
+                    startTerritoryCheck();
                 }
                 case HUB, CONNECTING -> {
                     Services.Discord.setDetails("");
                     Services.Discord.setState("In Hub");
                     Services.Discord.setWynncraftLogo();
+                    stopTerritoryCheck();
                 }
                 case CHARACTER_SELECTION -> {
                     if (displayLocation.get()) {
@@ -80,16 +81,19 @@ public class DiscordRichPresenceFeature extends Feature {
                     }
                     Services.Discord.setState("");
                     Services.Discord.setWynncraftLogo();
+                    stopTerritoryCheck();
                 }
             }
         } else {
             Services.Discord.setState("");
+            stopTerritoryCheck();
         }
     }
 
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
         Services.Discord.unload();
+        stopTerritoryCheck();
     }
 
     @Override
@@ -101,19 +105,20 @@ public class DiscordRichPresenceFeature extends Feature {
     public void onEnable() {
         // This isReady() check is required for Linux to not crash on config change.
         if (!Services.Discord.isReady()) {
-            // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
+            // Load the Discord SDK
             if (!Services.Discord.load()) {
                 // happens when wrong version of GLIBC is installed and Discord SDK fails to load
                 Managers.Feature.crashFeature(this);
-            } else {
-                tryUpdateDisplayedInfo();
             }
         }
+
+        tryUpdateDisplayedInfo();
     }
 
     @Override
     public void onDisable() {
         Services.Discord.unload();
+        stopTerritoryCheck();
     }
 
     private void tryUpdateDisplayedInfo() {
@@ -121,12 +126,10 @@ public class DiscordRichPresenceFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
 
         if (displayLocation.get()) {
-            if (lastTerritoryProfile == null) {
-                stopTerritoryCheck = false;
-                checkTerritory();
-            }
+            startTerritoryCheck();
         } else {
-            stopTerritoryCheck = true;
+            // Most likely it was already stopped, but just in case
+            stopTerritoryCheck();
             Services.Discord.setDetails("");
         }
 
@@ -156,15 +159,33 @@ public class DiscordRichPresenceFeature extends Feature {
         Services.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
     }
 
-    private void checkTerritory() {
-        if (stopTerritoryCheck || !Models.WorldState.onWorld()) {
-            lastTerritoryProfile = null;
-            stopTerritoryCheck = false;
+    private void startTerritoryCheck() {
+        if (territoryChecking) {
+            // Already checking, no need to start again
             return;
         }
 
+        territoryChecking = true;
+        checkTerritory();
+    }
+
+    private void stopTerritoryCheck() {
+        lastTerritoryProfile = null;
+        territoryChecking = false;
+    }
+
+    private void checkTerritory() {
+        if (!territoryChecking) return;
+
         // Player is not on world, or the feature is disabled, skip territory check, and stop scheduling
-        if (McUtils.player() == null) return;
+        if (!Models.WorldState.onWorld()) {
+            stopTerritoryCheck();
+            return;
+        }
+        if (McUtils.player() == null) {
+            stopTerritoryCheck();
+            return;
+        }
 
         Position position = McUtils.player().position();
         if (position != null) {
@@ -177,6 +198,7 @@ public class DiscordRichPresenceFeature extends Feature {
             }
         }
 
+        // Schedule next check
         Managers.TickScheduler.scheduleLater(this::checkTerritory, TERRITORY_TICKS_DELAY);
     }
 }
