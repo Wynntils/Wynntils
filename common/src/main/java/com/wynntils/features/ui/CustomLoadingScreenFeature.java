@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
@@ -13,6 +12,7 @@ import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.characterselector.LoadingScreen;
@@ -21,42 +21,40 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
     private LoadingScreen loadingScreen;
+    private ConnectScreen baseConnectScreen;
+    // Minecraft does some of it's connection logic in ConnectScreen which is strange
+    // We need to be able to tell our custom loading screen to work with it in the background
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenOpenPre(ScreenOpenedEvent.Pre event) {
-        if (loadingScreen == null) return;
-
-        System.out.println("onScreenOpenPre: " + event.getScreen().getClass().getSimpleName());
-        if (event.getScreen().title.getString().equals("Failed to connect to the server")) {
-            System.out.println(event.getScreen().getClass().getSimpleName());
+        if (event.getScreen() instanceof ConnectScreen cs) {
+            baseConnectScreen = cs;
         }
 
-        if (event.getScreen() instanceof ConnectScreen) {
-            event.setCanceled(true); // this is very sketchy
-            // connectscreen usually makes a new DisconnectedScreen when there is a problem connecting
-            // consider not
+        if (loadingScreen == null) return;
 
-            loadingScreen.setMessage("Connecting...");
+        if (event.getScreen() instanceof ConnectScreen) {
+            event.setCanceled(true);
+            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.connecting"));
         }
         if (event.getScreen() instanceof ProgressScreen) {
             event.setCanceled(true);
-            loadingScreen.setMessage("Working...");
+            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.working"));
         }
         if (event.getScreen() instanceof ReceivingLevelScreen) {
             event.setCanceled(true);
-            loadingScreen.setMessage("Receiving terrain...");
+            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.receivingTerrain"));
         }
 
-        if (event.getScreen() instanceof DisconnectedScreen disconnected) {
-            event.setCanceled(true);
-            loadingScreen.setMessage(disconnected.reason.getString());
-            System.out.println("DisconnectedScreen: " + disconnected.reason.getString());
+        if (event.getScreen() instanceof DisconnectedScreen) {
+            baseConnectScreen = null;
         }
     }
 
@@ -75,7 +73,7 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onResourcePack(ResourcePackEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setMessage("Downloading resource pack...");
+        loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.resourcePack"));
     }
 
     @SubscribeEvent
@@ -105,13 +103,13 @@ public class CustomLoadingScreenFeature extends Feature {
         switch (event.getNewState()) {
             case CONNECTING -> {
                 loadingScreen = LoadingScreen.create();
-                loadingScreen.setMessage("Connecting...");
+                loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.connecting"));
                 McUtils.mc().setScreen(loadingScreen);
             }
             case INTERIM -> {
                 if (loadingScreen == null) return;
 
-                loadingScreen.setMessage("Joining Wynncraft world...");
+                loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.joiningWorld"));
             }
             case WORLD, HUB, NOT_CONNECTED -> {
                 if (loadingScreen == null) return;
@@ -120,5 +118,12 @@ public class CustomLoadingScreenFeature extends Feature {
                 McUtils.mc().setScreen(null);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onTickAlways(TickAlwaysEvent e) {
+        // Minecraft does connection logic work every tick, do not remove this behaviour when cancelling ConnectScreens
+        if (baseConnectScreen == null) return;
+        baseConnectScreen.tick();
     }
 }
