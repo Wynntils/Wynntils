@@ -36,6 +36,8 @@ public class CustomLoadingScreenFeature extends Feature {
         if (event.getScreen() instanceof ConnectScreen cs) {
             baseConnectScreen = cs;
         } else if (!(event.getScreen() instanceof LoadingScreen)) {
+            // Ensures baseConnectScreen is cleared after the initial handshake occurs
+            // Only our LoadingScreen and ConnectScreen should be able to work with baseConnectScreen
             baseConnectScreen = null;
         }
 
