@@ -51,7 +51,7 @@ public final class CharacterModel extends Model {
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
     // Test in CharacterModel_VETERAN_PATTERN
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
-    private static final String HUNTED_STRING = "to enable hunted";
+    private static final Pattern HUNTED_PATTERN = Pattern.compile("§cShift Right-Click to enable hunted");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
@@ -127,8 +127,8 @@ public final class CharacterModel extends Model {
     }
 
     public boolean isHunted() {
-        return !LoreUtils.getStringLore(McUtils.inventory().getItem(SOUL_POINT_SLOT))
-                .contains(HUNTED_STRING);
+        Matcher m = LoreUtils.matchLoreLine(McUtils.inventory().getItem(SOUL_POINT_SLOT), 8, HUNTED_PATTERN);
+        return !m.matches();
     }
 
     @SubscribeEvent
