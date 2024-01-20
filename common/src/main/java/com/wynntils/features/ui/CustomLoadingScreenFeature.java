@@ -40,10 +40,6 @@ public class CustomLoadingScreenFeature extends Feature {
 
         if (loadingScreen == null) return;
 
-        if (event.getScreen() instanceof ConnectScreen) {
-            event.setCanceled(true);
-            loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.connecting"));
-        }
         if (event.getScreen() instanceof ProgressScreen) {
             event.setCanceled(true);
             loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.working"));
