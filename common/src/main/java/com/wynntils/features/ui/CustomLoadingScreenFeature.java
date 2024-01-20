@@ -18,7 +18,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.characterselector.LoadingScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ConnectScreen;
-import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.resources.language.I18n;
