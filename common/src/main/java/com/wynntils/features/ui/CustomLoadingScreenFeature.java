@@ -36,6 +36,8 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onScreenOpenPre(ScreenOpenedEvent.Pre event) {
         if (event.getScreen() instanceof ConnectScreen cs) {
             baseConnectScreen = cs;
+        } else if (!(event.getScreen() instanceof LoadingScreen)) {
+            baseConnectScreen = null;
         }
 
         if (loadingScreen == null) return;
@@ -47,10 +49,6 @@ public class CustomLoadingScreenFeature extends Feature {
         if (event.getScreen() instanceof ReceivingLevelScreen) {
             event.setCanceled(true);
             loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.receivingTerrain"));
-        }
-
-        if (event.getScreen() instanceof DisconnectedScreen) {
-            baseConnectScreen = null;
         }
     }
 
