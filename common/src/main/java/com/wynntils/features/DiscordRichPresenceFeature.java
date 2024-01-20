@@ -109,6 +109,7 @@ public class DiscordRichPresenceFeature extends Feature {
             if (!Services.Discord.load()) {
                 // happens when wrong version of GLIBC is installed and Discord SDK fails to load
                 Managers.Feature.crashFeature(this);
+                return;
             }
         }
 
