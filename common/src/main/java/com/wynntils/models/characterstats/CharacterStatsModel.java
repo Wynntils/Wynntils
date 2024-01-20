@@ -98,7 +98,7 @@ public final class CharacterStatsModel extends Model {
      */
     private int getCurrentSoulPoints() {
         ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() == Items.NETHER_STAR || soulPoints.getItem() == Items.DIAMOND_AXE) {
+        if (soulPoints.getItem() == (Models.Character.isHunted() ? Items.DIAMOND_AXE : Items.NETHER_STAR)) {
             return soulPoints.getCount();
         }
 
