@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -98,9 +98,11 @@ public final class CharacterStatsModel extends Model {
      */
     private int getCurrentSoulPoints() {
         ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() != Items.NETHER_STAR && soulPoints.getItem() != Items.DIAMOND_AXE) return -1;
+        if (soulPoints.getItem() == Items.NETHER_STAR || soulPoints.getItem() == Items.DIAMOND_AXE) {
+            return soulPoints.getCount();
+        }
 
-        return soulPoints.getCount();
+        return -1;
     }
 
     public CappedValue getSoulPoints() {
