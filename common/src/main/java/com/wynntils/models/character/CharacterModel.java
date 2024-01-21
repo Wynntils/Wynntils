@@ -125,6 +125,10 @@ public final class CharacterModel extends Model {
         return isVeteran;
     }
 
+    public boolean isHuntedMode() {
+        return McUtils.inventory().getItem(SOUL_POINT_SLOT).getItem() == Items.DIAMOND_AXE;
+    }
+
     @SubscribeEvent
     public void onMenuClosed(MenuClosedEvent e) {
         inCharacterSelection = false;
@@ -156,6 +160,30 @@ public final class CharacterModel extends Model {
                 WynntilsMod.info("Skipping silverbull subscription query ("
                         + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onChatReceived(ChatMessageReceivedEvent e) {
+        if (!e.getStyledText().matches(WYNN_DEATH_MESSAGE)) return;
+        lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
+        WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
+    }
+
+    @SubscribeEvent
+    public void beforePlayerTeleport(PlayerTeleportEvent e) {
+        if (McUtils.player() == null) return;
+        lastPositionBeforeTeleport = McUtils.player().position();
+    }
+
+    @SubscribeEvent
+    public void onContainerClick(ContainerClickEvent e) {
+        if (inCharacterSelection) {
+            if (e.getItemStack().getItem() == Items.AIR) return;
+            parseCharacter(e.getItemStack());
+            hasCharacter = true;
+            WynntilsMod.postEvent(new CharacterUpdateEvent());
+            WynntilsMod.info("Selected character " + getCharacterString());
         }
     }
 
@@ -287,17 +315,6 @@ public final class CharacterModel extends Model {
         updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
     }
 
-    @SubscribeEvent
-    public void onContainerClick(ContainerClickEvent e) {
-        if (inCharacterSelection) {
-            if (e.getItemStack().getItem() == Items.AIR) return;
-            parseCharacter(e.getItemStack());
-            hasCharacter = true;
-            WynntilsMod.postEvent(new CharacterUpdateEvent());
-            WynntilsMod.info("Selected character " + getCharacterString());
-        }
-    }
-
     private void parseCharacter(ItemStack itemStack) {
         List<StyledText> lore = LoreUtils.getLore(itemStack);
 
@@ -326,18 +343,5 @@ public final class CharacterModel extends Model {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
-    }
-
-    @SubscribeEvent
-    public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!e.getStyledText().matches(WYNN_DEATH_MESSAGE)) return;
-        lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
-        WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
-    }
-
-    @SubscribeEvent
-    public void beforePlayerTeleport(PlayerTeleportEvent e) {
-        if (McUtils.player() == null) return;
-        lastPositionBeforeTeleport = McUtils.player().position();
     }
 }

@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -131,7 +132,8 @@ public class SkillPointModel extends Model {
                 .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
-                        .verifyContentChange(this::verifyCharacterInfo)
+                        .verifyContentChange((container, changes, changeType) ->
+                                verifyChange(container, changes, changeType, CHARACTER_INFO_SOUL_POINT_SLOT))
                         .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
                 .build();
         query.executeQuery();
@@ -334,13 +336,15 @@ public class SkillPointModel extends Model {
                 .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT - 1)
                         .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
-                        .verifyContentChange(this::verifyCharacterInfo)
+                        .verifyContentChange((container, changes, changeType) ->
+                                verifyChange(container, changes, changeType, CHARACTER_INFO_SOUL_POINT_SLOT))
                         .processIncomingContainer(this::processTotalSkillPoints))
                 .conditionalThen(
                         this::checkTomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
                                 .expectContainerTitle(ContainerModel.MASTERY_TOMES_NAME)
-                                .verifyContentChange(this::verifyTomeMenu)
+                                .verifyContentChange((container, changes, changeType) ->
+                                        verifyChange(container, changes, changeType, TOME_MENU_SOUL_POINT_SLOT))
                                 .processIncomingContainer(this::processTomeSkillPoints))
                 .execute(this::calculateAssignedSkillPoints)
                 .build();
@@ -352,20 +356,16 @@ public class SkillPointModel extends Model {
         return LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
     }
 
-    private boolean verifyCharacterInfo(
-            ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
+    private boolean verifyChange(
+            ContainerContent content,
+            Int2ObjectMap<ItemStack> changes,
+            ContainerContentChangeType changeType,
+            int soulPointItemSlot) {
         // soul points resent last for both containers
+        Item soulPointItem = Models.Character.isHuntedMode() ? Items.DIAMOND_AXE : Items.NETHER_STAR;
         return changeType == ContainerContentChangeType.SET_SLOT
-                && changes.containsKey(CHARACTER_INFO_SOUL_POINT_SLOT)
-                && content.items().get(CHARACTER_INFO_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
-    }
-
-    private boolean verifyTomeMenu(
-            ContainerContent content, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
-        // soul points resent last for both containers
-        return changeType == ContainerContentChangeType.SET_SLOT
-                && changes.containsKey(TOME_MENU_SOUL_POINT_SLOT)
-                && content.items().get(TOME_MENU_SOUL_POINT_SLOT).getItem() == Items.NETHER_STAR;
+                && changes.containsKey(soulPointItemSlot)
+                && (content.items().get(soulPointItemSlot).getItem() == soulPointItem);
     }
 
     private void processTotalSkillPoints(ContainerContent content) {
