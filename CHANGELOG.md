@@ -1,9 +1,25 @@
+## [1.0.6](https://github.com/Wynntils/Artemis/compare/v1.0.5...v1.0.6) (2024-01-21)
+
+
+### Bug Fixes
+
+* Custom connect screen does not revert on failure ([#2329](https://github.com/Wynntils/Artemis/issues/2329)) ([12feb23](https://github.com/Wynntils/Artemis/commit/12feb23f01571f3db17d39587b0bc11d77f1b8b7))
+* Fix adding new custom bars duplicating config options [skip ci] ([#2330](https://github.com/Wynntils/Artemis/issues/2330)) ([cd15069](https://github.com/Wynntils/Artemis/commit/cd15069651e7cce1bc61f9c24036e13bd22f1304))
+* fix hunted mode breaking skill point parsing [skip ci] ([#2332](https://github.com/Wynntils/Artemis/issues/2332)) ([c6a436b](https://github.com/Wynntils/Artemis/commit/c6a436be325450e6fdaa21510af184554475fc27))
+* Use proper hooks for enabling/disabling Discord RPC, refactor territory checking [ci skip] ([#2331](https://github.com/Wynntils/Artemis/issues/2331)) ([73e4975](https://github.com/Wynntils/Artemis/commit/73e49752168c89a1e8bf2eb83be5b5f3c78c556d))
+* Vanilla actionbar formatting [skip ci] ([#2327](https://github.com/Wynntils/Artemis/issues/2327)) ([41f50f4](https://github.com/Wynntils/Artemis/commit/41f50f4308882b6842f1988236ef328523dc6d77))
+
 ## [1.0.5](https://github.com/Wynntils/Artemis/compare/v1.0.4...v1.0.5) (2024-01-14)
 
 
 ### Bug Fixes
 
 * Fix failing to encode consumable items if they are signed ([#2328](https://github.com/Wynntils/Artemis/issues/2328)) ([e11516d](https://github.com/Wynntils/Artemis/commit/e11516d9a1835fca1b1e2a724e39a5633b81c6f9))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.5 [skip ci] ([9dfd5d0](https://github.com/Wynntils/Artemis/commit/9dfd5d07e44ddeddd868159e0440b416a13a9b47))
 
 ## [1.0.4](https://github.com/Wynntils/Artemis/compare/v1.0.3...v1.0.4) (2024-01-12)
 
@@ -54,17 +70,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.2 [skip ci] ([3a7c951](https://github.com/Wynntils/Artemis/commit/3a7c951d09a4a9f9ee8b10d4a826423f05a02bef))
-
-## [1.0.1](https://github.com/Wynntils/Artemis/compare/v1.0.0...v1.0.1) (2024-01-09)
-
-
-### Bug Fixes
-
-* Fix issues with encoding crafted signed accessories ([#2316](https://github.com/Wynntils/Artemis/issues/2316)) ([a37a103](https://github.com/Wynntils/Artemis/commit/a37a103fccef7fe53adf2fd146e214142743a3a5))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2315](https://github.com/Wynntils/Artemis/issues/2315)) ([5dbfc58](https://github.com/Wynntils/Artemis/commit/5dbfc58446bcb2745ffaffc051401a446053c712))
-* **release:** v1.0.1 [skip ci] ([5da5959](https://github.com/Wynntils/Artemis/commit/5da5959e975a53040a9f96c37e02c77c6991363a))
 
