@@ -362,7 +362,7 @@ public class SkillPointModel extends Model {
             ContainerContentChangeType changeType,
             int soulPointItemSlot) {
         // soul points resent last for both containers
-        Item soulPointItem = Models.Character.isHunted() ? Items.DIAMOND_AXE : Items.NETHER_STAR;
+        Item soulPointItem = Models.Character.isHuntedMode() ? Items.DIAMOND_AXE : Items.NETHER_STAR;
         return changeType == ContainerContentChangeType.SET_SLOT
                 && changes.containsKey(soulPointItemSlot)
                 && (content.items().get(soulPointItemSlot).getItem() == soulPointItem);

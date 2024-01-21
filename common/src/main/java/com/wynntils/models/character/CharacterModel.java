@@ -125,7 +125,7 @@ public final class CharacterModel extends Model {
         return isVeteran;
     }
 
-    public boolean isHunted() {
+    public boolean isHuntedMode() {
         return McUtils.inventory().getItem(SOUL_POINT_SLOT).getItem() == Items.DIAMOND_AXE;
     }
 
