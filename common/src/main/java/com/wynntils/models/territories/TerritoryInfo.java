@@ -194,7 +194,7 @@ public class TerritoryInfo {
     }
 
     public List<CustomColor> getResourceColors() {
-        return generators.keySet().stream().map(x -> CustomColor.fromInt(x.getColor().getColor())).toList();
+        return generators.keySet().stream().filter(x -> x != GuildResource.EMERALD).map(x -> CustomColor.fromInt(x.getColor().getColor())).toList();
     }
 
     public boolean isHeadquarters() {

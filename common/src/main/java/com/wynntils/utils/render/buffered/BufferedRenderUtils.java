@@ -172,6 +172,10 @@ public final class BufferedRenderUtils {
             float height,
             float lineWidth
     ) {
+        if (colors.size() == 1) {
+            drawRectBorders(poseStack, bufferSource, colors.get(0), x, y, x + width, y + height, z, lineWidth);
+            return;
+        }
         float splitX = width / (colors.size() - 1);
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
@@ -198,6 +202,10 @@ public final class BufferedRenderUtils {
             float z,
             float width,
             float height) {
+        if (colors.size() == 1) {
+            drawRect(poseStack, bufferSource, colors.get(0), x, y, z, width, height);
+            return;
+        }
         Matrix4f matrix = poseStack.last().pose();
 
         VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
