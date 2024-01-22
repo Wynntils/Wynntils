@@ -193,8 +193,8 @@ public class TerritoryInfo {
         return defences;
     }
 
-    public CustomColor getResourceColor() {
-        return color;
+    public List<CustomColor> getResourceColors() {
+        return generators.keySet().stream().map(x -> CustomColor.fromInt(x.getColor().getColor())).toList();
     }
 
     public boolean isHeadquarters() {

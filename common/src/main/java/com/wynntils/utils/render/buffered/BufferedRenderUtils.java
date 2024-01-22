@@ -11,8 +11,11 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public final class BufferedRenderUtils {
     private static void drawLine(
@@ -156,6 +159,74 @@ public final class BufferedRenderUtils {
                 .color(color.r, color.g, color.b, color.a)
                 .endVertex();
         buffer.vertex(matrix, x, y, z).color(color.r, color.g, color.b, color.a).endVertex();
+    }
+    
+    public static void drawMulticoloredRectBorders(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            List<CustomColor> colors,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float lineWidth
+    ) {
+        float splitX = width / (colors.size() - 1);
+        for (int i = 0; i < colors.size(); i++) {
+            CustomColor color = colors.get(i);
+            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Mth.clamp(x + splitX * i , x, x + width);
+            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+            
+            drawLine(poseStack, bufferSource, color, leftX, y + height, centerX, y + height, z, lineWidth);
+            drawLine(poseStack, bufferSource, color, centerX, y + height, rightX, y, z, lineWidth);
+            drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, lineWidth);
+            drawLine(poseStack, bufferSource, color, centerX, y, leftX, y + height, z, lineWidth);
+        }
+    }
+
+    /**
+     * Draws a rectangle with multiple colors, each being an equal-ish portion of the rectangle as a parallelogram
+     */
+    public static void drawMulticoloredRect(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            List<CustomColor> colors,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height) {
+        Matrix4f matrix = poseStack.last().pose();
+
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+
+        float splitX = width / (colors.size() - 1);
+
+        for (int i = 0; i < colors.size(); i++) {
+            CustomColor color = colors.get(i);
+            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Mth.clamp(x + splitX * i , x, x + width);
+            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+
+            // bottom left
+            buffer.vertex(matrix, leftX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // bottom right
+            buffer.vertex(matrix, centerX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top right
+            buffer.vertex(matrix, rightX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top left
+            buffer.vertex(matrix, centerX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
     }
 
     public static void drawColoredTexturedRect(
