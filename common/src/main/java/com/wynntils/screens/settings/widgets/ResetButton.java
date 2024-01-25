@@ -5,8 +5,10 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
 import net.minecraft.client.sounds.SoundManager;
@@ -25,7 +27,9 @@ public class ResetButton extends GeneralSettingsButton {
                 Component.translatable("screens.wynntils.settingsScreen.reset.name"),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")),
                 maskTopY,
-                maskBottomY);
+                maskBottomY,
+                0,
+                0);
         this.config = config;
         this.onClick = onClick;
     }
@@ -51,5 +55,10 @@ public class ResetButton extends GeneralSettingsButton {
         if (!config.valueChanged()) return;
         config.reset();
         onClick.run();
+
+        // Reload configurables to update checkbox
+        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+            bookSettingsScreen.populateConfigurables();
+        }
     }
 }
