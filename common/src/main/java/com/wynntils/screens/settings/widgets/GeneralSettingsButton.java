@@ -25,6 +25,8 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final int maskTopY;
     private final int maskBottomY;
+    private final float translationX;
+    private final float translationY;
     private final List<Component> tooltip;
 
     protected GeneralSettingsButton(
@@ -35,11 +37,15 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
             Component title,
             List<Component> tooltip,
             int maskTopY,
-            int maskBottomY) {
+            int maskBottomY,
+            float translationX,
+            float translationY) {
         super(x, y, width, height, title);
         this.tooltip = tooltip;
         this.maskTopY = maskTopY;
         this.maskBottomY = maskBottomY;
+        this.translationX = translationX;
+        this.translationY = translationY;
     }
 
     @Override
@@ -59,14 +65,16 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                 3);
 
         FontRenderer.getInstance()
-                .renderAlignedTextInBox(
+                .renderScrollingAlignedTextInBox(
                         poseStack,
                         StyledText.fromComponent(getMessage()),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),
                         this.getY() + this.height,
-                        0,
+                        this.width - 2,
+                        translationX,
+                        translationY,
                         getTextColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,

@@ -798,20 +798,20 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         150)));
 
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.overlayManagement.close"), button -> {
-                            onClose();
-                            McUtils.mc().setScreen(previousScreen);
-                        })
+                Component.translatable("screens.wynntils.overlayManagement.close"), button -> {
+            onClose();
+            McUtils.mc().setScreen(previousScreen);
+        })
                 .pos(this.width / 2 - BUTTON_WIDTH - 12, yPos)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.closeTooltip")))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
-                        buttonsAtBottom ? Component.literal("🠝") : Component.literal("🠟"), button -> {
-                            buttonsAtBottom = !buttonsAtBottom;
-                            setupButtons();
-                        })
+                buttonsAtBottom ? Component.literal("🠝") : Component.literal("🠟"), button -> {
+            buttonsAtBottom = !buttonsAtBottom;
+            setupButtons();
+        })
                 .pos(this.width / 2 - 10, yPos)
                 .size(BUTTON_HEIGHT, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(
@@ -821,11 +821,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.overlayManagement.apply"), button -> {
-                            Managers.Config.saveConfig();
-                            onClose();
-                            McUtils.mc().setScreen(previousScreen);
-                        })
+                Component.translatable("screens.wynntils.overlayManagement.apply"), button -> {
+            Managers.Config.saveConfig();
+            onClose();
+            McUtils.mc().setScreen(previousScreen);
+        })
                 .pos(this.width / 2 + 12, yPos)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.applyTooltip")))

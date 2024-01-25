@@ -128,7 +128,7 @@ public class OverlayButton extends WynntilsButton {
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered
                 && (mouseY <= selectionScreen.getConfigMaskTopY()
-                        || mouseY >= selectionScreen.getConfigMaskBottomY())) {
+                || mouseY >= selectionScreen.getConfigMaskBottomY())) {
             isHovered = false;
         }
 
