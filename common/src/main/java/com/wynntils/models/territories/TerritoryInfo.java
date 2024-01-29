@@ -10,6 +10,7 @@ import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class TerritoryInfo {
     private GuildResourceValues defences;
 
     private final boolean headquarters;
-    private final CustomColor color;
+    private final List<CustomColor> colors = new ArrayList<>();
 
     /**
      * Holds and generates data based on the Achievement values gave by Wynncraft
@@ -124,10 +125,6 @@ public class TerritoryInfo {
             storage.put(resource, new TerritoryStorage(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))));
         }
 
-        float h = 0;
-        float s = 0.6f;
-        float v = 0.9f;
-
         double sum = generators.entrySet().stream()
                 .filter(c -> c.getKey() != GuildResource.EMERALD)
                 .map(Map.Entry::getValue)
@@ -135,26 +132,13 @@ public class TerritoryInfo {
                 .sum();
 
         for (Map.Entry<GuildResource, Integer> generator : generators.entrySet()) {
-            switch (generator.getKey()) {
-                case ORE:
-                    v = 1f;
-                    s = 0.3f;
-                    break;
-                case FISH:
-                    h += 180 * (generator.getValue() / sum);
-                    break;
-                case WOOD:
-                    h += 120 * (generator.getValue() / sum);
-                    break;
-                case CROPS:
-                    h += 60 * (generator.getValue() / sum);
-                    break;
-                case EMERALD:
-                    break;
+            switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
+                case ORE -> colors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
+                case FISH -> colors.add(CustomColor.fromHSV((float) (180 * (generator.getValue() / sum)) / 360f, 0.6f, 0.9f, 1));
+                case WOOD -> colors.add(CustomColor.fromHSV((float) (120 * (generator.getValue() / sum)) / 360f, 0.6f, 0.9f, 1));
+                case CROPS -> colors.add(CustomColor.fromHSV((float) (60 * (generator.getValue() / sum)) / 360f, 0.6f, 0.9f, 1));
             }
         }
-
-        color = CustomColor.fromHSV(h / 360f, s, v, 1);
     }
 
     public String getGuildName() {
@@ -194,7 +178,7 @@ public class TerritoryInfo {
     }
 
     public List<CustomColor> getResourceColors() {
-        return generators.keySet().stream().filter(x -> x != GuildResource.EMERALD).map(x -> CustomColor.fromInt(x.getColor().getColor())).toList();
+        return Collections.unmodifiableList(colors);
     }
 
     public boolean isHeadquarters() {
