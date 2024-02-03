@@ -115,13 +115,14 @@ public class TerritoryPoi implements Poi {
         BufferedRenderUtils.drawMulticoloredRectBorders(
                 poseStack,
                 bufferSource,
-                colors.stream().map(x -> x.withAlpha(100)).toList(),
+                colors,
                 actualRenderX,
                 actualRenderZ,
                 0,
                 renderWidth,
                 renderHeight,
-                1.5f);
+                1.5f,
+                0.5f);
 
         if (isTerritoryInfoUsable() && territoryInfo.isHeadquarters()) {
             BufferedRenderUtils.drawTexturedRect(

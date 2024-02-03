@@ -170,23 +170,29 @@ public final class BufferedRenderUtils {
             float z,
             float width,
             float height,
-            float lineWidth
+            float externalLineWidth,
+            float internalLineWidth
     ) {
         if (colors.size() == 1) {
-            drawRectBorders(poseStack, bufferSource, colors.get(0), x, y, x + width, y + height, z, lineWidth);
+            drawRectBorders(poseStack, bufferSource, colors.get(0), x, y, x + width, y + height, z, externalLineWidth);
             return;
         }
         float splitX = width / (colors.size() - 1);
+
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
             float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
             float centerX = Mth.clamp(x + splitX * i , x, x + width);
             float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
-            
-            drawLine(poseStack, bufferSource, color, leftX, y + height, centerX, y + height, z, lineWidth);
-            drawLine(poseStack, bufferSource, color, centerX, y + height, rightX, y, z, lineWidth);
-            drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, lineWidth);
-            drawLine(poseStack, bufferSource, color, centerX, y, leftX, y + height, z, lineWidth);
+
+            // bottom left to bottom center (always drawn)
+            drawLine(poseStack, bufferSource, color, leftX, y + height, centerX, y + height, z, externalLineWidth);
+            // bottom center to top right (drawn on i!=colors.size()-1)
+            drawLine(poseStack, bufferSource, color, centerX, y + height, rightX, y, z, (i != colors.size() - 1 ? internalLineWidth : externalLineWidth));
+            // top right to top center (always drawn)
+            drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, externalLineWidth);
+            // top center to bottom left (drawn on i!=0)
+            drawLine(poseStack, bufferSource, color, centerX, y, leftX, y + height, z, (i != 0 ? internalLineWidth : externalLineWidth));
         }
     }
 

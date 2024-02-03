@@ -10,7 +10,6 @@ import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class TerritoryInfo {
     private GuildResourceValues defences;
 
     private final boolean headquarters;
-    private final List<CustomColor> colors = new ArrayList<>();
+    private final List<CustomColor> resourceColors = new ArrayList<>();
 
     /**
      * Holds and generates data based on the Achievement values gave by Wynncraft
@@ -125,18 +124,12 @@ public class TerritoryInfo {
             storage.put(resource, new TerritoryStorage(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))));
         }
 
-        double sum = generators.entrySet().stream()
-                .filter(c -> c.getKey() != GuildResource.EMERALD)
-                .map(Map.Entry::getValue)
-                .mapToInt(Integer::intValue)
-                .sum();
-
         for (Map.Entry<GuildResource, Integer> generator : generators.entrySet()) {
             switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
-                case ORE -> colors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
-                case FISH -> colors.add(CustomColor.fromHSV((float) (180 * (generator.getValue() / sum)) / 360f, 0.6f, 0.9f, 1));
-                case WOOD -> colors.add(CustomColor.fromHSV((float) (120 * (generator.getValue() / sum)) / 360f, 0.6f, 0.9f, 1));
-                case CROPS -> colors.add(CustomColor.fromHSV((float) (60 * (generator.getValue() / sum)) / 360f, 0.6f, 0.9f, 1));
+                case ORE -> resourceColors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
+                case FISH -> resourceColors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
+                case WOOD -> resourceColors.add(CustomColor.fromHSV(1/3f, 0.6f, 0.9f, 1));
+                case CROPS -> resourceColors.add(CustomColor.fromHSV(1/6f, 0.6f, 0.9f, 1));
             }
         }
     }
@@ -178,7 +171,7 @@ public class TerritoryInfo {
     }
 
     public List<CustomColor> getResourceColors() {
-        return Collections.unmodifiableList(colors);
+        return resourceColors;
     }
 
     public boolean isHeadquarters() {
