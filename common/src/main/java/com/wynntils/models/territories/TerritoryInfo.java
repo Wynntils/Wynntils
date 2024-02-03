@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -128,8 +128,8 @@ public class TerritoryInfo {
             switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
                 case ORE -> resourceColors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
                 case FISH -> resourceColors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
-                case WOOD -> resourceColors.add(CustomColor.fromHSV(1/3f, 0.6f, 0.9f, 1));
-                case CROPS -> resourceColors.add(CustomColor.fromHSV(1/6f, 0.6f, 0.9f, 1));
+                case WOOD -> resourceColors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
+                case CROPS -> resourceColors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
             }
         }
     }

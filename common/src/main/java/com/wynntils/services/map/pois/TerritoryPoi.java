@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -21,7 +21,6 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -106,7 +105,7 @@ public class TerritoryPoi implements Poi {
         BufferedRenderUtils.drawMulticoloredRect(
                 poseStack,
                 bufferSource,
-                colors.stream().map(x -> x.withAlpha(100)).toList(),
+                colors.stream().map(x -> x.withAlpha(80)).toList(),
                 actualRenderX,
                 actualRenderZ,
                 0,

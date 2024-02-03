@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
@@ -9,13 +9,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-
-import java.util.List;
 
 public final class BufferedRenderUtils {
     private static void drawLine(
@@ -160,7 +159,7 @@ public final class BufferedRenderUtils {
                 .endVertex();
         buffer.vertex(matrix, x, y, z).color(color.r, color.g, color.b, color.a).endVertex();
     }
-    
+
     public static void drawMulticoloredRectBorders(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -171,8 +170,7 @@ public final class BufferedRenderUtils {
             float width,
             float height,
             float externalLineWidth,
-            float internalLineWidth
-    ) {
+            float internalLineWidth) {
         if (colors.size() == 1) {
             drawRectBorders(poseStack, bufferSource, colors.get(0), x, y, x + width, y + height, z, externalLineWidth);
             return;
@@ -182,17 +180,35 @@ public final class BufferedRenderUtils {
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
             float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
-            float centerX = Mth.clamp(x + splitX * i , x, x + width);
+            float centerX = Mth.clamp(x + splitX * i, x, x + width);
             float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
 
             // bottom left to bottom center (always drawn)
             drawLine(poseStack, bufferSource, color, leftX, y + height, centerX, y + height, z, externalLineWidth);
             // bottom center to top right (drawn on i!=colors.size()-1)
-            drawLine(poseStack, bufferSource, color, centerX, y + height, rightX, y, z, (i != colors.size() - 1 ? internalLineWidth : externalLineWidth));
+            drawLine(
+                    poseStack,
+                    bufferSource,
+                    color,
+                    centerX,
+                    y + height,
+                    rightX,
+                    y,
+                    z,
+                    (i != colors.size() - 1 ? internalLineWidth : externalLineWidth));
             // top right to top center (always drawn)
             drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, externalLineWidth);
             // top center to bottom left (drawn on i!=0)
-            drawLine(poseStack, bufferSource, color, centerX, y, leftX, y + height, z, (i != 0 ? internalLineWidth : externalLineWidth));
+            drawLine(
+                    poseStack,
+                    bufferSource,
+                    color,
+                    centerX,
+                    y,
+                    leftX,
+                    y + height,
+                    z,
+                    (i != 0 ? internalLineWidth : externalLineWidth));
         }
     }
 
@@ -221,7 +237,7 @@ public final class BufferedRenderUtils {
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
             float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
-            float centerX = Mth.clamp(x + splitX * i , x, x + width);
+            float centerX = Mth.clamp(x + splitX * i, x, x + width);
             float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
 
             // bottom left
