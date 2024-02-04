@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -21,6 +21,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.renderer.MultiBufferSource;
 
@@ -86,40 +87,41 @@ public class TerritoryPoi implements Poi {
 
         TerritoryProfile territoryProfile = getTerritoryProfile();
 
-        CustomColor color;
+        List<CustomColor> colors;
         if (isTerritoryInfoUsable()
                 && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
-            color = territoryInfo.getResourceColor();
+            colors = territoryInfo.getResourceColors();
         } else if ((isTerritoryInfoUsable()
                         && territoryInfo.getGuildName().equals(TerritoryProfile.GuildInfo.NONE.name()))
                 || territoryProfile.getGuildInfo() == TerritoryProfile.GuildInfo.NONE) {
             // Uncaptured territory at season reset
-            color = CommonColors.WHITE;
+            colors = List.of(CommonColors.WHITE);
         } else {
-            color = Models.Guild.getColor(
-                    isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild());
+            colors = List.of(Models.Guild.getColor(
+                    isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getGuild()));
         }
 
-        BufferedRenderUtils.drawRect(
+        BufferedRenderUtils.drawMulticoloredRect(
                 poseStack,
                 bufferSource,
-                color.withAlpha(65),
+                colors.stream().map(x -> x.withAlpha(80)).toList(),
                 actualRenderX,
                 actualRenderZ,
                 0,
                 renderWidth,
                 renderHeight);
-        BufferedRenderUtils.drawRectBorders(
+        BufferedRenderUtils.drawMulticoloredRectBorders(
                 poseStack,
                 bufferSource,
-                color,
+                colors,
                 actualRenderX,
                 actualRenderZ,
-                actualRenderX + renderWidth,
-                actualRenderZ + renderHeight,
                 0,
-                1.5f);
+                renderWidth,
+                renderHeight,
+                1.5f,
+                0.5f);
 
         if (isTerritoryInfoUsable() && territoryInfo.isHeadquarters()) {
             BufferedRenderUtils.drawTexturedRect(
@@ -141,7 +143,7 @@ public class TerritoryPoi implements Poi {
                             actualRenderZ,
                             actualRenderZ + renderHeight,
                             0,
-                            color,
+                            colors.get(0),
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
