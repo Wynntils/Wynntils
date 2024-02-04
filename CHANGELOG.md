@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/Wynntils/Artemis/compare/v1.0.6...v1.0.7) (2024-02-04)
+
+
+### New Features
+
+* Multicoloured territory production rendering ([#2334](https://github.com/Wynntils/Artemis/issues/2334)) ([b468cae](https://github.com/Wynntils/Artemis/commit/b468cae092ccd3e86189ddedac208242f395d9b5))
+
 ## [1.0.6](https://github.com/Wynntils/Artemis/compare/v1.0.5...v1.0.6) (2024-01-21)
 
 
@@ -8,6 +15,11 @@
 * fix hunted mode breaking skill point parsing [skip ci] ([#2332](https://github.com/Wynntils/Artemis/issues/2332)) ([c6a436b](https://github.com/Wynntils/Artemis/commit/c6a436be325450e6fdaa21510af184554475fc27))
 * Use proper hooks for enabling/disabling Discord RPC, refactor territory checking [ci skip] ([#2331](https://github.com/Wynntils/Artemis/issues/2331)) ([73e4975](https://github.com/Wynntils/Artemis/commit/73e49752168c89a1e8bf2eb83be5b5f3c78c556d))
 * Vanilla actionbar formatting [skip ci] ([#2327](https://github.com/Wynntils/Artemis/issues/2327)) ([41f50f4](https://github.com/Wynntils/Artemis/commit/41f50f4308882b6842f1988236ef328523dc6d77))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.6 [skip ci] ([6c23e1a](https://github.com/Wynntils/Artemis/commit/6c23e1abc076c13e1f5869c779816137e8f35912))
 
 ## [1.0.5](https://github.com/Wynntils/Artemis/compare/v1.0.4...v1.0.5) (2024-01-14)
 
@@ -52,22 +64,4 @@
 
 * **release:** v1.0.3 [skip ci] ([2bbb583](https://github.com/Wynntils/Artemis/commit/2bbb583c0d14934284e0297104ea0206866902c6))
 * Update item record textures [skip ci] ([#2322](https://github.com/Wynntils/Artemis/issues/2322)) ([5a17f3c](https://github.com/Wynntils/Artemis/commit/5a17f3c028578a68cfb719764178aa04f6ccf73c))
-
-## [1.0.2](https://github.com/Wynntils/Artemis/compare/v1.0.1...v1.0.2) (2024-01-10)
-
-
-### New Features
-
-* Partyfinder shorter alias [skip ci] ([#2318](https://github.com/Wynntils/Artemis/issues/2318)) ([6aa6bc0](https://github.com/Wynntils/Artemis/commit/6aa6bc03c89a60cb5abba5e715f05b32f371a2c4)), closes [#2](https://github.com/Wynntils/Artemis/issues/2)
-
-
-### Bug Fixes
-
-* Fix saved gear items rarely making the game not load ([#2320](https://github.com/Wynntils/Artemis/issues/2320)) ([eaaca04](https://github.com/Wynntils/Artemis/commit/eaaca049572645ae50dc30aacb85928494e57c50))
-* Held weapon not counted in gear skill points [skip ci] ([#2319](https://github.com/Wynntils/Artemis/issues/2319)) ([872ebc8](https://github.com/Wynntils/Artemis/commit/872ebc85dece1c1fd578beda52c6d8eead699336))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.2 [skip ci] ([3a7c951](https://github.com/Wynntils/Artemis/commit/3a7c951d09a4a9f9ee8b10d4a826423f05a02bef))
 
