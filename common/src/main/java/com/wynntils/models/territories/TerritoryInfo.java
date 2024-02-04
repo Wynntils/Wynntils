@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -35,7 +35,7 @@ public class TerritoryInfo {
     private GuildResourceValues defences;
 
     private final boolean headquarters;
-    private final CustomColor color;
+    private final List<CustomColor> resourceColors = new ArrayList<>();
 
     /**
      * Holds and generates data based on the Achievement values gave by Wynncraft
@@ -124,37 +124,14 @@ public class TerritoryInfo {
             storage.put(resource, new TerritoryStorage(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))));
         }
 
-        float h = 0;
-        float s = 0.6f;
-        float v = 0.9f;
-
-        double sum = generators.entrySet().stream()
-                .filter(c -> c.getKey() != GuildResource.EMERALD)
-                .map(Map.Entry::getValue)
-                .mapToInt(Integer::intValue)
-                .sum();
-
         for (Map.Entry<GuildResource, Integer> generator : generators.entrySet()) {
-            switch (generator.getKey()) {
-                case ORE:
-                    v = 1f;
-                    s = 0.3f;
-                    break;
-                case FISH:
-                    h += 180 * (generator.getValue() / sum);
-                    break;
-                case WOOD:
-                    h += 120 * (generator.getValue() / sum);
-                    break;
-                case CROPS:
-                    h += 60 * (generator.getValue() / sum);
-                    break;
-                case EMERALD:
-                    break;
+            switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
+                case ORE -> resourceColors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
+                case FISH -> resourceColors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
+                case WOOD -> resourceColors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
+                case CROPS -> resourceColors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
             }
         }
-
-        color = CustomColor.fromHSV(h / 360f, s, v, 1);
     }
 
     public String getGuildName() {
@@ -193,8 +170,8 @@ public class TerritoryInfo {
         return defences;
     }
 
-    public CustomColor getResourceColor() {
-        return color;
+    public List<CustomColor> getResourceColors() {
+        return resourceColors;
     }
 
     public boolean isHeadquarters() {
