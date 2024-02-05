@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -42,25 +42,26 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
                     .toUpperCase(Locale.ROOT);
             return new TeleportScrollItem(destination, true);
         } else {
-            String destination = switch (scrollName) {
-                // Originally Ne
-                case "Nemract" -> "Nr";
-                case "Nesaak" -> "Ns";
-                
-                // Originally Th
-                case "Thesead" -> "Ts";
-                case "Thanos" -> "Tn";
-                
-                // Originally Al
-                case "Almuj" -> "Aj";
-                case "Aldorei Town" -> "At";
+            String destination =
+                    switch (scrollName) {
+                            // Originally Ne
+                        case "Nemract" -> "Nr";
+                        case "Nesaak" -> "Ns";
 
-                // Originally Ma
-                case "Maex" -> "Mx";
-                case "Mage Island" -> "Mi";
-                
-                default -> scrollName.substring(0, 2);
-            };
+                            // Originally Th
+                        case "Thesead" -> "Ts";
+                        case "Thanos" -> "Tn";
+
+                            // Originally Al
+                        case "Almuj" -> "Aj";
+                        case "Aldorei Town" -> "At";
+
+                            // Originally Ma
+                        case "Maex" -> "Mx";
+                        case "Mage Island" -> "Mi";
+
+                        default -> scrollName.substring(0, 2);
+                    };
 
             return new TeleportScrollItem(destination, false);
         }
