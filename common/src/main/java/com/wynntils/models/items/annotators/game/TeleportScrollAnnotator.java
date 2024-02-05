@@ -42,7 +42,26 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
                     .toUpperCase(Locale.ROOT);
             return new TeleportScrollItem(destination, true);
         } else {
-            String destination = scrollName.substring(0, 2);
+            String destination = switch (scrollName) {
+                // Originally Ne
+                case "Nemract" -> "Nr";
+                case "Nesaak" -> "Ns";
+                
+                // Originally Th
+                case "Thesead" -> "Ts";
+                case "Thanos" -> "Tn";
+                
+                // Originally Al
+                case "Almuj" -> "Aj";
+                case "Aldorei Town" -> "At";
+
+                // Originally Ma
+                case "Maex" -> "Mx";
+                case "Mage Island" -> "Mi";
+                
+                default -> scrollName.substring(0, 2);
+            };
+
             return new TeleportScrollItem(destination, false);
         }
     }
