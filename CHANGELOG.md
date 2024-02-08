@@ -1,9 +1,21 @@
+## [1.0.8](https://github.com/Wynntils/Artemis/compare/v1.0.7...v1.0.8) (2024-02-08)
+
+
+### Bug Fixes
+
+* Wrong XP requirement ([#2339](https://github.com/Wynntils/Artemis/issues/2339)) ([eda6527](https://github.com/Wynntils/Artemis/commit/eda652793e5ba3f63ce8860b9a476908067c3d62))
+
 ## [1.0.7](https://github.com/Wynntils/Artemis/compare/v1.0.6...v1.0.7) (2024-02-04)
 
 
 ### New Features
 
 * Multicoloured territory production rendering ([#2334](https://github.com/Wynntils/Artemis/issues/2334)) ([b468cae](https://github.com/Wynntils/Artemis/commit/b468cae092ccd3e86189ddedac208242f395d9b5))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.7 [skip ci] ([591eaaa](https://github.com/Wynntils/Artemis/commit/591eaaaa908af8936a9f3ddb40b79a678028159f))
 
 ## [1.0.6](https://github.com/Wynntils/Artemis/compare/v1.0.5...v1.0.6) (2024-01-21)
 
@@ -45,23 +57,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2326](https://github.com/Wynntils/Artemis/issues/2326)) ([f0491bc](https://github.com/Wynntils/Artemis/commit/f0491bcd11cf1ae1456c5396f0ed1b1e2ccc3730))
 * **release:** v1.0.4 [skip ci] ([4632ecf](https://github.com/Wynntils/Artemis/commit/4632ecfec5a586a33779097381659678adab1de3))
-
-## [1.0.3](https://github.com/Wynntils/Artemis/compare/v1.0.2...v1.0.3) (2024-01-11)
-
-
-### New Features
-
-* Max and min functions take argument list, docs improvements [skip ci] ([#2321](https://github.com/Wynntils/Artemis/issues/2321)) ([741ba61](https://github.com/Wynntils/Artemis/commit/741ba616436c7292e6524460331dc4652f9aa686))
-
-
-### Bug Fixes
-
-* Closing item sharing screen breaks screen state ([#2323](https://github.com/Wynntils/Artemis/issues/2323)) ([2c6f05f](https://github.com/Wynntils/Artemis/commit/2c6f05f4846fc0ef53fae143bb1b6c7fa6822b1f))
-* Fix item record category being deleted if renamed to same name [skip ci] ([#2324](https://github.com/Wynntils/Artemis/issues/2324)) ([9f65454](https://github.com/Wynntils/Artemis/commit/9f65454b2d415cc96a74403b3f89b3b5b34bde45))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.3 [skip ci] ([2bbb583](https://github.com/Wynntils/Artemis/commit/2bbb583c0d14934284e0297104ea0206866902c6))
-* Update item record textures [skip ci] ([#2322](https://github.com/Wynntils/Artemis/issues/2322)) ([5a17f3c](https://github.com/Wynntils/Artemis/commit/5a17f3c028578a68cfb719764178aa04f6ccf73c))
 
