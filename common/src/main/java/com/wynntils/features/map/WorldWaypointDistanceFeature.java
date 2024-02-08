@@ -181,7 +181,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
                                 displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
                         + 90f;
-                float radius = icon.width() / 2 + Texture.POINTER.height();
+                float radius = icon.width() / 2 + 8f;
 
                 // offset from the central render position used for pointer position and anchor for scaling
                 float xOffset = radius * (float) StrictMath.cos((angle - 90) * 3 / 180);
