@@ -244,7 +244,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         Vec3 centerPoint = new Vec3(window.getGuiScaledWidth() / 2, window.getGuiScaledHeight() / 2, 0);
 
         // compensate for scaling, 4f is half the pointer icon height (used to anchor render positions)
-        float scaleFactor = 4f * (1 - scale.get());
+        float scaleFactor = Texture.POINTER.height() * (1 - scale.get());
 
         // minecraft's origin point is top left corner
         // so positive Y is at the screen bottom
