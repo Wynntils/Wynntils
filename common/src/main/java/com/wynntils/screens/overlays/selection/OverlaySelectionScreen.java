@@ -123,8 +123,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         // region Preview renderables
         exitPreviewButton = this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.overlaySelection.exitPreview"),
-                        (button) -> togglePreview(false))
+                Component.translatable("screens.wynntils.overlaySelection.exitPreview"),
+                (button) -> togglePreview(false))
                 .pos((Texture.OVERLAY_SELECTION_GUI.width() / 2) - 40, (int) (this.height - 25 - translationY))
                 .size(80, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlaySelection.exitPreviewTooltip")))
@@ -464,7 +464,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             // Don't deselect custom overlays as they will always fail the above check
             if (filterType == FilterType.BUILT_IN
                     || !(selectedOverlay instanceof CustomBarOverlayBase
-                            || selectedOverlay instanceof InfoBoxOverlay)) {
+                    || selectedOverlay instanceof InfoBoxOverlay)) {
                 setSelectedOverlay(null);
             }
         }
@@ -488,6 +488,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             setSelectedOverlay(newSelected);
         }
+
+        scrollOverlays(overlayScrollOffset);
     }
 
     public void setSelectedOverlay(Overlay selectedOverlay) {
@@ -604,6 +606,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             renderY += 43;
         }
+
+        scrollConfigs(configScrollOffset);
     }
 
     private void togglePreview(boolean enabled) {
@@ -924,11 +928,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private void renderOverlayScroll(PoseStack poseStack) {
         overlayScrollY = 24
                 + MathUtils.map(
-                        overlayScrollOffset,
-                        0,
-                        getMaxOverlayScrollOffset(),
-                        0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
+                overlayScrollOffset,
+                0,
+                getMaxOverlayScrollOffset(),
+                0,
+                177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 132, overlayScrollY);
     }
@@ -936,11 +940,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private void renderConfigScroll(PoseStack poseStack) {
         configScrollY = 24
                 + MathUtils.map(
-                        configScrollOffset,
-                        0,
-                        getMaxConfigScrollOffset(),
-                        0,
-                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
+                configScrollOffset,
+                0,
+                getMaxConfigScrollOffset(),
+                0,
+                177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 344, configScrollY);
     }

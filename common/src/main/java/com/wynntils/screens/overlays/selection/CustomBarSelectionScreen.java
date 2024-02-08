@@ -62,12 +62,12 @@ public class CustomBarSelectionScreen extends WynntilsScreen {
         calculateBarPosition();
 
         textureButton = this.addRenderableWidget(new Button.Builder(
-                        Component.literal(availableBars
-                                .get(barTypeIndex)
-                                .b()
-                                .get(barTextureIndex)
-                                .toString()),
-                        (b) -> {})
+                Component.literal(availableBars
+                        .get(barTypeIndex)
+                        .b()
+                        .get(barTextureIndex)
+                        .toString()),
+                (b) -> {})
                 .pos((int) ((this.width / 2f) - 30), (int) (barY + 20))
                 .size(60, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.customBarSelection.textureTooltip")))
@@ -79,14 +79,14 @@ public class CustomBarSelectionScreen extends WynntilsScreen {
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.customBarSelection.cancel"), (button) -> onClose())
+                Component.translatable("screens.wynntils.customBarSelection.cancel"), (button) -> onClose())
                 .pos((int) (this.width / 2f) - 90, (int) (barY + 45))
                 .size(80, 20)
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.customBarSelection.select"),
-                        (button) -> addCustomBar())
+                Component.translatable("screens.wynntils.customBarSelection.select"),
+                (button) -> addCustomBar())
                 .pos((int) (this.width / 2f) + 10, (int) (barY + 45))
                 .size(80, 20)
                 .build());
@@ -163,11 +163,11 @@ public class CustomBarSelectionScreen extends WynntilsScreen {
         // Calculate the central position to render the current selected bar at
         barX = (this.width - availableBars.get(barTypeIndex).a().width()) / 2f;
         barY = (this.height
-                        - availableBars
-                                .get(barTypeIndex)
-                                .b()
-                                .get(barTextureIndex)
-                                .getHeight())
+                - availableBars
+                .get(barTypeIndex)
+                .b()
+                .get(barTextureIndex)
+                .getHeight())
                 / 2f;
     }
 
