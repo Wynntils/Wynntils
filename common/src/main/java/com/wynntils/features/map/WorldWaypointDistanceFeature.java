@@ -183,18 +183,17 @@ public class WorldWaypointDistanceFeature extends Feature {
                         + 90f;
                 float radius = icon.width() / 2 + 8f;
 
-                // offset from the central render position used for pointer position and anchor for scaling
-                float xOffset = radius * (float) StrictMath.cos((angle - 90) * 3 / 180);
-                float yOffset = radius * (float) StrictMath.sin((angle - 90) * 3 / 180);
+                float pointerOffsetX = radius * (float) StrictMath.cos((angle - 90) * 3 / 180);
+                float pointerOffsetY = radius * (float) StrictMath.sin((angle - 90) * 3 / 180);
 
-                float pointerDisplayPositionX = displayPositionX + xOffset;
-                float pointerDisplayPositionY = displayPositionY + yOffset;
+                float pointerDisplayPositionX = displayPositionX + pointerOffsetX;
+                float pointerDisplayPositionY = displayPositionY + pointerOffsetY;
 
                 RenderUtils.drawScalingTexturedRect(
                         event.getPoseStack(),
                         icon.resource(),
-                        displayPositionX - scale.get() * icon.width() / 2 + xOffset * (1 - scale.get()),
-                        displayPositionY - scale.get() * icon.height() / 2 + yOffset * (1 - scale.get()),
+                        displayPositionX - scale.get() * icon.width() / 2 + pointerOffsetX * (1 - scale.get()),
+                        displayPositionY - scale.get() * icon.height() / 2 + pointerOffsetY * (1 - scale.get()),
                         0,
                         scale.get() * icon.width(),
                         scale.get() * icon.height(),
@@ -243,15 +242,14 @@ public class WorldWaypointDistanceFeature extends Feature {
         if (isInBound(position, window)) return null;
         Vec3 centerPoint = new Vec3(window.getGuiScaledWidth() / 2, window.getGuiScaledHeight() / 2, 0);
 
-        // compensate for scaling
-        float scaleFactor = (float) Texture.POINTER.height() / 2 * (1 - scale.get());
+        float pointerScaleCorrection = (float) Texture.POINTER.height() / 2 * (1 - scale.get());
 
         // minecraft's origin point is top left corner
         // so positive Y is at the screen bottom
-        float minX = (float) -(centerPoint.x - horizontalBoundingDistance.get() + scaleFactor);
-        float maxX = (float) centerPoint.x - horizontalBoundingDistance.get() + scaleFactor;
-        float minY = (float) -(centerPoint.y - topBoundingDistance.get() + scaleFactor);
-        float maxY = (float) centerPoint.y - bottomBoundingDistance.get() + scaleFactor;
+        float minX = (float) -(centerPoint.x - horizontalBoundingDistance.get() + pointerScaleCorrection);
+        float maxX = (float) centerPoint.x - horizontalBoundingDistance.get() + pointerScaleCorrection;
+        float minY = (float) -(centerPoint.y - topBoundingDistance.get() + pointerScaleCorrection);
+        float maxY = (float) centerPoint.y - bottomBoundingDistance.get() + pointerScaleCorrection;
 
         // drag the origin point to center since indicator's screenspace position / rotation is in relation to it
         Vec3 centerRelativePosition = position.subtract(centerPoint);
