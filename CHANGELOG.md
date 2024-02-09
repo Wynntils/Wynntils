@@ -1,9 +1,17 @@
+## [1.0.10](https://github.com/Wynntils/Artemis/compare/v1.0.9...v1.0.10) (2024-02-09)
+
+
+### New Features
+
+* add scaling to waypoint distance markers ([#2338](https://github.com/Wynntils/Artemis/issues/2338)) ([c30c198](https://github.com/Wynntils/Artemis/commit/c30c198f5d87e26948514d03a7f8c51eacb4b87c))
+
 ## [1.0.9](https://github.com/Wynntils/Artemis/compare/v1.0.8...v1.0.9) (2024-02-09)
 
 
 ### Miscellaneous Chores
 
 * Bump Kir-Antipov/mc-publish@v3.3.0 to re-enable releases to Modrinth/Curseforge ([#2340](https://github.com/Wynntils/Artemis/issues/2340)) ([6fec8d1](https://github.com/Wynntils/Artemis/commit/6fec8d142ba4939fec2a2c176f36bcca16af4b92))
+* **release:** v1.0.9 [skip ci] ([d3f3964](https://github.com/Wynntils/Artemis/commit/d3f3964894f183b6d44594f2b2760a6c751765f8))
 
 ## [1.0.8](https://github.com/Wynntils/Artemis/compare/v1.0.7...v1.0.8) (2024-02-08)
 
@@ -44,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.6 [skip ci] ([6c23e1a](https://github.com/Wynntils/Artemis/commit/6c23e1abc076c13e1f5869c779816137e8f35912))
-
-## [1.0.5](https://github.com/Wynntils/Artemis/compare/v1.0.4...v1.0.5) (2024-01-14)
-
-
-### Bug Fixes
-
-* Fix failing to encode consumable items if they are signed ([#2328](https://github.com/Wynntils/Artemis/issues/2328)) ([e11516d](https://github.com/Wynntils/Artemis/commit/e11516d9a1835fca1b1e2a724e39a5633b81c6f9))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.5 [skip ci] ([9dfd5d0](https://github.com/Wynntils/Artemis/commit/9dfd5d07e44ddeddd868159e0440b416a13a9b47))
 
