@@ -1,9 +1,21 @@
+## [1.0.9](https://github.com/Wynntils/Artemis/compare/v1.0.8...v1.0.9) (2024-02-09)
+
+
+### Miscellaneous Chores
+
+* Bump Kir-Antipov/mc-publish@v3.3.0 to re-enable releases to Modrinth/Curseforge ([#2340](https://github.com/Wynntils/Artemis/issues/2340)) ([6fec8d1](https://github.com/Wynntils/Artemis/commit/6fec8d142ba4939fec2a2c176f36bcca16af4b92))
+
 ## [1.0.8](https://github.com/Wynntils/Artemis/compare/v1.0.7...v1.0.8) (2024-02-08)
 
 
 ### Bug Fixes
 
 * Wrong XP requirement ([#2339](https://github.com/Wynntils/Artemis/issues/2339)) ([eda6527](https://github.com/Wynntils/Artemis/commit/eda652793e5ba3f63ce8860b9a476908067c3d62))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.8 [skip ci] ([7a81283](https://github.com/Wynntils/Artemis/commit/7a81283a3d2187b256347a3e665480e0e455d01b))
 
 ## [1.0.7](https://github.com/Wynntils/Artemis/compare/v1.0.6...v1.0.7) (2024-02-04)
 
@@ -44,17 +56,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.5 [skip ci] ([9dfd5d0](https://github.com/Wynntils/Artemis/commit/9dfd5d07e44ddeddd868159e0440b416a13a9b47))
-
-## [1.0.4](https://github.com/Wynntils/Artemis/compare/v1.0.3...v1.0.4) (2024-01-12)
-
-
-### Bug Fixes
-
-* Custom mod overlays do not render on chat ([#2325](https://github.com/Wynntils/Artemis/issues/2325)) ([c7f3c98](https://github.com/Wynntils/Artemis/commit/c7f3c989a9be2f68508a822f53848561958c0a76))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2326](https://github.com/Wynntils/Artemis/issues/2326)) ([f0491bc](https://github.com/Wynntils/Artemis/commit/f0491bcd11cf1ae1456c5396f0ed1b1e2ccc3730))
-* **release:** v1.0.4 [skip ci] ([4632ecf](https://github.com/Wynntils/Artemis/commit/4632ecfec5a586a33779097381659678adab1de3))
 
