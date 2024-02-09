@@ -1210,6 +1210,8 @@
   "feature.wynntils.worldWaypointDistance.maxWaypointTextDistance.description": "At what distance should the waypoint text stop rendering?",
   "feature.wynntils.worldWaypointDistance.maxWaypointTextDistance.name": "Maximum Distance for Waypoint Text",
   "feature.wynntils.worldWaypointDistance.name": "Waypoint Distance",
+  "feature.wynntils.worldWaypointDistance.scale.description": "How large should the marker be?",
+  "feature.wynntils.worldWaypointDistance.scale.name": "Scale",
   "feature.wynntils.worldWaypointDistance.textColor.description": "What color should distance text be?",
   "feature.wynntils.worldWaypointDistance.textColor.name": "Distance Text Color",
   "feature.wynntils.worldWaypointDistance.textShadow.description": "What should the text shadow look like?",
