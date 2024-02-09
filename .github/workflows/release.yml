@@ -120,7 +120,7 @@ jobs:
         with:
           name: build
 
-      - uses: Kir-Antipov/mc-publish@v3.2
+      - uses: Kir-Antipov/mc-publish@v3.3.0
         with:
           modrinth-id: dU5Gb9Ab
           modrinth-featured: true
