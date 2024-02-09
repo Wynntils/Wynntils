@@ -130,8 +130,7 @@ jobs:
           curseforge-id: 303451
           curseforge-token: ${{ secrets.CF_API_TOKEN }}
 
-          files-primary: "**/build/libs/*-${{ matrix.modloader }}*.jar"
-          files-secondary: ""
+          files: "**/build/libs/*-${{ matrix.modloader }}*.jar"
 
           name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
           version: ${{ needs.changelog.outputs.tag }}
