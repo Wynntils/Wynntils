@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
@@ -45,12 +44,6 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
             return new TeleportScrollItem(destination, true);
         } else {
             String destination = Services.Destination.getAbbreviation(scrollName);
-            if (destination == null) {
-                // fallback
-                destination = scrollName.substring(0, 2);
-                WynntilsMod.warn(
-                        "TeleportScrollAnnotator: No destination found for " + scrollName + ", using fallback");
-            }
             return new TeleportScrollItem(destination, false);
         }
     }

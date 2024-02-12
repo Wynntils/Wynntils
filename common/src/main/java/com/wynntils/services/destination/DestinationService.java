@@ -31,11 +31,20 @@ public class DestinationService extends Service {
     /**
      * Get the abbreviation of a location
      * @param location Full location name of the destination (eg. "Ragni")
-     * @return Abbreviation of the location (eg. "Ra") or null if not found
+     * @return Abbreviation of the location (eg. "Ra"). Reads from destination json first, if not found returns first + next non-conflicting letter of the location name.
      */
     public String getAbbreviation(String location) {
         if (!destinations.containsKey(location)) {
-            return null;
+            String abbreviation = location.substring(0, 2);
+            int i = 2;
+            while (destinations.containsValue(abbreviation)) {
+                if (location.charAt(i) == ' ') i++;
+                abbreviation = location.charAt(0) + "" + location.charAt(i);
+                i++;
+            }
+            WynntilsMod.warn("DestinationService: No destination found for " + location
+                    + ", using fallback abbreviation " + abbreviation);
+            return abbreviation;
         }
         return destinations.get(location);
     }
