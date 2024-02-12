@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -28,7 +28,8 @@ public final class SeaskipperDestinationAnnotator implements ItemAnnotator {
         String shorthand = Services.Destination.getAbbreviation(destination);
         if (shorthand == null) {
             shorthand = destination.substring(0, 2);
-            WynntilsMod.warn("SeaskipperDestinationAnnotator: No destination found for " + destination + ", using fallback");
+            WynntilsMod.warn(
+                    "SeaskipperDestinationAnnotator: No destination found for " + destination + ", using fallback");
         }
         return new SeaskipperDestinationItem(destination, price, shorthand);
     }
