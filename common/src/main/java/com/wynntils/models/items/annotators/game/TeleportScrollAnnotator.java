@@ -1,9 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -42,7 +44,13 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
                     .toUpperCase(Locale.ROOT);
             return new TeleportScrollItem(destination, true);
         } else {
-            String destination = scrollName.substring(0, 2);
+            String destination = Services.Destination.getAbbreviation(scrollName);
+            if (destination == null) {
+                // fallback
+                destination = scrollName.substring(0, 2);
+                WynntilsMod.warn(
+                        "TeleportScrollAnnotator: No destination found for " + scrollName + ", using fallback");
+            }
             return new TeleportScrollItem(destination, false);
         }
     }
