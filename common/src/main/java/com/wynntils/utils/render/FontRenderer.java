@@ -81,7 +81,7 @@ public final class FontRenderer {
         renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    private void renderAlignedTextInBox(
+    public void renderAlignedTextInBox(
             PoseStack poseStack,
             StyledText text,
             float x1,

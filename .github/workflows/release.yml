@@ -120,7 +120,7 @@ jobs:
         with:
           name: build
 
-      - uses: Kir-Antipov/mc-publish@v3.2
+      - uses: Kir-Antipov/mc-publish@v3.3.0
         with:
           modrinth-id: dU5Gb9Ab
           modrinth-featured: true
@@ -130,8 +130,7 @@ jobs:
           curseforge-id: 303451
           curseforge-token: ${{ secrets.CF_API_TOKEN }}
 
-          files-primary: "**/build/libs/*-${{ matrix.modloader }}*.jar"
-          files-secondary: ""
+          files: "**/build/libs/*-${{ matrix.modloader }}*.jar"
 
           name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
           version: ${{ needs.changelog.outputs.tag }}
