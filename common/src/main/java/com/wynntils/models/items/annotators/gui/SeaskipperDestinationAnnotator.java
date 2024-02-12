@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -23,7 +25,11 @@ public final class SeaskipperDestinationAnnotator implements ItemAnnotator {
         String destination = matcher.group(1);
         int price = Integer.parseInt(matcher.group(2));
 
-        String shorthand = destination.substring(0, 2);
+        String shorthand = Services.Destination.getAbbreviation(destination);
+        if (shorthand == null) {
+            shorthand = destination.substring(0, 2);
+            WynntilsMod.warn("SeaskipperDestinationAnnotator: No destination found for " + destination + ", using fallback");
+        }
         return new SeaskipperDestinationItem(destination, price, shorthand);
     }
 }
