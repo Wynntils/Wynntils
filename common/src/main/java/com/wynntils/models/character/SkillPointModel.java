@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -17,6 +18,7 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -31,10 +33,15 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,13 +59,17 @@ public class SkillPointModel extends Model {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
+    private static final Pattern SET_BONUS_PATTERN = Pattern.compile("");
+
+    private Set<String> processedItemSets = new HashSet<>();
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
-    private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> statusEffectSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> setBonusSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
 
     public SkillPointModel() {
         super(List.of());
@@ -194,6 +205,14 @@ public class SkillPointModel extends Model {
         return statusEffectSkillPoints.values().stream().reduce(0, Integer::sum);
     }
 
+    public int getSetBonusSkillPoints(Skill skill) {
+        return setBonusSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getSetBonusSum() {
+        return setBonusSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
     public int getAssignedSkillPoints(Skill skill) {
         return assignedSkillPoints.getOrDefault(skill, 0);
     }
@@ -292,6 +311,8 @@ public class SkillPointModel extends Model {
     private void calculateGearSkillPoints() {
         gearSkillPoints = new EnumMap<>(Skill.class);
         craftedSkillPoints = new EnumMap<>(Skill.class);
+        setBonusSkillPoints = new EnumMap<>(Skill.class);
+        processedItemSets = new HashSet<>();
 
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
         McUtils.inventory().armor.forEach(this::calculateSingleGearSkillPoints);
@@ -314,6 +335,13 @@ public class SkillPointModel extends Model {
                     gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
+
+            if (gear.getGearTier() == GearTier.SET && LoreUtils.getStringLore(itemStack).contains("Set Bonus")) {
+                for (StyledText line : LoreUtils.getLore(itemStack)) {
+                    Matcher m = SET_BONUS_PATTERN.matcher(line.getString());
+                }
+            }
+
         } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
             craftedGear.getIdentifications().forEach(x -> {
                 if (x.statType() instanceof SkillStatType skillStat) {
