@@ -1,14 +1,21 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -52,6 +59,26 @@ public final class InventoryUtils {
 
     public static ItemStack getItemInHand() {
         return McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+    }
+
+    /**
+     * Checks if the weapon in the player's hand has all requirements met.
+     */
+    public static boolean itemRequirementsMet(ItemStack itemStack) {
+        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
+
+        if (wynnItem.isEmpty()
+                || !(wynnItem.get() instanceof GearItem) && !(wynnItem.get() instanceof CraftedGearItem)) {
+            return false;
+        }
+
+        for (StyledText loreLine : LoreUtils.getLore(itemStack)) {
+            if (loreLine.startsWith("§c✖") && loreLine.contains("Min: ")) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public enum MouseClickType {

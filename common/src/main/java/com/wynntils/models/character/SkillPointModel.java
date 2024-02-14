@@ -16,9 +16,9 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
+import com.wynntils.models.character.type.SetInfo;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -29,19 +29,17 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,9 +57,11 @@ public class SkillPointModel extends Model {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
-    private static final Pattern SET_BONUS_PATTERN = Pattern.compile("");
+    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set: §7\\((\\d)/\\d\\)");
+    private static final Pattern SET_BONUS_PATTERN =
+            Pattern.compile("§[ac]([+-]\\d+) (Strength|Dexterity|Intelligence|Defence|Agility)");
 
-    private Set<String> processedItemSets = new HashSet<>();
+    private Map<String, SetInfo> processedSets = new HashMap<>();
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -312,17 +312,55 @@ public class SkillPointModel extends Model {
         gearSkillPoints = new EnumMap<>(Skill.class);
         craftedSkillPoints = new EnumMap<>(Skill.class);
         setBonusSkillPoints = new EnumMap<>(Skill.class);
-        processedItemSets = new HashSet<>();
+        processedSets = new HashMap<>();
 
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
-        McUtils.inventory().armor.forEach(this::calculateSingleGearSkillPoints);
-
-        for (int i : ACCESSORY_SLOTS) {
-            calculateSingleGearSkillPoints(McUtils.inventory().getItem(i));
+        for (ItemStack itemStack : McUtils.inventory().armor) {
+            calculateSingleGearSkillPoints(itemStack);
+            countSet(itemStack);
         }
 
-        // held item
-        calculateSingleGearSkillPoints(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        for (int i : ACCESSORY_SLOTS) {
+            ItemStack itemStack = McUtils.inventory().getItem(i);
+            calculateSingleGearSkillPoints(itemStack);
+            countSet(itemStack);
+        }
+
+        // held item - must check if it's actually valid before counting
+        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        if (InventoryUtils.itemRequirementsMet(itemInHand)) {
+            calculateSingleGearSkillPoints(itemInHand);
+            countSet(itemInHand);
+        }
+
+        for (SetInfo setInfo : processedSets.values()) {
+            if (setInfo.getWynncraftCount() == setInfo.getTrueCount()) {
+                for (StyledText line : LoreUtils.getLore(setInfo.getRelevantItem())) {
+                    Matcher m = SET_BONUS_PATTERN.matcher(line.getString());
+                    if (!m.matches()) continue;
+
+                    int value = Integer.parseInt(m.group(1));
+                    Skill skill = Skill.fromString(m.group(2));
+                    setBonusSkillPoints.merge(skill, value, Integer::sum);
+                }
+            } else {
+                // TODO: api call
+            }
+        }
+    }
+
+    private void countSet(ItemStack itemStack) {
+        for (StyledText line : LoreUtils.getLore(itemStack)) {
+            Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
+            if (nameMatcher.matches()) {
+                processedSets
+                        .computeIfAbsent(
+                                nameMatcher.group(1),
+                                k -> new SetInfo(Integer.parseInt(nameMatcher.group(2)), itemStack))
+                        .incrementTrueCount();
+                return;
+            }
+        }
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {
@@ -335,13 +373,6 @@ public class SkillPointModel extends Model {
                     gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
-
-            if (gear.getGearTier() == GearTier.SET && LoreUtils.getStringLore(itemStack).contains("Set Bonus")) {
-                for (StyledText line : LoreUtils.getLore(itemStack)) {
-                    Matcher m = SET_BONUS_PATTERN.matcher(line.getString());
-                }
-            }
-
         } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
             craftedGear.getIdentifications().forEach(x -> {
                 if (x.statType() instanceof SkillStatType skillStat) {
@@ -386,7 +417,7 @@ public class SkillPointModel extends Model {
 
     private boolean verifyChange(
             ContainerContent content,
-            Int2ObjectMap<ItemStack> changes,
+            Int2ObjectFunction<ItemStack> changes,
             ContainerContentChangeType changeType,
             int soulPointItemSlot) {
         // soul points resent last for both containers
