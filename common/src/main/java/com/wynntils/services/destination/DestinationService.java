@@ -46,7 +46,14 @@ public class DestinationService extends Service {
         String abbreviation = location.substring(0, 2);
         int i = 2;
         while (destinations.containsValue(abbreviation)) {
-            if (location.charAt(i) == ' ') i++;
+            while (location.charAt(i) == ' ') {
+                if (i == location.length() - 1) {
+                    WynntilsMod.warn("DestinationService: No unique destination found for " + location
+                            + ", computed fallback abbreviation " + abbreviation);
+                    return abbreviation;
+                }
+                i++;
+            }
             abbreviation = location.charAt(0) + "" + location.charAt(i);
             i++;
         }
@@ -64,9 +71,8 @@ public class DestinationService extends Service {
             for (Destination.DestinationDetail destination : result.destinations) {
                 newDestinations.put(destination.location, destination.abbreviation);
             }
+            destinations = newDestinations;
         });
-
-        destinations = newDestinations;
     }
 
     private static class Destination {
