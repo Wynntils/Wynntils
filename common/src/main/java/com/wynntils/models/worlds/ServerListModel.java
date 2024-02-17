@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -46,7 +46,7 @@ public final class ServerListModel extends Model {
 
     public List<String> getServersSortedOnUptime() {
         return getServers().stream()
-                .sorted(Comparator.comparing(profile -> getServer(profile).getUptime()))
+                .sorted(Comparator.comparingLong(profile -> -getServer(profile).getFirstSeen()))
                 .toList();
     }
 
