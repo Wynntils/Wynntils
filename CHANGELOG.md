@@ -1,9 +1,22 @@
+## [1.0.11](https://github.com/Wynntils/Artemis/compare/v1.0.10...v1.0.11) (2024-02-18)
+
+
+### Bug Fixes
+
+* Make sure all location abbreviations are unique (for scrolls and seaskipper tags) ([#2337](https://github.com/Wynntils/Artemis/issues/2337)) ([b9f685e](https://github.com/Wynntils/Artemis/commit/b9f685e6a7a059e639a3efa21c325b2dced0e082))
+* Sort worlds using their start time [skip ci] ([#2342](https://github.com/Wynntils/Artemis/issues/2342)) ([6cbe2ed](https://github.com/Wynntils/Artemis/commit/6cbe2ed16012d2a86794d1d7f08f24f85d40e3d6))
+
 ## [1.0.10](https://github.com/Wynntils/Artemis/compare/v1.0.9...v1.0.10) (2024-02-09)
 
 
 ### New Features
 
 * add scaling to waypoint distance markers ([#2338](https://github.com/Wynntils/Artemis/issues/2338)) ([c30c198](https://github.com/Wynntils/Artemis/commit/c30c198f5d87e26948514d03a7f8c51eacb4b87c))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.10 [skip ci] ([6ffcac3](https://github.com/Wynntils/Artemis/commit/6ffcac3f59ecc855c276c73b094acd1b92c9433e))
 
 ## [1.0.9](https://github.com/Wynntils/Artemis/compare/v1.0.8...v1.0.9) (2024-02-09)
 
@@ -36,20 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.7 [skip ci] ([591eaaa](https://github.com/Wynntils/Artemis/commit/591eaaaa908af8936a9f3ddb40b79a678028159f))
-
-## [1.0.6](https://github.com/Wynntils/Artemis/compare/v1.0.5...v1.0.6) (2024-01-21)
-
-
-### Bug Fixes
-
-* Custom connect screen does not revert on failure ([#2329](https://github.com/Wynntils/Artemis/issues/2329)) ([12feb23](https://github.com/Wynntils/Artemis/commit/12feb23f01571f3db17d39587b0bc11d77f1b8b7))
-* Fix adding new custom bars duplicating config options [skip ci] ([#2330](https://github.com/Wynntils/Artemis/issues/2330)) ([cd15069](https://github.com/Wynntils/Artemis/commit/cd15069651e7cce1bc61f9c24036e13bd22f1304))
-* fix hunted mode breaking skill point parsing [skip ci] ([#2332](https://github.com/Wynntils/Artemis/issues/2332)) ([c6a436b](https://github.com/Wynntils/Artemis/commit/c6a436be325450e6fdaa21510af184554475fc27))
-* Use proper hooks for enabling/disabling Discord RPC, refactor territory checking [ci skip] ([#2331](https://github.com/Wynntils/Artemis/issues/2331)) ([73e4975](https://github.com/Wynntils/Artemis/commit/73e49752168c89a1e8bf2eb83be5b5f3c78c556d))
-* Vanilla actionbar formatting [skip ci] ([#2327](https://github.com/Wynntils/Artemis/issues/2327)) ([41f50f4](https://github.com/Wynntils/Artemis/commit/41f50f4308882b6842f1988236ef328523dc6d77))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.6 [skip ci] ([6c23e1a](https://github.com/Wynntils/Artemis/commit/6c23e1abc076c13e1f5869c779816137e8f35912))
 
