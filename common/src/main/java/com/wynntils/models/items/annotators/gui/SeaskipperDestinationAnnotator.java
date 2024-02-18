@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -23,7 +24,7 @@ public final class SeaskipperDestinationAnnotator implements ItemAnnotator {
         String destination = matcher.group(1);
         int price = Integer.parseInt(matcher.group(2));
 
-        String shorthand = destination.substring(0, 2);
+        String shorthand = Services.Destination.getAbbreviation(destination);
         return new SeaskipperDestinationItem(destination, price, shorthand);
     }
 }

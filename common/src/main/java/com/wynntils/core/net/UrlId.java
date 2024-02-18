@@ -33,6 +33,7 @@ public enum UrlId {
     DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),
     DATA_STATIC_CHARMS("dataStaticCharms"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
+    DATA_STATIC_DESTINATIONS("dataStaticDestinations"),
     DATA_STATIC_GEAR("dataStaticGear"),
     DATA_STATIC_GEAR_ADVANCED("dataStaticGearAdvanced"),
     DATA_STATIC_IDENTIFICATION_KEYS("dataStaticIdentificationKeys"),
