@@ -104,6 +104,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
   },
   {
+    "id": "dataStaticDestinations",
+    "md5": "6c68932a8cacb3d1a1469bb8b3d35665",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/destinations.json"
+  },
+  {
     "id": "dataStaticGear",
     "md5": "43752a252ba67b8491945ad648dea931",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
