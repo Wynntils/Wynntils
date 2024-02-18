@@ -1,3 +1,10 @@
+## [1.0.12](https://github.com/Wynntils/Artemis/compare/v1.0.11...v1.0.12) (2024-02-18)
+
+
+### Bug Fixes
+
+* Add missing urls.json entry causing crashes ([#2344](https://github.com/Wynntils/Artemis/issues/2344)) ([0cb50b0](https://github.com/Wynntils/Artemis/commit/0cb50b0ec36e4f20a3dc3778c0f2c51fbffa09e2))
+
 ## [1.0.11](https://github.com/Wynntils/Artemis/compare/v1.0.10...v1.0.11) (2024-02-18)
 
 
@@ -5,6 +12,11 @@
 
 * Make sure all location abbreviations are unique (for scrolls and seaskipper tags) ([#2337](https://github.com/Wynntils/Artemis/issues/2337)) ([b9f685e](https://github.com/Wynntils/Artemis/commit/b9f685e6a7a059e639a3efa21c325b2dced0e082))
 * Sort worlds using their start time [skip ci] ([#2342](https://github.com/Wynntils/Artemis/issues/2342)) ([6cbe2ed](https://github.com/Wynntils/Artemis/commit/6cbe2ed16012d2a86794d1d7f08f24f85d40e3d6))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.11 [skip ci] ([7597058](https://github.com/Wynntils/Artemis/commit/759705842e876540b2ac6fc862f624919e611285))
 
 ## [1.0.10](https://github.com/Wynntils/Artemis/compare/v1.0.9...v1.0.10) (2024-02-09)
 
@@ -37,16 +49,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.8 [skip ci] ([7a81283](https://github.com/Wynntils/Artemis/commit/7a81283a3d2187b256347a3e665480e0e455d01b))
-
-## [1.0.7](https://github.com/Wynntils/Artemis/compare/v1.0.6...v1.0.7) (2024-02-04)
-
-
-### New Features
-
-* Multicoloured territory production rendering ([#2334](https://github.com/Wynntils/Artemis/issues/2334)) ([b468cae](https://github.com/Wynntils/Artemis/commit/b468cae092ccd3e86189ddedac208242f395d9b5))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.7 [skip ci] ([591eaaa](https://github.com/Wynntils/Artemis/commit/591eaaaa908af8936a9f3ddb40b79a678028159f))
 
