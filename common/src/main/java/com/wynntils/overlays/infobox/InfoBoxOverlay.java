@@ -15,9 +15,6 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     public final HiddenConfig<String> customName = new HiddenConfig<>("");
 
     @Persisted
-    public final Config<String> customName = new Config<>("");
-
-    @Persisted
     public final Config<String> content = new Config<>("");
 
     public InfoBoxOverlay(int id) {
