@@ -984,6 +984,8 @@
   "feature.wynntils.preventTradesDuels.name": "Prevent Trades & Duels",
   "feature.wynntils.preventTradesDuels.onlyWhileFighting.description": "Should the prevention only take place when you have dealt damage recently?",
   "feature.wynntils.preventTradesDuels.onlyWhileFighting.name": "Only While Fighting",
+  "feature.wynntils.preventTradesDuels.whenHoldingGatheringTool.description": "Should the prevention take place when holding a gathering tool?",
+  "feature.wynntils.preventTradesDuels.whenHoldingGatheringTool.name": "When Holding Gathering Tool",
   "feature.wynntils.questBook.name": "Quest Book Analysis",
   "feature.wynntils.quickCast.anotherInProgress": "Please wait for the previous quick-cast to finish.",
   "feature.wynntils.quickCast.classMismatch": "You can't use %s weapons!",
