@@ -283,7 +283,11 @@ public final class FontRenderer {
                     Math.sin(1.5707963267948966 * Math.cos(6.283185307179586 * currentTimeInSeconds / e)) / 2.0 + 0.5;
             double scrollOffset = Mth.lerp(f, 0.0, m);
 
-            RenderUtils.enableScissor((int) scissorX, (int) scissorY, (int) renderArea, font.lineHeight);
+            RenderUtils.enableScissor(
+                    (int) scissorX,
+                    (int) scissorY,
+                    (int) renderArea,
+                    font.lineHeight + 1); // + 1 to account for letters that sit lower, eg y
             renderText(
                     poseStack,
                     styledText,
