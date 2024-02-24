@@ -58,6 +58,7 @@ public class SkillPointModel extends Model {
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
     private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
+    private static final String SET_BONUS_HEADER = "§aSet Bonus:";
     private static final Pattern BONUS_SKILL_POINT_PATTERN =
             Pattern.compile("§[ac]([+-]\\d+) §7(Strength|Dexterity|Intelligence|Defence|Agility)");
 
@@ -335,11 +336,13 @@ public class SkillPointModel extends Model {
 
         for (Map.Entry<String, SetInfo> entry : processedSets.entrySet()) {
             SetInfo setInfo = entry.getValue();
+
             if (setInfo.getWynncraftCount() == setInfo.getTrueCount()) {
+                // Wynncraft reports the correct number of items in the set, we can use point values from in-game
                 boolean setBonusesStarted = false;
                 for (StyledText line : LoreUtils.getLore(setInfo.getRelevantItem())) {
                     if (!setBonusesStarted) { // avoid parsing normal item bonuses accidentally
-                        if (line.getString().equals("§aSet Bonus:")) {
+                        if (line.getString().equals(SET_BONUS_HEADER)) {
                             setBonusesStarted = true;
                         }
                         continue;
@@ -352,7 +355,15 @@ public class SkillPointModel extends Model {
                     setBonusSkillPoints.merge(skill, value, Integer::sum);
                 }
             } else {
-                System.out.println(Models.Set.getSetData(entry.getKey()));
+                // Two of the same ring bug on Wynn, we need to check our own data
+                Models.Set.getSetData(entry.getKey())
+                        .getBonusForItems(setInfo.getTrueCount())
+                        .forEach((statType, value) -> {
+                            if (Skill.isSkill(statType.getDisplayName())) {
+                                setBonusSkillPoints.merge(
+                                        Skill.fromString(statType.getDisplayName()), value, Integer::sum);
+                            }
+                        });
             }
         }
     }
@@ -487,6 +498,7 @@ public class SkillPointModel extends Model {
                     skill,
                     getTotalSkillPoints(skill)
                             - getGearSkillPoints(skill)
+                            - getSetBonusSkillPoints(skill)
                             - getTomeSkillPoints(skill)
                             - getCraftedSkillPoints(skill)
                             - getStatusEffectSkillPoints(skill));

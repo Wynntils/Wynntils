@@ -258,8 +258,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(
-                                I18n.get("screens.wynntils.skillPointLoadouts.setBonus", Models.SkillPoint.getSetBonusSum())),
+                        StyledText.fromString(I18n.get(
+                                "screens.wynntils.skillPointLoadouts.setBonus", Models.SkillPoint.getSetBonusSum())),
                         dividedWidth * 35,
                         dividedHeight * 15,
                         CommonColors.WHITE,
