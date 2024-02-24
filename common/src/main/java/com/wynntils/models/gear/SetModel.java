@@ -44,7 +44,7 @@ public class SetModel extends Model {
                             bonus.forEach((statName, statValue) -> {
                                 StatType statType = Models.Stat.fromApiName(statName);
                                 if (statType == null) {
-                                    System.out.println("Unknown stat type: " + statName);
+                                    WynntilsMod.warn("Unknown stat type: " + statName);
                                 }
                                 bonusMap.put(statType, statValue.intValue());
                             });
@@ -53,7 +53,6 @@ public class SetModel extends Model {
                         .toList();
 
                 setData.put(key, new SetInstance(bonuses, items));
-                System.out.println("Loaded set data for " + key);
             });
         });
     }
