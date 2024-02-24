@@ -205,20 +205,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
         }
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString((Models.SkillPoint.hasIllegalAssigned() ? ChatFormatting.RED : "")
-                                + I18n.get(
-                                        "screens.wynntils.skillPointLoadouts.assigned",
-                                        Models.SkillPoint.getAssignedSum())),
-                        dividedWidth * 35,
-                        dividedHeight * 11,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
+
+        // i iterates over the summary parts populating top to bottom
+        // j iterates over the skills populating left to right
+        for (int i = 0; i < summaryParts.size(); i++) {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
