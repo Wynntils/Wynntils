@@ -139,11 +139,6 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
-    "id": "dataStaticItemMutExcl",
-    "md5": "5c8533e7c89c42dc4322774353cf510e",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_mut_excl.json"
-  },
-  {
     "id": "dataStaticItemObtain",
     "md5": "20e9a265f5e2ed91b02d80623b3765bd",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"

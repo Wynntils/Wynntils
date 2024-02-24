@@ -40,7 +40,6 @@ public enum UrlId {
     DATA_STATIC_INGREDIENTS("dataStaticIngredients"),
     DATA_STATIC_INGREDIENTS_ADVANCED("dataStaticIngredientsAdvanced"),
     DATA_STATIC_INGREDIENT_SKINS("dataStaticIngredientSkins"),
-    DATA_STATIC_ITEM_MUT_EXCL("dataStaticItemMutExcl"),
     DATA_STATIC_ITEM_OBTAIN("dataStaticItemObtain"),
     DATA_STATIC_ITEM_SETS("dataStaticItemSets"),
     DATA_STATIC_LOOTRUN_TASKS_NAMED("dataStaticLootrunTasksNamed"),
