@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 public class SetModel extends Model {
-    private final Map<String, SetInstance> setData = new HashMap<>();
+    private final Map<String, SetInfo> setData = new HashMap<>();
 
     public SetModel() {
         super(List.of());
         loadSetData();
     }
 
-    public SetInstance getSetData(String setId) {
+    public SetInfo getSetData(String setId) {
         return setData.get(setId);
     }
 
@@ -52,16 +52,16 @@ public class SetModel extends Model {
                         })
                         .toList();
 
-                setData.put(key, new SetInstance(bonuses, items));
+                setData.put(key, new SetInfo(bonuses, items));
             });
         });
     }
 
-    public static final class SetInstance {
+    public static final class SetInfo {
         private final List<Map<StatType, Integer>> bonuses;
         private final List<String> items;
 
-        private SetInstance(List<Map<StatType, Integer>> bonuses, List<String> items) {
+        private SetInfo(List<Map<StatType, Integer>> bonuses, List<String> items) {
             this.bonuses = bonuses;
             this.items = items;
         }

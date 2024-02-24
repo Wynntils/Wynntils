@@ -6,12 +6,12 @@ package com.wynntils.models.character.type;
 
 import net.minecraft.world.item.ItemStack;
 
-public class SetInfo {
+public class SetInstance {
     private final int wynncraftCount;
     private int trueCount = 0;
     private final ItemStack relevantItem;
 
-    public SetInfo(int wynncraftCount, ItemStack relevantItem) {
+    public SetInstance(int wynncraftCount, ItemStack relevantItem) {
         this.wynncraftCount = wynncraftCount;
         this.relevantItem = relevantItem;
     }

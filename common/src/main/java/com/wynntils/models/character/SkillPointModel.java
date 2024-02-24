@@ -16,7 +16,7 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
-import com.wynntils.models.character.type.SetInfo;
+import com.wynntils.models.character.type.SetInstance;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
@@ -62,7 +62,7 @@ public class SkillPointModel extends Model {
     private static final Pattern BONUS_SKILL_POINT_PATTERN =
             Pattern.compile("§[ac]([+-]\\d+) §7(Strength|Dexterity|Intelligence|Defence|Agility)");
 
-    private Map<String, SetInfo> processedSets = new HashMap<>();
+    private Map<String, SetInstance> processedSets = new HashMap<>();
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -334,13 +334,13 @@ public class SkillPointModel extends Model {
             countSet(itemInHand);
         }
 
-        for (Map.Entry<String, SetInfo> entry : processedSets.entrySet()) {
-            SetInfo setInfo = entry.getValue();
+        for (Map.Entry<String, SetInstance> entry : processedSets.entrySet()) {
+            SetInstance setInstance = entry.getValue();
 
-            if (setInfo.getWynncraftCount() == setInfo.getTrueCount()) {
+            if (setInstance.getWynncraftCount() == setInstance.getTrueCount()) {
                 // Wynncraft reports the correct number of items in the set, we can use point values from in-game
                 boolean setBonusesStarted = false;
-                for (StyledText line : LoreUtils.getLore(setInfo.getRelevantItem())) {
+                for (StyledText line : LoreUtils.getLore(setInstance.getRelevantItem())) {
                     if (!setBonusesStarted) { // avoid parsing normal item bonuses accidentally
                         if (line.getString().equals(SET_BONUS_HEADER)) {
                             setBonusesStarted = true;
@@ -355,9 +355,10 @@ public class SkillPointModel extends Model {
                     setBonusSkillPoints.merge(skill, value, Integer::sum);
                 }
             } else {
-                // Two of the same ring bug on Wynn, we need to check our own data
+                // Two of the same ring bug on Wynn, they only report 1 ring
+                // Use our own data to calculate the set bonus
                 Models.Set.getSetData(entry.getKey())
-                        .getBonusForItems(setInfo.getTrueCount())
+                        .getBonusForItems(setInstance.getTrueCount())
                         .forEach((statType, value) -> {
                             if (Skill.isSkill(statType.getDisplayName())) {
                                 setBonusSkillPoints.merge(
@@ -375,7 +376,7 @@ public class SkillPointModel extends Model {
                 processedSets
                         .computeIfAbsent(
                                 nameMatcher.group(1),
-                                k -> new SetInfo(Integer.parseInt(nameMatcher.group(2)), itemStack))
+                                k -> new SetInstance(Integer.parseInt(nameMatcher.group(2)), itemStack))
                         .incrementTrueCount();
                 return;
             }
