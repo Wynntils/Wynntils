@@ -57,9 +57,9 @@ public class SkillPointModel extends Model {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
-    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set: §7\\((\\d)/\\d\\)");
-    private static final Pattern SET_BONUS_PATTERN =
-            Pattern.compile("§[ac]([+-]\\d+) (Strength|Dexterity|Intelligence|Defence|Agility)");
+    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
+    private static final Pattern BONUS_SKILL_POINT_PATTERN =
+            Pattern.compile("§[ac]([+-]\\d+) §7(Strength|Dexterity|Intelligence|Defence|Agility)");
 
     private Map<String, SetInfo> processedSets = new HashMap<>();
 
@@ -333,10 +333,18 @@ public class SkillPointModel extends Model {
             countSet(itemInHand);
         }
 
-        for (SetInfo setInfo : processedSets.values()) {
+        for (Map.Entry<String, SetInfo> entry : processedSets.entrySet()) {
+            SetInfo setInfo = entry.getValue();
             if (setInfo.getWynncraftCount() == setInfo.getTrueCount()) {
+                boolean setBonusesStarted = false;
                 for (StyledText line : LoreUtils.getLore(setInfo.getRelevantItem())) {
-                    Matcher m = SET_BONUS_PATTERN.matcher(line.getString());
+                    if (!setBonusesStarted) { // avoid parsing normal item bonuses accidentally
+                        if (line.getString().equals("§aSet Bonus:")) {
+                            setBonusesStarted = true;
+                        }
+                        continue;
+                    }
+                    Matcher m = BONUS_SKILL_POINT_PATTERN.matcher(line.getString());
                     if (!m.matches()) continue;
 
                     int value = Integer.parseInt(m.group(1));
@@ -344,7 +352,7 @@ public class SkillPointModel extends Model {
                     setBonusSkillPoints.merge(skill, value, Integer::sum);
                 }
             } else {
-                // TODO: api call
+                System.out.println(Models.Set.getSetData(entry.getKey()));
             }
         }
     }

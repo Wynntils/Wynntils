@@ -259,7 +259,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromString(
-                                I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum())),
+                                I18n.get("screens.wynntils.skillPointLoadouts.setBonus", Models.SkillPoint.getSetBonusSum())),
                         dividedWidth * 35,
                         dividedHeight * 15,
                         CommonColors.WHITE,
@@ -271,7 +271,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getTomeSkillPoints(Skill.values()[i])),
+                                    + Models.SkillPoint.getSetBonusSkillPoints(Skill.values()[i])),
                             dividedWidth * (51 + i * 2),
                             dividedHeight * 15,
                             CommonColors.WHITE,
@@ -282,8 +282,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get(
-                                "screens.wynntils.skillPointLoadouts.crafted", Models.SkillPoint.getCraftedSum())),
+                        StyledText.fromString(
+                                I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum())),
                         dividedWidth * 35,
                         dividedHeight * 17,
                         CommonColors.WHITE,
@@ -295,9 +295,33 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getCraftedSkillPoints(Skill.values()[i])),
+                                    + Models.SkillPoint.getTomeSkillPoints(Skill.values()[i])),
                             dividedWidth * (51 + i * 2),
                             dividedHeight * 17,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get(
+                                "screens.wynntils.skillPointLoadouts.crafted", Models.SkillPoint.getCraftedSum())),
+                        dividedWidth * 35,
+                        dividedHeight * 19,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        for (int i = 0; i < 5; i++) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
+                                    + Models.SkillPoint.getCraftedSkillPoints(Skill.values()[i])),
+                            dividedWidth * (51 + i * 2),
+                            dividedHeight * 19,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
@@ -310,7 +334,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 "screens.wynntils.skillPointLoadouts.statusEffects",
                                 Models.SkillPoint.getStatusEffectsSum())),
                         dividedWidth * 35,
-                        dividedHeight * 19,
+                        dividedHeight * 21,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
@@ -322,7 +346,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromString(Skill.values()[i].getColorCode() + ""
                                     + Models.SkillPoint.getStatusEffectSkillPoints(Skill.values()[i])),
                             dividedWidth * (51 + i * 2),
-                            dividedHeight * 19,
+                            dividedHeight * 21,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
@@ -334,7 +358,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.skillPointLoadouts.total", Models.SkillPoint.getTotalSum())),
                         dividedWidth * 35,
-                        dividedHeight * 21,
+                        dividedHeight * 23,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
@@ -346,7 +370,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromString(Skill.values()[i].getColorCode() + ""
                                     + Models.SkillPoint.getTotalSkillPoints(Skill.values()[i])),
                             dividedWidth * (51 + i * 2),
-                            dividedHeight * 21,
+                            dividedHeight * 23,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,

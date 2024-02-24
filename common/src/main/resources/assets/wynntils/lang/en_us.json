@@ -1989,6 +1989,7 @@
   "screens.wynntils.skillPointLoadouts.crafted": "From Crafteds (%d)",
   "screens.wynntils.skillPointLoadouts.delete": "Delete",
   "screens.wynntils.skillPointLoadouts.gear": "From Gear (%d)",
+  "screens.wynntils.skillPointLoadouts.setBonus": "From Set Bonus (%d)",
   "screens.wynntils.skillPointLoadouts.levelIncompatible": "Your combat level is too low to use this loadout. Parts of the loadout may not be fully loaded.",
   "screens.wynntils.skillPointLoadouts.load": "Load",
   "screens.wynntils.skillPointLoadouts.loadoutName": "Skill Point Loadouts",

@@ -30,13 +30,9 @@ public class SetModel extends Model {
 
     private void loadSetData() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
-        AtomicReference<Map<String, SetData>> newSetData = new AtomicReference<>();
         dl.handleReader(reader -> {
-            newSetData.set(WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, SetData>>() {}.getType()));
+            setData.putAll(WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, SetData>>() {}.getType()));
         });
-
-        setData.clear();
-        setData.putAll(newSetData.get());
     }
 
     public static class SetData {
