@@ -144,6 +144,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"
   },
   {
+    "id": "dataStaticItemSets",
+    "md5": "75813c52995e7a1e1881359b47f57827",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_sets.json"
+  },
+  {
     "id": "dataStaticLootrunTasksNamed",
     "md5": "4eb2931b1dbea269574b8864c8712ba4",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/lootrun_tasks_named.json"
