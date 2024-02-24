@@ -150,7 +150,7 @@ public final class ConfigManager extends Manager {
             // read value and update option
             JsonElement configJson = configObject.get(config.getJsonName());
             Object value = Managers.Json.GSON.fromJson(configJson, config.getType());
-            config.restoreValue(value);
+            config.setValueFromObject(value);
         }
 
         // Newly created group overlays need to be enabled

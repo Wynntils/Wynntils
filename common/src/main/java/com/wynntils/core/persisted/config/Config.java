@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -49,7 +49,7 @@ public class Config<T> extends PersistedValue<T> {
         this.userEdited = true;
     }
 
-    void restoreValue(Object value) {
+    public void setValueFromObject(Object value) {
         setValue((T) value);
     }
 
