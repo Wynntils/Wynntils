@@ -37,6 +37,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private static final int MAX_LOADOUTS_PER_PAGE = 11;
@@ -516,7 +517,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // endregion
 
-        // scrollbar
+        // region Scrollbar
         if (loadoutWidgets.size() > MAX_LOADOUTS_PER_PAGE) {
             float visibleRatio = Math.min(1, (float) MAX_LOADOUTS_PER_PAGE / loadoutWidgets.size());
             float scrollbarLength = dividedHeight * 48 * visibleRatio + 1;
@@ -539,6 +540,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedHeight * 48) + 1);
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.clearMask();
+        // endregion
     }
 
     @Override
@@ -580,7 +582,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         int scrollableWidgets = Math.max(0, loadoutWidgets.size() - MAX_LOADOUTS_PER_PAGE);
         float scrollableRatio = (float) scrollableWidgets / loadoutWidgets.size();
         float maxScrollOffset = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio;
-        scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollY / 100));
+        scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollY / 50));
 
         loadoutWidgets.forEach(widget -> {
             float baseYPosition = dividedHeight * (9f + loadoutWidgets.indexOf(widget) * 4f);
@@ -591,6 +593,16 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         });
 
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_DELETE && deleteButton.active) {
+            deleteButton.onPress();
+            return true;
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     public void setSelectedLoadout(Pair<String, SavableSkillPointSet> loadout) {
