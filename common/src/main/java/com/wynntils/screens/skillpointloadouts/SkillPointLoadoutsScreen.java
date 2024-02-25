@@ -581,7 +581,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         float scrollableRatio = (float) scrollableWidgets / loadoutWidgets.size();
         float maxScrollOffset = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio;
         scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollY / 100));
-        System.out.println(scrollPercent);
 
         loadoutWidgets.forEach(widget -> {
             float baseYPosition = dividedHeight * (9f + loadoutWidgets.indexOf(widget) * 4f);
