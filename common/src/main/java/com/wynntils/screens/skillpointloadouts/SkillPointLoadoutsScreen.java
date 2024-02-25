@@ -29,6 +29,8 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
@@ -37,6 +39,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
+    private static final int MAX_LOADOUTS_PER_PAGE = 11;
     private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
 
     private boolean firstInit = true;
@@ -50,6 +53,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
     private WynntilsButton convertButton;
+    private float scrollPercent = 0;
 
     private SkillPointLoadoutsScreen() {
         super(Component.literal("Skill Point Loadouts Screen"));
@@ -64,6 +68,33 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         super.doInit();
         if (firstInit) {
             firstInit = false;
+
+            summaryParts.add(Pair.of(
+                    () -> (Models.SkillPoint.hasIllegalAssigned() ? ChatFormatting.RED : "")
+                            + I18n.get(
+                                    "screens.wynntils.skillPointLoadouts.assigned", Models.SkillPoint.getAssignedSum()),
+                    Models.SkillPoint::getAssignedSkillPoints));
+            summaryParts.add(Pair.of(
+                    () -> I18n.get("screens.wynntils.skillPointLoadouts.gear", Models.SkillPoint.getGearSum()),
+                    Models.SkillPoint::getGearSkillPoints));
+            summaryParts.add(Pair.of(
+                    () -> I18n.get("screens.wynntils.skillPointLoadouts.setBonus", Models.SkillPoint.getSetBonusSum()),
+                    Models.SkillPoint::getSetBonusSkillPoints));
+            summaryParts.add(Pair.of(
+                    () -> I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum()),
+                    Models.SkillPoint::getTomeSkillPoints));
+            summaryParts.add(Pair.of(
+                    () -> I18n.get("screens.wynntils.skillPointLoadouts.crafted", Models.SkillPoint.getCraftedSum()),
+                    Models.SkillPoint::getCraftedSkillPoints));
+            summaryParts.add(Pair.of(
+                    () -> I18n.get(
+                            "screens.wynntils.skillPointLoadouts.statusEffects",
+                            Models.SkillPoint.getStatusEffectsSum()),
+                    Models.SkillPoint::getStatusEffectSkillPoints));
+            summaryParts.add(Pair.of(
+                    () -> I18n.get("screens.wynntils.skillPointLoadouts.total", Models.SkillPoint.getTotalSum()),
+                    Models.SkillPoint::getTotalSkillPoints));
+
             Models.SkillPoint.populateSkillPoints();
         }
 
@@ -485,7 +516,29 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // endregion
 
+        // scrollbar
+        if (loadoutWidgets.size() > MAX_LOADOUTS_PER_PAGE) {
+            float visibleRatio = Math.min(1, (float) MAX_LOADOUTS_PER_PAGE / loadoutWidgets.size());
+            float scrollbarLength = dividedHeight * 48 * visibleRatio + 1;
+            RenderUtils.drawRect(
+                    poseStack,
+                    CommonColors.LIGHT_GRAY,
+                    dividedWidth * 30,
+                    dividedHeight * 8 + dividedHeight * 48 * scrollPercent,
+                    0,
+                    dividedWidth * 0.5f,
+                    scrollbarLength);
+        }
+        // Only render from 8 to 56 for scrollable area
+        // -/+ 1 to not overlap/cut off content
+        RenderUtils.createRectMask(
+                poseStack,
+                (int) (dividedWidth * 4) - 1,
+                (int) (dividedHeight * 8) + 1,
+                (int) (dividedWidth * 26) + 1,
+                (int) (dividedHeight * 48) + 1);
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        RenderUtils.clearMask();
     }
 
     @Override
@@ -497,6 +550,48 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             }
         }
         return super.doMouseClicked(mouseX, mouseY, button);
+    }
+
+    /*
+    This is rather complicated
+    For the last item in the list, when the scrollPercent == scrollableRatio (so it's scrolled all the way to the bottom)
+    We need baseYPosition - scrollOffset to be equal to dividedHeight * 52
+    So we need to find the scrollOffset that makes that true
+    scrollOffset is dividedHeight * ??? * scrollPercent, where ??? is some magical multiplier that satisfies the above
+
+    (speaking in terms of dividedHeight)
+    (???, the magic multiplier, is eventually maxScrollOffset)
+    baseYPosition is fixed for the last element at (9 + (loadoutWidgets.size() - 1) * 4)
+    size - 1 because it's 0 indexed
+    scrollOffset is ??? * scrollPercent, but scrollPercent is scrollableRatio at the bottom
+    So then 52 = (9 + (loadoutWidgets.size() - 1) * 4) - ??? * scrollableRatio
+    Solve for ??? and we get
+    ??? = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio
+     */
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        // 11 loadouts are fully displayed from 9 to 56
+        // 12th one is very slightly cut off (it needs 57)
+        if (loadoutWidgets.size() <= MAX_LOADOUTS_PER_PAGE) {
+            return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        }
+
+        int scrollableWidgets = Math.max(0, loadoutWidgets.size() - MAX_LOADOUTS_PER_PAGE);
+        float scrollableRatio = (float) scrollableWidgets / loadoutWidgets.size();
+        float maxScrollOffset = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio;
+        scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollY / 100));
+        System.out.println(scrollPercent);
+
+        loadoutWidgets.forEach(widget -> {
+            float baseYPosition = dividedHeight * (9f + loadoutWidgets.indexOf(widget) * 4f);
+
+            float scrollOffset = dividedHeight * maxScrollOffset * scrollPercent;
+            widget.setY((int) (baseYPosition - scrollOffset));
+            widget.visible = !(widget.getY() <= dividedHeight * 4) && !(widget.getY() >= dividedHeight * 56);
+        });
+
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     public void setSelectedLoadout(Pair<String, SavableSkillPointSet> loadout) {
