@@ -2400,7 +2400,7 @@
   "screens.wynntils.wynntilsContentBook.sort.level.description": "Quests are sorted by level, lowest first",
   "screens.wynntils.wynntilsContentBook.sort.level.name": "Sort by Level",
   "screens.wynntils.wynntilsCrowdSourcing.collecting": "Collecting",
-  "screens.wynntils.wynntilsCrowdSourcing.copiedToClipboard": "Copied %d %s to clipboard",
+  "screens.wynntils.wynntilsCrowdSourcing.copiedToClipboard": "Copied %d data points of %s to clipboard",
   "screens.wynntils.wynntilsCrowdSourcing.name": "Crowd Sourcing",
   "screens.wynntils.wynntilsCrowdSourcing.noDataTypes": "There are no data types currently being crowd sourced matching your search query.",
   "screens.wynntils.wynntilsCrowdSourcing.notCollecting": "Not Collecting",
