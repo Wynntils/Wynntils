@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -276,22 +275,24 @@ public final class FontRenderer {
         int textLength = (int) ((font.width(styledText.getString()) + 1) * textScale);
 
         if (textLength > renderWidth) {
-            float maxScrollOffset = switch (horizontalAlignment) {
-                case CENTER -> -(textLength / 2f) + (renderWidth / 2);
-                case RIGHT -> 0.0f;
-                default -> textLength - renderWidth;
-            };
+            float maxScrollOffset =
+                    switch (horizontalAlignment) {
+                        case CENTER -> -(textLength / 2f) + (renderWidth / 2);
+                        case RIGHT -> 0.0f;
+                        default -> textLength - renderWidth;
+                    };
 
             double currentTimeInSeconds = (double) Util.getMillis() / 1000.0;
             double e = Math.max((double) maxScrollOffset * 0.5, 3.0);
             double f =
                     Math.sin(1.5707963267948966 * Math.cos(6.283185307179586 * currentTimeInSeconds / e)) / 2.0 + 0.5;
 
-            float startOffset = switch (horizontalAlignment) {
-                case CENTER -> (textLength / 2f) - (renderWidth / 2);
-                case RIGHT -> renderWidth - textLength;
-                default -> 0.0f;
-            };
+            float startOffset =
+                    switch (horizontalAlignment) {
+                        case CENTER -> (textLength / 2f) - (renderWidth / 2);
+                        case RIGHT -> renderWidth - textLength;
+                        default -> 0.0f;
+                    };
 
             double scrollOffset = Mth.lerp(f, startOffset, maxScrollOffset);
 
@@ -312,11 +313,8 @@ public final class FontRenderer {
             scissorX += translationX;
             scissorY += translationY;
 
-            RenderUtils.enableScissor(
-                    (int) scissorX,
-                    (int) scissorY,
-                    (int) renderWidth,
-                    (int) ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
+            RenderUtils.enableScissor((int) scissorX, (int) scissorY, (int) renderWidth, (int)
+                    ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
             renderText(
                     poseStack,
                     styledText,
