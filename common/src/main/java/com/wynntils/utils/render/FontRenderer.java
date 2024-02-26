@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -264,30 +265,58 @@ public final class FontRenderer {
             StyledText styledText,
             float x,
             float y,
-            float renderArea,
-            float scissorX,
-            float scissorY,
+            float renderWidth,
+            float translationX,
+            float translationY,
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
         int textLength = (int) ((font.width(styledText.getString()) + 1) * textScale);
-        float m;
 
-        if (textLength > renderArea) {
-            m = textLength - renderArea;
+        if (textLength > renderWidth) {
+            float maxScrollOffset = switch (horizontalAlignment) {
+                case CENTER -> -(textLength / 2f) + (renderWidth / 2);
+                case RIGHT -> 0.0f;
+                default -> textLength - renderWidth;
+            };
+
             double currentTimeInSeconds = (double) Util.getMillis() / 1000.0;
-            double e = Math.max((double) m * 0.5, 3.0);
+            double e = Math.max((double) maxScrollOffset * 0.5, 3.0);
             double f =
                     Math.sin(1.5707963267948966 * Math.cos(6.283185307179586 * currentTimeInSeconds / e)) / 2.0 + 0.5;
-            double scrollOffset = Mth.lerp(f, 0.0, m);
+
+            float startOffset = switch (horizontalAlignment) {
+                case CENTER -> (textLength / 2f) - (renderWidth / 2);
+                case RIGHT -> renderWidth - textLength;
+                default -> 0.0f;
+            };
+
+            double scrollOffset = Mth.lerp(f, startOffset, maxScrollOffset);
+
+            float scissorX =
+                    switch (horizontalAlignment) {
+                        case LEFT -> x;
+                        case CENTER -> x - (renderWidth / 2);
+                        case RIGHT -> x - renderWidth;
+                    };
+
+            float scissorY =
+                    switch (verticalAlignment) {
+                        case TOP -> y;
+                        case MIDDLE -> y - (font.lineHeight / 2f) - 1;
+                        case BOTTOM -> y - font.lineHeight - 1;
+                    };
+
+            scissorX += translationX;
+            scissorY += translationY;
 
             RenderUtils.enableScissor(
                     (int) scissorX,
                     (int) scissorY,
-                    (int) renderArea,
-                    font.lineHeight + 1); // + 1 to account for letters that sit lower, eg y
+                    (int) renderWidth,
+                    (int) ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
             renderText(
                     poseStack,
                     styledText,
@@ -318,9 +347,9 @@ public final class FontRenderer {
             StyledText styledText,
             float x,
             float y,
-            float renderArea,
-            float scissorX,
-            float scissorY,
+            float renderWidth,
+            float translationX,
+            float translationY,
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
@@ -330,9 +359,9 @@ public final class FontRenderer {
                 styledText,
                 x,
                 y,
-                renderArea,
-                scissorX,
-                scissorY,
+                renderWidth,
+                translationX,
+                translationY,
                 customColor,
                 horizontalAlignment,
                 verticalAlignment,
@@ -345,7 +374,7 @@ public final class FontRenderer {
             StyledText styledText,
             float x,
             float y,
-            float renderArea,
+            float renderWidth,
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
@@ -356,14 +385,57 @@ public final class FontRenderer {
                 styledText,
                 x,
                 y,
-                renderArea,
-                x,
-                y,
+                renderWidth,
+                0,
+                0,
                 customColor,
                 horizontalAlignment,
                 verticalAlignment,
                 shadow,
                 textScale);
+    }
+
+    public void renderScrollingAlignedTextInBox(
+            PoseStack poseStack,
+            StyledText text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float renderWidth,
+            float translationX,
+            float translationY,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
+                };
+
+        renderScrollingString(
+                poseStack,
+                text,
+                renderX,
+                renderY,
+                renderWidth,
+                translationX,
+                translationY,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow,
+                1f);
     }
 
     private void renderText(
