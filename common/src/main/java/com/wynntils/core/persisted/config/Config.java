@@ -49,7 +49,7 @@ public class Config<T> extends PersistedValue<T> {
         this.userEdited = true;
     }
 
-    public void setValueFromObject(Object value) {
+    public void restoreValue(Object value) {
         setValue((T) value);
     }
 
