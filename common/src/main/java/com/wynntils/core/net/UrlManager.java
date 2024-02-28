@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -29,12 +29,72 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Manages the URLs used by the mod.
+ *
+ * <h2>URL sources:</h2>
+ * <ol>
+ *     <li>Resource bundled with the mod</li>
+ *     <li>Local cache</li>
+ *     <li>Online source</li>
+ * </ol>
+ *
+ * <p>
+ *     The sources are loaded in the order listed above, and the first valid source is used.
+ *     If a source is loaded later, it can override the previous sources, if the version is higher.
+ * </p>
+ * <p>
+ *     The URLs are stored in a JSON file, which is read and parsed into a map of id - url pairs.
+ * </p>
+ *
+ * <h3>URL override</h3>
+ * <p>
+ *     It is possible to override the URL list by setting the java property `wynntils.url.list.override.link` to a valid URL.
+ *     This will override the bundled URL list. This is useful for regions that block Github CDN or for private purposes.
+ * </p>
+ * <p>
+ *     It is also possible to ignore the cache by setting the java property `wynntils.url.list.ignore.cache` to true.
+ *     This will force the mod to download the URL list from the online source, even if the cache is valid.
+ *     This is useful for development purposes, or for regions where the url list tends to change frequently.
+ * </p>
+ */
 public final class UrlManager extends Manager {
+    // -Dwynntils.url.list.override.link=https://example.com/urls.json
+    private static final String URLS_OVERRIDE_ENV = "wynntils.url.list.override.link";
+    // -Dwynntils.url.list.ignore.cache=true
+    private static final String URLS_IGNORE_CACHE_ENV = "wynntils.url.list.ignore.cache";
+
+    private final URI urlListOverrideUri;
+    private final boolean ignoreCache;
+
     private Map<UrlId, UrlInfo> urlMap = Map.of();
     private int version = -1;
 
     public UrlManager(NetManager netManager) {
         super(List.of(netManager));
+
+        // Read the url override from environment
+        String urlListOverride = System.getProperty(URLS_OVERRIDE_ENV);
+        URI parsedOverrideUri;
+        try {
+            parsedOverrideUri = URI.create(urlListOverride);
+        } catch (Exception e) {
+            parsedOverrideUri = null;
+            WynntilsMod.error("Invalid URL list override link: " + urlListOverride);
+        }
+        urlListOverrideUri = parsedOverrideUri;
+
+        // Read the ignore cache from environment
+        ignoreCache = Boolean.parseBoolean(System.getProperty(URLS_IGNORE_CACHE_ENV));
+
+        // Log the settings
+        if (urlListOverrideUri == null) {
+            WynntilsMod.info(
+                    "Loading urls.json in the normal mode. Url cache is " + (ignoreCache ? "ignored" : "used") + ".");
+        } else {
+            WynntilsMod.info("Loading urls.json from " + urlListOverrideUri + ". Url cache is "
+                    + (ignoreCache ? "ignored" : "used") + ".");
+        }
 
         loadUrls();
     }
@@ -83,7 +143,38 @@ public final class UrlManager extends Manager {
     private void loadUrls() {
         // Figure out where to load the URLs from initially
 
-        // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
+        // If we don't have an override, read the URLs in a normal way
+        if (urlListOverrideUri == null) {
+            // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
+            readEmbeddedUrls();
+
+            if (!ignoreCache) {
+                // Then try to read the URLs from the local cache
+                readLocalUrlCache();
+            }
+
+            // Then trigger a (re-)download from the net to the cache
+            // We need to do the urlInfo lookup ourself, since we might have
+            // a embryonic netManager which can't do much.
+            UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+            if (urlInfo == null) {
+                WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
+                throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
+            }
+            URI uri = URI.create(urlInfo.url());
+            downloadAndReadRemoteUrls(uri);
+        } else {
+            if (!ignoreCache) {
+                // Try to read the URLs from the local cache
+                readLocalUrlCache();
+            }
+
+            // Then trigger a (re-)download from the net to the cache
+            downloadAndReadRemoteUrls(urlListOverrideUri);
+        }
+    }
+
+    private void readEmbeddedUrls() {
         try {
             readInputStreamForUrl(getBundledInputStream());
         } catch (IOException | JsonSyntaxException e) {
@@ -93,8 +184,9 @@ public final class UrlManager extends Manager {
                     "ERROR: Bundled JSON has invalid syntax or is malformed, or it could not be read. This might be because of a corrupt download. Try updating Wynntils.",
                     e);
         }
+    }
 
-        // Then try to read the URLs from the local cache
+    private void readLocalUrlCache() {
         Pair<FileInputStream, File> localCache = getLocalCacheInputStreams();
         if (localCache != null) {
             try {
@@ -105,16 +197,9 @@ public final class UrlManager extends Manager {
                 FileUtils.deleteFile(localCache.value());
             }
         }
+    }
 
-        // Then trigger a (re-)download from the net to the cache
-        // We need to do the urlInfo lookup ourself, since we might have
-        // a embryonic netManager which can't do much.
-        UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
-        if (urlInfo == null) {
-            WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
-            throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
-        }
-        URI uri = URI.create(urlInfo.url());
+    private void downloadAndReadRemoteUrls(URI uri) {
         String localFileName = UrlId.DATA_STATIC_URLS.getId();
 
         Download dl = Managers.Net.download(uri, localFileName);
