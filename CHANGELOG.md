@@ -1,9 +1,22 @@
+## [1.0.13](https://github.com/Wynntils/Artemis/compare/v1.0.12...v1.0.13) (2024-02-28)
+
+
+### New Features
+
+* Add option to prevent trades/duels whilst holding gathering tool [skip ci] ([#2345](https://github.com/Wynntils/Artemis/issues/2345)) ([f727ace](https://github.com/Wynntils/Artemis/commit/f727acea4a5f27ee6d032bfe7fa6719df36ffe9d))
+* Allow overriding urls.json source link and cache with Java properties ([#2351](https://github.com/Wynntils/Artemis/issues/2351)) ([b803dc7](https://github.com/Wynntils/Artemis/commit/b803dc7f28876d9245f82ce8eec25920653c9572))
+
 ## [1.0.12](https://github.com/Wynntils/Artemis/compare/v1.0.11...v1.0.12) (2024-02-18)
 
 
 ### Bug Fixes
 
 * Add missing urls.json entry causing crashes ([#2344](https://github.com/Wynntils/Artemis/issues/2344)) ([0cb50b0](https://github.com/Wynntils/Artemis/commit/0cb50b0ec36e4f20a3dc3778c0f2c51fbffa09e2))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.12 [skip ci] ([92d1113](https://github.com/Wynntils/Artemis/commit/92d11131ecfe5bf536d500316b2325a43cc92482))
 
 ## [1.0.11](https://github.com/Wynntils/Artemis/compare/v1.0.10...v1.0.11) (2024-02-18)
 
@@ -37,16 +50,4 @@
 
 * Bump Kir-Antipov/mc-publish@v3.3.0 to re-enable releases to Modrinth/Curseforge ([#2340](https://github.com/Wynntils/Artemis/issues/2340)) ([6fec8d1](https://github.com/Wynntils/Artemis/commit/6fec8d142ba4939fec2a2c176f36bcca16af4b92))
 * **release:** v1.0.9 [skip ci] ([d3f3964](https://github.com/Wynntils/Artemis/commit/d3f3964894f183b6d44594f2b2760a6c751765f8))
-
-## [1.0.8](https://github.com/Wynntils/Artemis/compare/v1.0.7...v1.0.8) (2024-02-08)
-
-
-### Bug Fixes
-
-* Wrong XP requirement ([#2339](https://github.com/Wynntils/Artemis/issues/2339)) ([eda6527](https://github.com/Wynntils/Artemis/commit/eda652793e5ba3f63ce8860b9a476908067c3d62))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.8 [skip ci] ([7a81283](https://github.com/Wynntils/Artemis/commit/7a81283a3d2187b256347a3e665480e0e455d01b))
 
