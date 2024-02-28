@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -7,6 +7,8 @@ package com.wynntils.utils.wynn;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,13 @@ public final class ItemUtils {
         if (gearItemOpt.isEmpty()) return false;
 
         return gearItemOpt.get().getGearType().isWeapon();
+    }
+
+    public static boolean isGatheringTool(ItemStack itemStack) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        return wynnItemOpt
+                .filter(wynnItem -> wynnItem instanceof GatheringToolItem)
+                .isPresent();
     }
 
     public static StyledText getItemName(ItemStack itemStack) {
