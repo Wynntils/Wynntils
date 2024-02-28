@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -15,7 +15,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
-        SearchableContainerType currentContainer = Models.Bank.getCurrentContainer();
+        InteractiveContainerType currentContainer = Models.Bank.getCurrentContainer();
         if (currentContainer == null) return;
 
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
@@ -166,20 +166,20 @@ public class CustomBankQuickJumpsFeature extends Feature {
     protected void onConfigUpdate(Config<?> unknownConfig) {
         String fieldName = unknownConfig.getFieldName();
 
-        SearchableContainerType containerType;
+        InteractiveContainerType containerType;
         int maxValue;
 
         switch (fieldName) {
             case "accountBankDestinations" -> {
-                containerType = SearchableContainerType.ACCOUNT_BANK;
+                containerType = InteractiveContainerType.ACCOUNT_BANK;
                 maxValue = MAX_ACCOUNT_BANK_PAGES;
             }
             case "blockBankDestinations" -> {
-                containerType = SearchableContainerType.BLOCK_BANK;
+                containerType = InteractiveContainerType.BLOCK_BANK;
                 maxValue = MAX_BLOCK_BANK_PAGES;
             }
             case "bookshelfDestinations", "miscBucketDestinations", "characterBankDestinations" -> {
-                containerType = SearchableContainerType.BOOKSHELF;
+                containerType = InteractiveContainerType.BOOKSHELF;
                 maxValue = MAX_DEFAULT_PAGES;
             }
             default -> {
@@ -208,7 +208,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
         }
     }
 
-    private List<Integer> parseStringToDestinations(String destinationsStr, SearchableContainerType containerType) {
+    private List<Integer> parseStringToDestinations(String destinationsStr, InteractiveContainerType containerType) {
         String[] destinationStrings = destinationsStr.split(",");
 
         try {

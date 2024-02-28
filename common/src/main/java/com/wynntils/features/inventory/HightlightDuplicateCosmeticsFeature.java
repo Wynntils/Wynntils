@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -16,7 +16,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
@@ -60,8 +60,8 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
         StyledText title = StyledText.fromComponent(screen.getTitle());
 
-        SearchableContainerType searchableContainerType = SearchableContainerType.getContainerType(title);
-        if (searchableContainerType != SearchableContainerType.SCRAP_MENU) return;
+        InteractiveContainerType interactiveContainerType = InteractiveContainerType.getContainerType(title);
+        if (interactiveContainerType != InteractiveContainerType.SCRAP_MENU) return;
 
         onScrapMenu = true;
     }
@@ -99,7 +99,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (!onScrapMenu) return;
 
         // Don't highlight the cosmetics in the selected slots
-        if (SearchableContainerType.SCRAP_MENU.getBounds().getSlots().contains(e.getSlot().index)) {
+        if (InteractiveContainerType.SCRAP_MENU.getBounds().getSlots().contains(e.getSlot().index)) {
             Component hoverName = e.getSlot().getItem().getHoverName();
             boolean isSelected = selectedCosmetics.contains(hoverName);
             boolean isHovered = hoverName.equals(hoveredCosmetic);

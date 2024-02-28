@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -57,7 +57,7 @@ public class BankModel extends Model {
 
     private boolean editingName;
     private int currentPage = 1;
-    private SearchableContainerType currentContainer;
+    private InteractiveContainerType currentContainer;
 
     public BankModel() {
         super(List.of());
@@ -68,15 +68,15 @@ public class BankModel extends Model {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
         if (Models.Container.isAccountBankScreen(screen)) {
-            currentContainer = SearchableContainerType.ACCOUNT_BANK;
+            currentContainer = InteractiveContainerType.ACCOUNT_BANK;
         } else if (Models.Container.isBlockBankScreen(screen)) {
-            currentContainer = SearchableContainerType.BLOCK_BANK;
+            currentContainer = InteractiveContainerType.BLOCK_BANK;
         } else if (Models.Container.isBookshelfScreen(screen)) {
-            currentContainer = SearchableContainerType.BOOKSHELF;
+            currentContainer = InteractiveContainerType.BOOKSHELF;
         } else if (Models.Container.isCharacterBankScreen(screen)) {
-            currentContainer = SearchableContainerType.CHARACTER_BANK;
+            currentContainer = InteractiveContainerType.CHARACTER_BANK;
         } else if (Models.Container.isMiscBucketScreen(screen)) {
-            currentContainer = SearchableContainerType.MISC_BUCKET;
+            currentContainer = InteractiveContainerType.MISC_BUCKET;
         } else {
             currentContainer = null;
             currentPage = 1;
@@ -203,7 +203,7 @@ public class BankModel extends Model {
         }
     }
 
-    public SearchableContainerType getCurrentContainer() {
+    public InteractiveContainerType getCurrentContainer() {
         return currentContainer;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -22,7 +22,7 @@ import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
-import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
@@ -73,6 +73,21 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInPetMenu = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInContentBook = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> filterInGuildTerritories = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> filterInHousingJukebox = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> filterInHousingList = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> filterInJukebox = new Config<>(true);
+
+    @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
@@ -84,7 +99,7 @@ public class ContainerSearchFeature extends Feature {
 
     private SearchWidget lastSearchWidget;
     private ItemSearchHelperWidget lastItemSearchHelperWidget;
-    private SearchableContainerType currentSearchableContainerType;
+    private InteractiveContainerType currentInteractiveContainerType;
     private boolean autoSearching = false;
     private ItemSearchQuery lastSearchQuery;
 
@@ -99,10 +114,9 @@ public class ContainerSearchFeature extends Feature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        SearchableContainerType searchableContainerType = getCurrentSearchableContainerType(title);
-        if (searchableContainerType == null) return;
+        currentInteractiveContainerType = getCurrentInteractiveContainerType(title);
+        if (currentInteractiveContainerType == null) return;
 
-        currentSearchableContainerType = searchableContainerType;
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
 
@@ -153,7 +167,7 @@ public class ContainerSearchFeature extends Feature {
         lastSearchWidget = null;
         lastSearchQuery = null;
         lastItemSearchHelperWidget = null;
-        currentSearchableContainerType = null;
+        currentInteractiveContainerType = null;
         autoSearching = false;
         guildBankLastSearch = 0;
     }
@@ -162,8 +176,8 @@ public class ContainerSearchFeature extends Feature {
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
         if (lastSearchWidget == null
-                || currentSearchableContainerType == null
-                || currentSearchableContainerType.getNextItemSlot() == -1
+                || currentInteractiveContainerType == null
+                || currentInteractiveContainerType.getNextItemSlot() == -1
                 || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
@@ -188,7 +202,7 @@ public class ContainerSearchFeature extends Feature {
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
         if (!autoSearching) return;
-        if (currentSearchableContainerType == SearchableContainerType.GUILD_BANK) {
+        if (currentInteractiveContainerType == InteractiveContainerType.GUILD_BANK) {
             long diff = System.currentTimeMillis() - guildBankLastSearch;
             if (diff < GUILD_BANK_SEARCH_DELAY) {
                 Managers.TickScheduler.scheduleLater(
@@ -201,58 +215,80 @@ public class ContainerSearchFeature extends Feature {
         StyledText name = StyledText.fromComponent(abstractContainerScreen
                 .getMenu()
                 .getItems()
-                .get(currentSearchableContainerType.getNextItemSlot())
+                .get(currentInteractiveContainerType.getNextItemSlot())
                 .getHoverName());
 
-        if (!name.matches(currentSearchableContainerType.getNextItemPattern())) {
+        if (!name.matches(currentInteractiveContainerType.getNextItemPattern())) {
             autoSearching = false;
             return;
         }
 
         ContainerUtils.clickOnSlot(
-                currentSearchableContainerType.getNextItemSlot(),
+                currentInteractiveContainerType.getNextItemSlot(),
                 abstractContainerScreen.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
     }
 
-    private SearchableContainerType getCurrentSearchableContainerType(StyledText title) {
-        SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
+    private InteractiveContainerType getCurrentInteractiveContainerType(StyledText title) {
+        InteractiveContainerType containerType = InteractiveContainerType.getContainerType(title);
 
-        if (containerType == SearchableContainerType.ACCOUNT_BANK && filterInBank.get()) {
-            return SearchableContainerType.ACCOUNT_BANK;
+        if (containerType == null || !containerType.isSearchable()) return null;
+
+        if (containerType == InteractiveContainerType.ACCOUNT_BANK && filterInBank.get()) {
+            return InteractiveContainerType.ACCOUNT_BANK;
         }
 
-        if (containerType == SearchableContainerType.CHARACTER_BANK && filterInBank.get()) {
-            return SearchableContainerType.CHARACTER_BANK;
+        if (containerType == InteractiveContainerType.BLOCK_BANK && filterInBlockBank.get()) {
+            return InteractiveContainerType.BLOCK_BANK;
         }
 
-        if (containerType == SearchableContainerType.BLOCK_BANK && filterInBlockBank.get()) {
-            return SearchableContainerType.BLOCK_BANK;
+        if (containerType == InteractiveContainerType.BOOKSHELF && filterInBookshelf.get()) {
+            return InteractiveContainerType.BOOKSHELF;
         }
 
-        if (containerType == SearchableContainerType.BOOKSHELF && filterInBookshelf.get()) {
-            return SearchableContainerType.BOOKSHELF;
+        if (containerType == InteractiveContainerType.CHARACTER_BANK && filterInBank.get()) {
+            return InteractiveContainerType.CHARACTER_BANK;
         }
 
-        if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket.get()) {
-            return SearchableContainerType.MISC_BUCKET;
+        if (containerType == InteractiveContainerType.CONTENT_BOOK && filterInContentBook.get()) {
+            return InteractiveContainerType.CONTENT_BOOK;
         }
 
-        if (containerType == SearchableContainerType.GUILD_BANK && filterInGuildBank.get()) {
-            return SearchableContainerType.GUILD_BANK;
+        if (containerType == InteractiveContainerType.GUILD_BANK && filterInGuildBank.get()) {
+            return InteractiveContainerType.GUILD_BANK;
         }
 
-        if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList.get()) {
-            return SearchableContainerType.MEMBER_LIST;
+        if (containerType == InteractiveContainerType.GUILD_TERRITORIES && filterInGuildTerritories.get()) {
+            return InteractiveContainerType.GUILD_TERRITORIES;
         }
 
-        if (containerType == SearchableContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
-            return SearchableContainerType.SCRAP_MENU;
+        if (containerType == InteractiveContainerType.HOUSING_JUKEBOX && filterInHousingJukebox.get()) {
+            return InteractiveContainerType.HOUSING_JUKEBOX;
         }
 
-        if (containerType == SearchableContainerType.PET_MENU && filterInPetMenu.get()) {
-            return SearchableContainerType.PET_MENU;
+        if (containerType == InteractiveContainerType.HOUSING_LIST && filterInHousingList.get()) {
+            return InteractiveContainerType.HOUSING_LIST;
+        }
+
+        if (containerType == InteractiveContainerType.JUKEBOX && filterInJukebox.get()) {
+            return InteractiveContainerType.JUKEBOX;
+        }
+
+        if (containerType == InteractiveContainerType.MEMBER_LIST && filterInGuildMemberList.get()) {
+            return InteractiveContainerType.MEMBER_LIST;
+        }
+
+        if (containerType == InteractiveContainerType.MISC_BUCKET && filterInMiscBucket.get()) {
+            return InteractiveContainerType.MISC_BUCKET;
+        }
+
+        if (containerType == InteractiveContainerType.PET_MENU && filterInPetMenu.get()) {
+            return InteractiveContainerType.PET_MENU;
+        }
+
+        if (containerType == InteractiveContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
+            return InteractiveContainerType.SCRAP_MENU;
         }
 
         return null;
@@ -295,7 +331,7 @@ public class ContainerSearchFeature extends Feature {
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
-            if (!currentSearchableContainerType.getBounds().getSlots().contains(i)) continue;
+            if (!currentInteractiveContainerType.getBounds().getSlots().contains(i)) continue;
 
             ItemStack itemStack = container.getItem(i);
 

@@ -6,10 +6,8 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.containers.type.SearchableContainerType;
-import com.wynntils.utils.type.Pair;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
@@ -46,16 +44,6 @@ public final class ContainerModel extends Model {
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
     public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
-    private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
-    private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
-    private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
-    private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
-    private static final Pair<Integer, Integer> GUILD_MEMBER_LIST_PREVIOUS_NEXT_SLOTS = new Pair<>(10, 28);
-    private static final Pair<Integer, Integer> JUKEBOX_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
-    private static final Pair<Integer, Integer> LOBBY_PREVIOUS_NEXT_SLOTS = new Pair<>(36, 44);
-    private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
-    private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
-    private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText JUKEBOX_NAME = StyledText.fromString("Player's Jukebox");
@@ -131,7 +119,7 @@ public final class ContainerModel extends Model {
 
     public boolean isGuildMemberListScreen(Screen screen) {
         return StyledText.fromComponent(screen.getTitle())
-                .matches(SearchableContainerType.MEMBER_LIST.getTitlePattern());
+                .matches(InteractiveContainerType.MEMBER_LIST.getTitlePattern());
     }
 
     public boolean isJukeboxScreen(Screen screen) {
@@ -235,60 +223,5 @@ public final class ContainerModel extends Model {
 
     public Matcher lootChestMatcher(Screen screen) {
         return StyledText.fromComponent(screen.getTitle()).getNormalized().getMatcher(LOOT_CHEST_PATTERN);
-    }
-
-    public Optional<Integer> getScrollSlot(AbstractContainerScreen<?> gui, boolean scrollUp) {
-        Pair<Integer, Integer> slots = getScrollSlots(gui, scrollUp);
-        if (slots == null) return Optional.empty();
-
-        return Optional.of(scrollUp ? slots.a() : slots.b());
-    }
-
-    private Pair<Integer, Integer> getScrollSlots(AbstractContainerScreen<?> gui, boolean scrollUp) {
-        if (isAbilityTreeScreen(gui)) {
-            return ABILITY_TREE_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isAccountBankScreen(gui)
-                || isBlockBankScreen(gui)
-                || isBookshelfScreen(gui)
-                || isCharacterBankScreen(gui)
-                || isMiscBucketScreen(gui)) {
-            if (!scrollUp && isLastBankPage(gui)) return null;
-
-            return BANK_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isGuildBankScreen(gui)) {
-            return GUILD_BANK_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isGuildMemberListScreen(gui)) {
-            return GUILD_MEMBER_LIST_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isTradeMarketScreen(gui)) {
-            if (scrollUp && isFirstTradeMarketPage(gui)) return null;
-
-            return TRADE_MARKET_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isSecondaryTradeMarketScreen(gui)) {
-            return TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isScrapMenuScreen(gui)) {
-            return SCRAP_MENU_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isContentBook(gui)) {
-            return CONTENT_BOOK_PREVIOUS_NEXT_SLOTS;
-        }
-
-        if (isLobbyScreen(gui)) {
-            return LOBBY_PREVIOUS_NEXT_SLOTS;
-        }
-
-        return null;
     }
 }
