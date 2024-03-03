@@ -235,63 +235,23 @@ public class ContainerSearchFeature extends Feature {
 
         if (containerType == null || !containerType.isSearchable()) return null;
 
-        if (containerType == InteractiveContainerType.ACCOUNT_BANK && filterInBank.get()) {
-            return InteractiveContainerType.ACCOUNT_BANK;
-        }
-
-        if (containerType == InteractiveContainerType.BLOCK_BANK && filterInBlockBank.get()) {
-            return InteractiveContainerType.BLOCK_BANK;
-        }
-
-        if (containerType == InteractiveContainerType.BOOKSHELF && filterInBookshelf.get()) {
-            return InteractiveContainerType.BOOKSHELF;
-        }
-
-        if (containerType == InteractiveContainerType.CHARACTER_BANK && filterInBank.get()) {
-            return InteractiveContainerType.CHARACTER_BANK;
-        }
-
-        if (containerType == InteractiveContainerType.CONTENT_BOOK && filterInContentBook.get()) {
-            return InteractiveContainerType.CONTENT_BOOK;
-        }
-
-        if (containerType == InteractiveContainerType.GUILD_BANK && filterInGuildBank.get()) {
-            return InteractiveContainerType.GUILD_BANK;
-        }
-
-        if (containerType == InteractiveContainerType.GUILD_TERRITORIES && filterInGuildTerritories.get()) {
-            return InteractiveContainerType.GUILD_TERRITORIES;
-        }
-
-        if (containerType == InteractiveContainerType.HOUSING_JUKEBOX && filterInHousingJukebox.get()) {
-            return InteractiveContainerType.HOUSING_JUKEBOX;
-        }
-
-        if (containerType == InteractiveContainerType.HOUSING_LIST && filterInHousingList.get()) {
-            return InteractiveContainerType.HOUSING_LIST;
-        }
-
-        if (containerType == InteractiveContainerType.JUKEBOX && filterInJukebox.get()) {
-            return InteractiveContainerType.JUKEBOX;
-        }
-
-        if (containerType == InteractiveContainerType.MEMBER_LIST && filterInGuildMemberList.get()) {
-            return InteractiveContainerType.MEMBER_LIST;
-        }
-
-        if (containerType == InteractiveContainerType.MISC_BUCKET && filterInMiscBucket.get()) {
-            return InteractiveContainerType.MISC_BUCKET;
-        }
-
-        if (containerType == InteractiveContainerType.PET_MENU && filterInPetMenu.get()) {
-            return InteractiveContainerType.PET_MENU;
-        }
-
-        if (containerType == InteractiveContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
-            return InteractiveContainerType.SCRAP_MENU;
-        }
-
-        return null;
+        return switch (containerType) {
+            case ACCOUNT_BANK -> filterInBank.get() ? InteractiveContainerType.ACCOUNT_BANK : null;
+            case BLOCK_BANK -> filterInBlockBank.get() ? InteractiveContainerType.BLOCK_BANK : null;
+            case BOOKSHELF -> filterInBookshelf.get() ? InteractiveContainerType.BOOKSHELF : null;
+            case CHARACTER_BANK -> filterInBank.get() ? InteractiveContainerType.CHARACTER_BANK : null;
+            case CONTENT_BOOK -> filterInContentBook.get() ? InteractiveContainerType.CONTENT_BOOK : null;
+            case GUILD_BANK -> filterInGuildBank.get() ? InteractiveContainerType.GUILD_BANK : null;
+            case GUILD_TERRITORIES -> filterInGuildTerritories.get() ? InteractiveContainerType.GUILD_TERRITORIES : null;
+            case HOUSING_JUKEBOX -> filterInHousingJukebox.get() ? InteractiveContainerType.HOUSING_JUKEBOX : null;
+            case HOUSING_LIST -> filterInHousingList.get() ? InteractiveContainerType.HOUSING_LIST : null;
+            case JUKEBOX -> filterInJukebox.get() ? InteractiveContainerType.JUKEBOX : null;
+            case MEMBER_LIST -> filterInGuildMemberList.get() ? InteractiveContainerType.MEMBER_LIST : null;
+            case MISC_BUCKET -> filterInMiscBucket.get() ? InteractiveContainerType.MISC_BUCKET : null;
+            case PET_MENU -> filterInPetMenu.get() ? InteractiveContainerType.PET_MENU : null;
+            case SCRAP_MENU -> filterInScrapMenu.get() ? InteractiveContainerType.SCRAP_MENU : null;
+            case ABILITY_TREE, LOBBY, TRADE_MARKET_FILTERS, TRADE_MARKET_PRIMARY, TRADE_MARKET_SECONDARY -> null;
+        };
     }
 
     private void addWidgets(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
