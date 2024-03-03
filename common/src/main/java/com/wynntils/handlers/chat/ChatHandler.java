@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -85,7 +85,7 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
-    private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
+    private static final long SLOWDOWN_PACKET_TICK_DELAY = 20;
     private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
@@ -152,7 +152,7 @@ public final class ChatHandler extends Handler {
 
                 postNpcDialogue(dialogue, delayedType, true);
             } else {
-                lastSlowdownApplied = System.currentTimeMillis();
+                lastSlowdownApplied = McUtils.mc().level.getGameTime();
             }
         }
     }
@@ -337,7 +337,7 @@ public final class ChatHandler extends Handler {
 
         NpcDialogueType type = isSelection ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL;
 
-        if ((System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS)) {
+        if (McUtils.mc().level.getGameTime() <= lastSlowdownApplied + SLOWDOWN_PACKET_TICK_DELAY) {
             // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
             // This is the normal case
             postNpcDialogue(dialog, type, true);
