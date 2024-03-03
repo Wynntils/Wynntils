@@ -119,7 +119,6 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        super.onClose();
         McUtils.mc().setScreen(previousScreen);
     }
 
