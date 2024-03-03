@@ -277,6 +277,11 @@ public final class ConfigManager extends Manager {
             Map<String, Object> configData =
                     Managers.Json.GSON.fromJson(jsonInput, new TypeToken<HashMap<String, Object>>() {}.getType());
 
+            if (configData == null) {
+                WynntilsMod.warn("Unable to import config due to invalid input");
+                return false;
+            }
+
             // Loop through all features chosen to import to
             for (Configurable feature : configsToImport) {
                 // Loop through the visible configs only as they are the only configs to be imported
