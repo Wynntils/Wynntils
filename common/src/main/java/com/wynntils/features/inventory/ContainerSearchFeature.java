@@ -242,7 +242,9 @@ public class ContainerSearchFeature extends Feature {
             case CHARACTER_BANK -> filterInBank.get() ? InteractiveContainerType.CHARACTER_BANK : null;
             case CONTENT_BOOK -> filterInContentBook.get() ? InteractiveContainerType.CONTENT_BOOK : null;
             case GUILD_BANK -> filterInGuildBank.get() ? InteractiveContainerType.GUILD_BANK : null;
-            case GUILD_TERRITORIES -> filterInGuildTerritories.get() ? InteractiveContainerType.GUILD_TERRITORIES : null;
+            case GUILD_TERRITORIES -> filterInGuildTerritories.get()
+                    ? InteractiveContainerType.GUILD_TERRITORIES
+                    : null;
             case HOUSING_JUKEBOX -> filterInHousingJukebox.get() ? InteractiveContainerType.HOUSING_JUKEBOX : null;
             case HOUSING_LIST -> filterInHousingList.get() ? InteractiveContainerType.HOUSING_LIST : null;
             case JUKEBOX -> filterInJukebox.get() ? InteractiveContainerType.JUKEBOX : null;
