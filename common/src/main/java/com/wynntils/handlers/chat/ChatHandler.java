@@ -121,6 +121,8 @@ public final class ChatHandler extends Handler {
     public void onTick(TickEvent event) {
         if (collectedLines.isEmpty()) return;
 
+        // Level only ticks after this event and packets/events
+        // This means that we should not allow equality here
         long ticks = McUtils.mc().level.getGameTime();
         if (ticks > chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
             // Send the collected screen lines
@@ -192,7 +194,10 @@ public final class ChatHandler extends Handler {
                 || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
             // This is a "chat screen"
             List<Component> lines = ComponentUtils.splitComponentInLines(message);
-            if (currentTicks < chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+
+            // Allow ticks to be equal, since we we want to
+            // collect all lines in the this tick and the next one
+            if (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
                 // We are collecting lines, so add to the current collection
                 collectedLines.addAll(lines);
             } else {
