@@ -1,3 +1,16 @@
+## [1.0.14](https://github.com/Wynntils/Artemis/compare/v1.0.13...v1.0.14) (2024-03-03)
+
+
+### Bug Fixes
+
+* Fix TradeMarketScreen crashing the game if the user closes an ItemSharingScreen ([#2354](https://github.com/Wynntils/Artemis/issues/2354)) ([07a8613](https://github.com/Wynntils/Artemis/commit/07a8613177b293bc1a47a1be6ddf2ed34a5b5064))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([70ba0da](https://github.com/Wynntils/Artemis/commit/70ba0daf57e775fc7004b4f125a01147f27719e1))
+* Remove unused UrlIds ([#2355](https://github.com/Wynntils/Artemis/issues/2355)) ([4c54247](https://github.com/Wynntils/Artemis/commit/4c54247a48a1737fba7d81fb1d6655e855fc7735))
+
 ## [1.0.13](https://github.com/Wynntils/Artemis/compare/v1.0.12...v1.0.13) (2024-02-28)
 
 
@@ -5,6 +18,11 @@
 
 * Add option to prevent trades/duels whilst holding gathering tool [skip ci] ([#2345](https://github.com/Wynntils/Artemis/issues/2345)) ([f727ace](https://github.com/Wynntils/Artemis/commit/f727acea4a5f27ee6d032bfe7fa6719df36ffe9d))
 * Allow overriding urls.json source link and cache with Java properties ([#2351](https://github.com/Wynntils/Artemis/issues/2351)) ([b803dc7](https://github.com/Wynntils/Artemis/commit/b803dc7f28876d9245f82ce8eec25920653c9572))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.0.13 [skip ci] ([01ab411](https://github.com/Wynntils/Artemis/commit/01ab41136869925e70f4cc8073490f756d8a8457))
 
 ## [1.0.12](https://github.com/Wynntils/Artemis/compare/v1.0.11...v1.0.12) (2024-02-18)
 
@@ -42,12 +60,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.10 [skip ci] ([6ffcac3](https://github.com/Wynntils/Artemis/commit/6ffcac3f59ecc855c276c73b094acd1b92c9433e))
-
-## [1.0.9](https://github.com/Wynntils/Artemis/compare/v1.0.8...v1.0.9) (2024-02-09)
-
-
-### Miscellaneous Chores
-
-* Bump Kir-Antipov/mc-publish@v3.3.0 to re-enable releases to Modrinth/Curseforge ([#2340](https://github.com/Wynntils/Artemis/issues/2340)) ([6fec8d1](https://github.com/Wynntils/Artemis/commit/6fec8d142ba4939fec2a2c176f36bcca16af4b92))
-* **release:** v1.0.9 [skip ci] ([d3f3964](https://github.com/Wynntils/Artemis/commit/d3f3964894f183b6d44594f2b2760a6c751765f8))
 
