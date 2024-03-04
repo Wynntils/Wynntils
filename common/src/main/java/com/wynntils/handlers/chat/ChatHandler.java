@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -85,7 +85,7 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
-    private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
+    private static final long SLOWDOWN_PACKET_TICK_DELAY = 20;
     private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
@@ -121,8 +121,10 @@ public final class ChatHandler extends Handler {
     public void onTick(TickEvent event) {
         if (collectedLines.isEmpty()) return;
 
+        // Tick event runs after the chat packets, with the same tick number
+        // as the chat packets. This means we can allow equality here.
         long ticks = McUtils.mc().level.getGameTime();
-        if (ticks > chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+        if (ticks >= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
             // Send the collected screen lines
             processCollectedChatScreen();
         }
@@ -152,7 +154,7 @@ public final class ChatHandler extends Handler {
 
                 postNpcDialogue(dialogue, delayedType, true);
             } else {
-                lastSlowdownApplied = System.currentTimeMillis();
+                lastSlowdownApplied = McUtils.mc().level.getGameTime();
             }
         }
     }
@@ -192,7 +194,10 @@ public final class ChatHandler extends Handler {
                 || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
             // This is a "chat screen"
             List<Component> lines = ComponentUtils.splitComponentInLines(message);
-            if (currentTicks < chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+
+            // Allow ticks to be equal, since we we want to
+            // collect all lines in the this tick and the next one
+            if (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
                 // We are collecting lines, so add to the current collection
                 collectedLines.addAll(lines);
             } else {
@@ -337,7 +342,7 @@ public final class ChatHandler extends Handler {
 
         NpcDialogueType type = isSelection ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL;
 
-        if ((System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS)) {
+        if (McUtils.mc().level.getGameTime() <= lastSlowdownApplied + SLOWDOWN_PACKET_TICK_DELAY) {
             // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
             // This is the normal case
             postNpcDialogue(dialog, type, true);
