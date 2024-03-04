@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.notifications;
@@ -51,10 +51,12 @@ public final class NotificationManager extends Manager {
         for (MessageContainer cachedContainer : cachedMessageSet) {
             StyledText checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
+                Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
+
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 
                 WynntilsMod.postEvent(new NotificationEvent.Edit(cachedContainer));
-                sendToChatIfNeeded(cachedContainer);
+                sendToChatIfNeeded(oldMessage, cachedContainer);
 
                 return cachedContainer;
             }
@@ -63,7 +65,7 @@ public final class NotificationManager extends Manager {
         cachedMessageSet.put(msgContainer);
 
         WynntilsMod.postEvent(new NotificationEvent.Queue(msgContainer));
-        sendToChatIfNeeded(msgContainer);
+        sendToChatIfNeeded(null, msgContainer);
 
         return msgContainer;
     }
@@ -73,8 +75,9 @@ public final class NotificationManager extends Manager {
      * If the edited MessageContainer has repeated messages,
      * the old message container's message count is decreased by one,
      * and a new message container is created with the new message.
+     *
      * @param msgContainer The message container to edit
-     * @param newMessage The new message
+     * @param newMessage   The new message
      * @return The message container that was edited. This may be the new message container.
      */
     public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
@@ -82,34 +85,57 @@ public final class NotificationManager extends Manager {
 
         // If we have multiple repeated messages, we want to only edit the last one.
         if (msgContainer.getMessageCount() > 1) {
+            Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
+
             // Decrease the message count of the old message
             msgContainer.setMessageCount(msgContainer.getMessageCount() - 1);
 
             // Let the mod know that the message was edited
             WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
-            sendToChatIfNeeded(msgContainer);
+            sendToChatIfNeeded(oldMessage, msgContainer);
 
             // Then, queue the new message
             return queueMessage(newMessage);
         } else {
+            Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
             msgContainer.editMessage(newMessage);
 
             WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
-            sendToChatIfNeeded(msgContainer);
+            sendToChatIfNeeded(oldMessage, msgContainer);
 
             return msgContainer;
         }
     }
 
-    private void sendToChatIfNeeded(MessageContainer container) {
-        // Overlay is not enabled, send in chat
+    /**
+     * Removes a message from the queue.
+     *
+     * @param msgContainer The message container to remove
+     */
+    public void removeMessage(MessageContainer msgContainer) {
+        WynntilsMod.info("Message Removed: " + msgContainer.getRenderTask());
+
+        WynntilsMod.postEvent(new NotificationEvent.Remove(msgContainer));
+
+        // If the message is in the chat, remove it
         if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
                 .isEnabled()) {
-            sendOrEditNotification(container);
+            McUtils.removeMessageFromChat(msgContainer.getRenderTask().getText().getComponent());
         }
     }
 
-    private void sendOrEditNotification(MessageContainer msgContainer) {
+    private void sendToChatIfNeeded(Component oldMessage, MessageContainer container) {
+        // Overlay is not enabled, send in chat
+        if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
+                .isEnabled()) {
+            sendOrEditNotification(oldMessage, container);
+        }
+    }
+
+    private void sendOrEditNotification(Component oldMessage, MessageContainer msgContainer) {
+        if (oldMessage != null) {
+            McUtils.removeMessageFromChat(oldMessage);
+        }
         McUtils.mc()
                 .gui
                 .getChat()
