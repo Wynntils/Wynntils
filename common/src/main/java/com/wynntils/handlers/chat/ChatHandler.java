@@ -7,7 +7,7 @@ package com.wynntils.handlers.chat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -22,10 +22,8 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
@@ -88,7 +86,6 @@ public final class ChatHandler extends Handler {
     private static final long SLOWDOWN_PACKET_TICK_DELAY = 20;
     private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
-    private final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private String lastRealChat = null;
     private long lastSlowdownApplied = 0;
     private List<Component> lastScreenNpcDialog = List.of();
@@ -96,14 +93,6 @@ public final class ChatHandler extends Handler {
     private NpcDialogueType delayedType;
     private long chatScreenTicks = 0;
     private List<Component> collectedLines = new ArrayList<>();
-
-    public void addNpcDialogExtractionDependent(Feature feature) {
-        dialogExtractionDependents.add(feature);
-    }
-
-    public void removeNpcDialogExtractionDependent(Feature feature) {
-        dialogExtractionDependents.remove(feature);
-    }
 
     @SubscribeEvent
     public void onConnectionChange(WynncraftConnectionEvent event) {
@@ -451,6 +440,6 @@ public final class ChatHandler extends Handler {
     }
 
     private boolean shouldSeparateNPC() {
-        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
+        return Models.NpcDialogue.isNpcDialogExtractionRequired();
     }
 }
