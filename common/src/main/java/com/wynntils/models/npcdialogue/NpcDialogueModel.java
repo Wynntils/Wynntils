@@ -108,6 +108,12 @@ public class NpcDialogueModel extends Model {
         // a while)
         if (type == NpcDialogueType.NORMAL && currentDialogue.currentDialogue().equals(msg)) return;
 
+        // If the message is "NONE", set an empty dialogue
+        if (type == NpcDialogueType.NONE) {
+            currentDialogue = NpcDialogue.EMPTY;
+            return;
+        }
+
         currentDialogue = new NpcDialogue(msg, type, protectedDialogue, System.currentTimeMillis());
 
         if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {

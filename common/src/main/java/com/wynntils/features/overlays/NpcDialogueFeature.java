@@ -60,6 +60,9 @@ public class NpcDialogueFeature extends Feature {
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
 
     @Persisted
+    public final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
+
+    @Persisted
     public final Config<Boolean> autoProgress = new Config<>(false);
 
     @Persisted
@@ -71,8 +74,13 @@ public class NpcDialogueFeature extends Feature {
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
+    // Normal mode
     private List<Component> lastDialogue = null;
     private MessageContainer autoProgressContainer = null;
+
+    // Legacy mode
+    private MessageContainer displayedHelperContainer = null;
+    private StyledText displayedHelperMessage = null;
 
     public NpcDialogueFeature() {
         super();
@@ -119,20 +127,18 @@ public class NpcDialogueFeature extends Feature {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         updateAutoProgressNotification();
-    }
-
-    private void printDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
-        switch (type) {
-            case NONE -> clearLastDialogue();
-            case NORMAL -> displayNormalDialogue(dialogues);
-            case SELECTION -> displaySelection(dialogues);
-            case CONFIRMATIONLESS -> displayConfirmationlessDialogue(dialogues);
-        }
+        displayHelperMessage();
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         cancelAutoProgress();
+
+        // Reset the state
+        lastDialogue = null;
+        autoProgressContainer = null;
+        displayedHelperMessage = null;
+        displayedHelperContainer = null;
     }
 
     public void cancelAutoProgress() {
@@ -141,10 +147,7 @@ public class NpcDialogueFeature extends Feature {
         scheduledAutoProgressKeyPress.cancel(true);
 
         // Also reset the auto progress container
-        if (autoProgressContainer != null) {
-            Managers.Notification.removeMessage(autoProgressContainer);
-            autoProgressContainer = null;
-        }
+        resetAutoProgressContainer();
     }
 
     public ScheduledFuture<?> getScheduledAutoProgressKeyPress() {
@@ -159,6 +162,38 @@ public class NpcDialogueFeature extends Feature {
                         McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
                 delay,
                 TimeUnit.MILLISECONDS);
+    }
+
+    private void printDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
+        if (chatDisplayType.get() == NpcDialogueChatDisplayType.NORMAL) {
+            switch (type) {
+                case NONE -> clearLastDialogue();
+                case NORMAL -> displayNormalDialogue(dialogues);
+                case SELECTION -> displaySelection(dialogues);
+                case CONFIRMATIONLESS -> displayConfirmationlessDialogue(dialogues);
+            }
+        } else {
+            if (type == NpcDialogueType.NONE) {
+                removeHelperMessage();
+                resetAutoProgressContainer();
+                return;
+            }
+
+            // In legacy mode, just print the dialogues in chat
+            dialogues.forEach(McUtils::sendMessageToClient);
+
+            if (type == NpcDialogueType.SELECTION) {
+                displayedHelperMessage =
+                        StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.selectAnOption")
+                                .withStyle(ChatFormatting.RED));
+                displayHelperMessage();
+            } else if (type == NpcDialogueType.NORMAL) {
+                displayedHelperMessage =
+                        StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
+                                .withStyle(ChatFormatting.GREEN));
+                displayHelperMessage();
+            }
+        }
     }
 
     private void displayNormalDialogue(List<Component> dialogues) {
@@ -195,7 +230,7 @@ public class NpcDialogueFeature extends Feature {
                 + " to cancel)");
 
         if (autoProgressContainer != null) {
-            Managers.Notification.editMessage(autoProgressContainer, autoProgressStyledText);
+            autoProgressContainer = Managers.Notification.editMessage(autoProgressContainer, autoProgressStyledText);
         } else {
             autoProgressContainer = Managers.Notification.queueMessage(autoProgressStyledText);
         }
@@ -222,9 +257,40 @@ public class NpcDialogueFeature extends Feature {
         }
 
         // Also reset the auto progress container
+        resetAutoProgressContainer();
+    }
+
+    private void resetAutoProgressContainer() {
         if (autoProgressContainer != null) {
             Managers.Notification.removeMessage(autoProgressContainer);
             autoProgressContainer = null;
         }
+    }
+
+    private void displayHelperMessage() {
+        // If the helper message is null, return
+        if (displayedHelperMessage == null) return;
+
+        if (displayedHelperContainer == null) {
+            displayedHelperContainer = Managers.Notification.queueMessage(displayedHelperMessage);
+            return;
+        }
+
+        displayedHelperContainer = Managers.Notification.editMessage(displayedHelperContainer, displayedHelperMessage);
+    }
+
+    private void removeHelperMessage() {
+        displayedHelperMessage = null;
+
+        // If the helper container is not null, remove it
+        if (displayedHelperContainer != null) {
+            Managers.Notification.removeMessage(displayedHelperContainer);
+            displayedHelperContainer = null;
+        }
+    }
+
+    public enum NpcDialogueChatDisplayType {
+        NORMAL,
+        LEGACY
     }
 }

@@ -81,27 +81,30 @@ public final class NotificationManager extends Manager {
      * @return The message container that was edited. This may be the new message container.
      */
     public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
+        StyledText oldMessage = msgContainer.getMessage();
+
+        // If the message is the same, don't do anything
+        if (oldMessage.equals(newMessage)) return msgContainer;
+
         WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage.getString());
 
         // If we have multiple repeated messages, we want to only edit the last one.
+        Component oldComponent = msgContainer.getRenderTask().getText().getComponent();
         if (msgContainer.getMessageCount() > 1) {
-            Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
-
             // Decrease the message count of the old message
             msgContainer.setMessageCount(msgContainer.getMessageCount() - 1);
 
             // Let the mod know that the message was edited
             WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
-            sendToChatIfNeeded(oldMessage, msgContainer);
+            sendToChatIfNeeded(oldComponent, msgContainer);
 
             // Then, queue the new message
             return queueMessage(newMessage);
         } else {
-            Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
             msgContainer.editMessage(newMessage);
 
             WynntilsMod.postEvent(new NotificationEvent.Edit(msgContainer));
-            sendToChatIfNeeded(oldMessage, msgContainer);
+            sendToChatIfNeeded(oldComponent, msgContainer);
 
             return msgContainer;
         }
@@ -115,6 +118,7 @@ public final class NotificationManager extends Manager {
     public void removeMessage(MessageContainer msgContainer) {
         WynntilsMod.info("Message Removed: " + msgContainer.getRenderTask());
 
+        cachedMessageSet.remove(msgContainer);
         WynntilsMod.postEvent(new NotificationEvent.Remove(msgContainer));
 
         // If the message is in the chat, remove it
