@@ -110,7 +110,10 @@ public class NpcDialogueOverlay extends Overlay {
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         List<StyledText> fakeDialogue = List.of(
                 StyledText.fromString(
-                        "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
+                        "§7[1/2] §2Random Citizen: §aDid you know that Wynntils is the best Wynncraft mod you'll probably find?"),
+                StyledText.EMPTY,
+                StyledText.fromString(
+                        "§7[2/2] §2Random Citizen: §aIt's got so many features, it's hard to keep track of them all!"));
         // we have to force update every time
         updateTextRenderSettings();
 
