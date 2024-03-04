@@ -186,12 +186,12 @@ public class NpcDialogueOverlay extends Overlay {
 
         if (showHelperTexts.get()) {
             // Render "To continue" message
-            List<TextRenderTask> renderTaskList = new LinkedList<>();
+            List<TextRenderTask> helperRenderTasks = new LinkedList<>();
             StyledText protection = isProtected ? StyledText.fromString("§f<protected> §r") : StyledText.EMPTY;
             if (dialogueType == NpcDialogueType.NORMAL) {
                 TextRenderTask pressSneakMessage =
                         new TextRenderTask(PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
-                renderTaskList.add(pressSneakMessage);
+                helperRenderTasks.add(pressSneakMessage);
             } else if (dialogueType == NpcDialogueType.SELECTION) {
                 String msg;
                 if (isProtected) {
@@ -201,7 +201,7 @@ public class NpcDialogueOverlay extends Overlay {
                 }
 
                 TextRenderTask pressSneakMessage = new TextRenderTask(protection.append("§c" + msg), renderSetting);
-                renderTaskList.add(pressSneakMessage);
+                helperRenderTasks.add(pressSneakMessage);
             }
 
             NpcDialogueFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueFeature.class);
@@ -219,18 +219,18 @@ public class NpcDialogueOverlay extends Overlay {
                                         .getStringWithoutFormatting()
                                 + " to cancel)",
                         renderSetting);
-                renderTaskList.add(autoProgressMessage);
+                helperRenderTasks.add(autoProgressMessage);
             }
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
                             bufferSource,
-                            this.getRenderX() + 5,
+                            this.getRenderX(),
                             this.getRenderY() + 20 + textHeight,
-                            renderTaskList,
-                            this.getWidth() - 30,
-                            this.getHeight() - 30,
+                            helperRenderTasks,
+                            this.getWidth(),
+                            this.getHeight() - 20,
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
         }
