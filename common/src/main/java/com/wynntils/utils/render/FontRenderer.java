@@ -394,8 +394,8 @@ public final class FontRenderer {
     }
 
     public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
-        return lines.stream()
-                .mapToInt(line -> (int) calculateRenderHeight(line, maxWidth))
+        return (float) lines.stream()
+                .mapToDouble(line -> calculateRenderHeight(line, maxWidth))
                 .sum();
     }
 
