@@ -108,13 +108,11 @@ public class ContainerSearchFeature extends Feature {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(screen.getMenu() instanceof ChestMenu)) return;
 
-        StyledText title = StyledText.fromComponent(screen.getTitle());
-
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        currentInteractiveContainerType = getCurrentInteractiveContainerType(title);
+        currentInteractiveContainerType = getCurrentInteractiveContainerType(screen);
         if (currentInteractiveContainerType == null) return;
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
@@ -150,6 +148,7 @@ public class ContainerSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
+        if (currentInteractiveContainerType == null) return;
         forceUpdateSearch();
 
         if (autoSearching && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
@@ -159,6 +158,7 @@ public class ContainerSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        if (currentInteractiveContainerType == null) return;
         forceUpdateSearch();
     }
 
@@ -230,8 +230,14 @@ public class ContainerSearchFeature extends Feature {
                 abstractContainerScreen.getMenu().getItems());
     }
 
-    private InteractiveContainerType getCurrentInteractiveContainerType(StyledText title) {
-        InteractiveContainerType containerType = InteractiveContainerType.getContainerType(title);
+    private InteractiveContainerType getCurrentInteractiveContainerType(Screen screen) {
+        InteractiveContainerType containerType = null;
+
+        for (InteractiveContainerType type : InteractiveContainerType.values()) {
+            if (type.isScreen(screen)) {
+                containerType = type;
+            }
+        }
 
         if (containerType == null || !containerType.isSearchable()) return null;
 
@@ -242,13 +248,13 @@ public class ContainerSearchFeature extends Feature {
             case CHARACTER_BANK -> filterInBank.get() ? InteractiveContainerType.CHARACTER_BANK : null;
             case CONTENT_BOOK -> filterInContentBook.get() ? InteractiveContainerType.CONTENT_BOOK : null;
             case GUILD_BANK -> filterInGuildBank.get() ? InteractiveContainerType.GUILD_BANK : null;
+            case GUILD_MEMBER_LIST -> filterInGuildMemberList.get() ? InteractiveContainerType.GUILD_MEMBER_LIST : null;
             case GUILD_TERRITORIES -> filterInGuildTerritories.get()
                     ? InteractiveContainerType.GUILD_TERRITORIES
                     : null;
             case HOUSING_JUKEBOX -> filterInHousingJukebox.get() ? InteractiveContainerType.HOUSING_JUKEBOX : null;
             case HOUSING_LIST -> filterInHousingList.get() ? InteractiveContainerType.HOUSING_LIST : null;
             case JUKEBOX -> filterInJukebox.get() ? InteractiveContainerType.JUKEBOX : null;
-            case MEMBER_LIST -> filterInGuildMemberList.get() ? InteractiveContainerType.MEMBER_LIST : null;
             case MISC_BUCKET -> filterInMiscBucket.get() ? InteractiveContainerType.MISC_BUCKET : null;
             case PET_MENU -> filterInPetMenu.get() ? InteractiveContainerType.PET_MENU : null;
             case SCRAP_MENU -> filterInScrapMenu.get() ? InteractiveContainerType.SCRAP_MENU : null;

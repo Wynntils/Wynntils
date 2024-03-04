@@ -10,7 +10,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -58,10 +57,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(screen.getMenu() instanceof ChestMenu)) return;
 
-        StyledText title = StyledText.fromComponent(screen.getTitle());
-
-        InteractiveContainerType interactiveContainerType = InteractiveContainerType.getContainerType(title);
-        if (interactiveContainerType != InteractiveContainerType.SCRAP_MENU) return;
+        if (!InteractiveContainerType.SCRAP_MENU.isScreen(screen)) return;
 
         onScrapMenu = true;
     }

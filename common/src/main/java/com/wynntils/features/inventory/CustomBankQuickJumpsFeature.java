@@ -138,7 +138,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
         InteractiveContainerType currentContainer = Models.Bank.getCurrentContainer();
         if (currentContainer == null) return;
 
-        if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
+        if (Models.Bank.isItemIndicatingLastBankPage(e.getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))) {
             Models.Bank.updateFinalPage();
 
             lastPage = currentPage;

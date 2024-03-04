@@ -15,6 +15,7 @@ import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
 import com.wynntils.models.characterstats.actionbar.SprintSegment;
+import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
@@ -114,6 +115,18 @@ public class TestRegex {
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f5§7/16");
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f14§7/15");
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f0§7/15");
+    }
+
+    @Test
+    public void BankModel_PERSONAL_STORAGE_PATTERN() {
+        PatternTester p = new PatternTester(BankModel.class, "PERSONAL_STORAGE_PATTERN");
+        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Bank");
+        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Bank");
+        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Bank");
+        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Block Bank");
+        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
+        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
+        p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
     }
 
     @Test
@@ -221,13 +234,6 @@ public class TestRegex {
     }
 
     @Test
-    public void ContainerModel_GUILD_BANK_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "GUILD_BANK_PATTERN");
-        p.shouldMatch("Very Cool Guild Name: Bank (Everyone)");
-        p.shouldMatch("Other very cool guild name: Bank (High Ranked)");
-    }
-
-    @Test
     public void ContainerModel_LOOT_CHEST_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "LOOT_CHEST_PATTERN");
         // Tier 1
@@ -238,27 +244,6 @@ public class TestRegex {
         p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]");
         // Tier 4
         p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]");
-    }
-
-    @Test
-    public void ContainerModel_PERSONAL_STORAGE_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "PERSONAL_STORAGE_PATTERN");
-        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Bank");
-        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Bank");
-        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Bank");
-        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Block Bank");
-        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
-        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
-        p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
-    }
-
-    @Test
-    public void ContainerModel_TRADE_MARKET_FILTER_TITLE() {
-        PatternTester p = new PatternTester(ContainerModel.class, "TRADE_MARKET_FILTER_TITLE");
-        // Page 1
-        p.shouldMatch("[Pg. 1] Filter Items");
-        // Page 7
-        p.shouldMatch("[Pg. 7] Filter Items");
     }
 
     @Test
