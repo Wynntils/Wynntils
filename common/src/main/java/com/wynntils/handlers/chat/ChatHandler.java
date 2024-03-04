@@ -121,10 +121,10 @@ public final class ChatHandler extends Handler {
     public void onTick(TickEvent event) {
         if (collectedLines.isEmpty()) return;
 
-        // Level only ticks after this event and packets/events
-        // This means that we should not allow equality here
+        // Tick event runs after the chat packets, with the same tick number
+        // as the chat packets. This means we can allow equality here.
         long ticks = McUtils.mc().level.getGameTime();
-        if (ticks > chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+        if (ticks >= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
             // Send the collected screen lines
             processCollectedChatScreen();
         }
