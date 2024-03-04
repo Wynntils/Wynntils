@@ -30,6 +30,8 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.Pair;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -91,16 +93,25 @@ public class NpcDialogueOverlay extends Overlay {
 
         if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
-        LinkedList<StyledText> allDialogues = new LinkedList<>(currentDialogue.currentDialogue());
-        confirmationlessDialogues.forEach(d -> {
+        List<Pair<Long, List<StyledText>>> unsortedDialogues = new LinkedList<>();
+
+        if (!currentDialogue.isEmpty()) {
+            unsortedDialogues.add(Pair.of(currentDialogue.addTime(), currentDialogue.currentDialogue()));
+        }
+
+        confirmationlessDialogues.forEach(d -> unsortedDialogues.add(Pair.of(d.addTime(), d.text())));
+
+        // Sort the dialogues by their add time
+        unsortedDialogues.sort(Comparator.comparingLong(Pair::a));
+
+        LinkedList<StyledText> allDialogues = new LinkedList<>();
+        unsortedDialogues.forEach(pair -> {
+            allDialogues.addAll(pair.b());
             allDialogues.add(StyledText.EMPTY);
-            allDialogues.addAll(d.text());
         });
 
-        if (currentDialogue.isEmpty()) {
-            // Remove the initial blank line in that case
-            allDialogues.removeFirst();
-        }
+        // Remove the last empty line
+        allDialogues.removeLast();
 
         renderDialogue(
                 poseStack, bufferSource, allDialogues, currentDialogue.dialogueType(), currentDialogue.isProtected());

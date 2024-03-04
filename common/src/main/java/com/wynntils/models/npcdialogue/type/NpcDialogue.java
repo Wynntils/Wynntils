@@ -8,8 +8,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import java.util.List;
 
-public record NpcDialogue(List<StyledText> currentDialogue, NpcDialogueType dialogueType, boolean isProtected) {
-    public static final NpcDialogue EMPTY = new NpcDialogue(List.of(), NpcDialogueType.NONE, false);
+public record NpcDialogue(
+        List<StyledText> currentDialogue, NpcDialogueType dialogueType, boolean isProtected, long addTime) {
+    public static final NpcDialogue EMPTY = new NpcDialogue(List.of(), NpcDialogueType.NONE, false, 0);
 
     public boolean isEmpty() {
         return currentDialogue.isEmpty();

@@ -7,4 +7,4 @@ package com.wynntils.models.npcdialogue.type;
 import com.wynntils.core.text.StyledText;
 import java.util.List;
 
-public record ConfirmationlessDialogue(List<StyledText> text, long removeTime) {}
+public record ConfirmationlessDialogue(List<StyledText> text, long addTime, long removeTime) {}

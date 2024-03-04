@@ -97,13 +97,18 @@ public class NpcDialogueModel extends Model {
         confirmationlessDialogues.removeIf(d -> d.text().equals(msg));
 
         if (type == NpcDialogueType.CONFIRMATIONLESS) {
-            ConfirmationlessDialogue dialogue =
-                    new ConfirmationlessDialogue(msg, System.currentTimeMillis() + calculateMessageReadTime(msg));
+            ConfirmationlessDialogue dialogue = new ConfirmationlessDialogue(
+                    msg, System.currentTimeMillis(), System.currentTimeMillis() + calculateMessageReadTime(msg));
             confirmationlessDialogues.add(dialogue);
             return;
         }
 
-        currentDialogue = new NpcDialogue(msg, type, protectedDialogue);
+        // If the message is the same as the current one, and the mode is "normal", don't update it
+        // (ChatHandler already filters duplicates, but there are rare cases where the same dialogue is refreshed after
+        // a while)
+        if (type == NpcDialogueType.NORMAL && currentDialogue.currentDialogue().equals(msg)) return;
+
+        currentDialogue = new NpcDialogue(msg, type, protectedDialogue, System.currentTimeMillis());
 
         if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
