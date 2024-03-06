@@ -87,6 +87,14 @@ public final class ChatHandler extends Handler {
     private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
     private String lastRealChat = null;
+
+    // This is used to detect when the lastRealChat message
+    // is actually a confirmationless dialogue, but not a standard one,
+    // and we can't parse it properly. That makes it be the last "real" chat,
+    // so when we receive the clear screen, we think that all the messages are new.
+    // By keeping track of the last two real chats, we can detect this case.
+    private String oneBeforeLastRealChat = null;
+
     private long lastSlowdownApplied = 0;
     private List<Component> lastScreenNpcDialog = List.of();
     private List<Component> delayedDialogue;
@@ -100,6 +108,7 @@ public final class ChatHandler extends Handler {
         collectedLines = new ArrayList<>();
         chatScreenTicks = 0;
         lastRealChat = null;
+        oneBeforeLastRealChat = null;
         lastSlowdownApplied = 0;
         lastScreenNpcDialog = List.of();
         delayedDialogue = null;
@@ -235,6 +244,14 @@ public final class ChatHandler extends Handler {
             for (Component line : lines) {
                 String plainText = StyledText.fromComponent(line).getStringWithoutFormatting();
                 if (plainText.equals(lastRealChat)) break;
+                if (plainText.equals(oneBeforeLastRealChat)) {
+                    // We've not found the last chat message, but we have found the one before that
+                    // This means that the last chat message was a confirmationless dialogue
+                    lastRealChat = oneBeforeLastRealChat;
+                    oneBeforeLastRealChat = null;
+
+                    break;
+                }
                 newLines.addLast(line);
             }
         }
@@ -386,6 +403,7 @@ public final class ChatHandler extends Handler {
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
             // foreground and background versions
+            oneBeforeLastRealChat = lastRealChat;
             lastRealChat = plainText;
         }
 
@@ -411,16 +429,16 @@ public final class ChatHandler extends Handler {
     }
 
     private void postNpcDialogue(List<Component> dialogue, NpcDialogueType type, boolean isProtected) {
+        if (type == NpcDialogueType.NONE) {
+            // Ignore any delayed dialogues, since they are now obsolete
+            delayedDialogue = null;
+        }
+
         // Confirmationless dialoges bypass the lastScreenNpcDialogue check
         if (type != NpcDialogueType.CONFIRMATIONLESS) {
             if (lastScreenNpcDialog.equals(dialogue)) return;
 
             lastScreenNpcDialog = dialogue;
-        }
-
-        if (type == NpcDialogueType.NONE) {
-            // Ignore any delayed dialogues, since they are now obsolete
-            delayedDialogue = null;
         }
 
         NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
