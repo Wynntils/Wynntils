@@ -1,14 +1,30 @@
-## [1.0.14](https://github.com/Wynntils/Artemis/compare/v1.0.13...v1.0.14) (2024-03-03)
+## [1.1.0](https://github.com/Wynntils/Artemis/compare/v1.0.13...v1.1.0) (2024-03-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Make NpcDialogueFeature work in a chat-based mode, add legacy chat mode, fix many NPC dialogue related bugs, make the overlay work once again (#2358)
+
+### New Features
+
+* Make NpcDialogueFeature work in a chat-based mode, add legacy chat mode, fix many NPC dialogue related bugs, make the overlay work once again ([#2358](https://github.com/Wynntils/Artemis/issues/2358)) ([c58214f](https://github.com/Wynntils/Artemis/commit/c58214f52fc584e8343bfce0ddf24b703d3dc5e1))
 
 
 ### Bug Fixes
 
+* Add a versions file for CI ([cafeeaf](https://github.com/Wynntils/Artemis/commit/cafeeaf7398a1f79cf05f4f73014479966972038))
+* Fix some bugs in dialogue parsing (in ChatHandler) [ci skip] ([#2357](https://github.com/Wynntils/Artemis/issues/2357)) ([c2d2c16](https://github.com/Wynntils/Artemis/commit/c2d2c163707e683aa1cf4d5ded9d40482ac56005))
+* Fix some bugs in dialogue parsing (in ChatHandler) [ci skip] ([#2357](https://github.com/Wynntils/Artemis/issues/2357)) ([54fed73](https://github.com/Wynntils/Artemis/commit/54fed73b4c6f757e982124c074813b2149e5859f))
+* Fix TradeMarketScreen crashing the game if the user closes an ItemSharingScreen ([#2354](https://github.com/Wynntils/Artemis/issues/2354)) ([4fc0a07](https://github.com/Wynntils/Artemis/commit/4fc0a070d5d073c73cf934d523f94acf1e53a544))
 * Fix TradeMarketScreen crashing the game if the user closes an ItemSharingScreen ([#2354](https://github.com/Wynntils/Artemis/issues/2354)) ([07a8613](https://github.com/Wynntils/Artemis/commit/07a8613177b293bc1a47a1be6ddf2ed34a5b5064))
+* fix versioning by adding a version.json file for release branch ([1c6c3d8](https://github.com/Wynntils/Artemis/commit/1c6c3d859f11f0802d365c7b8094b166a1f1ebb3))
 
 
 ### Miscellaneous Chores
 
+* [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([9286e50](https://github.com/Wynntils/Artemis/commit/9286e505d616d0022cf9bc9a12c9d1f1a3b20ad1))
 * [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([70ba0da](https://github.com/Wynntils/Artemis/commit/70ba0daf57e775fc7004b4f125a01147f27719e1))
+* **release:** v1.0.14 [skip ci] ([a91ad35](https://github.com/Wynntils/Artemis/commit/a91ad35e4c998f8f08c30283c2910804783e349c))
 * Remove unused UrlIds ([#2355](https://github.com/Wynntils/Artemis/issues/2355)) ([4c54247](https://github.com/Wynntils/Artemis/commit/4c54247a48a1737fba7d81fb1d6655e855fc7735))
 
 ## [1.0.13](https://github.com/Wynntils/Artemis/compare/v1.0.12...v1.0.13) (2024-02-28)
