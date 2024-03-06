@@ -86,6 +86,9 @@ public class NpcDialogueFeature extends Feature {
     private MessageContainer autoProgressContainer = null;
 
     // Legacy mode
+    // Used to track when confirmationless dialogues are turned into normal dialogues,
+    // so we only display the helper message, and not duplicate the dialogues
+    private List<Component> lastDialogue = null;
     private MessageContainer displayedHelperContainer = null;
     private StyledText displayedHelperMessage = null;
 
@@ -156,6 +159,7 @@ public class NpcDialogueFeature extends Feature {
         currentDialogue = null;
         confirmationlessDialogues = new ArrayList<>();
         autoProgressContainer = null;
+        lastDialogue = null;
         displayedHelperMessage = null;
         displayedHelperContainer = null;
     }
@@ -187,15 +191,22 @@ public class NpcDialogueFeature extends Feature {
         if (chatDisplayType.get() == NpcDialogueChatDisplayType.NORMAL) {
             updateDialogueScreen();
         } else {
-            if (type == NpcDialogueType.NONE) {
+            if (type == NpcDialogueType.NONE || dialogues.isEmpty()) {
+                lastDialogue = null;
                 removeHelperMessage();
                 resetAutoProgressContainer();
                 return;
             }
 
-            // In legacy mode, just print the dialogues in chat
-            dialogues.forEach(McUtils::sendMessageToClient);
+            // If the dialogues are not the same as the last dialogues, print them in chat
+            if (!Objects.equals(dialogues, this.lastDialogue)) {
+                this.lastDialogue = dialogues;
 
+                // In legacy mode, just print the dialogues in chat
+                dialogues.forEach(McUtils::sendMessageToClient);
+            }
+
+            // Either ways, display the helper message
             if (type == NpcDialogueType.SELECTION) {
                 displayedHelperMessage =
                         StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.selectAnOption")
