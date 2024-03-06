@@ -28,6 +28,7 @@ public class CommandHandler extends Handler {
             // and we also have a wait time after dialogue ends
             // (because dialogues tend to clear for a tick or two).
             commandQueueTicks = 0;
+            return;
         }
 
         commandQueueTicks++;
