@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
@@ -98,7 +98,7 @@ public class CustomCommandKeybindsFeature extends Feature {
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
-            case EXECUTE -> Handlers.Command.sendCommand(keybindCommand);
+            case EXECUTE -> Handlers.Command.sendCommandImmediately(keybindCommand);
             case SUGGEST -> McUtils.mc().setScreen(new ChatScreen(keybindCommand));
         }
     }

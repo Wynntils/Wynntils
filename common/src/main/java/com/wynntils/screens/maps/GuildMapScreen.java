@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -281,7 +281,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            Handlers.Command.sendCommand("gu territory " + territoryPoi.getName());
+            Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
             int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);

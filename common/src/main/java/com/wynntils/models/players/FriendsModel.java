@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -235,7 +235,7 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {
             friendMessageStatus = ListStatus.EXPECTING;
             lastFriendRequest = System.currentTimeMillis();
-            Handlers.Command.sendCommand("friend list");
+            Handlers.Command.queueCommand("friend list");
         } else {
             WynntilsMod.info("Skipping friend list request because it was requested very recently.");
         }
@@ -243,7 +243,7 @@ public final class FriendsModel extends Model {
         if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
             onlineMessageStatus = ListStatus.EXPECTING;
             lastOnlineRequest = System.currentTimeMillis();
-            Handlers.Command.sendCommand("friend online");
+            Handlers.Command.queueCommand("friend online");
         } else {
             WynntilsMod.info("Skipping online friend list request because it was requested very recently.");
         }

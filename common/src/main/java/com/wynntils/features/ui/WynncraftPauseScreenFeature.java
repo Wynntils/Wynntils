@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -49,7 +49,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                 (button) -> {
                     McUtils.mc().setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
-                    Handlers.Command.sendCommand("class");
+                    Handlers.Command.sendCommandImmediately("class");
                 });
 
         renderables.set(3, classSelection);
@@ -62,7 +62,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                     (button) -> {
                         McUtils.mc().setScreen(null);
                         McUtils.mc().mouseHandler.grabMouse();
-                        Handlers.Command.sendCommand("hub");
+                        Handlers.Command.sendCommandImmediately("hub");
                     });
 
             renderables.set(4, hub);

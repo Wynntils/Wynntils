@@ -191,8 +191,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     private void shareItem(String target) {
         switch (target) {
-            case "guild" -> Handlers.Command.sendCommand("g " + encodedItem.toUtf16String());
-            case "party" -> Handlers.Command.sendCommand("p " + encodedItem.toUtf16String());
+            case "guild" -> Handlers.Command.sendCommandImmediately("g " + encodedItem.toUtf16String());
+            case "party" -> Handlers.Command.sendCommandImmediately("p " + encodedItem.toUtf16String());
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 

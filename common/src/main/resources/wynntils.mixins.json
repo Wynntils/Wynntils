@@ -3,6 +3,7 @@
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
+    "ChatComponentMixin",
     "ChatScreenMixin",
     "ChestMenuMixin",
     "ClientLevelMixin",
