@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.upfixers;
@@ -18,6 +18,8 @@ import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMovedUpfixer;
+import com.wynntils.core.persisted.upfixers.config.NpcDialoguesRenamedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
@@ -45,6 +47,8 @@ public class UpfixerManager extends Manager {
         registerUpfixer(new OverlayConfigsIntegrationUpfixer());
         registerUpfixer(new CustomBankQuickJumpsUpfixer());
         registerUpfixer(new CustomBankQuickJumpsBankNameUpfixer());
+        registerUpfixer(new NpcDialoguesRenamedUpfixer());
+        registerUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
     }
 
     private void registerUpfixer(Upfixer upfixer) {
