@@ -241,7 +241,7 @@ public final class ChatTabService extends Service {
         String autoCommand = getFocusedTab().getAutoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            Handlers.Command.sendCommandImmediate(autoCommand + " " + message);
+            Handlers.Command.sendCommandImmediately(autoCommand + " " + message);
         } else {
             McUtils.sendChat(message);
         }

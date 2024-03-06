@@ -48,7 +48,7 @@ public class CommandHandler extends Handler {
      * All commands automatically log when they are executed.
      * @param command The command to queue. The leading '/' should not be included.
      */
-    public void sendCommand(String command) {
+    public void queueCommand(String command) {
         if (commandQueueTicks >= TICKS_PER_EXECUTE && !Models.NpcDialogue.isInDialogue()) {
             WynntilsMod.info("Executing queued command immediately: " + command);
             McUtils.mc().getConnection().sendCommand(command);
@@ -64,7 +64,7 @@ public class CommandHandler extends Handler {
      * All commands automatically log when they are executed.
      * @param command The command to execute. The leading '/' should not be included.
      */
-    public void sendCommandImmediate(String command) {
+    public void sendCommandImmediately(String command) {
         WynntilsMod.info("Executing immediate command: " + command);
         McUtils.mc().getConnection().sendCommand(command);
     }

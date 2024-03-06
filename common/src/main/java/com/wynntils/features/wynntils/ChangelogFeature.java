@@ -53,7 +53,7 @@ public class ChangelogFeature extends Feature {
                     lastShownVersion.store(WynntilsMod.getVersion());
 
                     if (autoClassMenu.get()) {
-                        Handlers.Command.sendCommandImmediate("class");
+                        Handlers.Command.sendCommandImmediately("class");
                         waitForScreen = true;
                         changelogData = changelog;
                     } else {

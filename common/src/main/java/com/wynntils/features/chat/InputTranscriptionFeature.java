@@ -150,7 +150,7 @@ public class InputTranscriptionFeature extends Feature {
 
             if (!updatedCommand.equals(command)) {
                 event.setCanceled(true);
-                Handlers.Command.sendCommandImmediate(updatedCommand);
+                Handlers.Command.sendCommandImmediately(updatedCommand);
             }
         }
 

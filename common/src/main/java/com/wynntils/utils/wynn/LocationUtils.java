@@ -53,11 +53,11 @@ public final class LocationUtils {
 
     private static void sendShareMessage(String target, String locationString) {
         if (target.equals("guild")) {
-            Handlers.Command.sendCommandImmediate("g " + locationString);
+            Handlers.Command.sendCommandImmediately("g " + locationString);
         } else if (target.equals("party")) {
-            Handlers.Command.sendCommandImmediate("p " + locationString);
+            Handlers.Command.sendCommandImmediately("p " + locationString);
         } else {
-            Handlers.Command.sendCommandImmediate("msg " + target + " " + locationString);
+            Handlers.Command.sendCommandImmediately("msg " + target + " " + locationString);
         }
     }
 }

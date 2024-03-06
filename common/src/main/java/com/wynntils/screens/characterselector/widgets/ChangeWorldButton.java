@@ -32,7 +32,7 @@ public class ChangeWorldButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        Handlers.Command.sendCommandImmediate("hub");
+        Handlers.Command.sendCommandImmediately("hub");
     }
 
     @Override
