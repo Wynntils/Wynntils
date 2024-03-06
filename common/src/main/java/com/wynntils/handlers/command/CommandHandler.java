@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.command;
@@ -21,6 +21,15 @@ public class CommandHandler extends Handler {
     @SubscribeEvent
     public void onTick(TickEvent e) {
         if (!Models.WorldState.onWorld()) return;
+
+        if (Models.NpcDialogue.isInDialogue()) {
+            // Reset the command queue ticks when we are in dialogue,
+            // so that we don't execute commands mid-dialogue,
+            // and we also have a wait time after dialogue ends
+            // (because dialogues tend to clear for a tick or two).
+            commandQueueTicks = 0;
+        }
+
         commandQueueTicks++;
 
         if (commandQueueTicks >= TICKS_PER_EXECUTE && !commandQueue.isEmpty()) {
@@ -34,17 +43,29 @@ public class CommandHandler extends Handler {
     /**
      * Sends a command to the Wynncraft server. Commands will be sent as soon as possible, respecting the
      * server ratelimit. Queued commands may take up to {@link TICKS_PER_EXECUTE} each to execute.
+     * Use this when the mod requires a command to be sent, but it is not directly requested by the user.
      * If a queue is required, executions happen in the order they are queued.
      * All commands automatically log when they are executed.
      * @param command The command to queue. The leading '/' should not be included.
      */
     public void sendCommand(String command) {
-        if (commandQueueTicks >= TICKS_PER_EXECUTE) {
-            WynntilsMod.info("Executing immediate command: " + command);
+        if (commandQueueTicks >= TICKS_PER_EXECUTE && !Models.NpcDialogue.isInDialogue()) {
+            WynntilsMod.info("Executing queued command immediately: " + command);
             McUtils.mc().getConnection().sendCommand(command);
             commandQueueTicks = 0;
         } else {
             commandQueue.add(command);
         }
+    }
+
+    /**
+     * Sends a command to the Wynncraft server immediately, bypassing the queue.
+     * Use this method for user initiated commands, or commands that need to be executed immediately.
+     * All commands automatically log when they are executed.
+     * @param command The command to execute. The leading '/' should not be included.
+     */
+    public void sendCommandImmediate(String command) {
+        WynntilsMod.info("Executing immediate command: " + command);
+        McUtils.mc().getConnection().sendCommand(command);
     }
 }

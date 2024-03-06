@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.chat;
@@ -241,7 +241,7 @@ public final class ChatTabService extends Service {
         String autoCommand = getFocusedTab().getAutoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            Handlers.Command.sendCommand(autoCommand + " " + message);
+            Handlers.Command.sendCommandImmediate(autoCommand + " " + message);
         } else {
             McUtils.sendChat(message);
         }

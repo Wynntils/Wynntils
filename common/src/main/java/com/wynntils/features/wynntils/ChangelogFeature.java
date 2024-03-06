@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -53,7 +53,7 @@ public class ChangelogFeature extends Feature {
                     lastShownVersion.store(WynntilsMod.getVersion());
 
                     if (autoClassMenu.get()) {
-                        Handlers.Command.sendCommand("class");
+                        Handlers.Command.sendCommandImmediate("class");
                         waitForScreen = true;
                         changelogData = changelog;
                     } else {

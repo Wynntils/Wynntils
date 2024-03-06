@@ -73,6 +73,10 @@ public class NpcDialogueModel extends Model {
         return delay;
     }
 
+    public boolean isInDialogue() {
+        return currentDialogue != NpcDialogue.EMPTY && !currentDialogue.isEmpty();
+    }
+
     public NpcDialogue getCurrentDialogue() {
         return currentDialogue;
     }

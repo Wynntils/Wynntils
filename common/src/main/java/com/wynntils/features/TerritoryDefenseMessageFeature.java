@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -37,7 +37,8 @@ public class TerritoryDefenseMessageFeature extends Feature {
             Matcher matcher = StyledText.fromComponent(tooltipLine)
                     .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
             if (matcher.matches()) {
-                Handlers.Command.sendCommand("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
+                Handlers.Command.sendCommandImmediate(
+                        "g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
                 return;
             }
         }
