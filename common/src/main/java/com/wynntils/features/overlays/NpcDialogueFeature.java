@@ -20,11 +20,14 @@ import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.npcdialogue.type.ConfirmationlessDialogue;
+import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -75,7 +78,11 @@ public class NpcDialogueFeature extends Feature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     // Normal mode
-    private List<Component> lastDialogue = null;
+    // This list holds a constructed dialogue screen,
+    // with all the currently displayed dialogues
+    private List<Component> currentlyDisplayedDialogue = null;
+    private NpcDialogue currentDialogue = null;
+    private List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
     private MessageContainer autoProgressContainer = null;
 
     // Legacy mode
@@ -126,8 +133,18 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        // Both modes
         updateAutoProgressNotification();
-        displayHelperMessage();
+
+        // Normal mode
+        if (chatDisplayType.get() == NpcDialogueChatDisplayType.NORMAL) {
+            updateDialogueScreen();
+        }
+
+        // Legacy mode
+        if (chatDisplayType.get() == NpcDialogueChatDisplayType.LEGACY) {
+            displayHelperMessage();
+        }
     }
 
     @SubscribeEvent
@@ -135,7 +152,9 @@ public class NpcDialogueFeature extends Feature {
         cancelAutoProgress();
 
         // Reset the state
-        lastDialogue = null;
+        currentlyDisplayedDialogue = null;
+        currentDialogue = null;
+        confirmationlessDialogues = new ArrayList<>();
         autoProgressContainer = null;
         displayedHelperMessage = null;
         displayedHelperContainer = null;
@@ -166,12 +185,7 @@ public class NpcDialogueFeature extends Feature {
 
     private void printDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
         if (chatDisplayType.get() == NpcDialogueChatDisplayType.NORMAL) {
-            switch (type) {
-                case NONE -> clearLastDialogue();
-                case NORMAL -> displayNormalDialogue(dialogues);
-                case SELECTION -> displaySelection(dialogues);
-                case CONFIRMATIONLESS -> displayConfirmationlessDialogue(dialogues);
-            }
+            updateDialogueScreen();
         } else {
             if (type == NpcDialogueType.NONE) {
                 removeHelperMessage();
@@ -196,22 +210,54 @@ public class NpcDialogueFeature extends Feature {
         }
     }
 
-    private void displayNormalDialogue(List<Component> dialogues) {
-        List<Component> screenLines = new ArrayList<>();
+    private void updateDialogueScreen() {
+        List<ConfirmationlessDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
+        NpcDialogue currentDialogue = Models.NpcDialogue.getCurrentDialogue();
+
+        // If there is no dialogue, clear the last dialogue
+        if (currentDialogue == null || currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) {
+            clearLastDialogue();
+            return;
+        }
+
+        // If there is no change in the dialogues, return
+        if (Objects.equals(currentDialogue, this.currentDialogue)
+                && Objects.equals(confirmationlessDialogues, this.confirmationlessDialogues)) {
+            return;
+        }
+
+        this.currentDialogue = currentDialogue;
+        this.confirmationlessDialogues = confirmationlessDialogues;
 
         // Construct the dialogue screen
-        screenLines.add(Component.empty());
-        screenLines.addAll(dialogues);
-        screenLines.add(Component.empty());
-        screenLines.add(PRESS_SHIFT_TO_CONTINUE.getComponent());
-        screenLines.add(Component.empty());
+        List<Component> screenLines = new ArrayList<>();
+
+        for (ConfirmationlessDialogue confirmationlessDialogue : confirmationlessDialogues) {
+            screenLines.add(Component.empty());
+            screenLines.addAll(confirmationlessDialogue.text().stream()
+                    .map(StyledText::getComponent)
+                    .toList());
+        }
+
+        if (currentDialogue != null && !currentDialogue.isEmpty()) {
+            screenLines.add(Component.empty());
+            screenLines.addAll(currentDialogue.currentDialogue().stream()
+                    .map(StyledText::getComponent)
+                    .toList());
+            screenLines.add(Component.empty());
+            screenLines.add(PRESS_SHIFT_TO_CONTINUE.getComponent());
+            screenLines.add(Component.empty());
+        } else {
+            // Add an empty line after the last confirmationless dialogue
+            screenLines.add(Component.empty());
+        }
 
         // If the last dialogue is not null, clear it
         clearLastDialogue();
 
         // Send the dialogue to the client
         screenLines.forEach(McUtils::sendMessageToClient);
-        lastDialogue = screenLines;
+        currentlyDisplayedDialogue = screenLines;
     }
 
     private void updateAutoProgressNotification() {
@@ -236,24 +282,10 @@ public class NpcDialogueFeature extends Feature {
         }
     }
 
-    private void displaySelection(List<Component> dialogues) {
-        // If the last dialogue is not null, clear it
-        clearLastDialogue();
-
-        // Send the dialogue to the client
-        dialogues.forEach(McUtils::sendMessageToClient);
-        lastDialogue = dialogues;
-    }
-
-    private void displayConfirmationlessDialogue(List<Component> dialogues) {
-        // We don't want to set last dialogue here, as it's not a normal dialogue
-        dialogues.forEach(McUtils::sendMessageToClient);
-    }
-
     private void clearLastDialogue() {
-        if (lastDialogue != null) {
-            lastDialogue.forEach(McUtils::removeMessageFromChat);
-            lastDialogue = null;
+        if (currentlyDisplayedDialogue != null) {
+            currentlyDisplayedDialogue.forEach(McUtils::removeMessageFromChat);
+            currentlyDisplayedDialogue = null;
         }
 
         // Also reset the auto progress container

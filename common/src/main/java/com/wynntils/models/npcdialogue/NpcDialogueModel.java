@@ -78,7 +78,7 @@ public class NpcDialogueModel extends Model {
     }
 
     public List<ConfirmationlessDialogue> getConfirmationlessDialogues() {
-        return confirmationlessDialogues;
+        return List.copyOf(confirmationlessDialogues);
     }
 
     private void handleDialogue(List<Component> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
