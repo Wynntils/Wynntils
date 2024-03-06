@@ -136,6 +136,8 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (Managers.Overlay.isEnabled(npcDialogueOverlay)) return;
+
         // Both modes
         updateAutoProgressNotification();
 
