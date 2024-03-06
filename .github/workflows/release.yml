@@ -30,14 +30,15 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v5.1.0
+        uses: TriPSs/conventional-changelog-action@v5.2.1
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
           git-user-email: 'admin@wynntils.com'
           pre-commit: ./.github/.pre-commit.js
           config-file-path: ./.github/.config.js
-          skip-version-file: true
+          version-file: ./version.json
+          fallback-version: 1.0.0
           skip-git-pull: true
           pre-release: false
           release-count: 5
