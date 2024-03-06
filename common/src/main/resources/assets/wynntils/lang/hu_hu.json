@@ -236,8 +236,6 @@
   "feature.wynntils.mainMap.pointerType.description": "Milyen stílusú legyen a fő térkép játékos jelölése?",
   "feature.wynntils.mainMap.pointerType.name": "Fő Térkép Játékos Jelölés Típusa",
   "feature.wynntils.minimap.overlay.minimap.pointerColor.name": "Játékos Jelölés Színe",
-  "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.textShadow.description": "Hogyan nézzen ki a szöveg árnyéka?",
-  "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.textShadow.name": "Szöveg Árnyék",
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow.description": "Hogyan nézzen ki a szöveg árnyéka?",
   "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow.name": "Szöveg Árnyék",
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.description": "A játékos szellemek átlátszóságának szintje",
