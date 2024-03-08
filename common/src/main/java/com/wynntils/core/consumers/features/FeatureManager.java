@@ -88,7 +88,7 @@ import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
-import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
+import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
@@ -276,7 +276,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
-        registerFeature(new NpcDialogueOverlayFeature());
+        registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());

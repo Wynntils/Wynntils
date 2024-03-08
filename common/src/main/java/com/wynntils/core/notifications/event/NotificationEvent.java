@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.notifications.event;
@@ -26,6 +26,12 @@ public class NotificationEvent extends Event {
 
     public static class Edit extends NotificationEvent {
         public Edit(MessageContainer messageContainer) {
+            super(messageContainer);
+        }
+    }
+
+    public static class Remove extends NotificationEvent {
+        public Remove(MessageContainer messageContainer) {
             super(messageContainer);
         }
     }

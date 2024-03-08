@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container.scriptedquery;
@@ -76,7 +76,7 @@ public class QueryStep {
 
     public static QueryStep sendCommand(String command) {
         return new QueryStep(container -> {
-            Handlers.Command.sendCommand(command);
+            Handlers.Command.queueCommand(command);
             return true;
         });
     }

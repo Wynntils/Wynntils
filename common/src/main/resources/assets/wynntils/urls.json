@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticGearAdvanced",
-    "md5": "de09786b0ef8f8401e4794f204c9618e",
+    "md5": "c1a442a84db4f7675b1c06dbf118c9af",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
@@ -135,7 +135,7 @@
   },
   {
     "id": "dataStaticIngredientsAdvanced",
-    "md5": "0b6a25022ca5113677196f4b026c9476",
+    "md5": "56f32c7fb6a2c4dc186f331adc51d3c1",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
@@ -192,11 +192,6 @@
     "id": "dataStaticShinyStats",
     "md5": "c1837281e4b45af5683189ebd465d1cc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/shiny_stats.json"
-  },
-  {
-    "id": "dataStaticShinyStats",
-    "md5": "2dbc0fdde50512b64828d5642bb480b6",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/shiny_stats.json"
   },
   {
     "id": "dataStaticSplashes",

@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.extension.ChatComponentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -75,6 +76,10 @@ public final class McUtils {
             return;
         }
         player().sendSystemMessage(component);
+    }
+
+    public static void removeMessageFromChat(Component component) {
+        ((ChatComponentExtension) mc().gui.getChat()).deleteMessage(component);
     }
 
     public static void sendErrorToClient(String errorMsg) {

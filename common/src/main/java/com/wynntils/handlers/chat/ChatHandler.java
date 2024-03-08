@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -7,7 +7,7 @@ package com.wynntils.handlers.chat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -22,10 +22,8 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
@@ -85,11 +83,18 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
-    private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
+    private static final long SLOWDOWN_PACKET_TICK_DELAY = 20;
     private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
-    private final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private String lastRealChat = null;
+
+    // This is used to detect when the lastRealChat message
+    // is actually a confirmationless dialogue, but not a standard one,
+    // and we can't parse it properly. That makes it be the last "real" chat,
+    // so when we receive the clear screen, we think that all the messages are new.
+    // By keeping track of the last two real chats, we can detect this case.
+    private String oneBeforeLastRealChat = null;
+
     private long lastSlowdownApplied = 0;
     private List<Component> lastScreenNpcDialog = List.of();
     private List<Component> delayedDialogue;
@@ -97,20 +102,13 @@ public final class ChatHandler extends Handler {
     private long chatScreenTicks = 0;
     private List<Component> collectedLines = new ArrayList<>();
 
-    public void addNpcDialogExtractionDependent(Feature feature) {
-        dialogExtractionDependents.add(feature);
-    }
-
-    public void removeNpcDialogExtractionDependent(Feature feature) {
-        dialogExtractionDependents.remove(feature);
-    }
-
     @SubscribeEvent
     public void onConnectionChange(WynncraftConnectionEvent event) {
         // Reset chat handler
         collectedLines = new ArrayList<>();
         chatScreenTicks = 0;
         lastRealChat = null;
+        oneBeforeLastRealChat = null;
         lastSlowdownApplied = 0;
         lastScreenNpcDialog = List.of();
         delayedDialogue = null;
@@ -121,8 +119,10 @@ public final class ChatHandler extends Handler {
     public void onTick(TickEvent event) {
         if (collectedLines.isEmpty()) return;
 
+        // Tick event runs after the chat packets, with the same tick number
+        // as the chat packets. This means we can allow equality here.
         long ticks = McUtils.mc().level.getGameTime();
-        if (ticks > chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+        if (ticks >= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
             // Send the collected screen lines
             processCollectedChatScreen();
         }
@@ -152,7 +152,7 @@ public final class ChatHandler extends Handler {
 
                 postNpcDialogue(dialogue, delayedType, true);
             } else {
-                lastSlowdownApplied = System.currentTimeMillis();
+                lastSlowdownApplied = McUtils.mc().level.getGameTime();
             }
         }
     }
@@ -192,7 +192,10 @@ public final class ChatHandler extends Handler {
                 || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
             // This is a "chat screen"
             List<Component> lines = ComponentUtils.splitComponentInLines(message);
-            if (currentTicks < chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+
+            // Allow ticks to be equal, since we we want to
+            // collect all lines in the this tick and the next one
+            if (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
                 // We are collecting lines, so add to the current collection
                 collectedLines.addAll(lines);
             } else {
@@ -241,6 +244,14 @@ public final class ChatHandler extends Handler {
             for (Component line : lines) {
                 String plainText = StyledText.fromComponent(line).getStringWithoutFormatting();
                 if (plainText.equals(lastRealChat)) break;
+                if (plainText.equals(oneBeforeLastRealChat)) {
+                    // We've not found the last chat message, but we have found the one before that
+                    // This means that the last chat message was a confirmationless dialogue
+                    lastRealChat = oneBeforeLastRealChat;
+                    oneBeforeLastRealChat = null;
+
+                    break;
+                }
                 newLines.addLast(line);
             }
         }
@@ -337,7 +348,7 @@ public final class ChatHandler extends Handler {
 
         NpcDialogueType type = isSelection ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL;
 
-        if ((System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS)) {
+        if (McUtils.mc().level.getGameTime() <= lastSlowdownApplied + SLOWDOWN_PACKET_TICK_DELAY) {
             // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
             // This is the normal case
             postNpcDialogue(dialog, type, true);
@@ -392,6 +403,7 @@ public final class ChatHandler extends Handler {
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
             // foreground and background versions
+            oneBeforeLastRealChat = lastRealChat;
             lastRealChat = plainText;
         }
 
@@ -417,16 +429,16 @@ public final class ChatHandler extends Handler {
     }
 
     private void postNpcDialogue(List<Component> dialogue, NpcDialogueType type, boolean isProtected) {
+        if (type == NpcDialogueType.NONE) {
+            // Ignore any delayed dialogues, since they are now obsolete
+            delayedDialogue = null;
+        }
+
         // Confirmationless dialoges bypass the lastScreenNpcDialogue check
         if (type != NpcDialogueType.CONFIRMATIONLESS) {
             if (lastScreenNpcDialog.equals(dialogue)) return;
 
             lastScreenNpcDialog = dialogue;
-        }
-
-        if (type == NpcDialogueType.NONE) {
-            // Ignore any delayed dialogues, since they are now obsolete
-            delayedDialogue = null;
         }
 
         NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
@@ -446,6 +458,6 @@ public final class ChatHandler extends Handler {
     }
 
     private boolean shouldSeparateNPC() {
-        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
+        return Models.NpcDialogue.isNpcDialogExtractionRequired();
     }
 }

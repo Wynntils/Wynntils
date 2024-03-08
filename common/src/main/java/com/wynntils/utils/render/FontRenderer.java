@@ -326,10 +326,7 @@ public final class FontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, x, currentY, line);
-            // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
-            currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
-                    line.getSetting().maxWidth());
+            currentY += calculateRenderHeight(line.getText(), line.getSetting().maxWidth());
         }
     }
 
@@ -384,8 +381,8 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                height += font.wordWrapHeight(textRenderTask.getText().getString(), (int)
-                        textRenderTask.getSetting().maxWidth());
+                height += calculateRenderHeight(
+                        textRenderTask.getText(), textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
         }
@@ -397,18 +394,17 @@ public final class FontRenderer {
     }
 
     public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
-        int sum = 0;
-        for (StyledText line : lines) {
-            sum += font.wordWrapHeight(line.getString(), (int) maxWidth);
-        }
-        return sum;
+        return (float) lines.stream()
+                .mapToDouble(line -> calculateRenderHeight(line, maxWidth))
+                .sum();
     }
 
     public float calculateRenderHeight(StyledText line, float maxWidth) {
-        return font.wordWrapHeight(line.getString(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
+        return calculateRenderHeight(line.getString(), maxWidth);
     }
 
     public float calculateRenderHeight(String line, float maxWidth) {
-        return font.wordWrapHeight(line, maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
+        // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
+        return font.wordWrapHeight(line.isEmpty() ? " " : line, maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 }
