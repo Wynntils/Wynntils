@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -358,6 +358,13 @@ public final class OverlayManager extends Manager {
 
     public Set<Overlay> getOverlays() {
         return overlayInfoMap.keySet();
+    }
+
+    public <T extends Overlay> T getOverlay(Class<T> overlayClass) {
+        return (T) overlayInfoMap.keySet().stream()
+                .filter(overlayClass::isInstance)
+                .findFirst()
+                .orElse(null);
     }
 
     public Feature getOverlayParent(Overlay overlay) {
