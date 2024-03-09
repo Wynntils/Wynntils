@@ -10,10 +10,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.npcdialogue.type.ConfirmationlessDialogue;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NpcDialogueModel extends Model {
@@ -31,21 +28,16 @@ public class NpcDialogueModel extends Model {
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
 
     private NpcDialogue currentDialogue = NpcDialogue.EMPTY;
-    private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+    private List<NpcDialogue> confirmationlessDialogues = new ArrayList<>();
 
     public NpcDialogueModel() {
         super(List.of());
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent e) {
-        handleDialogue(e.getChatMessage(), e.isProtected(), e.getType());
-    }
-
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = NpcDialogue.EMPTY;
-        confirmationlessDialogues.clear();
+        confirmationlessDialogues = new ArrayList<>();
     }
 
     @SubscribeEvent
@@ -81,11 +73,11 @@ public class NpcDialogueModel extends Model {
         return currentDialogue;
     }
 
-    public List<ConfirmationlessDialogue> getConfirmationlessDialogues() {
+    public List<NpcDialogue> getConfirmationlessDialogues() {
         return List.copyOf(confirmationlessDialogues);
     }
 
-    private void handleDialogue(List<Component> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
+    public void handleDialogue(List<Component> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
         List<StyledText> msg =
                 chatMessage.stream().map(StyledText::fromComponent).toList();
 
@@ -98,11 +90,15 @@ public class NpcDialogueModel extends Model {
         // Just remove the old and add the new with an updated remove time
         // It can also happen that a confirmationless dialogue turn into a normal
         // dialogue after a while (the "Press SHIFT..." text do not appear immediately)
-        confirmationlessDialogues.removeIf(d -> d.text().equals(msg));
+        confirmationlessDialogues.removeIf(d -> d.currentDialogue().equals(msg));
 
         if (type == NpcDialogueType.CONFIRMATIONLESS) {
-            ConfirmationlessDialogue dialogue = new ConfirmationlessDialogue(
-                    msg, System.currentTimeMillis(), System.currentTimeMillis() + calculateMessageReadTime(msg));
+            NpcDialogue dialogue = new NpcDialogue(
+                    msg,
+                    NpcDialogueType.CONFIRMATIONLESS,
+                    protectedDialogue,
+                    System.currentTimeMillis(),
+                    System.currentTimeMillis() + calculateMessageReadTime(msg));
             confirmationlessDialogues.add(dialogue);
             return;
         }
@@ -118,7 +114,7 @@ public class NpcDialogueModel extends Model {
             return;
         }
 
-        currentDialogue = new NpcDialogue(msg, type, protectedDialogue, System.currentTimeMillis());
+        currentDialogue = new NpcDialogue(msg, type, protectedDialogue, System.currentTimeMillis(), 0);
 
         if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead

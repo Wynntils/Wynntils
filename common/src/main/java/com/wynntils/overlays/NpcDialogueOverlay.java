@@ -15,9 +15,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
-import com.wynntils.models.npcdialogue.type.ConfirmationlessDialogue;
+import com.wynntils.models.npcdialogue.event.NpcDialogEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -76,19 +75,21 @@ public class NpcDialogueOverlay extends Overlay {
 
     @SubscribeEvent
     public void onNpcDialogue(NpcDialogEvent event) {
+        NpcDialogue dialogue = event.getDialogue();
+
         // This is specific to the overlay, so we don't want to handle it in the feature
         // (when we display the dialogues in the chat, we don't need to duplicate the message)
-        if (event.getType() == NpcDialogueType.SELECTION) {
+        if (dialogue.dialogueType() == NpcDialogueType.SELECTION) {
             // This is a bit of a workaround to be able to select the options
             MutableComponent clickMsg =
                     Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
-            event.getChatMessage()
+            dialogue.dialogueComponent()
                     .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
             McUtils.sendMessageToClient(clickMsg);
 
             // Save the selection components so we can remove it later
             selectionComponents = clickMsg;
-        } else if (event.getType() == NpcDialogueType.NONE) {
+        } else if (dialogue.dialogueType() == NpcDialogueType.NONE) {
             // Remove the selection components if it exists
             if (selectionComponents != null) {
                 McUtils.removeMessageFromChat(selectionComponents);
@@ -100,7 +101,7 @@ public class NpcDialogueOverlay extends Overlay {
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         NpcDialogue currentDialogue = Models.NpcDialogue.getCurrentDialogue();
-        List<ConfirmationlessDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
+        List<NpcDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
 
         if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
@@ -110,7 +111,7 @@ public class NpcDialogueOverlay extends Overlay {
             unsortedDialogues.add(Pair.of(currentDialogue.addTime(), currentDialogue.currentDialogue()));
         }
 
-        confirmationlessDialogues.forEach(d -> unsortedDialogues.add(Pair.of(d.addTime(), d.text())));
+        confirmationlessDialogues.forEach(d -> unsortedDialogues.add(Pair.of(d.addTime(), d.currentDialogue())));
 
         // Sort the dialogues by their add time
         unsortedDialogues.sort(Comparator.comparingLong(Pair::a));

@@ -1,11 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
@@ -15,9 +13,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
-import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.npcdialogue.event.NpcDialogEvent;
+import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
@@ -79,52 +77,47 @@ public class TranslationFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent e) {
+    public void onNpcDialogue(NpcDialogEvent event) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
+        if (event.getDialogue().isEmpty()) return;
 
-        if (e instanceof TranslatedNpcDialogEvent) return;
+        NpcDialogue dialogue = event.getDialogue();
 
-        if (!e.getChatMessage().isEmpty()) {
-            List<String> wrapped = e.getChatMessage().stream()
-                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
-                    .toList();
-            Services.Translation.getTranslator(translationService.get())
-                    .translate(wrapped, languageName.get(), translatedMsgList -> {
-                        List<Component> translatedComponents = translatedMsgList.stream()
-                                .map(this::unwrapCoding)
-                                .map(s -> ((Component) s.getComponent()))
-                                .toList();
-                        Managers.TickScheduler.scheduleNextTick(() -> {
-                            NpcDialogEvent translatedEvent =
-                                    new TranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
-                            WynntilsMod.postEvent(translatedEvent);
-                        });
-                    });
-        } else {
-            // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());
-            WynntilsMod.postEvent(translatedEvent);
-        }
-        if (!keepOriginal.get()) {
-            e.setCanceled(true);
-        }
+        List<String> wrappedStrings =
+                dialogue.currentDialogue().stream().map(this::wrapCoding).toList();
+
+        Services.Translation.getTranslator(translationService.get())
+                .translate(wrappedStrings, languageName.get(), translatedMsgList -> {
+                    List<Component> translatedComponents = translatedMsgList.stream()
+                            .map(this::unwrapCoding)
+                            .map(s -> ((Component) s.getComponent()))
+                            .toList();
+
+                    // FIXME: Reimplement
+                    //                    Managers.TickScheduler.scheduleNextTick(() -> {
+                    //                        NpcDialogEvent translatedEvent =
+                    //                                new TranslatedNpcDialogEvent(translatedComponents,
+                    // event.getType(), event.isProtected());
+                    //                        WynntilsMod.postEvent(translatedEvent);
+                    //                    });
+                });
+
+        // FIXME: Reimplement
+        //        if (!keepOriginal.get()) {
+        //            e.setCanceled(true);
+        //        }
     }
 
     private StyledText unwrapCoding(String origCoded) {
         // Some translated text (e.g. from pt_br) contains Á. This will be stripped later on,
         // so convert it to A (not ideal but better than nothing).
+        // FIXME: Check if Á should be À
         return StyledText.fromString(
                 origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1").replace('Á', 'A'));
     }
 
     private String wrapCoding(StyledText origCoded) {
         return origCoded.getString().replaceAll("(§[0-9a-fklmnor])", "{$1}");
-    }
-
-    private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
-            super(chatMsg, type, isProtected);
-        }
     }
 }
