@@ -16,7 +16,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
-import com.wynntils.models.npcdialogue.event.NpcDialogEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -74,7 +74,7 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     @SubscribeEvent
-    public void onNpcDialogue(NpcDialogEvent event) {
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Post event) {
         NpcDialogue dialogue = event.getDialogue();
 
         // This is specific to the overlay, so we don't want to handle it in the feature
@@ -83,8 +83,8 @@ public class NpcDialogueOverlay extends Overlay {
             // This is a bit of a workaround to be able to select the options
             MutableComponent clickMsg =
                     Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
-            dialogue.dialogueComponent()
-                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
+            event.getPostProcessedDialogue()
+                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line.getComponent())));
             McUtils.sendMessageToClient(clickMsg);
 
             // Save the selection components so we can remove it later

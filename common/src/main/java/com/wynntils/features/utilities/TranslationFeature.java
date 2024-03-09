@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.utilities;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
@@ -14,12 +15,12 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.models.npcdialogue.event.NpcDialogEvent;
-import com.wynntils.models.npcdialogue.type.NpcDialogue;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.network.chat.Component;
+import java.util.concurrent.CompletableFuture;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -76,43 +77,53 @@ public class TranslationFeature extends Feature {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent event) {
+    // Translation should be the last post-processing step
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
-        if (event.getDialogue().isEmpty()) return;
 
-        NpcDialogue dialogue = event.getDialogue();
+        event.addProcessingStep(future -> future.thenCompose(styledTexts -> {
+            if (styledTexts.isEmpty()) return CompletableFuture.completedFuture(styledTexts);
 
-        List<String> wrappedStrings =
-                dialogue.currentDialogue().stream().map(this::wrapCoding).toList();
+            CompletableFuture<List<StyledText>> translationFuture = new CompletableFuture<>();
 
-        Services.Translation.getTranslator(translationService.get())
-                .translate(wrappedStrings, languageName.get(), translatedMsgList -> {
-                    List<Component> translatedComponents = translatedMsgList.stream()
-                            .map(this::unwrapCoding)
-                            .map(s -> ((Component) s.getComponent()))
-                            .toList();
+            CompletableFuture.runAsync(() -> {
+                try {
+                    Services.Translation.getTranslator(translationService.get())
+                            .translate(
+                                    styledTexts.stream().map(this::wrapCoding).toList(),
+                                    languageName.get(),
+                                    translatedMsgList -> {
+                                        List<StyledText> translatedComponents = new ArrayList<>();
 
-                    // FIXME: Reimplement
-                    //                    Managers.TickScheduler.scheduleNextTick(() -> {
-                    //                        NpcDialogEvent translatedEvent =
-                    //                                new TranslatedNpcDialogEvent(translatedComponents,
-                    // event.getType(), event.isProtected());
-                    //                        WynntilsMod.postEvent(translatedEvent);
-                    //                    });
-                });
+                                        // Add the original message if requested
+                                        if (keepOriginal.get()) {
+                                            translatedComponents.addAll(styledTexts);
+                                        }
 
-        // FIXME: Reimplement
-        //        if (!keepOriginal.get()) {
-        //            e.setCanceled(true);
-        //        }
+                                        // Add the translated message
+                                        translatedComponents.addAll(translatedMsgList.stream()
+                                                .map(this::unwrapCoding)
+                                                .toList());
+
+                                        translationFuture.complete(translatedComponents);
+                                    });
+                } catch (Exception e) {
+                    WynntilsMod.error("Failed to translate NPC dialogue.", e);
+                    translationFuture.complete(styledTexts);
+                }
+            });
+
+            return translationFuture;
+        }));
     }
 
     private StyledText unwrapCoding(String origCoded) {
         // Some translated text (e.g. from pt_br) contains Á. This will be stripped later on,
         // so convert it to A (not ideal but better than nothing).
         // FIXME: Check if Á should be À
+        // FIXME: We can easily inject back clickable/hoverable events here, with StyledText
         return StyledText.fromString(
                 origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1").replace('Á', 'A'));
     }

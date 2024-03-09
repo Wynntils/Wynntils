@@ -14,7 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.npcdialogue.event.NpcDialogEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
@@ -77,12 +77,12 @@ public class TranscribeMessagesFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent event) {
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!transcribeNpcs.get()) return;
 
         NpcDialogue dialogue = event.getDialogue();
         if (dialogue.currentDialogue().stream()
-                .anyMatch(text -> Models.WynnAlphabet.hasWynnicOrGavellian(text.getStringWithoutFormatting()))) {
+                .noneMatch(text -> Models.WynnAlphabet.hasWynnicOrGavellian(text.getStringWithoutFormatting()))) {
             return;
         }
 
@@ -97,24 +97,23 @@ public class TranscribeMessagesFeature extends Feature {
         //            event.setCanceled(true);
         //        }
 
-        List<Component> transcriptedComponents = dialogue.currentDialogue().stream()
-                .map(styledText ->
-                        getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, true))
-                .map(s -> ((Component) s.getComponent()))
-                .toList();
-
         // FIXME: Reimplement
         //        if (showTooltip.get()) {
         //            for (Component transcriptedComponent : transcriptedComponents) {
         //                McUtils.sendMessageToClient(transcriptedComponent);
         //            }
-        //        } else {
-        //            Managers.TickScheduler.scheduleNextTick(() -> {
-        //                NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
-        //                        transcriptedComponents, event.getType(), event.isProtected());
-        //                WynntilsMod.postEvent(transcriptedEvent);
-        //            });
         //        }
+
+        event.addProcessingStep(future ->
+                future.thenApply(styledTexts -> transcribeText(styledTexts, transcribeWynnic, transcribeGavellian)));
+    }
+
+    private List<StyledText> transcribeText(
+            List<StyledText> styledTexts, boolean transcribeWynnic, boolean transcribeGavellian) {
+        return styledTexts.stream()
+                .map(styledText ->
+                        getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, true))
+                .toList();
     }
 
     private StyledText getStyledTextWithTranscription(

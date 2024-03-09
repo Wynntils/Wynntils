@@ -19,7 +19,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.npcdialogue.event.NpcDialogEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
@@ -92,21 +92,13 @@ public class NpcDialogueFeature extends Feature {
     private StyledText displayedHelperMessage = null;
 
     public NpcDialogueFeature() {
-        super();
-
         // Add this feature as a dependent of the NpcDialogueModel
         Models.NpcDialogue.addNpcDialogExtractionDependent(this);
     }
 
     @SubscribeEvent
-    public void onNpcDialogue(NpcDialogEvent event) {
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         NpcDialogue dialogue = event.getDialogue();
-
-        // If the overlay is not enabled, print the dialogue in chat, like Wynn would
-        if (!Managers.Overlay.isEnabled(npcDialogueOverlay)) {
-            printDialogueInChat(dialogue.dialogueComponent(), dialogue.dialogueType(), dialogue.isProtected());
-        }
-
         NpcDialogueType dialogueType = dialogue.dialogueType();
 
         if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) return;
@@ -133,6 +125,20 @@ public class NpcDialogueFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onNpcDialoguePost(NpcDialogueProcessingEvent.Post event) {
+        NpcDialogue dialogue = event.getDialogue();
+
+        // If the overlay is not enabled, print the dialogue in chat, like Wynn would
+        if (!Managers.Overlay.isEnabled(npcDialogueOverlay)
+                && chatDisplayType.get() == NpcDialogueChatDisplayType.LEGACY) {
+            printLegacyDialogueInChat(
+                    event.getPostProcessedDialogueComponent(), dialogue.dialogueType(), dialogue.isProtected());
+        }
+
+        // NpcDialogueChatDisplayType.NORMAL mode updates in the onTick method
+    }
+
+    @SubscribeEvent
     public void onTick(TickEvent event) {
         if (Managers.Overlay.isEnabled(npcDialogueOverlay)) return;
 
@@ -146,6 +152,13 @@ public class NpcDialogueFeature extends Feature {
 
         // Legacy mode
         if (chatDisplayType.get() == NpcDialogueChatDisplayType.LEGACY) {
+            if (!Models.NpcDialogue.isInDialogue()) {
+                lastDialogue = null;
+                removeHelperMessage();
+                resetAutoProgressContainer();
+                return;
+            }
+
             displayHelperMessage();
         }
     }
@@ -187,37 +200,26 @@ public class NpcDialogueFeature extends Feature {
                 TimeUnit.MILLISECONDS);
     }
 
-    private void printDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
-        if (chatDisplayType.get() == NpcDialogueChatDisplayType.NORMAL) {
-            updateDialogueScreen();
-        } else {
-            if (type == NpcDialogueType.NONE || dialogues.isEmpty()) {
-                lastDialogue = null;
-                removeHelperMessage();
-                resetAutoProgressContainer();
-                return;
-            }
+    private void printLegacyDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
+        // If the dialogues are not the same as the last dialogues, print them in chat
+        if (!Objects.equals(dialogues, this.lastDialogue)) {
+            this.lastDialogue = dialogues;
 
-            // If the dialogues are not the same as the last dialogues, print them in chat
-            if (!Objects.equals(dialogues, this.lastDialogue)) {
-                this.lastDialogue = dialogues;
+            // In legacy mode, just print the dialogues in chat
+            dialogues.forEach(McUtils::sendMessageToClient);
+        }
 
-                // In legacy mode, just print the dialogues in chat
-                dialogues.forEach(McUtils::sendMessageToClient);
-            }
-
-            // Either ways, display the helper message
-            if (type == NpcDialogueType.SELECTION) {
-                displayedHelperMessage =
-                        StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.selectAnOption")
-                                .withStyle(ChatFormatting.RED));
-                displayHelperMessage();
-            } else if (type == NpcDialogueType.NORMAL) {
-                displayedHelperMessage =
-                        StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
-                                .withStyle(ChatFormatting.GREEN));
-                displayHelperMessage();
-            }
+        // Either ways, display the helper message
+        if (type == NpcDialogueType.SELECTION) {
+            displayedHelperMessage =
+                    StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.selectAnOption")
+                            .withStyle(ChatFormatting.RED));
+            displayHelperMessage();
+        } else if (type == NpcDialogueType.NORMAL) {
+            displayedHelperMessage =
+                    StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
+                            .withStyle(ChatFormatting.GREEN));
+            displayHelperMessage();
         }
     }
 
