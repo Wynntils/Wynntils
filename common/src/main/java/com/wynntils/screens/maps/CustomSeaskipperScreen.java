@@ -62,6 +62,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     // UI Size, position etc
     private boolean draggingScroll = false;
     private boolean firstInit = true;
+    private double currentUnusedScroll = 0;
     private float currentTextureScale;
     private float departureBoardY;
     private float destinationButtonsRenderX;
@@ -332,8 +333,20 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         if (mouseX >= renderX) { // Scroll the map
             return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
         } else { // Scroll the departure list
-            double scrollValue = -Math.signum(deltaY);
-            scroll((int) scrollValue);
+            if (Math.abs(deltaY) == 1.0) {
+                scroll((int) -deltaY);
+                return true;
+            }
+
+            // Account for scrollpad
+            currentUnusedScroll -= deltaY / 5d;
+
+            if (Math.abs(currentUnusedScroll) < 1) return true;
+
+            int scroll = (int) (currentUnusedScroll);
+            currentUnusedScroll = currentUnusedScroll % 1;
+
+            scroll(scroll);
 
             return true;
         }
