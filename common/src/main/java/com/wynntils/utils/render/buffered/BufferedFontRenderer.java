@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
@@ -330,7 +330,7 @@ public final class BufferedFontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) < maxWidth / textScale) {
             renderText(
                     poseStack,
                     bufferSource,
@@ -345,7 +345,8 @@ public final class BufferedFontRenderer {
             return;
         }
 
-        List<FormattedText> parts = font.getSplitter().splitLines(text.getComponent(), (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts =
+                font.getSplitter().splitLines(text.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
 
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
@@ -361,11 +362,12 @@ public final class BufferedFontRenderer {
                     bufferSource,
                     part,
                     x,
-                    y + (i * font.lineHeight),
+                    y + (i * font.lineHeight * textScale),
                     customColor,
                     horizontalAlignment,
                     verticalAlignment,
-                    shadow);
+                    shadow,
+                    textScale);
         }
     }
 
@@ -426,11 +428,10 @@ public final class BufferedFontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, bufferSource, x, currentY, line, textScale);
-            // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
-                    .calculateRenderHeight(
-                            line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
-                            line.getSetting().maxWidth());
+                            .calculateRenderHeight(
+                                    line.getText(), line.getSetting().maxWidth() / textScale)
+                    * textScale;
         }
     }
 
