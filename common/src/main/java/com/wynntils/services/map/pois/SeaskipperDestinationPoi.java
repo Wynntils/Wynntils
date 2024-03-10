@@ -11,7 +11,6 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.services.map.type.DisplayPriority;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -183,7 +182,8 @@ public class SeaskipperDestinationPoi implements Poi {
     private CustomColor getColor() {
         if (destination.isPlayerInside()) {
             return CommonColors.ORANGE;
-        } else if (McUtils.mc().screen instanceof CustomSeaskipperScreen seaskipperScreen && seaskipperScreen.getSelectedDestination() == this) {
+        } else if (McUtils.mc().screen instanceof CustomSeaskipperScreen seaskipperScreen
+                && seaskipperScreen.getSelectedDestination() == this) {
             return CommonColors.GREEN;
         } else if (!destination.isAvailable()) {
             return CommonColors.GRAY;
