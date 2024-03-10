@@ -120,12 +120,17 @@ public class TranslationFeature extends Feature {
     }
 
     private StyledText unwrapCoding(String origCoded) {
-        // Some translated text (e.g. from pt_br) contains Á. This will be stripped later on,
-        // so convert it to A (not ideal but better than nothing).
-        // FIXME: Check if Á should be À
+        // Some translated text (e.g. from pt_br) contains special characters.
+        // These will need to be stripped or converted, which is not ideal but better than nothing.
+        // Note about special characters:
+        // - Á is a full-screen black character, which is used in animations.
+        // - À is a common white-space character, used in the chat.
+
         // FIXME: We can easily inject back clickable/hoverable events here, with StyledText
-        return StyledText.fromString(
-                origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1").replace('Á', 'A'));
+        return StyledText.fromString(origCoded
+                .replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1")
+                .replace('Á', 'A')
+                .replace('À', 'A'));
     }
 
     private String wrapCoding(StyledText origCoded) {
