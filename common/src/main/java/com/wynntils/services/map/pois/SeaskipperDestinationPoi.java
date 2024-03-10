@@ -9,9 +9,12 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
+import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.services.map.type.DisplayPriority;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
@@ -99,17 +102,7 @@ public class SeaskipperDestinationPoi implements Poi {
         renderedEndX = renderedX + renderWidth;
         renderedEndY = renderedY + renderHeight;
 
-        CustomColor color;
-
-        if (destination.isPlayerInside()) {
-            color = CommonColors.ORANGE;
-        } else if (!destination.isAvailable()) {
-            color = CommonColors.GRAY;
-        } else if (Models.Emerald.getAmountInInventory() < destination.item().getPrice()) {
-            color = CommonColors.RED;
-        } else {
-            color = CommonColors.WHITE;
-        }
+        CustomColor color = getColor();
 
         if (renderBorders) {
             BufferedRenderUtils.drawRect(
@@ -185,5 +178,19 @@ public class SeaskipperDestinationPoi implements Poi {
 
     public boolean isSelected(double mouseX, double mouseY) {
         return mouseX > renderedX && mouseX < renderedEndX && mouseY > renderedY && mouseY < renderedEndY;
+    }
+
+    private CustomColor getColor() {
+        if (destination.isPlayerInside()) {
+            return CommonColors.ORANGE;
+        } else if (McUtils.mc().screen instanceof CustomSeaskipperScreen seaskipperScreen && seaskipperScreen.getSelectedDestination() == this) {
+            return CommonColors.GREEN;
+        } else if (!destination.isAvailable()) {
+            return CommonColors.GRAY;
+        } else if (Models.Emerald.getAmountInInventory() < destination.item().getPrice()) {
+            return CommonColors.RED;
+        } else {
+            return CommonColors.WHITE;
+        }
     }
 }
