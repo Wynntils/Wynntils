@@ -15,7 +15,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
-import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.colors.ColorChatFormatting;
@@ -80,29 +79,11 @@ public class TranscribeMessagesFeature extends Feature {
     public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!transcribeNpcs.get()) return;
 
-        NpcDialogue dialogue = event.getDialogue();
-        if (dialogue.currentDialogue().stream()
-                .noneMatch(text -> Models.WynnAlphabet.hasWynnicOrGavellian(text.getStringWithoutFormatting()))) {
-            return;
-        }
-
         boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcribeGavellian =
                 Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.GAVELLIAN);
 
         if (!transcribeWynnic && !transcribeGavellian) return;
-
-        // FIXME: Reimplement
-        //        if (!showTooltip.get()) {
-        //            event.setCanceled(true);
-        //        }
-
-        // FIXME: Reimplement
-        //        if (showTooltip.get()) {
-        //            for (Component transcriptedComponent : transcriptedComponents) {
-        //                McUtils.sendMessageToClient(transcriptedComponent);
-        //            }
-        //        }
 
         event.addProcessingStep(future ->
                 future.thenApply(styledTexts -> transcribeText(styledTexts, transcribeWynnic, transcribeGavellian)));
@@ -110,6 +91,13 @@ public class TranscribeMessagesFeature extends Feature {
 
     private List<StyledText> transcribeText(
             List<StyledText> styledTexts, boolean transcribeWynnic, boolean transcribeGavellian) {
+        // If there are no Wynnic or Gavellian characters, return the original text
+        if (styledTexts.stream()
+                .noneMatch(text -> Models.WynnAlphabet.hasWynnicOrGavellian(text.getStringWithoutFormatting()))) {
+            return styledTexts;
+        }
+
+        // Transcribe each styled text
         return styledTexts.stream()
                 .map(styledText ->
                         getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, true))
