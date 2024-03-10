@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -23,12 +23,12 @@ import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -57,7 +57,6 @@ public class TranscribeMessagesFeature extends Feature {
     public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
-    private static final Pattern WYNNIC_NUMBER_PATTERN = Pattern.compile("[⑴-⑿]+");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
@@ -115,10 +114,54 @@ public class TranscribeMessagesFeature extends Feature {
 
     private StyledText getStyledTextWithTranscription(
             StyledText original, boolean transcribeWynnic, boolean transcribeGavellian, boolean npcDialogue) {
-        ChatFormatting defaultColor = npcDialogue
-                ? ColorChatFormatting.GREEN.getChatFormatting()
-                : ColorChatFormatting.WHITE.getChatFormatting();
+        if (!transcribeWynnic && !transcribeGavellian) return original;
 
+        StyledText transcribedStyledText = original;
+
+        if (transcribeWynnic) {
+            // Wynnic numbers are transcribed first
+            transcribedStyledText = transcribeStyledText(
+                    transcribedStyledText,
+                    Models.WynnAlphabet::getWynnicNumberMatcher,
+                    (partToBeTranslated) -> Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
+                            partToBeTranslated,
+                            WynnAlphabet.WYNNIC,
+                            coloredTranscriptions.get(),
+                            wynnicColor.get().getChatFormatting(),
+                            npcDialogue || showTooltip.get()));
+
+            // Wynnic characters are transcribed second
+            transcribedStyledText = transcribeStyledText(
+                    transcribedStyledText,
+                    Models.WynnAlphabet::getWynnicCharacterMatcher,
+                    (partToBeTranslated) -> Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
+                            partToBeTranslated,
+                            WynnAlphabet.WYNNIC,
+                            coloredTranscriptions.get(),
+                            wynnicColor.get().getChatFormatting(),
+                            npcDialogue || showTooltip.get()));
+        }
+
+        if (transcribeGavellian) {
+            // Lastly, Gavellian characters are transcribed
+            transcribedStyledText = transcribeStyledText(
+                    transcribedStyledText,
+                    Models.WynnAlphabet::getGavellianCharacterMatcher,
+                    (partToBeTranslated) -> Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
+                            partToBeTranslated,
+                            WynnAlphabet.GAVELLIAN,
+                            coloredTranscriptions.get(),
+                            gavellianColor.get().getChatFormatting(),
+                            npcDialogue || showTooltip.get()));
+        }
+
+        return transcribedStyledText;
+    }
+
+    private StyledText transcribeStyledText(
+            StyledText original,
+            Function<String, Matcher> matcherFunction,
+            Function<StyledTextPart, StyledTextPart> transcriptorFunction) {
         return original.iterateBackwards((part, changes) -> {
             String partText = part.getString(null, PartStyle.StyleType.NONE);
             String transcriptedText = partText;
@@ -127,55 +170,64 @@ public class TranscribeMessagesFeature extends Feature {
                 return IterationDecision.BREAK;
             }
 
-            if (transcribeWynnic) {
-                Matcher numMatcher = WYNNIC_NUMBER_PATTERN.matcher(partText);
+            List<StyledTextPart> newParts = new ArrayList<>();
 
-                if (coloredTranscriptions.get()) {
-                    transcriptedText =
-                            numMatcher.replaceAll(match -> wynnicColor.get().getChatFormatting()
-                                    + String.valueOf(Models.WynnAlphabet.wynnicNumToInt(match.group()))
-                                    + ColorChatFormatting.WHITE.getChatFormatting());
-                } else {
-                    transcriptedText = numMatcher.replaceAll(
-                            match -> String.valueOf(Models.WynnAlphabet.wynnicNumToInt(match.group())));
-                }
+            newParts = translatePartUsingMatcher(part, matcherFunction, transcriptorFunction, newParts);
 
-                transcriptedText = Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
-                        transcriptedText,
-                        WynnAlphabet.WYNNIC,
-                        coloredTranscriptions.get(),
-                        wynnicColor.get().getChatFormatting(),
-                        defaultColor);
-            }
-
-            if (transcribeGavellian) {
-                transcriptedText = Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
-                        transcriptedText,
-                        WynnAlphabet.GAVELLIAN,
-                        coloredTranscriptions.get(),
-                        gavellianColor.get().getChatFormatting(),
-                        defaultColor);
-            }
-
-            StyledTextPart newPart;
-
-            if (transcribeGavellian || transcribeWynnic) {
-                String text = showTooltip.get() ? partText : transcriptedText;
-                Component hoverComponent = (npcDialogue || showTooltip.get())
-                        ? Component.literal(transcriptedText)
-                        : Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText);
-                Style style = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
-
-                newPart = new StyledTextPart(text, style, null, Style.EMPTY);
-            } else {
-                newPart = part;
+            // If the part was not changed, we don't need to add it to the changes
+            if (newParts.isEmpty()) {
+                return IterationDecision.CONTINUE;
             }
 
             changes.remove(part);
-            changes.add(newPart);
+            changes.addAll(newParts);
 
             return IterationDecision.CONTINUE;
         });
+    }
+
+    private List<StyledTextPart> translatePartUsingMatcher(
+            StyledTextPart part,
+            Function<String, Matcher> matcherFunction,
+            Function<StyledTextPart, StyledTextPart> transcriptorFunction,
+            List<StyledTextPart> newParts) {
+        String partText = part.getString(null, PartStyle.StyleType.NONE);
+
+        Matcher matcher = matcherFunction.apply(partText);
+
+        while (matcher.find()) {
+            StyledTextPart partToBeTranslated =
+                    new StyledTextPart(matcher.group(), part.getPartStyle().getStyle(), null, Style.EMPTY);
+            StyledTextPart transcribedPart = transcriptorFunction.apply(partToBeTranslated);
+
+            if (matcher.start() > 0) {
+                String preText = partText.substring(0, matcher.start());
+
+                // Optimization: If the preText is blank, we use the same color as the part to be translated,
+                //               so we reduce the number of color codes in the string output
+                Style style = preText.isBlank()
+                        ? part.getPartStyle()
+                                .getStyle()
+                                .withColor(transcribedPart
+                                        .getPartStyle()
+                                        .getStyle()
+                                        .getColor())
+                        : part.getPartStyle().getStyle();
+
+                newParts.add(new StyledTextPart(preText, style, null, Style.EMPTY));
+            }
+
+            newParts.add(transcribedPart);
+
+            partText = partText.substring(matcher.end());
+            matcher = matcherFunction.apply(partText);
+        }
+
+        if (!partText.isEmpty()) {
+            newParts.add(new StyledTextPart(partText, part.getPartStyle().getStyle(), null, Style.EMPTY));
+        }
+
+        return newParts;
     }
 
     private static class WynnTranscriptedNpcDialogEvent extends NpcDialogEvent {
