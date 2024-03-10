@@ -193,20 +193,34 @@ public class TranscribeMessagesFeature extends Feature {
             List<StyledTextPart> newParts) {
         String partText = part.getString(null, PartStyle.StyleType.NONE);
 
-        Matcher numMatcher = matcherFunction.apply(partText);
+        Matcher matcher = matcherFunction.apply(partText);
 
-        while (numMatcher.find()) {
-            if (numMatcher.start() > 0) {
-                String preNum = partText.substring(0, numMatcher.start());
-                newParts.add(new StyledTextPart(preNum, part.getPartStyle().getStyle(), null, Style.EMPTY));
+        while (matcher.find()) {
+            StyledTextPart partToBeTranslated =
+                    new StyledTextPart(matcher.group(), part.getPartStyle().getStyle(), null, Style.EMPTY);
+            StyledTextPart transcribedPart = transcriptorFunction.apply(partToBeTranslated);
+
+            if (matcher.start() > 0) {
+                String preText = partText.substring(0, matcher.start());
+
+                // Optimization: If the preText is blank, we use the same color as the part to be translated,
+                //               so we reduce the number of color codes in the string output
+                Style style = preText.isBlank()
+                        ? part.getPartStyle()
+                                .getStyle()
+                                .withColor(transcribedPart
+                                        .getPartStyle()
+                                        .getStyle()
+                                        .getColor())
+                        : part.getPartStyle().getStyle();
+
+                newParts.add(new StyledTextPart(preText, style, null, Style.EMPTY));
             }
 
-            StyledTextPart partToBeTranslated =
-                    new StyledTextPart(numMatcher.group(), part.getPartStyle().getStyle(), null, Style.EMPTY);
-            newParts.add(transcriptorFunction.apply(partToBeTranslated));
+            newParts.add(transcribedPart);
 
-            partText = partText.substring(numMatcher.end());
-            numMatcher = matcherFunction.apply(partText);
+            partText = partText.substring(matcher.end());
+            matcher = matcherFunction.apply(partText);
         }
 
         if (!partText.isEmpty()) {
