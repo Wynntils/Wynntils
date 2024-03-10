@@ -1,17 +1,20 @@
 /*
- * Copyright © Wynntils 2018-2023.
+ * Copyright © Wynntils 2018-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.translation;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.translation.type.TranslationProvider;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TranslationService extends Service {
     private TranslationProvider translator = null;
@@ -19,6 +22,7 @@ public final class TranslationService extends Service {
     public TranslationService() {
         super(List.of());
 
+        addShutdownHook();
         CachingTranslationProvider.loadTranslationCache();
     }
 
@@ -27,8 +31,13 @@ public final class TranslationService extends Service {
         CachingTranslationProvider.loadTranslationCache();
     }
 
-    public void shutdown() {
-        CachingTranslationProvider.saveTranslationCache();
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() == WorldState.WORLD)
+            ;
+
+        // Save translation cache when world is unloaded
+        TaskUtils.runAsync(CachingTranslationProvider::saveTranslationCache);
     }
 
     /**
@@ -68,9 +77,19 @@ public final class TranslationService extends Service {
         translator = null;
     }
 
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            CachingTranslationProvider.saveTranslationCache();
+            WynntilsMod.info("Successfully saved translation cache!");
+        }));
+    }
+
     public enum TranslationServices {
-        GOOGLEAPI(GoogleApiTranslationProvider.class),
-        PIGLATIN(PigLatinTranslationProvider.class);
+        GOOGLEAPI(GoogleApiTranslationProvider.class);
+
+        // This is a demo service, not used in production.
+        // Users accidentally enabling this service could cause confusion and frustration.
+        // PIGLATIN(PigLatinTranslationProvider.class);
 
         private final Class<? extends TranslationProvider> serviceClass;
 
