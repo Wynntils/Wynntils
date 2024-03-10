@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
@@ -102,6 +103,10 @@ public class SeaskipperDestinationPoi implements Poi {
 
         if (destination.isPlayerInside()) {
             color = CommonColors.ORANGE;
+        } else if (!destination.isAvailable()) {
+            color = CommonColors.GRAY;
+        } else if (Models.Emerald.getAmountInInventory() < destination.item().getPrice()) {
+            color = CommonColors.RED;
         } else {
             color = CommonColors.WHITE;
         }
