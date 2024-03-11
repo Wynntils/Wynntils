@@ -268,12 +268,13 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) / textScale < maxWidth) {
             renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
 
-        List<FormattedText> parts = font.getSplitter().splitLines(text.getComponent(), (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts =
+                font.getSplitter().splitLines(text.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
 
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
@@ -288,11 +289,12 @@ public final class FontRenderer {
                     poseStack,
                     part,
                     x,
-                    y + (i * font.lineHeight),
+                    y + (i * font.lineHeight * textScale),
                     customColor,
                     horizontalAlignment,
                     verticalAlignment,
-                    shadow);
+                    shadow,
+                    textScale);
         }
     }
 
