@@ -66,41 +66,54 @@ public class TestStyledText {
 
     @Test
     public void parsingStringsWithEvents_shouldProduceCorrectString() {
-        final String stringWithEvents = "§c§oitalicred§9§o§<1>blue§cnonitalic§oinherited§lbold§r§[1]after";
+        final String stringWithEvents = "§c§oitalicred§9§o§<1>blue§cnonitalic§oinherited§l§<2>bold§r§[1]after";
+        final List<HoverEvent> hoverEvents = List.of(
+                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover")),
+                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover2")));
+        final List<ClickEvent> clickEvents = List.of(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command"));
         final StyledText originalText = StyledText.fromComponent(Component.empty()
                 .append(Component.literal("italicred")
                         .withStyle(ChatFormatting.ITALIC)
                         .withStyle(ChatFormatting.RED)
                         .append(Component.literal("blue")
                                 .withStyle(ChatFormatting.BLUE)
-                                .withStyle(style -> style.withHoverEvent(
-                                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover")))))
+                                .withStyle(style -> style.withHoverEvent(hoverEvents.get(0))))
                         .append(Component.literal("nonitalic").withStyle(Style.EMPTY.withItalic(false)))
                         .append(Component.literal("inherited")
-                                .append(Component.literal("bold").withStyle(ChatFormatting.BOLD))))
-                .append(Component.literal("after")
-                        .withStyle(style ->
-                                style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command")))));
+                                .append(Component.literal("bold")
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .withStyle(style -> style.withHoverEvent(hoverEvents.get(1))))))
+                .append(Component.literal("after").withStyle(style -> style.withClickEvent(clickEvents.get(0)))));
 
         StyledText styledText = StyledText.fromModifiedString(stringWithEvents, originalText);
 
-        boolean hasClickEvent = false;
-        boolean hasHoverEvent = false;
+        int hoverEventCount = 0;
+        int clickEventCount = 0;
         for (StyledTextPart part : styledText) {
             if (part.getPartStyle().getStyle().getClickEvent() != null) {
-                hasClickEvent = true;
+                if (clickEventCount >= clickEvents.size()) {
+                    Assertions.fail("StyledText.fromModifiedString() had too many click events.");
+                }
+
+                Assertions.assertEquals(
+                        clickEvents.get(clickEventCount),
+                        part.getPartStyle().getStyle().getClickEvent(),
+                        "StyledText.fromModifiedString() did not inherit the correct click event.");
+
+                clickEventCount++;
             }
             if (part.getPartStyle().getStyle().getHoverEvent() != null) {
-                hasHoverEvent = true;
+                if (hoverEventCount >= hoverEvents.size()) {
+                    Assertions.fail("StyledText.fromModifiedString() had too many hover events.");
+                }
+
+                Assertions.assertEquals(
+                        hoverEvents.get(hoverEventCount),
+                        part.getPartStyle().getStyle().getHoverEvent(),
+                        "StyledText.fromModifiedString() did not inherit the correct hover event.");
+
+                hoverEventCount++;
             }
-        }
-
-        if (!hasClickEvent) {
-            Assertions.fail("StyledText.fromModifiedString() did not inherit the correct click event.");
-        }
-
-        if (!hasHoverEvent) {
-            Assertions.fail("StyledText.fromModifiedString() did not inherit the correct hover event.");
         }
 
         Assertions.assertEquals(
