@@ -148,6 +148,26 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(List.of(part), List.of(), List.of());
     }
 
+    public static StyledText fromParts(List<StyledTextPart> parts) {
+        // Collect the events
+        List<ClickEvent> clickEvents = new ArrayList<>();
+        List<HoverEvent> hoverEvents = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            ClickEvent clickEvent = part.getPartStyle().getStyle().getClickEvent();
+            if (clickEvent != null) {
+                clickEvents.add(clickEvent);
+            }
+
+            HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
+            if (hoverEvent != null) {
+                hoverEvents.add(hoverEvent);
+            }
+        }
+
+        return new StyledText(parts, clickEvents, hoverEvents);
+    }
+
     public static StyledText fromJson(String json) {
         MutableComponent component = Component.Serializer.fromJson(json);
         return component == null ? StyledText.EMPTY : StyledText.fromComponent(component);
