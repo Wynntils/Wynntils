@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
@@ -42,6 +42,9 @@ public final class StyledText implements Iterable<StyledTextPart> {
     private final List<ClickEvent> clickEvents;
     private final List<HoverEvent> hoverEvents;
 
+    /**
+     * Note: All callers of this constructor should ensure that the event lists are collected from the parts.
+     */
     private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
                 .filter(styledTextPart -> !styledTextPart.isEmpty())
@@ -53,8 +56,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     public static StyledText fromComponent(Component component) {
         List<StyledTextPart> parts = new ArrayList<>();
-        List<ClickEvent> clickEvents = new ArrayList<>();
-        List<HoverEvent> hoverEvents = new ArrayList<>();
 
         // Walk the component tree using DFS
         // Component#visit behaves weirdly, so we do it manually
@@ -90,6 +91,22 @@ public final class StyledText implements Iterable<StyledTextPart> {
                     styledTextParts.stream().filter(part -> !part.isEmpty()).toList());
         }
 
+        // Collect the events
+        List<ClickEvent> clickEvents = new ArrayList<>();
+        List<HoverEvent> hoverEvents = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            ClickEvent clickEvent = part.getPartStyle().getStyle().getClickEvent();
+            if (clickEvent != null) {
+                clickEvents.add(clickEvent);
+            }
+
+            HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
+            if (hoverEvent != null) {
+                hoverEvents.add(hoverEvent);
+            }
+        }
+
         return new StyledText(parts, clickEvents, hoverEvents);
     }
 
@@ -98,12 +115,36 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
+    public static StyledText fromModifiedString(String codedString, StyledText styledText) {
+        List<HoverEvent> hoverEvents = List.copyOf(styledText.hoverEvents);
+        List<ClickEvent> clickEvents = List.copyOf(styledText.clickEvents);
+
+        return new StyledText(
+                StyledTextPart.fromCodedString(codedString, Style.EMPTY, styledText, Style.EMPTY),
+                clickEvents,
+                hoverEvents);
+    }
+
     public static StyledText fromUnformattedString(String unformattedString) {
         StyledTextPart part = new StyledTextPart(unformattedString, Style.EMPTY, null, Style.EMPTY);
         return new StyledText(List.of(part), List.of(), List.of());
     }
 
     public static StyledText fromPart(StyledTextPart part) {
+        // Collect the events
+        List<ClickEvent> clickEvents = new ArrayList<>();
+        List<HoverEvent> hoverEvents = new ArrayList<>();
+
+        ClickEvent clickEvent = part.getPartStyle().getStyle().getClickEvent();
+        if (clickEvent != null) {
+            clickEvents.add(clickEvent);
+        }
+
+        HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
+        if (hoverEvent != null) {
+            hoverEvents.add(hoverEvent);
+        }
+
         return new StyledText(List.of(part), List.of(), List.of());
     }
 
@@ -660,7 +701,12 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return parts.size();
     }
 
-    int addClickEvent(ClickEvent clickEvent) {
+    /**
+     * Returns the first part of this {@link StyledText} that matches the given event.
+     * @param clickEvent the event to find
+     * @return the 1-based index, or -1
+     */
+    int getClickEventIndex(ClickEvent clickEvent) {
         // Check if the event is already in the list
         for (int i = 0; i < clickEvents.size(); i++) {
             ClickEvent event = clickEvents.get(i);
@@ -669,12 +715,19 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        clickEvents.add(clickEvent);
-
-        return clickEvents.size();
+        return -1;
     }
 
-    int addHoverEvent(HoverEvent hoverEvent) {
+    ClickEvent getClickEvent(int index) {
+        return Iterables.get(clickEvents, index - 1, null);
+    }
+
+    /**
+     * Returns the first part of this {@link StyledText} that matches the given event.
+     * @param hoverEvent the event to find
+     * @return the 1-based index, or -1
+     */
+    int getHoverEventIndex(HoverEvent hoverEvent) {
         // Check if the event is already in the list
         for (int i = 0; i < hoverEvents.size(); i++) {
             HoverEvent event = hoverEvents.get(i);
@@ -683,9 +736,11 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        hoverEvents.add(hoverEvent);
+        return -1;
+    }
 
-        return hoverEvents.size();
+    HoverEvent getHoverEvent(int index) {
+        return Iterables.get(hoverEvents, index - 1, null);
     }
 
     private StyledTextPart getPartBefore(StyledTextPart part) {
