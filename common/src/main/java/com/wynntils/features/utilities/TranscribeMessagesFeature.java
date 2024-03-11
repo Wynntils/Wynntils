@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -176,7 +175,7 @@ public class TranscribeMessagesFeature extends Feature {
             return IterationDecision.CONTINUE;
         });
     }
-  
+
     private List<StyledTextPart> translatePartUsingMatcher(
             StyledTextPart part,
             Function<String, Matcher> matcherFunction,
