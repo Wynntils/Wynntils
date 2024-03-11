@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
@@ -160,7 +160,7 @@ public final class PartStyle {
                 styleString
                         .append(STYLE_PREFIX)
                         .append("[")
-                        .append(owner.getParent().addClickEvent(clickEvent))
+                        .append(owner.getParent().getClickEventIndex(clickEvent))
                         .append("]");
             }
 
@@ -169,7 +169,7 @@ public final class PartStyle {
                 styleString
                         .append(STYLE_PREFIX)
                         .append("<")
-                        .append(owner.getParent().addHoverEvent(hoverEvent))
+                        .append(owner.getParent().getHoverEventIndex(hoverEvent))
                         .append(">");
             }
         }

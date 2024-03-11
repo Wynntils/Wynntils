@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -61,6 +62,51 @@ public class TestStyledText {
                 expectedNoFormat,
                 styledText.getString(PartStyle.StyleType.NONE),
                 "StyledText.getString(NONE) returned an unexpected value.");
+    }
+
+    @Test
+    public void parsingStringsWithEvents_shouldProduceCorrectString() {
+        final String stringWithEvents = "§c§oitalicred§9§o§<1>blue§cnonitalic§oinherited§lbold§r§[1]after";
+        final StyledText originalText = StyledText.fromComponent(Component.empty()
+                .append(Component.literal("italicred")
+                        .withStyle(ChatFormatting.ITALIC)
+                        .withStyle(ChatFormatting.RED)
+                        .append(Component.literal("blue")
+                                .withStyle(ChatFormatting.BLUE)
+                                .withStyle(style -> style.withHoverEvent(
+                                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover")))))
+                        .append(Component.literal("nonitalic").withStyle(Style.EMPTY.withItalic(false)))
+                        .append(Component.literal("inherited")
+                                .append(Component.literal("bold").withStyle(ChatFormatting.BOLD))))
+                .append(Component.literal("after")
+                        .withStyle(style ->
+                                style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command")))));
+
+        StyledText styledText = StyledText.fromModifiedString(stringWithEvents, originalText);
+
+        boolean hasClickEvent = false;
+        boolean hasHoverEvent = false;
+        for (StyledTextPart part : styledText) {
+            if (part.getPartStyle().getStyle().getClickEvent() != null) {
+                hasClickEvent = true;
+            }
+            if (part.getPartStyle().getStyle().getHoverEvent() != null) {
+                hasHoverEvent = true;
+            }
+        }
+
+        if (!hasClickEvent) {
+            Assertions.fail("StyledText.fromModifiedString() did not inherit the correct click event.");
+        }
+
+        if (!hasHoverEvent) {
+            Assertions.fail("StyledText.fromModifiedString() did not inherit the correct hover event.");
+        }
+
+        Assertions.assertEquals(
+                stringWithEvents,
+                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
     }
 
     @Test
