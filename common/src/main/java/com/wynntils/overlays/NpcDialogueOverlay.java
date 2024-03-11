@@ -17,6 +17,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueRemoved;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -89,7 +90,12 @@ public class NpcDialogueOverlay extends Overlay {
 
             // Save the selection components so we can remove it later
             selectionComponents = clickMsg;
-        } else if (dialogue.dialogueType() == NpcDialogueType.NONE) {
+        }
+    }
+
+    @SubscribeEvent
+    public void onNpcDialogueRemoved(NpcDialogueRemoved event) {
+        if (event.getRemovedDialogue().dialogueType() == NpcDialogueType.SELECTION) {
             // Remove the selection components if it exists
             if (selectionComponents != null) {
                 McUtils.removeMessageFromChat(selectionComponents);

@@ -13,6 +13,7 @@ import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueRemoved;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.HashSet;
@@ -95,7 +96,9 @@ public class NpcDialogueModel extends Model {
 
         // If the message is "NONE", set an empty dialogue
         if (type == NpcDialogueType.NONE) {
+            NpcDialogue oldDialogue = currentDialogue;
             currentDialogue = NpcDialogue.EMPTY;
+            WynntilsMod.postEvent(new NpcDialogueRemoved(oldDialogue));
             return;
         }
 
