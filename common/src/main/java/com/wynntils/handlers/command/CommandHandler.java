@@ -14,9 +14,11 @@ import java.util.Queue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommandHandler extends Handler {
+    private static final int TICKS_PER_EXECUTE = 7;
+    private static final int NPC_DIALOGUE_WAIT_TICKS = 40;
+
     private final Queue<String> commandQueue = new LinkedList<>();
     private int commandQueueTicks = 0;
-    private static final int TICKS_PER_EXECUTE = 7;
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
@@ -27,17 +29,17 @@ public class CommandHandler extends Handler {
             // so that we don't execute commands mid-dialogue,
             // and we also have a wait time after dialogue ends
             // (because dialogues tend to clear for a tick or two).
-            commandQueueTicks = 0;
+            commandQueueTicks = NPC_DIALOGUE_WAIT_TICKS;
             return;
         }
 
-        commandQueueTicks++;
+        commandQueueTicks--;
 
-        if (commandQueueTicks >= TICKS_PER_EXECUTE && !commandQueue.isEmpty()) {
+        if (commandQueueTicks <= 0 && !commandQueue.isEmpty()) {
             String command = commandQueue.poll();
             WynntilsMod.info("Executing queued command: " + command);
             McUtils.mc().getConnection().sendCommand(command);
-            commandQueueTicks = 0;
+            commandQueueTicks = TICKS_PER_EXECUTE;
         }
     }
 
@@ -50,10 +52,10 @@ public class CommandHandler extends Handler {
      * @param command The command to queue. The leading '/' should not be included.
      */
     public void queueCommand(String command) {
-        if (commandQueueTicks >= TICKS_PER_EXECUTE && !Models.NpcDialogue.isInDialogue()) {
+        if (commandQueueTicks <= 0 && !Models.NpcDialogue.isInDialogue()) {
             WynntilsMod.info("Executing queued command immediately: " + command);
             McUtils.mc().getConnection().sendCommand(command);
-            commandQueueTicks = 0;
+            commandQueueTicks = TICKS_PER_EXECUTE;
         } else {
             commandQueue.add(command);
         }
