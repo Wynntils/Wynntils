@@ -175,10 +175,6 @@ public class SeaskipperDestinationPoi implements Poi {
         return destination.isAvailable();
     }
 
-    public boolean isSelected(double mouseX, double mouseY) {
-        return mouseX > renderedX && mouseX < renderedEndX && mouseY > renderedY && mouseY < renderedEndY;
-    }
-
     private CustomColor getColor() {
         if (destination.isPlayerInside()) {
             return CommonColors.ORANGE;

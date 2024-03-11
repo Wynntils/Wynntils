@@ -261,7 +261,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         // If clicked on a destinationPoi and it is available, try and purchase a pass
         for (SeaskipperDestinationPoi poi : destinationPois) {
-            if (poi.isSelected(mouseX, mouseY)) {
+            if (hoveredPoi == poi) {
                 if (poi.isAvailable()) {
                     Models.Seaskipper.purchasePass(poi.getDestination());
                 }
