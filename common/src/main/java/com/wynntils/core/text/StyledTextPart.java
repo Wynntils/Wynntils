@@ -66,13 +66,16 @@ public final class StyledTextPart {
             if (nextIsFormatting) {
                 nextIsFormatting = false;
 
-                if (current == '[') {
-                    clickEventPrefix = true;
-                    continue;
-                }
-                if (current == '<') {
-                    hoverEventPrefix = true;
-                    continue;
+                // Only parse events, if we have a parent
+                if (parent != null) {
+                    if (current == '[') {
+                        clickEventPrefix = true;
+                        continue;
+                    }
+                    if (current == '<') {
+                        hoverEventPrefix = true;
+                        continue;
+                    }
                 }
 
                 ChatFormatting formatting = ChatFormatting.getByCode(current);
@@ -83,7 +86,7 @@ public final class StyledTextPart {
                     continue;
                 }
 
-                // We already had some text with the current style
+                // If we already had some text with the current style
                 // Append it before modifying the style
                 if (!currentString.isEmpty()) {
                     if (style != Style.EMPTY) {
@@ -119,14 +122,18 @@ public final class StyledTextPart {
                     continue;
                 }
 
+                // This is set to true if we have overwritten the current style's event
+                Style oldStyle = null;
+
                 if (clickEventPrefix && current == ']') {
                     ClickEvent clickEvent = parent.getClickEvent(Integer.parseInt(eventIndexString));
 
                     if (clickEvent != null) {
+                        oldStyle = currentStyle;
+
                         currentStyle = currentStyle.withClickEvent(clickEvent);
                         clickEventPrefix = false;
                         eventIndexString = "";
-                        continue;
                     }
                 }
 
@@ -134,11 +141,36 @@ public final class StyledTextPart {
                     HoverEvent hoverEvent = parent.getHoverEvent(Integer.parseInt(eventIndexString));
 
                     if (hoverEvent != null) {
+                        oldStyle = currentStyle;
+
                         currentStyle = currentStyle.withHoverEvent(hoverEvent);
                         hoverEventPrefix = false;
                         eventIndexString = "";
-                        continue;
                     }
+                }
+
+                if (oldStyle != null) {
+                    // If we already had some text with the current style
+                    // Append it before modifying the style
+                    if (!currentString.isEmpty()) {
+                        if (style != Style.EMPTY) {
+                            // We might have lost an event, so we need to add it back
+                            // (theoritically this case can't happen at this location)
+                            currentStyle = currentStyle
+                                    .withClickEvent(style.getClickEvent())
+                                    .withHoverEvent(style.getHoverEvent());
+                        }
+                        // But if the style is empty, we might have parsed events from the string itself
+
+                        parts.add(new StyledTextPart(currentString.toString(), oldStyle, null, parentStyle));
+
+                        // reset string
+                        // style is not reset, because we want to keep the formatting
+                        currentString = new StringBuilder();
+                    }
+
+                    // Even if we did not add a new part, we've parsed an event
+                    continue;
                 }
 
                 // The event was not formatted properly, so add it as a string

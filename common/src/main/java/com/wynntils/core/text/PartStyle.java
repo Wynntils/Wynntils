@@ -111,7 +111,7 @@ public final class PartStyle {
         // If the current color is NONE, we NEED to try to construct a difference,
         // since there will be no color formatting resetting the formatting afterwards.
         if (previousStyle != null && (color == CustomColor.NONE || previousStyle.color.equals(color))) {
-            String differenceString = this.tryConstructDifference(previousStyle);
+            String differenceString = this.tryConstructDifference(previousStyle, type == StyleType.INCLUDE_EVENTS);
 
             if (differenceString != null) {
                 styleString.append(differenceString);
@@ -152,25 +152,25 @@ public final class PartStyle {
             if (italic) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
             }
-        }
 
-        if (type == StyleType.INCLUDE_EVENTS) {
-            // 3. Click event
-            if (clickEvent != null) {
-                styleString
-                        .append(STYLE_PREFIX)
-                        .append("[")
-                        .append(owner.getParent().getClickEventIndex(clickEvent))
-                        .append("]");
-            }
+            if (type == StyleType.INCLUDE_EVENTS) {
+                // 3. Click event
+                if (clickEvent != null) {
+                    styleString
+                            .append(STYLE_PREFIX)
+                            .append("[")
+                            .append(owner.getParent().getClickEventIndex(clickEvent))
+                            .append("]");
+                }
 
-            // 4. Hover event
-            if (hoverEvent != null) {
-                styleString
-                        .append(STYLE_PREFIX)
-                        .append("<")
-                        .append(owner.getParent().getHoverEventIndex(hoverEvent))
-                        .append(">");
+                // 4. Hover event
+                if (hoverEvent != null) {
+                    styleString
+                            .append(STYLE_PREFIX)
+                            .append("<")
+                            .append(owner.getParent().getHoverEventIndex(hoverEvent))
+                            .append(">");
+                }
             }
         }
 
@@ -253,7 +253,7 @@ public final class PartStyle {
         return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
-    private String tryConstructDifference(PartStyle oldStyle) {
+    private String tryConstructDifference(PartStyle oldStyle, boolean includeEvents) {
         StringBuilder add = new StringBuilder();
 
         int oldColorInt = oldStyle.color.asInt();
@@ -284,6 +284,30 @@ public final class PartStyle {
 
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
+
+        if (includeEvents) {
+            // If there is a click event in the old style, but not in the new one, we can't construct a difference.
+            // Otherwise, if the old style and the new style has different events, add the new event.
+            // This can happen in two cases:
+            // - The old style has an event, but the new one has one as well.
+            // - The old style doesn't have an event, but the new does.
+
+            if (oldStyle.clickEvent != null && this.clickEvent == null) return null;
+            if (oldStyle.clickEvent != this.clickEvent) {
+                add.append(STYLE_PREFIX)
+                        .append("[")
+                        .append(owner.getParent().getClickEventIndex(clickEvent))
+                        .append("]");
+            }
+
+            if (oldStyle.hoverEvent != null && this.hoverEvent == null) return null;
+            if (oldStyle.hoverEvent != this.hoverEvent) {
+                add.append(STYLE_PREFIX)
+                        .append("<")
+                        .append(owner.getParent().getHoverEventIndex(hoverEvent))
+                        .append(">");
+            }
+        }
 
         return add.toString();
     }
