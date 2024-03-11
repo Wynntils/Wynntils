@@ -1,3 +1,25 @@
+## [1.1.1](https://github.com/Wynntils/Artemis/compare/v1.1.0...v1.1.1) (2024-03-11)
+
+
+### New Features
+
+* Add support for events in string-parsed StyledTexts [skip ci] ([#2365](https://github.com/Wynntils/Artemis/issues/2365)) ([c54326f](https://github.com/Wynntils/Artemis/commit/c54326f79718ab62ee0df92abc9027ebdb99bdea))
+* Custom Seaskipper screen redesign [skip ci] ([#2364](https://github.com/Wynntils/Artemis/issues/2364)) ([1dda1cf](https://github.com/Wynntils/Artemis/commit/1dda1cfbce9944b21fb6775552d9a560690c571e))
+
+
+### Bug Fixes
+
+* Fix NotificationManager not displaying notifications if the Game Notification overlay is disabled, but the parent feature is enabled [skip ci] ([#2361](https://github.com/Wynntils/Artemis/issues/2361)) ([7f27f28](https://github.com/Wynntils/Artemis/commit/7f27f2869bc733c2c20008df5eb84cfa137c8b22))
+* Fix StatusEffectsOverlay rendering some status effects without respecting the font size setting [skip ci] ([#2360](https://github.com/Wynntils/Artemis/issues/2360)) ([12f462a](https://github.com/Wynntils/Artemis/commit/12f462a4e854a8fcbcc918da7a3eadc09b2dc3f5))
+* Refactor multi-line message handling in ChatHandler, fix multi-line messages not appearing twice, even if they should ([#2366](https://github.com/Wynntils/Artemis/issues/2366)) ([8e767f7](https://github.com/Wynntils/Artemis/commit/8e767f7c9b0de486402f6038951a9597b8c4669b))
+* Wait even more in CommandHandler when trying to execute a command during a dialogue [skip ci] ([#2367](https://github.com/Wynntils/Artemis/issues/2367)) ([07f7a81](https://github.com/Wynntils/Artemis/commit/07f7a811a2826d38303d31fb389e075d24a44489))
+
+
+### Code Refactoring
+
+* Make TranscribeMessagesFeature use StyledText to produce a translator-friendly output [skip ci] ([#2363](https://github.com/Wynntils/Artemis/issues/2363)) ([f096ee4](https://github.com/Wynntils/Artemis/commit/f096ee4a92249c29d98e6594396cc6685b5aec06))
+* Turn SearchableContainerType into InteractiveContainerType [skip ci] ([#2353](https://github.com/Wynntils/Artemis/issues/2353)) ([98df8d1](https://github.com/Wynntils/Artemis/commit/98df8d1d563e10b56210db80a4440de0f08d65c1))
+
 ## [1.1.0](https://github.com/Wynntils/Artemis/compare/v1.0.13...v1.1.0) (2024-03-06)
 
 
@@ -25,6 +47,7 @@
 * [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([9286e50](https://github.com/Wynntils/Artemis/commit/9286e505d616d0022cf9bc9a12c9d1f1a3b20ad1))
 * [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([70ba0da](https://github.com/Wynntils/Artemis/commit/70ba0daf57e775fc7004b4f125a01147f27719e1))
 * **release:** v1.0.14 [skip ci] ([a91ad35](https://github.com/Wynntils/Artemis/commit/a91ad35e4c998f8f08c30283c2910804783e349c))
+* **release:** v1.1.0 [skip ci] ([f879a17](https://github.com/Wynntils/Artemis/commit/f879a17abc264e23360b4def6c1d4d2e145df36d))
 * Remove unused UrlIds ([#2355](https://github.com/Wynntils/Artemis/issues/2355)) ([4c54247](https://github.com/Wynntils/Artemis/commit/4c54247a48a1737fba7d81fb1d6655e855fc7735))
 
 ## [1.0.13](https://github.com/Wynntils/Artemis/compare/v1.0.12...v1.0.13) (2024-02-28)
@@ -64,16 +87,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.11 [skip ci] ([7597058](https://github.com/Wynntils/Artemis/commit/759705842e876540b2ac6fc862f624919e611285))
-
-## [1.0.10](https://github.com/Wynntils/Artemis/compare/v1.0.9...v1.0.10) (2024-02-09)
-
-
-### New Features
-
-* add scaling to waypoint distance markers ([#2338](https://github.com/Wynntils/Artemis/issues/2338)) ([c30c198](https://github.com/Wynntils/Artemis/commit/c30c198f5d87e26948514d03a7f8c51eacb4b87c))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.10 [skip ci] ([6ffcac3](https://github.com/Wynntils/Artemis/commit/6ffcac3f59ecc855c276c73b094acd1b92c9433e))
 
