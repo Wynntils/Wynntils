@@ -337,7 +337,7 @@ public class SkillPointModel extends Model {
         for (Map.Entry<String, SetInstance> entry : processedSets.entrySet()) {
             SetInstance setInstance = entry.getValue();
 
-            if (setInstance.getWynncraftCount() == setInstance.getTrueCount()) {
+            if (setInstance.wynncraftCount() == setInstance.trueCount()) {
                 // Wynncraft reports the correct number of items in the set, we can use point values from in-game
                 boolean setBonusesStarted = false;
                 for (StyledText line : LoreUtils.getLore(setInstance.getRelevantItem())) {
@@ -358,7 +358,7 @@ public class SkillPointModel extends Model {
                 // Two of the same ring bug on Wynn, they only report 1 ring
                 // Use our own data to calculate the set bonus
                 Models.Set.getSetInfo(entry.getKey())
-                        .getBonusForItems(setInstance.getTrueCount())
+                        .getBonusForItems(setInstance.trueCount())
                         .forEach((statType, value) -> {
                             if (Skill.isSkill(statType.getDisplayName())) {
                                 setBonusSkillPoints.merge(
@@ -373,12 +373,13 @@ public class SkillPointModel extends Model {
         for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
             if (nameMatcher.matches()) {
-                processedSets
-                        .computeIfAbsent(
-                                nameMatcher.group(1),
-                                k -> new SetInstance(Integer.parseInt(nameMatcher.group(2)), itemStack))
-                        .incrementTrueCount();
-                return;
+                // TODO remove, this should be in GearInstance eventually
+//                processedSets
+//                        .computeIfAbsent(
+//                                nameMatcher.group(1),
+//                                k -> new SetInstance(Integer.parseInt(nameMatcher.group(2)), itemStack))
+//                        .incrementTrueCount();
+//                return;
             }
         }
     }

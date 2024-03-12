@@ -4,31 +4,6 @@
  */
 package com.wynntils.models.gear.type;
 
-import net.minecraft.world.item.ItemStack;
-
-public class SetInstance {
-    private final int wynncraftCount;
-    private int trueCount = 0;
-    private final ItemStack relevantItem;
-
-    public SetInstance(int wynncraftCount, ItemStack relevantItem) {
-        this.wynncraftCount = wynncraftCount;
-        this.relevantItem = relevantItem;
-    }
-
-    public int getWynncraftCount() {
-        return wynncraftCount;
-    }
-
-    public int getTrueCount() {
-        return trueCount;
-    }
-
-    public ItemStack getRelevantItem() {
-        return relevantItem;
-    }
-
-    public void incrementTrueCount() {
-        this.trueCount++;
-    }
+public record SetInstance(int wynncraftCount, int trueCount) {
+    // TODO maybe include the bonuses for trueCount??
 }
