@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -7,8 +7,10 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.player.LocalPlayer;
@@ -84,6 +86,19 @@ public class CharacterFunctions {
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
             return Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
+        }
+    }
+
+    public static class StatusEffectsFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            List<StatusEffect> statusEffectsList = Models.StatusEffect.getStatusEffects();
+            List<String> statusEffectsFullStringList = new ArrayList<String>();
+            for (StatusEffect statusEffect : statusEffectsList) {
+                statusEffectsFullStringList.add(statusEffect.asString().getString());
+            }
+
+            return String.join("\n", statusEffectsFullStringList);
         }
     }
 

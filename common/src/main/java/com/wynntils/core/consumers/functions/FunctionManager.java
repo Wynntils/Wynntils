@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions;
@@ -438,6 +438,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
+        registerFunction(new CharacterFunctions.StatusEffectsFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
