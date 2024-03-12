@@ -438,8 +438,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
+        registerFunction(new CharacterFunctions.StatusEffectActiveFunction());
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
-        registerFunction(new CharacterFunctions.ContainsStatusEffectFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());

@@ -98,12 +98,13 @@ public class CharacterFunctions {
         }
     }
 
-    public static class ContainsStatusEffectFunction extends Function<Boolean> {
+    public static class StatusEffectActiveFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             String query = arguments.getArgument("query").getStringValue();
             return !Models.StatusEffect.getStatusEffects().stream()
-                    .filter(statusEffect -> statusEffect.asString().getString().contains(query))
+                    .filter(statusEffect ->
+                            statusEffect.getName().getStringWithoutFormatting().equals(query))
                     .toList()
                     .isEmpty();
         }
