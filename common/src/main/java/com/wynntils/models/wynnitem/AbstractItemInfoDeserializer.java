@@ -20,6 +20,7 @@ import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.FixedStats;
@@ -34,6 +35,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -429,5 +431,12 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
         // Return an immutable list
         return List.copyOf(list);
+    }
+
+    protected SetInfo parseSetInfo(JsonObject json) {
+        String setName = JsonUtils.getNullableJsonString(json, "set");
+        if (setName == null) return null;
+
+        return Models.Set.getSetInfo(setName);
     }
 }

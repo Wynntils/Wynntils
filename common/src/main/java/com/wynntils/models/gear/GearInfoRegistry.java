@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearInfo;
@@ -19,6 +20,7 @@ import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -79,6 +81,11 @@ public class GearInfoRegistry {
                 // Inject the name into the object
                 itemObject.addProperty("name", entry.getKey());
 
+                // also inject the set info
+                // this will either be the set name or null, which will be parsed in the deserializer
+                String setName = Models.Set.getSetName(entry.getKey());
+                itemObject.addProperty("set", setName);
+
                 // Deserialize the item
                 GearInfo gearInfo = gson.fromJson(itemObject, GearInfo.class);
 
@@ -129,9 +136,10 @@ public class GearInfoRegistry {
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
+            SetInfo setInfo = parseSetInfo(json);
 
             return new GearInfo(
-                    displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
+                    displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats, setInfo);
         }
     }
 }

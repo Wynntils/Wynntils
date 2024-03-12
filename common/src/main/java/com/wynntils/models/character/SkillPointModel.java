@@ -16,7 +16,7 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
-import com.wynntils.models.character.type.SetInstance;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
@@ -357,7 +357,7 @@ public class SkillPointModel extends Model {
             } else {
                 // Two of the same ring bug on Wynn, they only report 1 ring
                 // Use our own data to calculate the set bonus
-                Models.Set.getSetData(entry.getKey())
+                Models.Set.getSetInfo(entry.getKey())
                         .getBonusForItems(setInstance.getTrueCount())
                         .forEach((statType, value) -> {
                             if (Skill.isSkill(statType.getDisplayName())) {

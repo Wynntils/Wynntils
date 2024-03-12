@@ -11,13 +11,15 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.stats.type.StatType;
-import java.util.Collections;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SetModel extends Model {
+    // Stored as a map for quick lookup
     private final Map<String, SetInfo> setData = new HashMap<>();
 
     public SetModel() {
@@ -25,8 +27,21 @@ public class SetModel extends Model {
         loadSetData();
     }
 
-    public SetInfo getSetData(String setId) {
+    public SetInfo getSetInfo(String setId) {
         return setData.get(setId);
+    }
+
+    /**
+     * @param itemName The name of the item to check
+     * @return The set name if the item is part of a set, null otherwise
+     */
+    public String getSetName(String itemName) {
+        for (Map.Entry<String, SetInfo> entry : setData.entrySet()) {
+            if (entry.getValue().items().contains(itemName)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     private void loadSetData() {
@@ -52,39 +67,8 @@ public class SetModel extends Model {
                         })
                         .toList();
 
-                setData.put(key, new SetInfo(bonuses, items));
+                setData.put(key, new SetInfo(key, bonuses, items));
             });
         });
-    }
-
-    public static final class SetInfo {
-        private final List<Map<StatType, Integer>> bonuses;
-        private final List<String> items;
-
-        private SetInfo(List<Map<StatType, Integer>> bonuses, List<String> items) {
-            this.bonuses = bonuses;
-            this.items = items;
-        }
-
-        public List<Map<StatType, Integer>> getBonuses() {
-            return Collections.unmodifiableList(bonuses);
-        }
-
-        /**
-         * @param numberOfItems The number of items equipped to get the set bonus for
-         * @return A map of stat names to the bonus value for that stat
-         */
-        public Map<StatType, Integer> getBonusForItems(int numberOfItems) {
-            return bonuses.get(numberOfItems - 1);
-        }
-
-        public List<String> getItems() {
-            return Collections.unmodifiableList(items);
-        }
-
-        @Override
-        public String toString() {
-            return "SetData{" + "bonuses=" + bonuses + ", items=" + items + '}';
-        }
     }
 }

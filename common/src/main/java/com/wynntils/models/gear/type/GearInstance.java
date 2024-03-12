@@ -18,20 +18,23 @@ public record GearInstance(
         List<Powder> powders,
         int rerolls,
         Optional<Float> overallQuality,
-        Optional<ShinyStat> shinyStat) {
+        Optional<ShinyStat> shinyStat,
+        Optional<SetInstance> setInstance) {
     public static GearInstance create(
             GearInfo gearInfo,
             List<StatActualValue> identifications,
             List<Powder> powders,
             int rerolls,
-            Optional<ShinyStat> shinyStat) {
+            Optional<ShinyStat> shinyStat,
+            Optional<SetInstance> setInstance) {
         return new GearInstance(
                 identifications,
                 powders,
                 rerolls,
                 StatCalculator.calculateOverallQuality(
                         gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
-                shinyStat);
+                shinyStat,
+                setInstance);
     }
 
     public boolean hasOverallValue() {

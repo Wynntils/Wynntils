@@ -24,6 +24,7 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -49,8 +50,8 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel() {
-        super(List.of());
+    public GearModel(SetModel setModel) {
+        super(List.of(setModel));
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
@@ -88,16 +89,17 @@ public final class GearModel extends Model {
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
-
+        // TODO: i can just steal the parsing thing i wrote earlier from SkillPointModel
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), Optional.empty());
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
+        // TODO: this is for "fake items" eg. from the gear viewer. probably better to leave as empty since we have no idea about their accessories?
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), Optional.empty());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {

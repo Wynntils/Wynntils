@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.character.type;
+package com.wynntils.models.gear.type;
 
 import net.minecraft.world.item.ItemStack;
 

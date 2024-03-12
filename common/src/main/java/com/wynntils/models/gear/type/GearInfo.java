@@ -20,7 +20,8 @@ public record GearInfo(
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         FixedStats fixedStats,
-        List<Pair<StatType, StatPossibleValues>> variableStats) {
+        List<Pair<StatType, StatPossibleValues>> variableStats,
+        SetInfo setInfo) {
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()
                 .filter(p -> p.key().equals(statType))
