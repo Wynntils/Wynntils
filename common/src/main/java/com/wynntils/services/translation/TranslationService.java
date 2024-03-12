@@ -13,11 +13,14 @@ import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TranslationService extends Service {
     private TranslationProvider translator = null;
+    private Future<?> translationServiceSavingFuture = CompletableFuture.completedFuture(null);
 
     public TranslationService() {
         super(List.of());
@@ -33,11 +36,14 @@ public final class TranslationService extends Service {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.WORLD)
-            ;
+        // We don't need to save on world join, as there is no changes
+        if (event.getNewState() == WorldState.WORLD) return;
+
+        // Save is still in-progress
+        if (!translationServiceSavingFuture.isDone() && !translationServiceSavingFuture.isCancelled()) return;
 
         // Save translation cache when world is unloaded
-        TaskUtils.runAsync(CachingTranslationProvider::saveTranslationCache);
+        translationServiceSavingFuture = TaskUtils.runAsync(CachingTranslationProvider::saveTranslationCache);
     }
 
     /**
