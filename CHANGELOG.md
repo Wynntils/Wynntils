@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/Wynntils/Artemis/compare/v1.1.1...v1.1.2) (2024-03-12)
+
+
+### Bug Fixes
+
+* Make translations work with NPC dialogues ([#2362](https://github.com/Wynntils/Artemis/issues/2362)) ([dd0360e](https://github.com/Wynntils/Artemis/commit/dd0360e195d33e26e9e00e8a803f4ceee1db42ba))
+
 ## [1.1.1](https://github.com/Wynntils/Artemis/compare/v1.1.0...v1.1.1) (2024-03-11)
 
 
@@ -13,6 +20,11 @@
 * Fix StatusEffectsOverlay rendering some status effects without respecting the font size setting [skip ci] ([#2360](https://github.com/Wynntils/Artemis/issues/2360)) ([12f462a](https://github.com/Wynntils/Artemis/commit/12f462a4e854a8fcbcc918da7a3eadc09b2dc3f5))
 * Refactor multi-line message handling in ChatHandler, fix multi-line messages not appearing twice, even if they should ([#2366](https://github.com/Wynntils/Artemis/issues/2366)) ([8e767f7](https://github.com/Wynntils/Artemis/commit/8e767f7c9b0de486402f6038951a9597b8c4669b))
 * Wait even more in CommandHandler when trying to execute a command during a dialogue [skip ci] ([#2367](https://github.com/Wynntils/Artemis/issues/2367)) ([07f7a81](https://github.com/Wynntils/Artemis/commit/07f7a811a2826d38303d31fb389e075d24a44489))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.1 [skip ci] ([d5c8521](https://github.com/Wynntils/Artemis/commit/d5c852198ac2476c23488e2148593870b387714f))
 
 
 ### Code Refactoring
@@ -74,17 +86,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.0.12 [skip ci] ([92d1113](https://github.com/Wynntils/Artemis/commit/92d11131ecfe5bf536d500316b2325a43cc92482))
-
-## [1.0.11](https://github.com/Wynntils/Artemis/compare/v1.0.10...v1.0.11) (2024-02-18)
-
-
-### Bug Fixes
-
-* Make sure all location abbreviations are unique (for scrolls and seaskipper tags) ([#2337](https://github.com/Wynntils/Artemis/issues/2337)) ([b9f685e](https://github.com/Wynntils/Artemis/commit/b9f685e6a7a059e639a3efa21c325b2dced0e082))
-* Sort worlds using their start time [skip ci] ([#2342](https://github.com/Wynntils/Artemis/issues/2342)) ([6cbe2ed](https://github.com/Wynntils/Artemis/commit/6cbe2ed16012d2a86794d1d7f08f24f85d40e3d6))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.11 [skip ci] ([7597058](https://github.com/Wynntils/Artemis/commit/759705842e876540b2ac6fc862f624919e611285))
 
