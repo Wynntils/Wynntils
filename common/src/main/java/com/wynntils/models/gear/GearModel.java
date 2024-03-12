@@ -227,20 +227,33 @@ public final class GearModel extends Model {
             if (setCountInfo == null) continue;
 
             Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
-            setCountMap.put(
-                    setCountInfo.key(),
-                    newCounts);
+            setCountMap.put(setCountInfo.key(), newCounts);
         }
 
-        for (int i : new int[]{9, 10, 11, 12}) { // FIXME - hardcoded slots
+        int[] accessorySlots = {9, 10, 11, 12};
+        if (McUtils.player().hasContainerOpen()) {
+            // Scale according to server chest size
+            // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
+            int baseSize = McUtils.player().containerMenu.getItems().size();
+            accessorySlots = new int[]{baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+        }
+        for (int i : accessorySlots) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
+            Pair<String, Integer> setCountInfo = countSet(itemStack);
+            if (setCountInfo == null) continue;
 
+            Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
+            setCountMap.put(setCountInfo.key(), newCounts);
         }
 
         // held item - must check if it's actually valid before counting
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (InventoryUtils.itemRequirementsMet(itemInHand)) {
-            countSet(itemInHand);
+            Pair<String, Integer> setCountInfo = countSet(itemInHand);
+            if (setCountInfo != null) {
+                Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
+                setCountMap.put(setCountInfo.key(), newCounts);
+            }
         }
 
         return setCountMap;
