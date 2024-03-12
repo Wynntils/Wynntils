@@ -7,10 +7,8 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.player.LocalPlayer;
@@ -92,28 +90,22 @@ public class CharacterFunctions {
     public static class StatusEffectsFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            List<StatusEffect> statusEffectsList = Models.StatusEffect.getStatusEffects();
-            List<String> statusEffectsFullStringList = new ArrayList<String>();
-            for (StatusEffect statusEffect : statusEffectsList) {
-                statusEffectsFullStringList.add(statusEffect.asString().getString());
-            }
+            List<String> statusEffectsList = Models.StatusEffect.getStatusEffects().stream()
+                    .map(statusEffect -> statusEffect.asString().getString())
+                    .toList();
 
-            return String.join("\n", statusEffectsFullStringList);
+            return String.join("\n", statusEffectsList);
         }
     }
 
     public static class ContainsStatusEffectFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            List<StatusEffect> statusEffectsList = Models.StatusEffect.getStatusEffects();
-            List<String> statusEffectsFullStringList = new ArrayList<String>();
-            for (StatusEffect statusEffect : statusEffectsList) {
-                statusEffectsFullStringList.add(statusEffect.asString().getString());
-            }
-
             String query = arguments.getArgument("query").getStringValue();
-
-            return String.join("\n", statusEffectsFullStringList).contains(query);
+            return !Models.StatusEffect.getStatusEffects().stream()
+                    .filter(statusEffect -> statusEffect.asString().getString().contains(query))
+                    .toList()
+                    .isEmpty();
         }
 
         @Override
