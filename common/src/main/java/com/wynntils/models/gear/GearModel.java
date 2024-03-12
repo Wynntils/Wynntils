@@ -116,6 +116,8 @@ public final class GearModel extends Model {
                     // todo remove
                     if (gearInfo.name().equals("Morph-Gold")) {
                         System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
+                    } else {
+                        System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
                     }
                 }
             }

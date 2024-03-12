@@ -353,8 +353,10 @@ public class SkillPointModel extends Model {
                 if (!processedSets.contains(setInfo.name())) {
                     System.out.println("processing set " + setInfo.name() + " on item " + itemStack.getHoverName());
                     System.out.println("SetInstance is " + setInstance);
+                    // fixme: this setinstance returns 3-4 true count even when count is actually 8
+                    // probably because we need to update/reannotate all items in the set when some set item is updated
+                    // deal with in gearmodel later
                     setInstance.trueCountBonuses().forEach((statType, value) -> {
-                        System.out.println(statType.toString() + ": " + value);
                         if (Skill.isSkill(statType.getDisplayName())) {
                             setBonusSkillPoints.merge(
                                     Skill.fromString(statType.getDisplayName()), value, Integer::sum);
