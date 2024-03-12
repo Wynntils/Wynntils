@@ -82,13 +82,6 @@ public class GearInfoRegistry {
                 // Inject the name into the object
                 itemObject.addProperty("name", entry.getKey());
 
-                // also inject the set info
-                // this will either be the set name or null, which will be parsed in the deserializer
-                // FIXME: this causes CME once in a while, but it doesn't tell me the right line numbers
-                // figure it out at some point
-                String setName = Models.Set.getSetName(entry.getKey());
-                itemObject.addProperty("setName", setName);
-
                 // Deserialize the item
                 GearInfo gearInfo = gson.fromJson(itemObject, GearInfo.class);
 
@@ -139,7 +132,8 @@ public class GearInfoRegistry {
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
-            Optional<SetInfo> setInfo = parseSetInfo(json);
+            // FIXME: this causes CME once in a while, but it doesn't tell me the right line numbers
+            Optional<SetInfo> setInfo = parseSetInfo(displayName);
 
             return new GearInfo(
                     displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats, setInfo);
