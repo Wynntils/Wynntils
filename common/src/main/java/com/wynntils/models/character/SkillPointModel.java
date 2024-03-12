@@ -57,7 +57,6 @@ public class SkillPointModel extends Model {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
-    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
     private static final String SET_BONUS_HEADER = "§aSet Bonus:";
     private static final Pattern BONUS_SKILL_POINT_PATTERN =
             Pattern.compile("§[ac]([+-]\\d+) §7(Strength|Dexterity|Intelligence|Defence|Agility)");
@@ -318,20 +317,17 @@ public class SkillPointModel extends Model {
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
         for (ItemStack itemStack : McUtils.inventory().armor) {
             calculateSingleGearSkillPoints(itemStack);
-            countSet(itemStack);
         }
 
         for (int i : ACCESSORY_SLOTS) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
             calculateSingleGearSkillPoints(itemStack);
-            countSet(itemStack);
         }
 
         // held item - must check if it's actually valid before counting
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (InventoryUtils.itemRequirementsMet(itemInHand)) {
             calculateSingleGearSkillPoints(itemInHand);
-            countSet(itemInHand);
         }
 
         for (Map.Entry<String, SetInstance> entry : processedSets.entrySet()) {
@@ -340,20 +336,20 @@ public class SkillPointModel extends Model {
             if (setInstance.wynncraftCount() == setInstance.trueCount()) {
                 // Wynncraft reports the correct number of items in the set, we can use point values from in-game
                 boolean setBonusesStarted = false;
-                for (StyledText line : LoreUtils.getLore(setInstance.getRelevantItem())) {
-                    if (!setBonusesStarted) { // avoid parsing normal item bonuses accidentally
-                        if (line.getString().equals(SET_BONUS_HEADER)) {
-                            setBonusesStarted = true;
-                        }
-                        continue;
-                    }
-                    Matcher m = BONUS_SKILL_POINT_PATTERN.matcher(line.getString());
-                    if (!m.matches()) continue;
-
-                    int value = Integer.parseInt(m.group(1));
-                    Skill skill = Skill.fromString(m.group(2));
-                    setBonusSkillPoints.merge(skill, value, Integer::sum);
-                }
+//                for (StyledText line : LoreUtils.getLore(setInstance.getRelevantItem())) {
+//                    if (!setBonusesStarted) { // avoid parsing normal item bonuses accidentally
+//                        if (line.getString().equals(SET_BONUS_HEADER)) {
+//                            setBonusesStarted = true;
+//                        }
+//                        continue;
+//                    }
+//                    Matcher m = BONUS_SKILL_POINT_PATTERN.matcher(line.getString());
+//                    if (!m.matches()) continue;
+//
+//                    int value = Integer.parseInt(m.group(1));
+//                    Skill skill = Skill.fromString(m.group(2));
+//                    setBonusSkillPoints.merge(skill, value, Integer::sum);
+//                }
             } else {
                 // Two of the same ring bug on Wynn, they only report 1 ring
                 // Use our own data to calculate the set bonus
@@ -365,21 +361,6 @@ public class SkillPointModel extends Model {
                                         Skill.fromString(statType.getDisplayName()), value, Integer::sum);
                             }
                         });
-            }
-        }
-    }
-
-    private void countSet(ItemStack itemStack) {
-        for (StyledText line : LoreUtils.getLore(itemStack)) {
-            Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
-            if (nameMatcher.matches()) {
-                // TODO remove, this should be in GearInstance eventually
-//                processedSets
-//                        .computeIfAbsent(
-//                                nameMatcher.group(1),
-//                                k -> new SetInstance(Integer.parseInt(nameMatcher.group(2)), itemStack))
-//                        .incrementTrueCount();
-//                return;
             }
         }
     }

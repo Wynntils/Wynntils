@@ -84,6 +84,8 @@ public class GearInfoRegistry {
 
                 // also inject the set info
                 // this will either be the set name or null, which will be parsed in the deserializer
+                // FIXME: this causes CME once in a while, but it doesn't tell me the right line numbers
+                // figure it out at some point
                 String setName = Models.Set.getSetName(entry.getKey());
                 itemObject.addProperty("setName", setName);
 

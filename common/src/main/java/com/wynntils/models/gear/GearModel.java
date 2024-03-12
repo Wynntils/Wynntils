@@ -7,10 +7,13 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.SetInfo;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -20,13 +23,20 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.wynn.InventoryUtils;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -45,6 +55,8 @@ import net.minecraft.world.item.ItemStack;
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
 public final class GearModel extends Model {
+    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
+
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
@@ -84,20 +96,36 @@ public final class GearModel extends Model {
         gearInfoRegistry.reloadData();
     }
 
+    // For "real" gear items eg. from the inventory
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
-        // TODO: i can just steal the parsing thing i wrote earlier from SkillPointModel
+        Optional<SetInstance> setInstance = Optional.empty();
+        if (gearInfo.tier() == GearTier.SET) {
+            Map<String, Pair<Integer, Integer>> setCountMap = getSetCountMap();
+            Optional<SetInfo> setInfo = gearInfo.setInfo();
+            if (setInfo.isEmpty()) {
+                WynntilsMod.warn("SetInfo is empty for set item " + gearInfo.name());
+            } else {
+                if (setCountMap.containsKey(setInfo.get().name())) {
+                    Pair<Integer, Integer> counts = setCountMap.get(setInfo.get().name());
+                    setInstance = Optional.of(new SetInstance(counts.a(), counts.b(), setInfo.get().getBonusForItems(counts.b())));
+
+                    // todo remove
+                    System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
+                }
+            }
+        }
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), Optional.empty());
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), setInstance);
     }
 
+    // For parsing gear from the gear viewer
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
-        // TODO: this is for "fake items" eg. from the gear viewer. probably better to leave as empty since we have no idea about their accessories?
         return GearInstance.create(
                 gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), Optional.empty());
     }
@@ -185,5 +213,51 @@ public final class GearModel extends Model {
 
     public Stream<GearInfo> getAllGearInfos() {
         return gearInfoRegistry.getGearInfoStream();
+    }
+
+    /**
+     * Goes through user's equipped gear (all armour, accessories, held weapon) and returns count of each set
+     * @return <set name, <wynncraft count, true count>> map
+     */
+    private Map<String, Pair<Integer, Integer>> getSetCountMap() {
+        Map<String, Pair<Integer, Integer>> setCountMap = new HashMap<>();
+
+        for (ItemStack itemStack : McUtils.inventory().armor) {
+            Pair<String, Integer> setCountInfo = countSet(itemStack);
+            if (setCountInfo == null) continue;
+
+            Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
+            setCountMap.put(
+                    setCountInfo.key(),
+                    newCounts);
+        }
+
+        for (int i : new int[]{9, 10, 11, 12}) { // FIXME - hardcoded slots
+            ItemStack itemStack = McUtils.inventory().getItem(i);
+
+        }
+
+        // held item - must check if it's actually valid before counting
+        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        if (InventoryUtils.itemRequirementsMet(itemInHand)) {
+            countSet(itemInHand);
+        }
+
+        return setCountMap;
+    }
+
+    /**
+     * @return Pair<Set name, Wynncraft count> or null if not found
+     */
+    private Pair<String, Integer> countSet(ItemStack itemStack) {
+        for (StyledText line : LoreUtils.getLore(itemStack)) {
+            Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
+            if (nameMatcher.matches()) {
+                String setName = nameMatcher.group(1);
+                int count = Integer.parseInt(nameMatcher.group(2));
+                return new Pair<>(setName, count);
+            }
+        }
+        return null;
     }
 }
