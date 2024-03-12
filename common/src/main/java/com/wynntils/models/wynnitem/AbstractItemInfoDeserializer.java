@@ -436,6 +436,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     protected Optional<SetInfo> parseSetInfo(String name) {
         if (name == null) return Optional.empty();
 
-        return Optional.ofNullable(Models.Set.getSetInfo(name));
+        return Optional.ofNullable(Models.Set.getSetInfo(Models.Set.getSetName(name)));
     }
 }
