@@ -114,7 +114,9 @@ public final class GearModel extends Model {
                     setInstance = Optional.of(new SetInstance(counts.a(), counts.b(), setInfo.get().getBonusForItems(counts.b())));
 
                     // todo remove
-                    System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
+                    if (gearInfo.name().equals("Morph-Gold")) {
+                        System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
+                    }
                 }
             }
         }

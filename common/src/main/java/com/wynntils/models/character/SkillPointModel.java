@@ -16,6 +16,8 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
@@ -34,9 +36,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,11 +61,8 @@ public class SkillPointModel extends Model {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
-    private static final String SET_BONUS_HEADER = "§aSet Bonus:";
-    private static final Pattern BONUS_SKILL_POINT_PATTERN =
-            Pattern.compile("§[ac]([+-]\\d+) §7(Strength|Dexterity|Intelligence|Defence|Agility)");
 
-    private Map<String, SetInstance> processedSets = new HashMap<>();
+    private Set<String> processedSets = new HashSet<>();
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -312,7 +313,7 @@ public class SkillPointModel extends Model {
         gearSkillPoints = new EnumMap<>(Skill.class);
         craftedSkillPoints = new EnumMap<>(Skill.class);
         setBonusSkillPoints = new EnumMap<>(Skill.class);
-        processedSets = new HashMap<>();
+        processedSets = new HashSet<>();
 
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
         for (ItemStack itemStack : McUtils.inventory().armor) {
@@ -329,40 +330,6 @@ public class SkillPointModel extends Model {
         if (InventoryUtils.itemRequirementsMet(itemInHand)) {
             calculateSingleGearSkillPoints(itemInHand);
         }
-
-        for (Map.Entry<String, SetInstance> entry : processedSets.entrySet()) {
-            SetInstance setInstance = entry.getValue();
-
-            if (setInstance.wynncraftCount() == setInstance.trueCount()) {
-                // Wynncraft reports the correct number of items in the set, we can use point values from in-game
-                boolean setBonusesStarted = false;
-//                for (StyledText line : LoreUtils.getLore(setInstance.getRelevantItem())) {
-//                    if (!setBonusesStarted) { // avoid parsing normal item bonuses accidentally
-//                        if (line.getString().equals(SET_BONUS_HEADER)) {
-//                            setBonusesStarted = true;
-//                        }
-//                        continue;
-//                    }
-//                    Matcher m = BONUS_SKILL_POINT_PATTERN.matcher(line.getString());
-//                    if (!m.matches()) continue;
-//
-//                    int value = Integer.parseInt(m.group(1));
-//                    Skill skill = Skill.fromString(m.group(2));
-//                    setBonusSkillPoints.merge(skill, value, Integer::sum);
-//                }
-            } else {
-                // Two of the same ring bug on Wynn, they only report 1 ring
-                // Use our own data to calculate the set bonus
-                Models.Set.getSetInfo(entry.getKey())
-                        .getBonusForItems(setInstance.trueCount())
-                        .forEach((statType, value) -> {
-                            if (Skill.isSkill(statType.getDisplayName())) {
-                                setBonusSkillPoints.merge(
-                                        Skill.fromString(statType.getDisplayName()), value, Integer::sum);
-                            }
-                        });
-            }
-        }
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {
@@ -375,6 +342,27 @@ public class SkillPointModel extends Model {
                     gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
+
+            if (gear.getGearTier() == GearTier.SET
+                    && gear.getItemInfo().setInfo().isPresent()
+                    && gear.getItemInstance().isPresent()
+                    && gear.getItemInstance().get().setInstance().isPresent()) {
+                SetInfo setInfo = gear.getItemInfo().setInfo().get();
+                SetInstance setInstance = gear.getItemInstance().get().setInstance().get();
+
+                if (!processedSets.contains(setInfo.name())) {
+                    System.out.println("processing set " + setInfo.name() + " on item " + itemStack.getHoverName());
+                    System.out.println("SetInstance is " + setInstance);
+                    setInstance.trueCountBonuses().forEach((statType, value) -> {
+                        System.out.println(statType.toString() + ": " + value);
+                        if (Skill.isSkill(statType.getDisplayName())) {
+                            setBonusSkillPoints.merge(
+                                    Skill.fromString(statType.getDisplayName()), value, Integer::sum);
+                        }
+                    });
+                    processedSets.add(setInfo.name());
+                }
+            }
         } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
             craftedGear.getIdentifications().forEach(x -> {
                 if (x.statType() instanceof SkillStatType skillStat) {
