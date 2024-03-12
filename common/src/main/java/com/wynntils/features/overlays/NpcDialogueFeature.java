@@ -16,11 +16,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.npcdialogue.type.ConfirmationlessDialogue;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
@@ -82,7 +81,7 @@ public class NpcDialogueFeature extends Feature {
     // with all the currently displayed dialogues
     private List<Component> currentlyDisplayedDialogue = null;
     private NpcDialogue currentDialogue = null;
-    private List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+    private List<NpcDialogue> confirmationlessDialogues = new ArrayList<>();
     private MessageContainer autoProgressContainer = null;
 
     // Legacy mode
@@ -93,20 +92,14 @@ public class NpcDialogueFeature extends Feature {
     private StyledText displayedHelperMessage = null;
 
     public NpcDialogueFeature() {
-        super();
-
         // Add this feature as a dependent of the NpcDialogueModel
         Models.NpcDialogue.addNpcDialogExtractionDependent(this);
     }
 
     @SubscribeEvent
-    public void onNpcDialogue(NpcDialogEvent e) {
-        // If the overlay is not enabled, print the dialogue in chat, like Wynn would
-        if (!Managers.Overlay.isEnabled(npcDialogueOverlay)) {
-            printDialogueInChat(e.getChatMessage(), e.getType(), e.isProtected());
-        }
-
-        NpcDialogueType dialogueType = e.getType();
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
+        NpcDialogue dialogue = event.getDialogue();
+        NpcDialogueType dialogueType = dialogue.dialogueType();
 
         if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) return;
 
@@ -121,17 +114,28 @@ public class NpcDialogueFeature extends Feature {
         }
 
         if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
-            List<StyledText> msg =
-                    e.getChatMessage().stream().map(StyledText::fromComponent).toList();
-
             // Schedule a new sneak key press if this is not the end of the dialogue
-            if (!msg.isEmpty()) {
-                scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
+            if (!dialogue.isEmpty()) {
+                scheduledAutoProgressKeyPress = scheduledSneakPress(dialogue.currentDialogue());
 
                 // Display the auto progress notification
                 updateAutoProgressNotification();
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onNpcDialoguePost(NpcDialogueProcessingEvent.Post event) {
+        NpcDialogue dialogue = event.getDialogue();
+
+        // If the overlay is not enabled, print the dialogue in chat, like Wynn would
+        if (!Managers.Overlay.isEnabled(npcDialogueOverlay)
+                && chatDisplayType.get() == NpcDialogueChatDisplayType.LEGACY) {
+            printLegacyDialogueInChat(
+                    event.getPostProcessedDialogueComponent(), dialogue.dialogueType(), dialogue.isProtected());
+        }
+
+        // NpcDialogueChatDisplayType.NORMAL mode updates in the onTick method
     }
 
     @SubscribeEvent
@@ -148,6 +152,13 @@ public class NpcDialogueFeature extends Feature {
 
         // Legacy mode
         if (chatDisplayType.get() == NpcDialogueChatDisplayType.LEGACY) {
+            if (!Models.NpcDialogue.isInDialogue()) {
+                lastDialogue = null;
+                removeHelperMessage();
+                resetAutoProgressContainer();
+                return;
+            }
+
             displayHelperMessage();
         }
     }
@@ -179,8 +190,8 @@ public class NpcDialogueFeature extends Feature {
         return scheduledAutoProgressKeyPress;
     }
 
-    private ScheduledFuture<?> scheduledSneakPress(List<StyledText> msg) {
-        long delay = Models.NpcDialogue.calculateMessageReadTime(msg);
+    private ScheduledFuture<?> scheduledSneakPress(List<StyledText> dialogue) {
+        long delay = Models.NpcDialogue.calculateMessageReadTime(dialogue);
 
         return autoProgressExecutor.schedule(
                 () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
@@ -189,42 +200,31 @@ public class NpcDialogueFeature extends Feature {
                 TimeUnit.MILLISECONDS);
     }
 
-    private void printDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
-        if (chatDisplayType.get() == NpcDialogueChatDisplayType.NORMAL) {
-            updateDialogueScreen();
-        } else {
-            if (type == NpcDialogueType.NONE || dialogues.isEmpty()) {
-                lastDialogue = null;
-                removeHelperMessage();
-                resetAutoProgressContainer();
-                return;
-            }
+    private void printLegacyDialogueInChat(List<Component> dialogues, NpcDialogueType type, boolean isProtected) {
+        // If the dialogues are not the same as the last dialogues, print them in chat
+        if (!Objects.equals(dialogues, this.lastDialogue)) {
+            this.lastDialogue = dialogues;
 
-            // If the dialogues are not the same as the last dialogues, print them in chat
-            if (!Objects.equals(dialogues, this.lastDialogue)) {
-                this.lastDialogue = dialogues;
+            // In legacy mode, just print the dialogues in chat
+            dialogues.forEach(McUtils::sendMessageToClient);
+        }
 
-                // In legacy mode, just print the dialogues in chat
-                dialogues.forEach(McUtils::sendMessageToClient);
-            }
-
-            // Either ways, display the helper message
-            if (type == NpcDialogueType.SELECTION) {
-                displayedHelperMessage =
-                        StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.selectAnOption")
-                                .withStyle(ChatFormatting.RED));
-                displayHelperMessage();
-            } else if (type == NpcDialogueType.NORMAL) {
-                displayedHelperMessage =
-                        StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
-                                .withStyle(ChatFormatting.GREEN));
-                displayHelperMessage();
-            }
+        // Either ways, display the helper message
+        if (type == NpcDialogueType.SELECTION) {
+            displayedHelperMessage =
+                    StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.selectAnOption")
+                            .withStyle(ChatFormatting.RED));
+            displayHelperMessage();
+        } else if (type == NpcDialogueType.NORMAL) {
+            displayedHelperMessage =
+                    StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.shiftToProgress")
+                            .withStyle(ChatFormatting.GREEN));
+            displayHelperMessage();
         }
     }
 
     private void updateDialogueScreen() {
-        List<ConfirmationlessDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
+        List<NpcDialogue> confirmationlessDialogues = Models.NpcDialogue.getConfirmationlessDialogues();
         NpcDialogue currentDialogue = Models.NpcDialogue.getCurrentDialogue();
 
         // If there is no dialogue, clear the last dialogue
@@ -245,11 +245,9 @@ public class NpcDialogueFeature extends Feature {
         // Construct the dialogue screen
         List<Component> screenLines = new ArrayList<>();
 
-        for (ConfirmationlessDialogue confirmationlessDialogue : confirmationlessDialogues) {
+        for (NpcDialogue confirmationlessDialogue : confirmationlessDialogues) {
             screenLines.add(Component.empty());
-            screenLines.addAll(confirmationlessDialogue.text().stream()
-                    .map(StyledText::getComponent)
-                    .toList());
+            screenLines.addAll(confirmationlessDialogue.dialogueComponent());
         }
 
         if (currentDialogue != null && !currentDialogue.isEmpty()) {
