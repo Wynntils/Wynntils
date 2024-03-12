@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -150,7 +149,7 @@ public final class ChatHandler extends Handler {
                 List<Component> dialogue = delayedDialogue;
                 delayedDialogue = null;
 
-                postNpcDialogue(dialogue, delayedType, true);
+                handleNpcDialogue(dialogue, delayedType, true);
             } else {
                 lastSlowdownApplied = McUtils.mc().level.getGameTime();
             }
@@ -261,7 +260,7 @@ public final class ChatHandler extends Handler {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            postNpcDialogue(List.of(), NpcDialogueType.NONE, false);
+            handleNpcDialogue(List.of(), NpcDialogueType.NONE, false);
             return;
         }
 
@@ -344,7 +343,7 @@ public final class ChatHandler extends Handler {
     private void handleScreenNpcDialog(List<Component> dialog, boolean isSelection) {
         if (dialog.isEmpty()) {
             // dialog could be the empty list, this means the last dialog is removed
-            postNpcDialogue(dialog, NpcDialogueType.NONE, false);
+            handleNpcDialogue(dialog, NpcDialogueType.NONE, false);
             return;
         }
 
@@ -353,7 +352,7 @@ public final class ChatHandler extends Handler {
         if (McUtils.mc().level.getGameTime() <= lastSlowdownApplied + SLOWDOWN_PACKET_TICK_DELAY) {
             // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
             // This is the normal case
-            postNpcDialogue(dialog, type, true);
+            handleNpcDialogue(dialog, type, true);
             return;
         }
 
@@ -367,7 +366,7 @@ public final class ChatHandler extends Handler {
                 delayedDialogue = null;
                 // If we got here, then we did not get the slowdown effect, otherwise we would
                 // have sent the dialogue already
-                postNpcDialogue(dialogToSend, delayedType, false);
+                handleNpcDialogue(dialogToSend, delayedType, false);
             }
         });
     }
@@ -383,7 +382,7 @@ public final class ChatHandler extends Handler {
         if (recipientType == RecipientType.NPC) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
-            postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
+            handleNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
             return;
         }
 
@@ -415,7 +414,7 @@ public final class ChatHandler extends Handler {
 
         if (recipientType == RecipientType.NPC) {
             if (shouldSeparateNPC()) {
-                postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
+                handleNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                 // We need to cancel the original chat event, if any
                 return null;
             } else {
@@ -430,7 +429,7 @@ public final class ChatHandler extends Handler {
         return event.getMessage();
     }
 
-    private void postNpcDialogue(List<Component> dialogue, NpcDialogueType type, boolean isProtected) {
+    private void handleNpcDialogue(List<Component> dialogue, NpcDialogueType type, boolean isProtected) {
         if (type == NpcDialogueType.NONE) {
             // Ignore any delayed dialogues, since they are now obsolete
             delayedDialogue = null;
@@ -443,8 +442,7 @@ public final class ChatHandler extends Handler {
             lastScreenNpcDialog = dialogue;
         }
 
-        NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
-        WynntilsMod.postEvent(event);
+        Models.NpcDialogue.handleDialogue(dialogue, isProtected, type);
     }
 
     private RecipientType getRecipientType(StyledText codedMessage, MessageType messageType) {
