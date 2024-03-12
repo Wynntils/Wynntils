@@ -30,6 +30,10 @@ public class NpcDialogueModel extends Model {
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
 
     private NpcDialogue currentDialogue = NpcDialogue.EMPTY;
+
+    // If we translate a confirmationless dialogue, then we need to change this list.
+    // However, translation is ran as a futrue, so it is not guranteed that only one thread will access this list at a
+    // time.
     private ConcurrentLinkedQueue<NpcDialogue> confirmationlessDialogues = new ConcurrentLinkedQueue<>();
 
     public NpcDialogueModel() {
