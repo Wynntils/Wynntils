@@ -433,10 +433,10 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(list);
     }
 
-    protected SetInfo parseSetInfo(JsonObject json) {
-        String setName = JsonUtils.getNullableJsonString(json, "set");
-        if (setName == null) return null;
+    protected Optional<SetInfo> parseSetInfo(JsonObject json) {
+        String setName = JsonUtils.getNullableJsonString(json, "setName");
+        if (setName == null) return Optional.empty();
 
-        return Models.Set.getSetInfo(setName);
+        return Optional.ofNullable(Models.Set.getSetInfo(setName));
     }
 }

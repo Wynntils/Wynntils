@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GearInfoRegistry {
@@ -84,7 +85,7 @@ public class GearInfoRegistry {
                 // also inject the set info
                 // this will either be the set name or null, which will be parsed in the deserializer
                 String setName = Models.Set.getSetName(entry.getKey());
-                itemObject.addProperty("set", setName);
+                itemObject.addProperty("setName", setName);
 
                 // Deserialize the item
                 GearInfo gearInfo = gson.fromJson(itemObject, GearInfo.class);
@@ -136,7 +137,7 @@ public class GearInfoRegistry {
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
-            SetInfo setInfo = parseSetInfo(json);
+            Optional<SetInfo> setInfo = parseSetInfo(json);
 
             return new GearInfo(
                     displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats, setInfo);
