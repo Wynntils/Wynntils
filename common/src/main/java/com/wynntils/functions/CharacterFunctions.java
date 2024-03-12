@@ -102,6 +102,32 @@ public class CharacterFunctions {
         }
     }
 
+    public static class ContainsStatusEffectFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            List<StatusEffect> statusEffectsList = Models.StatusEffect.getStatusEffects();
+            List<String> statusEffectsFullStringList = new ArrayList<String>();
+            for (StatusEffect statusEffect : statusEffectsList) {
+                statusEffectsFullStringList.add(statusEffect.asString().getString());
+            }
+
+            String query = arguments.getArgument("query").getStringValue();
+
+            return String.join("\n", statusEffectsFullStringList).contains(query);
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("contains_effect");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("query", String.class, null)));
+        }
+    }
+
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
