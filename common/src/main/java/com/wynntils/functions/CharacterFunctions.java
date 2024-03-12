@@ -102,11 +102,9 @@ public class CharacterFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             String query = arguments.getArgument("query").getStringValue();
-            return !Models.StatusEffect.getStatusEffects().stream()
-                    .filter(statusEffect ->
-                            statusEffect.getName().getStringWithoutFormatting().equals(query))
-                    .toList()
-                    .isEmpty();
+            return Models.StatusEffect.getStatusEffects().stream()
+                    .anyMatch(statusEffect ->
+                            statusEffect.getName().getStringWithoutFormatting().equals(query));
         }
 
         @Override
