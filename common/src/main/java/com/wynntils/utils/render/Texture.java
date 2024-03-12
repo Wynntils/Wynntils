@@ -206,10 +206,9 @@ public enum Texture {
     // endregion
 
     // region Seaskipper
-    BOAT_BUTTON("seaskipper/boat_button.png", 39, 76),
-    DESTINATION_BUTTON("seaskipper/destination_button.png", 66, 40),
-    DESTINATION_LIST("seaskipper/destination_list_background.png", 143, 205),
-    TRAVEL_BUTTON("seaskipper/travel_button.png", 100, 76),
+    DESTINATION_BUTTON("seaskipper/destination_button.png", 135, 40),
+    DESTINATION_LIST("seaskipper/destination_list_background.png", 151, 226),
+    TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
 
     // region UI Components

@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Optional;
@@ -30,9 +30,9 @@ public class ContainerScrollFeature extends Feature {
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
 
-        boolean scrollUp = event.isScrollingUp() ^ invertScroll.get();
+        boolean scrollBack = event.isScrollingUp() ^ invertScroll.get();
 
-        Optional<Integer> slot = Models.Container.getScrollSlot(gui, scrollUp);
+        Optional<Integer> slot = InteractiveContainerType.getScrollButton(gui, scrollBack);
 
         if (slot.isEmpty()) return;
 

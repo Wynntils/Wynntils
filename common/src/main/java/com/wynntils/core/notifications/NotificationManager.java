@@ -9,8 +9,8 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.overlays.GameNotificationOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -122,16 +122,14 @@ public final class NotificationManager extends Manager {
         WynntilsMod.postEvent(new NotificationEvent.Remove(msgContainer));
 
         // If the message is in the chat, remove it
-        if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
-                .isEnabled()) {
+        if (shouldSendToChat()) {
             McUtils.removeMessageFromChat(msgContainer.getRenderTask().getText().getComponent());
         }
     }
 
     private void sendToChatIfNeeded(Component oldMessage, MessageContainer container) {
         // Overlay is not enabled, send in chat
-        if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
-                .isEnabled()) {
+        if (shouldSendToChat()) {
             sendOrEditNotification(oldMessage, container);
         }
     }
@@ -144,5 +142,9 @@ public final class NotificationManager extends Manager {
                 .gui
                 .getChat()
                 .addMessage(msgContainer.getRenderTask().getText().getComponent());
+    }
+
+    private static boolean shouldSendToChat() {
+        return !Managers.Overlay.isEnabled(Managers.Overlay.getOverlay(GameNotificationOverlay.class));
     }
 }
