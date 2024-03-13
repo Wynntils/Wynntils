@@ -26,6 +26,7 @@ import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,26 +103,26 @@ public final class GearModel extends Model {
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
-        Optional<SetInstance> setInstance = Optional.empty();
-        if (gearInfo.tier() == GearTier.SET) {
-            Map<String, Pair<Integer, Integer>> setCountMap = getSetCountMap();
-            Optional<SetInfo> setInfo = gearInfo.setInfo();
-            if (setInfo.isEmpty()) {
-                WynntilsMod.warn("SetInfo is empty for set item " + gearInfo.name());
-            } else {
-                if (setCountMap.containsKey(setInfo.get().name())) {
-                    Pair<Integer, Integer> counts = setCountMap.get(setInfo.get().name());
-                    setInstance = Optional.of(new SetInstance(counts.a(), counts.b(), setInfo.get().getBonusForItems(counts.b())));
 
-                    // todo remove
-                    if (gearInfo.name().equals("Morph-Gold")) {
-                        System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
-                    } else {
-                        System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
-                    }
-                }
+        // Set parsing
+        Optional<SetInstance> setInstance = Optional.empty();
+        if (gearInfo.tier() == GearTier.SET && gearInfo.setInfo().isPresent()) {
+            // We have a set and the information required to make instances
+            // Go through all of user's active gear and figure out how many of this set is active
+            Pair<Integer, Integer> setCount = getActiveSetCount(gearInfo.setInfo().get().name());
+            SetInfo setInfo = gearInfo.setInfo().get();
+
+            // we are wearing some item from this set
+            setInstance = Optional.of(new SetInstance(setInfo, setCount.a(), setCount.b(), setInfo.getBonusForItems(setCount.b())));
+
+            // todo remove
+            if (gearInfo.name().equals("Morph-Gold")) {
+                System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
+            } else {
+                System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
             }
         }
+
         return GearInstance.create(
                 gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), setInstance);
     }
@@ -220,18 +221,17 @@ public final class GearModel extends Model {
     }
 
     /**
-     * Goes through user's equipped gear (all armour, accessories, held weapon) and returns count of each set
-     * @return <set name, <wynncraft count, true count>> map
+     * Goes through user's equipped gear (all armour, accessories, held weapon) and returns count of specified
+     * @return <wynncraft count, true count>
      */
-    private Map<String, Pair<Integer, Integer>> getSetCountMap() {
-        Map<String, Pair<Integer, Integer>> setCountMap = new HashMap<>();
+    private Pair<Integer, Integer> getActiveSetCount(String setName) {
+        Pair<Integer, Integer> count = Pair.of(0, 0);
 
         for (ItemStack itemStack : McUtils.inventory().armor) {
-            Pair<String, Integer> setCountInfo = countSet(itemStack);
-            if (setCountInfo == null) continue;
+            int wynncraftCount = countSet(itemStack, setName);
+            if (wynncraftCount == -1) continue;
 
-            Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
-            setCountMap.put(setCountInfo.key(), newCounts);
+            count = Pair.of(wynncraftCount, count.b() + 1);
         }
 
         int[] accessorySlots = {9, 10, 11, 12};
@@ -243,38 +243,34 @@ public final class GearModel extends Model {
         }
         for (int i : accessorySlots) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
-            Pair<String, Integer> setCountInfo = countSet(itemStack);
-            if (setCountInfo == null) continue;
+            int wynncraftCount = countSet(itemStack, setName);
+            if (wynncraftCount == -1) continue;
 
-            Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
-            setCountMap.put(setCountInfo.key(), newCounts);
+            count = Pair.of(wynncraftCount, count.b() + 1);
         }
 
         // held item - must check if it's actually valid before counting
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (InventoryUtils.itemRequirementsMet(itemInHand)) {
-            Pair<String, Integer> setCountInfo = countSet(itemInHand);
-            if (setCountInfo != null) {
-                Pair<Integer, Integer> newCounts = Pair.of(setCountInfo.value(), setCountMap.getOrDefault(setCountInfo.key(), Pair.of(0, 0)).value() + 1);
-                setCountMap.put(setCountInfo.key(), newCounts);
-            }
+            int wynncraftCount = countSet(itemInHand, setName);
+            if (wynncraftCount == -1) return count;
+
+            count = Pair.of(wynncraftCount, count.b() + 1);
         }
 
-        return setCountMap;
+        return count;
     }
 
     /**
-     * @return Pair<Set name, Wynncraft count> or null if not found
+     * @return Wynncraft's count of the set if the set matches the specified name, or -1 if it doesn't
      */
-    private Pair<String, Integer> countSet(ItemStack itemStack) {
+    private int countSet(ItemStack itemStack, String setName) {
         for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
-            if (nameMatcher.matches()) {
-                String setName = nameMatcher.group(1);
-                int count = Integer.parseInt(nameMatcher.group(2));
-                return new Pair<>(setName, count);
+            if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                return Integer.parseInt(nameMatcher.group(2));
             }
         }
-        return null;
+        return -1;
     }
 }
