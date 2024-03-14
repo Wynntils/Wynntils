@@ -27,6 +27,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,7 @@ public final class GearModel extends Model {
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
+    private final Map<String, List<SetInstance>> activeSetsCache = new HashMap<>();
 
     public GearModel(SetModel setModel) {
         super(List.of(setModel));
@@ -113,7 +115,23 @@ public final class GearModel extends Model {
             SetInfo setInfo = gearInfo.setInfo().get();
 
             // we are wearing some item from this set
-            setInstance = Optional.of(new SetInstance(setInfo, setCount.a(), setCount.b(), setInfo.getBonusForItems(setCount.b())));
+            setInstance = Optional.of(new SetInstance(setInfo, setCount.a(), setCount.b(), activeSetsCache.get(setInfo.name())));
+            if (!activeSetsCache.containsKey(setInfo.name())) {
+                activeSetsCache.put(setInfo.name(), new ArrayList<>());
+            }
+            activeSetsCache.get(setInfo.name()).add(setInstance.get());
+            activeSetsCache.get(setInfo.name()).forEach(si -> {
+                if (si.getWynncraftCount() != setCount.a()) {
+                    si.setWynncraftCount(setCount.a());
+                }
+                if (si.getTrueCount() != setCount.b()) {
+                    si.setTrueCount(setCount.b());
+                }
+                if (si.getSetInstances() != activeSetsCache.get(setInfo.name())) {
+                    si.setSetInstances(activeSetsCache.get(setInfo.name()));
+                }
+                System.out.println("updated SetInstance to " + si);
+            });
 
             // todo remove
             if (gearInfo.name().equals("Morph-Gold")) {
@@ -265,7 +283,6 @@ public final class GearModel extends Model {
      * @return Wynncraft's count of the set if the set matches the specified name, or -1 if it doesn't
      */
     private int countSet(ItemStack itemStack, String setName) {
-        System.out.println("size " + LoreUtils.getLore(itemStack).size());
         for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
             if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {

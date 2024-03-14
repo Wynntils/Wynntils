@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -35,15 +34,13 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -356,7 +353,7 @@ public class SkillPointModel extends Model {
                     // fixme: this setinstance returns 3-4 true count even when count is actually 8
                     // probably because we need to update/reannotate all items in the set when some set item is updated
                     // deal with in gearmodel later
-                    setInstance.trueCountBonuses().forEach((statType, value) -> {
+                    setInstance.getTrueCountBonuses().forEach((statType, value) -> {
                         if (Skill.isSkill(statType.getDisplayName())) {
                             setBonusSkillPoints.merge(
                                     Skill.fromString(statType.getDisplayName()), value, Integer::sum);
