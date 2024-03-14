@@ -44,6 +44,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
 
     private boolean firstInit = true;
+    private final List<Pair<Supplier<String>, Function<Skill, Integer>>> summaryParts = new ArrayList<>();
 
     private SaveButton saveAssignedButton;
     private SaveButton saveBuildButton;
@@ -79,9 +80,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     () -> I18n.get("screens.wynntils.skillPointLoadouts.gear", Models.SkillPoint.getGearSum()),
                     Models.SkillPoint::getGearSkillPoints));
             summaryParts.add(Pair.of(
-                    () -> I18n.get("screens.wynntils.skillPointLoadouts.setBonus", Models.SkillPoint.getSetBonusSum()),
-                    Models.SkillPoint::getSetBonusSkillPoints));
-            summaryParts.add(Pair.of(
                     () -> I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum()),
                     Models.SkillPoint::getTomeSkillPoints));
             summaryParts.add(Pair.of(
@@ -101,6 +99,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         populateLoadouts();
 
+        // region Widget initialization
         saveNameInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 35),
                 (int) (dividedHeight * 24),
@@ -163,6 +162,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 Component.translatable("screens.wynntils.skillPointLoadouts.convert"),
                 this);
         this.addRenderableWidget(convertButton);
+        // endregion
 
         setSelectedLoadout(null);
     }
@@ -244,135 +244,26 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getAssignedSkillPoints(Skill.values()[i])),
-                            dividedWidth * (51 + i * 2),
-                            dividedHeight * 11,
+                            StyledText.fromString(summaryParts.get(i).key().get()),
+                            dividedWidth * 35,
+                            dividedHeight * (11 + i * 2),
                             CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
+                            HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
-        }
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(
-                                I18n.get("screens.wynntils.skillPointLoadouts.gear", Models.SkillPoint.getGearSum())),
-                        dividedWidth * 35,
-                        dividedHeight * 13,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getGearSkillPoints(Skill.values()[i])),
-                            dividedWidth * (51 + i * 2),
-                            dividedHeight * 13,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-        }
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(
-                                I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum())),
-                        dividedWidth * 35,
-                        dividedHeight * 15,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getTomeSkillPoints(Skill.values()[i])),
-                            dividedWidth * (51 + i * 2),
-                            dividedHeight * 15,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-        }
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get(
-                                "screens.wynntils.skillPointLoadouts.crafted", Models.SkillPoint.getCraftedSum())),
-                        dividedWidth * 35,
-                        dividedHeight * 17,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getCraftedSkillPoints(Skill.values()[i])),
-                            dividedWidth * (51 + i * 2),
-                            dividedHeight * 17,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-        }
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get(
-                                "screens.wynntils.skillPointLoadouts.statusEffects",
-                                Models.SkillPoint.getStatusEffectsSum())),
-                        dividedWidth * 35,
-                        dividedHeight * 19,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getStatusEffectSkillPoints(Skill.values()[i])),
-                            dividedWidth * (51 + i * 2),
-                            dividedHeight * 19,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-        }
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(
-                                I18n.get("screens.wynntils.skillPointLoadouts.total", Models.SkillPoint.getTotalSum())),
-                        dividedWidth * 35,
-                        dividedHeight * 21,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                    + Models.SkillPoint.getTotalSkillPoints(Skill.values()[i])),
-                            dividedWidth * (51 + i * 2),
-                            dividedHeight * 21,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
+            for (int j = 0; j < 5; j++) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(Skill.values()[j].getColorCode() + ""
+                                        + summaryParts.get(i).value().apply(Skill.values()[j])),
+                                dividedWidth * (51 + j * 2),
+                                dividedHeight * (10 + i * 2),
+                                CommonColors.WHITE,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+            }
         }
 
         if (hasSaveNameConflict) {
@@ -560,7 +451,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     We need baseYPosition - scrollOffset to be equal to dividedHeight * 52
     So we need to find the scrollOffset that makes that true
     scrollOffset is dividedHeight * ??? * scrollPercent, where ??? is some magical multiplier that satisfies the above
-
     (speaking in terms of dividedHeight)
     (???, the magic multiplier, is eventually maxScrollOffset)
     baseYPosition is fixed for the last element at (9 + (loadoutWidgets.size() - 1) * 4)
