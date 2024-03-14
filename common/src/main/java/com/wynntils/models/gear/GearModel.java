@@ -119,7 +119,7 @@ public final class GearModel extends Model {
             if (gearInfo.name().equals("Morph-Gold")) {
                 System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
             } else {
-                System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
+//                System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
             }
         }
 
@@ -265,6 +265,7 @@ public final class GearModel extends Model {
      * @return Wynncraft's count of the set if the set matches the specified name, or -1 if it doesn't
      */
     private int countSet(ItemStack itemStack, String setName) {
+        System.out.println("size " + LoreUtils.getLore(itemStack).size());
         for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
             if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
