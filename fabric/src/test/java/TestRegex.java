@@ -216,6 +216,10 @@ public class TestRegex {
         p.shouldMatch("\uE023 §#44aa3300v8j§a has just logged in!");
         // champion nickname
         p.shouldMatch("\uE017 §#ffe60000§ocharlie268IsAWizard§6 has just logged in!");
+        // moderator nickname, new style
+        p.shouldMatch("\uE01F §6§o§<1>Navi§e has just logged in!");
+        // music, new style
+        p.shouldMatch("\uE020 §3Texilated§b has just logged in!");
     }
 
     @Test
