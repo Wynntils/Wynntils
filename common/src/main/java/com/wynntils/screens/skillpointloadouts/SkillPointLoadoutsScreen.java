@@ -17,6 +17,7 @@ import com.wynntils.screens.skillpointloadouts.widgets.DeleteButton;
 import com.wynntils.screens.skillpointloadouts.widgets.LoadButton;
 import com.wynntils.screens.skillpointloadouts.widgets.LoadoutWidget;
 import com.wynntils.screens.skillpointloadouts.widgets.SaveButton;
+import com.wynntils.screens.skillpointloadouts.widgets.ScrollBar;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -55,6 +56,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
     private WynntilsButton convertButton;
+
+    private ScrollBar scrollBar;
     private float scrollPercent = 0;
 
     private SkillPointLoadoutsScreen() {
@@ -163,6 +166,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 this);
         this.addRenderableWidget(convertButton);
         // endregion
+
+        scrollBar = new ScrollBar(dividedWidth * 30, dividedHeight * 8, dividedWidth * 0.5f, 0, this, dividedHeight);
+        this.addRenderableWidget(scrollBar);
 
         setSelectedLoadout(null);
     }
@@ -410,16 +416,15 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         // region Scrollbar
         if (loadoutWidgets.size() > MAX_LOADOUTS_PER_PAGE) {
+            scrollBar.visible = true;
+            scrollBar.active = true;
             float visibleRatio = Math.min(1, (float) MAX_LOADOUTS_PER_PAGE / loadoutWidgets.size());
             float scrollbarLength = dividedHeight * 48 * visibleRatio + 1;
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.LIGHT_GRAY,
-                    dividedWidth * 30,
-                    dividedHeight * 8 + dividedHeight * 48 * scrollPercent,
-                    0,
-                    dividedWidth * 0.5f,
-                    scrollbarLength);
+            scrollBar.setY((int) (dividedHeight * 8 + dividedHeight * 48 * scrollPercent));
+            scrollBar.setHeight((int) scrollbarLength);
+        } else {
+            scrollBar.visible = false;
+            scrollBar.active = false;
         }
         // Only render from 8 to 56 for scrollable area
         // -/+ 1 to not overlap/cut off content
@@ -490,6 +495,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         if (keyCode == GLFW.GLFW_KEY_DELETE && deleteButton.active) {
             deleteButton.onPress();
             return true;
+        } else if (keyCode == GLFW.GLFW_KEY_END) {
+            mouseScrolled(0, 0, 0, Float.NEGATIVE_INFINITY);
+        } else if (keyCode == GLFW.GLFW_KEY_HOME) {
+            mouseScrolled(0, 0, 0, Float.POSITIVE_INFINITY);
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
