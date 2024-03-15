@@ -1695,7 +1695,7 @@
   "function.wynntils.sprint.description": "Your remaining sprint stamina",
   "function.wynntils.sprint.name": "Sprint",
   "function.wynntils.statusEffectActive.argument.query": "Case-sensitive effect name string to check for",
-  "function.wynntils.statusEffectActive.description": "Checks if [string] is contained in the status effect list",
+  "function.wynntils.statusEffectActive.description": "Checks if an effect is contained in the status effect list",
   "function.wynntils.statusEffectActive.name": "Status Effect Active",
   "function.wynntils.statusEffects.description": "Retrieves the full list of status effects",
   "function.wynntils.statusEffects.name": "Status Effects",
