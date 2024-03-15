@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
@@ -16,6 +16,8 @@ import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
+    private WynntilsButton helperButton;
+
     protected WynntilsGuideScreen(Component component) {
         super(component);
 
@@ -28,7 +30,7 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
     protected void doInit() {
         super.doInit();
 
-        WynntilsButton helperButton = new ItemSearchHelperWidget(
+        helperButton = new ItemSearchHelperWidget(
                 Texture.CONTENT_BOOK_BACKGROUND.width() - 17,
                 -19,
                 (int) (Texture.INFO.width() / 1.7f),
@@ -71,6 +73,19 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         }
 
         reloadElementsList(itemSearchWidget.getSearchQuery());
+    }
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        // Don't want right click clearing the text input
+        if (helperButton != null && helperButton.mouseClicked(mouseX - translationX, mouseY - translationY, button)) {
+            return false;
+        }
+
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     protected abstract void reloadElementsList(ItemSearchQuery searchQuery);
