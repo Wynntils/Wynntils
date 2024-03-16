@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -45,7 +45,6 @@ import org.lwjgl.glfw.GLFW;
 public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
-    private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
     private static final int MAP_CENTER_X = -150;
     private static final int MAP_CENTER_Z = -3000;
     private static final int MAX_X = 1650;
@@ -72,7 +71,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float mapCenterX;
     protected float mapCenterZ;
 
-    protected float currentZoom = 1f;
+    // Zooming updates currentZoomStep, but we also cache the currentZoom for rendering
+    // 17 steps is roughly zoom level 1
+    protected int currentZoomStep = 17;
+    protected float currentZoom = MapRenderer.getZoomFromSteps(currentZoomStep);
 
     protected Poi hovered = null;
 
@@ -224,9 +226,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        double newZoom = currentZoom + deltaY * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
-        setZoom((float) newZoom);
-
+        adjustZoomStep((int) Math.signum(deltaY));
         return true;
     }
 
@@ -237,11 +237,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
-            setZoom(currentZoom + currentZoom * 0.05f);
+            adjustZoomStep(1);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
-            setZoom(currentZoom - currentZoom * 0.05f);
+            adjustZoomStep(-1);
             return true;
         }
 
@@ -368,7 +368,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void centerMap() {
         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
-        setZoom(0);
+        adjustZoomStep(0);
     }
 
     protected boolean isPlayerInsideMainArea() {
@@ -376,8 +376,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }
 
-    protected void setZoom(float zoomTargetDelta) {
-        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM);
+    protected void adjustZoomStep(int delta) {
+        currentZoomStep = MathUtils.clamp(currentZoomStep + delta, 0, MapRenderer.ZOOM_STEPS - 1);
+        recalculateZoom();
+    }
+
+    protected void recalculateZoom() {
+        this.currentZoom = MapRenderer.getZoomFromSteps(currentZoomStep);
     }
 
     protected void updateMapCenter(float newX, float newZ) {

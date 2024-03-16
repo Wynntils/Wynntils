@@ -33,10 +33,18 @@ import org.lwjgl.opengl.GL13;
 
 public final class MapRenderer {
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    public static final float MIN_ZOOM = 0.1f;
-    public static final float MAX_ZOOM = 5;
 
-    public static Poi hovered = null;
+    // ZOOM_STEPS is the number of steps the zoom can take. (0 to ZOOM_STEPS - 1)
+    public static final int ZOOM_STEPS = 30;
+    public static final float MIN_ZOOM = 0.1f;
+    private static final double MIN_ZOOM_LOG = Math.log(MIN_ZOOM);
+    public static final float MAX_ZOOM = 5f;
+    private static final double MAX_ZOOM_LOG = Math.log(MAX_ZOOM);
+
+    // Zoom is calculated using exponential interpolation between MIN_ZOOM and MAX_ZOOM.
+    public static float getZoomFromSteps(int step) {
+        return (float) Math.exp(MIN_ZOOM_LOG + (MAX_ZOOM_LOG - MIN_ZOOM_LOG) * step / (ZOOM_STEPS - 1));
+    }
 
     public static void renderMapQuad(
             MapTexture map,
