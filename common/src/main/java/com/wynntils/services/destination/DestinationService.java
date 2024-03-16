@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class DestinationService extends Service {
     // Map<location, abbreviation>
-    private Map<String, String> destinations;
+    private Map<String, String> destinations = new HashMap<>();
 
     public DestinationService() {
         super(List.of());
 
-        loadDestinations();
+        reloadData();
     }
 
     @Override
@@ -63,14 +63,15 @@ public class DestinationService extends Service {
     }
 
     private void loadDestinations() {
-        Map<String, String> newDestinations = new HashMap<>();
-
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_DESTINATIONS);
         dl.handleReader(reader -> {
+            Map<String, String> newDestinations = new HashMap<>();
+
             Destination result = WynntilsMod.GSON.fromJson(reader, Destination.class);
             for (Destination.DestinationDetail destination : result.destinations) {
                 newDestinations.put(destination.location, destination.abbreviation);
             }
+
             destinations = newDestinations;
         });
     }
@@ -78,7 +79,7 @@ public class DestinationService extends Service {
     private static class Destination {
         List<DestinationDetail> destinations;
 
-        static class DestinationDetail {
+        private static class DestinationDetail {
             String location;
             String abbreviation;
         }
