@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -33,19 +33,18 @@ public enum UrlId {
     DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),
     DATA_STATIC_CHARMS("dataStaticCharms"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
-    DATA_STATIC_GEAR("dataStaticGear"),
+    DATA_STATIC_DESTINATIONS("dataStaticDestinations"),
     DATA_STATIC_GEAR_ADVANCED("dataStaticGearAdvanced"),
-    DATA_STATIC_INGREDIENTS("dataStaticIngredients"),
+    DATA_STATIC_IDENTIFICATION_KEYS("dataStaticIdentificationKeys"),
     DATA_STATIC_INGREDIENTS_ADVANCED("dataStaticIngredientsAdvanced"),
-    DATA_STATIC_INGREDIENT_SKINS("dataStaticIngredientSkins"),
     DATA_STATIC_ITEM_OBTAIN("dataStaticItemObtain"),
     DATA_STATIC_LOOTRUN_TASKS_NAMED("dataStaticLootrunTasksNamed"),
-    DATA_STATIC_MAJOR_IDS("dataStaticMajorIds"),
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_MATERIAL_CONVERSION("dataStaticMaterialConversion"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
+    DATA_STATIC_SHINY_STATS("dataStaticShinyStats"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
     DATA_STATIC_TOMES("dataStaticTomes"),
     DATA_STATIC_URLS("dataStaticUrls"),

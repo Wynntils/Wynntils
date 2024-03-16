@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -52,7 +52,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
 
         if (amountToContribute != -1) {
             waitingForCommandResponse = true;
-            Handlers.Command.sendCommand("guild xp " + amountToContribute);
+            Handlers.Command.queueCommand("guild xp " + amountToContribute);
         }
     }
 

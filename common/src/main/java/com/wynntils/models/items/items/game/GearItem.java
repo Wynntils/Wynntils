@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -13,6 +14,10 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PowderedItemProperty;
+import com.wynntils.models.items.properties.RerollableItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -25,6 +30,9 @@ public class GearItem extends GameItem
         implements GearTierItemProperty,
                 GearTypeItemProperty,
                 LeveledItemProperty,
+                PowderedItemProperty,
+                RerollableItemProperty,
+                ShinyItemProperty,
                 IdentifiableItemProperty<GearInfo, GearInstance> {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
@@ -114,6 +122,26 @@ public class GearItem extends GameItem
     @Override
     public float getOverallPercentage() {
         return gearInstance != null ? gearInstance.getOverallPercentage() : 0.0f;
+    }
+
+    @Override
+    public int getPowderSlots() {
+        return gearInfo.powderSlots();
+    }
+
+    @Override
+    public List<Powder> getPowders() {
+        return gearInstance != null ? gearInstance.powders() : List.of();
+    }
+
+    @Override
+    public int getRerollCount() {
+        return gearInstance != null ? gearInstance.rerolls() : 0;
+    }
+
+    @Override
+    public Optional<ShinyStat> getShinyStat() {
+        return gearInstance != null ? gearInstance.shinyStat() : Optional.empty();
     }
 
     @Override

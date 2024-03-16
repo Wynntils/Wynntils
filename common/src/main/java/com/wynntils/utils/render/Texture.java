@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -77,7 +77,7 @@ public enum Texture {
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
-    INFO("info.png", 25, 25),
+    INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
@@ -151,6 +151,17 @@ public enum Texture {
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
     // endregion
 
+    // region Item Storage
+    ITEM_RECORD("item_storage/record.png", 171, 167),
+    ITEM_RECORD_ADD("item_storage/record_add.png", 9, 18),
+    ITEM_RECORD_BUTTON_LEFT("item_storage/record_button_left.png", 11, 20),
+    ITEM_RECORD_BUTTON_RIGHT("item_storage/record_button_right.png", 11, 20),
+    ITEM_RECORD_CONFIRM("item_storage/record_confirm.png", 9, 18),
+    ITEM_RECORD_DELETE("item_storage/record_delete.png", 9, 18),
+    ITEM_RECORD_HELP("item_storage/record_help.png", 9, 18),
+    ITEM_RECORD_SCROLL("item_storage/record_scroll_button.png", 7, 8),
+    // endregion
+
     // region Lootrun
     LOOTRUN_LINE("lootrun/path_arrow.png", 16, 16),
 
@@ -195,10 +206,9 @@ public enum Texture {
     // endregion
 
     // region Seaskipper
-    BOAT_BUTTON("seaskipper/boat_button.png", 39, 76),
-    DESTINATION_BUTTON("seaskipper/destination_button.png", 66, 40),
-    DESTINATION_LIST("seaskipper/destination_list_background.png", 143, 205),
-    TRAVEL_BUTTON("seaskipper/travel_button.png", 100, 76),
+    DESTINATION_BUTTON("seaskipper/destination_button.png", 135, 40),
+    DESTINATION_LIST("seaskipper/destination_list_background.png", 151, 226),
+    TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
 
     // region UI Components
@@ -209,6 +219,7 @@ public enum Texture {
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
+    ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),

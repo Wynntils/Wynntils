@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat;
@@ -7,25 +7,22 @@ package com.wynntils.handlers.chat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
@@ -38,7 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * CHAT, SYSTEM and GAME_INFO. The latter is the "action bar", and is handled
  * elsewhere. However, starting with Minecraft 1.19, Wynncraft will send all chat
  * messages as SYSTEM, so we will ignore the CHAT type.
- *
+ * <p>
  * Using the regexp patterns in RecipientType, we classify the incoming messages
  * according to if they are sent to the guild, party, global chat, etc. Messages
  * that do not match any of these categories are called "info" messages, and are
@@ -85,11 +82,18 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
-    private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
+    private static final long SLOWDOWN_PACKET_TICK_DELAY = 20;
     private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
-    private final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private String lastRealChat = null;
+
+    // This is used to detect when the lastRealChat message
+    // is actually a confirmationless dialogue, but not a standard one,
+    // and we can't parse it properly. That makes it be the last "real" chat,
+    // so when we receive the clear screen, we think that all the messages are new.
+    // By keeping track of the last two real chats, we can detect this case.
+    private String oneBeforeLastRealChat = null;
+
     private long lastSlowdownApplied = 0;
     private List<Component> lastScreenNpcDialog = List.of();
     private List<Component> delayedDialogue;
@@ -97,20 +101,13 @@ public final class ChatHandler extends Handler {
     private long chatScreenTicks = 0;
     private List<Component> collectedLines = new ArrayList<>();
 
-    public void addNpcDialogExtractionDependent(Feature feature) {
-        dialogExtractionDependents.add(feature);
-    }
-
-    public void removeNpcDialogExtractionDependent(Feature feature) {
-        dialogExtractionDependents.remove(feature);
-    }
-
     @SubscribeEvent
     public void onConnectionChange(WynncraftConnectionEvent event) {
         // Reset chat handler
         collectedLines = new ArrayList<>();
         chatScreenTicks = 0;
         lastRealChat = null;
+        oneBeforeLastRealChat = null;
         lastSlowdownApplied = 0;
         lastScreenNpcDialog = List.of();
         delayedDialogue = null;
@@ -121,8 +118,10 @@ public final class ChatHandler extends Handler {
     public void onTick(TickEvent event) {
         if (collectedLines.isEmpty()) return;
 
+        // Tick event runs after the chat packets, with the same tick number
+        // as the chat packets. This means we can allow equality here.
         long ticks = McUtils.mc().level.getGameTime();
-        if (ticks > chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+        if (ticks >= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
             // Send the collected screen lines
             processCollectedChatScreen();
         }
@@ -150,9 +149,9 @@ public final class ChatHandler extends Handler {
                 List<Component> dialogue = delayedDialogue;
                 delayedDialogue = null;
 
-                postNpcDialogue(dialogue, delayedType, true);
+                handleNpcDialogue(dialogue, delayedType, true);
             } else {
-                lastSlowdownApplied = System.currentTimeMillis();
+                lastSlowdownApplied = McUtils.mc().level.getGameTime();
             }
         }
     }
@@ -181,18 +180,23 @@ public final class ChatHandler extends Handler {
     }
 
     private void handleWithSeparation(ChatPacketReceivedEvent event) {
-        Component message = event.getMessage();
-        StyledText styledText = StyledText.fromComponent(message);
+        StyledText styledText = StyledText.fromComponent(event.getMessage());
 
         long currentTicks = McUtils.mc().level.getGameTime();
 
-        // It is a multi-line screen if it contains a newline, or if it is empty and sent in the same tick (with
-        // some fuzziness) as the current screen
-        if (styledText.contains("\n")
-                || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
-            // This is a "chat screen"
-            List<Component> lines = ComponentUtils.splitComponentInLines(message);
-            if (currentTicks < chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+        List<Component> lines = StyledTextUtils.splitInLines(styledText).stream()
+                .map(StyledText::getComponent)
+                .map(c -> (Component) c)
+                .toList();
+
+        // It is a multi-line screen if it is parsed to be multiple lines,
+        // or if it is empty and sent in the same tick (with some fuzziness) as the current screen
+        if (lines.size() > 1 || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
+            // This is a "chat screen" message, which is a multi-line message
+
+            // Allow ticks to be equal, since we we want to
+            // collect all lines in the this tick and the next one
+            if (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
                 // We are collecting lines, so add to the current collection
                 collectedLines.addAll(lines);
             } else {
@@ -241,6 +245,14 @@ public final class ChatHandler extends Handler {
             for (Component line : lines) {
                 String plainText = StyledText.fromComponent(line).getStringWithoutFormatting();
                 if (plainText.equals(lastRealChat)) break;
+                if (plainText.equals(oneBeforeLastRealChat)) {
+                    // We've not found the last chat message, but we have found the one before that
+                    // This means that the last chat message was a confirmationless dialogue
+                    lastRealChat = oneBeforeLastRealChat;
+                    oneBeforeLastRealChat = null;
+
+                    break;
+                }
                 newLines.addLast(line);
             }
         }
@@ -248,7 +260,7 @@ public final class ChatHandler extends Handler {
         if (newLines.isEmpty()) {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
-            postNpcDialogue(List.of(), NpcDialogueType.NONE, false);
+            handleNpcDialogue(List.of(), NpcDialogueType.NONE, false);
             return;
         }
 
@@ -331,16 +343,16 @@ public final class ChatHandler extends Handler {
     private void handleScreenNpcDialog(List<Component> dialog, boolean isSelection) {
         if (dialog.isEmpty()) {
             // dialog could be the empty list, this means the last dialog is removed
-            postNpcDialogue(dialog, NpcDialogueType.NONE, false);
+            handleNpcDialogue(dialog, NpcDialogueType.NONE, false);
             return;
         }
 
         NpcDialogueType type = isSelection ? NpcDialogueType.SELECTION : NpcDialogueType.NORMAL;
 
-        if ((System.currentTimeMillis() <= lastSlowdownApplied + SLOWDOWN_PACKET_DIFF_MS)) {
+        if (McUtils.mc().level.getGameTime() <= lastSlowdownApplied + SLOWDOWN_PACKET_TICK_DELAY) {
             // This is a "protected" dialogue if we have gotten slowdown effect just prior to the chat message
             // This is the normal case
-            postNpcDialogue(dialog, type, true);
+            handleNpcDialogue(dialog, type, true);
             return;
         }
 
@@ -354,7 +366,7 @@ public final class ChatHandler extends Handler {
                 delayedDialogue = null;
                 // If we got here, then we did not get the slowdown effect, otherwise we would
                 // have sent the dialogue already
-                postNpcDialogue(dialogToSend, delayedType, false);
+                handleNpcDialogue(dialogToSend, delayedType, false);
             }
         });
     }
@@ -370,7 +382,7 @@ public final class ChatHandler extends Handler {
         if (recipientType == RecipientType.NPC) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
-            postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
+            handleNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
             return;
         }
 
@@ -392,6 +404,7 @@ public final class ChatHandler extends Handler {
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
             // foreground and background versions
+            oneBeforeLastRealChat = lastRealChat;
             lastRealChat = plainText;
         }
 
@@ -401,7 +414,7 @@ public final class ChatHandler extends Handler {
 
         if (recipientType == RecipientType.NPC) {
             if (shouldSeparateNPC()) {
-                postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
+                handleNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
                 // We need to cancel the original chat event, if any
                 return null;
             } else {
@@ -416,7 +429,12 @@ public final class ChatHandler extends Handler {
         return event.getMessage();
     }
 
-    private void postNpcDialogue(List<Component> dialogue, NpcDialogueType type, boolean isProtected) {
+    private void handleNpcDialogue(List<Component> dialogue, NpcDialogueType type, boolean isProtected) {
+        if (type == NpcDialogueType.NONE) {
+            // Ignore any delayed dialogues, since they are now obsolete
+            delayedDialogue = null;
+        }
+
         // Confirmationless dialoges bypass the lastScreenNpcDialogue check
         if (type != NpcDialogueType.CONFIRMATIONLESS) {
             if (lastScreenNpcDialog.equals(dialogue)) return;
@@ -424,13 +442,7 @@ public final class ChatHandler extends Handler {
             lastScreenNpcDialog = dialogue;
         }
 
-        if (type == NpcDialogueType.NONE) {
-            // Ignore any delayed dialogues, since they are now obsolete
-            delayedDialogue = null;
-        }
-
-        NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
-        WynntilsMod.postEvent(event);
+        Models.NpcDialogue.handleDialogue(dialogue, isProtected, type);
     }
 
     private RecipientType getRecipientType(StyledText codedMessage, MessageType messageType) {
@@ -446,6 +458,6 @@ public final class ChatHandler extends Handler {
     }
 
     private boolean shouldSeparateNPC() {
-        return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
+        return Models.NpcDialogue.isNpcDialogExtractionRequired();
     }
 }

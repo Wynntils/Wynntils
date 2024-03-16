@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -88,7 +88,7 @@ import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
-import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
+import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
@@ -137,6 +137,7 @@ import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
+import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
@@ -275,7 +276,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
-        registerFeature(new NpcDialogueOverlayFeature());
+        registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
@@ -342,6 +343,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GammabrightFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
+        registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         // endregion

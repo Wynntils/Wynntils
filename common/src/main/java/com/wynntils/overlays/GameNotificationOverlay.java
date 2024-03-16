@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -90,6 +90,12 @@ public class GameNotificationOverlay extends Overlay {
                 .findFirst()
                 .ifPresent(
                         timedMessageContainer -> timedMessageContainer.resetRemainingTime(getMessageDisplayLength()));
+    }
+
+    @SubscribeEvent
+    public void onGameNotification(NotificationEvent.Remove event) {
+        messageQueue.removeIf(timedMessageContainer ->
+                timedMessageContainer.getMessageContainer().equals(event.getMessageContainer()));
     }
 
     @Override

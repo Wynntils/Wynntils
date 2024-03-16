@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
@@ -40,9 +40,18 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         List<Component> header = new ArrayList<>();
 
         // name
-        String prefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + gearInfo.name())
-                .withStyle(gearInfo.tier().getChatFormatting()));
+        String unidentifiedPrefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
+        Component shinyPrefix = gearInstance != null && gearInstance.shinyStat().isPresent()
+                ? Component.literal("⬡ ")
+                        .withStyle(ChatFormatting.WHITE)
+                        .append(Component.literal("Shiny ")
+                                .withStyle(gearInfo.tier().getChatFormatting()))
+                : Component.empty();
+        header.add(Component.empty()
+                .withStyle(gearInfo.tier().getChatFormatting())
+                .append(Component.literal(unidentifiedPrefix)
+                        .append(shinyPrefix)
+                        .append(Component.literal(gearInfo.name()))));
 
         // attack speed
         if (gearInfo.fixedStats().attackSpeed().isPresent())
@@ -125,6 +134,16 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
             }
         }
         if (requirementsCount > 0) {
+            header.add(Component.literal(""));
+        }
+
+        if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
+            header.add(Component.literal(
+                            "⬡ " + gearInstance.shinyStat().get().statType().displayName() + ": ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(String.valueOf(
+                                    gearInstance.shinyStat().get().value()))
+                            .withStyle(ChatFormatting.WHITE)));
             header.add(Component.literal(""));
         }
 

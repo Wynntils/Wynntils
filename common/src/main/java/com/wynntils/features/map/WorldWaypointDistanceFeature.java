@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -48,6 +48,9 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @Persisted
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
+
+    @Persisted
+    public final Config<Float> scale = new Config<>(1.0f);
 
     @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
@@ -139,50 +142,39 @@ public class WorldWaypointDistanceFeature extends Feature {
                 RenderUtils.drawScalingTexturedRect(
                         event.getPoseStack(),
                         icon.resource(),
-                        displayPositionX - icon.width() / 2,
-                        displayPositionY - icon.height() - backgroundHeight / 2 - 3f,
+                        displayPositionX - scale.get() * icon.width() / 2,
+                        displayPositionY - scale.get() * (icon.height() + backgroundHeight / 2 + 3f),
                         0,
-                        icon.width(),
-                        icon.height(),
+                        scale.get() * icon.width(),
+                        scale.get() * icon.height(),
                         icon.width(),
                         icon.height());
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 RenderUtils.drawRect(
                         event.getPoseStack(),
                         CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
-                        displayPositionX - (backgroundWidth / 2) - 2,
-                        displayPositionY - (backgroundHeight / 2) - 2,
+                        displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
+                        displayPositionY - scale.get() * (backgroundHeight / 2 + 2),
                         0,
-                        backgroundWidth + 3,
-                        backgroundHeight + 2);
+                        scale.get() * (backgroundWidth + 3),
+                        scale.get() * (backgroundHeight + 2));
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 event.getPoseStack(),
                                 StyledText.fromString(renderedMarker.distanceText),
-                                displayPositionX - backgroundWidth,
-                                displayPositionX + backgroundWidth,
-                                displayPositionY - backgroundHeight,
-                                displayPositionY + backgroundHeight,
+                                displayPositionX - scale.get() * backgroundWidth,
+                                displayPositionX + scale.get() * backgroundWidth,
+                                displayPositionY - scale.get() * backgroundHeight,
+                                displayPositionY + scale.get() * backgroundHeight,
                                 0,
                                 renderedMarker.markerInfo.beaconColor(),
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
-                                textShadow.get());
+                                textShadow.get(),
+                                scale.get());
             } else {
                 displayPositionX = intersectPoint.x;
                 displayPositionY = intersectPoint.y;
-
-                RenderUtils.drawScalingTexturedRect(
-                        event.getPoseStack(),
-                        icon.resource(),
-                        displayPositionX - icon.width() / 2,
-                        displayPositionY - icon.height() / 2,
-                        0,
-                        icon.width(),
-                        icon.height(),
-                        icon.width(),
-                        icon.height());
-                RenderSystem.setShaderColor(1, 1, 1, 1);
 
                 // pointer position is determined by finding the point on circle centered around displayPosition
                 double angle = Math.toDegrees(StrictMath.atan2(
@@ -190,10 +182,24 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
                         + 90f;
                 float radius = icon.width() / 2 + 8f;
-                float pointerDisplayPositionX =
-                        (float) (displayPositionX + radius * StrictMath.cos((angle - 90) * 3 / 180));
-                float pointerDisplayPositionY =
-                        (float) (displayPositionY + radius * StrictMath.sin((angle - 90) * 3 / 180));
+
+                float pointerOffsetX = radius * (float) StrictMath.cos((angle - 90) * 3 / 180);
+                float pointerOffsetY = radius * (float) StrictMath.sin((angle - 90) * 3 / 180);
+
+                float pointerDisplayPositionX = displayPositionX + pointerOffsetX;
+                float pointerDisplayPositionY = displayPositionY + pointerOffsetY;
+
+                RenderUtils.drawScalingTexturedRect(
+                        event.getPoseStack(),
+                        icon.resource(),
+                        displayPositionX - scale.get() * icon.width() / 2 + pointerOffsetX * (1 - scale.get()),
+                        displayPositionY - scale.get() * icon.height() / 2 + pointerOffsetY * (1 - scale.get()),
+                        0,
+                        scale.get() * icon.width(),
+                        scale.get() * icon.height(),
+                        icon.width(),
+                        icon.height());
+                RenderSystem.setShaderColor(1, 1, 1, 1);
 
                 // apply rotation
                 PoseStack poseStack = event.getPoseStack();
@@ -207,7 +213,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 DUMMY_WAYPOINT
                         .getPointerPoi()
                         .renderAt(
-                                poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
+                                poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, scale.get(), 1);
                 bufferSource.endBatch();
                 poseStack.popPose();
             }
@@ -236,12 +242,14 @@ public class WorldWaypointDistanceFeature extends Feature {
         if (isInBound(position, window)) return null;
         Vec3 centerPoint = new Vec3(window.getGuiScaledWidth() / 2, window.getGuiScaledHeight() / 2, 0);
 
+        float pointerScaleCorrection = (float) Texture.POINTER.height() / 2 * (1 - scale.get());
+
         // minecraft's origin point is top left corner
         // so positive Y is at the screen bottom
-        float minX = (float) -(centerPoint.x - horizontalBoundingDistance.get());
-        float maxX = (float) centerPoint.x - horizontalBoundingDistance.get();
-        float minY = (float) -(centerPoint.y - topBoundingDistance.get());
-        float maxY = (float) centerPoint.y - bottomBoundingDistance.get();
+        float minX = (float) -(centerPoint.x - horizontalBoundingDistance.get() + pointerScaleCorrection);
+        float maxX = (float) centerPoint.x - horizontalBoundingDistance.get() + pointerScaleCorrection;
+        float minY = (float) -(centerPoint.y - topBoundingDistance.get() + pointerScaleCorrection);
+        float maxY = (float) centerPoint.y - bottomBoundingDistance.get() + pointerScaleCorrection;
 
         // drag the origin point to center since indicator's screenspace position / rotation is in relation to it
         Vec3 centerRelativePosition = position.subtract(centerPoint);

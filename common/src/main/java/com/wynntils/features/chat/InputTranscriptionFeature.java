@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -150,7 +150,7 @@ public class InputTranscriptionFeature extends Feature {
 
             if (!updatedCommand.equals(command)) {
                 event.setCanceled(true);
-                Handlers.Command.sendCommand(updatedCommand);
+                Handlers.Command.sendCommandImmediately(updatedCommand);
             }
         }
 

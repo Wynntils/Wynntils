@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -16,6 +16,7 @@ import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -31,13 +32,13 @@ public class CraftedGearItem extends GameItem
                 GearTypeItemProperty,
                 DurableItemProperty,
                 LeveledItemProperty,
+                PowderedItemProperty,
                 CraftedItemProperty {
     private final String name;
     private final int effectStrength;
     private final GearType gearType;
     private final GearAttackSpeed attackSpeed;
     private final int health;
-    private final int level;
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
     private final GearRequirements requirements;
@@ -53,7 +54,6 @@ public class CraftedGearItem extends GameItem
             GearType gearType,
             GearAttackSpeed attackSpeed,
             int health,
-            int level,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
             GearRequirements requirements,
@@ -67,7 +67,6 @@ public class CraftedGearItem extends GameItem
         this.gearType = gearType;
         this.attackSpeed = attackSpeed;
         this.health = health;
-        this.level = level;
         this.damages = damages;
         this.defences = defences;
         this.requirements = requirements;
@@ -102,7 +101,7 @@ public class CraftedGearItem extends GameItem
 
     @Override
     public int getLevel() {
-        return level;
+        return requirements.level();
     }
 
     public List<Pair<DamageType, RangedValue>> getDamages() {
@@ -137,10 +136,12 @@ public class CraftedGearItem extends GameItem
         return requirements.classType().orElse(null);
     }
 
+    @Override
     public List<Powder> getPowders() {
         return powders;
     }
 
+    @Override
     public int getPowderSlots() {
         return powderSlots;
     }
@@ -162,8 +163,7 @@ public class CraftedGearItem extends GameItem
                 + effectStrength + ", gearType="
                 + gearType + ", attackSpeed="
                 + attackSpeed + ", health="
-                + health + ", level="
-                + level + ", damages="
+                + health + ", damages="
                 + damages + ", defences="
                 + defences + ", requirements="
                 + requirements + ", possibleValues="

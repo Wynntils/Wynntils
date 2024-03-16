@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -148,32 +148,31 @@ public final class MathFunctions {
     public static class MaxFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Math.max(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
+            return values.stream().mapToDouble(Number::doubleValue).max().orElse(0);
+            // .orElse(0) is safer because max() returns OptionalDouble, but will probably never be used
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
     }
 
     public static class MinFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Math.min(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
+            return values.stream().mapToDouble(Number::doubleValue).min().orElse(0);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
     }
 

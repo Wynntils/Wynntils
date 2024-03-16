@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -108,28 +108,32 @@ public final class GearModel extends Model {
 
         CraftedItemParseResults craftedResults = WynnItemParser.parseCraftedItem(itemStack);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
-        GearType gearType = GearType.fromItemStack(itemStack);
+        GearType gearType;
+        // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
+        // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
+        gearType = GearType.fromString(result.itemType());
+        if (gearType == null && craftedResults.requirements().classType().isPresent()) {
+            // If the item is signed, we can find the class type from the requirements
+            gearType = GearType.fromClassType(
+                    craftedResults.requirements().classType().get());
+        }
+
+        // If we still failed to find the gear type, try to find it from the item stack
         if (gearType == null) {
-            // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
-            // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
-            gearType = GearType.fromString(result.itemType());
+            gearType = GearType.fromItemStack(itemStack);
+
             if (gearType == null) {
-                // If the item is signed, we can find the class type from the requirements
-                if (craftedResults.requirements().classType().isPresent()) {
-                    gearType = GearType.fromClassType(
-                            craftedResults.requirements().classType().get());
-                }
-                // If we failed to find the class type, fall back to weapon
+                // If we failed to find the gear type, assume it is a weapon
                 gearType = GearType.WEAPON;
             }
         }
+
         return new CraftedGearItem(
                 craftedResults.name(),
                 craftedResults.effectStrength(),
                 gearType,
                 craftedResults.attackSpeed(),
                 result.health(),
-                result.level(),
                 craftedResults.damages(),
                 craftedResults.defences(),
                 craftedResults.requirements(),

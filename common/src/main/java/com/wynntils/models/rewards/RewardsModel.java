@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -33,6 +33,14 @@ public class RewardsModel extends Model {
     public void reloadData() {
         tomeInfoRegistry.reloadData();
         charmInfoRegistry.reloadData();
+    }
+
+    public CharmInfo getCharmInfoFromDisplayName(String name) {
+        return charmInfoRegistry.getFromDisplayName(name);
+    }
+
+    public TomeInfo getTomeInfoFromDisplayName(String name) {
+        return tomeInfoRegistry.getFromDisplayName(name);
     }
 
     public Stream<CharmInfo> getAllCharmInfos() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -40,7 +40,7 @@ public final class FontRenderer {
         return font;
     }
 
-    private void renderText(
+    public void renderText(
             PoseStack poseStack,
             StyledText text,
             float x,
@@ -81,7 +81,7 @@ public final class FontRenderer {
         renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    private void renderAlignedTextInBox(
+    public void renderAlignedTextInBox(
             PoseStack poseStack,
             StyledText text,
             float x1,
@@ -268,12 +268,13 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) / textScale < maxWidth) {
             renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
 
-        List<FormattedText> parts = font.getSplitter().splitLines(text.getComponent(), (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts =
+                font.getSplitter().splitLines(text.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
 
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
@@ -288,11 +289,12 @@ public final class FontRenderer {
                     poseStack,
                     part,
                     x,
-                    y + (i * font.lineHeight),
+                    y + (i * font.lineHeight * textScale),
                     customColor,
                     horizontalAlignment,
                     verticalAlignment,
-                    shadow);
+                    shadow,
+                    textScale);
         }
     }
 
@@ -326,10 +328,7 @@ public final class FontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, x, currentY, line);
-            // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
-            currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
-                    line.getSetting().maxWidth());
+            currentY += calculateRenderHeight(line.getText(), line.getSetting().maxWidth());
         }
     }
 
@@ -384,8 +383,8 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                height += font.wordWrapHeight(textRenderTask.getText().getString(), (int)
-                        textRenderTask.getSetting().maxWidth());
+                height += calculateRenderHeight(
+                        textRenderTask.getText(), textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
         }
@@ -397,18 +396,17 @@ public final class FontRenderer {
     }
 
     public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
-        int sum = 0;
-        for (StyledText line : lines) {
-            sum += font.wordWrapHeight(line.getString(), (int) maxWidth);
-        }
-        return sum;
+        return (float) lines.stream()
+                .mapToDouble(line -> calculateRenderHeight(line, maxWidth))
+                .sum();
     }
 
     public float calculateRenderHeight(StyledText line, float maxWidth) {
-        return font.wordWrapHeight(line.getString(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
+        return calculateRenderHeight(line.getString(), maxWidth);
     }
 
     public float calculateRenderHeight(String line, float maxWidth) {
-        return font.wordWrapHeight(line, maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
+        // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
+        return font.wordWrapHeight(line.isEmpty() ? " " : line, maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 }

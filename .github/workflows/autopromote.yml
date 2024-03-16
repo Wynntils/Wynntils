@@ -7,9 +7,9 @@ on:
       - development
 
 jobs:
-  update-pre-alpha:
+  update-alpha:
     if: github.ref == 'refs/heads/development'
-    name: Merge development into pre-alpha after a PR is merged
+    name: Merge development into alpha after a PR is merged
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -20,11 +20,11 @@ jobs:
         with:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'development'
-          target: 'pre-alpha'
+          target: 'alpha'
 
-  update-alpha:
+  update-release:
     if: github.ref == 'refs/heads/main'
-    name: Merge main into beta after a PR is merged
+    name: Merge main into release after a PR is merged
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -35,4 +35,4 @@ jobs:
         with:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'main'
-          target: 'beta'
+          target: 'release'

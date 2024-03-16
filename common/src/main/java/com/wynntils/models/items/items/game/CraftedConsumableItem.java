@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -17,6 +17,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 
 public class CraftedConsumableItem extends GameItem
@@ -71,8 +72,11 @@ public class CraftedConsumableItem extends GameItem
 
     @Override
     public List<StatPossibleValues> getPossibleValues() {
-        // We can't know the possible values of crafted consumables
-        return List.of();
+        // We have to create fake possible values for the identifications, as they don't exist for crafted consumables.
+        return identifications.stream()
+                .map(stat -> new StatPossibleValues(
+                        stat.statType(), RangedValue.of(stat.value(), stat.value()), stat.value(), false))
+                .toList();
     }
 
     @Override

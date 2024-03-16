@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -45,8 +45,12 @@ public abstract class MinecraftMixin {
 
     @Inject(method = "tick()V", at = @At("HEAD"))
     private void tickPost(CallbackInfo ci) {
-        MixinHelper.post(new TickEvent());
+        // TickAlwaysEvent is posted before TickEvent to ensure
+        // that the tasks in TickSchedulerManager are run before
+        // any other tick event listeners could schedule new tasks
+        // making it run in the same tick
         MixinHelper.postAlways(new TickAlwaysEvent());
+        MixinHelper.post(new TickEvent());
     }
 
     @Inject(method = "resizeDisplay()V", at = @At("RETURN"))

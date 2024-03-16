@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -351,7 +351,7 @@ public final class PartyModel extends Model {
 
         expectingPartyMessage = true;
         lastPartyRequest = System.currentTimeMillis();
-        Handlers.Command.sendCommand("party list");
+        Handlers.Command.queueCommand("party list");
     }
 
     public void increasePlayerPriority(String playerName) {
@@ -413,7 +413,7 @@ public final class PartyModel extends Model {
      */
     public void partyKick(String player) {
         nextKickHandled = true;
-        Handlers.Command.sendCommand("party kick " + player);
+        Handlers.Command.queueCommand("party kick " + player);
         processPartyKick(player);
     }
 
@@ -421,7 +421,7 @@ public final class PartyModel extends Model {
      * Promotes a player to party leader.
      */
     public void partyPromote(String player) {
-        Handlers.Command.sendCommand("party promote " + player);
+        Handlers.Command.queueCommand("party promote " + player);
     }
 
     /**
@@ -429,35 +429,35 @@ public final class PartyModel extends Model {
      */
     public void partyInvite(String player) {
         if (!inParty) partyCreate();
-        Handlers.Command.sendCommand("party invite " + player);
+        Handlers.Command.queueCommand("party invite " + player);
     }
 
     /**
      * Leaves the party.
      */
     public void partyLeave() {
-        Handlers.Command.sendCommand("party leave");
+        Handlers.Command.queueCommand("party leave");
     }
 
     /**
      * Disbands the party.
      */
     public void partyDisband() {
-        Handlers.Command.sendCommand("party disband");
+        Handlers.Command.queueCommand("party disband");
     }
 
     /**
      * Creates a party.
      */
     public void partyCreate() {
-        Handlers.Command.sendCommand("party create");
+        Handlers.Command.queueCommand("party create");
     }
 
     /**
      * Join another players party
      */
     public void partyJoin(String playerName) {
-        Handlers.Command.sendCommand("party join " + playerName);
+        Handlers.Command.queueCommand("party join " + playerName);
     }
 
     /**

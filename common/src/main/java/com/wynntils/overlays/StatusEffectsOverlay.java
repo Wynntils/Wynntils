@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -109,8 +109,13 @@ public class StatusEffectsOverlay extends Overlay {
                         bufferSource,
                         this.getRenderX(),
                         this.getRenderY(),
-                        List.of(new TextRenderTask(
-                                StyledText.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting)),
+                        List.of(
+                                new TextRenderTask(
+                                        StyledText.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
+                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Exploding 01:12"), textRenderSetting),
+                                new TextRenderTask(StyledText.fromString("§8⬤ §7 Thorns 00:12"), textRenderSetting),
+                                new TextRenderTask(
+                                        StyledText.fromString("§8⬤ §7 Soul Point Regen 00:12"), textRenderSetting)),
                         this.getWidth(),
                         this.getHeight(),
                         this.getRenderHorizontalAlignment(),
