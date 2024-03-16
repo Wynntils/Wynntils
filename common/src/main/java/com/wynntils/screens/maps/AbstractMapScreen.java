@@ -73,7 +73,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     // Zooming updates currentZoomStep, but we also cache the currentZoom for rendering
     // 17 steps is roughly zoom level 1
-    protected int currentZoomStep = 17;
+    protected int currentZoomStep = MapRenderer.DEFAULT_ZOOM_STEP;
     protected float currentZoom = MapRenderer.getZoomFromSteps(currentZoomStep);
 
     protected Poi hovered = null;

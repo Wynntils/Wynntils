@@ -35,7 +35,10 @@ public final class MapRenderer {
     // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
 
     // ZOOM_STEPS is the number of steps the zoom can take. (0 to ZOOM_STEPS - 1)
-    public static final int ZOOM_STEPS = 30;
+    public static final int ZOOM_STEPS = 40;
+    // This value should be the nearest step to the default zoom, 1.0f.
+    public static final int DEFAULT_ZOOM_STEP = 23;
+
     public static final float MIN_ZOOM = 0.1f;
     private static final double MIN_ZOOM_LOG = Math.log(MIN_ZOOM);
     public static final float MAX_ZOOM = 5f;

@@ -49,7 +49,7 @@ public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
     @Persisted
-    public final Config<Integer> scaleSteps = new Config<>(17);
+    public final Config<Integer> scaleSteps = new Config<>(MapRenderer.DEFAULT_ZOOM_STEP);
 
     @Persisted
     public final Config<Float> poiScale = new Config<>(0.6f);
