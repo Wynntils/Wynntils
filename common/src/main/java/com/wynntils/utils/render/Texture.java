@@ -77,7 +77,7 @@ public enum Texture {
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
-    INFO("info.png", 25, 25),
+    INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
@@ -206,10 +206,9 @@ public enum Texture {
     // endregion
 
     // region Seaskipper
-    BOAT_BUTTON("seaskipper/boat_button.png", 39, 76),
-    DESTINATION_BUTTON("seaskipper/destination_button.png", 66, 40),
-    DESTINATION_LIST("seaskipper/destination_list_background.png", 143, 205),
-    TRAVEL_BUTTON("seaskipper/travel_button.png", 100, 76),
+    DESTINATION_BUTTON("seaskipper/destination_button.png", 135, 40),
+    DESTINATION_LIST("seaskipper/destination_list_background.png", 151, 226),
+    TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
 
     // region UI Components

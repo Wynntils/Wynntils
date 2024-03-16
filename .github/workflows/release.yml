@@ -21,6 +21,9 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
+      - name: Set up version.json
+        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -30,13 +33,14 @@ jobs:
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v5.1.0
+        uses: TriPSs/conventional-changelog-action@v5.2.1
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
           git-user-email: 'admin@wynntils.com'
           pre-commit: ./.github/.pre-commit.js
           config-file-path: ./.github/.config.js
+          version-file: ./version.json
           skip-version-file: true
           skip-git-pull: true
           pre-release: false

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.mod;
@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TickSchedulerManager extends Manager {
@@ -27,7 +28,10 @@ public final class TickSchedulerManager extends Manager {
         tasks.put(runnable, 0);
     }
 
-    @SubscribeEvent
+    // The priority is set to HIGHEST to ensure that the tasks are run
+    // before any other tick event listeners could schedule new tasks
+    // making it run in the same tick
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTick(TickAlwaysEvent e) {
         Iterator<Map.Entry<Runnable, Integer>> it = tasks.entrySet().iterator();
         while (it.hasNext()) {

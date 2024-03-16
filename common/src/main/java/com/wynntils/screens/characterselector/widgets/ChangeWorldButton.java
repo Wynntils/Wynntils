@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector.widgets;
@@ -32,7 +32,7 @@ public class ChangeWorldButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        Handlers.Command.sendCommand("hub");
+        Handlers.Command.sendCommandImmediately("hub");
     }
 
     @Override

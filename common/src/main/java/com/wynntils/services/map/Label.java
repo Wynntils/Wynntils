@@ -1,8 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
+
+import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.type.Location;
 
 public class Label {
     private final String name;
@@ -47,9 +50,37 @@ public class Label {
         return level;
     }
 
+    public int getCombatLevel() {
+        if (level == null) return 0;
+
+        try {
+            return Integer.parseInt(level);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    public Location getLocation() {
+        return new Location(x, 0, z);
+    }
+
     public enum LabelLayer {
-        PROVINCE,
-        CITY,
-        TOWN_OR_PLACE
+        PROVINCE("province"),
+        CITY("city"),
+        TOWN_OR_PLACE("place");
+
+        private final String mapDataId;
+
+        LabelLayer(String mapDataId) {
+            this.mapDataId = mapDataId;
+        }
+
+        public String getMapDataId() {
+            return mapDataId;
+        }
+
+        public String getName() {
+            return StringUtils.capitalized(mapDataId);
+        }
     }
 }

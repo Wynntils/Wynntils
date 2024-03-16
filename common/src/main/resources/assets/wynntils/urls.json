@@ -104,13 +104,18 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
   },
   {
+    "id": "dataStaticDestinations",
+    "md5": "6c68932a8cacb3d1a1469bb8b3d35665",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/destinations.json"
+  },
+  {
     "id": "dataStaticGear",
     "md5": "43752a252ba67b8491945ad648dea931",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
     "id": "dataStaticGearAdvanced",
-    "md5": "de09786b0ef8f8401e4794f204c9618e",
+    "md5": "c1a442a84db4f7675b1c06dbf118c9af",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
@@ -130,13 +135,18 @@
   },
   {
     "id": "dataStaticIngredientsAdvanced",
-    "md5": "0b6a25022ca5113677196f4b026c9476",
+    "md5": "56f32c7fb6a2c4dc186f331adc51d3c1",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
     "id": "dataStaticItemObtain",
     "md5": "20e9a265f5e2ed91b02d80623b3765bd",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_obtain.json"
+  },
+  {
+    "id": "dataStaticItemSets",
+    "md5": "75813c52995e7a1e1881359b47f57827",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_sets.json"
   },
   {
     "id": "dataStaticLootrunTasksNamed",
@@ -182,11 +192,6 @@
     "id": "dataStaticShinyStats",
     "md5": "c1837281e4b45af5683189ebd465d1cc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/shiny_stats.json"
-  },
-  {
-    "id": "dataStaticShinyStats",
-    "md5": "2dbc0fdde50512b64828d5642bb480b6",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/shiny_stats.json"
   },
   {
     "id": "dataStaticSplashes",

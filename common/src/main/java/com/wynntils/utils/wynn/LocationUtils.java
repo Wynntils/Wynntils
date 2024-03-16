@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -53,11 +53,11 @@ public final class LocationUtils {
 
     private static void sendShareMessage(String target, String locationString) {
         if (target.equals("guild")) {
-            Handlers.Command.sendCommand("g " + locationString);
+            Handlers.Command.sendCommandImmediately("g " + locationString);
         } else if (target.equals("party")) {
-            Handlers.Command.sendCommand("p " + locationString);
+            Handlers.Command.sendCommandImmediately("p " + locationString);
         } else {
-            Handlers.Command.sendCommand("msg " + target + " " + locationString);
+            Handlers.Command.sendCommandImmediately("msg " + target + " " + locationString);
         }
     }
 }

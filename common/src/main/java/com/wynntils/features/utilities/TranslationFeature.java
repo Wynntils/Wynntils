@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
@@ -13,15 +12,16 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
-import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.network.chat.Component;
+import java.util.concurrent.CompletableFuture;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -57,19 +57,19 @@ public class TranslationFeature extends Feature {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        StyledText origCoded = e.getStyledText();
-        String wrapped = wrapCoding(origCoded);
+        StyledText originalText = e.getStyledText();
+        String codedString = wrapCoding(originalText);
         Services.Translation.getTranslator(translationService.get())
-                .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
+                .translate(List.of(codedString), languageName.get(), translatedMsgList -> {
                     StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.get(0);
-                        messageToSend = unwrapCoding(result);
+                        messageToSend = unwrapCoding(result, originalText);
                     } else {
                         if (keepOriginal.get()) return;
 
                         // We failed to get a translation; send the original message so it's not lost
-                        messageToSend = origCoded;
+                        messageToSend = originalText;
                     }
                     McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });
@@ -78,53 +78,80 @@ public class TranslationFeature extends Feature {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent e) {
+    // Translation should be the last post-processing step
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
 
-        if (e instanceof TranslatedNpcDialogEvent) return;
+        event.addProcessingStep(future -> future.thenCompose(styledTexts -> {
+            if (styledTexts.isEmpty()) return CompletableFuture.completedFuture(styledTexts);
 
-        if (!e.getChatMessage().isEmpty()) {
-            List<String> wrapped = e.getChatMessage().stream()
-                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
-                    .toList();
-            Services.Translation.getTranslator(translationService.get())
-                    .translate(wrapped, languageName.get(), translatedMsgList -> {
-                        List<Component> translatedComponents = translatedMsgList.stream()
-                                .map(this::unwrapCoding)
-                                .map(s -> ((Component) s.getComponent()))
-                                .toList();
-                        Managers.TickScheduler.scheduleNextTick(() -> {
-                            NpcDialogEvent translatedEvent =
-                                    new TranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
-                            WynntilsMod.postEvent(translatedEvent);
-                        });
-                    });
-        } else {
-            // We must also pass on the null event to clear the dialogue
-            NpcDialogEvent translatedEvent = new TranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());
-            WynntilsMod.postEvent(translatedEvent);
-        }
-        if (!keepOriginal.get()) {
-            e.setCanceled(true);
-        }
+            CompletableFuture<List<StyledText>> translationFuture = new CompletableFuture<>();
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    Services.Translation.getTranslator(translationService.get())
+                            .translate(
+                                    styledTexts.stream().map(this::wrapCoding).toList(),
+                                    languageName.get(),
+                                    translatedMsgList -> {
+                                        List<StyledText> translatedComponents = new ArrayList<>();
+
+                                        // Add the original message if requested
+                                        if (keepOriginal.get()) {
+                                            translatedComponents.addAll(styledTexts);
+                                        }
+
+                                        // Add the translated message
+                                        for (int i = 0; i < translatedMsgList.size(); i++) {
+                                            String result = translatedMsgList.get(i);
+                                            StyledText originalText = styledTexts.get(i);
+
+                                            StyledText messageToSend = unwrapCoding(result, originalText);
+                                            translatedComponents.add(messageToSend);
+                                        }
+
+                                        translationFuture.complete(translatedComponents);
+                                    });
+                } catch (Exception e) {
+                    WynntilsMod.error("Failed to translate NPC dialogue.", e);
+                    translationFuture.complete(styledTexts);
+                }
+            });
+
+            return translationFuture;
+        }));
     }
 
-    private StyledText unwrapCoding(String origCoded) {
-        // Some translated text (e.g. from pt_br) contains Á. This will be stripped later on,
-        // so convert it to A (not ideal but better than nothing).
-        return StyledText.fromString(
-                origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1").replace('Á', 'A'));
+    private StyledText unwrapCoding(String codedTranslatedString, StyledText originalText) {
+        // Some translated text (e.g. from pt_br) contains special characters.
+        // These will need to be stripped or converted, which is not ideal but better than nothing.
+        // Note about special characters:
+        // - Á is a full-screen black character, which is used in animations.
+        // - À is a common white-space character, used in the chat.
+
+        // Note about wrapping:
+        // The wrapping is done to prevent the translation service from translating the color codes.
+        // - §x is used for color codes
+        // - §[x] is used for click events
+        // - §<x> is used for hover events
+
+        return StyledText.fromModifiedString(
+                codedTranslatedString
+                        .replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1")
+                        .replaceAll("\\[ ?§ ?([0-9]+) ?\\]", "§[$1]")
+                        .replaceAll("\\< ?§ ?([0-9]+) ?\\>", "§<$1>")
+                        .replace('Á', 'A')
+                        .replace('À', 'A'),
+                originalText);
     }
 
     private String wrapCoding(StyledText origCoded) {
-        return origCoded.getString().replaceAll("(§[0-9a-fklmnor])", "{$1}");
-    }
-
-    private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
-            super(chatMsg, type, isProtected);
-        }
+        return origCoded
+                .getString(PartStyle.StyleType.INCLUDE_EVENTS)
+                .replaceAll("(§[0-9a-fklmnor])", "{$1}")
+                .replaceAll("§\\[([0-9]+)\\]", "[§$1]")
+                .replaceAll("§<([0-9]+)>", "<§$1>");
     }
 }
