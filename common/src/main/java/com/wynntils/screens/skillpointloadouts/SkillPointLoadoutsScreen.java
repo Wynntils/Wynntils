@@ -450,22 +450,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         return super.doMouseClicked(mouseX, mouseY, button);
     }
 
-    /*
-    This is rather complicated
-    For the last item in the list, when the scrollPercent == scrollableRatio (so it's scrolled all the way to the bottom)
-    We need baseYPosition - scrollOffset to be equal to dividedHeight * 52
-    So we need to find the scrollOffset that makes that true
-    scrollOffset is dividedHeight * ??? * scrollPercent, where ??? is some magical multiplier that satisfies the above
-    (speaking in terms of dividedHeight)
-    (???, the magic multiplier, is eventually maxScrollOffset)
-    baseYPosition is fixed for the last element at (9 + (loadoutWidgets.size() - 1) * 4)
-    size - 1 because it's 0 indexed
-    scrollOffset is ??? * scrollPercent, but scrollPercent is scrollableRatio at the bottom
-    So then 52 = (9 + (loadoutWidgets.size() - 1) * 4) - ??? * scrollableRatio
-    Solve for ??? and we get
-    ??? = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio
-     */
-
+    // baseYPosition - dividedHeight * maxScrollOffset * scrollPercent = dividedHeight * 52
+    // Solve for maxScrollOffset
+    // Full explanation in #artemis-dev
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         // 11 loadouts are fully displayed from 9 to 56

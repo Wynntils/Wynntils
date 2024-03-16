@@ -126,7 +126,6 @@ public class SkillPointModel extends Model {
     }
 
     public void loadLoadout(String name) {
-        if (name == null) return; // no loadout selected
         ContainerUtils.closeBackgroundContainer();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
