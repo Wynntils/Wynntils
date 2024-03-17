@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter;
@@ -11,6 +11,7 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
+import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
@@ -18,6 +19,7 @@ import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
 import com.wynntils.services.itemfilter.statproviders.DurabilityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.EmeraldValueStatProvider;
+import com.wynntils.services.itemfilter.statproviders.FavoriteStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearRestrictionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.GearTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.HealthStatProvider;
@@ -421,6 +423,8 @@ public class ItemFilterService extends Service {
         for (StatType statType : Models.Stat.getAllStatTypes()) {
             registerStatProvider(new ActualStatProvider(statType));
         }
+
+        registerStatProvider(new FavoriteStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {
@@ -445,6 +449,7 @@ public class ItemFilterService extends Service {
                 StatValue.class, new RangedStatFilters.RangedStatValueStatFilter.RangedStatValueStatFilterFactory());
 
         registerStatFilter(StatValue.class, new PercentageStatFilter.PercentageStatFilterFactory());
+        registerStatFilter(Boolean.class, new BooleanStatFilter.BooleanStatFilterFactory());
 
         // String is the fallback type, so it should be registered last
         registerStatFilter(String.class, new StringStatFilter.StringStatFilterFactory());

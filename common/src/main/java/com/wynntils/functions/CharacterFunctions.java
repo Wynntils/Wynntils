@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -84,6 +84,38 @@ public class CharacterFunctions {
             double dX = player.getX() - player.xOld;
             double dZ = player.getZ() - player.zOld;
             return Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
+        }
+    }
+
+    public static class StatusEffectsFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            List<String> statusEffectsList = Models.StatusEffect.getStatusEffects().stream()
+                    .map(statusEffect -> statusEffect.asString().getString())
+                    .toList();
+
+            return String.join("\n", statusEffectsList);
+        }
+    }
+
+    public static class StatusEffectActiveFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String query = arguments.getArgument("query").getStringValue();
+            return Models.StatusEffect.getStatusEffects().stream()
+                    .anyMatch(statusEffect ->
+                            statusEffect.getName().getStringWithoutFormatting().equals(query));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("contains_effect");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("query", String.class, null)));
         }
     }
 
