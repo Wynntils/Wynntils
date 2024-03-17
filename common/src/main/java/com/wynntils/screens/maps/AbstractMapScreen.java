@@ -369,7 +369,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void centerMap() {
         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
-        adjustZoomStep(0);
+        setZoomStep(0);
     }
 
     protected boolean isPlayerInsideMainArea() {
@@ -379,6 +379,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void adjustZoomStep(float delta) {
         currentZoomStep = MathUtils.clamp(currentZoomStep + delta, 1, MapRenderer.ZOOM_STEPS);
+        recalculateZoom();
+    }
+
+    protected void setZoomStep(float zoomStep) {
+        currentZoomStep = MathUtils.clamp(zoomStep, 1, MapRenderer.ZOOM_STEPS);
         recalculateZoom();
     }
 
