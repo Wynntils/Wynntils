@@ -499,7 +499,7 @@ public class MinimapOverlay extends Overlay {
     protected void onConfigUpdate(Config<?> config) {
         if (config == scaleSteps && (scaleSteps.get() < 1 || scaleSteps.get() >= MapRenderer.ZOOM_STEPS)) {
             // Clamp scale steps to prevent weird zoom levels
-            scaleSteps.setValue(MathUtils.clamp(scaleSteps.get(), 1, MapRenderer.ZOOM_STEPS - 1));
+            scaleSteps.setValue(MathUtils.clamp(scaleSteps.get(), 1, MapRenderer.ZOOM_STEPS));
         }
     }
 

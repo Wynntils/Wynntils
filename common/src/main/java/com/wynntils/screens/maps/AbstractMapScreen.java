@@ -226,7 +226,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        adjustZoomStep((int) Math.signum(deltaY));
+        // We are taking steps of 2, because steps of one is too slow
+        adjustZoomStep((int) Math.signum(deltaY) * 2);
         return true;
     }
 
@@ -377,7 +378,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void adjustZoomStep(int delta) {
-        currentZoomStep = MathUtils.clamp(currentZoomStep + delta, 0, MapRenderer.ZOOM_STEPS - 1);
+        currentZoomStep = MathUtils.clamp(currentZoomStep + delta, 1, MapRenderer.ZOOM_STEPS);
         recalculateZoom();
     }
 
