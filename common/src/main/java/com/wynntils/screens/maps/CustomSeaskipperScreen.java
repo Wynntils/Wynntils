@@ -639,7 +639,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         updateMapCenter(
                 destination.getLocation().getX(), destination.getLocation().getZ());
 
-        adjustZoomStep(5);
+        currentZoomStep = 20;
+        recalculateZoom();
     }
 
     private void reloadButtons() {
