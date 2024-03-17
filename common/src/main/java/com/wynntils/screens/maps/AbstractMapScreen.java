@@ -226,7 +226,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        adjustZoomStep((float) deltaY);
+        adjustZoomStep((float) (2f * deltaY));
         return true;
     }
 
