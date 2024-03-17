@@ -47,8 +47,8 @@ public class ScrollBar extends AbstractWidget {
     // Full explanation in #artemis-dev
     @Override
     protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
+        parent.doScroll((-25 * dragY) / (24 * dividedHeight));
         super.onDrag(mouseX, mouseY, dragX, dragY);
-        parent.mouseScrolled(mouseX, mouseY, 0, (-25 * dragY) / (24 * dividedHeight));
     }
 
     @Override

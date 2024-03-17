@@ -461,11 +461,15 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         if (loadoutWidgets.size() <= MAX_LOADOUTS_PER_PAGE) {
             return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
         }
+        doScroll(scrollY);
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
 
+    public void doScroll(double scrollAmount) {
         int scrollableWidgets = Math.max(0, loadoutWidgets.size() - MAX_LOADOUTS_PER_PAGE);
         float scrollableRatio = (float) scrollableWidgets / loadoutWidgets.size();
         float maxScrollOffset = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio;
-        scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollY / 50));
+        scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollAmount / 50));
 
         loadoutWidgets.forEach(widget -> {
             float baseYPosition = dividedHeight * (9f + loadoutWidgets.indexOf(widget) * 4f);
@@ -474,8 +478,6 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             widget.setY((int) (baseYPosition - scrollOffset));
             widget.visible = !(widget.getY() <= dividedHeight * 4) && !(widget.getY() >= dividedHeight * 56);
         });
-
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     @Override
@@ -484,9 +486,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             deleteButton.onPress();
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_END) {
-            mouseScrolled(0, 0, 0, Float.NEGATIVE_INFINITY);
+            doScroll(Float.NEGATIVE_INFINITY);
         } else if (keyCode == GLFW.GLFW_KEY_HOME) {
-            mouseScrolled(0, 0, 0, Float.POSITIVE_INFINITY);
+            doScroll(Float.POSITIVE_INFINITY);
         }
 
         return super.keyPressed(keyCode, scanCode, modifiers);
