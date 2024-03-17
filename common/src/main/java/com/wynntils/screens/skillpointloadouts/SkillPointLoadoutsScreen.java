@@ -455,6 +455,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     // Full explanation in #artemis-dev
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        // In terms of grid divisions
         // 11 loadouts are fully displayed from 9 to 56
         // 12th one is very slightly cut off (it needs 57)
         if (loadoutWidgets.size() <= MAX_LOADOUTS_PER_PAGE) {
