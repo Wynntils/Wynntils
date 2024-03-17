@@ -73,7 +73,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     // Zooming updates currentZoomStep, but we also cache the currentZoom for rendering
     // 17 steps is roughly zoom level 1
-    protected int currentZoomStep = MapRenderer.DEFAULT_ZOOM_STEP;
+    protected float currentZoomStep = MapRenderer.DEFAULT_ZOOM_STEP;
     protected float currentZoom = MapRenderer.getZoomFromSteps(currentZoomStep);
 
     protected Poi hovered = null;
@@ -226,8 +226,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        // We are taking steps of 2, because steps of one is too slow
-        adjustZoomStep((int) Math.signum(deltaY) * 2);
+        adjustZoomStep((float) deltaY);
         return true;
     }
 
@@ -238,11 +237,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
-            adjustZoomStep(1);
+            // Take steps of 2 to make it easier to zoom in and out
+            adjustZoomStep(2);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
-            adjustZoomStep(-1);
+            // Take steps of 2 to make it easier to zoom in and out
+            adjustZoomStep(-2);
             return true;
         }
 
@@ -377,7 +378,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }
 
-    protected void adjustZoomStep(int delta) {
+    protected void adjustZoomStep(float delta) {
         currentZoomStep = MathUtils.clamp(currentZoomStep + delta, 1, MapRenderer.ZOOM_STEPS);
         recalculateZoom();
     }

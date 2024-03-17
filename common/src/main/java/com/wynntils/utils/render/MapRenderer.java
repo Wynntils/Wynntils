@@ -57,7 +57,7 @@ public final class MapRenderer {
     // - This means that the zoom values for each step become exponentially larger.
     // - Steps are 1-based (1 to ZOOM_STEPS), so we subtract 1 from the step to get the correct zoom value,
     //   to ensure that the real zoom values are in the range [MIN_ZOOM, MAX_ZOOM] (including the boundaries).
-    public static float getZoomFromSteps(int step) {
+    public static float getZoomFromSteps(float step) {
         return (float) Math.exp(MIN_ZOOM_LOG + (MAX_ZOOM_LOG - MIN_ZOOM_LOG) * (step - 1) / (ZOOM_STEPS - 1));
     }
 
