@@ -13,6 +13,7 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.type.Pair;
@@ -51,6 +52,11 @@ public final class FavoritesService extends Service {
 
         if (wynnItem instanceof IngredientItem ingredientItem) {
             return isFavorite(ingredientItem.getIngredientInfo().name());
+        }
+
+        // This is for unidentified items that have been revealed
+        if (wynnItem instanceof GearItem gearItem) {
+            return isFavorite(gearItem.getName());
         }
 
         if (wynnItem instanceof IngredientPouchItem pouchItem) {
