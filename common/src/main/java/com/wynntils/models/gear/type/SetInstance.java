@@ -13,27 +13,21 @@ import java.util.Map;
 // Essentially if you have two of the same ring on, it's only counted once
 public class SetInstance {
     private final SetInfo setInfo;
-    private int wynncraftCount;
+    private final Map<String, Boolean> activeItems;
     private int trueCount;
-    private List<SetInstance> setInstances; // List of other instances of the same set
 
-    public SetInstance(SetInfo setInfo, int wynncraftCount, int trueCount, List<SetInstance> setInstances) {
+    public SetInstance(SetInfo setInfo, Map<String, Boolean> activeItems, int trueCount) {
         this.setInfo = setInfo;
-        this.wynncraftCount = wynncraftCount;
         this.trueCount = trueCount;
-        this.setInstances = setInstances;
+        this.activeItems = activeItems;
     }
 
     public SetInfo getSetInfo() {
         return setInfo;
     }
 
-    public int getWynncraftCount() {
-        return wynncraftCount;
-    }
-
-    public void setWynncraftCount(int wynncraftCount) {
-        this.wynncraftCount = wynncraftCount;
+    public Map<String, Boolean> getActiveItems() {
+        return activeItems;
     }
 
     public int getTrueCount() {
@@ -48,32 +42,4 @@ public class SetInstance {
         return setInfo.getBonusForItems(trueCount);
     }
 
-    public List<SetInstance> getSetInstances() {
-        return setInstances;
-    }
-
-    public void setSetInstances(List<SetInstance> setInstances) {
-        this.setInstances = setInstances;
-    }
-
-    @Override
-    public String toString() {
-        // avoid stack overflow
-        StringBuilder setInstancesString = new StringBuilder("[");
-        for (SetInstance instance : setInstances) {
-            setInstancesString.append("{wynncraftCount=").append(instance.getWynncraftCount())
-                    .append(", trueCount=").append(instance.getTrueCount()).append("}, ");
-        }
-        if (!setInstances.isEmpty()) {
-            setInstancesString.setLength(setInstancesString.length() - 2); // Remove the last comma and space
-        }
-        setInstancesString.append("]");
-
-        return "SetInstance{" +
-                "setInfo=" + setInfo +
-                ", wynncraftCount=" + wynncraftCount +
-                ", trueCount=" + trueCount +
-                ", setInstances=" + setInstancesString +
-                '}';
-    }
 }

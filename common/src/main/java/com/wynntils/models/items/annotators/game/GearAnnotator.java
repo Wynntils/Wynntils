@@ -56,44 +56,9 @@ public final class GearAnnotator implements ItemAnnotator {
             setInfo = Optional.of(Models.Set.getSetInfo(setName));
 
             // Parse set instance
-
+            setInstance = Optional.of(new SetInstance(setInfo.get(), getActiveItems(setInfo.get().name()), getTrueCount(setInfo.get().name())));
         }
         return new GearItem(gearInfo, gearInstance, setInfo, setInstance);
-    }
-
-    // Set parsing
-    Optional<SetInstance> setInstance = Optional.empty();
-        if (gearInfo.tier() == GearTier.SET && gearInfo.setInfo().isPresent()) {
-        // We have a set and the information required to make instances
-        // Go through all of user's active gear and figure out how many of this set is active
-        Pair<Integer, Integer> setCount = getActiveSetCount(gearInfo.setInfo().get().name());
-        SetInfo setInfo = gearInfo.setInfo().get();
-
-        // we are wearing some item from this set
-        setInstance = Optional.of(new SetInstance(setInfo, setCount.a(), setCount.b(), activeSetsCache.get(setInfo.name())));
-        if (!activeSetsCache.containsKey(setInfo.name())) {
-            activeSetsCache.put(setInfo.name(), new ArrayList<>());
-        }
-        activeSetsCache.get(setInfo.name()).add(setInstance.get());
-        activeSetsCache.get(setInfo.name()).forEach(si -> {
-            if (si.getWynncraftCount() != setCount.a()) {
-                si.setWynncraftCount(setCount.a());
-            }
-            if (si.getTrueCount() != setCount.b()) {
-                si.setTrueCount(setCount.b());
-            }
-            if (si.getSetInstances() != activeSetsCache.get(setInfo.name())) {
-                si.setSetInstances(activeSetsCache.get(setInfo.name()));
-            }
-            System.out.println("updated SetInstance to " + si);
-        });
-
-        // todo remove
-        if (gearInfo.name().equals("Morph-Gold")) {
-            System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
-        } else {
-//                System.out.println("Found SetInstance for " + gearInfo.name() + ": " + setInstance);
-        }
     }
 
     /**
