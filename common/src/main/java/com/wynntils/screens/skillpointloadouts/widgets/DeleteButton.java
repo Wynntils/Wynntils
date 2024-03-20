@@ -22,5 +22,6 @@ public class DeleteButton extends WynntilsButton {
         Models.SkillPoint.deleteLoadout(parent.selectedLoadout.key());
         parent.setSelectedLoadout(null);
         parent.populateLoadouts();
+        parent.doScroll(0); // force scrollPercent refresh
     }
 }
