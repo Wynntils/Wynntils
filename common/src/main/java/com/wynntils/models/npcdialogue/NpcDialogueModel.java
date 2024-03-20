@@ -10,19 +10,18 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueFeature;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.npcdialogue.type.ConfirmationlessDialogue;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueRemoved;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class NpcDialogueModel extends Model {
@@ -31,21 +30,20 @@ public class NpcDialogueModel extends Model {
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
 
     private NpcDialogue currentDialogue = NpcDialogue.EMPTY;
-    private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+
+    // If we translate a confirmationless dialogue, then we need to change this list.
+    // However, translation is ran as a futrue, so it is not guranteed that only one thread will access this list at a
+    // time.
+    private ConcurrentLinkedQueue<NpcDialogue> confirmationlessDialogues = new ConcurrentLinkedQueue<>();
 
     public NpcDialogueModel() {
         super(List.of());
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent e) {
-        handleDialogue(e.getChatMessage(), e.isProtected(), e.getType());
-    }
-
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
         currentDialogue = NpcDialogue.EMPTY;
-        confirmationlessDialogues.clear();
+        confirmationlessDialogues = new ConcurrentLinkedQueue<>();
     }
 
     @SubscribeEvent
@@ -81,11 +79,11 @@ public class NpcDialogueModel extends Model {
         return currentDialogue;
     }
 
-    public List<ConfirmationlessDialogue> getConfirmationlessDialogues() {
+    public List<NpcDialogue> getConfirmationlessDialogues() {
         return List.copyOf(confirmationlessDialogues);
     }
 
-    private void handleDialogue(List<Component> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
+    public void handleDialogue(List<Component> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
         List<StyledText> msg =
                 chatMessage.stream().map(StyledText::fromComponent).toList();
 
@@ -98,12 +96,13 @@ public class NpcDialogueModel extends Model {
         // Just remove the old and add the new with an updated remove time
         // It can also happen that a confirmationless dialogue turn into a normal
         // dialogue after a while (the "Press SHIFT..." text do not appear immediately)
-        confirmationlessDialogues.removeIf(d -> d.text().equals(msg));
+        confirmationlessDialogues.removeIf(d -> d.currentDialogue().equals(msg));
 
-        if (type == NpcDialogueType.CONFIRMATIONLESS) {
-            ConfirmationlessDialogue dialogue = new ConfirmationlessDialogue(
-                    msg, System.currentTimeMillis(), System.currentTimeMillis() + calculateMessageReadTime(msg));
-            confirmationlessDialogues.add(dialogue);
+        // If the message is "NONE", set an empty dialogue
+        if (type == NpcDialogueType.NONE) {
+            NpcDialogue oldDialogue = currentDialogue;
+            currentDialogue = NpcDialogue.EMPTY;
+            WynntilsMod.postEvent(new NpcDialogueRemoved(oldDialogue));
             return;
         }
 
@@ -112,18 +111,69 @@ public class NpcDialogueModel extends Model {
         // a while)
         if (type == NpcDialogueType.NORMAL && currentDialogue.currentDialogue().equals(msg)) return;
 
-        // If the message is "NONE", set an empty dialogue
-        if (type == NpcDialogueType.NONE) {
-            currentDialogue = NpcDialogue.EMPTY;
-            return;
-        }
+        NpcDialogue dialogue = new NpcDialogue(
+                msg,
+                type,
+                protectedDialogue,
+                System.currentTimeMillis(),
+                System.currentTimeMillis() + calculateMessageReadTime(msg));
 
-        currentDialogue = new NpcDialogue(msg, type, protectedDialogue, System.currentTimeMillis());
+        if (type == NpcDialogueType.CONFIRMATIONLESS) {
+            confirmationlessDialogues.add(dialogue);
+        } else {
+            currentDialogue = dialogue;
+        }
 
         if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             Managers.Notification.queueMessage(msg.get(0));
         }
+
+        NpcDialogueProcessingEvent.Pre event = new NpcDialogueProcessingEvent.Pre(dialogue);
+        WynntilsMod.postEvent(event);
+
+        // Hook after post-processing steps
+        event.addProcessingStep(future -> future.whenComplete((styledTexts, throwable) -> {
+            if (throwable != null) {
+                WynntilsMod.error("Failed to process NPC dialogue.", throwable);
+                return;
+            }
+
+            // Should never happen, but just in case
+            if (styledTexts.isEmpty()) return;
+
+            // Capture the old dialogue from the method
+            final NpcDialogue oldDialogue = dialogue;
+
+            // If the dialogue is the same as the old one, don't do anything
+            if (oldDialogue.currentDialogue().equals(styledTexts)) return;
+
+            styledTexts.forEach(styledText -> WynntilsMod.info("[Translated NPC] " + styledText.getString()));
+
+            // Update the dialogue with the new one
+            NpcDialogue newDialogue = new NpcDialogue(
+                    styledTexts,
+                    oldDialogue.dialogueType(),
+                    oldDialogue.isProtected(),
+                    oldDialogue.addTime(),
+                    oldDialogue.removeTime());
+
+            // Update the current dialogue
+            if (oldDialogue == currentDialogue) {
+                currentDialogue = newDialogue;
+            } else {
+                // Update the confirmationless dialogues, if the old dialogue is still in the list
+                if (confirmationlessDialogues.remove(oldDialogue)) {
+                    confirmationlessDialogues.add(newDialogue);
+                }
+            }
+
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                NpcDialogueProcessingEvent.Post postEvent =
+                        new NpcDialogueProcessingEvent.Post(newDialogue, styledTexts);
+                WynntilsMod.postEvent(postEvent);
+            });
+        }));
     }
 }

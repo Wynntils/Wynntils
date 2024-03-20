@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -16,19 +14,16 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.event.NpcDialogEvent;
-import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.colors.ColorChatFormatting;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -79,9 +74,8 @@ public class TranscribeMessagesFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent event) {
+    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!transcribeNpcs.get()) return;
-        if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getChatMessage().toString())) return;
 
         boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcribeGavellian =
@@ -89,27 +83,23 @@ public class TranscribeMessagesFeature extends Feature {
 
         if (!transcribeWynnic && !transcribeGavellian) return;
 
-        if (!showTooltip.get()) {
-            event.setCanceled(true);
+        event.addProcessingStep(future ->
+                future.thenApply(styledTexts -> transcribeText(styledTexts, transcribeWynnic, transcribeGavellian)));
+    }
+
+    private List<StyledText> transcribeText(
+            List<StyledText> styledTexts, boolean transcribeWynnic, boolean transcribeGavellian) {
+        // If there are no Wynnic or Gavellian characters, return the original text
+        if (styledTexts.stream()
+                .noneMatch(text -> Models.WynnAlphabet.hasWynnicOrGavellian(text.getStringWithoutFormatting()))) {
+            return styledTexts;
         }
 
-        List<Component> transcriptedComponents = event.getChatMessage().stream()
-                .map(styledText -> getStyledTextWithTranscription(
-                        StyledText.fromComponent(styledText), transcribeWynnic, transcribeGavellian, true))
-                .map(s -> ((Component) s.getComponent()))
+        // Transcribe each styled text
+        return styledTexts.stream()
+                .map(styledText ->
+                        getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, true))
                 .toList();
-
-        if (showTooltip.get()) {
-            for (Component transcriptedComponent : transcriptedComponents) {
-                McUtils.sendMessageToClient(transcriptedComponent);
-            }
-        } else {
-            Managers.TickScheduler.scheduleNextTick(() -> {
-                NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
-                        transcriptedComponents, event.getType(), event.isProtected());
-                WynntilsMod.postEvent(transcriptedEvent);
-            });
-        }
     }
 
     private StyledText getStyledTextWithTranscription(
@@ -228,11 +218,5 @@ public class TranscribeMessagesFeature extends Feature {
         }
 
         return newParts;
-    }
-
-    private static class WynnTranscriptedNpcDialogEvent extends NpcDialogEvent {
-        protected WynnTranscriptedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
-            super(chatMsg, type, isProtected);
-        }
     }
 }

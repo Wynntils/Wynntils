@@ -1,13 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.elements.type.PowderTierInfo;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
+import com.wynntils.utils.MathUtils;
 
-public class PowderItem extends GameItem implements NumberedTierItemProperty {
+public class PowderItem extends GameItem implements NamedItemProperty, NumberedTierItemProperty {
     private final PowderTierInfo powderTierInfo;
 
     public PowderItem(PowderTierInfo powderTierInfo) {
@@ -21,6 +23,12 @@ public class PowderItem extends GameItem implements NumberedTierItemProperty {
     @Override
     public int getTier() {
         return powderTierInfo.tier();
+    }
+
+    @Override
+    public String getName() {
+        return powderTierInfo.element().getSymbol() + " "
+                + powderTierInfo.element().getName() + " Powder " + MathUtils.toRoman(powderTierInfo.tier());
     }
 
     @Override
