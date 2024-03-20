@@ -16,6 +16,9 @@ import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.items.game.GearItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 public final class GearAnnotator implements ItemAnnotator {
     private static final Pattern GEAR_PATTERN =
             Pattern.compile("^(?:§f⬡ )?(?<rarity>§[5abcdef])(?<unidentified>Unidentified )?(?:Shiny )?(?<name>.+)$");
+    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -65,14 +69,40 @@ public final class GearAnnotator implements ItemAnnotator {
      * Goes through user's equipped gear (all armour, accessories, held weapon) and returns count of specified
      * @return <wynncraft count, true count>
      */
-    private Pair<Integer, Integer> getActiveSetCount(String setName) {
-        Pair<Integer, Integer> count = Pair.of(0, 0);
+    private Map<String, Boolean> getActiveItems(String setName) {
+        Map<String, Boolean> activeItems = new HashMap<>();
 
+        int[] accessorySlots = {9, 10, 11, 12};
+        if (McUtils.player().hasContainerOpen()) {
+            // Scale according to server chest size
+            // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
+            int baseSize = McUtils.player().containerMenu.getItems().size();
+            accessorySlots = new int[]{baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+        }
+
+        for (String itemName : Models.Set.getSetInfo(setName).items()) {
+            boolean isActive =
+                    McUtils.inventory().armor.stream().anyMatch(itemStack -> itemStack.getHoverName().getString().equals(itemName)) ||
+                            Arrays.stream(accessorySlots).anyMatch(i -> McUtils.inventory().getItem(i).getHoverName().getString().equals(itemName)) ||
+                            (InventoryUtils.itemRequirementsMet(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND)) && McUtils.player().getItemInHand(InteractionHand.MAIN_HAND).getHoverName().getString().equals(itemName));
+
+
+            activeItems.put(itemName, isActive);
+        }
+        return activeItems;
+    }
+
+    /**
+     * @return true count of specified set
+     */
+    private int getTrueCount(String setName) {
         for (ItemStack itemStack : McUtils.inventory().armor) {
-            int wynncraftCount = countSet(itemStack, setName);
-            if (wynncraftCount == -1) continue;
-
-            count = Pair.of(wynncraftCount, count.b() + 1);
+            for (StyledText line : LoreUtils.getLore(itemStack)) {
+                Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    return Integer.parseInt(nameMatcher.group(2));
+                }
+            }
         }
 
         int[] accessorySlots = {9, 10, 11, 12};
@@ -82,36 +112,16 @@ public final class GearAnnotator implements ItemAnnotator {
             int baseSize = McUtils.player().containerMenu.getItems().size();
             accessorySlots = new int[]{baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
         }
+
         for (int i : accessorySlots) {
-            ItemStack itemStack = McUtils.inventory().getItem(i);
-            int wynncraftCount = countSet(itemStack, setName);
-            if (wynncraftCount == -1) continue;
-
-            count = Pair.of(wynncraftCount, count.b() + 1);
-        }
-
-        // held item - must check if it's actually valid before counting
-        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        if (InventoryUtils.itemRequirementsMet(itemInHand)) {
-            int wynncraftCount = countSet(itemInHand, setName);
-            if (wynncraftCount == -1) return count;
-
-            count = Pair.of(wynncraftCount, count.b() + 1);
-        }
-
-        return count;
-    }
-
-    /**
-     * @return Wynncraft's count of the set if the set matches the specified name, or -1 if it doesn't
-     */
-    private int countSet(ItemStack itemStack, String setName) {
-        for (StyledText line : LoreUtils.getLore(itemStack)) {
-            Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
-            if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                return Integer.parseInt(nameMatcher.group(2));
+            for (StyledText line : LoreUtils.getLore(McUtils.inventory().getItem(i))) {
+                Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    return Integer.parseInt(nameMatcher.group(2));
+                }
             }
         }
+
         return -1;
     }
 }

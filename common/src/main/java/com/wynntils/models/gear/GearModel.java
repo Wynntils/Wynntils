@@ -57,8 +57,6 @@ import net.minecraft.world.item.ItemStack;
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
 public final class GearModel extends Model {
-    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
-
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
