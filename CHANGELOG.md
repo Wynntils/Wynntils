@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/Wynntils/Artemis/compare/v1.1.3...v1.1.4) (2024-03-20)
+
+
+### New Features
+
+* Skill point loadouts smooth scrolling ([#2348](https://github.com/Wynntils/Artemis/issues/2348)) ([04395e5](https://github.com/Wynntils/Artemis/commit/04395e57a6971c9dfa1c57c68b25f0bbd2088c6e))
+
 ## [1.1.3](https://github.com/Wynntils/Artemis/compare/v1.1.2...v1.1.3) (2024-03-17)
 
 
@@ -15,6 +22,11 @@
 * Incorrect price lines on certain bulk buyable items [skip ci] ([#2371](https://github.com/Wynntils/Artemis/issues/2371)) ([de0a9cf](https://github.com/Wynntils/Artemis/commit/de0a9cf00c498a83b9a37b626fe61d7432cbcd6e))
 * Prevent right clicking helper button in guides clearing input [skip ci] ([#2372](https://github.com/Wynntils/Artemis/issues/2372)) ([4b5e602](https://github.com/Wynntils/Artemis/commit/4b5e602651328996430f349ed9a924a36d334806))
 * Staff join messages not redirecting [skip ci] ([#2369](https://github.com/Wynntils/Artemis/issues/2369)) ([ac9998e](https://github.com/Wynntils/Artemis/commit/ac9998ef37ff82791055dd4335af23691e5eca56))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.3 [skip ci] ([21292fd](https://github.com/Wynntils/Artemis/commit/21292fd9ea9d166fcc4f6dc1054889fa7c208c11))
 
 ## [1.1.2](https://github.com/Wynntils/Artemis/compare/v1.1.1...v1.1.2) (2024-03-12)
 
@@ -84,17 +96,4 @@
 * **release:** v1.0.14 [skip ci] ([a91ad35](https://github.com/Wynntils/Artemis/commit/a91ad35e4c998f8f08c30283c2910804783e349c))
 * **release:** v1.1.0 [skip ci] ([f879a17](https://github.com/Wynntils/Artemis/commit/f879a17abc264e23360b4def6c1d4d2e145df36d))
 * Remove unused UrlIds ([#2355](https://github.com/Wynntils/Artemis/issues/2355)) ([4c54247](https://github.com/Wynntils/Artemis/commit/4c54247a48a1737fba7d81fb1d6655e855fc7735))
-
-## [1.0.13](https://github.com/Wynntils/Artemis/compare/v1.0.12...v1.0.13) (2024-02-28)
-
-
-### New Features
-
-* Add option to prevent trades/duels whilst holding gathering tool [skip ci] ([#2345](https://github.com/Wynntils/Artemis/issues/2345)) ([f727ace](https://github.com/Wynntils/Artemis/commit/f727acea4a5f27ee6d032bfe7fa6719df36ffe9d))
-* Allow overriding urls.json source link and cache with Java properties ([#2351](https://github.com/Wynntils/Artemis/issues/2351)) ([b803dc7](https://github.com/Wynntils/Artemis/commit/b803dc7f28876d9245f82ce8eec25920653c9572))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.0.13 [skip ci] ([01ab411](https://github.com/Wynntils/Artemis/commit/01ab41136869925e70f4cc8073490f756d8a8457))
 
