@@ -132,11 +132,9 @@ public class GearInfoRegistry {
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
-            // FIXME: this causes CME once in a while, but it doesn't tell me the right line numbers
-            Optional<SetInfo> setInfo = parseSetInfo(displayName);
 
             return new GearInfo(
-                    displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats, setInfo);
+                    displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
         }
     }
 }

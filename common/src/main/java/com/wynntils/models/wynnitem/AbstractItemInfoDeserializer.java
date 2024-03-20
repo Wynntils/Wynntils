@@ -432,10 +432,4 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         // Return an immutable list
         return List.copyOf(list);
     }
-
-    protected Optional<SetInfo> parseSetInfo(String name) {
-        if (name == null) return Optional.empty();
-
-        return Optional.ofNullable(Models.Set.getSetInfo(Models.Set.getSetName(name)));
-    }
 }

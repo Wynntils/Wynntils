@@ -10,12 +10,15 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.SetInfo;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
+import com.wynntils.models.items.properties.SetItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -33,13 +36,19 @@ public class GearItem extends GameItem
                 PowderedItemProperty,
                 RerollableItemProperty,
                 ShinyItemProperty,
-                IdentifiableItemProperty<GearInfo, GearInstance> {
+                IdentifiableItemProperty<GearInfo, GearInstance>,
+                SetItemProperty
+                {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
+    private final Optional<SetInfo> setInfo;
+    private final Optional<SetInstance> setInstance;
 
-    public GearItem(GearInfo gearInfo, GearInstance gearInstance) {
+    public GearItem(GearInfo gearInfo, GearInstance gearInstance, Optional<SetInfo> setInfo, Optional<SetInstance> setInstance) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
+        this.setInfo = setInfo;
+        this.setInstance = setInstance;
     }
 
     @Override
@@ -50,6 +59,16 @@ public class GearItem extends GameItem
     @Override
     public Optional<GearInstance> getItemInstance() {
         return Optional.ofNullable(gearInstance);
+    }
+
+    @Override
+    public Optional<SetInfo> getSetInfo() {
+        return setInfo;
+    }
+
+    @Override
+    public Optional<SetInstance> getSetInstance() {
+        return setInstance;
     }
 
     public boolean isUnidentified() {
@@ -146,6 +165,11 @@ public class GearItem extends GameItem
 
     @Override
     public String toString() {
-        return "GearItem{" + "gearInfo=" + gearInfo + ", gearInstance=" + gearInstance + '}';
+        return "GearItem{" +
+                "gearInfo=" + gearInfo +
+                ", gearInstance=" + gearInstance +
+                ", setInfo=" + setInfo +
+                ", setInstance=" + setInstance +
+                '}';
     }
 }

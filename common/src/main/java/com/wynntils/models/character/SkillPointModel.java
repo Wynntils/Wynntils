@@ -341,11 +341,10 @@ public class SkillPointModel extends Model {
             });
 
             if (gear.getGearTier() == GearTier.SET
-                    && gear.getItemInfo().setInfo().isPresent()
-                    && gear.getItemInstance().isPresent()
-                    && gear.getItemInstance().get().setInstance().isPresent()) {
-                SetInfo setInfo = gear.getItemInfo().setInfo().get();
-                SetInstance setInstance = gear.getItemInstance().get().setInstance().get();
+                    && gear.getSetInfo().isPresent()
+                    && gear.getSetInstance().isPresent()) {
+                SetInfo setInfo = gear.getSetInfo().get();
+                SetInstance setInstance = gear.getSetInstance().get();
 
                 if (!processedSets.contains(setInfo.name())) {
                     System.out.println("processing set " + setInfo.name() + " on item " + itemStack.getHoverName());
