@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -34,7 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
-    private static final Pattern WIKI_APOSTROPHE = Pattern.compile("&#039;");
+    private static final String WIKI_APOSTROPHE = "&#039;";
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
@@ -138,9 +137,11 @@ public final class QuestModel extends Model {
             ApiResponse apiResponse =
                     Managers.Net.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
             apiResponse.handleJsonArray(json -> {
-                String pageTitle = WIKI_APOSTROPHE
-                        .matcher(json.get(0).getAsJsonObject().get("_pageTitle").getAsString())
-                        .replaceAll("'");
+                String pageTitle = json.get(0)
+                        .getAsJsonObject()
+                        .get("_pageTitle")
+                        .getAsString()
+                        .replace(WIKI_APOSTROPHE, "'");
                 Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
             });
         }
