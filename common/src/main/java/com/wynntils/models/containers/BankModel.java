@@ -11,7 +11,8 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.containers.type.InteractiveContainerType;
+import com.wynntils.models.containers.type.PersonalStorageContainer;
+import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,24 +69,20 @@ public class BankModel extends Model {
 
     private boolean editingName;
     private int currentPage = 1;
-    private InteractiveContainerType currentContainer;
+    private PersonalStorageType currentContainer = null;
 
     public BankModel() {
         super(List.of());
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-
-        for (InteractiveContainerType type : InteractiveContainerType.values()) {
-            if (type.isBank() && type.isScreen(screen)) {
-                currentContainer = type;
-                break;
-            }
+        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer personalStorageContainer)) {
+            return;
         }
 
-        if (currentContainer == null) return;
+        currentContainer = personalStorageContainer.getPersonalStorageType();
 
         currentPage = getCurrentBankPage(screen);
 
@@ -192,7 +189,6 @@ public class BankModel extends Model {
                     .get()
                     .getOrDefault(Models.Character.getId(), MAX_CHARACTER_BANK_PAGES);
             case MISC_BUCKET -> finalMiscBucketPage.get();
-            default -> 1;
         };
     }
 
@@ -219,7 +215,7 @@ public class BankModel extends Model {
         }
     }
 
-    public InteractiveContainerType getCurrentContainer() {
+    public PersonalStorageType getCurrentContainer() {
         return currentContainer;
     }
 
@@ -244,7 +240,6 @@ public class BankModel extends Model {
                     .get()
                     .getOrDefault(Models.Character.getId(), new TreeMap<>());
             case MISC_BUCKET -> customMiscBucketPageNames.get();
-            default -> null;
         };
     }
 }
