@@ -5,8 +5,6 @@
 package com.wynntils.models.gear.type;
 
 import com.wynntils.models.stats.type.StatType;
-
-import java.util.List;
 import java.util.Map;
 
 // wynncraftCount can eventually be removed when Wynncraft fixes their double ring bug...
@@ -42,4 +40,11 @@ public class SetInstance {
         return setInfo.getBonusForItems(trueCount);
     }
 
+    @Override
+    public String toString() {
+        return "SetInstance{" + "setInfo="
+                + setInfo + ", activeItems="
+                + activeItems + ", trueCount="
+                + trueCount + '}';
+    }
 }

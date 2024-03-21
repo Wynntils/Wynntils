@@ -15,11 +15,10 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
-import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.SetInfo;
-import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.type.SetInfo;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -40,7 +39,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -340,9 +338,7 @@ public class SkillPointModel extends Model {
                 }
             });
 
-            if (gear.getGearTier() == GearTier.SET
-                    && gear.getSetInfo().isPresent()
-                    && gear.getSetInstance().isPresent()) {
+            if (gear.getSetInfo().isPresent() && gear.getSetInstance().isPresent()) {
                 SetInfo setInfo = gear.getSetInfo().get();
                 SetInstance setInstance = gear.getSetInstance().get();
 
@@ -351,11 +347,10 @@ public class SkillPointModel extends Model {
                     System.out.println("SetInstance is " + setInstance);
                     // fixme: this setinstance returns 3-4 true count even when count is actually 8
                     // probably because we need to update/reannotate all items in the set when some set item is updated
-                    // deal with in gearmodel later
+                    // deal with in gearmodel laterf
                     setInstance.getTrueCountBonuses().forEach((statType, value) -> {
                         if (Skill.isSkill(statType.getDisplayName())) {
-                            setBonusSkillPoints.merge(
-                                    Skill.fromString(statType.getDisplayName()), value, Integer::sum);
+                            setBonusSkillPoints.merge(Skill.fromString(statType.getDisplayName()), value, Integer::sum);
                         }
                     });
                     processedSets.add(setInfo.name());

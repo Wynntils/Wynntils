@@ -7,12 +7,10 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
@@ -23,22 +21,12 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.InventoryUtils;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -103,7 +91,6 @@ public final class GearModel extends Model {
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
-
 
         return GearInstance.create(
                 gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());

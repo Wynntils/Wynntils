@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearInfo;
@@ -20,7 +19,6 @@ import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GearInfoRegistry {

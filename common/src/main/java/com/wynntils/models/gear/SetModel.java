@@ -13,7 +13,6 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.stats.type.StatType;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +26,12 @@ public class SetModel extends Model {
         loadSetData();
     }
 
-    public SetInfo getSetInfo(String setId) {
-        return setData.get(setId);
+    public SetInfo getSetInfoForId(String setId) {
+        return setData.getOrDefault(setId, null);
+    }
+
+    public SetInfo getSetInfoForItem(String itemName) {
+        return getSetInfoForId(getSetName(itemName));
     }
 
     /**

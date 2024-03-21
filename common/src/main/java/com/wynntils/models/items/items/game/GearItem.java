@@ -37,14 +37,17 @@ public class GearItem extends GameItem
                 RerollableItemProperty,
                 ShinyItemProperty,
                 IdentifiableItemProperty<GearInfo, GearInstance>,
-                SetItemProperty
-                {
+                SetItemProperty {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
     private final Optional<SetInfo> setInfo;
     private final Optional<SetInstance> setInstance;
 
-    public GearItem(GearInfo gearInfo, GearInstance gearInstance, Optional<SetInfo> setInfo, Optional<SetInstance> setInstance) {
+    public GearItem(
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            Optional<SetInfo> setInfo,
+            Optional<SetInstance> setInstance) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
         this.setInfo = setInfo;
@@ -165,11 +168,10 @@ public class GearItem extends GameItem
 
     @Override
     public String toString() {
-        return "GearItem{" +
-                "gearInfo=" + gearInfo +
-                ", gearInstance=" + gearInstance +
-                ", setInfo=" + setInfo +
-                ", setInstance=" + setInstance +
-                '}';
+        return "GearItem{" + "gearInfo="
+                + gearInfo + ", gearInstance="
+                + gearInstance + ", setInfo="
+                + setInfo + ", setInstance="
+                + setInstance + '}';
     }
 }

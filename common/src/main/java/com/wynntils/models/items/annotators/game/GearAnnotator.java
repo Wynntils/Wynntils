@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -14,19 +14,15 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.items.game.GearItem;
-
-import java.util.ArrayList;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
@@ -51,16 +47,14 @@ public final class GearAnnotator implements ItemAnnotator {
         GearInstance gearInstance =
                 matcher.group("unidentified") != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
 
-        // TODO: Add SetInstance
         Optional<SetInfo> setInfo = Optional.empty();
         Optional<SetInstance> setInstance = Optional.empty();
         if (gearInfo.tier() == GearTier.SET) {
-            // Parse set info (mostly from SetModel)
-            String setName = Models.Set.getSetName(gearInfo.name());
-            setInfo = Optional.of(Models.Set.getSetInfo(setName));
-
-            // Parse set instance
-            setInstance = Optional.of(new SetInstance(setInfo.get(), getActiveItems(setInfo.get().name()), getTrueCount(setInfo.get().name())));
+            setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
+            setInstance = Optional.of(new SetInstance(
+                    setInfo.get(),
+                    getActiveItems(setInfo.get().name()),
+                    getTrueCount(setInfo.get().name())));
         }
         return new GearItem(gearInfo, gearInstance, setInfo, setInstance);
     }
@@ -77,15 +71,26 @@ public final class GearAnnotator implements ItemAnnotator {
             // Scale according to server chest size
             // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
             int baseSize = McUtils.player().containerMenu.getItems().size();
-            accessorySlots = new int[]{baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+            accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
         }
 
-        for (String itemName : Models.Set.getSetInfo(setName).items()) {
-            boolean isActive =
-                    McUtils.inventory().armor.stream().anyMatch(itemStack -> itemStack.getHoverName().getString().equals(itemName)) ||
-                            Arrays.stream(accessorySlots).anyMatch(i -> McUtils.inventory().getItem(i).getHoverName().getString().equals(itemName)) ||
-                            (InventoryUtils.itemRequirementsMet(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND)) && McUtils.player().getItemInHand(InteractionHand.MAIN_HAND).getHoverName().getString().equals(itemName));
+        for (String itemName : Models.Set.getSetInfoForId(setName).items()) {
+            boolean armorActive = McUtils.inventory().armor.stream()
+                    .anyMatch(itemStack -> itemStack.getHoverName().getString().equals(itemName));
+            boolean accessoryActive = Arrays.stream(accessorySlots).anyMatch(i -> McUtils.inventory()
+                    .getItem(i)
+                    .getHoverName()
+                    .getString()
+                    .equals(itemName));
+            boolean heldActive =
+                    InventoryUtils.itemRequirementsMet(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))
+                            && McUtils.player()
+                                    .getItemInHand(InteractionHand.MAIN_HAND)
+                                    .getHoverName()
+                                    .getString()
+                                    .equals(itemName);
 
+            boolean isActive = armorActive || accessoryActive || heldActive;
 
             activeItems.put(itemName, isActive);
         }
@@ -96,11 +101,14 @@ public final class GearAnnotator implements ItemAnnotator {
      * @return true count of specified set
      */
     private int getTrueCount(String setName) {
+        int count = 0;
+
         for (ItemStack itemStack : McUtils.inventory().armor) {
             for (StyledText line : LoreUtils.getLore(itemStack)) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    return Integer.parseInt(nameMatcher.group(2));
+                    count++;
+                    break;
                 }
             }
         }
@@ -110,18 +118,28 @@ public final class GearAnnotator implements ItemAnnotator {
             // Scale according to server chest size
             // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
             int baseSize = McUtils.player().containerMenu.getItems().size();
-            accessorySlots = new int[]{baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+            accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
         }
 
         for (int i : accessorySlots) {
             for (StyledText line : LoreUtils.getLore(McUtils.inventory().getItem(i))) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    return Integer.parseInt(nameMatcher.group(2));
+                    count++;
+                    break;
                 }
             }
         }
 
-        return -1;
+        if (InventoryUtils.itemRequirementsMet(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
+            for (StyledText line : LoreUtils.getLore(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
+                Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
     }
 }
