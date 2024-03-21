@@ -50,8 +50,8 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 .filter(styledTextPart -> !styledTextPart.isEmpty())
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
-        this.clickEvents = new ArrayList<>(clickEvents);
-        this.hoverEvents = new ArrayList<>(hoverEvents);
+        this.clickEvents = clickEvents.stream().distinct().collect(Collectors.toList());
+        this.hoverEvents = hoverEvents.stream().distinct().collect(Collectors.toList());
     }
 
     public static StyledText fromComponent(Component component) {
@@ -91,23 +91,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
                     styledTextParts.stream().filter(part -> !part.isEmpty()).toList());
         }
 
-        // Collect the events
-        List<ClickEvent> clickEvents = new ArrayList<>();
-        List<HoverEvent> hoverEvents = new ArrayList<>();
-
-        for (StyledTextPart part : parts) {
-            ClickEvent clickEvent = part.getPartStyle().getStyle().getClickEvent();
-            if (clickEvent != null) {
-                clickEvents.add(clickEvent);
-            }
-
-            HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
-            if (hoverEvent != null) {
-                hoverEvents.add(hoverEvent);
-            }
-        }
-
-        return new StyledText(parts, clickEvents, hoverEvents);
+        return fromParts(parts);
     }
 
     public static StyledText fromString(String codedString) {
@@ -131,21 +115,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     }
 
     public static StyledText fromPart(StyledTextPart part) {
-        // Collect the events
-        List<ClickEvent> clickEvents = new ArrayList<>();
-        List<HoverEvent> hoverEvents = new ArrayList<>();
-
-        ClickEvent clickEvent = part.getPartStyle().getStyle().getClickEvent();
-        if (clickEvent != null) {
-            clickEvents.add(clickEvent);
-        }
-
-        HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
-        if (hoverEvent != null) {
-            hoverEvents.add(hoverEvent);
-        }
-
-        return new StyledText(List.of(part), List.of(), List.of());
+        return fromParts(List.of(part));
     }
 
     public static StyledText fromParts(List<StyledTextPart> parts) {
@@ -222,8 +192,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {
         List<StyledTextPart> parts = new ArrayList<>();
-        List<ClickEvent> clickEvents = new ArrayList<>();
-        List<HoverEvent> hoverEvents = new ArrayList<>();
 
         final int length = texts.length;
         for (int i = 0; i < length; i++) {
@@ -233,15 +201,9 @@ public final class StyledText implements Iterable<StyledTextPart> {
             if (i != length - 1) {
                 parts.addAll(styledTextSeparator.parts);
             }
-
-            clickEvents.addAll(text.clickEvents);
-            hoverEvents.addAll(text.hoverEvents);
         }
 
-        clickEvents.addAll(styledTextSeparator.clickEvents);
-        hoverEvents.addAll(styledTextSeparator.hoverEvents);
-
-        return new StyledText(parts, clickEvents, hoverEvents);
+        return fromParts(parts);
     }
 
     public static StyledText join(StyledText styledTextSeparator, Iterable<StyledText> texts) {
@@ -257,17 +219,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
     }
 
     public static StyledText concat(StyledText... texts) {
-        List<StyledTextPart> parts = new ArrayList<>();
-        List<ClickEvent> clickEvents = new ArrayList<>();
-        List<HoverEvent> hoverEvents = new ArrayList<>();
-
-        for (StyledText text : texts) {
-            parts.addAll(text.parts);
-            clickEvents.addAll(text.clickEvents);
-            hoverEvents.addAll(text.hoverEvents);
-        }
-
-        return new StyledText(parts, clickEvents, hoverEvents);
+        return fromParts(Arrays.stream(texts)
+                .map(text -> text.parts)
+                .flatMap(List::stream)
+                .toList());
     }
 
     public static StyledText concat(Iterable<StyledText> texts) {
@@ -275,10 +230,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     }
 
     public StyledText getNormalized() {
-        return new StyledText(
-                parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()),
-                clickEvents,
-                hoverEvents);
+        return fromParts(parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()));
     }
 
     public StyledText trim() {
@@ -292,7 +244,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
         int lastIndex = newParts.size() - 1;
         newParts.set(lastIndex, newParts.get(lastIndex).stripTrailing());
 
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     public boolean isEmpty() {
@@ -386,7 +338,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText appendPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
         newParts.add(part);
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     public StyledText prepend(StyledText styledText) {
@@ -400,7 +352,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText prependPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
         newParts.add(0, part);
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     /**
@@ -443,7 +395,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
                     // If this is the last part, then we might need to add other parts
                     if (j != stringParts.size() - 1) {
-                        splitTexts.add(new StyledText(splitParts, clickEvents, hoverEvents));
+                        splitTexts.add(fromParts(splitParts));
                         splitParts.clear();
                     }
                 }
@@ -457,7 +409,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
         // Add the last text
         if (!splitParts.isEmpty()) {
-            splitTexts.add(new StyledText(splitParts, clickEvents, hoverEvents));
+            splitTexts.add(fromParts(splitParts));
         }
 
         return splitTexts.toArray(StyledText[]::new);
@@ -534,7 +486,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             previousPartStyle = part.getPartStyle();
         }
 
-        return new StyledText(includedParts, clickEvents, hoverEvents);
+        return fromParts(includedParts);
     }
 
     public StyledText[] partition(int... indexes) {
@@ -601,7 +553,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             newParts.add(part);
         }
 
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     /**
@@ -631,7 +583,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     /**
@@ -660,7 +612,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     public StyledText iterateBackwards(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
@@ -681,7 +633,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, clickEvents, hoverEvents);
+        return fromParts(newParts);
     }
 
     public StyledText withoutFormatting() {
