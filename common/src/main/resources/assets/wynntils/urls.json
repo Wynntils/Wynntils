@@ -1,6 +1,6 @@
 [
   {
-    "version": 10
+    "version": 11
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -61,7 +61,7 @@
     ],
     "encoding": "wiki",
     "id": "apiWikiDiscoveryQuery",
-    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%{name}"
+    "url": "https://wynncraft.wiki.gg/api.php?action=parse&format=json&prop=wikitext&section=0&page=%{name}"
   },
   {
     "arguments": [
@@ -69,7 +69,7 @@
     ],
     "encoding": "cargo",
     "id": "apiWikiQuestPageQuery",
-    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}"
+    "url": "https://wynncraft.wiki.gg/index.php?title=Special:CargoExport&tables=Quests&&fields=Quests._pageTitle&where=Quests.name+%3D+%{name}&order+by=&limit=2000&format=json"
   },
   {
     "id": "dataAthenaGuildList",
@@ -222,7 +222,7 @@
     ],
     "encoding": "wiki",
     "id": "linkWikiLookup",
-    "url": "https://wynncraft.fandom.com/wiki/%{title}"
+    "url": "https://wynncraft.wiki.gg/wiki/%{title}"
   },
   {
     "arguments": [
