@@ -1,9 +1,37 @@
+## [1.1.5](https://github.com/Wynntils/Artemis/compare/v1.1.4...v1.1.5) (2024-03-22)
+
+
+### New Features
+
+* Migrate to wiki.gg [skip ci] ([#2378](https://github.com/Wynntils/Artemis/issues/2378)) ([ad6bc3b](https://github.com/Wynntils/Artemis/commit/ad6bc3b9f3719d15075f70b3bb3394058fd9e949))
+* Skill point loadouts smooth scrolling ([#2348](https://github.com/Wynntils/Artemis/issues/2348)) ([634ef94](https://github.com/Wynntils/Artemis/commit/634ef944be73643ae4b5be7b1012468eee7bca14))
+
+
+### Bug Fixes
+
+* fix item data failing to load if ItemObtainType is unknown ([#2380](https://github.com/Wynntils/Artemis/issues/2380)) ([328354c](https://github.com/Wynntils/Artemis/commit/328354c178fd5673c96757ac0c0902159229a705))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2379](https://github.com/Wynntils/Artemis/issues/2379)) ([bc5da6f](https://github.com/Wynntils/Artemis/commit/bc5da6f1f6a30c81be3a104a716e573d10a9d67e))
+
+
+### Code Refactoring
+
+* streamline event handling in StyledText by using StyledText[#from](https://github.com/Wynntils/Artemis/issues/from)Parts almost everywhere [skip ci] ([#2377](https://github.com/Wynntils/Artemis/issues/2377)) ([989243d](https://github.com/Wynntils/Artemis/commit/989243da325b6fb5b2dc301267db5539f63c8065))
+
 ## [1.1.4](https://github.com/Wynntils/Artemis/compare/v1.1.3...v1.1.4) (2024-03-20)
 
 
 ### New Features
 
 * Skill point loadouts smooth scrolling ([#2348](https://github.com/Wynntils/Artemis/issues/2348)) ([04395e5](https://github.com/Wynntils/Artemis/commit/04395e57a6971c9dfa1c57c68b25f0bbd2088c6e))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.4 [skip ci] ([2697f0b](https://github.com/Wynntils/Artemis/commit/2697f0b5b4ffe3da01111b50d71f86309e2d3ce4))
 
 ## [1.1.3](https://github.com/Wynntils/Artemis/compare/v1.1.2...v1.1.3) (2024-03-17)
 
@@ -66,34 +94,4 @@
 
 * Make TranscribeMessagesFeature use StyledText to produce a translator-friendly output [skip ci] ([#2363](https://github.com/Wynntils/Artemis/issues/2363)) ([f096ee4](https://github.com/Wynntils/Artemis/commit/f096ee4a92249c29d98e6594396cc6685b5aec06))
 * Turn SearchableContainerType into InteractiveContainerType [skip ci] ([#2353](https://github.com/Wynntils/Artemis/issues/2353)) ([98df8d1](https://github.com/Wynntils/Artemis/commit/98df8d1d563e10b56210db80a4440de0f08d65c1))
-
-## [1.1.0](https://github.com/Wynntils/Artemis/compare/v1.0.13...v1.1.0) (2024-03-06)
-
-
-### ⚠ BREAKING CHANGES
-
-* Make NpcDialogueFeature work in a chat-based mode, add legacy chat mode, fix many NPC dialogue related bugs, make the overlay work once again (#2358)
-
-### New Features
-
-* Make NpcDialogueFeature work in a chat-based mode, add legacy chat mode, fix many NPC dialogue related bugs, make the overlay work once again ([#2358](https://github.com/Wynntils/Artemis/issues/2358)) ([c58214f](https://github.com/Wynntils/Artemis/commit/c58214f52fc584e8343bfce0ddf24b703d3dc5e1))
-
-
-### Bug Fixes
-
-* Add a versions file for CI ([cafeeaf](https://github.com/Wynntils/Artemis/commit/cafeeaf7398a1f79cf05f4f73014479966972038))
-* Fix some bugs in dialogue parsing (in ChatHandler) [ci skip] ([#2357](https://github.com/Wynntils/Artemis/issues/2357)) ([c2d2c16](https://github.com/Wynntils/Artemis/commit/c2d2c163707e683aa1cf4d5ded9d40482ac56005))
-* Fix some bugs in dialogue parsing (in ChatHandler) [ci skip] ([#2357](https://github.com/Wynntils/Artemis/issues/2357)) ([54fed73](https://github.com/Wynntils/Artemis/commit/54fed73b4c6f757e982124c074813b2149e5859f))
-* Fix TradeMarketScreen crashing the game if the user closes an ItemSharingScreen ([#2354](https://github.com/Wynntils/Artemis/issues/2354)) ([4fc0a07](https://github.com/Wynntils/Artemis/commit/4fc0a070d5d073c73cf934d523f94acf1e53a544))
-* Fix TradeMarketScreen crashing the game if the user closes an ItemSharingScreen ([#2354](https://github.com/Wynntils/Artemis/issues/2354)) ([07a8613](https://github.com/Wynntils/Artemis/commit/07a8613177b293bc1a47a1be6ddf2ed34a5b5064))
-* fix versioning by adding a version.json file for release branch ([1c6c3d8](https://github.com/Wynntils/Artemis/commit/1c6c3d859f11f0802d365c7b8094b166a1f1ebb3))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([9286e50](https://github.com/Wynntils/Artemis/commit/9286e505d616d0022cf9bc9a12c9d1f1a3b20ad1))
-* [auto-generated] Update urls.json [ci skip] ([#2352](https://github.com/Wynntils/Artemis/issues/2352)) ([70ba0da](https://github.com/Wynntils/Artemis/commit/70ba0daf57e775fc7004b4f125a01147f27719e1))
-* **release:** v1.0.14 [skip ci] ([a91ad35](https://github.com/Wynntils/Artemis/commit/a91ad35e4c998f8f08c30283c2910804783e349c))
-* **release:** v1.1.0 [skip ci] ([f879a17](https://github.com/Wynntils/Artemis/commit/f879a17abc264e23360b4def6c1d4d2e145df36d))
-* Remove unused UrlIds ([#2355](https://github.com/Wynntils/Artemis/issues/2355)) ([4c54247](https://github.com/Wynntils/Artemis/commit/4c54247a48a1737fba7d81fb1d6655e855fc7735))
 
