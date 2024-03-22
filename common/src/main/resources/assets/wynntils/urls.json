@@ -115,12 +115,12 @@
   },
   {
     "id": "dataStaticGearAdvanced",
-    "md5": "c1a442a84db4f7675b1c06dbf118c9af",
+    "md5": "e36ac2c2447c2cbcc7a2fecb175701e2",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
     "id": "dataStaticIdentificationKeys",
-    "md5": "2d4bc2b39baf7060b637ceb5ee538b77",
+    "md5": "dcd9d021c6bae9948c7f8c3e5a6a6ae6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/id_keys.json"
   },
   {
@@ -135,7 +135,7 @@
   },
   {
     "id": "dataStaticIngredientsAdvanced",
-    "md5": "56f32c7fb6a2c4dc186f331adc51d3c1",
+    "md5": "882726f5fe8844558be67a3c0ed3e9bb",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
