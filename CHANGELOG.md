@@ -1,3 +1,10 @@
+## [1.1.6](https://github.com/Wynntils/Artemis/compare/v1.1.5...v1.1.6) (2024-03-25)
+
+
+### Bug Fixes
+
+* Fix NpcDialogueFeature legacy mode not displaying text when translations are off ([#2382](https://github.com/Wynntils/Artemis/issues/2382)) ([5c0d6e3](https://github.com/Wynntils/Artemis/commit/5c0d6e305e6f3959295e3b2699d231a2146eef03))
+
 ## [1.1.5](https://github.com/Wynntils/Artemis/compare/v1.1.4...v1.1.5) (2024-03-22)
 
 
@@ -15,6 +22,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2379](https://github.com/Wynntils/Artemis/issues/2379)) ([bc5da6f](https://github.com/Wynntils/Artemis/commit/bc5da6f1f6a30c81be3a104a716e573d10a9d67e))
+* **release:** v1.1.5 [skip ci] ([43a6ccc](https://github.com/Wynntils/Artemis/commit/43a6ccc15ed2fa0adab49c4ab37e8089df29b688))
 
 
 ### Code Refactoring
@@ -67,31 +75,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.2 [skip ci] ([5695e25](https://github.com/Wynntils/Artemis/commit/5695e25d281eae1772347d6c9009d225cf44da0c))
-
-## [1.1.1](https://github.com/Wynntils/Artemis/compare/v1.1.0...v1.1.1) (2024-03-11)
-
-
-### New Features
-
-* Add support for events in string-parsed StyledTexts [skip ci] ([#2365](https://github.com/Wynntils/Artemis/issues/2365)) ([c54326f](https://github.com/Wynntils/Artemis/commit/c54326f79718ab62ee0df92abc9027ebdb99bdea))
-* Custom Seaskipper screen redesign [skip ci] ([#2364](https://github.com/Wynntils/Artemis/issues/2364)) ([1dda1cf](https://github.com/Wynntils/Artemis/commit/1dda1cfbce9944b21fb6775552d9a560690c571e))
-
-
-### Bug Fixes
-
-* Fix NotificationManager not displaying notifications if the Game Notification overlay is disabled, but the parent feature is enabled [skip ci] ([#2361](https://github.com/Wynntils/Artemis/issues/2361)) ([7f27f28](https://github.com/Wynntils/Artemis/commit/7f27f2869bc733c2c20008df5eb84cfa137c8b22))
-* Fix StatusEffectsOverlay rendering some status effects without respecting the font size setting [skip ci] ([#2360](https://github.com/Wynntils/Artemis/issues/2360)) ([12f462a](https://github.com/Wynntils/Artemis/commit/12f462a4e854a8fcbcc918da7a3eadc09b2dc3f5))
-* Refactor multi-line message handling in ChatHandler, fix multi-line messages not appearing twice, even if they should ([#2366](https://github.com/Wynntils/Artemis/issues/2366)) ([8e767f7](https://github.com/Wynntils/Artemis/commit/8e767f7c9b0de486402f6038951a9597b8c4669b))
-* Wait even more in CommandHandler when trying to execute a command during a dialogue [skip ci] ([#2367](https://github.com/Wynntils/Artemis/issues/2367)) ([07f7a81](https://github.com/Wynntils/Artemis/commit/07f7a811a2826d38303d31fb389e075d24a44489))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.1 [skip ci] ([d5c8521](https://github.com/Wynntils/Artemis/commit/d5c852198ac2476c23488e2148593870b387714f))
-
-
-### Code Refactoring
-
-* Make TranscribeMessagesFeature use StyledText to produce a translator-friendly output [skip ci] ([#2363](https://github.com/Wynntils/Artemis/issues/2363)) ([f096ee4](https://github.com/Wynntils/Artemis/commit/f096ee4a92249c29d98e6594396cc6685b5aec06))
-* Turn SearchableContainerType into InteractiveContainerType [skip ci] ([#2353](https://github.com/Wynntils/Artemis/issues/2353)) ([98df8d1](https://github.com/Wynntils/Artemis/commit/98df8d1d563e10b56210db80a4440de0f08d65c1))
 
