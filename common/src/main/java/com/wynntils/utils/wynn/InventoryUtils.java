@@ -61,26 +61,6 @@ public final class InventoryUtils {
         return McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
     }
 
-    /**
-     * Checks if the weapon in the player's hand has all requirements met.
-     */
-    public static boolean itemRequirementsMet(ItemStack itemStack) {
-        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-
-        if (wynnItem.isEmpty()
-                || !(wynnItem.get() instanceof GearItem) && !(wynnItem.get() instanceof CraftedGearItem)) {
-            return false;
-        }
-
-        for (StyledText loreLine : LoreUtils.getLore(itemStack)) {
-            if (loreLine.startsWith("§c✖") && loreLine.contains("Min: ")) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public enum MouseClickType {
         LEFT_CLICK,
         RIGHT_CLICK
