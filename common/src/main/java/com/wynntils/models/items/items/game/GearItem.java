@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
@@ -26,7 +25,6 @@ import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
@@ -172,14 +170,7 @@ public class GearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        // probably migrate this to GearInstance?
-        for (StyledText loreLine : LoreUtils.getLore(this)) {
-            if (loreLine.startsWith("§c✖") && loreLine.contains("Min: ")) {
-                return false;
-            }
-        }
-
-        return true;
+        return gearInstance.meetsRequirements();
     }
 
     @Override

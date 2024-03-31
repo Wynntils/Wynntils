@@ -72,7 +72,7 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
 
         return ErrorOr.of(new GearItem(
                 gearInfo,
-                GearInstance.create(gearInfo, idList, powders, rerolls, shinyStat),
+                GearInstance.create(gearInfo, idList, powders, rerolls, shinyStat, false),
                 Optional.empty(),
                 Optional.empty()));
     }

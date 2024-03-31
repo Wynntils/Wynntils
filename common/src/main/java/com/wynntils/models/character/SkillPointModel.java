@@ -321,9 +321,12 @@ public class SkillPointModel extends Model {
         }
 
         // held item - must check if it's actually valid before counting
-        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        if (InventoryUtils.itemRequirementsMet(itemInHand)) {
-            calculateSingleGearSkillPoints(itemInHand);
+        ItemStack handStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        Optional<WynnItem> itemInHand = Models.Item.getWynnItem(handStack);
+        if (itemInHand.isPresent() && itemInHand.get() instanceof GearItem gear) {
+            if (gear.meetsActualRequirements()) {
+                calculateSingleGearSkillPoints(handStack);
+            }
         }
     }
 

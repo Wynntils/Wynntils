@@ -13,10 +13,10 @@ import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
+import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,13 +82,18 @@ public final class GearAnnotator implements ItemAnnotator {
                     .getHoverName()
                     .getString()
                     .equals(itemName));
-            boolean heldActive =
-                    InventoryUtils.itemRequirementsMet(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))
-                            && McUtils.player()
-                                    .getItemInHand(InteractionHand.MAIN_HAND)
-                                    .getHoverName()
-                                    .getString()
-                                    .equals(itemName);
+
+            boolean heldActive = false;
+            Optional<WynnItem> wynnItem =
+                    Models.Item.getWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+            if (wynnItem.isPresent() && wynnItem.get() instanceof GearItem gearItem) {
+                heldActive = gearItem.meetsActualRequirements()
+                        && McUtils.player()
+                                .getItemInHand(InteractionHand.MAIN_HAND)
+                                .getHoverName()
+                                .getString()
+                                .equals(itemName);
+            }
 
             boolean isActive = armorActive || accessoryActive || heldActive;
 
@@ -131,7 +136,9 @@ public final class GearAnnotator implements ItemAnnotator {
             }
         }
 
-        if (InventoryUtils.itemRequirementsMet(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
+        Optional<WynnItem> wynnItem =
+                Models.Item.getWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        if (wynnItem.isPresent() && wynnItem.get() instanceof GearItem gearItem && gearItem.meetsActualRequirements()) {
             for (StyledText line : LoreUtils.getLore(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {

@@ -7,6 +7,7 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -21,6 +22,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -92,8 +94,22 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
+        // probably migrate this to GearInstance?
+        boolean meetsRequirements = true;
+        for (StyledText loreLine : LoreUtils.getLore(itemStack)) {
+            if (loreLine.startsWith("§c✖") && loreLine.contains("Min: ")) {
+                meetsRequirements = false;
+                break;
+            }
+        }
+
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                meetsRequirements);
     }
 
     // For parsing gear from the gear viewer
@@ -101,7 +117,7 @@ public final class GearModel extends Model {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat(), false);
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {

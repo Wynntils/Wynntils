@@ -159,6 +159,11 @@ public class CraftedGearItem extends GameItem
     }
 
     @Override
+    public boolean meetsActualRequirements() {
+        return false; // TODO
+    }
+
+    @Override
     public String toString() {
         return "CraftedGearItem{" + "name='"
                 + name + '\'' + ", effectStrength="
