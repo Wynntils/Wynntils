@@ -53,8 +53,8 @@ public final class GearModel extends Model {
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
     private final Map<String, List<SetInstance>> activeSetsCache = new HashMap<>();
 
-    public GearModel(SetModel setModel) {
-        super(List.of(setModel));
+    public GearModel() {
+        super(List.of());
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
