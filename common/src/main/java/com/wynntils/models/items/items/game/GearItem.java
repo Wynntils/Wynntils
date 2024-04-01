@@ -43,17 +43,14 @@ public class GearItem extends GameItem
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
     private final Optional<SetInfo> setInfo;
-    private final Optional<SetInstance> setInstance;
 
     public GearItem(
             GearInfo gearInfo,
             GearInstance gearInstance,
-            Optional<SetInfo> setInfo,
-            Optional<SetInstance> setInstance) {
+            Optional<SetInfo> setInfo) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
         this.setInfo = setInfo;
-        this.setInstance = setInstance;
     }
 
     @Override
@@ -73,7 +70,7 @@ public class GearItem extends GameItem
 
     @Override
     public Optional<SetInstance> getSetInstance() {
-        return setInstance;
+        return gearInstance.setInstance();
     }
 
     public boolean isUnidentified() {
@@ -175,10 +172,10 @@ public class GearItem extends GameItem
 
     @Override
     public String toString() {
-        return "GearItem{" + "gearInfo="
-                + gearInfo + ", gearInstance="
-                + gearInstance + ", setInfo="
-                + setInfo + ", setInstance="
-                + setInstance + '}';
+        return "GearItem{" +
+                "gearInfo=" + gearInfo +
+                ", gearInstance=" + gearInstance +
+                ", setInfo=" + setInfo +
+                '}';
     }
 }

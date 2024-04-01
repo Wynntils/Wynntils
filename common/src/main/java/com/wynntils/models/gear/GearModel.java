@@ -27,6 +27,7 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -103,13 +104,16 @@ public final class GearModel extends Model {
             }
         }
 
+        // TODO: parse set here!!
+
         return GearInstance.create(
                 gearInfo,
                 result.identifications(),
                 result.powders(),
                 result.rerolls(),
                 result.shinyStat(),
-                meetsRequirements);
+                meetsRequirements,
+                Optional.empty());
     }
 
     // For parsing gear from the gear viewer
