@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearInfo;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GearInfoRegistry {
@@ -131,7 +133,15 @@ public class GearInfoRegistry {
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
             return new GearInfo(
-                    displayName, type, tier, powderSlots, metaInfo, requirements, fixedStats, variableStats);
+                    displayName,
+                    type,
+                    tier,
+                    powderSlots,
+                    metaInfo,
+                    requirements,
+                    fixedStats,
+                    variableStats,
+                    Optional.ofNullable(Models.Set.getSetInfoForItem(displayName)));
         }
     }
 }

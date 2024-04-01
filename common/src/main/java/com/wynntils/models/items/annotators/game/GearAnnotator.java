@@ -49,15 +49,12 @@ public final class GearAnnotator implements ItemAnnotator {
         GearInstance gearInstance =
                 matcher.group("unidentified") != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
 
-        Optional<SetInfo> setInfo = Optional.empty();
-        Optional<SetInstance> setInstance = Optional.empty();
-
         if (gearInfo.tier() == GearTier.SET) {
-            setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
+            Optional<SetInfo> setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
             int wynnCount = getCount(setInfo.get().name());
             int equippedItemSlot = Models.PlayerInventory.getEquippedItemSlot(itemStack);
             if (equippedItemSlot >= 0) {
-                setInstance = Optional.of(new SetInstance(
+                Optional<SetInstance> setInstance = Optional.of(new SetInstance(
                         setInfo.get(), getActiveItems(setInfo.get().name()), wynnCount));
                 GearSlot slot;
                 if (gearInfo.type() == GearType.RING) {
@@ -69,7 +66,7 @@ public final class GearAnnotator implements ItemAnnotator {
             }
         }
 
-        return new GearItem(gearInfo, gearInstance, setInfo, setInstance);
+        return new GearItem(gearInfo, gearInstance);
     }
 
     /**

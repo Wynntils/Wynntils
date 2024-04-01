@@ -31,9 +31,7 @@ public final class GuideGearItemStack extends GuideItemStack {
                 gearInfo.metaInfo().material().itemStack(),
                 new GearItem(
                         gearInfo,
-                        null,
-                        Optional.ofNullable(Models.Set.getSetInfoForItem(gearInfo.name())),
-                        Optional.empty()),
+                        null),
                 gearInfo.name());
 
         this.gearInfo = gearInfo;
@@ -71,13 +69,7 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(
-                new GearItem(
-                        gearInfo,
-                        null,
-                        Optional.ofNullable(Models.Set.getSetInfoForItem(gearInfo.name())),
-                        Optional.empty()),
-                true);
+        IdentifiableTooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new GearItem(gearInfo, null), true);
         this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache

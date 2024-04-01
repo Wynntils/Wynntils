@@ -42,15 +42,10 @@ public class GearItem extends GameItem
                 RequirementItemProperty {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
-    private final Optional<SetInfo> setInfo;
 
-    public GearItem(
-            GearInfo gearInfo,
-            GearInstance gearInstance,
-            Optional<SetInfo> setInfo) {
+    public GearItem(GearInfo gearInfo, GearInstance gearInstance) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
-        this.setInfo = setInfo;
     }
 
     @Override
@@ -65,7 +60,7 @@ public class GearItem extends GameItem
 
     @Override
     public Optional<SetInfo> getSetInfo() {
-        return setInfo;
+        return gearInfo.setInfo();
     }
 
     @Override
@@ -172,10 +167,6 @@ public class GearItem extends GameItem
 
     @Override
     public String toString() {
-        return "GearItem{" +
-                "gearInfo=" + gearInfo +
-                ", gearInstance=" + gearInstance +
-                ", setInfo=" + setInfo +
-                '}';
+        return "GearItem{" + "gearInfo=" + gearInfo + ", gearInstance=" + gearInstance + '}';
     }
 }

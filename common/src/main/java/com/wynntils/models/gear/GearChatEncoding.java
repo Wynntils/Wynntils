@@ -207,13 +207,9 @@ public class GearChatEncoding {
 
         // create chat gear stack
         // Note that the chat procotol does not allow for shiny stats to be transferred
-        GearInstance gearInstance =
-                GearInstance.create(gearInfo, identifications, powderList, rerolls, Optional.empty(), false);
-        return new GearItem(
-                gearInfo,
-                gearInstance,
-                Optional.empty(),
-                Optional.empty()); // TODO: populate setInfo but not setInstance
+        GearInstance gearInstance = GearInstance.create(
+                gearInfo, identifications, powderList, rerolls, Optional.empty(), false, Optional.empty());
+        return new GearItem(gearInfo, gearInstance); // TODO: populate setInfo but not setInstance
     }
 
     public Matcher gearChatEncodingMatcher(String str) {

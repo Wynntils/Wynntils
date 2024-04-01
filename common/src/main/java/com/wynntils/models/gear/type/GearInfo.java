@@ -10,6 +10,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public record GearInfo(
@@ -20,7 +21,8 @@ public record GearInfo(
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         FixedStats fixedStats,
-        List<Pair<StatType, StatPossibleValues>> variableStats) {
+        List<Pair<StatType, StatPossibleValues>> variableStats,
+        Optional<SetInfo> setInfo) {
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()
                 .filter(p -> p.key().equals(statType))
