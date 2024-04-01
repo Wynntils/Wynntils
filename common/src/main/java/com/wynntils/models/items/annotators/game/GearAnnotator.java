@@ -19,7 +19,6 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,11 +54,11 @@ public final class GearAnnotator implements ItemAnnotator {
 
         if (gearInfo.tier() == GearTier.SET) {
             setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
-            Pair<Integer, Integer> counts = getCount(setInfo.get().name());
+            int wynnCount = getCount(setInfo.get().name());
             int equippedItemSlot = Models.PlayerInventory.getEquippedItemSlot(itemStack);
             if (equippedItemSlot >= 0) {
                 setInstance = Optional.of(new SetInstance(
-                        setInfo.get(), getActiveItems(setInfo.get().name()), counts.a(), counts.b()));
+                        setInfo.get(), getActiveItems(setInfo.get().name()), wynnCount));
                 GearSlot slot;
                 if (gearInfo.type() == GearType.RING) {
                     slot = equippedItemSlot % 9 == 0 ? GearSlot.RING1 : GearSlot.RING2;
@@ -116,19 +115,14 @@ public final class GearAnnotator implements ItemAnnotator {
     }
 
     /**
-     * @return Pair<true count, wynn count> of specified set
+     * @return Wynncraft's count of specified set
      */
-    private Pair<Integer, Integer> getCount(String setName) {
-        int trueCount = 0;
-        int wynnCount = 0;
-
+    private int getCount(String setName) {
         for (ItemStack itemStack : McUtils.inventory().armor) {
             for (StyledText line : LoreUtils.getLore(itemStack)) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    trueCount++;
-                    wynnCount = Integer.parseInt(nameMatcher.group(2));
-                    break;
+                    return Integer.parseInt(nameMatcher.group(2));
                 }
             }
         }
@@ -140,14 +134,11 @@ public final class GearAnnotator implements ItemAnnotator {
             int baseSize = McUtils.player().containerMenu.getItems().size();
             accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
         }
-
         for (int i : accessorySlots) {
             for (StyledText line : LoreUtils.getLore(McUtils.inventory().getItem(i))) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    trueCount++;
-                    wynnCount = Integer.parseInt(nameMatcher.group(2));
-                    break;
+                    return Integer.parseInt(nameMatcher.group(2));
                 }
             }
         }
@@ -158,12 +149,11 @@ public final class GearAnnotator implements ItemAnnotator {
             for (StyledText line : LoreUtils.getLore(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    trueCount++;
-                    wynnCount = Integer.parseInt(nameMatcher.group(2));
-                    break;
+                    return Integer.parseInt(nameMatcher.group(2));
                 }
             }
         }
-        return Pair.of(trueCount, wynnCount);
+
+        return 0;
     }
 }

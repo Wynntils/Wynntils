@@ -13,26 +13,19 @@ import java.util.Map;
 public class SetInstance {
     private SetInfo setInfo;
     private Map<String, Boolean> activeItems;
-    private int trueCount;
     private int wynnCount;
 
-    public SetInstance(SetInfo setInfo, Map<String, Boolean> activeItems, int trueCount, int wynnCount) {
+    public SetInstance(SetInfo setInfo, Map<String, Boolean> activeItems, int wynnCount) {
         this.setInfo = setInfo;
         this.activeItems = activeItems;
-        this.trueCount = trueCount;
         this.wynnCount = wynnCount;
         Models.Set.updateAllSetInstances(this);
     }
 
-    public void update(SetInfo setInfo, Map<String, Boolean> activeItems, int trueCount, int wynnCount) {
+    public void update(SetInfo setInfo, Map<String, Boolean> activeItems, int wynnCount) {
         this.setInfo = setInfo;
         this.activeItems = activeItems;
-        this.trueCount = trueCount;
         this.wynnCount = wynnCount;
-    }
-
-    public Map<StatType, Integer> getTrueCountBonuses() {
-        return setInfo.getBonusForItems(trueCount);
     }
 
     public Map<StatType, Integer> getWynnCountBonuses() {
@@ -47,10 +40,6 @@ public class SetInstance {
         return activeItems;
     }
 
-    public int getTrueCount() {
-        return trueCount;
-    }
-
     public int getWynnCount() {
         return wynnCount;
     }
@@ -59,8 +48,7 @@ public class SetInstance {
     public String toString() {
         return "SetInstance{" + "setInfo="
                 + setInfo + ", activeItems="
-                + activeItems + ", trueCount="
-                + trueCount + ", wynnCount="
+                + activeItems + ", wynnCount="
                 + wynnCount + '}';
     }
 }

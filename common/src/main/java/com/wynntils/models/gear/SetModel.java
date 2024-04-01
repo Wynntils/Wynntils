@@ -62,12 +62,7 @@ public class SetModel extends Model {
                     .getSetInfo()
                     .name()
                     .equals(instance.getSetInfo().name())) {
-                entry.getValue()
-                        .update(
-                                instance.getSetInfo(),
-                                instance.getActiveItems(),
-                                instance.getTrueCount(),
-                                instance.getWynnCount());
+                entry.getValue().update(instance.getSetInfo(), instance.getActiveItems(), instance.getWynnCount());
             }
         }
     }
