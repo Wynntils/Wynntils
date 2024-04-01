@@ -17,6 +17,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,10 +52,9 @@ public final class GearAnnotator implements ItemAnnotator {
         Optional<SetInstance> setInstance = Optional.empty();
         if (gearInfo.tier() == GearTier.SET) {
             setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
-            setInstance = Optional.of(new SetInstance(
-                    setInfo.get(),
-                    getActiveItems(setInfo.get().name()),
-                    getTrueCount(setInfo.get().name())));
+            Pair<Integer, Integer> counts = getCount(setInfo.get().name());
+            setInstance = Optional.of(
+                    new SetInstance(setInfo.get(), getActiveItems(setInfo.get().name()), counts.a(), counts.b()));
         }
         return new GearItem(gearInfo, gearInstance, setInfo, setInstance);
     }
@@ -103,16 +103,18 @@ public final class GearAnnotator implements ItemAnnotator {
     }
 
     /**
-     * @return true count of specified set
+     * @return Pair<true count, wynn count> of specified set
      */
-    private int getTrueCount(String setName) {
-        int count = 0;
+    private Pair<Integer, Integer> getCount(String setName) {
+        int trueCount = 0;
+        int wynnCount = 0;
 
         for (ItemStack itemStack : McUtils.inventory().armor) {
             for (StyledText line : LoreUtils.getLore(itemStack)) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    count++;
+                    trueCount++;
+                    wynnCount = Integer.parseInt(nameMatcher.group(2));
                     break;
                 }
             }
@@ -130,7 +132,8 @@ public final class GearAnnotator implements ItemAnnotator {
             for (StyledText line : LoreUtils.getLore(McUtils.inventory().getItem(i))) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    count++;
+                    trueCount++;
+                    wynnCount = Integer.parseInt(nameMatcher.group(2));
                     break;
                 }
             }
@@ -142,11 +145,12 @@ public final class GearAnnotator implements ItemAnnotator {
             for (StyledText line : LoreUtils.getLore(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
                 Matcher nameMatcher = SET_PATTERN.matcher(line.getString());
                 if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    count++;
+                    trueCount++;
+                    wynnCount = Integer.parseInt(nameMatcher.group(2));
                     break;
                 }
             }
         }
-        return count;
+        return Pair.of(trueCount, wynnCount);
     }
 }
