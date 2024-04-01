@@ -15,6 +15,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GearInfoRegistry {
     private List<GearInfo> gearInfoRegistry = List.of();
@@ -42,11 +44,24 @@ public class GearInfoRegistry {
     public GearInfoRegistry() {
         WynntilsMod.registerEventListener(this);
 
-        reloadData();
+        loadData();
     }
 
-    public void reloadData() {
-        loadGearRegistry();
+    public void loadData() {
+        // We do not explicitly load the ingredient DB here,
+        // but when all of it's dependencies are loaded,
+        // the NetResultProcessedEvent will trigger the load.
+    }
+
+    @SubscribeEvent
+    public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
+        UrlId urlId = event.getUrlId();
+        if (urlId == UrlId.DATA_STATIC_ITEM_SETS) {
+            if (!Models.Set.hasSetData()) return;
+
+            loadGearRegistry();
+            return;
+        }
     }
 
     public GearInfo getFromDisplayName(String gearName) {

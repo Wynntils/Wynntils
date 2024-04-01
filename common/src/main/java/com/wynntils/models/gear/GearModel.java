@@ -85,7 +85,7 @@ public final class GearModel extends Model {
 
     @Override
     public void reloadData() {
-        gearInfoRegistry.reloadData();
+        gearInfoRegistry.loadData();
     }
 
     // For "real" gear items eg. from the inventory

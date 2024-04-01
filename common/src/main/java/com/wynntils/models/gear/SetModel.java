@@ -65,6 +65,10 @@ public class SetModel extends Model {
         return 0;
     }
 
+    public boolean hasSetData() {
+        return !setData.isEmpty();
+    }
+
     private void loadSetData() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
         dl.handleReader(reader -> {
