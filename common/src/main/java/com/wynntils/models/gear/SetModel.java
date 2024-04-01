@@ -79,8 +79,9 @@ public class SetModel extends Model {
     private void loadSetData() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
         dl.handleReader(reader -> {
+            TypeToken<Map<String, RawSetInfo>> type = new TypeToken<>() {};
             Map<String, RawSetInfo> rawSets =
-                    WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, RawSetInfo>>() {}.getType());
+                    Managers.Json.GSON.fromJson(reader, type.getType());
             rawSets.forEach((setName, rawSetInfo) -> {
                 List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
                         .map(bonusPair -> {
