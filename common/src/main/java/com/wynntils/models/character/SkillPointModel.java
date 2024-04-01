@@ -57,8 +57,6 @@ public class SkillPointModel extends Model {
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
 
-    private Set<String> processedSets = new HashSet<>();
-
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
@@ -308,7 +306,6 @@ public class SkillPointModel extends Model {
         gearSkillPoints = new EnumMap<>(Skill.class);
         craftedSkillPoints = new EnumMap<>(Skill.class);
         setBonusSkillPoints = new EnumMap<>(Skill.class);
-        processedSets = new HashSet<>();
 
         // Cannot combine these loops because of the way the inventory is numbered when a container is open
         for (ItemStack itemStack : McUtils.inventory().armor) {
@@ -328,6 +325,15 @@ public class SkillPointModel extends Model {
                 calculateSingleGearSkillPoints(handStack);
             }
         }
+
+        Models.Set.getUniqueSetInstances().forEach(
+                setInstance -> setInstance.getTrueCountBonuses().forEach(
+                        (bonus, value) -> {
+                            if (bonus instanceof SkillStatType skillStat) {
+                                setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
+                            }
+                        })
+        );
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {
@@ -341,24 +347,6 @@ public class SkillPointModel extends Model {
                 }
             });
 
-            if (gear.getSetInfo().isPresent() && gear.getSetInstance().isPresent()) {
-                SetInfo setInfo = gear.getSetInfo().get();
-                SetInstance setInstance = gear.getSetInstance().get();
-
-                if (!processedSets.contains(setInfo.name())) {
-                    System.out.println("processing set " + setInfo.name() + " on item " + itemStack.getHoverName());
-                    System.out.println("SetInstance is " + setInstance);
-                    // fixme: this setinstance returns 3-4 true count even when count is actually 8
-                    // probably because we need to update/reannotate all items in the set when some set item is updated
-                    // deal with in gearmodel laterf
-                    setInstance.getTrueCountBonuses().forEach((statType, value) -> {
-                        if (Skill.isSkill(statType.getDisplayName())) {
-                            setBonusSkillPoints.merge(Skill.fromString(statType.getDisplayName()), value, Integer::sum);
-                        }
-                    });
-                    processedSets.add(setInfo.name());
-                }
-            }
         } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
             craftedGear.getIdentifications().forEach(x -> {
                 if (x.statType() instanceof SkillStatType skillStat) {

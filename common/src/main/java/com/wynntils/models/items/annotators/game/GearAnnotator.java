@@ -14,7 +14,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
-import com.wynntils.models.gear.type.SetSlot;
+import com.wynntils.models.gear.type.GearSlot;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -60,11 +60,11 @@ public final class GearAnnotator implements ItemAnnotator {
             if (equippedItemSlot >= 0) {
                 setInstance = Optional.of(new SetInstance(
                         setInfo.get(), getActiveItems(setInfo.get().name()), counts.a(), counts.b()));
-                SetSlot slot;
+                GearSlot slot;
                 if (gearInfo.type() == GearType.RING) {
-                    slot = equippedItemSlot % 9 == 0 ? SetSlot.RING1 : SetSlot.RING2;
+                    slot = equippedItemSlot % 9 == 0 ? GearSlot.RING1 : GearSlot.RING2;
                 } else {
-                    slot = SetSlot.fromGearType(gearInfo.type());
+                    slot = GearSlot.fromGearType(gearInfo.type());
                 }
                 Models.Set.updateSetInstance(slot, setInstance.get());
             }
@@ -73,6 +73,9 @@ public final class GearAnnotator implements ItemAnnotator {
         return new GearItem(gearInfo, gearInstance, setInfo, setInstance);
     }
 
+    /**
+     * @return A map of a set's item names to whether they are equipped and active on the player
+     */
     private Map<String, Boolean> getActiveItems(String setName) {
         Map<String, Boolean> activeItems = new HashMap<>();
 

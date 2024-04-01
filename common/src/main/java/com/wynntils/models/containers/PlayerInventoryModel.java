@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,12 +57,20 @@ public final class PlayerInventoryModel extends Model {
             accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
         }
 
-        int found = McUtils.inventory().findSlotMatchingItem(itemStack);
-        if (Arrays.stream(accessorySlots).anyMatch(slot -> slot == found) || McUtils.inventory().selected == found) {
-            return found;
+        for (int slot : accessorySlots) {
+            ItemStack equipped = McUtils.inventory().getItem(slot);
+            if (ItemStack.isSameItem(equipped, itemStack)) {
+                return slot;
+            }
         }
-        if (McUtils.inventory().armor.contains(itemStack)) {
-            return found;
+        for (int i = 0; i < 4; i++) {
+            ItemStack equipped = McUtils.inventory().armor.get(i);
+            if (ItemStack.isSameItem(equipped, itemStack)) {
+                return i + 5;
+            }
+        }
+        if (ItemStack.isSameItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), itemStack)) {
+            return McUtils.inventory().selected;
         }
         return -1;
     }

@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gear.type;
 
-public enum SetSlot {
+public enum GearSlot {
     HELMET,
     CHESTPLATE,
     LEGGINGS,
@@ -18,7 +18,7 @@ public enum SetSlot {
     /**
      * Rings must be handled manually since there are two possible slots
      */
-    public static SetSlot fromGearType(GearType gearType) {
+    public static GearSlot fromGearType(GearType gearType) {
         return switch (gearType) {
             case SPEAR, BOW, WAND, DAGGER, RELIK, WEAPON -> WEAPON;
 

@@ -13,17 +13,18 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
-import com.wynntils.models.gear.type.SetSlot;
+import com.wynntils.models.gear.type.GearSlot;
 import com.wynntils.models.stats.type.StatType;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SetModel extends Model {
     // Stored as a map for quick lookup <name, SetInfo>
     private final Map<String, SetInfo> setData = new HashMap<>();
-    private final Map<SetSlot, SetInstance> setInstances = new EnumMap<>(SetSlot.class);
+    private final Map<GearSlot, SetInstance> setInstances = new EnumMap<>(GearSlot.class);
 
     public SetModel() {
         super(List.of());
@@ -51,12 +52,21 @@ public class SetModel extends Model {
         return null;
     }
 
-    public void updateSetInstance(SetSlot slot, SetInstance instance) {
+    public void updateSetInstance(GearSlot slot, SetInstance instance) {
         setInstances.put(slot, instance);
     }
 
-    public SetInstance getSetInstance(SetSlot slot) {
-        return setInstances.get(slot);
+    public void updateAllSetInstances(SetInstance instance) {
+        for (Map.Entry<GearSlot, SetInstance> entry : setInstances.entrySet()) {
+            if (entry.getValue().setInfo().name().equals(instance.setInfo().name())) {
+                setInstances.put(entry.getKey(), instance);
+                System.out.println("Updated set instance for " + entry.getKey() + " to " + instance.trueCount());
+            }
+        }
+    }
+
+    public Set<SetInstance> getUniqueSetInstances() {
+        return Set.copyOf(setInstances.values());
     }
 
     private void loadSetData() {
@@ -80,7 +90,6 @@ public class SetModel extends Model {
                         .toList();
 
                 setData.put(setName, new SetInfo(setName, bonuses, rawSetInfo.items));
-                System.out.println("Loaded set: " + setName + " (" + rawSetInfo.items.size() + " items)");
             });
         });
     }
