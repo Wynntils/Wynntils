@@ -17,8 +17,6 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.type.SetInfo;
-import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -33,11 +31,9 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeMap;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -326,14 +322,12 @@ public class SkillPointModel extends Model {
             }
         }
 
-        Models.Set.getUniqueSetInstances().forEach(
-                setInstance -> setInstance.getTrueCountBonuses().forEach(
-                        (bonus, value) -> {
-                            if (bonus instanceof SkillStatType skillStat) {
-                                setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
-                            }
-                        })
-        );
+        Models.Set.getUniqueSetInstances()
+                .forEach(setInstance -> setInstance.getTrueCountBonuses().forEach((bonus, value) -> {
+                    if (bonus instanceof SkillStatType skillStat) {
+                        setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
+                    }
+                }));
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {

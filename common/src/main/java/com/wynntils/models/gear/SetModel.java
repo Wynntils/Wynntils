@@ -11,9 +11,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gear.type.GearSlot;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
-import com.wynntils.models.gear.type.GearSlot;
 import com.wynntils.models.stats.type.StatType;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -60,7 +60,6 @@ public class SetModel extends Model {
         for (Map.Entry<GearSlot, SetInstance> entry : setInstances.entrySet()) {
             if (entry.getValue().setInfo().name().equals(instance.setInfo().name())) {
                 setInstances.put(entry.getKey(), instance);
-                System.out.println("Updated set instance for " + entry.getKey() + " to " + instance.trueCount());
             }
         }
     }
@@ -72,9 +71,9 @@ public class SetModel extends Model {
     private void loadSetData() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
         dl.handleReader(reader -> {
-            Map<String, RawSetInfo> rawSets = WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, RawSetInfo>>() {}.getType());
+            Map<String, RawSetInfo> rawSets =
+                    WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, RawSetInfo>>() {}.getType());
             rawSets.forEach((setName, rawSetInfo) -> {
-
                 List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
                         .map(bonusPair -> {
                             Map<StatType, Integer> bonusMap = new HashMap<>();
