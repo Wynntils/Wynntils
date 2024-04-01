@@ -80,8 +80,7 @@ public class SetModel extends Model {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
         dl.handleReader(reader -> {
             TypeToken<Map<String, RawSetInfo>> type = new TypeToken<>() {};
-            Map<String, RawSetInfo> rawSets =
-                    Managers.Json.GSON.fromJson(reader, type.getType());
+            Map<String, RawSetInfo> rawSets = Managers.Json.GSON.fromJson(reader, type.getType());
             rawSets.forEach((setName, rawSetInfo) -> {
                 List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
                         .map(bonusPair -> {
