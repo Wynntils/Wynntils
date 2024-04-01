@@ -11,17 +11,30 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearSlot;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
 public class SetModel extends Model {
+    public static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
+
     // Stored as a map for quick lookup <name, SetInfo>
     private final Map<String, SetInfo> setData = new HashMap<>();
     private final Map<GearSlot, SetInstance> setInstances = new EnumMap<>(GearSlot.class);
@@ -31,12 +44,12 @@ public class SetModel extends Model {
         loadSetData();
     }
 
-    public SetInfo getSetInfoForId(String setId) {
+    public SetInfo getSetInfo(String setId) {
         return setData.getOrDefault(setId, null);
     }
 
     public SetInfo getSetInfoForItem(String itemName) {
-        return getSetInfoForId(getSetName(itemName));
+        return getSetInfo(getSetName(itemName));
     }
 
     /**
@@ -56,13 +69,53 @@ public class SetModel extends Model {
         setInstances.put(slot, instance);
     }
 
-    public Set<SetInstance> getUniqueSetInstances() {
-        return Set.copyOf(setInstances.values());
+    /**
+     * @return A Set of all equipped set names
+     */
+    public Set<String> getUniqueSetNames() {
+        return setInstances.values().stream().map(x -> x.getSetInfo().name()).collect(Collectors.toSet());
     }
 
     public int getTrueCount(String setName) {
-        // todo..
-        return 0;
+        int trueCount = 0;
+
+        for (ItemStack itemStack : McUtils.inventory().armor) {
+            for (StyledText line : LoreUtils.getLore(itemStack)) {
+                Matcher nameMatcher = SetModel.SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    trueCount++;
+                }
+            }
+        }
+
+        int[] accessorySlots = {9, 10, 11, 12};
+        if (McUtils.player().hasContainerOpen()) {
+            // Scale according to server chest size
+            // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
+            int baseSize = McUtils.player().containerMenu.getItems().size();
+            accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+        }
+        for (int i : accessorySlots) {
+            for (StyledText line : LoreUtils.getLore(McUtils.inventory().getItem(i))) {
+                Matcher nameMatcher = SetModel.SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    trueCount++;
+                }
+            }
+        }
+
+        Optional<WynnItem> wynnItem =
+                Models.Item.getWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        if (wynnItem.isPresent() && wynnItem.get() instanceof GearItem gearItem && gearItem.meetsActualRequirements()) {
+            for (StyledText line : LoreUtils.getLore(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))) {
+                Matcher nameMatcher = SetModel.SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    trueCount++;
+                }
+            }
+        }
+
+        return trueCount;
     }
 
     public boolean hasSetData() {

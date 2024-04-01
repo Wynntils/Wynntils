@@ -322,9 +322,9 @@ public class SkillPointModel extends Model {
             }
         }
 
-        Models.Set.getUniqueSetInstances().forEach(setInstance -> {
-            int trueCount = Models.Set.getTrueCount(setInstance.getSetInfo().name());
-            setInstance.getSetInfo().getBonusForItems(trueCount).forEach((bonus, value) -> {
+        Models.Set.getUniqueSetNames().forEach(name -> {
+            int trueCount = Models.Set.getTrueCount(name);
+            Models.Set.getSetInfo(name).getBonusForItems(trueCount).forEach((bonus, value) -> {
                 if (bonus instanceof SkillStatType skillStat) {
                     setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
                 }
