@@ -56,19 +56,13 @@ public class SetModel extends Model {
         setInstances.put(slot, instance);
     }
 
-    public void updateAllSetInstances(SetInstance instance) {
-        for (Map.Entry<GearSlot, SetInstance> entry : setInstances.entrySet()) {
-            if (entry.getValue()
-                    .getSetInfo()
-                    .name()
-                    .equals(instance.getSetInfo().name())) {
-                entry.getValue().update(instance.getSetInfo(), instance.getActiveItems(), instance.getWynnCount());
-            }
-        }
-    }
-
     public Set<SetInstance> getUniqueSetInstances() {
         return Set.copyOf(setInstances.values());
+    }
+
+    public int getTrueCount(String setName) {
+        // todo..
+        return 0;
     }
 
     private void loadSetData() {
