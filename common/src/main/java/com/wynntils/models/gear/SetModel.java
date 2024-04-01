@@ -58,8 +58,16 @@ public class SetModel extends Model {
 
     public void updateAllSetInstances(SetInstance instance) {
         for (Map.Entry<GearSlot, SetInstance> entry : setInstances.entrySet()) {
-            if (entry.getValue().setInfo().name().equals(instance.setInfo().name())) {
-                setInstances.put(entry.getKey(), instance);
+            if (entry.getValue()
+                    .getSetInfo()
+                    .name()
+                    .equals(instance.getSetInfo().name())) {
+                entry.getValue()
+                        .update(
+                                instance.getSetInfo(),
+                                instance.getActiveItems(),
+                                instance.getTrueCount(),
+                                instance.getWynnCount());
             }
         }
     }
