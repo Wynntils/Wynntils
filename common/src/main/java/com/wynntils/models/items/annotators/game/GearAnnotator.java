@@ -11,8 +11,10 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
+import com.wynntils.models.gear.type.SetSlot;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -50,19 +52,27 @@ public final class GearAnnotator implements ItemAnnotator {
 
         Optional<SetInfo> setInfo = Optional.empty();
         Optional<SetInstance> setInstance = Optional.empty();
+
         if (gearInfo.tier() == GearTier.SET) {
             setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
             Pair<Integer, Integer> counts = getCount(setInfo.get().name());
-            setInstance = Optional.of(
-                    new SetInstance(setInfo.get(), getActiveItems(setInfo.get().name()), counts.a(), counts.b()));
+            int equippedItemSlot = Models.PlayerInventory.getEquippedItemSlot(itemStack);
+            if (equippedItemSlot >= 0) {
+                setInstance = Optional.of(new SetInstance(
+                        setInfo.get(), getActiveItems(setInfo.get().name()), counts.a(), counts.b()));
+                SetSlot slot;
+                if (gearInfo.type() == GearType.RING) {
+                    slot = equippedItemSlot % 9 == 0 ? SetSlot.RING1 : SetSlot.RING2;
+                } else {
+                    slot = SetSlot.fromGearType(gearInfo.type());
+                }
+                Models.Set.updateSetInstance(slot, setInstance.get());
+            }
         }
+
         return new GearItem(gearInfo, gearInstance, setInfo, setInstance);
     }
 
-    /**
-     * Goes through user's equipped gear (all armour, accessories, held weapon) and returns count of specified
-     * @return <wynncraft count, true count>
-     */
     private Map<String, Boolean> getActiveItems(String setName) {
         Map<String, Boolean> activeItems = new HashMap<>();
 

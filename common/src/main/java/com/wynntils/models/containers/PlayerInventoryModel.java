@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -16,6 +16,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,6 +41,28 @@ public final class PlayerInventoryModel extends Model {
 
     public CappedValue getIngredientPouchSlots() {
         return new CappedValue(getUsedIngredientPouchSlots(), MAX_INGREDIENT_POUCH_SLOTS);
+    }
+
+    /**
+     * @return -1 if the item is not equipped, otherwise the slot number
+     */
+    public int getEquippedItemSlot(ItemStack itemStack) {
+        int[] accessorySlots = {9, 10, 11, 12};
+        if (McUtils.player().hasContainerOpen()) {
+            // Scale according to server chest size
+            // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
+            int baseSize = McUtils.player().containerMenu.getItems().size();
+            accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+        }
+
+        int found = McUtils.inventory().findSlotMatchingItem(itemStack);
+        if (Arrays.stream(accessorySlots).anyMatch(slot -> slot == found) || McUtils.inventory().selected == found) {
+            return found;
+        }
+        if (McUtils.inventory().armor.contains(itemStack)) {
+            return found;
+        }
+        return -1;
     }
 
     public void registerWatcher(InventoryWatcher watcher) {
