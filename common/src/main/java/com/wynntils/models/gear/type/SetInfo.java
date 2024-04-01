@@ -18,9 +18,4 @@ public record SetInfo(String name, List<Map<StatType, Integer>> bonuses, List<St
     public Map<StatType, Integer> getBonusForItems(int numberOfItems) {
         return bonuses.get(Mth.clamp(numberOfItems, 1, items.size()) - 1);
     }
-
-    @Override
-    public String toString() {
-        return "SetInfo{" + "name='" + name + '\'' + ", bonuses=" + bonuses + ", items=" + items + '}';
-    }
 }
