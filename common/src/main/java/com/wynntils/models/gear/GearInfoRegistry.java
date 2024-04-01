@@ -48,7 +48,7 @@ public class GearInfoRegistry {
     }
 
     public void loadData() {
-        // We do not explicitly load the ingredient DB here,
+        // We do not explicitly load the gear DB here,
         // but when all of it's dependencies are loaded,
         // the NetResultProcessedEvent will trigger the load.
     }
