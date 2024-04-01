@@ -322,12 +322,16 @@ public class SkillPointModel extends Model {
             }
         }
 
-        Models.Set.getUniqueSetInstances()
-                .forEach(setInstance -> setInstance.getTrueCountBonuses().forEach((bonus, value) -> {
-                    if (bonus instanceof SkillStatType skillStat) {
-                        setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
-                    }
-                }));
+        Models.Set.getUniqueSetInstances().forEach(
+                setInstance -> {
+                    int trueCount = Models.Set.getTrueCount(setInstance.getSetInfo().name());
+                    setInstance.getSetInfo().getBonusForItems(trueCount).forEach((bonus, value) -> {
+                        if (bonus instanceof SkillStatType skillStat) {
+                            setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
+                        }
+                    });
+                }
+        );
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {
