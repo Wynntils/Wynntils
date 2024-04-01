@@ -4,12 +4,9 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.models.stats.type.StatType;
 import java.util.Map;
 
-// wynncraftCount can eventually be removed when Wynncraft fixes their double ring bug...
-// Essentially if you have two of the same ring on, it's only counted once
 public class SetInstance {
     private SetInfo setInfo;
     private Map<String, Boolean> activeItems;
@@ -19,7 +16,6 @@ public class SetInstance {
         this.setInfo = setInfo;
         this.activeItems = activeItems;
         this.wynnCount = wynnCount;
-        Models.Set.updateAllSetInstances(this);
     }
 
     public void update(SetInfo setInfo, Map<String, Boolean> activeItems, int wynnCount) {
@@ -40,6 +36,11 @@ public class SetInstance {
         return activeItems;
     }
 
+    /**
+     * wynnCount may be inaccurate when the user has two of the same ring equipped (wynncraft bug).
+     * Use SetModel to determine the true count if necessary.
+     * @return Wynncraft's possibly inaccurate count of how many items in the set are equipped
+     */
     public int getWynnCount() {
         return wynnCount;
     }
