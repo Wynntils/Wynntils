@@ -62,28 +62,31 @@ public class SetModel extends Model {
     private void loadSetData() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
         dl.handleReader(reader -> {
-            Map<String, Map<String, List<?>>> tempData =
-                    WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, Map<String, List<?>>>>() {}.getType());
-            tempData.forEach((key, value) -> {
-                List<Map<String, Double>> rawBonuses = (List<Map<String, Double>>) value.get("bonuses");
-                List<String> items = (List<String>) value.get("items");
+            Map<String, RawSetInfo> rawSets = WynntilsMod.GSON.fromJson(reader, new TypeToken<Map<String, RawSetInfo>>() {}.getType());
+            rawSets.forEach((setName, rawSetInfo) -> {
 
-                List<Map<StatType, Integer>> bonuses = rawBonuses.stream()
-                        .map(bonus -> {
+                List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
+                        .map(bonusPair -> {
                             Map<StatType, Integer> bonusMap = new HashMap<>();
-                            bonus.forEach((statName, statValue) -> {
+                            bonusPair.forEach((statName, statValue) -> {
                                 StatType statType = Models.Stat.fromApiName(statName);
                                 if (statType == null) {
                                     WynntilsMod.warn("Unknown stat type: " + statName);
                                 }
-                                bonusMap.put(statType, statValue.intValue());
+                                bonusMap.put(statType, statValue);
                             });
                             return bonusMap;
                         })
                         .toList();
 
-                setData.put(key, new SetInfo(key, bonuses, items));
+                setData.put(setName, new SetInfo(setName, bonuses, rawSetInfo.items));
+                System.out.println("Loaded set: " + setName + " (" + rawSetInfo.items.size() + " items)");
             });
         });
+    }
+
+    private static class RawSetInfo {
+        public List<Map<String, Integer>> bonuses;
+        public List<String> items;
     }
 }
