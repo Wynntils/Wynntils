@@ -1,9 +1,27 @@
+## [1.1.7](https://github.com/Wynntils/Artemis/compare/v1.1.6...v1.1.7) (2024-04-02)
+
+
+### Bug Fixes
+
+* Always apply url changes from the remote urls.json ([#2385](https://github.com/Wynntils/Artemis/issues/2385)) ([e643a26](https://github.com/Wynntils/Artemis/commit/e643a262205538b3f566b5a410da4407b3ad8017))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2381](https://github.com/Wynntils/Artemis/issues/2381)) ([dea63cd](https://github.com/Wynntils/Artemis/commit/dea63cd048744915581270e2c849b1da43fcfdb8))
+* [auto-generated] Update urls.json [ci skip] ([#2384](https://github.com/Wynntils/Artemis/issues/2384)) ([2ff2468](https://github.com/Wynntils/Artemis/commit/2ff24685c3e2053861ba4d0ea1e007ea81541689))
+
 ## [1.1.6](https://github.com/Wynntils/Artemis/compare/v1.1.5...v1.1.6) (2024-03-25)
 
 
 ### Bug Fixes
 
 * Fix NpcDialogueFeature legacy mode not displaying text when translations are off ([#2382](https://github.com/Wynntils/Artemis/issues/2382)) ([5c0d6e3](https://github.com/Wynntils/Artemis/commit/5c0d6e305e6f3959295e3b2699d231a2146eef03))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.6 [skip ci] ([79b35e8](https://github.com/Wynntils/Artemis/commit/79b35e8f469d75f1dea5e9cc76da2ecf73067317))
 
 ## [1.1.5](https://github.com/Wynntils/Artemis/compare/v1.1.4...v1.1.5) (2024-03-22)
 
@@ -63,16 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.3 [skip ci] ([21292fd](https://github.com/Wynntils/Artemis/commit/21292fd9ea9d166fcc4f6dc1054889fa7c208c11))
-
-## [1.1.2](https://github.com/Wynntils/Artemis/compare/v1.1.1...v1.1.2) (2024-03-12)
-
-
-### Bug Fixes
-
-* Make translations work with NPC dialogues ([#2362](https://github.com/Wynntils/Artemis/issues/2362)) ([dd0360e](https://github.com/Wynntils/Artemis/commit/dd0360e195d33e26e9e00e8a803f4ceee1db42ba))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.2 [skip ci] ([5695e25](https://github.com/Wynntils/Artemis/commit/5695e25d281eae1772347d6c9009d225cf44da0c))
 
