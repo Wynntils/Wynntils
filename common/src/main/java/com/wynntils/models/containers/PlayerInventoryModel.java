@@ -8,7 +8,11 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.containers.type.InventoryAccessory;
 import com.wynntils.models.containers.type.InventoryWatcher;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -27,7 +31,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class PlayerInventoryModel extends Model {
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
-    private static final int[] ACCESSORY_SLOTS = {9, 10, 11, 12};
 
     private final InventoryWatcher emptySlotWatcher = new InventoryWatcher(ItemStack::isEmpty);
     private final List<InventoryWatcher> watchers = new ArrayList<>(List.of(emptySlotWatcher));
@@ -53,37 +56,28 @@ public final class PlayerInventoryModel extends Model {
         watchers.remove(watcher);
     }
 
-    /**
-     * @return -1 if the item is not equipped, otherwise the slot number
-     */
-    public int getEquippedItemSlot(ItemStack itemStack) {
-        int[] calculatedAccessorySlots = ACCESSORY_SLOTS;
-        if (McUtils.player().hasContainerOpen()) {
-            // Scale according to server chest size
-            // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
-            int baseSize = McUtils.player().containerMenu.getItems().size();
-            calculatedAccessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
-        }
-
-        for (int slot : calculatedAccessorySlots) {
-            ItemStack equipped = McUtils.inventory().getItem(slot);
-            if (ItemStack.isSameItem(equipped, itemStack)) {
-                return slot;
+    public List<ItemStack> getEquippedItems() {
+        List<ItemStack> returnable = new ArrayList<>(McUtils.inventory().armor);
+        for (int i : InventoryAccessory.getSlots()) {
+            int baseSize = 0;
+            if (McUtils.player().hasContainerOpen()) {
+                // Scale according to server chest size
+                // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
+                baseSize = McUtils.player().containerMenu.getItems().size();
             }
+            returnable.add(McUtils.inventory().getItem(i + baseSize));
         }
 
-        for (int i = 0; i < 4; i++) {
-            ItemStack equipped = McUtils.inventory().armor.get(i);
-            if (ItemStack.isSameItem(equipped, itemStack)) {
-                return i + 5; // from wiki.vg/Inventory (helmet starts at 5)
-            }
+        Optional<WynnItem> wynnItem =
+                Models.Item.getWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        if (wynnItem.isPresent()
+                && ((wynnItem.get() instanceof GearItem gearItem && gearItem.meetsActualRequirements())
+                        || (wynnItem.get() instanceof CraftedGearItem craftedGearItem
+                                && craftedGearItem.meetsActualRequirements()))) {
+            returnable.add(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
         }
 
-        if (ItemStack.isSameItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), itemStack)) {
-            return McUtils.inventory().selected;
-        }
-
-        return -1;
+        return returnable;
     }
 
     @SubscribeEvent

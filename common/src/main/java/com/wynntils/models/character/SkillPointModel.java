@@ -16,6 +16,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.type.InventoryAccessory;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -45,7 +46,6 @@ public class SkillPointModel extends Model {
     @Persisted
     private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new TreeMap<>());
 
-    private static final int[] ACCESSORY_SLOTS = {9, 10, 11, 12};
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
@@ -100,7 +100,7 @@ public class SkillPointModel extends Model {
         Collections.reverse(armourNames); // helmet to boots order
 
         List<String> accessoryNames = new ArrayList<>();
-        for (int i : ACCESSORY_SLOTS) {
+        for (int i : InventoryAccessory.getSlots()) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
             if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
                 accessoryNames.add(itemStack.getHoverName().getString());
@@ -308,7 +308,7 @@ public class SkillPointModel extends Model {
             calculateSingleGearSkillPoints(itemStack);
         }
 
-        for (int i : ACCESSORY_SLOTS) {
+        for (int i : InventoryAccessory.getSlots()) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
             calculateSingleGearSkillPoints(itemStack);
         }

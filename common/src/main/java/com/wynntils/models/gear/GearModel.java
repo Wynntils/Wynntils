@@ -95,7 +95,7 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        // probably migrate this to GearInstance?
+        // TODO see WynnItemParser's regex sections
         boolean meetsRequirements = true;
         for (StyledText loreLine : LoreUtils.getLore(itemStack)) {
             if (loreLine.startsWith("§c✖") && loreLine.contains("Min: ")) {
@@ -104,7 +104,10 @@ public final class GearModel extends Model {
             }
         }
 
-        // TODO: parse set here!!
+        if (result.tier() == GearTier.SET) {
+            // TODO: parse set here (need to reimpl getActiveItems, getWynnCount)
+            SetInstance setInstance = new SetInstance(gearInfo.setInfo().get(), Map.of(), 0);
+        }
 
         return GearInstance.create(
                 gearInfo,

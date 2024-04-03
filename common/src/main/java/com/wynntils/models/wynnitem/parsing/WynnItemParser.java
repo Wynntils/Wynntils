@@ -177,10 +177,13 @@ public final class WynnItemParser {
                 continue;
             }
 
+            // TODO: look for other requirements (or generalize the level one)
+
             Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTEN);
             if (setBonusMatcher.matches()) {
                 // Any stat lines that follow from now on belongs to the Set Bonus
                 // Maybe these could be collected separately, but for now, ignore them
+                // TODO: we can actually do this now
                 setBonusStats = true;
             }
 

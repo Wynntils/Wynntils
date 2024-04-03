@@ -11,18 +11,10 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.SetModel;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.GearSlot;
-import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.SetInfo;
-import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,66 +41,7 @@ public final class GearAnnotator implements ItemAnnotator {
         GearInstance gearInstance =
                 matcher.group("unidentified") != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
 
-        if (gearInfo.tier() == GearTier.SET) {
-            Optional<SetInfo> setInfo = Optional.of(Models.Set.getSetInfoForItem(gearInfo.name()));
-            int wynnCount = getWynncraftCount(setInfo.get().name());
-            int equippedItemSlot = Models.PlayerInventory.getEquippedItemSlot(itemStack);
-            if (equippedItemSlot >= 0) {
-                Optional<SetInstance> setInstance = Optional.of(new SetInstance(
-                        setInfo.get(), getActiveItems(setInfo.get().name()), wynnCount));
-                GearSlot slot;
-                if (gearInfo.type() == GearType.RING) {
-                    slot = equippedItemSlot % 9 == 0 ? GearSlot.RING1 : GearSlot.RING2;
-                } else {
-                    slot = GearSlot.fromGearType(gearInfo.type());
-                }
-                Models.Set.updateSetInstance(slot, setInstance.get());
-            }
-        }
-
         return new GearItem(gearInfo, gearInstance);
-    }
-
-    /**
-     * @return A map of a set's item names to whether they are equipped and active on the player
-     */
-    private Map<String, Boolean> getActiveItems(String setName) {
-        Map<String, Boolean> activeItems = new HashMap<>();
-
-        int[] accessorySlots = {9, 10, 11, 12};
-        if (McUtils.player().hasContainerOpen()) {
-            // Scale according to server chest size
-            // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
-            int baseSize = McUtils.player().containerMenu.getItems().size();
-            accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
-        }
-
-        for (String itemName : Models.Set.getSetInfo(setName).items()) {
-            boolean armorActive = McUtils.inventory().armor.stream()
-                    .anyMatch(itemStack -> itemStack.getHoverName().getString().equals(itemName));
-            boolean accessoryActive = Arrays.stream(accessorySlots).anyMatch(i -> McUtils.inventory()
-                    .getItem(i)
-                    .getHoverName()
-                    .getString()
-                    .equals(itemName));
-
-            boolean heldActive = false;
-            Optional<WynnItem> wynnItem =
-                    Models.Item.getWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
-            if (wynnItem.isPresent() && wynnItem.get() instanceof GearItem gearItem) {
-                heldActive = gearItem.meetsActualRequirements()
-                        && McUtils.player()
-                                .getItemInHand(InteractionHand.MAIN_HAND)
-                                .getHoverName()
-                                .getString()
-                                .equals(itemName);
-            }
-
-            boolean isActive = armorActive || accessoryActive || heldActive;
-
-            activeItems.put(itemName, isActive);
-        }
-        return activeItems;
     }
 
     /**
