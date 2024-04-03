@@ -27,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class PlayerInventoryModel extends Model {
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
+    private static final int[] ACCESSORY_SLOTS = {9, 10, 11, 12};
 
     private final InventoryWatcher emptySlotWatcher = new InventoryWatcher(ItemStack::isEmpty);
     private final List<InventoryWatcher> watchers = new ArrayList<>(List.of(emptySlotWatcher));
@@ -43,19 +44,28 @@ public final class PlayerInventoryModel extends Model {
         return new CappedValue(getUsedIngredientPouchSlots(), MAX_INGREDIENT_POUCH_SLOTS);
     }
 
+    public void registerWatcher(InventoryWatcher watcher) {
+        watchers.add(watcher);
+        updateCache();
+    }
+
+    public void unregisterWatcher(InventoryWatcher watcher) {
+        watchers.remove(watcher);
+    }
+
     /**
      * @return -1 if the item is not equipped, otherwise the slot number
      */
     public int getEquippedItemSlot(ItemStack itemStack) {
-        int[] accessorySlots = {9, 10, 11, 12};
+        int[] calculatedAccessorySlots = ACCESSORY_SLOTS;
         if (McUtils.player().hasContainerOpen()) {
             // Scale according to server chest size
             // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
             int baseSize = McUtils.player().containerMenu.getItems().size();
-            accessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
+            calculatedAccessorySlots = new int[] {baseSize, baseSize + 1, baseSize + 2, baseSize + 3};
         }
 
-        for (int slot : accessorySlots) {
+        for (int slot : calculatedAccessorySlots) {
             ItemStack equipped = McUtils.inventory().getItem(slot);
             if (ItemStack.isSameItem(equipped, itemStack)) {
                 return slot;
@@ -74,15 +84,6 @@ public final class PlayerInventoryModel extends Model {
         }
 
         return -1;
-    }
-
-    public void registerWatcher(InventoryWatcher watcher) {
-        watchers.add(watcher);
-        updateCache();
-    }
-
-    public void unregisterWatcher(InventoryWatcher watcher) {
-        watchers.remove(watcher);
     }
 
     @SubscribeEvent
