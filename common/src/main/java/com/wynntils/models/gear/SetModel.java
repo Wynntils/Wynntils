@@ -73,7 +73,7 @@ public class SetModel extends Model {
      * @return A Set of all equipped set names
      */
     public Set<String> getUniqueSetNames() {
-        return setInstances.values().stream().map(x -> x.getSetInfo().name()).collect(Collectors.toSet());
+        return setInstances.values().stream().map(x -> x.setInfo().name()).collect(Collectors.toSet());
     }
 
     public int getTrueCount(String setName) {
