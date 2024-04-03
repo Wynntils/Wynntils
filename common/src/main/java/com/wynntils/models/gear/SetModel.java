@@ -44,6 +44,11 @@ public class SetModel extends Model {
         loadSetData();
     }
 
+    @Override
+    public void reloadData() {
+        loadSetData();
+    }
+
     public SetInfo getSetInfo(String setId) {
         return setData.getOrDefault(setId, null);
     }
