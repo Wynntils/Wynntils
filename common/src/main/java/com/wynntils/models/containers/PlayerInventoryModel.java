@@ -61,18 +61,18 @@ public final class PlayerInventoryModel extends Model {
                 return slot;
             }
         }
-        
+
         for (int i = 0; i < 4; i++) {
             ItemStack equipped = McUtils.inventory().armor.get(i);
             if (ItemStack.isSameItem(equipped, itemStack)) {
                 return i + 5;
             }
         }
-        
+
         if (ItemStack.isSameItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), itemStack)) {
             return McUtils.inventory().selected;
         }
-        
+
         return -1;
     }
 
