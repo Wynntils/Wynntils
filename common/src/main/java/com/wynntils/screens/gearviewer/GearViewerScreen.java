@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.gearviewer;
@@ -10,7 +10,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
@@ -23,7 +22,6 @@ import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -97,7 +95,6 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
         JsonObject itemData = LoreUtils.getJsonFromIngameLore(itemStack);
         GearInstance gearInstance = Models.Gear.parseInstance(gearInfo, itemData);
-        Optional<SetInfo> setInfo = Optional.ofNullable(Models.Set.getSetInfoForItem(gearInfo.name()));
         return new FakeItemStack(new GearItem(gearInfo, gearInstance), "From " + playerName.getString());
     }
 
