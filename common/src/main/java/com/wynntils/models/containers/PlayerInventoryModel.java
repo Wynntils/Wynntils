@@ -75,7 +75,7 @@ public final class PlayerInventoryModel extends Model {
         for (int i = 0; i < 4; i++) {
             ItemStack equipped = McUtils.inventory().armor.get(i);
             if (ItemStack.isSameItem(equipped, itemStack)) {
-                return i + 5;
+                return i + 5; // from wiki.vg/Inventory (helmet starts at 5)
             }
         }
 
