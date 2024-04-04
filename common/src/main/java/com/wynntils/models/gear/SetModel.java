@@ -12,12 +12,17 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,7 +69,17 @@ public class SetModel extends Model {
      * @return A Set of all equipped set names
      */
     public Set<String> getUniqueSetNames() {
-        return Set.of(); // TODO
+        Set<String> returnable = new HashSet<>();
+        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
+            if (wynnItem.isPresent()
+                    && wynnItem.get() instanceof GearItem gear
+                    && gear.getGearTier() == GearTier.SET
+                    && gear.getSetInfo().isPresent()) {
+                returnable.add(gear.getSetInfo().get().name());
+            }
+        }
+        return returnable;
     }
 
     public int getTrueCount(String setName) {
