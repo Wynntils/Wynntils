@@ -101,7 +101,8 @@ public class SkillPointModel extends Model {
         List<String> accessoryNames = new ArrayList<>();
         for (int i : InventoryAccessory.getSlots()) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
+            if (!itemStack.isEmpty()
+                    && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
                 accessoryNames.add(itemStack.getHoverName().getString());
             }
         }
@@ -333,7 +334,8 @@ public class SkillPointModel extends Model {
                     craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
-        } else if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
+        } else if (!itemStack.isEmpty()
+                && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
             WynntilsMod.warn("Skill Point Model failed to parse gear: " + LoreUtils.getStringLore(itemStack));
         }
     }
