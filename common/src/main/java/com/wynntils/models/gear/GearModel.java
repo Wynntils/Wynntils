@@ -7,11 +7,13 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
@@ -52,7 +54,6 @@ public final class GearModel extends Model {
 
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
-    private final Map<String, List<SetInstance>> activeSetsCache = new HashMap<>();
 
     public GearModel() {
         super(List.of());
@@ -104,9 +105,10 @@ public final class GearModel extends Model {
             }
         }
 
-        if (result.tier() == GearTier.SET) {
-            // TODO: parse set here (need to reimpl getActiveItems, getWynnCount)
-            SetInstance setInstance = new SetInstance(gearInfo.setInfo().get(), Map.of(), 0);
+        SetInstance setInstance = null;
+        if (result.tier() == GearTier.SET && gearInfo.setInfo().isPresent()) {
+            SetInfo setInfo = gearInfo.setInfo().get();
+            setInstance = new SetInstance(setInfo, getActiveItems(setInfo.name()), getWynncraftCount(setInfo.name()));
         }
 
         return GearInstance.create(
@@ -116,7 +118,7 @@ public final class GearModel extends Model {
                 result.rerolls(),
                 result.shinyStat(),
                 meetsRequirements,
-                Optional.empty());
+                Optional.ofNullable(setInstance));
     }
 
     // For parsing gear from the gear viewer
@@ -216,5 +218,35 @@ public final class GearModel extends Model {
 
     public Stream<GearInfo> getAllGearInfos() {
         return gearInfoRegistry.getGearInfoStream();
+    }
+
+    private Map<String, Boolean> getActiveItems(String setName) {
+        Map<String, Boolean> activeItems = new HashMap<>();
+
+        for (String itemName : Models.Set.getSetInfo(setName).items()) {
+            activeItems.put(
+                    itemName,
+                    Models.PlayerInventory.getEquippedItems().stream()
+                            .map(x -> x.getHoverName().getString())
+                            .anyMatch(x -> x.equals(itemName)));
+        }
+
+        return activeItems;
+    }
+
+    /**
+     * @return Wynncraft's count of specified set
+     */
+    private int getWynncraftCount(String setName) {
+        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+            for (StyledText line : LoreUtils.getLore(itemStack)) {
+                Matcher nameMatcher = SetModel.SET_PATTERN.matcher(line.getString());
+                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
+                    return Integer.parseInt(nameMatcher.group(2));
+                }
+            }
+        }
+
+        return 0;
     }
 }
