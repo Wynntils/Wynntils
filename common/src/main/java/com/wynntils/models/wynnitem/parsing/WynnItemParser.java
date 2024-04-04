@@ -72,15 +72,18 @@ public final class WynnItemParser {
     private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
 
     // Test in WynnItemParser_MIN_LEVEL_PATTERN
-    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§7 Combat Lv. Min: (\\d+)$");
+    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§(c✖|a✔)§7 Combat Lv. Min: (?<level>\\d+)$");
 
     // Test in WynnItemParser_CLASS_REQ_PATTERN
     private static final Pattern CLASS_REQ_PATTERN =
-            Pattern.compile("^§(?:c✖|a✔)§7 Class Req: (?<name>.+)\\/(?<skinned>.+)$");
+            Pattern.compile("^§(c✖|a✔)§7 Class Req: (?<name>.+)\\/(?<skinned>.+)$");
 
     // Test in WynnItemParser_SKILL_REQ_PATTERN
     private static final Pattern SKILL_REQ_PATTERN =
-            Pattern.compile("^§(?:c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
+            Pattern.compile("^§(c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
+
+    // Test in WynnItemParser_MISC_REQ_PATTERN
+    private static final Pattern MISC_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 (.+)$");
 
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 
@@ -112,6 +115,7 @@ public final class WynnItemParser {
         boolean parsingEffects = false;
         Optional<ShinyStat> shinyStat = Optional.empty();
         String effectsColorCode = "";
+        boolean allRequirementsMet = true;
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
@@ -170,14 +174,40 @@ public final class WynnItemParser {
                 continue;
             }
 
-            // Look for level requirements
+            // Requirements
+            // Combat level
             Matcher levelMatcher = normalizedCoded.getMatcher(MIN_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
+                level = Integer.parseInt(levelMatcher.group("level"));
                 continue;
             }
 
-            // TODO: look for other requirements (or generalize the level one)
+            // Class
+            Matcher classMatcher = normalizedCoded.getMatcher(CLASS_REQ_PATTERN);
+            if (classMatcher.matches()) {
+                String mark = classMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
+            }
+
+            // Skills
+            Matcher skillMatcher = normalizedCoded.getMatcher(SKILL_REQ_PATTERN);
+            if (skillMatcher.matches()) {
+                String mark = skillMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
+            }
+
+            // Misc requirements
+            Matcher miscMatcher = normalizedCoded.getMatcher(MISC_REQ_PATTERN);
+            if (miscMatcher.matches()) {
+                String mark = miscMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
+            }
 
             Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTEN);
             if (setBonusMatcher.matches()) {
@@ -289,7 +319,8 @@ public final class WynnItemParser {
                 tierCount,
                 tierCount,
                 durabilityMax,
-                shinyStat);
+                shinyStat,
+                allRequirementsMet);
     }
 
     public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -350,7 +381,8 @@ public final class WynnItemParser {
                 rerolls,
                 0,
                 0,
-                Optional.empty());
+                Optional.empty(),
+                false);
     }
 
     public static CraftedItemParseResults parseCraftedItem(ItemStack itemStack) {
@@ -375,6 +407,7 @@ public final class WynnItemParser {
             }
         }
 
+        boolean allRequirementsMet = true;
         for (Component loreLine : lore) {
             StyledText coded = StyledText.fromComponent(loreLine);
 
@@ -402,7 +435,12 @@ public final class WynnItemParser {
             // Combat level
             Matcher levelMatcher = coded.getMatcher(MIN_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
-                levelReq = Integer.parseInt(levelMatcher.group(1));
+                levelReq = Integer.parseInt(levelMatcher.group("level"));
+
+                String mark = levelMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
             }
 
             // Class
@@ -410,6 +448,11 @@ public final class WynnItemParser {
             if (classMatcher.matches()) {
                 String className = classMatcher.group("name");
                 classReq = ClassType.fromName(className);
+
+                String mark = classMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
             }
 
             // Skills
@@ -419,6 +462,11 @@ public final class WynnItemParser {
                 Skill skill = Skill.fromString(skillName);
                 int value = Integer.parseInt(skillMatcher.group("value"));
                 skillReqs.add(Pair.of(skill, value));
+
+                String mark = skillMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
             }
         }
 
@@ -428,7 +476,8 @@ public final class WynnItemParser {
                 attackSpeed,
                 damages,
                 defences,
-                new GearRequirements(levelReq, Optional.ofNullable(classReq), skillReqs, Optional.empty()));
+                new GearRequirements(levelReq, Optional.ofNullable(classReq), skillReqs, Optional.empty()),
+                allRequirementsMet);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

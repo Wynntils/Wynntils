@@ -48,6 +48,7 @@ public class CraftedGearItem extends GameItem
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final int powderSlots;
+    private final boolean requirementsMet;
     private final CappedValue durability;
 
     public CraftedGearItem(
@@ -63,6 +64,7 @@ public class CraftedGearItem extends GameItem
             List<StatActualValue> identifications,
             List<Powder> powders,
             int powderSlots,
+            boolean requirementsMet,
             CappedValue durability) {
         this.name = name;
         this.effectStrength = effectStrength;
@@ -76,6 +78,7 @@ public class CraftedGearItem extends GameItem
         this.identifications = identifications;
         this.powders = powders;
         this.powderSlots = powderSlots;
+        this.requirementsMet = requirementsMet;
         this.durability = durability;
     }
 
@@ -160,7 +163,7 @@ public class CraftedGearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return false; // TODO
+        return requirementsMet;
     }
 
     @Override

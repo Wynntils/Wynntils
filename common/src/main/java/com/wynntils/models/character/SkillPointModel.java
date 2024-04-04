@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -303,23 +302,8 @@ public class SkillPointModel extends Model {
         craftedSkillPoints = new EnumMap<>(Skill.class);
         setBonusSkillPoints = new EnumMap<>(Skill.class);
 
-        // Cannot combine these loops because of the way the inventory is numbered when a container is open
-        for (ItemStack itemStack : McUtils.inventory().armor) {
+        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
             calculateSingleGearSkillPoints(itemStack);
-        }
-
-        for (int i : InventoryAccessory.getSlots()) {
-            ItemStack itemStack = McUtils.inventory().getItem(i);
-            calculateSingleGearSkillPoints(itemStack);
-        }
-
-        // held item - must check if it's actually valid before counting
-        ItemStack handStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        Optional<WynnItem> itemInHand = Models.Item.getWynnItem(handStack);
-        if (itemInHand.isPresent() && itemInHand.get() instanceof GearItem gear) {
-            if (gear.meetsActualRequirements()) {
-                calculateSingleGearSkillPoints(handStack);
-            }
         }
 
         Models.Set.getUniqueSetNames().forEach(name -> {

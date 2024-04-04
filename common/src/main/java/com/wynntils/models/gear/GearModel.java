@@ -96,15 +96,6 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        // TODO see WynnItemParser's regex sections
-        boolean meetsRequirements = true;
-        for (StyledText loreLine : LoreUtils.getLore(itemStack)) {
-            if (loreLine.startsWith("§c✖") && loreLine.contains("Min: ")) {
-                meetsRequirements = false;
-                break;
-            }
-        }
-
         SetInstance setInstance = null;
         if (result.tier() == GearTier.SET && gearInfo.setInfo().isPresent()) {
             SetInfo setInfo = gearInfo.setInfo().get();
@@ -117,7 +108,7 @@ public final class GearModel extends Model {
                 result.powders(),
                 result.rerolls(),
                 result.shinyStat(),
-                meetsRequirements,
+                result.allRequirementsMet(),
                 Optional.ofNullable(setInstance));
     }
 
@@ -176,6 +167,7 @@ public final class GearModel extends Model {
                 result.identifications(),
                 result.powders(),
                 result.powderSlots(),
+                result.allRequirementsMet(),
                 durability);
     }
 

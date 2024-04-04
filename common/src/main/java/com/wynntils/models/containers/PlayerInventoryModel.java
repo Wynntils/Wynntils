@@ -56,6 +56,9 @@ public final class PlayerInventoryModel extends Model {
         watchers.remove(watcher);
     }
 
+    /**
+     * @return List of all equipped armor, accessories, and held item that meets requirements
+     */
     public List<ItemStack> getEquippedItems() {
         List<ItemStack> returnable = new ArrayList<>(McUtils.inventory().armor);
         for (int i : InventoryAccessory.getSlots()) {
