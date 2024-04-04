@@ -17,21 +17,19 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
-import com.wynntils.models.containers.type.InventoryAccessory;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -91,23 +89,28 @@ public class SkillPointModel extends Model {
      * Saves the current equipped gear and provided skill points.
      */
     public void saveBuild(String name, int[] skillPoints) {
+        String weapon = null;
         List<String> armourNames = new ArrayList<>();
-        McUtils.inventory().armor.stream()
-                .filter(x -> !x.isEmpty())
-                .map(x -> x.getHoverName().getString())
-                .forEach(armourNames::add);
-        Collections.reverse(armourNames); // helmet to boots order
-
         List<String> accessoryNames = new ArrayList<>();
-        for (int i : InventoryAccessory.getSlots()) {
-            ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty()
-                    && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
-                accessoryNames.add(itemStack.getHoverName().getString());
+
+        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
+            if (wynnItemOptional.isEmpty()) continue;
+            WynnItem wynnItem = wynnItemOptional.get();
+
+            if (wynnItem instanceof GearTypeItemProperty gear) {
+                if (gear.getGearType().isArmor()) {
+                    armourNames.add(itemStack.getHoverName().getString());
+                } else if (gear.getGearType().isAccessory()) {
+                    accessoryNames.add(itemStack.getHoverName().getString());
+                } else if (gear.getGearType().isWeapon()) {
+                    weapon = itemStack.getHoverName().getString();
+                }
             }
         }
 
-        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints, armourNames, accessoryNames);
+        SavableSkillPointSet assignedSkillPointSet =
+                new SavableSkillPointSet(skillPoints, weapon, armourNames, accessoryNames);
         skillPointLoadouts.get().put(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }

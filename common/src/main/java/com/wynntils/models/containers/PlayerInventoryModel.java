@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,6 +63,8 @@ public final class PlayerInventoryModel extends Model {
      */
     public List<ItemStack> getEquippedItems() {
         List<ItemStack> returnable = new ArrayList<>(McUtils.inventory().armor);
+        Collections.reverse(returnable); // Reverse so that helmet is first
+
         for (int i : InventoryAccessory.getSlots()) {
             int baseSize = 0;
             if (McUtils.player().hasContainerOpen()) {
@@ -83,7 +86,7 @@ public final class PlayerInventoryModel extends Model {
             returnable.add(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
         }
 
-        return returnable;
+        return returnable.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
     }
 
     @SubscribeEvent
