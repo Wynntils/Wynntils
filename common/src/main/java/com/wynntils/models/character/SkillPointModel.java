@@ -337,8 +337,7 @@ public class SkillPointModel extends Model {
                     craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
-        } else if (!itemStack.isEmpty()
-                && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
+        } else {
             WynntilsMod.warn("Skill Point Model failed to parse gear: " + LoreUtils.getStringLore(itemStack));
         }
     }

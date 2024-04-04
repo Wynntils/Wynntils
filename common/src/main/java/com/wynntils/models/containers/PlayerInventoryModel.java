@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerInventoryModel extends Model {
-    public static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
+    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
 
