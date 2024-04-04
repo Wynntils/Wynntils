@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -34,7 +34,6 @@ public final class GearAnnotator implements ItemAnnotator {
 
         GearInstance gearInstance =
                 matcher.group("unidentified") != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
-
         return new GearItem(gearInfo, gearInstance);
     }
 }
