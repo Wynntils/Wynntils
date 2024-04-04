@@ -215,12 +215,12 @@ public final class GearModel extends Model {
     private Map<String, Boolean> getActiveItems(String setName) {
         Map<String, Boolean> activeItems = new HashMap<>();
 
+        List<String> itemNames = Models.PlayerInventory.getEquippedItems().stream()
+                .map(itemStack -> itemStack.getHoverName().getString())
+                .toList();
+
         for (String itemName : Models.Set.getSetInfo(setName).items()) {
-            activeItems.put(
-                    itemName,
-                    Models.PlayerInventory.getEquippedItems().stream()
-                            .map(x -> x.getHoverName().getString())
-                            .anyMatch(x -> x.equals(itemName)));
+            activeItems.put(itemName, itemNames.stream().anyMatch(name -> name.equals(itemName)));
         }
 
         return activeItems;
