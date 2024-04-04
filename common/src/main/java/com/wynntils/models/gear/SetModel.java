@@ -44,8 +44,11 @@ public class SetModel extends Model {
         loadSetData();
     }
 
-    public SetInfo getSetInfo(String setId) {
-        return setData.getOrDefault(setId, null);
+    /**
+     * @param setName Name of the set as it appears in game. Eg. "Morph"
+     */
+    public SetInfo getSetInfo(String setName) {
+        return setData.getOrDefault(setName, null);
     }
 
     public SetInfo getSetInfoForItem(String itemName) {
