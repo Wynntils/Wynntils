@@ -1,3 +1,15 @@
+## [1.1.8](https://github.com/Wynntils/Artemis/compare/v1.1.7...v1.1.8) (2024-04-04)
+
+
+### Bug Fixes
+
+* Fix item record crashing if there is a faulty item, fix item saving mode ([#2386](https://github.com/Wynntils/Artemis/issues/2386)) ([0e368b7](https://github.com/Wynntils/Artemis/commit/0e368b74e255c0ee6ad1bc15819c554b56dbb394))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2387](https://github.com/Wynntils/Artemis/issues/2387)) ([28da619](https://github.com/Wynntils/Artemis/commit/28da6197ba4ad25872954af3da87ee4df5069eb0))
+
 ## [1.1.7](https://github.com/Wynntils/Artemis/compare/v1.1.6...v1.1.7) (2024-04-02)
 
 
@@ -10,6 +22,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2381](https://github.com/Wynntils/Artemis/issues/2381)) ([dea63cd](https://github.com/Wynntils/Artemis/commit/dea63cd048744915581270e2c849b1da43fcfdb8))
 * [auto-generated] Update urls.json [ci skip] ([#2384](https://github.com/Wynntils/Artemis/issues/2384)) ([2ff2468](https://github.com/Wynntils/Artemis/commit/2ff24685c3e2053861ba4d0ea1e007ea81541689))
+* **release:** v1.1.7 [skip ci] ([545ea38](https://github.com/Wynntils/Artemis/commit/545ea38ae96f8c61f492a3a95a71e290f4302777))
 
 ## [1.1.6](https://github.com/Wynntils/Artemis/compare/v1.1.5...v1.1.6) (2024-03-25)
 
@@ -58,27 +71,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.4 [skip ci] ([2697f0b](https://github.com/Wynntils/Artemis/commit/2697f0b5b4ffe3da01111b50d71f86309e2d3ce4))
-
-## [1.1.3](https://github.com/Wynntils/Artemis/compare/v1.1.2...v1.1.3) (2024-03-17)
-
-
-### New Features
-
-* Add favorite filter [skip ci] ([#2376](https://github.com/Wynntils/Artemis/issues/2376)) ([2f55163](https://github.com/Wynntils/Artemis/commit/2f55163b1d773429fc96b863777ff8a14c7a5d73))
-* Add initial new MapData service [skip ci] ([#2158](https://github.com/Wynntils/Artemis/issues/2158)) ([2929a43](https://github.com/Wynntils/Artemis/commit/2929a43b0ce248f3c60772b5b4698115f0ef66c9))
-* Add StatusEffect function [skip ci] ([#2368](https://github.com/Wynntils/Artemis/issues/2368)) ([c5abcc5](https://github.com/Wynntils/Artemis/commit/c5abcc55e31dafeef92802af6312359beaf342b6))
-
-
-### Bug Fixes
-
-* fix DestinationService throwing NPE if destinations fail to load [skip ci] ([#2374](https://github.com/Wynntils/Artemis/issues/2374)) ([d03fcd6](https://github.com/Wynntils/Artemis/commit/d03fcd61d348c4aa394b4748c0ffe1d61114c473))
-* fix lootrun started message not matching the coordinate pattern [skip ci] ([#2370](https://github.com/Wynntils/Artemis/issues/2370)) ([a188818](https://github.com/Wynntils/Artemis/commit/a188818fe02a77fe37996e3f6e401fc47c6978ad))
-* Incorrect price lines on certain bulk buyable items [skip ci] ([#2371](https://github.com/Wynntils/Artemis/issues/2371)) ([de0a9cf](https://github.com/Wynntils/Artemis/commit/de0a9cf00c498a83b9a37b626fe61d7432cbcd6e))
-* Prevent right clicking helper button in guides clearing input [skip ci] ([#2372](https://github.com/Wynntils/Artemis/issues/2372)) ([4b5e602](https://github.com/Wynntils/Artemis/commit/4b5e602651328996430f349ed9a924a36d334806))
-* Staff join messages not redirecting [skip ci] ([#2369](https://github.com/Wynntils/Artemis/issues/2369)) ([ac9998e](https://github.com/Wynntils/Artemis/commit/ac9998ef37ff82791055dd4335af23691e5eca56))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.3 [skip ci] ([21292fd](https://github.com/Wynntils/Artemis/commit/21292fd9ea9d166fcc4f6dc1054889fa7c208c11))
 
