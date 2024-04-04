@@ -16,6 +16,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.PlayerInventoryModel;
 import com.wynntils.models.containers.type.InventoryAccessory;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
@@ -48,7 +49,6 @@ public class SkillPointModel extends Model {
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
-    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
 
@@ -101,7 +101,7 @@ public class SkillPointModel extends Model {
         List<String> accessoryNames = new ArrayList<>();
         for (int i : InventoryAccessory.getSlots()) {
             ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
+            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
                 accessoryNames.add(itemStack.getHoverName().getString());
             }
         }
@@ -333,7 +333,7 @@ public class SkillPointModel extends Model {
                     craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
-        } else if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
+        } else if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(PlayerInventoryModel.EMPTY_ACCESSORY_SLOT)) {
             WynntilsMod.warn("Skill Point Model failed to parse gear: " + LoreUtils.getStringLore(itemStack));
         }
     }

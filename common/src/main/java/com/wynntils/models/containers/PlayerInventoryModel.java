@@ -29,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerInventoryModel extends Model {
+    public static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
 
@@ -68,6 +69,8 @@ public final class PlayerInventoryModel extends Model {
                 // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
                 baseSize = McUtils.player().containerMenu.getItems().size();
             }
+            ItemStack accessory = McUtils.inventory().getItem(i + baseSize);
+            if (accessory.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) continue;
             returnable.add(McUtils.inventory().getItem(i + baseSize));
         }
 
