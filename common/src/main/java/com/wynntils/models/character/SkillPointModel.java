@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -99,11 +100,11 @@ public class SkillPointModel extends Model {
 
             if (wynnItem instanceof GearTypeItemProperty gear) {
                 if (gear.getGearType().isArmor()) {
-                    armourNames.add(itemStack.getHoverName().getString());
+                    armourNames.add(StyledText.fromComponent(itemStack.getHoverName()).getString());
                 } else if (gear.getGearType().isAccessory()) {
-                    accessoryNames.add(itemStack.getHoverName().getString());
+                    accessoryNames.add(StyledText.fromComponent(itemStack.getHoverName()).getString());
                 } else if (gear.getGearType().isWeapon()) {
-                    weapon = itemStack.getHoverName().getString();
+                    weapon = StyledText.fromComponent(itemStack.getHoverName()).getString();
                 }
             }
         }
