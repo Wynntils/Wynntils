@@ -112,13 +112,14 @@ public class SetModel extends Model {
                 List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
                         .map(bonusPair -> {
                             Map<StatType, Integer> bonusMap = new HashMap<>();
-                            bonusPair.forEach((statName, statValue) -> {
-                                StatType statType = Models.Stat.fromApiName(statName);
+                            for (Map.Entry<String, Integer> entry : bonusPair.entrySet()) {
+                                StatType statType = Models.Stat.fromApiName(entry.getKey());
                                 if (statType == null) {
-                                    WynntilsMod.warn("Unknown stat type: " + statName);
+                                    WynntilsMod.warn("Unknown stat type: " + entry.getKey());
+                                    continue;
                                 }
-                                bonusMap.put(statType, statValue);
-                            });
+                                bonusMap.put(statType, entry.getValue());
+                            }
                             return bonusMap;
                         })
                         .toList();
