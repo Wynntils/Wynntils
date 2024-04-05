@@ -99,7 +99,7 @@ public final class GearModel extends Model {
         SetInstance setInstance = null;
         if (result.tier() == GearTier.SET && gearInfo.setInfo().isPresent()) {
             SetInfo setInfo = gearInfo.setInfo().get();
-            setInstance = new SetInstance(setInfo, getActiveItems(setInfo.name()), getWynncraftCount(setInfo.name()));
+            setInstance = new SetInstance(setInfo, getActiveSetItems(setInfo.name()), getWynncraftCount(setInfo.name()));
         }
 
         return GearInstance.create(
@@ -212,11 +212,11 @@ public final class GearModel extends Model {
         return gearInfoRegistry.getGearInfoStream();
     }
 
-    private Map<String, Boolean> getActiveItems(String setName) {
+    private Map<String, Boolean> getActiveSetItems(String setName) {
         Map<String, Boolean> activeItems = new HashMap<>();
 
         List<String> itemNames = Models.PlayerInventory.getEquippedItems().stream()
-                .map(itemStack -> itemStack.getHoverName().getString())
+                .map(itemStack -> StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting())
                 .toList();
 
         for (String itemName : Models.Set.getSetInfo(setName).items()) {
