@@ -14,6 +14,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -77,12 +78,9 @@ public final class PlayerInventoryModel extends Model {
             returnable.add(McUtils.inventory().getItem(i + baseSize));
         }
 
-        Optional<WynnItem> wynnItem =
-                Models.Item.getWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
-        if (wynnItem.isPresent()
-                && ((wynnItem.get() instanceof GearItem gearItem && gearItem.meetsActualRequirements())
-                        || (wynnItem.get() instanceof CraftedGearItem craftedGearItem
-                                && craftedGearItem.meetsActualRequirements()))) {
+        Optional<RequirementItemProperty> wynnItem =
+                Models.Item.asWynnItemProperty(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), RequirementItemProperty.class);
+        if (wynnItem.isPresent() && wynnItem.get().meetsActualRequirements()) {
             returnable.add(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
         }
 
