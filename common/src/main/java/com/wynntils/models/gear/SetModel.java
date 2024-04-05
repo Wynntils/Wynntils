@@ -74,12 +74,11 @@ public class SetModel extends Model {
     public Set<String> getUniqueSetNames() {
         Set<String> returnable = new HashSet<>();
         for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
-            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-            if (wynnItem.isPresent()
-                    && wynnItem.get() instanceof GearItem gear
-                    && gear.getGearTier() == GearTier.SET
-                    && gear.getSetInfo().isPresent()) {
-                returnable.add(gear.getSetInfo().get().name());
+            Optional<GearItem> gear = Models.Item.asWynnItem(itemStack, GearItem.class);
+            if (gear.isPresent()
+                    && gear.get().getGearTier() == GearTier.SET
+                    && gear.get().getSetInfo().isPresent()) {
+                returnable.add(gear.get().getSetInfo().get().name());
             }
         }
         return returnable;
