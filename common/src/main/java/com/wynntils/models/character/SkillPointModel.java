@@ -100,9 +100,11 @@ public class SkillPointModel extends Model {
 
             if (wynnItem instanceof GearTypeItemProperty gear) {
                 if (gear.getGearType().isArmor()) {
-                    armourNames.add(StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    armourNames.add(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString());
                 } else if (gear.getGearType().isAccessory()) {
-                    accessoryNames.add(StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    accessoryNames.add(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString());
                 } else if (gear.getGearType().isWeapon()) {
                     weapon = StyledText.fromComponent(itemStack.getHoverName()).getString();
                 }

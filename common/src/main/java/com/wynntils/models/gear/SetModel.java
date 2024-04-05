@@ -14,7 +14,6 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.LoreUtils;
