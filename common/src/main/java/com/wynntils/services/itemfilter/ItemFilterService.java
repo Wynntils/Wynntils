@@ -6,6 +6,8 @@ package com.wynntils.services.itemfilter;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
@@ -59,9 +61,12 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterService extends Service {
-    private static final String SORT_KEY = "sort";
-    private static final String SORT_REVERSE_KEY = "^";
-    private static final String SORT_LIST_SEPARATOR = ",";
+    public static final String SORT_KEY = "sort";
+    public static final String SORT_REVERSE_KEY = "^";
+    public static final String SORT_LIST_SEPARATOR = ",";
+
+    @Persisted
+    public final Storage<List<Pair<String, String>>> presets = new Storage<>(new ArrayList<>());
 
     private final List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
     private final List<Pair<Class<?>, StatFilterFactory<? extends StatFilter<?>>>> statFilters = new ArrayList<>();
@@ -292,7 +297,7 @@ public class ItemFilterService extends Service {
      * @param name an alias of the stat provider
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
-    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name) {
+    public ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))

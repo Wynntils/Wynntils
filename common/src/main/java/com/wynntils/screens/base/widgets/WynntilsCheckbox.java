@@ -40,6 +40,21 @@ public class WynntilsCheckbox extends Checkbox {
             Component message,
             boolean selected,
             int maxTextWidth,
+            Consumer<Integer> onClick) {
+        super(x, y, width, height, message, selected);
+        this.maxTextWidth = maxTextWidth;
+        this.color = CommonColors.WHITE.asInt();
+        this.onClick = onClick;
+    }
+
+    public WynntilsCheckbox(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component message,
+            boolean selected,
+            int maxTextWidth,
             Consumer<Integer> onClick,
             List<Component> tooltip) {
         super(x, y, width, height, message, selected);

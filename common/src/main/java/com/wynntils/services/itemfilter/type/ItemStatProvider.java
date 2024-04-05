@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -30,6 +30,10 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
      */
     public abstract List<T> getValue(WynnItem wynnItem);
 
+    public List<String> getValidInputs() {
+        return List.of();
+    }
+
     public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
@@ -40,6 +44,10 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
 
     public String getName() {
         return name;
+    }
+
+    public String getDisplayName() {
+        return getTranslation("name");
     }
 
     protected String getTranslationKey() {
