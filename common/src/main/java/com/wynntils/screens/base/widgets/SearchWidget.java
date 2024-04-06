@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
@@ -19,11 +19,13 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
     protected static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
-    private static final float VERTICAL_OFFSET = 6.5f;
+
+    protected static final float VERTICAL_OFFSET = 6.5f;
 
     public SearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
@@ -35,6 +37,7 @@ public class SearchWidget extends TextInputBoxWidget {
     protected void doRenderWidget(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -49,6 +52,7 @@ public class SearchWidget extends TextInputBoxWidget {
         renderText(
                 poseStack,
                 renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -62,6 +66,7 @@ public class SearchWidget extends TextInputBoxWidget {
     protected void renderText(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -146,7 +151,12 @@ public class SearchWidget extends TextInputBoxWidget {
                 && mouseY >= this.getY()
                 && mouseY <= this.getY() + this.height) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                setTextBoxInput("");
+                setCursorAndHighlightPositions(0);
+            } else {
+                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             return true;
@@ -161,5 +171,10 @@ public class SearchWidget extends TextInputBoxWidget {
     protected void removeFocus() {
         this.setTextBoxInput("");
         super.removeFocus();
+    }
+
+    public void opened() {
+        setCursorPosition(textBoxInput.length());
+        setHighlightPosition(0);
     }
 }

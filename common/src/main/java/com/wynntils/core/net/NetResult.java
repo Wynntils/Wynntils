@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
 
@@ -14,8 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.http.HttpRequest;
+import java.net.http.HttpTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 
 public abstract class NetResult {
@@ -87,7 +89,13 @@ public abstract class NetResult {
         CompletableFuture<Void> future = getInputStreamFuture()
                 .thenAccept(wrappingHandler(onCompletion, onError))
                 .exceptionally(t -> {
-                    WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc, t);
+                    if (t instanceof CompletionException ce && ce.getCause() instanceof HttpTimeoutException hte) {
+                        // Don't spam the log with stack traces for timeouts
+                        WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc
+                                + ", HttpTimeoutException: " + hte.getMessage());
+                    } else {
+                        WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc, t);
+                    }
                     onError.accept(t);
                     return null;
                 });

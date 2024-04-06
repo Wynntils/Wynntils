@@ -1,56 +1,57 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMMANDS)
 public class CustomCommandKeybindsFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<String> keybindCommand1 = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<CommandType> commandType1 = new Config<>(CommandType.EXECUTE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> keybindCommand2 = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<CommandType> commandType2 = new Config<>(CommandType.EXECUTE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> keybindCommand3 = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<CommandType> commandType3 = new Config<>(CommandType.EXECUTE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> keybindCommand4 = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<CommandType> commandType4 = new Config<>(CommandType.EXECUTE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> keybindCommand5 = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<CommandType> commandType5 = new Config<>(CommandType.EXECUTE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> keybindCommand6 = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<CommandType> commandType6 = new Config<>(CommandType.EXECUTE);
 
     @RegisterKeyBind
@@ -97,7 +98,7 @@ public class CustomCommandKeybindsFeature extends Feature {
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
-            case EXECUTE -> McUtils.sendCommand(keybindCommand);
+            case EXECUTE -> Handlers.Command.sendCommandImmediately(keybindCommand);
             case SUGGEST -> McUtils.mc().setScreen(new ChatScreen(keybindCommand));
         }
     }

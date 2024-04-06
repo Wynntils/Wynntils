@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -48,7 +49,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                 (button) -> {
                     McUtils.mc().setScreen(null);
                     McUtils.mc().mouseHandler.grabMouse();
-                    McUtils.sendCommand("class");
+                    Handlers.Command.sendCommandImmediately("class");
                 });
 
         renderables.set(3, classSelection);
@@ -61,7 +62,7 @@ public class WynncraftPauseScreenFeature extends Feature {
                     (button) -> {
                         McUtils.mc().setScreen(null);
                         McUtils.mc().mouseHandler.grabMouse();
-                        McUtils.sendCommand("hub");
+                        Handlers.Command.sendCommandImmediately("hub");
                     });
 
             renderables.set(4, hub);

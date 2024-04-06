@@ -1,13 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -16,14 +15,16 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.UnknownGearItem;
-import com.wynntils.models.stats.StatModel;
-import com.wynntils.models.wynnitem.WynnItemModel;
+import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -49,8 +50,8 @@ public final class GearModel extends Model {
     private final GearChatEncoding gearChatEncoding = new GearChatEncoding();
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
 
-    public GearModel(ElementModel elementModel, StatModel statModel, WynnItemModel wynnItemModel) {
-        super(List.of(elementModel, statModel, wynnItemModel));
+    public GearModel() {
+        super(List.of());
     }
 
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
@@ -71,48 +72,92 @@ public final class GearModel extends Model {
     }
 
     public boolean canBeGearBox(GearInfo gear) {
+        // If an item is pre-identified, it cannot be in a gear box
         // If all the ways we can obtain this is by merchants, it cannot be in a gear box
-        return gear.metaInfo().obtainInfo().stream()
-                .anyMatch(o -> !o.sourceType().isMerchant());
+        return !gear.metaInfo().preIdentified()
+                && gear.metaInfo().obtainInfo().stream()
+                        .anyMatch(o -> !o.sourceType().isMerchant());
     }
 
     @Override
     public void reloadData() {
-        gearInfoRegistry.reloadData();
+        gearInfoRegistry.loadData();
     }
 
+    // For "real" gear items eg. from the inventory
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
+        return GearInstance.create(
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                result.allRequirementsMet(),
+                result.setInstance());
     }
 
+    // For parsing gear from the gear viewer
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
+        return GearInstance.create(
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                false,
+                Optional.empty());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+        // We pass this down to the parser, so it can populate it
+        // (gears don't have to parse possible values on the fly, since the api provides them)
+        Map<StatType, StatPossibleValues> possibleValuesMap = new HashMap<>();
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, possibleValuesMap);
+
+        CraftedItemParseResults craftedResults = WynnItemParser.parseCraftedItem(itemStack);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
-        GearType gearType = GearType.fromItemStack(itemStack);
+        GearType gearType;
+        // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
+        // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
+        gearType = GearType.fromString(result.itemType());
+        if (gearType == null && craftedResults.requirements().classType().isPresent()) {
+            // If the item is signed, we can find the class type from the requirements
+            gearType = GearType.fromClassType(
+                    craftedResults.requirements().classType().get());
+        }
+
+        // If we still failed to find the gear type, try to find it from the item stack
         if (gearType == null) {
-            // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
-            // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
-            gearType = GearType.fromString(result.itemType());
+            gearType = GearType.fromItemStack(itemStack);
+
             if (gearType == null) {
-                // ... but if the item is signed, this will not work either. We're out of luck,
-                // fall back to a generic type, and assume it is a weapon
+                // If we failed to find the gear type, assume it is a weapon
                 gearType = GearType.WEAPON;
             }
         }
-        // FIXME: Damages and requirements are not yet parsed
+
         return new CraftedGearItem(
-                gearType, result.level(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+                craftedResults.name(),
+                craftedResults.effectStrength(),
+                gearType,
+                craftedResults.attackSpeed(),
+                result.health(),
+                craftedResults.damages(),
+                craftedResults.defences(),
+                craftedResults.requirements(),
+                possibleValuesMap.values().stream().toList(),
+                result.identifications(),
+                result.powders(),
+                result.powderSlots(),
+                result.allRequirementsMet(),
+                durability);
     }
 
     public UnknownGearItem parseUnknownGearItem(

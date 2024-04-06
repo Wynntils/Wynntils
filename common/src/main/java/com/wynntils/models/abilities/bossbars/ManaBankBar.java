@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.bossbars;
 
@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class ManaBankBar extends TrackedBar {
-    private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)§3\\]");
+    private static final Pattern MANA_BANK_PATTERN = Pattern.compile("§bMana Bank §3\\[(\\d+)/(\\d+)\\]");
 
     public ManaBankBar() {
         super(MANA_BANK_PATTERN);

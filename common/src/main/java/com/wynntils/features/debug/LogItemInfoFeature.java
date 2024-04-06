@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
@@ -8,13 +8,13 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterCommand;
-import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterCommand;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -60,7 +60,7 @@ public class LogItemInfoFeature extends Feature {
         String description = getDescription(McUtils.player().getItemBySlot(EquipmentSlot.MAINHAND));
 
         WynntilsMod.info(description);
-        context.getSource().sendSuccess(Component.literal(description).withStyle(ChatFormatting.AQUA), false);
+        context.getSource().sendSuccess(() -> Component.literal(description).withStyle(ChatFormatting.AQUA), false);
         return 1;
     }
 
@@ -74,7 +74,7 @@ public class LogItemInfoFeature extends Feature {
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "
-                + itemStack.getTag().toString().replace('§', '&') + "\nGlint: "
+                + itemStack.getOrCreateTag().toString().replace('§', '&') + "\nGlint: "
                 + itemStack.hasFoil();
     }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards.type;
 
@@ -13,7 +13,8 @@ public enum TomeType {
     GUILD("Allegiance", true, false),
     SLAYING(false, true),
     GATHERING(false, true),
-    DUNGEONEERING(false, true);
+    DUNGEONEERING(false, true),
+    LOOTRUN(true, false);
 
     private final String typeString;
     private final boolean hasVariants;

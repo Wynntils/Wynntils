@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.json;
 
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class JsonTypeWrapper implements ParameterizedType {
+public final class JsonTypeWrapper implements ParameterizedType {
     private final ParameterizedType type;
 
     public static Type wrap(Type type) {

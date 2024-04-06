@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items;
 
@@ -8,10 +8,10 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import net.minecraft.world.item.ItemStack;
 
 public class WynnItem implements ItemAnnotation {
-    private final WynnItemCache cache = new WynnItemCache();
+    private final WynnItemData data = new WynnItemData();
 
-    public WynnItemCache getCache() {
-        return cache;
+    public WynnItemData getData() {
+        return data;
     }
 
     @Override
@@ -21,6 +21,7 @@ public class WynnItem implements ItemAnnotation {
 
     @Override
     public void onUpdate(ItemStack itemStack) {
-        cache.clearAll();
+        data.clearAll();
+        data.store(WynnItemData.ITEMSTACK_KEY, itemStack);
     }
 }

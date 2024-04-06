@@ -1,23 +1,44 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects.type;
 
+import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.text.StyledText;
 
-public class StatusEffect {
+public class StatusEffect implements Comparable<StatusEffect> {
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
+    private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
+    private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
+    private final Double modifierValue;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 
-    public StatusEffect(StyledText name, StyledText displayedTime, StyledText prefix) {
+    public StatusEffect(
+            StyledText name,
+            StyledText modifier,
+            StyledText modifierSuffix,
+            StyledText displayedTime,
+            StyledText prefix) {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
-        this.fullName =
-                StyledText.concat(prefix, StyledText.fromString(" "), name, StyledText.fromString(" "), displayedTime);
+        this.modifier = modifier;
+        this.modifierSuffix = modifierSuffix;
+
+        this.fullName = StyledText.concat(
+                prefix,
+                StyledText.fromString(" "),
+                modifier,
+                modifierSuffix,
+                StyledText.fromString(" "),
+                name,
+                StyledText.fromString(" "),
+                displayedTime);
+        this.modifierValue =
+                modifier != StyledText.EMPTY ? Double.parseDouble(modifier.getStringWithoutFormatting()) : null;
     }
 
     /**
@@ -25,6 +46,13 @@ public class StatusEffect {
      */
     public StyledText getName() {
         return name;
+    }
+
+    /**
+     * @return The modifier of the consumable
+     */
+    public StyledText getModifier() {
+        return modifier;
     }
 
     /**
@@ -57,5 +85,26 @@ public class StatusEffect {
 
     public StyledText asString() {
         return fullName;
+    }
+
+    public StyledText getModifierSuffix() {
+        return this.modifierSuffix;
+    }
+
+    public boolean hasModifierValue() {
+        return this.modifierValue != null;
+    }
+
+    public double getModifierValue() {
+        return this.modifierValue;
+    }
+
+    @Override
+    public int compareTo(StatusEffect effect) {
+        return ComparisonChain.start()
+                .compare(this.getPrefix().getString(), effect.getPrefix().getString())
+                .compare(this.getName().getString(), effect.getName().getString())
+                .compare(this.getModifier().getString(), effect.getModifier().getString())
+                .result();
     }
 }

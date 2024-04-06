@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.scoreboard;
 
@@ -12,7 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public final class ScoreboardSegment {
     private final ScoreboardPart scoreboardPart;
     private final StyledText header;
-    private List<StyledText> content;
+    private final List<StyledText> content;
     private boolean visible = true;
 
     public ScoreboardSegment(ScoreboardPart scoreboardPart, StyledText header, List<StyledText> content) {

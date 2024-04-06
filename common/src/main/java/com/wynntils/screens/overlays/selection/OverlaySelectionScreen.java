@@ -1,24 +1,26 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -63,11 +65,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        poseStack.pushPose();
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        int backgroundColor = CommonColors.DARK_GRAY.withAlpha(200).asInt();
-        this.fillGradient(poseStack, 0, 0, this.width, this.height, backgroundColor, backgroundColor);
+        PoseStack poseStack = guiGraphics.pose();
+
+        poseStack.pushPose();
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Texture.OVERLAY_SELECTION_GUI.resource());
@@ -76,16 +79,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         poseStack.translate(x, y, 0);
 
-        blit(
-                poseStack,
-                0,
-                0,
-                0,
-                0,
-                Texture.OVERLAY_SELECTION_GUI.width(),
-                Texture.OVERLAY_SELECTION_GUI.height(),
-                Texture.OVERLAY_SELECTION_GUI.width(),
-                Texture.OVERLAY_SELECTION_GUI.height());
+        RenderUtils.drawTexturedRect(poseStack, Texture.OVERLAY_SELECTION_GUI, 0, 0);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -100,9 +94,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
         poseStack.popPose();
 
-        overlayList.render(poseStack, mouseX, mouseY, partialTick);
-
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        overlayList.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -112,8 +104,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        return overlayList.mouseScrolled(mouseX, mouseY, delta);
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        return overlayList.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     @Override

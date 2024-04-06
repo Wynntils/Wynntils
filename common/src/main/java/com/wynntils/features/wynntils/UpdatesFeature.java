@@ -1,18 +1,19 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.net.athena.UpdateManager;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -24,17 +25,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class UpdatesFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> updateReminder = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoUpdate = new Config<>(false);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
 
-        CompletableFuture.runAsync(() -> Managers.Update.getLatestBuild()
+        CompletableFuture.runAsync(() -> Services.Update.getLatestBuild()
                 .whenCompleteAsync((version, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
                     if (version == null) {
                         WynntilsMod.info(
@@ -67,7 +68,7 @@ public class UpdatesFeature extends Feature {
                         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
-                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
+                        CompletableFuture<UpdateService.UpdateResult> completableFuture = Services.Update.tryUpdate();
 
                         completableFuture.whenCompleteAsync(
                                 (result, t) -> McUtils.sendMessageToClient(result.getMessage()));
@@ -88,8 +89,6 @@ public class UpdatesFeature extends Feature {
                 .append(Component.translatable(
                                 "feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)
                         .append(clickable)
-                        .append(Component.literal("\n"))
-                        .append(Component.translatable("feature.wynntils.updates.reminder.alpha"))
                         .withStyle(ChatFormatting.GREEN)));
     }
 }

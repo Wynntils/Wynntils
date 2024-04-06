@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
 
@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -18,6 +17,7 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -26,9 +26,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    // If you modify please test with link below
-    // If you pass the tests and it still doesn't work, please resync tests with the game and update the link here
-    // https://regexr.com/76ijo
+    // Test in SpellModel_SPELL_TITLE_PATTERN
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
@@ -37,10 +35,20 @@ public class SpellModel extends Model {
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
 
-    public SpellModel(CharacterModel characterModel) {
-        super(List.of(characterModel));
+    public SpellModel() {
+        super(List.of());
 
         Handlers.ActionBar.registerSegment(spellSegment);
+        Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
+    }
+
+    private List<Pattern> getKnownMarkerNames() {
+        List<Pattern> knownMarkerNames = new ArrayList<>();
+        knownMarkerNames.add(SPELL_CAST);
+        knownMarkerNames.addAll(Arrays.stream(SpellFailureReason.values())
+                .map(s -> Pattern.compile(s.getMessage().getString()))
+                .toList());
+        return knownMarkerNames;
     }
 
     @SubscribeEvent(receiveCanceled = true)

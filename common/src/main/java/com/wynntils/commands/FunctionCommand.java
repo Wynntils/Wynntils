@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -8,11 +8,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.GenericFunction;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.StyledText;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class FunctionCommand extends Command {
                     Stream.concat(
                             Managers.Function.getFunctions().stream().map(Function::getName),
                             Managers.Function.getFunctions().stream()
-                                    .map(Function::getAliases)
+                                    .map(Function::getAliasList)
                                     .flatMap(Collection::stream)),
                     builder);
 
@@ -58,11 +58,6 @@ public class FunctionCommand extends Command {
     @Override
     public String getCommandName() {
         return "function";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Call Wynntils functions";
     }
 
     @Override
@@ -103,7 +98,8 @@ public class FunctionCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Template calculated: \"%s\" -> [%s]".formatted(template, resultString)),
+                        () -> Component.literal(
+                                "Template calculated: \"%s\" -> [%s]".formatted(template, resultString.getString())),
                         false);
 
         return 1;
@@ -145,8 +141,8 @@ public class FunctionCommand extends Command {
                                             : ChatFormatting.YELLOW))
                     .withStyle(style -> style.withClickEvent(
                             new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/function help " + function.getName())));
-            if (!function.getAliases().isEmpty()) {
-                String aliasList = String.join(", ", function.getAliases());
+            if (!function.getAliasList().isEmpty()) {
+                String aliasList = String.join(", ", function.getAliasList());
 
                 functionComponent
                         .append(Component.literal(" [alias: ").withStyle(ChatFormatting.GRAY))
@@ -160,7 +156,7 @@ public class FunctionCommand extends Command {
             response.append(functionComponent);
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -189,7 +185,7 @@ public class FunctionCommand extends Command {
         Component response = Component.literal(function.getName())
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal(" is now enabled").withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -214,7 +210,7 @@ public class FunctionCommand extends Command {
         MutableComponent result = Component.literal("");
         result.append(
                 Managers.Function.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
-        context.getSource().sendSuccess(result, false);
+        context.getSource().sendSuccess(() -> result, false);
         return 1;
     }
 
@@ -241,7 +237,7 @@ public class FunctionCommand extends Command {
         helpComponent.append(
                 ChatFormatting.GRAY + "Description: " + ChatFormatting.WHITE + function.getDescription() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Aliases:" + ChatFormatting.WHITE + " ["
-                + String.join(", ", function.getAliases()) + "]\n");
+                + String.join(", ", function.getAliasList()) + "]\n");
         helpComponent.append(ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE
                 + function.getFunctionType().getSimpleName() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Arguments:" + ChatFormatting.WHITE + " ("
@@ -274,7 +270,7 @@ public class FunctionCommand extends Command {
                 .append(Component.literal(function.getName() + "\n").withStyle(ChatFormatting.BOLD))
                 .append(helpComponent.withStyle(ChatFormatting.WHITE));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 

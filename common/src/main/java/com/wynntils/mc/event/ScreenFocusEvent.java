@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ScreenFocusEvent extends Event {
     private final Screen screen;
-    private GuiEventListener guiEventListener;
+    private final GuiEventListener guiEventListener;
 
     public ScreenFocusEvent(Screen screen, GuiEventListener guiEventListener) {
         this.screen = screen;

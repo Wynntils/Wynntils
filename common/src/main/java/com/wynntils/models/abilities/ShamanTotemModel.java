@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
 
@@ -18,7 +18,6 @@ import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,8 +46,8 @@ public class ShamanTotemModel extends Model {
     private static final double TOTEM_SEARCH_RADIUS = 1.0;
     private static final int CAST_DELAY_MAX_MS = 450;
 
-    public ShamanTotemModel(WorldStateModel worldStateModel) {
-        super(List.of(worldStateModel));
+    public ShamanTotemModel() {
+        super(List.of());
     }
 
     @SubscribeEvent

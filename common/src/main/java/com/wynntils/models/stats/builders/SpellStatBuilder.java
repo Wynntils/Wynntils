@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
 
@@ -47,15 +47,23 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
     }
 
     private SpellStatType buildSpellStat(SpellType spellType, StatUnit unit) {
-        String apiUnit = (unit == StatUnit.RAW) ? "Raw" : "Pct";
+        String apiUnit = unit == StatUnit.RAW ? "raw" : "";
         String loreUnit = apiUnit.toUpperCase(Locale.ROOT);
         int spellNumber = spellType.getSpellNumber();
+        String spellNumberString =
+                switch (spellNumber) {
+                    case 1 -> "1st";
+                    case 2 -> "2nd";
+                    case 3 -> "3rd";
+                    case 4 -> "4th";
+                    default -> throw new IllegalArgumentException("Invalid spell number: " + spellNumber);
+                };
 
         return new SpellStatType(
                 "SPELL_" + spellType.name() + "_COST_" + unit.name(),
                 getStatNameForSpell(spellType.getName()),
-                "spellCost" + apiUnit + spellNumber,
-                "SPELL_COST_" + loreUnit + "_" + spellNumber,
+                apiUnit + spellNumberString + "SpellCost",
+                "SPELL_COST_" + loreUnit + (loreUnit.isEmpty() ? "" : "_") + spellNumber,
                 unit,
                 spellType);
     }

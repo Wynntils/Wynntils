@@ -1,25 +1,26 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.map.MapTexture;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.IconPoi;
-import com.wynntils.models.map.pois.LabelPoi;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.screens.base.WynntilsScreen;
+import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.IconPoi;
+import com.wynntils.services.map.pois.LabelPoi;
+import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -29,11 +30,14 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.BoundingShape;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -41,13 +45,16 @@ import org.lwjgl.glfw.GLFW;
 public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
-
-    // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    private static final float MIN_ZOOM = 0.1f;
-    private static final float MAX_ZOOM = 3f;
     private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
+    private static final int MAP_CENTER_X = -150;
+    private static final int MAP_CENTER_Z = -3000;
+    private static final int MAX_X = 1650;
+    private static final int MAX_Z = -150;
+    private static final int MIN_X = -2400;
+    private static final int MIN_Z = -6600;
 
     protected boolean holdingMapKey = false;
+    protected boolean firstInit = true;
 
     protected float renderWidth;
     protected float renderHeight;
@@ -66,10 +73,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float mapCenterZ;
 
     protected float currentZoom = 1f;
-
-    private boolean dragging = false;
-    private double lastMouseX = 0;
-    private double lastMouseY = 0;
 
     protected Poi hovered = null;
 
@@ -112,8 +115,20 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
     }
 
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        for (GuiEventListener child : children) {
+            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                guiGraphics.renderComponentTooltip(
+                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                return;
+            }
+        }
+    }
+
     @Override
-    public void renderBackground(PoseStack poseStack) {
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.FULLSCREEN_MAP_BORDER.resource(),
@@ -126,8 +141,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
-    protected void renderGradientBackground(PoseStack poseStack) {
-        super.renderBackground(poseStack);
+    protected void renderGradientBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     protected void renderPois(
@@ -190,7 +205,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
-            if (filterBox.intersects(textureBoundingBox)) {
+            if (BoundingShape.intersects(filterBox, textureBoundingBox)) {
                 filteredPois.add(poi);
                 if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
                     hovered = poi;
@@ -208,30 +223,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            dragging = true;
-        }
-
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        double newZoom = currentZoom + delta * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        double newZoom = currentZoom + deltaY * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
         setZoom((float) newZoom);
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            dragging = false;
-        }
 
         return true;
     }
@@ -240,6 +234,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
+            return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
+            setZoom(currentZoom + currentZoom * 0.05f);
+            return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
+            setZoom(currentZoom - currentZoom * 0.05f);
             return true;
         }
 
@@ -259,6 +261,18 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return false;
     }
 
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (button == 0
+                && mouseX >= renderX
+                && mouseX <= renderX + renderWidth
+                && mouseY >= renderY
+                && mouseY <= renderY + renderHeight) {
+            updateMapCenter((float) (mapCenterX - dragX / currentZoom), (float) (mapCenterZ - dragY / currentZoom));
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
     protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
@@ -275,7 +289,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderMapButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderMapButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.MAP_BUTTONS_BACKGROUND,
@@ -283,7 +299,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND.height());
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(poseStack, mouseX, mouseY, partialTicks);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -319,7 +335,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         BoundingBox textureBoundingBox =
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
 
-        List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
 
         MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
@@ -345,22 +361,23 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.disableScissor();
     }
 
-    protected void updateMapCenterIfDragging(int mouseX, int mouseY) {
-        if (dragging) {
-            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / currentZoom), (float)
-                    (mapCenterZ + (lastMouseY - mouseY) / currentZoom));
-        }
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-    }
-
     protected void centerMapAroundPlayer() {
         updateMapCenter(
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
     }
 
+    protected void centerMap() {
+        updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
+        setZoom(0);
+    }
+
+    protected boolean isPlayerInsideMainArea() {
+        return MathUtils.isInside(
+                (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
+    }
+
     protected void setZoom(float zoomTargetDelta) {
-        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
+        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM);
     }
 
     protected void updateMapCenter(float newX, float newZ) {

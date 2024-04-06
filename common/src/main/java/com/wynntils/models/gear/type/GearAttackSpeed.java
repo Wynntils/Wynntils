@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
 
 import com.wynntils.core.WynntilsMod;
+import java.util.Locale;
 
 public enum GearAttackSpeed {
     SUPER_FAST("Super Fast Attack Speed", 3),
@@ -26,7 +27,7 @@ public enum GearAttackSpeed {
     public static GearAttackSpeed fromString(String str) {
         if (str == null) return null;
         try {
-            return GearAttackSpeed.valueOf(str);
+            return GearAttackSpeed.valueOf(str.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             WynntilsMod.warn("Invalid gear attack speed: " + str);
             return null;

@@ -1,22 +1,23 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.models.dungeon.type.Dungeon;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -40,73 +41,73 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> horseTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> horseTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> powderTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> powderTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> skillIconEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> teleportScrollEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @SubscribeEvent
@@ -129,7 +130,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
         TextOverlayInfo overlayProperty =
-                wynnItem.getCache().getOrCalculate(WynnItemCache.OVERLAY_KEY, () -> calculateOverlay(wynnItem));
+                wynnItem.getData().getOrCalculate(WynnItemData.OVERLAY_KEY, () -> calculateOverlay(wynnItem));
         if (overlayProperty == null) return;
 
         if (!overlayProperty.isTextOverlayEnabled()) return;
@@ -222,6 +223,7 @@ public class ItemTextOverlayFeature extends Feature {
     private final class DungeonKeyOverlay implements TextOverlayInfo {
         private static final CustomColor STANDARD_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
         private static final CustomColor CORRUPTED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.DARK_RED);
+        private static final CustomColor REMOVED_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GRAY);
 
         private final DungeonKeyItem item;
 
@@ -231,9 +233,16 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            CustomColor textColor = item.isCorrupted() ? CORRUPTED_COLOR : STANDARD_COLOR;
+            Dungeon dungeon = item.getDungeon();
+            String text = dungeon.getInitials();
 
-            String text = item.getDungeon();
+            CustomColor textColor;
+            if (item.isCorrupted()) {
+                textColor = dungeon.isCorruptedRemoved() ? REMOVED_COLOR : CORRUPTED_COLOR;
+            } else {
+                textColor = dungeon.isRemoved() ? REMOVED_COLOR : STANDARD_COLOR;
+            }
+
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(dungeonKeyShadow.get());
 
@@ -308,7 +317,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier(), horseTierRomanNumerals.get());
+            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
                     .withTextShadow(horseTierShadow.get());

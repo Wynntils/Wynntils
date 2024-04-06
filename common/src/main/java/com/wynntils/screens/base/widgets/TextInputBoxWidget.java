@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -17,10 +18,12 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -34,11 +37,13 @@ public class TextInputBoxWidget extends AbstractWidget {
     private static final int CURSOR_TICK = 350;
 
     private final Consumer<String> onUpdateConsumer;
+
+    protected List<Component> tooltip;
     protected String textBoxInput = "";
     protected int cursorPosition = 0;
-    protected int highlightPosition = 0;
+    private int highlightPosition = 0;
     private long lastCursorSwitch = 0;
-    protected boolean renderCursor = true;
+    private boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
 
     protected boolean isDragging = false;
@@ -55,7 +60,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, boxTitle);
-        this.onUpdateConsumer = onUpdateConsumer == null ? s -> {} : onUpdateConsumer;
+        this.onUpdateConsumer = onUpdateConsumer == null ? this::onUpdate : onUpdateConsumer;
         this.textboxScreen = textboxScreen;
     }
 
@@ -82,9 +87,12 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
+        int renderedTextStart = renderedTextDetails.b();
 
         Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
 
@@ -104,6 +112,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         doRenderWidget(
                 poseStack,
                 renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -116,6 +125,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected void doRenderWidget(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -127,7 +137,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         poseStack.translate(this.getX(), this.getY(), 0);
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 1, this.width, this.height);
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
         RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 1, 2);
 
         FontRenderer.getInstance()
@@ -179,6 +189,10 @@ public class TextInputBoxWidget extends AbstractWidget {
                 VerticalAlignment.MIDDLE,
                 false);
 
+        if (isHovered && tooltip != null) {
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+        }
+
         poseStack.popPose();
     }
 
@@ -190,7 +204,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * Determines the text to render based on cursor position and maxTextWidth
      * @return The text to render, and the starting position of the text within the entire text
      */
-    protected Pair<String, Integer> getRenderedText(float maxTextWidth) {
+    private Pair<String, Integer> getRenderedText(float maxTextWidth) {
         Font font = FontRenderer.getInstance().getFont();
 
         if (font.width(textBoxInput) < maxTextWidth) {
@@ -199,15 +213,13 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         StringBuilder builder = new StringBuilder();
 
-        // First append to the left of the cursor
-        int stringPosition = cursorPosition - 1;
-        while (font.width(builder.toString()) < maxTextWidth && stringPosition >= 0) {
-            builder.append(textBoxInput.charAt(stringPosition));
-
+        int stringPosition = cursorPosition;
+        while (font.width(builder.toString()) < maxTextWidth && stringPosition > 0) {
             stringPosition--;
+            builder.append(textBoxInput.charAt(stringPosition));
         }
 
-        final int startingAt = Math.max(stringPosition, 0); // If we went too far, start at the beginning
+        final int startingAt = stringPosition;
 
         // Now reverse so it's actually to the left
         builder.reverse();
@@ -228,7 +240,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * This interval is zero indexed.
      * This does NOT represent the *entire* highlighted portion, just the VISIBLE part!
      */
-    protected Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText) {
+    private Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText) {
         if (renderedText.isEmpty()) {
             return Pair.of(0, 0);
         }
@@ -257,15 +269,21 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-
         if (this.isHovered) {
-            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
+            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                setTextBoxInput("");
+                setCursorAndHighlightPositions(0);
+            } else {
+                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             this.setFocused(true);
             return true;
-        } else {
+        }
+        if (isFocused()) {
+            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
             this.setFocused(false);
             textboxScreen.setFocusedTextInput(null);
@@ -322,6 +340,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
+        if (!isFocused()) return false;
+
         if (textBoxInput == null) {
             textBoxInput = "";
         }
@@ -532,7 +552,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * Accepts values outside the bounds of the text box, it will clamp them.
      * @param cursorPosition
      */
-    public void setCursorPosition(int cursorPosition) {
+    protected void setCursorPosition(int cursorPosition) {
         this.cursorPosition = MathUtils.clamp(cursorPosition, 0, textBoxInput.length());
     }
 
@@ -541,7 +561,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * This means there will be no highlight.
      * Accepts values outside the bounds of the text box, it will clamp them.
      */
-    public void setCursorAndHighlightPositions(int pos) {
+    protected void setCursorAndHighlightPositions(int pos) {
         this.cursorPosition = MathUtils.clamp(pos, 0, textBoxInput.length());
         this.highlightPosition = this.cursorPosition;
     }
@@ -550,7 +570,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         return textBoxInput;
     }
 
-    public String getHighlightedText() {
+    private String getHighlightedText() {
         int startIndex = Math.min(this.cursorPosition, this.highlightPosition);
         int endIndex = Math.max(this.cursorPosition, this.highlightPosition);
 
@@ -561,16 +581,16 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.renderColor = renderColor;
     }
 
-    public boolean hasHighlighted() {
+    private boolean hasHighlighted() {
         return this.cursorPosition != this.highlightPosition;
     }
 
-    public void setHighlightPosition(int position) {
+    protected void setHighlightPosition(int position) {
         int length = this.textBoxInput.length();
         this.highlightPosition = Mth.clamp(position, 0, length);
     }
 
-    public void replaceHighlighted(String text) {
+    private void replaceHighlighted(String text) {
         int startIndex = Math.min(this.cursorPosition, this.highlightPosition);
         int endIndex = Math.max(this.cursorPosition, this.highlightPosition);
 
@@ -583,4 +603,9 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.setHighlightPosition(this.cursorPosition);
         this.onUpdateConsumer.accept(this.textBoxInput);
     }
+
+    /**
+     * If there is no on update consumer given in the constructor, this method gets called instead.
+     */
+    protected void onUpdate(String text) {}
 }

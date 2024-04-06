@@ -1,14 +1,17 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
 
 import java.util.List;
 
 /**
- * Managers constitute the core functionality of Wynntils. They are created
- * as singletons in the {@link Managers} holding class.
+ * Managers constitute the core functionality of Wynntils. They provide the framework
+ * of the entire mod, but does not have any knowledge about Wynncraft specific details
+ * nor any specialized services.
+ *
+ * Managers are created as singletons in the {@link Managers} holding class.
  */
 public abstract class Manager extends CoreComponent {
     protected Manager(List<Manager> dependencies) {
@@ -20,7 +23,7 @@ public abstract class Manager extends CoreComponent {
     }
 
     @Override
-    protected String getComponentType() {
+    public String getTypeName() {
         return "Manager";
     }
 

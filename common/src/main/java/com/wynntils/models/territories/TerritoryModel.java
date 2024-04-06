@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -14,11 +15,9 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.TerritoryPoi;
-import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import java.lang.reflect.Type;
+import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,9 +32,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.core.Position;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TerritoryModel extends Model {
@@ -56,7 +56,6 @@ public final class TerritoryModel extends Model {
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
     private final ScheduledFuture<?> timerFuture;
-    private int errorCount = 0;
 
     public TerritoryModel() {
         super(List.of());
@@ -77,11 +76,12 @@ public final class TerritoryModel extends Model {
         return allTerritoryPois;
     }
 
-    public List<Poi> getTerritoryPoisFromAdvancement() {
+    public List<TerritoryPoi> getTerritoryPoisFromAdvancement() {
         return new ArrayList<>(territoryPoiMap.values());
     }
 
-    public List<Poi> getFilteredTerritoryPoisFromAdvancement(int filterLevel, TerritoryDefenseFilterType filterType) {
+    public List<TerritoryPoi> getFilteredTerritoryPoisFromAdvancement(
+            int filterLevel, TerritoryDefenseFilterType filterType) {
         return switch (filterType) {
             case HIGHER -> territoryPoiMap.values().stream()
                     .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
@@ -106,22 +106,17 @@ public final class TerritoryModel extends Model {
                 .orElse(null);
     }
 
-    public void reset() {
-        errorCount = 0;
-    }
-
     @SubscribeEvent
     public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
-        for (Map.Entry<ResourceLocation, Advancement.Builder> added :
-                event.getAdded().entrySet()) {
-            added.getValue().parent((ResourceLocation) null);
-            Advancement built = added.getValue().build(added.getKey());
+        for (AdvancementHolder added : event.getAdded()) {
+            Advancement advancement = added.value();
 
-            if (built.getDisplay() == null) continue;
+            if (advancement.display().isEmpty()) continue;
 
-            String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
+            DisplayInfo displayInfo = advancement.display().get();
+            String territoryName = StyledText.fromComponent(displayInfo.getTitle())
                     .replaceAll("\\[", "")
                     .replaceAll("\\]", "")
                     .trim()
@@ -134,10 +129,10 @@ public final class TerritoryModel extends Model {
             if (territoryName.isEmpty()) continue;
 
             // headquarters frame is challenge
-            boolean headquarters = built.getDisplay().getFrame() == FrameType.CHALLENGE;
+            boolean headquarters = displayInfo.getFrame() == FrameType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            StyledText description = StyledText.fromComponent(built.getDisplay().getDescription());
+            StyledText description = StyledText.fromComponent(displayInfo.getDescription());
             StyledText[] colored = description.split("\n");
             String[] raw = description.getStringWithoutFormatting().split("\n");
 
@@ -150,36 +145,33 @@ public final class TerritoryModel extends Model {
 
             if (territoryProfile == null) continue;
 
-            territoryPoiMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
+            territoryPoiMap.put(
+                    entry.getKey(), new TerritoryPoi(() -> getTerritoryProfile(entry.getKey()), entry.getValue()));
         }
     }
 
     private void updateTerritoryProfileMap() {
-        // dataAthenaTerritoryList is based on
-        // https://api.wynncraft.com/public_api.php?action=territoryList
-        // but guild prefix is injected based on
-        // https://api.wynncraft.com/public_api.php?action=guildStats&command=<guildName>
-        // and guild color is injected based on values maintained on Athena, and a constant
-        // level = 1 is also injected.
-
-        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_TERRITORY_LIST);
+        Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
                 json -> {
-                    if (!json.has("territories")) return;
+                    Map<String, TerritoryProfile> tempMap = new HashMap<>();
+                    for (Map.Entry<String, JsonElement> entry :
+                            json.getAsJsonObject().entrySet()) {
+                        JsonObject territoryObject = entry.getValue().getAsJsonObject();
 
-                    Type type = new TypeToken<HashMap<String, TerritoryProfile>>() {}.getType();
-                    territoryProfileMap = TERRITORY_PROFILE_GSON.fromJson(json.get("territories"), type);
+                        // Inject back the name for the deserializer
+                        territoryObject.addProperty("name", entry.getKey());
+
+                        TerritoryProfile territoryProfile =
+                                TERRITORY_PROFILE_GSON.fromJson(territoryObject, TerritoryProfile.class);
+                        tempMap.put(entry.getKey(), territoryProfile);
+                    }
+
+                    territoryProfileMap = tempMap;
                     allTerritoryPois = territoryProfileMap.values().stream()
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
-                    // TODO: Add events if territories changed
                 },
-                onError -> {
-                    errorCount++;
-                    if (errorCount >= MAX_ERRORS) {
-                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups.");
-                        timerFuture.cancel(false);
-                    }
-                });
+                onError -> WynntilsMod.warn("Failed to update territory data."));
     }
 }

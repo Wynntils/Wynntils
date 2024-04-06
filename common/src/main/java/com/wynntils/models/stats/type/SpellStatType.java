@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
 
@@ -25,9 +25,14 @@ public final class SpellStatType extends StatType {
     }
 
     @Override
-    public boolean showAsInverted() {
-        // Note that this is used only when displaying; internally the value is
-        // represented as positive (> 0).
+    public boolean displayAsInverted() {
+        // Negative spell stats are positive for the player
+        return true;
+    }
+
+    @Override
+    public boolean calculateAsInverted() {
+        // Spell costs are calculated using inverted values to account for rounding
         return true;
     }
 }

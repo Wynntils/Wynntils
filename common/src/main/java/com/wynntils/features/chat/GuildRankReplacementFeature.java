@@ -1,15 +1,15 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -28,17 +28,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class GuildRankReplacementFeature extends Feature {
     private static final char STAR = '★';
+    private static final char REPLACEMENT_STAR = '*';
 
-    @RegisterConfig
+    @Persisted
     public final Config<RankType> rankType = new Config<>(RankType.NAME);
 
-    // Test suite: https://regexr.com/7e5gr
-    private static final Pattern GUILD_MESSAGE_PATTERN = Pattern.compile("§3\\[(?:§b)?★{0,5}(?:§3)?.{1,16}]§b");
+    // Test in GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN
+    private static final Pattern GUILD_MESSAGE_PATTERN =
+            Pattern.compile("§3\\[(?:§b)?★{0,5}(?:§3)?(?:§o)?.{1,16}(?:§r)?(?:§3)?\\]§b");
 
-    // Test suite: https://regexr.com/7e66m
+    // Test in GuildRankReplacementFeature_RECRUIT_USERNAME_PATTERN
     private static final Pattern RECRUIT_USERNAME_PATTERN = Pattern.compile("§3\\[(.{1,16})");
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessageReceived(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.GUILD) return;
 
@@ -51,6 +53,7 @@ public class GuildRankReplacementFeature extends Feature {
                 switch (rankType.get()) {
                     case NONE -> modifyByRemovingRank(originalStyledText);
                     case NAME -> modifyByAddingTextRank(originalStyledText);
+                    case SMALL_STARS -> modifyByAddingSmallStarsRank(originalStyledText);
                 };
 
         if (originalStyledText.equals(modified)) return; // no changes
@@ -59,18 +62,17 @@ public class GuildRankReplacementFeature extends Feature {
     }
 
     private StyledText modifyByRemovingRank(StyledText styledText) {
-        StyledText modified = styledText.iterate((part, changes) -> {
+        return styledText.iterate((part, changes) -> {
             if (part.getString(null, PartStyle.StyleType.NONE).contains(String.valueOf(STAR))) {
                 changes.remove(part);
                 return IterationDecision.BREAK;
             }
             return IterationDecision.CONTINUE;
         });
-        return modified;
     }
 
     private StyledText modifyByAddingTextRank(StyledText styledText) {
-        StyledText modified = styledText.iterateBackwards((part, changes) -> {
+        return styledText.iterateBackwards((part, changes) -> {
             int stars = (int) part.getString(null, PartStyle.StyleType.NONE)
                     .chars()
                     .filter(c -> c == STAR)
@@ -115,12 +117,28 @@ public class GuildRankReplacementFeature extends Feature {
 
             return IterationDecision.CONTINUE;
         });
+    }
 
-        return modified;
+    private StyledText modifyByAddingSmallStarsRank(StyledText styledText) {
+        return styledText.iterate((part, changes) -> {
+            String partContent = part.getString(null, PartStyle.StyleType.NONE);
+            if (partContent.contains(String.valueOf(STAR))) {
+                changes.set(
+                        0,
+                        new StyledTextPart(
+                                partContent.replaceAll(String.valueOf(STAR), String.valueOf(REPLACEMENT_STAR)),
+                                part.getPartStyle().getStyle(),
+                                null,
+                                Style.EMPTY));
+                return IterationDecision.BREAK;
+            }
+            return IterationDecision.CONTINUE;
+        });
     }
 
     private enum RankType {
         NAME,
-        NONE
+        NONE,
+        SMALL_STARS
     }
 }

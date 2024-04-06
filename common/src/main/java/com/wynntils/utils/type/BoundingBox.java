@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
 
-public class BoundingBox {
+public class BoundingBox implements BoundingShape {
     private final float x1;
     private final float z1;
     private final float x2;
@@ -24,13 +24,24 @@ public class BoundingBox {
         assert x1 < x2 && z1 < z2;
     }
 
-    public boolean contains(float x, float z) {
-        return x1 <= x && x <= x2 && z1 <= z && z <= z2;
+    public float x1() {
+        return x1;
     }
 
-    public boolean intersects(BoundingBox other) {
-        boolean xIntersects = Math.max(x1, other.x1) < Math.min(x2, other.x2);
-        boolean zIntersects = Math.max(z1, other.z1) < Math.min(z2, other.z2);
-        return xIntersects && zIntersects;
+    public float z1() {
+        return z1;
+    }
+
+    public float x2() {
+        return x2;
+    }
+
+    public float z2() {
+        return z2;
+    }
+
+    @Override
+    public boolean contains(float x, float z) {
+        return x1 <= x && x <= x2 && z1 <= z && z <= z2;
     }
 }

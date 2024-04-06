@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
@@ -11,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PowderSpecialSegment implements ActionBarSegment {
-    private static final Pattern POWDER_SPECIAL_PATTERN = Pattern.compile("§0 *§.([✤✦❉✹❋]) (\\d+)% *");
+    // Test in PowderSpecialSegment_POWDER_SPECIAL_PATTERN
+    private static final Pattern POWDER_SPECIAL_PATTERN = Pattern.compile("§.([✤✦❉✹❋]) (\\d+)%");
 
     private float powderSpecialCharge = 0;
     private Powder powderSpecialType = null;
@@ -51,6 +52,7 @@ public class PowderSpecialSegment implements ActionBarSegment {
         return powderSpecialType;
     }
 
+    @Override
     public boolean isHidden() {
         return hidden;
     }

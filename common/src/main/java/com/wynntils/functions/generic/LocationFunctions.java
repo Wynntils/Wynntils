@@ -1,11 +1,11 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.functions.GenericFunction;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 
@@ -67,7 +67,7 @@ public final class LocationFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("loc");
         }
     }

@@ -1,13 +1,13 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.changelog;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsPagedScreen;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -23,6 +23,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
@@ -57,37 +59,41 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         setCurrentPage(0);
 
         this.addRenderableWidget(new PageSelectorButton(
-                80 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.CHANGELOG_BACKGROUND.height() - 17,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                80 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.SCROLL_BACKGROUND.height() - 17,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.CHANGELOG_BACKGROUND.width() - 80,
-                Texture.CHANGELOG_BACKGROUND.height() - 17,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.SCROLL_BACKGROUND.width() - 80,
+                Texture.SCROLL_BACKGROUND.height() - 17,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
 
         poseStack.translate(
-                (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f,
-                (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f,
+                (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f,
+                (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f,
                 0);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.CHANGELOG_BACKGROUND, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, 0, 0);
 
         FontRenderer.getInstance().renderTexts(poseStack, 45, 15, changelogTasks.get(currentPage));
 
         renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
 
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        for (Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         poseStack.popPose();
     }
@@ -98,8 +104,8 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
                         80,
-                        Texture.CHANGELOG_BACKGROUND.width() - 80,
-                        Texture.CHANGELOG_BACKGROUND.height() - 17,
+                        Texture.SCROLL_BACKGROUND.width() - 80,
+                        Texture.SCROLL_BACKGROUND.height() - 17,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -108,15 +114,26 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        double adjustedMouseX = mouseX - (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
-        double adjustedMouseY = mouseY - (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
+        double adjustedMouseX = mouseX - (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f;
+        double adjustedMouseY = mouseY - (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f;
 
         return super.doMouseClicked(adjustedMouseX, adjustedMouseY, button);
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        if (deltaY > 0) {
+            setCurrentPage(getCurrentPage() - 1);
+        } else if (deltaY < 0) {
+            setCurrentPage(getCurrentPage() + 1);
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+    }
+
     private void calculateRenderTasks() {
         TextRenderSetting setting = TextRenderSetting.DEFAULT
-                .withMaxWidth(Texture.CHANGELOG_BACKGROUND.width() - 85)
+                .withMaxWidth(Texture.SCROLL_BACKGROUND.width() - 85)
                 .withCustomColor(CommonColors.WHITE)
                 .withTextShadow(TextShadow.OUTLINE);
 
@@ -127,7 +144,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         this.changelogTasks = new ArrayList<>();
 
-        final int maxHeight = Texture.CHANGELOG_BACKGROUND.height() - 35;
+        final int maxHeight = Texture.SCROLL_BACKGROUND.height() - 55;
 
         float currentHeight = 0;
         List<TextRenderTask> currentPage = new ArrayList<>();

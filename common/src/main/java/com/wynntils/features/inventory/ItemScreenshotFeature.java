@@ -1,59 +1,68 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemScreenshotFeature extends Feature {
+    // The 4, 4 offset is intentional, otherwise the tooltip will be rendered outside of the screen
+    private static final ClientTooltipPositioner NO_POSITIONER =
+            (int screenWidth, int screenHeight, int mouseX, int mouseY, int tooltipWidth, int tooltipHeight) ->
+                    new Vector2i(4, 4);
+
     @RegisterKeyBind
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> saveToDisk = new Config<>(false);
 
     private Slot screenshotSlot = null;
@@ -73,7 +82,6 @@ public class ItemScreenshotFeature extends Feature {
 
         // has to be called during a render period
         takeScreenshot(screen, screenshotSlot, e.getTooltips());
-        makeChatPrompt(screenshotSlot);
         screenshotSlot = null;
     }
 
@@ -87,7 +95,7 @@ public class ItemScreenshotFeature extends Feature {
         // width calculation
         int width = 0;
         for (Component c : tooltip) {
-            int w = font.width(c.getString());
+            int w = font.width(c);
             if (w > width) {
                 width = w;
             }
@@ -105,18 +113,28 @@ public class ItemScreenshotFeature extends Feature {
         float scaleh = (float) screen.height / height;
         float scalew = (float) screen.width / width;
 
+        // Create tooltip renderer
+        Screen.DeferredTooltipRendering deferredTooltipRendering = new Screen.DeferredTooltipRendering(
+                Lists.transform(tooltip, Component::getVisualOrderText), NO_POSITIONER);
+
         // draw tooltip to framebuffer, create image
         McUtils.mc().getMainRenderTarget().unbindWrite();
 
-        PoseStack poseStack = new PoseStack();
+        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), MultiBufferSource.immediate(new BufferBuilder(256)));
         RenderTarget fb = new MainTarget(width * 2, height * 2);
         fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2, false);
         fb.bindWrite(false);
-        poseStack.pushPose();
-        poseStack.scale(scalew, scaleh, 1);
-        RenderUtils.drawTooltip(poseStack, tooltip, font, true);
-        poseStack.popPose();
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().scale(scalew, scaleh, 1);
+        guiGraphics.renderTooltip(
+                FontRenderer.getInstance().getFont(),
+                deferredTooltipRendering.tooltip(),
+                deferredTooltipRendering.positioner(),
+                0,
+                0);
+        guiGraphics.pose().popPose();
+        guiGraphics.flush();
         fb.unbindWrite();
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
@@ -126,12 +144,14 @@ public class ItemScreenshotFeature extends Feature {
             // First try to save it to disk
             String itemNameForFile = StyledText.fromComponent(itemStack.getHoverName())
                     .trim()
+                    .replaceAll("⬡ ", "") // remove shiny indicator
                     .replaceAll("[/ ]", "_")
                     .getNormalized()
                     .getString(PartStyle.StyleType.NONE);
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
             try {
+                Files.createDirectories(screenshotDir.toPath()); // create dir if it doesn't exist, ignore if it does
                 File outputfile = new File(screenshotDir, filename);
                 ImageIO.write(bi, "png", outputfile);
 
@@ -145,9 +165,8 @@ public class ItemScreenshotFeature extends Feature {
                         .withStyle(ChatFormatting.GREEN));
             } catch (IOException e) {
                 WynntilsMod.error("Failed to save image to disk", e);
-                McUtils.sendMessageToClient(Component.translatable(
-                                "feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename)
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendErrorToClient(
+                        I18n.get("feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename));
             }
 
             if (SystemUtils.isMac()) {
@@ -163,7 +182,7 @@ public class ItemScreenshotFeature extends Feature {
                             .withStyle(ChatFormatting.UNDERLINE)
                             .withStyle(style -> style.withClickEvent(new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
-                                    "/wynntils config set ItemScreenshotFeature saveToDisk true")))));
+                                    "/wynntils config set ItemScreenshot saveToDisk true")))));
             return;
         }
 
@@ -173,34 +192,8 @@ public class ItemScreenshotFeature extends Feature {
                     .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.error")
-                    .withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
         }
-    }
-
-    private static void makeChatPrompt(Slot hoveredSlot) {
-        // chat item prompt
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
-        if (gearItemOpt.isEmpty()) return;
-
-        GearItem gearItem = gearItemOpt.get();
-        if (gearItem.isUnidentified()) {
-            // We can only send chat encoded gear of identified gear
-            WynntilsMod.warn("Cannot make chat link of unidentified gear");
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemError")
-                    .withStyle(ChatFormatting.RED));
-            return;
-        }
-        String encoded = Models.Gear.toEncodedString(gearItem);
-
-        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemMessage")
-                .withStyle(ChatFormatting.DARK_GREEN)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, encoded)))
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.translatable("feature.wynntils.itemScreenshot.chatItemTooltip")
-                                .withStyle(ChatFormatting.DARK_AQUA)))));
     }
 
     /**
@@ -213,7 +206,9 @@ public class ItemScreenshotFeature extends Feature {
         int loreStart = -1;
         for (int i = 0; i < tooltip.size(); i++) {
             // only remove text after the item type indicator
-            if (WynnItemMatchers.rarityLineMatcher(tooltip.get(i)).find()) {
+            String tooltipLine = tooltip.get(i).getString();
+            Matcher matcher = ItemUtils.ITEM_RARITY_PATTERN.matcher(tooltipLine);
+            if (matcher.find()) {
                 loreStart = i + 1;
                 break;
             }

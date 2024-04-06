@@ -1,13 +1,15 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.gear;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
+import com.wynntils.core.components.Services;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public final class GuideGearItemStack extends GuideItemStack {
         appendObtainInfo(tooltipLines, gearInfo.metaInfo().obtainInfo());
 
         tooltipLines.add(Component.empty());
-        if (Models.Favorites.isFavorite(this)) {
+        if (Services.Favorites.isFavorite(this)) {
             tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                     .withStyle(ChatFormatting.YELLOW));
         } else {
@@ -62,12 +64,12 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        GearTooltipBuilder gearTooltipBuilder = Models.GearTooltip.buildNew(gearInfo, null, true);
-        this.generatedTooltip = gearTooltipBuilder.getTooltipLines(Models.Character.getClassType());
+        IdentifiableTooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new GearItem(gearInfo, null), true);
+        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(this, GearItem.class);
         if (gearItemOpt.isEmpty()) return;
-        gearItemOpt.get().getCache().clear(WynnItemCache.TOOLTIP_KEY);
+        gearItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
     }
 }

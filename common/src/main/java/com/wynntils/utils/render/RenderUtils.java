@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
 
@@ -13,12 +13,15 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.TooltipUtils;
-import java.util.List;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -513,150 +516,6 @@ public final class RenderUtils {
         drawArc(poseStack, color, x, y, z, 0.25f, innerRadius, outerRadius, angleOffset);
     }
 
-    public static void drawTooltip(
-            PoseStack poseStack, List<Component> componentLines, Font font, boolean firstLineHasPlusHeight) {
-        List<ClientTooltipComponent> lines = TooltipUtils.componentToClientTooltipComponent(componentLines);
-
-        int tooltipWidth = TooltipUtils.getToolTipWidth(lines, font);
-        int tooltipHeight = TooltipUtils.getToolTipHeight(lines);
-
-        // background box
-        poseStack.pushPose();
-        int tooltipX = 4;
-        int tooltipY = 4;
-        int zLevel = 400;
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        Matrix4f matrix4f = poseStack.last().pose();
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 4,
-                tooltipX + tooltipWidth + 3,
-                tooltipY - 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY + tooltipHeight + 3,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 4,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 3,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 4,
-                tooltipY - 3,
-                tooltipX - 3,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX + tooltipWidth + 3,
-                tooltipY - 3,
-                tooltipX + tooltipWidth + 4,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BACKGROUND,
-                BACKGROUND);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 3 + 1,
-                tooltipX - 3 + 1,
-                tooltipY + tooltipHeight + 3 - 1,
-                zLevel,
-                BORDER_START,
-                BORDER_END);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX + tooltipWidth + 2,
-                tooltipY - 3 + 1,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 3 - 1,
-                zLevel,
-                BORDER_START,
-                BORDER_END);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY - 3,
-                tooltipX + tooltipWidth + 3,
-                tooltipY - 3 + 1,
-                zLevel,
-                BORDER_START,
-                BORDER_START);
-        fillGradient(
-                matrix4f,
-                bufferBuilder,
-                tooltipX - 3,
-                tooltipY + tooltipHeight + 2,
-                tooltipX + tooltipWidth + 3,
-                tooltipY + tooltipHeight + 3,
-                zLevel,
-                BORDER_END,
-                BORDER_END);
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        BufferUploader.drawWithShader(bufferBuilder.end());
-        RenderSystem.disableBlend();
-
-        // text
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        poseStack.translate(0.0, 0.0, 400.0);
-        int s = tooltipY;
-        boolean first = firstLineHasPlusHeight;
-        for (ClientTooltipComponent line : lines) {
-            line.renderText(font, tooltipX, s, matrix4f, bufferSource);
-            s += line.getHeight() + (first ? 2 : 0);
-            first = false;
-        }
-        bufferSource.endBatch();
-        poseStack.popPose();
-    }
-
-    public static void drawTooltipAt(
-            PoseStack poseStack,
-            double renderX,
-            double renderY,
-            double renderZ,
-            List<Component> componentLines,
-            Font font,
-            boolean firstLineHasPlusHeight) {
-        poseStack.pushPose();
-
-        poseStack.translate(renderX, renderY, renderZ);
-        drawTooltip(poseStack, componentLines, font, firstLineHasPlusHeight);
-
-        poseStack.popPose();
-    }
-
     /**
      * drawProgressBar
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
@@ -944,8 +803,8 @@ public final class RenderUtils {
         poseStack.translate(-centerX, -centerZ, 0);
     }
 
-    public static void renderItem(PoseStack poseStack, ItemStack itemStack, int x, int y) {
-        McUtils.mc().getItemRenderer().renderGuiItem(poseStack, itemStack, x, y);
+    public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
+        guiGraphics.renderItem(itemStack, x, y);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
@@ -974,7 +833,6 @@ public final class RenderUtils {
                 Texture.VIGNETTE.height());
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderSystem.enableBlend();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
@@ -1020,6 +878,69 @@ public final class RenderUtils {
             }
 
             matrixStack.popPose();
+        }
+    }
+
+    public static void renderProfessionBadge(
+            PoseStack poseStack,
+            EntityRenderDispatcher dispatcher,
+            Entity entity,
+            ResourceLocation tex,
+            float width,
+            float height,
+            int uOffset,
+            int vOffset,
+            int u,
+            int v,
+            int textureWidth,
+            int textureHeight,
+            float customOffset,
+            float horizontalShift,
+            float verticalShift) {
+        double d = dispatcher.distanceToSqr(entity);
+        if (d <= 4096.0) {
+            poseStack.pushPose();
+
+            poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
+            poseStack.mulPose(dispatcher.cameraOrientation());
+            poseStack.scale(-0.025F, -0.025F, 0.025F);
+
+            Matrix4f matrix = poseStack.last().pose();
+
+            float halfWidth = width / 2;
+            float halfHeight = height / 2;
+            float uScale = 1F / textureWidth;
+            float vScale = 1F / textureHeight;
+
+            RenderSystem.enableDepthTest();
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, tex);
+
+            BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+            bufferBuilder
+                    .vertex(matrix, -halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                    .uv(uOffset * uScale, vOffset * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, -halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                    .uv(uOffset * uScale, (v + vOffset) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, halfWidth + horizontalShift, halfHeight - verticalShift, 0)
+                    .uv((u + uOffset) * uScale, (v + vOffset) * vScale)
+                    .endVertex();
+            bufferBuilder
+                    .vertex(matrix, halfWidth + horizontalShift, -halfHeight - verticalShift, 0)
+                    .uv((u + uOffset) * uScale, vOffset * vScale)
+                    .endVertex();
+
+            BufferUploader.drawWithShader(bufferBuilder.end());
+
+            RenderSystem.disableDepthTest();
+
+            poseStack.popPose();
         }
     }
 
@@ -1093,6 +1014,31 @@ public final class RenderUtils {
         RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
     }
 
+    public static void createRectMask(PoseStack poseStack, float x, float y, float width, float height) {
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+
+        drawRect(poseStack, CommonColors.WHITE, x, y, 0, width, height);
+
+        // Reenable color and depth
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.depthMask(true);
+
+        // Only write to stencil area
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
+    }
+
     /**
      * Clears the active rendering mask from the screen.
      * Based on Figura <a href="https://github.com/Kingdom-of-The-Moon/FiguraRewriteRewrite"> code</a>.
@@ -1106,5 +1052,36 @@ public final class RenderUtils {
 
         // Always succeed in the stencil test, no matter what.
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+    }
+
+    public static void renderDebugGrid(
+            PoseStack poseStack, float GRID_DIVISIONS, float dividedWidth, float dividedHeight) {
+        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
+            double x = dividedWidth * i;
+            double y = dividedHeight * i;
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, dividedHeight * GRID_DIVISIONS);
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, dividedWidth * GRID_DIVISIONS, 1);
+            if (i % 2 == 0) continue; // reduce clutter
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.valueOf(i)),
+                            (float) x,
+                            dividedHeight * (GRID_DIVISIONS / 2),
+                            CommonColors.RED,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.valueOf(i)),
+                            dividedWidth * (GRID_DIVISIONS / 2),
+                            (float) y,
+                            CommonColors.CYAN,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
     }
 }

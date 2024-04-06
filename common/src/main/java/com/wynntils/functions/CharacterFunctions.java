@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -49,7 +49,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp");
         }
     }
@@ -61,7 +61,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_max");
         }
     }
@@ -87,6 +87,38 @@ public class CharacterFunctions {
         }
     }
 
+    public static class StatusEffectsFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            List<String> statusEffectsList = Models.StatusEffect.getStatusEffects().stream()
+                    .map(statusEffect -> statusEffect.asString().getString())
+                    .toList();
+
+            return String.join("\n", statusEffectsList);
+        }
+    }
+
+    public static class StatusEffectActiveFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String query = arguments.getArgument("query").getStringValue();
+            return Models.StatusEffect.getStatusEffects().stream()
+                    .anyMatch(statusEffect ->
+                            statusEffect.getName().getStringWithoutFormatting().equals(query));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("contains_effect");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("query", String.class, null)));
+        }
+    }
+
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
@@ -98,7 +130,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_timer");
         }
     }
@@ -112,7 +144,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_timer_m");
         }
     }
@@ -126,7 +158,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_timer_s");
         }
     }

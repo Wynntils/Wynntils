@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
 
@@ -15,8 +15,10 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkillPointAnnotator implements ItemAnnotator {
+    // Test in SkillPointAnnotator_SKILL_POINT_PATTERN
     private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
-    private static final Pattern LORE_PATTERN = Pattern.compile("^§7[ À]+(-?\\d+) points?[ À]+§6-?\\d+ points?$");
+    // Test in SkillPointAnnotator_LORE_PATTERN
+    private static final Pattern LORE_PATTERN = Pattern.compile("^[ À]+§7(-?\\d+) points?§r[ À]+§6-?\\d+ points?$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

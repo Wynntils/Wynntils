@@ -1,15 +1,16 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
@@ -19,10 +20,12 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.ItemUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,24 +42,28 @@ public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
+    private static final float BADGE_MARGIN = 2;
     private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideAllNametags = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hidePlayerNametags = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideNametagBackground = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
+    public final Config<Boolean> showProfessionBadges = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> showGearOnHover = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showWynntilsMarker = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
@@ -88,6 +95,8 @@ public class CustomNametagRendererFeature extends Feature {
         if (!nametags.isEmpty()) {
             event.setCanceled(true);
             drawNametags(event, nametags);
+        } else {
+            drawBadges(event, 0);
         }
     }
 
@@ -131,7 +140,7 @@ public class CustomNametagRendererFeature extends Feature {
 
         // This must specifically NOT be normalized; the ֎ is significant
         String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
+        MutableComponent description = ItemUtils.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
@@ -157,21 +166,21 @@ public class CustomNametagRendererFeature extends Feature {
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }
 
-        if (!showWynntilsMarker.get()) return;
-
         // Add an appropriate Wynntils marker
         Component realName = event.getDisplayName();
-        Component vanillaNametag;
+        Component vanillaNametag = realName;
 
-        StyledText styledText = StyledText.fromComponent(realName);
-        if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
-            vanillaNametag = Component.literal(WYNNTILS_LOGO)
-                    .withStyle(ChatFormatting.DARK_GRAY)
-                    .append(realName);
-        } else {
-            vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(realName);
+        if (showWynntilsMarker.get()) {
+            StyledText styledText = StyledText.fromComponent(realName);
+            if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
+                vanillaNametag = Component.literal(WYNNTILS_LOGO)
+                        .withStyle(ChatFormatting.DARK_GRAY)
+                        .append(realName);
+            } else {
+                vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(realName);
+            }
         }
         nametags.add(new CustomNametag(vanillaNametag, 1f));
     }
@@ -197,6 +206,45 @@ public class CustomNametagRendererFeature extends Feature {
                     event.getFont(),
                     nametag.nametagScale(),
                     yOffset);
+        }
+
+        drawBadges(event, yOffset);
+    }
+
+    private void drawBadges(PlayerNametagRenderEvent event, float height) {
+        if (!showProfessionBadges.get()) return;
+
+        List<LeaderboardBadge> badges =
+                Services.Leaderboard.getBadges(event.getEntity().getUUID());
+
+        if (badges.isEmpty()) return;
+
+        float totalWidth = LeaderboardBadge.WIDTH * badges.size() + BADGE_MARGIN * (badges.size() - 1);
+        float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
+        float yOffset = 15F;
+        if (height == 0) {
+            yOffset += 10F;
+        }
+
+        for (LeaderboardBadge badge : badges) {
+            RenderUtils.renderProfessionBadge(
+                    event.getPoseStack(),
+                    event.getEntityRenderDispatcher(),
+                    event.getEntity(),
+                    Texture.LEADERBOARD_BADGES.resource(),
+                    LeaderboardBadge.WIDTH,
+                    LeaderboardBadge.HEIGHT,
+                    badge.uOffset(),
+                    badge.vOffset(),
+                    LeaderboardBadge.WIDTH,
+                    LeaderboardBadge.HEIGHT,
+                    Texture.LEADERBOARD_BADGES.width(),
+                    Texture.LEADERBOARD_BADGES.height(),
+                    height,
+                    xOffset,
+                    yOffset);
+
+            xOffset += LeaderboardBadge.WIDTH + BADGE_MARGIN;
         }
     }
 

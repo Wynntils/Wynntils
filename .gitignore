@@ -8,9 +8,10 @@ classes/
 .gradle/
 .architectury-transformer/
 
-# Data generated while running Minecraft
+# Data generated while running Minecraft or tests
 run/
 .devauth/microsoft_accounts.json
+*/logs/*
 
 # IDEs
 .idea/

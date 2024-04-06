@@ -1,10 +1,12 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
 
-public record CappedValue(int current, int max) {
+import com.google.common.collect.ComparisonChain;
+
+public record CappedValue(int current, int max) implements Comparable<CappedValue> {
     public static final CappedValue EMPTY = new CappedValue(0, 0);
 
     public CappedValue withCurrent(int newCurrent) {
@@ -43,5 +45,13 @@ public record CappedValue(int current, int max) {
     @Override
     public String toString() {
         return current + "/" + max;
+    }
+
+    @Override
+    public int compareTo(CappedValue other) {
+        return ComparisonChain.start()
+                .compare(current, other.current)
+                .compare(max, other.max)
+                .result();
     }
 }

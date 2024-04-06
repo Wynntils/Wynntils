@@ -3,15 +3,21 @@
     "Team Wynntils"
   ],
   "breaks": {
-    "creativecore": "<2.10.4"
+    "exordium": "*",
+    "memoryleakfix": "<1.1.2"
+  },
+  "conflicts": {
+    "avomod": "*",
+    "chatpatches": "*",
+    "weirdchat": "*"
   },
   "contact": {
     "homepage": "https://wynntils.com",
     "sources": "https://github.com/Wynntils/Artemis"
   },
   "depends": {
-    "fabricloader": ">=0.14.18",
-    "minecraft": "1.19.4"
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.20.2"
   },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
@@ -22,7 +28,7 @@
   "environment": "*",
   "icon": "assets/wynntils/logo.png",
   "id": "wynntils",
-  "license": "GNU AGPL 3",
+  "license": "LGPL-3.0-only",
   "mixins": [
     "wynntils.mixins.json",
     "wynntils.mixins.fabric.json"

@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
 
@@ -17,11 +17,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TerritoryInfo {
+    private static final Pattern NAME_PATTERN = Pattern.compile("(.+) \\[(.+)\\]\\s*");
     private static final Pattern GENERATOR_PATTERN =
             Pattern.compile("(.\\s)?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
     private static final Pattern STORAGE_PATTERN = Pattern.compile("(.\\s)?([0-9]+)\\/([0-9]+) stored");
     private static final Pattern DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
     private static final Pattern TREASURY_PATTERN = Pattern.compile("✦ Treasury: (.+)");
+
+    private String guildName;
+    private String guildPrefix;
 
     private final HashMap<GuildResource, TerritoryStorage> storage = new HashMap<>();
     private final HashMap<GuildResource, Integer> generators = new HashMap<>();
@@ -31,7 +35,7 @@ public class TerritoryInfo {
     private GuildResourceValues defences;
 
     private final boolean headquarters;
-    private final CustomColor color;
+    private final List<CustomColor> resourceColors = new ArrayList<>();
 
     /**
      * Holds and generates data based on the Achievement values gave by Wynncraft
@@ -68,6 +72,14 @@ public class TerritoryInfo {
             // initial trading route parsing
             if (unformatted.startsWith("-")) {
                 tradingRoutes.add(unformatted.substring(2));
+                continue;
+            }
+
+            // name parsing
+            Matcher nameMatcher = NAME_PATTERN.matcher(unformatted);
+            if (nameMatcher.matches()) {
+                guildName = nameMatcher.group(1);
+                guildPrefix = nameMatcher.group(2);
                 continue;
             }
 
@@ -112,37 +124,22 @@ public class TerritoryInfo {
             storage.put(resource, new TerritoryStorage(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))));
         }
 
-        float h = 0;
-        float s = 0.6f;
-        float v = 0.9f;
-
-        double sum = generators.entrySet().stream()
-                .filter(c -> c.getKey() != GuildResource.EMERALD)
-                .map(Map.Entry::getValue)
-                .mapToInt(Integer::intValue)
-                .sum();
-
         for (Map.Entry<GuildResource, Integer> generator : generators.entrySet()) {
-            switch (generator.getKey()) {
-                case ORE:
-                    v = 1f;
-                    s = 0.3f;
-                    break;
-                case FISH:
-                    h += 180 * (generator.getValue() / sum);
-                    break;
-                case WOOD:
-                    h += 120 * (generator.getValue() / sum);
-                    break;
-                case CROPS:
-                    h += 60 * (generator.getValue() / sum);
-                    break;
-                case EMERALD:
-                    break;
+            switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
+                case ORE -> resourceColors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
+                case FISH -> resourceColors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
+                case WOOD -> resourceColors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
+                case CROPS -> resourceColors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
             }
         }
+    }
 
-        color = CustomColor.fromHSV(h / 360f, s, v, 1);
+    public String getGuildName() {
+        return guildName;
+    }
+
+    public String getGuildPrefix() {
+        return guildPrefix;
     }
 
     public Map<GuildResource, Integer> getGenerators() {
@@ -173,8 +170,8 @@ public class TerritoryInfo {
         return defences;
     }
 
-    public CustomColor getColor() {
-        return color;
+    public List<CustomColor> getResourceColors() {
+        return resourceColors;
     }
 
     public boolean isHeadquarters() {

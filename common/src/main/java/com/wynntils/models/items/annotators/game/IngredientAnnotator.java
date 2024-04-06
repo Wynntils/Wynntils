@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class IngredientAnnotator implements ItemAnnotator {
-    // Test suite: https://regexr.com/7co3b
+    // Test in IngredientAnnotator_INGREDIENT_PATTERN
     private static final Pattern INGREDIENT_PATTERN =
             Pattern.compile("^§7(.+?)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 

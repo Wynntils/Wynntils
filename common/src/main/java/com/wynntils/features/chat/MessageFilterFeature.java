@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -21,6 +21,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class MessageFilterFeature extends Feature {
     // List of Pair<Foreground, Background>
     // Ensures we only try relevant regexes for any given message
+
+    // By policy, we should never filter out any promotional messages from Wynncraft.
+    // We do not want to harm their ability to make money and sustain the site.
 
     private static final List<Pair<Pattern, Pattern>> WELCOME = List.of(
             Pair.of(Pattern.compile("^§7Loading Resource Pack\\.\\.\\.$"), null),
@@ -43,21 +46,21 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^§8\\[§7!§8\\] §7Congratulations to (§r)?.* for reaching (combat )?§flevel .*!$"),
                     Pattern.compile("^(§8)?\\[!\\] Congratulations to (§r)?.* for reaching (combat )?§7level .*!$")));
 
-    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(
-            Pattern.compile(
-                    "^§5Party Finder:§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §e\\d+ other players§d!$"),
-            null));
+    // Test in MessageFilterFeature_PARTY_FINDER
+    private static final Pattern PARTY_FINDER_FG = Pattern.compile(
+            "^§5Party Finder:§d Hey [\\w ]{1,20}, over here! Join the [a-zA-Z'§ ]+ queue and match up with §e\\d{1,2} other players?§d!$");
+    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(PARTY_FINDER_FG, null));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideWelcome = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideSystemInfo = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideLevelUp = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hidePartyFinder = new Config<>(false);
 
     @SubscribeEvent

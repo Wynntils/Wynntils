@@ -1,15 +1,16 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
@@ -29,7 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showGuessesPrice = new Config<>(true);
 
     @SubscribeEvent
@@ -61,7 +62,7 @@ public class ItemGuessFeature extends Feature {
 
             MutableComponent itemDesc = Component.literal(gearInfo.name()).withStyle(gearTier.getChatFormatting());
 
-            if (Models.Favorites.isFavorite(gearInfo.name())) {
+            if (Services.Favorites.isFavorite(gearInfo.name())) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);
             }
 

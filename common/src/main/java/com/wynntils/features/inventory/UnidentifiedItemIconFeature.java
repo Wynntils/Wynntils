@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.gear.type.GearType;
@@ -41,12 +41,12 @@ public class UnidentifiedItemIconFeature extends Feature {
             Map.entry(GearType.MASTERY_TOME, Pair.of(16 * 0, 16 * 3)),
             Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3)));
 
-    @RegisterConfig
+    @Persisted
     public final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.WYNN);
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {
-        drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 300);
+        drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 200);
     }
 
     @SubscribeEvent
@@ -88,7 +88,7 @@ public class UnidentifiedItemIconFeature extends Feature {
             this.yOffset = yOffset;
         }
 
-        public int getTextureYOffset() {
+        private int getTextureYOffset() {
             return yOffset;
         }
     }

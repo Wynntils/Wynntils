@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -8,10 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.type.QuestSortOrder;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.models.activities.quests.QuestInfo;
+import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
@@ -30,22 +30,19 @@ import net.minecraft.world.phys.Vec3;
 public class QuestCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Quest.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
+                    Models.Quest.getQuests(ActivitySortOrder.ALPHABETIC).stream()
+                            .map(QuestInfo::getName),
+                    builder);
 
     private static final SuggestionProvider<CommandSourceStack> SORT_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Arrays.stream(QuestSortOrder.values())
+                    Arrays.stream(ActivitySortOrder.values())
                             .map(order -> order.name().toLowerCase(Locale.ROOT)),
                     builder);
 
     @Override
     public String getCommandName() {
         return "quest";
-    }
-
-    @Override
-    public String getDescription() {
-        return "List, show and track quests";
     }
 
     @Override
@@ -76,14 +73,14 @@ public class QuestCommand extends Command {
     }
 
     private int listQuests(CommandContext<CommandSourceStack> context, String sort) {
-        QuestSortOrder order = QuestSortOrder.fromString(sort);
+        ActivitySortOrder order = ActivitySortOrder.fromString(sort);
 
         Models.Quest.rescanQuestBook(true, false);
 
         if (Models.Quest.getQuestsRaw().isEmpty()) {
             context.getSource()
                     .sendSuccess(
-                            Component.literal("Quest Book was not scanned. You might have to retry this command.")
+                            () -> Component.literal("Quest Book was not scanned. You might have to retry this command.")
                                     .withStyle(ChatFormatting.YELLOW),
                             false);
         }
@@ -101,7 +98,7 @@ public class QuestCommand extends Command {
         MutableComponent response = Component.literal("Active quests:").withStyle(ChatFormatting.AQUA);
         generateQuestList(quests, response);
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -113,7 +110,7 @@ public class QuestCommand extends Command {
         if (Models.Quest.getQuestsRaw().isEmpty()) {
             context.getSource()
                     .sendSuccess(
-                            Component.literal("Quest Book was not scanned. You might have to retry this command.")
+                            () -> Component.literal("Quest Book was not scanned. You might have to retry this command.")
                                     .withStyle(ChatFormatting.YELLOW),
                             false);
         }
@@ -136,7 +133,7 @@ public class QuestCommand extends Command {
 
         generateQuestList(quests, response);
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -160,7 +157,7 @@ public class QuestCommand extends Command {
                         .withStyle(ChatFormatting.DARK_GREEN));
             }
 
-            if (quest.equals(Models.Quest.getTrackedQuest())) {
+            if (quest.equals(Models.Activity.getTrackedQuestInfo())) {
                 response.append(Component.literal(" [Tracked]")
                         .withStyle(ChatFormatting.DARK_AQUA)
                         .withStyle(style ->
@@ -179,7 +176,7 @@ public class QuestCommand extends Command {
         MutableComponent response =
                 Component.literal("Info for quest: " + quest.getName()).withStyle(ChatFormatting.AQUA);
         response.append(Component.literal("\n - Status: ").withStyle(ChatFormatting.WHITE))
-                .append(quest.getStatus().getQuestBookComponent())
+                .append(quest.getStatus().getQuestStateComponent())
                 .append(Component.literal("\n - Level: ").withStyle(ChatFormatting.WHITE))
                 .append(Component.literal(Integer.toString(quest.getLevel())).withStyle(ChatFormatting.YELLOW))
                 .append(Component.literal("\n - Length: ").withStyle(ChatFormatting.WHITE))
@@ -204,7 +201,7 @@ public class QuestCommand extends Command {
                                         Component.literal("Click to lookup quest on wiki"))))
                         .withStyle(ChatFormatting.DARK_AQUA));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -216,12 +213,12 @@ public class QuestCommand extends Command {
         Models.Quest.startTracking(quest);
         MutableComponent response =
                 Component.literal("Now tracking quest " + quest.getName()).withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
+        QuestInfo trackedQuest = Models.Activity.getTrackedQuestInfo();
         if (trackedQuest == null) {
             context.getSource()
                     .sendFailure(Component.literal("No quest currently tracked").withStyle(ChatFormatting.RED));
@@ -232,7 +229,7 @@ public class QuestCommand extends Command {
 
         MutableComponent response = Component.literal("Stopped tracking quest " + trackedQuest.getName())
                 .withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -244,7 +241,7 @@ public class QuestCommand extends Command {
         Models.Quest.openQuestOnWiki(quest);
         MutableComponent response =
                 Component.literal("Quest opened on wiki " + quest.getName()).withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -260,7 +257,7 @@ public class QuestCommand extends Command {
                         questInfo.getName().toLowerCase(Locale.ROOT).contains(questNameLowerCase))
                 .toList();
 
-        if (matchingQuests.size() < 1) {
+        if (matchingQuests.isEmpty()) {
             context.getSource()
                     .sendFailure(Component.literal("Quest '" + questName + "' not found")
                             .withStyle(ChatFormatting.RED));
@@ -268,7 +265,7 @@ public class QuestCommand extends Command {
         } else if (matchingQuests.size() > 1) {
             MutableComponent error = Component.literal("Quest '" + questName + "' match several quests:")
                     .withStyle(ChatFormatting.RED);
-            for (var quest : matchingQuests) {
+            for (QuestInfo quest : matchingQuests) {
                 error.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                         .append(Component.literal(quest.getName()).withStyle(ChatFormatting.WHITE));
             }

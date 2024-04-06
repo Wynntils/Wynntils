@@ -1,9 +1,11 @@
 /*
- * Copyright © Wynntils 2021.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2021-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -20,20 +22,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
-    private void setScreenPost(Screen screen, CallbackInfo ci) {
+    private void setScreenPost(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
         if (screen == null) {
-            MixinHelper.post(new ScreenClosedEvent());
+            MixinHelper.post(new ScreenClosedEvent(oldScreen.get()));
         } else {
             MixinHelper.post(new ScreenOpenedEvent.Post(screen));
         }
     }
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
-    private void setScreenPre(Screen screen, CallbackInfo ci) {
+    private void setScreenPre(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
+        oldScreen.set(((Minecraft) (Object) this).screen);
+
         if (screen == null) return;
 
         ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);
-        MixinHelper.post(event);
+        MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
@@ -41,8 +45,12 @@ public abstract class MinecraftMixin {
 
     @Inject(method = "tick()V", at = @At("HEAD"))
     private void tickPost(CallbackInfo ci) {
-        MixinHelper.post(new TickEvent());
+        // TickAlwaysEvent is posted before TickEvent to ensure
+        // that the tasks in TickSchedulerManager are run before
+        // any other tick event listeners could schedule new tasks
+        // making it run in the same tick
         MixinHelper.postAlways(new TickAlwaysEvent());
+        MixinHelper.post(new TickEvent());
     }
 
     @Inject(method = "resizeDisplay()V", at = @At("RETURN"))

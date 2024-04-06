@@ -1,17 +1,17 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.war;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.models.war.scoreboard.WarScoreboardPart;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class WarModel extends Model {
     }
 
     public void findWarPlayers() {
-        hadesUsers = Models.Hades.getHadesUsers()
+        hadesUsers = Services.Hades.getHadesUsers()
                 .filter(hadesUser -> hadesUser
                         .getMapLocation()
                         .asLocation()

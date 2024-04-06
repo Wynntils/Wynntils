@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.objectives;
 
@@ -36,7 +36,9 @@ public class DailyObjectiveScoreboardPart extends AbstractObjectivesScoreboardPa
             return;
         }
 
-        WynntilsMod.info("Adding " + objectives.size() + " daily objectives.");
+        if (Models.Objectives.getPersonalObjectives().isEmpty()) {
+            WynntilsMod.info("Adding " + objectives.size() + " daily objectives.");
+        }
 
         for (WynnObjective objective : objectives) {
             if (!objective.isGuildObjective()) {

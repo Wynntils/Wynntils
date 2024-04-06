@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
 
@@ -9,7 +9,8 @@ import java.util.Locale;
 public enum GearRestrictions {
     NONE(""),
     UNTRADABLE("Untradable Item"),
-    QUEST_ITEM("Quest Item");
+    QUEST_ITEM("Quest Item"),
+    SOULBOUND("Soulbound Item");
 
     private final String description;
 
@@ -18,11 +19,13 @@ public enum GearRestrictions {
     }
 
     public static GearRestrictions fromString(String typeStr) {
-        try {
-            return GearRestrictions.valueOf(typeStr.toUpperCase(Locale.ROOT).replace(" ", "_"));
-        } catch (IllegalArgumentException e) {
-            return null;
+        for (GearRestrictions type : GearRestrictions.values()) {
+            if (type.name().replaceAll("_", " ").toLowerCase(Locale.ROOT).equals(typeStr.toLowerCase(Locale.ROOT))) {
+                return type;
+            }
         }
+
+        return null;
     }
 
     public String getDescription() {

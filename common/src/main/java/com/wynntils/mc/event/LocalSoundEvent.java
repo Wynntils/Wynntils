@@ -1,10 +1,11 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -19,6 +20,19 @@ public abstract class LocalSoundEvent extends Event {
 
     public SoundEvent getSound() {
         return sound;
+    }
+
+    public static final class Client extends LocalSoundEvent {
+        private final SoundSource source;
+
+        public Client(SoundEvent sound, SoundSource source) {
+            super(sound);
+            this.source = source;
+        }
+
+        public SoundSource getSource() {
+            return source;
+        }
     }
 
     public static final class Player extends LocalSoundEvent {

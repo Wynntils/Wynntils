@@ -1,10 +1,15 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
 
+import com.google.common.reflect.TypeToken;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.spells.type.SpellType;
@@ -25,35 +30,45 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.type.RangedValue;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 public final class StatModel extends Model {
     private final List<StatType> statTypeRegistry = new ArrayList<>();
     private final StatLookupTable statTypeLookup = new StatLookupTable();
     private final Map<StatListOrdering, List<StatType>> orderingLists;
-    private final List<SkillStatType> skillStats;
+
+    // An id map for stat type -> unique id keys, used for gear chat encoding
+    private Map<StatType, Integer> statTypeIdMap = new HashMap<>();
 
     public StatModel() {
         super(List.of());
 
         // First build stats of all kinds
+        List<SkillStatType> skillStats = buildStats(new SkillStatBuilder());
         List<MiscStatType> miscStats = buildStats(new MiscStatBuilder());
         List<DefenceStatType> defenceStats = buildStats(new DefenceStatBuilder());
         List<DamageStatType> damageStats = buildStats(new DamageStatBuilder());
         List<SpellStatType> spellStats = buildStats(new SpellStatBuilder());
 
-        // Skill stats is special, they are not variable for gear
-        skillStats = buildStats(new SkillStatBuilder());
-
         // Then put them all in the registry
-        initRegistry(miscStats, defenceStats, damageStats, spellStats);
+        initRegistry(skillStats, miscStats, defenceStats, damageStats, spellStats);
 
         // Finally create ordered lists for sorting
-        orderingLists = StatListOrderer.createOrderingMap(miscStats, defenceStats, damageStats, spellStats);
+        orderingLists = StatListOrderer.createOrderingMap(skillStats, miscStats, defenceStats, damageStats, spellStats);
+
+        reloadData();
+    }
+
+    @Override
+    public void reloadData() {
+        loadIdentificationKeys();
     }
 
     public StatActualValue buildActualValue(
@@ -73,17 +88,31 @@ public final class StatModel extends Model {
             if (statType.getInternalRollName().equals(id)) return statType;
         }
 
-        for (StatType statType : skillStats) {
-            if (statType.getInternalRollName().equals(id)) return statType;
+        return null;
+    }
+
+    public StatType fromApiName(String id) {
+        for (StatType statType : statTypeRegistry) {
+            if (statType.getApiName().equals(id)) return statType;
         }
 
         return null;
     }
 
-    public String getDisplayName(StatType statType, GearInfo gearInfo, ClassType currentClass) {
-        if (statType instanceof SpellStatType spellStatType) {
-            ClassType classReq = gearInfo.type().getClassReq();
+    public Optional<Integer> getIdForStatType(StatType statType) {
+        return Optional.ofNullable(statTypeIdMap.get(statType));
+    }
 
+    public Optional<StatType> getStatTypeForId(int id) {
+        return statTypeIdMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == id)
+                .map(Map.Entry::getKey)
+                .findFirst();
+    }
+
+    public String getDisplayName(
+            StatType statType, ClassType classReq, ClassType currentClass, RangedValue workingLevelRange) {
+        if (statType instanceof SpellStatType spellStatType) {
             // If there is no class associated with the gear (i.e. it is not
             // a weapon), chose our current class
             ClassType classToUse = classReq != null ? classReq : currentClass;
@@ -91,6 +120,12 @@ public final class StatModel extends Model {
             SpellType spellType = spellStatType.getSpellType().forOtherClass(classToUse);
             return SpellStatBuilder.getStatNameForSpell(spellType.getName());
         }
+
+        // Inject level range into charm leveled stats
+        if (statType.getSpecialStatType() == StatType.SpecialStatType.CHARM_LEVELED_STAT) {
+            return statType.getDisplayName().replace("${}", workingLevelRange.low() + "-" + workingLevelRange.high());
+        }
+
         return statType.getDisplayName();
     }
 
@@ -119,10 +154,12 @@ public final class StatModel extends Model {
     }
 
     private void initRegistry(
+            List<SkillStatType> skillStats,
             List<MiscStatType> miscStats,
             List<DefenceStatType> defenceStats,
             List<DamageStatType> damageStats,
             List<SpellStatType> spellStats) {
+        statTypeRegistry.addAll(skillStats);
         statTypeRegistry.addAll(miscStats);
         statTypeRegistry.addAll(defenceStats);
         statTypeRegistry.addAll(damageStats);
@@ -140,15 +177,63 @@ public final class StatModel extends Model {
         }
     }
 
+    private void loadIdentificationKeys() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_IDENTIFICATION_KEYS);
+        dl.handleReader(reader -> {
+            Type type = new TypeToken<Map<String, Integer>>() {}.getType();
+            Map<String, Integer> apiNamesToIdMap = Managers.Json.GSON.fromJson(reader, type);
+
+            Map<StatType, Integer> tempMap = new HashMap<>();
+
+            for (Map.Entry<String, Integer> entry : apiNamesToIdMap.entrySet()) {
+                StatType statType = fromApiName(entry.getKey());
+                if (statType == null) {
+                    WynntilsMod.warn("Unknown stat type for identification key: " + entry.getKey());
+                    continue;
+                }
+
+                tempMap.put(statType, entry.getValue());
+            }
+
+            statTypeIdMap = Map.copyOf(tempMap);
+        });
+    }
+
     private static class StatLookupTable {
         private final Map<String, StatType> lookupTable = new HashMap<>();
+        private final Map<Pattern, StatType> regexLookupTable = new HashMap<>();
 
         private StatType get(String displayName, String unit) {
             String lookupName = displayName + (unit == null ? "" : unit);
-            return lookupTable.get(lookupName);
+            StatType statType = lookupTable.get(lookupName);
+
+            if (statType != null) return statType;
+
+            for (Map.Entry<Pattern, StatType> entry : regexLookupTable.entrySet()) {
+                if (entry.getKey().matcher(displayName).matches()) {
+                    statType = entry.getValue();
+                    break;
+                }
+            }
+
+            return statType;
         }
 
         private void put(String displayName, StatUnit unit, StatType statType) {
+            // If the stat is a tome base stat,
+            // we don't want to add it to the lookup table,
+            // as we won't look it up in a regular way
+            if (statType.getSpecialStatType() == StatType.SpecialStatType.TOME_BASE_STAT) return;
+
+            // If the stat is a charm leveled stat,
+            // we want to add it to the regex lookup table
+            // because the stat name will have a level range in it
+            if (statType.getSpecialStatType() == StatType.SpecialStatType.CHARM_LEVELED_STAT) {
+                regexLookupTable.put(
+                        Pattern.compile(statType.getDisplayName().replace("${}", "(\\d+)-(\\d+)")), statType);
+                return;
+            }
+
             String lookupName = displayName + unit.getDisplayName();
             lookupTable.put(lookupName, statType);
         }

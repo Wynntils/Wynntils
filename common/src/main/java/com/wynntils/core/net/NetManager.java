@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
 
@@ -17,8 +17,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -28,16 +30,14 @@ public final class NetManager extends Manager {
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
     private static final String USER_AGENT = String.format(
-            "Wynntils Artemis\\%s (%s) %s",
+            "Wynntils Artemis\\%s+MC-%s (%s) %s",
             WynntilsMod.getVersion(),
+            SharedConstants.getCurrentVersion().getName(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 
-    public NetManager(UrlManager urlManager) {
-        // NetManager is involved in a circular dependency with UrlManager. This means
-        // it will be instantiated twice, first as a throw-away instance local to UrlManager
-        // bootstrapping only, then as the real instance for Managers.
-        super(List.of(urlManager));
+    public NetManager() {
+        super(List.of());
     }
 
     public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
@@ -131,6 +131,9 @@ public final class NetManager extends Manager {
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
+            assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())))
+                    : "Arguments mismatch for " + urlId + ", expected: " + urlInfo.arguments() + " got: "
+                            + arguments.keySet();
 
             JsonObject jsonArgs = new JsonObject();
             arguments.forEach(jsonArgs::addProperty);
@@ -146,7 +149,12 @@ public final class NetManager extends Manager {
 
         try (InputStream is = Files.newInputStream(localFile.toPath())) {
             String fileHash = DigestUtils.md5Hex(is);
-            return fileHash.equalsIgnoreCase(expectedHash);
+            boolean hashMatches = fileHash.equalsIgnoreCase(expectedHash);
+            if (WynntilsMod.isDevelopmentEnvironment() && !hashMatches) {
+                WynntilsMod.warn("Hash mismatch for " + localFile.getPath() + ": " + fileHash + " != " + expectedHash
+                        + ". If you see this often, check urls.json, there might be an outdated hash.");
+            }
+            return hashMatches;
         } catch (IOException e) {
             WynntilsMod.warn("Error when calculating md5 for " + localFile.getPath(), e);
             return false;

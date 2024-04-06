@@ -34,10 +34,11 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     // Hades Protocol
-    include(forgeRuntimeLibrary("com.wynntils.hades:hades:${hades_version}"))
+    include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
+    include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
-    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
-    implementation(include("com.github.llamalad7.mixinextras:mixinextras-forge:${mixinextras_version}"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
 }
 
 processResources {
@@ -51,19 +52,21 @@ processResources {
 shadowJar {
     exclude "fabric.mod.json"
 
-    configurations = [project.configurations.shadowCommon]
+    configurations = [
+        project.configurations.shadowCommon
+    ]
 
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "forge"
+    archiveClassifier = "forge+MC-${minecraft_version}"
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {

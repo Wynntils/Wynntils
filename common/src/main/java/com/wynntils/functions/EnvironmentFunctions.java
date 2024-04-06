@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             // FIXME: These aliases are a bit backwards, let's clean it up in the future
             return List.of("capped_memory");
         }
@@ -50,11 +50,11 @@ public class EnvironmentFunctions {
     public static class StopwatchZero extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.isZero();
+            return Services.Stopwatch.isZero();
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("stopwatch_is_zero");
         }
     }
@@ -62,35 +62,35 @@ public class EnvironmentFunctions {
     public static class StopwatchRunningFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.isRunning();
+            return Services.Stopwatch.isRunning();
         }
     }
 
     public static class StopwatchHoursFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getHours();
+            return Services.Stopwatch.getHours();
         }
     }
 
     public static class StopwatchMinutesFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getMinutes();
+            return Services.Stopwatch.getMinutes();
         }
     }
 
     public static class StopwatchSecondsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getSeconds();
+            return Services.Stopwatch.getSeconds();
         }
     }
 
     public static class StopwatchMillisecondsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getMilliseconds();
+            return Services.Stopwatch.getMilliseconds();
         }
     }
 
@@ -101,7 +101,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("memorymax", "memmax");
         }
     }
@@ -113,7 +113,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("memoryused", "memused");
         }
     }
@@ -125,7 +125,7 @@ public class EnvironmentFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("memorypct", "mempct");
         }
     }

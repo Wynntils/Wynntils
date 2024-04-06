@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Optional;
@@ -12,10 +13,10 @@ import java.util.regex.Pattern;
 
 public final class LocationUtils {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile(
-            "(?<x>[-+]?\\d{1,6})(?:.\\d+)?([^0-9.+-]{1,5}(?<y>[-+]?\\d{1,3})(?:.\\d+)?)?[^0-9.+-]{1,5}(?<z>[-+]?\\d{1,6})(?:.\\d+)?");
+            "\\s*(?<x>[-+]?\\d{1,6})(?:\\.\\d+)?([^0-9.+-]{1,5}(?<y>[-+]?\\d{1,3})(?:\\.\\d+)?)?[^0-9.+-]{1,5}(?<z>[-+]?\\d{1,6})(?:\\.\\d+)?\\s*");
 
     private static final Pattern STRICT_COORDINATE_PATTERN = Pattern.compile(
-            "([-+]?\\d{1,6})(?:.\\d+)?([,\\s]{1,2}([-+]?\\d{1,3})(?:.\\d+)?)?[,\\s]{1,2}([-+]?\\d{1,6})(?:.\\d+)?");
+            "(?:^|\\s|\\[)\\s*([-+]?\\d{1,6}(?:[\\s,]{0,2}[-+]?\\d{1,3}(?:[\\s,]{0,2}[-+]?\\d{1,6})?)?)\\s*(?:\\]|\\s+|$)");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
@@ -45,19 +46,18 @@ public final class LocationUtils {
     }
 
     public static void shareCompass(String target, Location compass) {
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+        String locationString = "My compass is at [" + compass.x + ", " + compass.y + ", " + compass.z + "]";
 
         LocationUtils.sendShareMessage(target, locationString);
     }
 
     private static void sendShareMessage(String target, String locationString) {
         if (target.equals("guild")) {
-            McUtils.sendCommand("g " + locationString);
+            Handlers.Command.sendCommandImmediately("g " + locationString);
         } else if (target.equals("party")) {
-            McUtils.sendCommand("p " + locationString);
+            Handlers.Command.sendCommandImmediately("p " + locationString);
         } else {
-            McUtils.sendCommand("msg " + target + " " + locationString);
+            Handlers.Command.sendCommandImmediately("msg " + target + " " + locationString);
         }
     }
 }

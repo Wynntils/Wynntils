@@ -1,21 +1,24 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -23,9 +26,11 @@ public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\u2060\u2064\u2061";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
-    public static final int SPINNER_SPEED = 1200;
+    private static final int SPINNER_SPEED = 1200;
 
-    private String message;
+    private String message = "";
+    private String title = "";
+    private String subtitle = "";
 
     private LoadingScreen() {
         super(Component.translatable("screens.wynntils.characterSelection.name"));
@@ -35,12 +40,32 @@ public final class LoadingScreen extends WynntilsScreen {
         return new LoadingScreen();
     }
 
+    @Override
+    public void onClose() {
+        ClientPacketListener connection = McUtils.mc().getConnection();
+        if (connection != null) {
+            connection.close();
+        }
+
+        super.onClose();
+    }
+
     public void setMessage(String message) {
         this.message = message;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         // Draw background
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -57,15 +82,15 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw notebook background
         poseStack.translate(
-                (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f,
-                (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f,
+                (this.width - Texture.SCROLL_BACKGROUND.width()) / 2f,
+                (this.height - Texture.SCROLL_BACKGROUND.height()) / 2f,
                 0);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.CHANGELOG_BACKGROUND, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, 0, 0);
 
         // Draw logo
-        int centerX = Texture.CHANGELOG_BACKGROUND.width() / 2 + 15;
-        String logoString = Managers.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
+        int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
+        String logoString = Services.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -83,7 +108,29 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(message),
                         centerX,
+                        100,
+                        MOSS_GREEN,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+
+        // Draw additional messages (typically about queue position)
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(title),
+                        centerX,
                         120,
+                        MOSS_GREEN,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(subtitle),
+                        centerX,
+                        130,
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
@@ -97,11 +144,11 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
-        ResourceLocation resource = Texture.RELOAD_BUTTON.resource();
+        ResourceLocation resource = Texture.RELOAD_ICON_OFFSET.resource();
 
-        int fullWidth = Texture.RELOAD_BUTTON.width();
+        int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
         int width = fullWidth / 2;
-        int height = Texture.RELOAD_BUTTON.height();
+        int height = Texture.RELOAD_ICON_OFFSET.height();
         int uOffset = state ? width : 0;
 
         RenderUtils.drawTexturedRect(

@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem;
 
@@ -40,7 +40,7 @@ public class WynnItemModel extends Model {
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
-        return itemObtainMap.get(name);
+        return itemObtainMap.getOrDefault(name, List.of());
     }
 
     public Optional<String> getMaterialName(int idCode, int damageCode) {

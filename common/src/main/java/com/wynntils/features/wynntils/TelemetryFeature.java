@@ -1,23 +1,24 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -29,7 +30,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
 
     @SubscribeEvent
@@ -62,16 +63,19 @@ public class TelemetryFeature extends Feature {
         if (crashReports.get() != ConfirmedBoolean.UNCONFIRMED) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
-        component.append(Component.literal("Wynntils can send telemetry data when a component fails.\n"
-                        + "This data does not contain any personal information,\n"
-                        + "but is helpful for developers for fixing bugs in Wynntils.\n")
+        component.append(Component.literal(
+                        """
+                        Wynntils can send telemetry data when a component fails.
+                        This data does not contain any personal information,
+                        but is helpful for developers for fixing bugs in Wynntils.
+                        """)
                 .withStyle(ChatFormatting.GRAY));
 
         component.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set TelemetryFeature crashReports true"))));
+                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set Telemetry crashReports true"))));
         component.append(
                 Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
 
@@ -79,16 +83,10 @@ public class TelemetryFeature extends Feature {
                 .withStyle(ChatFormatting.RED)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set TelemetryFeature crashReports false"))));
+                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set Telemetry crashReports false"))));
         component.append(
                 Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
 
         McUtils.sendMessageToClient(component);
-    }
-
-    public enum ConfirmedBoolean {
-        FALSE,
-        TRUE,
-        UNCONFIRMED
     }
 }

@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
+import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.questbook.widgets.QuestBookSearchWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -19,6 +19,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -33,7 +34,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
-    private final QuestBookSearchWidget searchWidget;
+    protected SearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override
@@ -48,22 +49,22 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Do not lose search info on re-init
         this.searchWidget = new QuestBookSearchWidget(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15),
                 0,
-                Texture.QUEST_BOOK_SEARCH.width(),
-                Texture.QUEST_BOOK_SEARCH.height(),
+                Texture.CONTENT_BOOK_SEARCH.width(),
+                Texture.CONTENT_BOOK_SEARCH.height(),
                 s -> reloadElements(),
                 this);
     }
 
-    protected void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
+            renderable.render(guiGraphics, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {
@@ -78,9 +79,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width(),
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -92,15 +93,27 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(key),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f,
                         0,
-                        Texture.QUEST_BOOK_BACKGROUND.height(),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
+                        Texture.CONTENT_BOOK_BACKGROUND.height(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
+    }
+
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        List<Component> tooltipLines = List.of();
+
+        if (this.hovered instanceof TooltipProvider tooltipWidget) {
+            tooltipLines = tooltipWidget.getTooltipLines();
+        }
+
+        if (tooltipLines.isEmpty()) return;
+
+        guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
     }
 
     @Override
@@ -144,7 +157,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
-            McUtils.mc().setScreen(null);
+            onClose();
             return true;
         }
 
@@ -165,10 +178,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Usually, mouse scroll wheel delta is always (-)1
-        if (Math.abs(delta) == 1) {
-            setCurrentPage(getCurrentPage() - (int) delta);
+        if (Math.abs(deltaY) == 1) {
+            setCurrentPage(getCurrentPage() - (int) deltaY);
             return true;
         }
 
@@ -176,7 +189,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Delta is divided by 10 to make it more precise
         // We subtract so scrolling down actually scrolls down
-        currentScroll -= delta / 10d;
+        currentScroll -= deltaY / 10d;
 
         if (Math.abs(currentScroll) < 1) return true;
 
@@ -246,5 +259,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     protected int getElementsPerPage() {
         return 13;
+    }
+
+    @Override
+    public void added() {
+        searchWidget.opened();
+        super.added();
     }
 }

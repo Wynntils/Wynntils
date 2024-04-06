@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
@@ -13,6 +13,10 @@ public abstract class ItemTooltipFlagsEvent extends Event {
 
     protected ItemTooltipFlagsEvent(ItemStack itemStack) {
         this.itemStack = itemStack;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
     public static final class Advanced extends ItemTooltipFlagsEvent {

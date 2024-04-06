@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
 
@@ -14,11 +14,11 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -43,14 +43,12 @@ public class AddCommandExpansionFeature extends Feature {
 
     private static final SuggestionProvider<CommandSourceStack> PARTY_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Party.getPartyMembers().stream()
-                            .filter(p -> !p.equals(McUtils.player().getName().getString())),
-                    builder);
+                    Models.Party.getPartyMembers().stream().filter(p -> !p.equals(McUtils.playerName())), builder);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     @SubscribeEvent
@@ -389,6 +387,7 @@ public class AddCommandExpansionFeature extends Feature {
                 .then(literal("high"))
                 .then(literal("veryhigh"))
                 .then(literal("highest"))
+                .then(literal("unlimited"))
                 .then(argument("particles_per_tick", IntegerArgumentType.integer()))
                 .build();
         addNode(root, node);

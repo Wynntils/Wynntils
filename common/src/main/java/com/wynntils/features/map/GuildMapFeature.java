@@ -1,16 +1,16 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -19,11 +19,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class GuildMapFeature extends Feature {
-
-    @RegisterConfig
+    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @RegisterKeyBind

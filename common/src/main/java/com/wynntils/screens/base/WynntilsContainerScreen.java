@@ -1,13 +1,12 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,14 +19,13 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
 
     private void failure(String method, Throwable e) {
         WynntilsMod.error("Failure in " + this.getClass().getSimpleName() + "." + method + "()", e);
-        McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in "
-                        + this.getClass().getSimpleName() + " during " + method + ". Screen forcefully closed.")
-                .withStyle(ChatFormatting.RED));
+        McUtils.sendErrorToClient("Wynntils: Failure in " + this.getClass().getSimpleName() + " during " + method
+                + ". Screen forcefully closed.");
         McUtils.mc().setScreen(null);
     }
 
     @Override
-    protected final void init() {
+    public final void init() {
         try {
             doInit();
         } catch (Throwable t) {
@@ -40,15 +38,15 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
     }
 
     @Override
-    public final void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public final void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         try {
-            doRender(poseStack, mouseX, mouseY, partialTick);
+            doRender(guiGraphics, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
             failure("render", t);
         }
     }
 
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.render(poseStack, mouseX, mouseY, partialTick);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 }

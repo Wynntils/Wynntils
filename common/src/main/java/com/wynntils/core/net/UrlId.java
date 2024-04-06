@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
 
@@ -20,29 +20,36 @@ public enum UrlId {
     API_ATHENA_AUTH_PUBLIC_KEY("apiAthenaAuthPublicKey"),
     API_ATHENA_AUTH_RESPONSE("apiAthenaAuthResponse"),
     API_ATHENA_TELEMETRY_CRASH("apiAthenaTelemetryCrash"),
-    API_ATHENA_UPDATE_CHECK("apiAthenaUpdateCheck"),
     API_ATHENA_UPDATE_CHANGELOG("apiAthenaUpdateChangelog"),
+    API_ATHENA_UPDATE_CHECK("apiAthenaUpdateCheck"),
     API_ATHENA_USER_INFO("apiAthenaUserInfo"),
     API_GOOGLE_TRANSLATION("apiGoogleTranslation"),
     API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),
     API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
+    DATA_ATHENA_GUILD_LIST("dataAthenaGuildList"),
+    DATA_ATHENA_LEADERBOARD("dataAthenaLeaderboard"),
     DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
-    DATA_ATHENA_TERRITORY_LIST("dataAthenaTerritoryList"),
     DATA_STATIC_ABILITIES("dataStaticAbilities"),
+    DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),
+    DATA_STATIC_CHARMS("dataStaticCharms"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
-    DATA_STATIC_DISCOVERIES("dataStaticDiscoveries"),
-    DATA_STATIC_GEAR("dataStaticGear"),
-    DATA_STATIC_INGREDIENTS("dataStaticIngredients"),
-    DATA_STATIC_INGREDIENT_SKINS("dataStaticIngredientSkins"),
+    DATA_STATIC_DESTINATIONS("dataStaticDestinations"),
+    DATA_STATIC_GEAR_ADVANCED("dataStaticGearAdvanced"),
+    DATA_STATIC_IDENTIFICATION_KEYS("dataStaticIdentificationKeys"),
+    DATA_STATIC_INGREDIENTS_ADVANCED("dataStaticIngredientsAdvanced"),
     DATA_STATIC_ITEM_OBTAIN("dataStaticItemObtain"),
-    DATA_STATIC_MAJOR_IDS("dataStaticMajorIds"),
+    DATA_STATIC_ITEM_SETS("dataStaticItemSets"),
+    DATA_STATIC_LOOTRUN_TASKS_NAMED("dataStaticLootrunTasksNamed"),
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_MATERIAL_CONVERSION("dataStaticMaterialConversion"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
+    DATA_STATIC_SHINY_STATS("dataStaticShinyStats"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
+    DATA_STATIC_TOMES("dataStaticTomes"),
     DATA_STATIC_URLS("dataStaticUrls"),
+    DATA_WYNNCRAFT_TERRITORY_LIST("dataWynncraftTerritoryListV3"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
     LINK_WYNNDATA_ITEM_LOOKUP("linkWynndataItemLookup"),

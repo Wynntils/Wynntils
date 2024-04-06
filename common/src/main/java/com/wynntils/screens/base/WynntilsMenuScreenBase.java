@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -34,12 +35,12 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
     }
 
     protected void renderBackgroundTexture(PoseStack poseStack) {
-        int txWidth = Texture.QUEST_BOOK_BACKGROUND.width();
-        int txHeight = Texture.QUEST_BOOK_BACKGROUND.height();
+        int txWidth = Texture.CONTENT_BOOK_BACKGROUND.width();
+        int txHeight = Texture.CONTENT_BOOK_BACKGROUND.height();
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.QUEST_BOOK_BACKGROUND.resource(),
+                Texture.CONTENT_BOOK_BACKGROUND.resource(),
                 (this.width - txWidth) / 2f,
                 (this.height - txHeight) / 2f,
                 0,
@@ -60,8 +61,8 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(version),
                         59f * 1.3f,
-                        (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f) * 1.3f,
-                        Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
+                        (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f) * 1.3f,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() * 1.3f - 6f,
                         0,
                         CommonColors.YELLOW,
                         HorizontalAlignment.CENTER,
@@ -70,10 +71,10 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
     }
 
     protected void renderTitle(PoseStack poseStack, String titleString) {
-        int txWidth = Texture.QUEST_BOOK_TITLE.width();
-        int txHeight = Texture.QUEST_BOOK_TITLE.height();
+        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
+        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
-                poseStack, Texture.QUEST_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
+                poseStack, Texture.CONTENT_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
 
         poseStack.pushPose();
         poseStack.scale(2f, 2f, 0f);
@@ -90,25 +91,37 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         poseStack.popPose();
     }
 
-    protected void renderDescription(PoseStack poseStack, String description) {
+    protected void renderDescription(PoseStack poseStack, String description, String filterHelper) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(description),
                         20,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        140,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
+                        80,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.LEFT,
+                        TextShadow.NONE);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        StyledText.fromString(filterHelper),
+                        20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
+                        105,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 
-    public float getTranslationX() {
-        return (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f;
+    protected float getTranslationX() {
+        return (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f;
     }
 
-    public float getTranslationY() {
-        return (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f;
+    protected float getTranslationY() {
+        return (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f;
     }
 }

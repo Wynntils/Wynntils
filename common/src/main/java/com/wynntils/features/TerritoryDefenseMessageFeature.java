@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -36,7 +37,8 @@ public class TerritoryDefenseMessageFeature extends Feature {
             Matcher matcher = StyledText.fromComponent(tooltipLine)
                     .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
             if (matcher.matches()) {
-                McUtils.sendCommand("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
+                Handlers.Command.sendCommandImmediately(
+                        "g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
                 return;
             }
         }

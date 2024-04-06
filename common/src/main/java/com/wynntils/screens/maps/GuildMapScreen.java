@@ -1,25 +1,26 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.TerritoryPoi;
-import com.wynntils.models.map.pois.WaypointPoi;
-import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -32,8 +33,11 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -44,10 +48,13 @@ import org.lwjgl.glfw.GLFW;
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
+    private boolean hybridMode = true;
+
     private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
     private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;
+    private BasicTexturedButton hybridModeButton;
 
     private GuildMapScreen() {}
 
@@ -62,14 +69,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
         // Buttons have to be added in reverse order (right to left) so they don't overlap
 
         this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 7 + 20 * 6,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
+                        - 8),
+                10,
                 16,
-                16,
-                Texture.MAP_HELP_BUTTON,
+                Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
                         Component.literal("[>] ")
@@ -79,15 +86,31 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable("screens.wynntils.guildMap.help.description1")))));
 
+        this.addRenderableWidget(
+                hybridModeButton = new BasicTexturedButton(
+                        width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20 * 2,
+                        (int) (this.renderHeight
+                                - this.renderedBorderYOffset
+                                - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                                - 8),
+                        16,
+                        16,
+                        Texture.OVERLAY_EXTRA_ICON,
+                        (b) -> {
+                            hybridMode = !hybridMode;
+                            hybridModeButton.setTooltip(getHybridModeTooltip());
+                        },
+                        getHybridModeTooltip()));
+
         territoryDefenseFilterButton = this.addRenderableWidget(new BasicTexturedButton(
-                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20,
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 4 + 20,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
+                        - 8),
                 16,
                 16,
-                Texture.MAP_DEFENSE_FILTER_BUTTON,
+                Texture.DEFENSE_FILTER_ICON,
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
                     if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -124,10 +147,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
                         - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
-                        - 6),
-                16,
-                16,
-                Texture.MAP_ADD_BUTTON,
+                        - 7),
+                14,
+                14,
+                Texture.ADD_ICON,
                 (b) -> resourceMode = !resourceMode,
                 List.of(
                         Component.literal("[>] ")
@@ -135,10 +158,21 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
                         Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        if (firstInit) {
+            // When outside of the main map, center to the middle of the map
+            if (!isPlayerInsideMainArea()) {
+                centerMap();
+            }
+
+            firstInit = false;
+        }
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
                         .openGuildMapKeybind
@@ -147,8 +181,6 @@ public final class GuildMapScreen extends AbstractMapScreen {
             this.onClose();
             return;
         }
-
-        updateMapCenterIfDragging(mouseX, mouseY);
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -174,13 +206,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor();
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         renderCoordinates(poseStack, mouseX, mouseY);
 
-        renderMapButtons(poseStack, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredTerritoryInfo(poseStack);
+
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -204,11 +238,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                TerritoryPoi routePoi = Models.Territory.getTerritoryPoiFromAdvancement(tradingRoute);
+                Optional<Poi> routePoi = filteredPois.stream()
+                        .filter(filteredPoi -> filteredPoi.getName().equals(tradingRoute))
+                        .findFirst();
+
                 // Only render connection if the other poi is also in the filtered pois
-                if (routePoi != null && filteredPois.contains(routePoi)) {
-                    float x = MapRenderer.getRenderX(routePoi, mapCenterX, centerX, currentZoom);
-                    float z = MapRenderer.getRenderZ(routePoi, mapCenterZ, centerZ, currentZoom);
+                if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
+                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, currentZoom);
+                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, currentZoom);
 
                     RenderUtils.drawLine(poseStack, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 0, 1);
                 }
@@ -244,17 +281,19 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            McUtils.sendCommand("gu territory " + territoryPoi.getName());
+            Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            Location location = new Location(gameX, 0, gameZ);
+
             if (hovered instanceof WaypointPoi) {
-                Models.Compass.reset();
+                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(location);
                 return true;
             }
 
-            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-            Models.Compass.setCompassLocation(new Location(gameX, 0, gameZ));
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location);
             return true;
         }
 
@@ -267,34 +306,89 @@ public final class GuildMapScreen extends AbstractMapScreen {
         poseStack.pushPose();
         poseStack.translate(width - SCREEN_SIDE_OFFSET - 250, SCREEN_SIDE_OFFSET + 40, 101);
 
+        if (territoryPoi.isFakeTerritoryInfo()) {
+            renderTerritoryTooltipWithFakeInfo(poseStack, territoryPoi);
+        } else {
+            renderTerritoryTooltip(poseStack, territoryPoi);
+        }
+
+        poseStack.popPose();
+    }
+
+    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
+        List<TerritoryPoi> advancementPois = territoryDefenseFilterEnabled
+                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
+                        territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
+                : Models.Territory.getTerritoryPoisFromAdvancement();
+
+        List<Poi> renderedPois = new ArrayList<>();
+
+        if (hybridMode) {
+            // We base hybrid mode on the advancement pois, it should be more consistent
+
+            for (TerritoryPoi poi : advancementPois) {
+                TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(poi.getName());
+
+                // If the API and advamcement pois don't match, we use the API pois without advancement info
+                if (territoryProfile != null
+                        && territoryProfile
+                                .getGuild()
+                                .equals(poi.getTerritoryInfo().getGuildName())) {
+                    renderedPois.add(poi);
+                } else {
+                    renderedPois.add(new TerritoryPoi(territoryProfile, poi.getTerritoryInfo()));
+                }
+            }
+        } else {
+            renderedPois.addAll(advancementPois);
+        }
+
+        Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().forEach(renderedPois::add);
+
+        renderPois(
+                renderedPois,
+                poseStack,
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                1,
+                mouseX,
+                mouseY);
+    }
+
+    public boolean isResourceMode() {
+        return resourceMode;
+    }
+
+    private static void renderTerritoryTooltip(PoseStack poseStack, TerritoryPoi territoryPoi) {
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
+
+        final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
+
         final float centerHeight = 75
                 + (territoryInfo.getStorage().values().size()
                                 + territoryInfo.getGenerators().size())
                         * 10
                 + (territoryInfo.isHeadquarters() ? 20 : 0);
-        final int textureWidth = Texture.TERRITORY_TOOLTIP_CENTER.width();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.TERRITORY_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.TERRITORY_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
                 0,
-                Texture.TERRITORY_TOOLTIP_TOP.height(),
+                Texture.MAP_INFO_TOOLTIP_TOP.height(),
                 textureWidth,
                 centerHeight,
                 textureWidth,
-                Texture.TERRITORY_TOOLTIP_CENTER.height());
+                Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.TERRITORY_NAME_BOX, 0, Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight);
+                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
 
         // guild
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(
-                                "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
+                                "%s [%s]".formatted(territoryInfo.getGuildName(), territoryInfo.getGuildPrefix())),
                         10,
                         10,
                         CommonColors.MAGENTA,
@@ -392,12 +486,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderYOffset += 20;
 
+        String timeHeldString = territoryProfile.getGuild().equals(territoryInfo.getGuildName())
+                ? territoryProfile.getTimeAcquiredColor() + territoryProfile.getReadableRelativeTimeAcquired()
+                : "-";
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(
-                                ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
-                                        + territoryProfile.getReadableRelativeTimeAcquired()),
+                        StyledText.fromString(ChatFormatting.GRAY + "Time Held: " + timeHeldString),
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
@@ -412,36 +507,75 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         StyledText.fromString(territoryPoi.getName()),
                         7,
                         textureWidth,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight + Texture.TERRITORY_NAME_BOX.height(),
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
-
-        poseStack.popPose();
     }
 
-    private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Poi> pois = territoryDefenseFilterEnabled
-                ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
-                        territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
-                : Models.Territory.getTerritoryPoisFromAdvancement();
+    private static void renderTerritoryTooltipWithFakeInfo(PoseStack poseStack, TerritoryPoi territoryPoi) {
+        final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
+        final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
 
-        Models.Compass.getCompassWaypoint().ifPresent(pois::add);
+        final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        renderPois(
-                pois,
+        final float centerHeight = 35;
+
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(
                 poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
-                1,
-                mouseX,
-                mouseY);
-    }
+                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
+                0,
+                Texture.MAP_INFO_TOOLTIP_TOP.height(),
+                textureWidth,
+                centerHeight,
+                textureWidth,
+                Texture.MAP_INFO_TOOLTIP_CENTER.height());
+        RenderUtils.drawTexturedRect(
+                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
 
-    public boolean isResourceMode() {
-        return resourceMode;
+        // guild
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(
+                                "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
+                        10,
+                        10,
+                        CommonColors.MAGENTA,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.OUTLINE);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.guildMap.hybridMode.noAdvancementData")),
+                        10,
+                        30,
+                        CommonColors.LIGHT_GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.OUTLINE);
+
+        // Territory name
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        StyledText.fromString(territoryPoi.getName()),
+                        7,
+                        textureWidth,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
+                        0,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.OUTLINE);
     }
 
     private List<Component> getCompleteFilterTooltip() {
@@ -465,5 +599,22 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description3")
                         .withStyle(ChatFormatting.GRAY),
                 lastLine);
+    }
+
+    private List<Component> getHybridModeTooltip() {
+        return List.of(
+                Component.literal("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(Component.translatable("screens.wynntils.guildMap.hybridMode.name")),
+                Component.translatable("screens.wynntils.guildMap.hybridMode.description1")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("screens.wynntils.guildMap.hybridMode.description2")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(
+                                (hybridMode
+                                        ? Component.translatable("screens.wynntils.guildMap.hybridMode.hybrid")
+                                                .withStyle(ChatFormatting.GREEN)
+                                        : Component.translatable("screens.wynntils.guildMap.hybridMode.advancement")
+                                                .withStyle(ChatFormatting.RED))));
     }
 }

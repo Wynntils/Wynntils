@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
 
@@ -10,7 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,8 +21,8 @@ public final class ShamanMaskModel extends Model {
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
 
-    public ShamanMaskModel(WorldStateModel worldStateModel) {
-        super(List.of(worldStateModel));
+    public ShamanMaskModel() {
+        super(List.of());
     }
 
     @SubscribeEvent

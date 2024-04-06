@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
@@ -11,7 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ManaSegment implements ActionBarSegment {
-    private static final Pattern MANA_PATTERN = Pattern.compile("§b✺ ([0-9]+)/([0-9]+)");
+    // Test in ManaSegment_MANA_PATTERN
+    private static final Pattern MANA_PATTERN = Pattern.compile("(?:§b)?✺ (\\d+)/(\\d+)");
 
     private CappedValue mana = CappedValue.EMPTY;
     private boolean hidden;
@@ -47,6 +48,7 @@ public class ManaSegment implements ActionBarSegment {
         return ActionBarPosition.RIGHT;
     }
 
+    @Override
     public boolean isHidden() {
         return hidden;
     }

@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HealthSegment implements ActionBarSegment {
-    private static final Pattern HEALTH_PATTERN = Pattern.compile("§c❤ ([0-9]+)/([0-9]+)");
+    private static final Pattern HEALTH_PATTERN = Pattern.compile("§c❤ (\\d+)/(\\d+)");
 
     private CappedValue health = CappedValue.EMPTY;
     private boolean hidden;
@@ -47,6 +47,7 @@ public class HealthSegment implements ActionBarSegment {
         return health;
     }
 
+    @Override
     public boolean isHidden() {
         return hidden;
     }

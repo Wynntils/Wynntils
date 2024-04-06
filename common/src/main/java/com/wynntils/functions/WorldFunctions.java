@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.mobtotem.MobTotem;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.token.type.TokenGatekeeper;
@@ -33,7 +34,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("world");
         }
     }
@@ -60,7 +61,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("world_uptime", "uptime");
         }
     }
@@ -79,7 +80,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_count");
         }
     }
@@ -101,7 +102,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_dep");
         }
     }
@@ -123,7 +124,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token");
         }
     }
@@ -145,7 +146,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_type");
         }
     }
@@ -240,7 +241,7 @@ public class WorldFunctions {
     public static class PingFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Ping.getPing();
+            return Services.Ping.getPing();
         }
     }
 
@@ -258,7 +259,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("territory");
         }
     }
@@ -279,7 +280,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("territory_owner");
         }
 
@@ -287,6 +288,25 @@ public class WorldFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
+        }
+    }
+
+    public static class InMappedAreaFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            float width = arguments.getArgument("width").getDoubleValue().floatValue();
+            float height = arguments.getArgument("height").getDoubleValue().floatValue();
+            float scale = arguments.getArgument("scale").getDoubleValue().floatValue();
+
+            return Services.Map.isPlayerInMappedArea(width, height, scale);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("width", Number.class, 130),
+                    new FunctionArguments.Argument<>("height", Number.class, 130),
+                    new FunctionArguments.Argument<>("scale", Number.class, 1)));
         }
     }
 }

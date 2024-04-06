@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.mobtotem;
 
@@ -8,7 +8,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
-import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.Comparator;
@@ -28,8 +27,8 @@ public class MobTotemModel extends Model {
 
     private final Map<Integer, MobTotem> mobTotems = new LinkedHashMap<>();
 
-    public MobTotemModel(WorldStateModel worldState) {
-        super(List.of(worldState));
+    public MobTotemModel() {
+        super(List.of());
     }
 
     @SubscribeEvent

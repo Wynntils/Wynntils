@@ -1,35 +1,50 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.Configurable;
-import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
 
+    private final List<Component> descriptionTooltip;
+
     public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
-        super(x, y, width, height, Component.literal(((Translatable) configurable).getTranslatedName()));
+        super(x, y, width, height, Component.literal(configurable.getTranslatedName()));
         this.configurable = configurable;
+
+        if (configurable instanceof Feature feature) {
+            descriptionTooltip =
+                    ComponentUtils.wrapTooltips(List.of(Component.literal(feature.getTranslatedDescription())), 150);
+        } else {
+            descriptionTooltip = List.of();
+        }
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         CustomColor color = isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
 
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
@@ -43,14 +58,19 @@ public class ConfigurableButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(
-                                (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName()),
+                        StyledText.fromString((isOverlay ? "   " : "") + configurable.getTranslatedName()),
                         this.getX(),
                         this.getY(),
                         color,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
+
+        if (isHovered && configurable instanceof Feature) {
+            McUtils.mc()
+                    .screen
+                    .setTooltipForNextRenderPass(Lists.transform(descriptionTooltip, Component::getVisualOrderText));
+        }
     }
 
     @Override

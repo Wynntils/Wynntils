@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
@@ -11,6 +11,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class ScrollButton extends WynntilsButton {
@@ -47,9 +48,10 @@ public class ScrollButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (maxScroll == 0) return;
 
+        PoseStack poseStack = guiGraphics.pose();
         if (scrollAreaColor != CustomColor.NONE) {
             RenderUtils.drawRect(
                     poseStack,
@@ -64,7 +66,7 @@ public class ScrollButton extends WynntilsButton {
         float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack, Texture.SETTING_SCROLL_BUTTON, this.getX(), renderY, isHovered);
+                poseStack, Texture.CONFIG_BOOK_SCROLL_BUTTON, this.getX(), renderY, isHovered);
     }
 
     @Override
@@ -115,10 +117,10 @@ public class ScrollButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         // Usually, mouse scroll wheel delta is always (-)1
-        if (Math.abs(delta) == 1) {
-            scroll((int) -delta);
+        if (Math.abs(deltaY) == 1) {
+            scroll((int) -deltaY);
             return true;
         }
 
@@ -126,7 +128,7 @@ public class ScrollButton extends WynntilsButton {
 
         // Delta is divided by 10 to make it more precise
         // We subtract so scrolling down actually scrolls down
-        currentUnusedScroll -= delta / 10d;
+        currentUnusedScroll -= deltaY / 10d;
 
         if (Math.abs(currentUnusedScroll) < 1) return true;
 

@@ -1,8 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
+
+import com.wynntils.core.WynntilsMod;
 
 public final class ErrorOr<T> {
     private final T value;
@@ -39,5 +41,19 @@ public final class ErrorOr<T> {
 
     public boolean hasError() {
         return error != null;
+    }
+
+    public <T> ErrorOr<T> logged() {
+        if (!hasError()) {
+            throw new IllegalStateException("Tried to log when no error is present.");
+        }
+
+        WynntilsMod.error(error);
+        return (ErrorOr<T>) this;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorOr{" + "value=" + value + ", error='" + error + '\'' + '}';
     }
 }

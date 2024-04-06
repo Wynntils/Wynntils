@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.gearviewer;
 
@@ -18,10 +18,11 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -48,7 +49,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         super(menu, player.getInventory(), Component.empty());
 
         this.player = player;
-        this.scoreboard = player.level.getScoreboard();
+        this.scoreboard = player.level().getScoreboard();
 
         if (scoreboard.getTeamNames().contains(TEAM_NAME)) {
             gearViewerTeam = scoreboard.getPlayerTeam(TEAM_NAME);
@@ -81,7 +82,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
         // This must specifically NOT be normalized; the ֎ is significant
         String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
+        MutableComponent description = ItemUtils.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);
             return itemStack;
@@ -111,30 +112,45 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPlayerModel(poseStack, mouseX, mouseY);
+        renderPlayerModel(guiGraphics, mouseX, mouseY);
 
-        viewPlayerStatsButton.render(poseStack, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+
+        viewPlayerStatsButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderPlayerModel(PoseStack poseStack, int mouseX, int mouseY) {
-        int posX = (int) (this.width / 2f);
-        int posY = (int) (this.height / 2f) + 32;
+    private void renderPlayerModel(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        int renderX = (this.width - Texture.GEAR_VIEWER_BACKGROUND.width()) / 2;
+        int renderY = (this.height - Texture.GEAR_VIEWER_BACKGROUND.height()) / 2;
+
+        int renderWidth = Texture.GEAR_VIEWER_BACKGROUND.width();
+        int renderHeight = Texture.GEAR_VIEWER_BACKGROUND.height();
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                poseStack, posX, posY, 30, posX - mouseX, posY - 50 - mouseY, player);
+                guiGraphics,
+                renderX,
+                renderY,
+                renderX + renderWidth,
+                renderY + renderHeight,
+                30,
+                0.2f,
+                mouseX,
+                mouseY,
+                player);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(poseStack, Texture.GEAR_VIEWER_BACKGROUND, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         // we don't want to draw any labels
     }
 

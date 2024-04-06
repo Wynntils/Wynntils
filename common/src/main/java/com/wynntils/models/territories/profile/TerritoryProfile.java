@@ -1,18 +1,18 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.profile;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.SimpleDateFormatter;
-import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,63 +23,28 @@ import net.minecraft.core.Position;
 
 public class TerritoryProfile {
     private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
 
     private final String name;
     private final String friendlyName;
-    private final int startX;
-    private final int startZ;
-    private final int endX;
-    private final int endZ;
 
-    private final String guild;
-    private final String guildPrefix;
-    private final CustomColor guildColor;
-    private final String attacker;
+    private final TerritoryLocation territoryLocation;
+
+    private final GuildInfo guildInfo;
+
     private final Date acquired;
 
-    private final int level;
-
     public TerritoryProfile(
-            String name,
-            String friendlyName,
-            String guildPrefix,
-            CustomColor guildColor,
-            int level,
-            int startX,
-            int startZ,
-            int endX,
-            int endZ,
-            String guild,
-            String attacker,
-            Date acquired) {
+            String name, String friendlyName, TerritoryLocation territoryLocation, GuildInfo guildInfo, Date acquired) {
         this.name = name;
         this.friendlyName = friendlyName;
-
-        this.level = level;
-
-        this.guildPrefix = guildPrefix;
-        this.guildColor = guildColor;
-        this.guild = guild;
-        this.attacker = attacker;
-
+        this.territoryLocation = territoryLocation;
+        this.guildInfo = guildInfo;
         this.acquired = acquired;
+    }
 
-        if (endX < startX) {
-            this.startX = endX;
-            this.endX = startX;
-        } else {
-            this.startX = startX;
-            this.endX = endX;
-        }
-
-        if (endZ < startZ) {
-            this.startZ = endZ;
-            this.endZ = startZ;
-        } else {
-            this.startZ = startZ;
-            this.endZ = endZ;
-        }
+    public GuildInfo getGuildInfo() {
+        return guildInfo;
     }
 
     public String getName() {
@@ -90,40 +55,28 @@ public class TerritoryProfile {
         return friendlyName;
     }
 
-    public CustomColor getGuildColor() {
-        return guildColor;
-    }
-
     public int getStartX() {
-        return startX;
+        return territoryLocation.startX();
     }
 
     public int getStartZ() {
-        return startZ;
+        return territoryLocation.startZ();
     }
 
     public int getEndX() {
-        return endX;
+        return territoryLocation.endX();
     }
 
     public int getEndZ() {
-        return endZ;
+        return territoryLocation.endZ();
     }
 
     public String getGuild() {
-        return guild;
+        return guildInfo.name();
     }
 
     public String getGuildPrefix() {
-        return guildPrefix;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public String getAttacker() {
-        return attacker;
+        return guildInfo.prefix();
     }
 
     public Date getAcquired() {
@@ -180,25 +133,50 @@ public class TerritoryProfile {
         public TerritoryProfile deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject territory = json.getAsJsonObject();
+
             int startX = Integer.MAX_VALUE - 1;
             int startZ = Integer.MAX_VALUE - 1;
             int endX = Integer.MAX_VALUE;
             int endZ = Integer.MAX_VALUE;
             if (territory.has("location")) {
                 JsonObject location = territory.getAsJsonObject("location");
-                startX = location.get("startX").getAsInt();
-                startZ = location.get("startZ").getAsInt();
-                endX = location.get("endX").getAsInt();
-                endZ = location.get("endZ").getAsInt();
+
+                JsonArray start = location.getAsJsonArray("start");
+                startX = start.get(0).getAsInt();
+                startZ = start.get(1).getAsInt();
+
+                JsonArray end = location.getAsJsonArray("end");
+                endX = end.get(0).getAsInt();
+                endZ = end.get(1).getAsInt();
+
+                // Sometimes the start and end coordinates are swapped, so we need to check for that
+                if (startX > endX) {
+                    int temp = startX;
+                    startX = endX;
+                    endX = temp;
+                }
+
+                if (startZ > endZ) {
+                    int temp = startZ;
+                    startZ = endZ;
+                    endZ = temp;
+                }
             }
-            String territoryName = territory.get("territory").getAsString();
+
+            TerritoryLocation territoryLocation = new TerritoryLocation(startX, startZ, endX, endZ);
+
+            String territoryName = territory.get("name").getAsString();
             String friendlyName = territoryName.replace('’', '\'');
 
-            String guild;
-            if (territory.get("guild").isJsonNull()) {
-                guild = "Unknown";
+            GuildInfo guild;
+            JsonElement guildJson = territory.get("guild");
+            if (guildJson.isJsonNull()
+                    || !guildJson.isJsonObject()
+                    || guildJson.getAsJsonObject().get("name").isJsonNull()
+                    || guildJson.getAsJsonObject().get("prefix").isJsonNull()) {
+                guild = GuildInfo.NONE;
             } else {
-                guild = territory.get("guild").getAsString();
+                guild = context.deserialize(guildJson, GuildInfo.class);
             }
 
             Date acquired = null;
@@ -207,41 +185,14 @@ public class TerritoryProfile {
             } catch (ParseException e) {
                 WynntilsMod.error("Error when trying to parse territory profile data.", e);
             }
-            String attacker = null;
-            if (!territory.get("attacker").isJsonNull()) {
-                attacker = territory.get("attacker").getAsString();
-            }
 
-            String guildPrefix;
-            if (territory.get("guildPrefix").isJsonNull()) {
-                guildPrefix = "UNKNOWN";
-            } else {
-                guildPrefix = territory.get("guildPrefix").getAsString();
-            }
-
-            int level = territory.get("level").getAsInt();
-
-            CustomColor guildColor;
-            if (territory.get("guildColor").getAsString().isEmpty()) {
-                guildColor = CustomColor.colorForStringHash(guild);
-            } else {
-                guildColor =
-                        CustomColor.fromHexString(territory.get("guildColor").getAsString());
-            }
-
-            return new TerritoryProfile(
-                    territoryName,
-                    friendlyName,
-                    guildPrefix,
-                    guildColor,
-                    level,
-                    startX,
-                    startZ,
-                    endX,
-                    endZ,
-                    guild,
-                    attacker,
-                    acquired);
+            return new TerritoryProfile(territoryName, friendlyName, territoryLocation, guild, acquired);
         }
     }
+
+    public record GuildInfo(String name, String prefix) {
+        public static final GuildInfo NONE = new GuildInfo("No owner", "None");
+    }
+
+    public record TerritoryLocation(int startX, int startZ, int endX, int endZ) {}
 }

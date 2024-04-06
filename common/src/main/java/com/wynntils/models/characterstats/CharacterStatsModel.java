@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.HealthSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
     private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
@@ -33,8 +35,8 @@ public final class CharacterStatsModel extends Model {
     private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
     private final SprintSegment sprintSegment = new SprintSegment();
 
-    public CharacterStatsModel(CombatXpModel combatXpModel) {
-        super(List.of(combatXpModel));
+    public CharacterStatsModel() {
+        super(List.of());
 
         Handlers.ActionBar.registerSegment(coordinatesSegment);
         Handlers.ActionBar.registerSegment(healthSegment);
@@ -79,7 +81,10 @@ public final class CharacterStatsModel extends Model {
      * Return the maximum number of soul points the character can currently have
      */
     private int getMaxSoulPoints() {
-        // FIXME: If player is veteran, we should always return 15
+        if (Models.Character.isVeteran()) {
+            return 15;
+        }
+
         int maxIfNotVeteran =
                 10 + MathUtils.clamp(Models.CombatXp.getCombatLevel().current() / 15, 0, 5);
         if (getCurrentSoulPoints() > maxIfNotVeteran) {
@@ -93,11 +98,11 @@ public final class CharacterStatsModel extends Model {
      */
     private int getCurrentSoulPoints() {
         ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() != Items.NETHER_STAR) {
-            return -1;
+        if (soulPoints.getItem() == Items.NETHER_STAR || soulPoints.getItem() == Items.DIAMOND_AXE) {
+            return soulPoints.getCount();
         }
 
-        return soulPoints.getCount();
+        return -1;
     }
 
     public CappedValue getSoulPoints() {
@@ -124,7 +129,7 @@ public final class CharacterStatsModel extends Model {
         List<GearInfo> wornGear = new ArrayList<>();
         Optional<GearItem> mainHandGearItem = Models.Item.asWynnItem(player.getMainHandItem(), GearItem.class);
         if (mainHandGearItem.isPresent()) {
-            GearInfo gearInfo = mainHandGearItem.get().getGearInfo();
+            GearInfo gearInfo = mainHandGearItem.get().getItemInfo();
             if (gearInfo.type().isValidWeapon(Models.Character.getClassType())
                     && Models.CombatXp.getCombatLevel().current()
                             >= gearInfo.requirements().level()) {
@@ -138,7 +143,7 @@ public final class CharacterStatsModel extends Model {
         player.getArmorSlots().forEach(itemStack -> {
             Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (armorGearItem.isPresent()) {
-                GearInfo gearInfo = armorGearItem.get().getGearInfo();
+                GearInfo gearInfo = armorGearItem.get().getItemInfo();
                 wornGear.add(gearInfo);
             }
         });
@@ -147,7 +152,7 @@ public final class CharacterStatsModel extends Model {
         InventoryUtils.getAccessories(player).forEach(itemStack -> {
             Optional<GearItem> accessoryGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (accessoryGearItem.isPresent()) {
-                GearInfo gearInfo = accessoryGearItem.get().getGearInfo();
+                GearInfo gearInfo = accessoryGearItem.get().getItemInfo();
                 wornGear.add(gearInfo);
             }
         });
@@ -156,6 +161,12 @@ public final class CharacterStatsModel extends Model {
     }
 
     private void centerSegmentCleared() {
+        powderSpecialSegment.replaced();
+    }
+
+    @SubscribeEvent
+    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
+        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
         powderSpecialSegment.replaced();
     }
 }

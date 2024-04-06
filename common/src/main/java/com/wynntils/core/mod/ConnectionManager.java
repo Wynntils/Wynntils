@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2021-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.mod;
 
@@ -18,7 +18,8 @@ import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ConnectionManager extends Manager {
-    private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
+    private static final Pattern WYNNCRAFT_SERVER_PATTERN =
+            Pattern.compile("^(?:(.*)\\.)?wynncraft\\.(?:com|net|org)$");
 
     private boolean isConnected = false;
 
@@ -30,8 +31,9 @@ public final class ConnectionManager extends Manager {
         return isConnected;
     }
 
+    // ScreenOpenedEvent.Pre is used, because it is always posted
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent.Post e) {
+    public void onScreenOpened(ScreenOpenedEvent.Pre e) {
         if (e.getScreen() instanceof DisconnectedScreen) {
             disconnect();
         }
@@ -53,7 +55,8 @@ public final class ConnectionManager extends Manager {
         String host = e.getHost().toLowerCase(Locale.ROOT);
         Matcher matcher = WYNNCRAFT_SERVER_PATTERN.matcher(host);
         if (matcher.matches()) {
-            String hostName = matcher.group(1).toLowerCase(Locale.ROOT);
+            String hostName = matcher.group(1);
+            hostName = hostName == null ? "play" : hostName.toLowerCase(Locale.ROOT);
             connect(hostName);
         }
     }

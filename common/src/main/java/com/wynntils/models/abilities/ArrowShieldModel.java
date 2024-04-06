@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
 
@@ -117,9 +117,11 @@ public class ArrowShieldModel extends Model {
     }
 
     private void registerShield() {
-        spawnedArrowIds = collectedArrowIds;
-        collectedArrowIds = null;
-        WynntilsMod.postEvent(new ArrowShieldEvent.Created(spawnedArrowIds.size()));
+        if (collectedArrowIds != null) {
+            spawnedArrowIds = collectedArrowIds;
+            collectedArrowIds = null;
+            WynntilsMod.postEvent(new ArrowShieldEvent.Created(spawnedArrowIds.size()));
+        }
     }
 
     private void removeShield() {

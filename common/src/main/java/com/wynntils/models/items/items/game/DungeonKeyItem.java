@@ -1,21 +1,22 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.dungeon.type.Dungeon;
 import com.wynntils.models.items.properties.TargetedItemProperty;
 
 public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
-    private final String dungeon;
+    private final Dungeon dungeon;
     private final boolean corrupted;
 
-    public DungeonKeyItem(String dungeon, boolean corrupted) {
+    public DungeonKeyItem(Dungeon dungeon, boolean corrupted) {
         this.dungeon = dungeon;
         this.corrupted = corrupted;
     }
 
-    public String getDungeon() {
+    public Dungeon getDungeon() {
         return dungeon;
     }
 
@@ -23,8 +24,9 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
         return corrupted;
     }
 
+    @Override
     public String getTarget() {
-        return dungeon;
+        return dungeon.getName();
     }
 
     @Override

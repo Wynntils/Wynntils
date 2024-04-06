@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector.widgets;
 
@@ -17,6 +17,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class ClassInfoButton extends WynntilsButton {
@@ -31,7 +32,8 @@ public class ClassInfoButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.CHARACTER_BUTTON.resource(),
@@ -52,8 +54,8 @@ public class ClassInfoButton extends WynntilsButton {
         poseStack.pushPose();
         poseStack.translate(this.getX() + this.width * 0.038f, this.getY() + this.height * 0.12f, 0f);
         float itemScale = this.height * 0.03f;
-        poseStack.scale(itemScale, itemScale, 0f);
-        RenderUtils.renderItem(poseStack, classInfo.itemStack(), 0, 0);
+        poseStack.scale(itemScale, itemScale, itemScale);
+        RenderUtils.renderItem(guiGraphics, classInfo.itemStack(), 0, 0);
         poseStack.popPose();
 
         poseStack.pushPose();

@@ -1,17 +1,16 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc.type;
 
-import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.Comparator;
+import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3d;
 
 public class Location implements Comparable<Location> {
     // Compare first x, then z, and finally y
@@ -47,6 +46,18 @@ public class Location implements Comparable<Location> {
         return new Location(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
     }
 
+    public int x() {
+        return x;
+    }
+
+    public int y() {
+        return y;
+    }
+
+    public int z() {
+        return z;
+    }
+
     public Location offset(int dx, int dy, int dz) {
         return new Location(this.x() + dx, this.y() + dy, this.z() + dz);
     }
@@ -59,30 +70,30 @@ public class Location implements Comparable<Location> {
         return new Vec3(x, y, z);
     }
 
+    public Position toPosition() {
+        return new Vec3(x, y, z);
+    }
+
+    public boolean equalsIgnoringY(Location other) {
+        return this.x() == other.x() && this.z() == other.z();
+    }
+
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-
-        if (obj instanceof Vector3d) {
-            return super.equals(obj);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return x == location.x && y == location.y && z == location.z;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
+    @Override
     public String toString() {
-        return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
-    }
-
-    public int x() {
-        return x;
-    }
-
-    public int y() {
-        return y;
-    }
-
-    public int z() {
-        return z;
+        return "[" + this.x + ", " + this.y + ", " + this.z + "]";
     }
 
     @Override

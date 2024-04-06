@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2021-2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2021-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core;
 
@@ -13,6 +13,8 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.type.CrashType;
@@ -25,10 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.SharedConstants;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -80,6 +79,7 @@ public final class WynntilsMod {
     public static void reloadAllComponentData() {
         componentMap.get(Manager.class).forEach(c -> ((Manager) c).reloadData());
         componentMap.get(Model.class).forEach(c -> ((Model) c).reloadData());
+        componentMap.get(Service.class).forEach(c -> ((Service) c).reloadData());
     }
 
     private static void handleExceptionInEventListener(Throwable t, Event event) {
@@ -110,6 +110,10 @@ public final class WynntilsMod {
 
     public static String getVersion() {
         return version;
+    }
+
+    public static boolean isPreAlpha() {
+        return version.contains("pre-alpha");
     }
 
     public static boolean isDevelopmentBuild() {
@@ -155,6 +159,7 @@ public final class WynntilsMod {
     // Ran when resources (including I18n) are available
     public static void onResourcesFinishedLoading() {
         if (initCompleted) return;
+        initCompleted = true;
 
         try {
             initFeatures();
@@ -178,13 +183,14 @@ public final class WynntilsMod {
                 "Wynntils: Starting version {} (using {} on Minecraft {})",
                 version,
                 modLoader,
-                Minecraft.getInstance().getLaunchedVersion());
+                SharedConstants.getCurrentVersion().getName());
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
         registerComponents(Managers.class, Manager.class);
         registerComponents(Handlers.class, Handler.class);
         registerComponents(Models.class, Model.class);
+        registerComponents(Services.class, Service.class);
 
         // Init storage for loaded components immediately
         Managers.Storage.initComponents();
@@ -212,13 +218,12 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String modVersion) {
-        if (modVersion.equals("DEV")) {
-            version = modVersion;
+        if (modVersion.contains("SNAPSHOT")) {
             developmentBuild = true;
         } else {
-            version = "v" + modVersion;
             developmentBuild = false;
         }
+        version = "v" + modVersion;
     }
 
     private static void initFeatures() {
@@ -230,37 +235,39 @@ public final class WynntilsMod {
         Managers.Config.init();
         Managers.Storage.initFeatures();
 
+        // Init services that depends on I18n
+        Services.Statistics.init();
+
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),
                 Managers.Function.getFunctions().size());
-
-        initCompleted = true;
     }
 
     private static void addCrashCallbacks() {
         Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
     }
 
-    public static void reportCrash(String fullName, String niceName, CrashType type, Throwable throwable) {
-        reportCrash(fullName, niceName, type, throwable, true, true);
+    public static void reportCrash(
+            CrashType type, String niceName, String fullName, String reason, Throwable throwable) {
+        reportCrash(type, niceName, fullName, reason, true, true, throwable);
     }
 
     public static void reportCrash(
-            String fullName,
-            String niceName,
             CrashType type,
-            Throwable throwable,
+            String niceName,
+            String fullName,
+            String reason,
             boolean shouldSendChat,
-            boolean isDisabled) {
-        WynntilsMod.warn("Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName);
+            boolean isDisabled,
+            Throwable throwable) {
+        WynntilsMod.warn(
+                "Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName + " due to " + reason);
         WynntilsMod.error("Exception thrown by " + fullName, throwable);
 
         if (shouldSendChat) {
-            MutableComponent component = Component.literal("Wynntils error: " + type.getName() + " '" + niceName
-                            + "' has crashed" + (isDisabled ? " and has been disabled" : ""))
-                    .withStyle(ChatFormatting.RED);
-            McUtils.sendMessageToClient(component);
+            McUtils.sendErrorToClient("Wynntils error: " + type.getName() + " '" + niceName + "' has crashed in "
+                    + reason + (isDisabled ? " and has been disabled" : ""));
         }
 
         postEvent(new WynntilsCrashEvent(fullName, type, throwable));
@@ -268,7 +275,6 @@ public final class WynntilsMod {
 
     public enum ModLoader {
         FORGE,
-        FABRIC,
-        QUILT
+        FABRIC
     }
 }

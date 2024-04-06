@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -42,7 +43,7 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
                     .toUpperCase(Locale.ROOT);
             return new TeleportScrollItem(destination, true);
         } else {
-            String destination = scrollName.substring(0, 2);
+            String destination = Services.Destination.getAbbreviation(scrollName);
             return new TeleportScrollItem(destination, false);
         }
     }

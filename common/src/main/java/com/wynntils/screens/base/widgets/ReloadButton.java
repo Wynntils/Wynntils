@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
@@ -10,25 +10,29 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class ReloadButton extends WynntilsButton implements TooltipProvider {
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
-
+    private final List<Component> RELOAD_TOOLTIP;
     private final Runnable onClickRunnable;
 
-    public ReloadButton(int x, int y, int width, int height, Runnable onClickRunnable) {
+    public ReloadButton(int x, int y, int width, int height, String activityType, Runnable onClickRunnable) {
         super(x, y, width, height, Component.literal("Reload Button"));
         this.onClickRunnable = onClickRunnable;
+
+        RELOAD_TOOLTIP = List.of(
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.name")
+                        .withStyle(ChatFormatting.WHITE),
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.description", activityType)
+                        .withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        Texture reloadButton = Texture.RELOAD_BUTTON;
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        Texture reloadButton = Texture.RELOAD_ICON_OFFSET;
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(
                     poseStack,

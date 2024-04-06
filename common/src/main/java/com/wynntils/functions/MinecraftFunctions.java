@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -19,7 +19,7 @@ public class MinecraftFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("my_loc");
         }
     }
@@ -35,6 +35,13 @@ public class MinecraftFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return MinecraftAccessor.getFps();
+        }
+    }
+
+    public static class TicksFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return (int) McUtils.mc().level.getGameTime();
         }
     }
 }

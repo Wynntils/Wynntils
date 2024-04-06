@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.damage;
 
@@ -23,10 +23,10 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
-    // https://regexr.com/7968a
-    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[24bcef]-(\\d+) ([❤✦✤❉❋✹]) )");
+    // Test in DamageModel_DAMAGE_LABEL_PATTERN
+    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[245bcef](?:§l)?-(\\d+) ([❤✦✤❉❋✹☠]) )");
 
-    // https://regexr.com/7965g
+    // Test in DamageModel_DAMAGE_BAR_PATTERN
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*) - §c(\\d+)§4❤(?: - §7(.*)§7)?$");
 
     private final DamageBar damageBar = new DamageBar();
@@ -40,6 +40,7 @@ public final class DamageModel extends Model {
 
     public DamageModel() {
         super(List.of());
+
         Handlers.BossBar.registerBar(damageBar);
     }
 
@@ -88,8 +89,8 @@ public final class DamageModel extends Model {
                 / (double) seconds;
     }
 
-    public final class DamageBar extends TrackedBar {
-        public DamageBar() {
+    private final class DamageBar extends TrackedBar {
+        private DamageBar() {
             super(DAMAGE_BAR_PATTERN);
         }
 

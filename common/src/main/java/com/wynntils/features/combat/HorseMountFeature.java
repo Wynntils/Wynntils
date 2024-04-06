@@ -1,18 +1,20 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -30,6 +32,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -42,16 +45,24 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
+    private static final StyledText MSG_NO_SPACE = StyledText.fromString("§4There is no room for a horse.");
+    private static final StyledText MSG_TOO_MANY_MOBS =
+            StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
+    private static final StyledText MSG_HORSE_UNAVAILABLE =
+            StyledText.fromString("§4You cannot interact with your horse at the moment.");
+    private static final StyledText MSG_HORSE_NOT_ALLOWED = StyledText.fromString("§4You cannot use your horse here!");
+
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
+    private boolean cancelMountingHorse = false;
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> guaranteedMount = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> playWhistle = new Config<>(true);
 
     @SubscribeEvent
@@ -64,6 +75,18 @@ public class HorseMountFeature extends Feature {
 
         mountHorse();
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST) // this needs to run before ChatRedirectFeature cancels the event
+    public void onChatReceived(ChatMessageReceivedEvent e) {
+        StyledText message = e.getOriginalStyledText();
+
+        if (message.equals(MSG_NO_SPACE)
+                || message.equals(MSG_TOO_MANY_MOBS)
+                || message.equals(MSG_HORSE_UNAVAILABLE)
+                || message.equals(MSG_HORSE_NOT_ALLOWED)) {
+            cancelMountingHorse = true;
+        }
     }
 
     private void mountHorse() {
@@ -104,6 +127,12 @@ public class HorseMountFeature extends Feature {
     private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
+            return;
+        }
+
+        if (cancelMountingHorse) {
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
+            cancelMountingHorse = false;
             return;
         }
 

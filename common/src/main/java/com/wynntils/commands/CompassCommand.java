@@ -1,23 +1,26 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.ServicePoi;
-import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.pois.ServicePoi;
+import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -52,11 +55,6 @@ public class CompassCommand extends Command {
     }
 
     @Override
-    public String getDescription() {
-        return "Set your compass to various targets";
-    }
-
-    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("at")
@@ -68,6 +66,8 @@ public class CompassCommand extends Command {
                                         .executes(this::shareLocation)))
                         .then(Commands.argument("target", StringArgumentType.word())
                                 .suggests(SHARE_TARGET_SUGGESTION_PROVIDER)
+                                .then(Commands.argument("index", IntegerArgumentType.integer())
+                                        .executes(this::shareCompassIndex))
                                 .executes(this::shareCompass)))
                 .then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
@@ -93,10 +93,30 @@ public class CompassCommand extends Command {
                 .executes(this::syntaxError);
     }
 
-    private int shareCompass(CommandContext<CommandSourceStack> context) {
-        Optional<Location> compassLocation = Models.Compass.getCompassLocation();
+    private int shareCompassIndex(CommandContext<CommandSourceStack> context) {
+        List<MarkerInfo> markers =
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
 
-        if (compassLocation.isEmpty()) {
+        if (markers.isEmpty()) {
+            context.getSource()
+                    .sendFailure(
+                            Component.literal("You don't have a compass set!").withStyle(ChatFormatting.RED));
+            return 1;
+        }
+
+        String target = StringArgumentType.getString(context, "target");
+        int index = IntegerArgumentType.getInteger(context, "index");
+
+        LocationUtils.shareCompass(target, markers.get(index).location());
+
+        return 1;
+    }
+
+    private int shareCompass(CommandContext<CommandSourceStack> context) {
+        List<MarkerInfo> markers =
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
+
+        if (markers.isEmpty()) {
             context.getSource()
                     .sendFailure(
                             Component.literal("You don't have a compass set!").withStyle(ChatFormatting.RED));
@@ -105,7 +125,7 @@ public class CompassCommand extends Command {
 
         String target = StringArgumentType.getString(context, "target");
 
-        LocationUtils.shareCompass(target, compassLocation.get());
+        LocationUtils.shareCompass(target, markers.get(0).location());
 
         return 1;
     }
@@ -121,11 +141,12 @@ public class CompassCommand extends Command {
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {
         Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
-        Models.Compass.setCompassLocation(location);
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location);
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -137,11 +158,12 @@ public class CompassCommand extends Command {
             return 0;
         }
 
-        Models.Compass.setCompassLocation(location.get());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.get());
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.get().toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -152,7 +174,7 @@ public class CompassCommand extends Command {
         if (selectedKind == null) return 0;
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<ServicePoi> closestServiceOptional = Models.Poi.getServicePois().stream()
+        Optional<ServicePoi> closestServiceOptional = Services.Poi.getServicePois()
                 .filter(poi -> poi.getKind() == selectedKind)
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
@@ -166,7 +188,9 @@ public class CompassCommand extends Command {
             return 0;
         }
         Poi closestService = closestServiceOptional.get();
-        Models.Compass.setCompassLocation(
+
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
                 closestService.getLocation().asLocation(),
                 closestServiceOptional.get().getIcon());
 
@@ -174,14 +198,14 @@ public class CompassCommand extends Command {
                 .withStyle(ChatFormatting.AQUA);
         response.append(
                 Component.literal(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Services.Poi.getLabelPois()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
@@ -213,12 +237,13 @@ public class CompassCommand extends Command {
             place = places.get(0);
         }
 
-        Models.Compass.setCompassLocation(place.getLocation().asLocation());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(place.getLocation().asLocation());
 
         MutableComponent response =
                 Component.literal("Compass set to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -237,21 +262,22 @@ public class CompassCommand extends Command {
 
         PoiLocation location = territoryProfile.getCenterLocation();
 
-        Models.Compass.setCompassLocation(location.asLocation());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.asLocation());
 
         MutableComponent response = Component.literal(
                         "Compass set to middle of " + territoryProfile.getFriendlyName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
     private int compassClear(CommandContext<CommandSourceStack> context) {
-        Models.Compass.reset();
+        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
 
         MutableComponent response = Component.literal("Compass cleared").withStyle(ChatFormatting.AQUA);
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 

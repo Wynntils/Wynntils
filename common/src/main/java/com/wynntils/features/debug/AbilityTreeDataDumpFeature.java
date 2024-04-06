@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
@@ -8,10 +8,10 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
@@ -50,7 +50,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
                 () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(this::saveToDisk));
     }
 
-    public void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
+    private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
         // Save the dump to a file
         JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
 

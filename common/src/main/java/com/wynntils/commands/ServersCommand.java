@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
@@ -26,11 +26,6 @@ public class ServersCommand extends Command {
     @Override
     public String getCommandName() {
         return "servers";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Show information about Wynncraft servers";
     }
 
     @Override
@@ -85,7 +80,7 @@ public class ServersCommand extends Command {
             message.append(Component.literal(String.join(", ", players)).withStyle(ChatFormatting.AQUA));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
 
         return 1;
     }
@@ -114,7 +109,7 @@ public class ServersCommand extends Command {
                     Component.literal(String.join(", ", currentTypeServers)).withStyle(ChatFormatting.AQUA));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
 
         return 1;
     }
@@ -136,7 +131,7 @@ public class ServersCommand extends Command {
                     .withStyle(ChatFormatting.AQUA));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
 
         return 1;
     }

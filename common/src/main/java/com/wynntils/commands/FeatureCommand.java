@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
@@ -8,10 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -29,11 +29,6 @@ public class FeatureCommand extends Command {
     @Override
     public String getCommandName() {
         return "feature";
-    }
-
-    @Override
-    public String getDescription() {
-        return "List and manage Wynntils features";
     }
 
     @Override
@@ -80,7 +75,7 @@ public class FeatureCommand extends Command {
                     .append(Component.literal(translatedName).withStyle(color));
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -117,7 +112,7 @@ public class FeatureCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(feature.getTranslatedName() + " was enabled successfully.")
+                        () -> Component.literal(feature.getTranslatedName() + " was enabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -157,7 +152,7 @@ public class FeatureCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(feature.getTranslatedName() + " was disabled successfully.")
+                        () -> Component.literal(feature.getTranslatedName() + " was disabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -205,7 +200,7 @@ public class FeatureCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(feature.getTranslatedName() + " was reloaded successfully.")
+                        () -> Component.literal(feature.getTranslatedName() + " was reloaded successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 

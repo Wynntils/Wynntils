@@ -1,19 +1,20 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.storage.Storage;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.changelog.ChangelogScreen;
@@ -24,10 +25,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
-    // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
-    public Storage<String> lastShownVersion = new Storage<>("v0.0.2-alpha.2");
+    // If we don't know the last version, assume we just downloaded the mod, so don't show the changelog
+    @Persisted
+    public final Storage<String> lastShownVersion = new Storage<>(WynntilsMod.getVersion());
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoClassMenu = new Config<>(false);
 
     private boolean waitForScreen = false;
@@ -51,7 +53,7 @@ public class ChangelogFeature extends Feature {
                     lastShownVersion.store(WynntilsMod.getVersion());
 
                     if (autoClassMenu.get()) {
-                        McUtils.sendCommand("class");
+                        Handlers.Command.sendCommandImmediately("class");
                         waitForScreen = true;
                         changelogData = changelog;
                     } else {

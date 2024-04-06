@@ -1,6 +1,6 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.buffered;
 
@@ -9,13 +9,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 public final class BufferedRenderUtils {
-    public static void drawLine(
+    private static void drawLine(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             CustomColor color,
@@ -158,6 +160,105 @@ public final class BufferedRenderUtils {
         buffer.vertex(matrix, x, y, z).color(color.r, color.g, color.b, color.a).endVertex();
     }
 
+    public static void drawMulticoloredRectBorders(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            List<CustomColor> colors,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height,
+            float externalLineWidth,
+            float internalLineWidth) {
+        if (colors.size() == 1) {
+            drawRectBorders(poseStack, bufferSource, colors.get(0), x, y, x + width, y + height, z, externalLineWidth);
+            return;
+        }
+        float splitX = width / (colors.size() - 1);
+
+        for (int i = 0; i < colors.size(); i++) {
+            CustomColor color = colors.get(i);
+            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Mth.clamp(x + splitX * i, x, x + width);
+            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+
+            // bottom left to bottom center (always drawn)
+            drawLine(poseStack, bufferSource, color, leftX, y + height, centerX, y + height, z, externalLineWidth);
+            // bottom center to top right (drawn on i!=colors.size()-1)
+            drawLine(
+                    poseStack,
+                    bufferSource,
+                    color,
+                    centerX,
+                    y + height,
+                    rightX,
+                    y,
+                    z,
+                    (i != colors.size() - 1 ? internalLineWidth : externalLineWidth));
+            // top right to top center (always drawn)
+            drawLine(poseStack, bufferSource, color, rightX, y, centerX, y, z, externalLineWidth);
+            // top center to bottom left (drawn on i!=0)
+            drawLine(
+                    poseStack,
+                    bufferSource,
+                    color,
+                    centerX,
+                    y,
+                    leftX,
+                    y + height,
+                    z,
+                    (i != 0 ? internalLineWidth : externalLineWidth));
+        }
+    }
+
+    /**
+     * Draws a rectangle with multiple colors, each being an equal-ish portion of the rectangle as a parallelogram
+     */
+    public static void drawMulticoloredRect(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            List<CustomColor> colors,
+            float x,
+            float y,
+            float z,
+            float width,
+            float height) {
+        if (colors.size() == 1) {
+            drawRect(poseStack, bufferSource, colors.get(0), x, y, z, width, height);
+            return;
+        }
+        Matrix4f matrix = poseStack.last().pose();
+
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+
+        float splitX = width / (colors.size() - 1);
+
+        for (int i = 0; i < colors.size(); i++) {
+            CustomColor color = colors.get(i);
+            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Mth.clamp(x + splitX * i, x, x + width);
+            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+
+            // bottom left
+            buffer.vertex(matrix, leftX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // bottom right
+            buffer.vertex(matrix, centerX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top right
+            buffer.vertex(matrix, rightX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top left
+            buffer.vertex(matrix, centerX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+    }
+
     public static void drawColoredTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -207,7 +308,7 @@ public final class BufferedRenderUtils {
                 texture.height());
     }
 
-    public static void drawTexturedRect(
+    private static void drawTexturedRect(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             ResourceLocation tex,
@@ -563,7 +664,7 @@ public final class BufferedRenderUtils {
      * @param x2 top-right x(on screen)
      * @param y2 top-right y(on screen)
      */
-    public static void createMask(
+    private static void createMask(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             Texture texture,

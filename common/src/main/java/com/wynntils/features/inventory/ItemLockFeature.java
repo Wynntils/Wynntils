@@ -1,23 +1,23 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.HiddenConfig;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
+import com.wynntils.models.containers.type.InteractiveContainerType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -41,13 +41,13 @@ public class ItemLockFeature extends Feature {
     private final KeyBind lockSlotKeyBind =
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
-    @RegisterConfig
+    @Persisted
     public final HiddenConfig<Map<String, Set<Integer>>> classSlotLockMap = new HiddenConfig<>(new TreeMap<>());
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
 
     @SubscribeEvent
@@ -55,7 +55,7 @@ public class ItemLockFeature extends Feature {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
         // Don't render lock on ability tree slots
-        if (Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
+        if (InteractiveContainerType.ABILITY_TREE.isScreen(abstractContainerScreen)) return;
 
         for (Integer slotId : classSlotLockMap.get().getOrDefault(Models.Character.getId(), new TreeSet<>())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
@@ -74,7 +74,7 @@ public class ItemLockFeature extends Feature {
     public void onInventoryClickEvent(ContainerClickEvent event) {
         // Don't lock ability tree slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
+                || InteractiveContainerType.ABILITY_TREE.isScreen(abstractContainerScreen)) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
 
         // We have to match slot.index here, because the event slot number is an index as well
@@ -145,6 +145,6 @@ public class ItemLockFeature extends Feature {
             classSet.add(hoveredSlot.getContainerSlot());
         }
 
-        Managers.Config.saveConfig();
+        classSlotLockMap.touched();
     }
 }

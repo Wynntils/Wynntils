@@ -1,22 +1,23 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class RenderEvent extends Event {
-    private final PoseStack poseStack;
+    private final GuiGraphics guiGraphics;
     private final float partialTicks;
     private final Window window;
     private final ElementType type;
 
-    protected RenderEvent(PoseStack poseStack, float partialTicks, Window window, ElementType type) {
-        this.poseStack = poseStack;
+    protected RenderEvent(GuiGraphics guiGraphics, float partialTicks, Window window, ElementType type) {
+        this.guiGraphics = guiGraphics;
         this.partialTicks = partialTicks;
         this.window = window;
         this.type = type;
@@ -26,8 +27,12 @@ public abstract class RenderEvent extends Event {
         return type;
     }
 
+    public GuiGraphics getGuiGraphics() {
+        return guiGraphics;
+    }
+
     public PoseStack getPoseStack() {
-        return poseStack;
+        return guiGraphics.pose();
     }
 
     public float getPartialTicks() {
@@ -42,19 +47,20 @@ public abstract class RenderEvent extends Event {
         GUI, // This is called before and after Gui#render
         CROSSHAIR,
         HEALTH_BAR,
-        FOOD_BAR
+        FOOD_BAR,
+        PLAYER_TAB_LIST
     }
 
     @Cancelable
     public static class Pre extends RenderEvent {
-        public Pre(PoseStack poseStack, float partialTicks, Window window, ElementType type) {
-            super(poseStack, partialTicks, window, type);
+        public Pre(GuiGraphics guiGraphics, float partialTicks, Window window, ElementType type) {
+            super(guiGraphics, partialTicks, window, type);
         }
     }
 
     public static class Post extends RenderEvent {
-        public Post(PoseStack poseStack, float partialTicks, Window window, ElementType type) {
-            super(poseStack, partialTicks, window, type);
+        public Post(GuiGraphics guiGraphics, float partialTicks, Window window, ElementType type) {
+            super(guiGraphics, partialTicks, window, type);
         }
     }
 }

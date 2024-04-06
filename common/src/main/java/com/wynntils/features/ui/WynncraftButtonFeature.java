@@ -1,19 +1,18 @@
 /*
- * Copyright © Wynntils 2021-2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2021-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -21,6 +20,7 @@ import com.wynntils.utils.render.Texture;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -36,26 +36,28 @@ import org.apache.commons.lang3.Validate;
 
 @ConfigCategory(Category.UI)
 public class WynncraftButtonFeature extends Feature {
-    private static final String GAME_SERVER = "play.wynncraft.com";
-    private static final String LOBBY_SERVER = "lobby.wynncraft.com";
+    private static final String WYNNCRAFT_DOMAIN = ".wynncraft.com";
     private boolean firstTitleScreenInit = true;
 
-    @RegisterConfig
-    public final Config<Boolean> connectToLobby = new Config<>(false);
+    @Persisted
+    public final Config<ServerType> serverType = new Config<>(ServerType.GAME);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoConnect = new Config<>(false);
 
+    @Persisted
+    public final Config<Boolean> loadResourcePack = new Config<>(true);
+
     @SubscribeEvent
-    public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
-        TitleScreen titleScreen = e.getTitleScreen();
+    public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
+        TitleScreen titleScreen = event.getTitleScreen();
 
         addWynncraftButton(titleScreen);
     }
 
     @SubscribeEvent
-    public void onTitleScreenInit(ScreenInitEvent e) {
-        if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
+    public void onScreenInit(ScreenInitEvent event) {
+        if (!(event.getScreen() instanceof TitleScreen titleScreen)) return;
 
         if (firstTitleScreenInit && autoConnect.get()) {
             firstTitleScreenInit = false;
@@ -68,6 +70,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
+        if (titleScreen.children.stream().anyMatch(child -> child instanceof WynncraftButton)) return;
+
         ServerData wynncraftServer = getWynncraftServer();
 
         WynncraftButton wynncraftButton = new WynncraftButton(
@@ -76,16 +80,17 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private ServerData getWynncraftServer() {
-        ServerData wynncraftServer =
-                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
-        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+        ServerData wynncraftServer = new ServerData(
+                "Wynncraft", serverType.get().serverAddressPrefix + WYNNCRAFT_DOMAIN, ServerData.Type.OTHER);
+        wynncraftServer.setResourcePackStatus(
+                loadResourcePack.get() ? ServerData.ServerPackStatus.ENABLED : ServerData.ServerPackStatus.DISABLED);
 
         return wynncraftServer;
     }
 
     private static void connectToServer(ServerData serverData) {
         ConnectScreen.startConnecting(
-                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData);
+                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false);
     }
 
     private static class WynncraftButton extends Button {
@@ -94,7 +99,7 @@ public class WynncraftButtonFeature extends Feature {
 
         // TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
-            super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
+            super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
 
             this.serverIcon = new ServerIcon(serverData);
@@ -102,17 +107,26 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float partialTicks) {
-            super.renderWidget(matrices, mouseX, mouseY, partialTicks);
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
             if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
                 return;
             }
 
-            RenderSystem.setShaderTexture(0, serverIcon.getServerIconLocation());
-
             // Insets the icon by 3
-            blit(matrices, this.getX() + 3, this.getY() + 3, this.width - 6, this.height - 6, 0, 0, 64, 64, 64, 64);
+            guiGraphics.blit(
+                    serverIcon.getServerIconLocation(),
+                    this.getX() + 3,
+                    this.getY() + 3,
+                    this.width - 6,
+                    this.height - 6,
+                    0,
+                    0,
+                    64,
+                    64,
+                    64,
+                    64);
         }
 
         protected static void onPress(Button button) {
@@ -143,6 +157,7 @@ public class WynncraftButtonFeature extends Feature {
             this.serverIconLocation = FALLBACK;
         }
 
+        @SuppressWarnings("deprecation")
         private void loadResource(boolean allowStale) {
             // Try default
             ResourceLocation destination =
@@ -216,6 +231,19 @@ public class WynncraftButtonFeature extends Feature {
                 WynntilsMod.error("Unable to read server image: " + server.name, e);
                 serverIconLocation = FALLBACK;
             }
+        }
+    }
+
+    private enum ServerType {
+        LOBBY("lobby"),
+        GAME("play"),
+        MEDIA("media"),
+        BETA("beta");
+
+        private final String serverAddressPrefix;
+
+        ServerType(String serverAddressPrefix) {
+            this.serverAddressPrefix = serverAddressPrefix;
         }
     }
 }

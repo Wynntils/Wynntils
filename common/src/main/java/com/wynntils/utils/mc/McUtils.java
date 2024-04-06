@@ -1,11 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.extension.ChatComponentExtension;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
@@ -29,6 +31,10 @@ public final class McUtils {
 
     public static LocalPlayer player() {
         return mc().player;
+    }
+
+    public static String playerName() {
+        return player().getName().getString();
     }
 
     public static Options options() {
@@ -72,7 +78,22 @@ public final class McUtils {
         player().sendSystemMessage(component);
     }
 
+    public static void removeMessageFromChat(Component component) {
+        ((ChatComponentExtension) mc().gui.getChat()).deleteMessage(component);
+    }
+
+    public static void sendErrorToClient(String errorMsg) {
+        WynntilsMod.warn("Chat error message sent: " + errorMsg);
+        McUtils.sendMessageToClient(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
+    }
+
     public static void sendPacket(Packet<?> packet) {
+        if (mc().getConnection() == null) {
+            WynntilsMod.error(
+                    "Tried to send packet: \"" + packet.getClass().getSimpleName() + "\", but connection was null.");
+            return;
+        }
+
         mc().getConnection().send(packet);
     }
 
@@ -81,10 +102,11 @@ public final class McUtils {
     }
 
     /**
-     * Sends the specified command to the server.
-     * @param command The command to send. The leading '/' should not be included.
+     * Sends some chat message directly to the server.
+     * Does not respect ChatTabFeature settings.
+     * @param message The message to send.
      */
-    public static void sendCommand(String command) {
-        mc().getConnection().sendCommand(command);
+    public static void sendChat(String message) {
+        mc().getConnection().sendChat(message);
     }
 }

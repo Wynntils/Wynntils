@@ -1,13 +1,14 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -19,6 +20,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -45,7 +47,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
     @Override
     public void render(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             int index,
             int top,
             int left,
@@ -55,6 +57,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
             int mouseY,
             boolean isMouseOver,
             float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
         poseStack.translate(left + PADDING, top + PADDING, 0);
 
@@ -112,11 +116,10 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         // right click
         if (button == 1) {
-            Managers.Config.getConfigHolders()
-                    .filter(configHolder -> configHolder.getParent() == overlay
-                            && configHolder.getFieldName().equals("userEnabled"))
+            Managers.Config.getConfigsForOwner(overlay)
+                    .filter(config -> config.getFieldName().equals("userEnabled"))
                     .findFirst()
-                    .ifPresent(configHolder -> configHolder.setValue(!Managers.Overlay.isEnabled(overlay)));
+                    .ifPresent(config -> ((Config<Boolean>) config).setValue(!Managers.Overlay.isEnabled(overlay)));
             Managers.Config.saveConfig();
             return true;
         }

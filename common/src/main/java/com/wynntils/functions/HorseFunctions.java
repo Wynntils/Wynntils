@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2022-2023.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -43,7 +43,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_lvl");
         }
     }
@@ -58,7 +58,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_mlvl");
         }
     }
@@ -73,7 +73,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_xp");
         }
     }
@@ -84,11 +84,11 @@ public class HorseFunctions {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return -1;
 
-            return horse.get().getTier();
+            return horse.get().getTier().getNumeral();
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_tier");
         }
     }
@@ -104,7 +104,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_name");
         }
     }

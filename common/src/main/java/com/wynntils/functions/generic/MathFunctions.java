@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.functions.GenericFunction;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import java.util.List;
 
 public final class MathFunctions {
@@ -40,7 +40,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sub");
         }
     }
@@ -61,7 +61,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mul");
         }
     }
@@ -81,7 +81,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("div");
         }
     }
@@ -101,7 +101,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mod");
         }
     }
@@ -122,7 +122,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("pow");
         }
     }
@@ -140,7 +140,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sqrt");
         }
     }
@@ -148,32 +148,31 @@ public final class MathFunctions {
     public static class MaxFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Math.max(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
+            return values.stream().mapToDouble(Number::doubleValue).max().orElse(0);
+            // .orElse(0) is safer because max() returns OptionalDouble, but will probably never be used
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
     }
 
     public static class MinFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Math.min(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
+            return values.stream().mapToDouble(Number::doubleValue).min().orElse(0);
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", Number.class, null),
-                    new FunctionArguments.Argument<>("second", Number.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
     }
 
@@ -206,7 +205,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("int");
         }
     }
@@ -227,7 +226,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("rand");
         }
     }

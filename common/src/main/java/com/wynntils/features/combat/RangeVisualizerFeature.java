@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
@@ -9,15 +9,13 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -30,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
@@ -87,9 +85,7 @@ public class RangeVisualizerFeature extends Feature {
             // This is ourselves, rendered from outside
 
             // Don't render for preview in inventory or character selection screen
-            if (McUtils.mc().screen instanceof InventoryScreen) return;
-            if (McUtils.mc().screen instanceof CharacterSelectorScreen) return;
-            if (McUtils.mc().screen instanceof WynntilsMenuScreen) return;
+            if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
 
             validGear = Models.CharacterStats.getWornGear();
         } else {
@@ -125,10 +121,10 @@ public class RangeVisualizerFeature extends Feature {
         // Only a few major IDs can actually be applied at the same time, but we make this general
         List<Pair<CustomColor, Float>> circles = validGear.stream()
                 .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
-                    case "TAUNT" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
-                    case "HERO" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
-                    case "ALTRUISM" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
-                    case "GUARDIAN" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
+                    case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
+                    case "Saviour’s Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
+                    case "Heart of the Pack" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
+                    case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
                     default -> null;
                 }))
                 .filter(Objects::nonNull)
