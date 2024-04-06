@@ -13,11 +13,14 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
+import com.wynntils.models.gear.SetModel;
 import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.SetInfo;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
@@ -33,6 +36,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -89,7 +93,12 @@ public final class WynnItemParser {
 
     private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
 
-    public static final Pattern SET_BONUS_PATTEN = Pattern.compile("^§aSet Bonus:$");
+    private static final Pattern SET_ITEM_PATTERN = Pattern.compile("^§[a7]- §([28])(.+)");
+
+    public static final Pattern SET_BONUS_PATTERN = Pattern.compile("^§aSet Bonus:$");
+
+    private static final Pattern SET_BONUS_IDENTIFICATION_PATTERN =
+            Pattern.compile("§[ac]([-+]\\d+)(%| tier|/[35]s)? ?§7 ?(.*)");
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
     public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
@@ -116,6 +125,10 @@ public final class WynnItemParser {
         Optional<ShinyStat> shinyStat = Optional.empty();
         String effectsColorCode = "";
         boolean allRequirementsMet = true;
+        SetInfo setInfo = null;
+        Map<String, Boolean> activeItems = new HashMap<>();
+        int setWynnCount = 0;
+        Map<StatType, Integer> wynnBonuses = new HashMap<>();
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
@@ -124,6 +137,32 @@ public final class WynnItemParser {
         for (Component loreLine : lore) {
             StyledText coded = StyledText.fromComponent(loreLine);
             StyledText normalizedCoded = coded.getNormalized();
+
+            if (setBonusStats) {
+                // We should revert back to normal parsing when we encounter an empty line
+                if (normalizedCoded.isEmpty()) {
+                    setBonusStats = false;
+                    continue;
+                }
+
+                Matcher setBonusIdentificationMatcher = normalizedCoded.getMatcher(SET_BONUS_IDENTIFICATION_PATTERN);
+                if (!setBonusIdentificationMatcher.matches()) {
+                    WynntilsMod.warn("Item " + itemStack.getHoverName().getString()
+                            + " has unknown set bonus stat line: " + loreLine);
+                    continue;
+                }
+                int value = Integer.parseInt(setBonusIdentificationMatcher.group(1));
+                String unit = setBonusIdentificationMatcher.group(2);
+                String statDisplayName = setBonusIdentificationMatcher.group(3);
+
+                StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
+                if (statType == null) {
+                    WynntilsMod.warn("Item " + itemStack.getHoverName().getString()
+                            + " has unknown identified set bonus stat " + statDisplayName);
+                    continue;
+                }
+                wynnBonuses.put(statType, value);
+            }
 
             // Look for powder
             Matcher powderMatcher = normalizedCoded.getMatcher(POWDER_PATTERN);
@@ -209,11 +248,24 @@ public final class WynnItemParser {
                 }
             }
 
-            Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTEN);
+            Matcher setMatcher = normalizedCoded.getMatcher(SetModel.SET_PATTERN);
+            if (setMatcher.matches()) {
+                String setName = setMatcher.group(1);
+                setInfo = Models.Set.getSetInfo(setName);
+                setWynnCount = Integer.parseInt(setMatcher.group(2));
+            }
+
+            Matcher setItemMatcher = normalizedCoded.getMatcher(SET_ITEM_PATTERN);
+            if (setItemMatcher.matches()) {
+                boolean active = setItemMatcher.group(1).equals("2");
+                String itemName = setItemMatcher.group(2);
+                activeItems.put(itemName, active);
+            }
+
+            Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTERN);
             if (setBonusMatcher.matches()) {
                 // Any stat lines that follow from now on belongs to the Set Bonus
-                // Maybe these could be collected separately, but for now, ignore them
-                // TODO: we can actually do this now
+                // These are collected at the top of this loop for efficiency
                 setBonusStats = true;
             }
 
@@ -306,6 +358,10 @@ public final class WynnItemParser {
             }
         }
 
+        System.out.println("Figured out item " + itemStack.getHoverName().getString() + " has " + activeItems);
+        System.out.println(
+                "Figured out item " + itemStack.getHoverName().getString() + " has set bonuses " + wynnBonuses);
+
         return new WynnItemParseResult(
                 tier,
                 itemType,
@@ -320,7 +376,8 @@ public final class WynnItemParser {
                 tierCount,
                 durabilityMax,
                 shinyStat,
-                allRequirementsMet);
+                allRequirementsMet,
+                Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses)));
     }
 
     public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -382,7 +439,8 @@ public final class WynnItemParser {
                 0,
                 0,
                 Optional.empty(),
-                false);
+                false,
+                Optional.empty());
     }
 
     public static CraftedItemParseResults parseCraftedItem(ItemStack itemStack) {

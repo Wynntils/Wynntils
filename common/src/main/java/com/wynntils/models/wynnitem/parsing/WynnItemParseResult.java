@@ -6,6 +6,7 @@ package com.wynntils.models.wynnitem.parsing;
 
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.wynnitem.type.ItemEffect;
@@ -29,4 +30,5 @@ public record WynnItemParseResult(
         int durabilityCurrent,
         int durabilityMax,
         Optional<ShinyStat> shinyStat,
-        boolean allRequirementsMet) {}
+        boolean allRequirementsMet,
+        Optional<SetInstance> setInstance) {}

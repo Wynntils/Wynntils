@@ -7,14 +7,10 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.SetInfo;
-import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -24,7 +20,6 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -96,13 +91,6 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        SetInstance setInstance = null;
-        if (result.tier() == GearTier.SET && gearInfo.setInfo().isPresent()) {
-            SetInfo setInfo = gearInfo.setInfo().get();
-            setInstance =
-                    new SetInstance(setInfo, getActiveSetItems(setInfo.name()), getWynncraftCount(setInfo.name()));
-        }
-
         return GearInstance.create(
                 gearInfo,
                 result.identifications(),
@@ -110,7 +98,7 @@ public final class GearModel extends Model {
                 result.rerolls(),
                 result.shinyStat(),
                 result.allRequirementsMet(),
-                Optional.ofNullable(setInstance));
+                result.setInstance());
     }
 
     // For parsing gear from the gear viewer
@@ -211,36 +199,5 @@ public final class GearModel extends Model {
 
     public Stream<GearInfo> getAllGearInfos() {
         return gearInfoRegistry.getGearInfoStream();
-    }
-
-    private Map<String, Boolean> getActiveSetItems(String setName) {
-        Map<String, Boolean> activeItems = new HashMap<>();
-
-        List<String> itemNames = Models.PlayerInventory.getEquippedItems().stream()
-                .map(itemStack ->
-                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting())
-                .toList();
-
-        for (String itemName : Models.Set.getSetInfo(setName).items()) {
-            activeItems.put(itemName, itemNames.stream().anyMatch(name -> name.equals(itemName)));
-        }
-
-        return activeItems;
-    }
-
-    /**
-     * @return Wynncraft's count of specified set
-     */
-    private int getWynncraftCount(String setName) {
-        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
-            for (StyledText line : LoreUtils.getLore(itemStack)) {
-                Matcher nameMatcher = SetModel.SET_PATTERN.matcher(line.getString());
-                if (nameMatcher.matches() && nameMatcher.group(1).equals(setName)) {
-                    return Integer.parseInt(nameMatcher.group(2));
-                }
-            }
-        }
-
-        return 0;
     }
 }
