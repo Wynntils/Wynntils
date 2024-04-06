@@ -10,12 +10,16 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.gear.type.SetInfo;
+import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.PowderedItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
+import com.wynntils.models.items.properties.SetItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -33,7 +37,9 @@ public class GearItem extends GameItem
                 PowderedItemProperty,
                 RerollableItemProperty,
                 ShinyItemProperty,
-                IdentifiableItemProperty<GearInfo, GearInstance> {
+                IdentifiableItemProperty<GearInfo, GearInstance>,
+                SetItemProperty,
+                RequirementItemProperty {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
 
@@ -50,6 +56,16 @@ public class GearItem extends GameItem
     @Override
     public Optional<GearInstance> getItemInstance() {
         return Optional.ofNullable(gearInstance);
+    }
+
+    @Override
+    public Optional<SetInfo> getSetInfo() {
+        return gearInfo.setInfo();
+    }
+
+    @Override
+    public Optional<SetInstance> getSetInstance() {
+        return gearInstance.setInstance();
     }
 
     public boolean isUnidentified() {
@@ -142,6 +158,11 @@ public class GearItem extends GameItem
     @Override
     public Optional<ShinyStat> getShinyStat() {
         return gearInstance != null ? gearInstance.shinyStat() : Optional.empty();
+    }
+
+    @Override
+    public boolean meetsActualRequirements() {
+        return gearInstance.meetsRequirements();
     }
 
     @Override

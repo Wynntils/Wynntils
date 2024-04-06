@@ -126,6 +126,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                 identifications,
                 powders,
                 powderSlots,
+                false,
                 durability));
     }
 

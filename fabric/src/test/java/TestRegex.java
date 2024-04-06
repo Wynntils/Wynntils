@@ -711,6 +711,13 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_MISC_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "MISC_REQ_PATTERN");
+        p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
+        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light");
+    }
+
+    @Test
     public void WynnItemParser_SHINY_STAT_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "SHINY_STAT_PATTERN");
         p.shouldMatch("§f⬡ §7Raids Won: §f0");
