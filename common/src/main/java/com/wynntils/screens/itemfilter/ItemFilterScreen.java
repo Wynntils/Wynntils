@@ -1139,7 +1139,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
             }
         }
 
-        filterQuery = filterBuilder.toString();
+        filterQuery = filterBuilder.toString().trim();
     }
 
     private void createSortQuery() {
