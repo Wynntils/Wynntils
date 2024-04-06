@@ -358,10 +358,6 @@ public final class WynnItemParser {
             }
         }
 
-        System.out.println("Figured out item " + itemStack.getHoverName().getString() + " has " + activeItems);
-        System.out.println(
-                "Figured out item " + itemStack.getHoverName().getString() + " has set bonuses " + wynnBonuses);
-
         return new WynnItemParseResult(
                 tier,
                 itemType,
