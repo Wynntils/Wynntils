@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.type;
@@ -14,8 +14,8 @@ import com.google.common.collect.ComparisonChain;
  * @param col The column of the ability tree. Index starts at 0.
  */
 public record AbilityTreeLocation(int page, int row, int col) implements Comparable<AbilityTreeLocation> {
-    private static final int MAX_ROWS = 6;
-    private static final int MAX_COLS = 9;
+    public static final int MAX_ROWS = 6;
+    public static final int MAX_COLS = 9;
 
     public static AbilityTreeLocation fromSlot(int slot, int page) {
         int row = slot / MAX_COLS;

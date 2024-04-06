@@ -18,6 +18,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -25,6 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -52,7 +55,12 @@ public class AbilityTreeContainerQueries {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
-                    McUtils.sendErrorToClient("Dumping Ability Tree failed");
+                    McUtils.sendMessageToClient(
+                            Component.literal("Error dumping ability tree.").withStyle(ChatFormatting.RED));
+
+                    if (McUtils.mc().screen instanceof CustomAbilityTreeScreen abilityTreeScreen) {
+                        abilityTreeScreen.setTreeParseState(CustomAbilityTreeScreen.TreeParseState.FAILED);
+                    }
                 })
 
                 // Open character/compass menu
