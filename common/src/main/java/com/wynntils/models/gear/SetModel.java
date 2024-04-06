@@ -11,25 +11,20 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.SetItemProperty;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.mc.LoreUtils;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class SetModel extends Model {
-    public static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
-
     // Stored as a map for quick lookup <name, SetInfo>
     private final Map<String, SetInfo> setData = new HashMap<>();
 
@@ -87,11 +82,11 @@ public class SetModel extends Model {
         int trueCount = 0;
 
         for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
-            for (StyledText line : LoreUtils.getLore(itemStack)) {
-                Matcher setMatcher = SetModel.SET_PATTERN.matcher(line.getString());
-                if (setMatcher.matches() && setMatcher.group(1).equals(setName)) {
-                    trueCount++;
-                }
+            Optional<SetItemProperty> setItemProperty =
+                    Models.Item.asWynnItemProperty(itemStack, SetItemProperty.class);
+            if (setItemProperty.isEmpty() || setItemProperty.get().getSetInfo().isEmpty()) continue;
+            if (setItemProperty.get().getSetInfo().get().name().equals(setName)) {
+                trueCount++;
             }
         }
 
