@@ -303,6 +303,8 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
         this.addRenderableWidget(unusedButton);
         // endregion
 
+        valueWidget = null;
+
         populateProviders();
         populatePresets();
     }
