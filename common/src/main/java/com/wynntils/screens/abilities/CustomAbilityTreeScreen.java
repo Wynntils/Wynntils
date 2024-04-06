@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.abilities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionNode;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
@@ -16,7 +17,6 @@ import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.screens.abilities.widgets.AbilityNodeConnectionWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.abilities.widgets.AbilityTreePageSelectorButton;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 
@@ -95,8 +96,10 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     // region Rendering
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(poseStack);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         poseStack.pushPose();
         // Make the drawing origin the start of the texture, centered on the screen
@@ -119,9 +122,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 backgroundHeight);
 
         if (treeParseState == TreeParseState.PARSED) {
-            renderNodes(poseStack, mouseX, mouseY, partialTick);
+            renderNodes(guiGraphics, mouseX, mouseY, partialTick);
 
-            renderWidgets(poseStack, mouseX, mouseY, partialTick);
+            renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -142,7 +145,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         poseStack.popPose();
     }
 
-    private void renderNodes(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderNodes(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
 
         // Set the node area offset
@@ -151,19 +156,21 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         // Apply texture scale
         poseStack.scale(textureScale, textureScale, 1);
 
-        nodeWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
-        connectionWidgets.values().forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+        nodeWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        connectionWidgets.values().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
         poseStack.popPose();
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         poseStack.pushPose();
 
         // Apply texture scale
         poseStack.scale(textureScale, textureScale, 1);
 
-        renderables.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+        renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
         poseStack.popPose();
     }
@@ -177,12 +184,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         if (treeParseState != TreeParseState.PARSED) return false;
 
         // Translate the mouse position to match what is rendered on the screen
-        mouseX -= (this.width - Texture.ABILITY_TREE_BACKGROUND.width() * textureScale) / 2;
-        mouseY -= (this.height - Texture.ABILITY_TREE_BACKGROUND.height() * textureScale) / 2;
+        double scaledMouseX = mouseX - (this.width - Texture.ABILITY_TREE_BACKGROUND.width() * textureScale) / 2;
+        double scaledMouseY = mouseY - (this.height - Texture.ABILITY_TREE_BACKGROUND.height() * textureScale) / 2;
 
         // Actual texture positions are not scaled, only the rendering is
-        mouseX /= textureScale;
-        mouseY /= textureScale;
+        scaledMouseY /= textureScale;
+        scaledMouseX /= textureScale;
 
         for (GuiEventListener child : this.children()) {
             if (child.isMouseOver(mouseX, mouseY)) {
@@ -196,10 +203,10 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (treeParseState != TreeParseState.PARSED) return false;
 
-        setCurrentPage((int) (currentPage - Math.signum(delta)));
+        setCurrentPage((int) (currentPage - Math.signum(scrollX)));
         return true;
     }
 
@@ -321,8 +328,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     }
 
     private Pair<Integer, Integer> getRenderLocation(AbilityTreeLocation location) {
-        float horizontalChunkWidth = NODE_AREA_WIDTH / AbilityTreeLocation.MAX_COLS;
-        float verticalChunkHeight = NODE_AREA_HEIGHT / AbilityTreeLocation.MAX_ROWS;
+        float horizontalChunkWidth = (float) NODE_AREA_WIDTH / AbilityTreeLocation.MAX_COLS;
+        float verticalChunkHeight = (float) NODE_AREA_HEIGHT / AbilityTreeLocation.MAX_ROWS;
 
         return Pair.of((int) (location.col() * horizontalChunkWidth + horizontalChunkWidth / 2f), (int)
                 (location.row() * verticalChunkHeight + verticalChunkHeight / 2f));

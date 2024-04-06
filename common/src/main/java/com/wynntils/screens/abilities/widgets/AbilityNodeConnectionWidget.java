@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.abilities.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionNode;
-import com.wynntils.utils.render.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -22,8 +21,8 @@ public class AbilityNodeConnectionWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.renderItem(poseStack, node.getItemStack(), this.getX(), this.getY());
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guiGraphics.renderItem(node.getItemStack(), this.getX(), this.getY());
     }
 
     @Override

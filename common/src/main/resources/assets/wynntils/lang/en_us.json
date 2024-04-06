@@ -282,6 +282,7 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Tracked",
   "feature.wynntils.cosmeticsPreview.description": "Renders your player in the cosmetics screen.",
   "feature.wynntils.cosmeticsPreview.name": "Cosmetics Player Preview",
+  "feature.wynntils.customAbilityTree.description": "Adds a custom ability tree UI, allowing you to edit your abilities without saving the changes, adding presets, and more.",
   "feature.wynntils.customAbilityTree.name": "Custom Ability Tree",
   "feature.wynntils.customAbilityTree.noAbilityTreeData": "Could not download ability tree data. Try restarting your game.",
   "feature.wynntils.customAbilityTree.noClassData": "Class data was not parsed. Try rejoining this character.",

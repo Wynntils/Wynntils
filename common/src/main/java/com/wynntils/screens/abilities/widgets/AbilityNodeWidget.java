@@ -1,17 +1,16 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.abilities.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +29,7 @@ public class AbilityNodeWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
         Optional<ParsedAbilityTree> treeOptional = Models.AbilityTree.getCurrentAbilityTree();
@@ -53,17 +52,15 @@ public class AbilityNodeWidget extends AbstractWidget {
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
 
-        RenderUtils.renderItem(poseStack, itemStack, this.getX(), this.getY());
+        guiGraphics.renderItem(itemStack, this.getX(), this.getY());
 
         if (isMouseOver(mouseX, mouseY)) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    0,
-                    node.getDescription(nodeState, currentAbilityTree),
+            guiGraphics.renderTooltip(
                     FontRenderer.getInstance().getFont(),
-                    false);
+                    node.getDescription(nodeState, currentAbilityTree),
+                    Optional.empty(),
+                    mouseX,
+                    mouseY);
         }
     }
 

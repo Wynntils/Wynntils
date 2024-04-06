@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * Copyright © Wynntils 2023-2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.abilities.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -27,13 +27,13 @@ public class AbilityTreePageSelectorButton extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int i, int j, float f) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (upDirection && screen.getCurrentPage() == 0) return;
         if (!upDirection && screen.getCurrentPage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) return;
 
         Texture texture = upDirection ? Texture.ABILITY_TREE_UP_ARROW : Texture.ABILITY_TREE_DOWN_ARROW;
 
-        RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
+        RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, this.getX(), this.getY());
     }
 
     @Override

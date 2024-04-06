@@ -5,8 +5,6 @@
 package com.wynntils.models.abilitytree;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
@@ -18,6 +16,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class AbilityTreeModel extends Model {
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
-    private Map<ClassType, AbilityTreeInfo> abiliiyTreeMap = new HashMap<>();
+    private Map<ClassType, AbilityTreeInfo> abiliiyTreeMap = new EnumMap<>(ClassType.class);
     private ParsedAbilityTree currentAbilityTree;
 
     public AbilityTreeModel() {
@@ -42,11 +41,10 @@ public class AbilityTreeModel extends Model {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_ABILITIES);
         dl.handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, AbilityTreeInfo>>() {}.getType();
-            Gson gson = new GsonBuilder().create();
 
-            Map<String, AbilityTreeInfo> abilityMap = gson.fromJson(reader, type);
+            Map<String, AbilityTreeInfo> abilityMap = Managers.Json.GSON.fromJson(reader, type);
 
-            Map<ClassType, AbilityTreeInfo> tempMap = new HashMap<>();
+            Map<ClassType, AbilityTreeInfo> tempMap = new EnumMap<>(ClassType.class);
 
             abilityMap.forEach((key, value) -> tempMap.put(ClassType.fromName(key), value));
 
@@ -55,7 +53,7 @@ public class AbilityTreeModel extends Model {
     }
 
     public boolean isLoaded() {
-        return !ABILIIY_TREE_MAP.isEmpty();
+        return !abiliiyTreeMap.isEmpty();
     }
 
     public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
