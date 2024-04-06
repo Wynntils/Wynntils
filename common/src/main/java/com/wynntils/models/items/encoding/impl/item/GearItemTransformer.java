@@ -70,7 +70,8 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
 
         List<StatActualValue> idList = identifications.values().stream().toList();
 
-        return ErrorOr.of(new GearItem(gearInfo, GearInstance.create(gearInfo, idList, powders, rerolls, shinyStat)));
+        return ErrorOr.of(new GearItem(
+                gearInfo, GearInstance.create(gearInfo, idList, powders, rerolls, shinyStat, false, Optional.empty())));
     }
 
     @Override

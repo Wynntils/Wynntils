@@ -83,6 +83,9 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                     () -> I18n.get("screens.wynntils.skillPointLoadouts.gear", Models.SkillPoint.getGearSum()),
                     Models.SkillPoint::getGearSkillPoints));
             summaryParts.add(Pair.of(
+                    () -> I18n.get("screens.wynntils.skillPointLoadouts.setBonus", Models.SkillPoint.getSetBonusSum()),
+                    Models.SkillPoint::getSetBonusSkillPoints));
+            summaryParts.add(Pair.of(
                     () -> I18n.get("screens.wynntils.skillPointLoadouts.tomes", Models.SkillPoint.getTomeSum()),
                     Models.SkillPoint::getTomeSkillPoints));
             summaryParts.add(Pair.of(
@@ -345,6 +348,22 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 TextShadow.NORMAL);
             }
             if (selectedLoadout.value().isBuild()) {
+                int startingHeight = 41;
+                if (selectedLoadout.value().weapon() != null) {
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    poseStack,
+                                    StyledText.fromString(
+                                            selectedLoadout.value().weapon()),
+                                    dividedWidth * 35,
+                                    dividedHeight * 40,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.LEFT,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.NORMAL);
+                    startingHeight = 42;
+                }
+
                 List<TextRenderTask> tasks = new ArrayList<>();
                 for (int i = 0; i < selectedLoadout.value().armourNames().size(); i++) {
                     String armour = selectedLoadout.value().armourNames().get(i);
@@ -366,7 +385,8 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     VerticalAlignment.BOTTOM,
                                     TextShadow.NORMAL)));
                 }
-                FontRenderer.getInstance().renderTexts(poseStack, dividedWidth * 35, dividedHeight * 41, tasks);
+                FontRenderer.getInstance()
+                        .renderTexts(poseStack, dividedWidth * 35, dividedHeight * startingHeight, tasks);
 
                 tasks = new ArrayList<>();
                 for (int i = 0; i < selectedLoadout.value().accessoryNames().size(); i++) {
@@ -397,7 +417,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                         * (selectedLoadout.value().armourNames().isEmpty()
                                                 ? 35
                                                 : 44), // left align accessories if no armour
-                                dividedHeight * 41,
+                                dividedHeight * startingHeight,
                                 tasks);
             } else {
                 FontRenderer.getInstance()
