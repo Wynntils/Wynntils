@@ -1,3 +1,10 @@
+## [1.1.9](https://github.com/Wynntils/Artemis/compare/v1.1.8...v1.1.9) (2024-04-06)
+
+
+### Bug Fixes
+
+* Parse set data to fix skill point model saving skill requirements incorrectly ([#2343](https://github.com/Wynntils/Artemis/issues/2343)) ([ed39445](https://github.com/Wynntils/Artemis/commit/ed39445db1db2bc54d685049a643bd35a14a22b4))
+
 ## [1.1.8](https://github.com/Wynntils/Artemis/compare/v1.1.7...v1.1.8) (2024-04-04)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2387](https://github.com/Wynntils/Artemis/issues/2387)) ([28da619](https://github.com/Wynntils/Artemis/commit/28da6197ba4ad25872954af3da87ee4df5069eb0))
+* **release:** v1.1.8 [skip ci] ([26192fa](https://github.com/Wynntils/Artemis/commit/26192fa9500ebfc43831e01958ef81c922e6a9e0))
 
 ## [1.1.7](https://github.com/Wynntils/Artemis/compare/v1.1.6...v1.1.7) (2024-04-02)
 
@@ -59,16 +67,4 @@
 ### Code Refactoring
 
 * streamline event handling in StyledText by using StyledText[#from](https://github.com/Wynntils/Artemis/issues/from)Parts almost everywhere [skip ci] ([#2377](https://github.com/Wynntils/Artemis/issues/2377)) ([989243d](https://github.com/Wynntils/Artemis/commit/989243da325b6fb5b2dc301267db5539f63c8065))
-
-## [1.1.4](https://github.com/Wynntils/Artemis/compare/v1.1.3...v1.1.4) (2024-03-20)
-
-
-### New Features
-
-* Skill point loadouts smooth scrolling ([#2348](https://github.com/Wynntils/Artemis/issues/2348)) ([04395e5](https://github.com/Wynntils/Artemis/commit/04395e57a6971c9dfa1c57c68b25f0bbd2088c6e))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.4 [skip ci] ([2697f0b](https://github.com/Wynntils/Artemis/commit/2697f0b5b4ffe3da01111b50d71f86309e2d3ce4))
 
