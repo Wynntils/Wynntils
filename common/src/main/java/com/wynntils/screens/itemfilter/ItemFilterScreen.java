@@ -646,6 +646,8 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
         createFilterQuery();
         populateQuery();
+        // Sorts are not required to be repopulated here as filters can only be added
+        // when not in sort view mode
     }
 
     public void removeFilter(ItemStatProvider<?> provider) {
@@ -665,6 +667,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
         createFilterQuery();
         populateQuery();
+        // Same as above method, sorts aren't required to be repopulated here
     }
 
     public void addSort(Pair<ItemStatProvider<?>, String> newSort) {
