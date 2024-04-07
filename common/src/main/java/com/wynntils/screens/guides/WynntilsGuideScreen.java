@@ -7,7 +7,7 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
-import com.wynntils.screens.base.widgets.ItemSearchButton;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -41,7 +41,7 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         this.addRenderableWidget(helperButton);
 
         this.addRenderableWidget(
-                new ItemSearchButton(Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true));
+                new ItemFilterUIButton(Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true));
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),

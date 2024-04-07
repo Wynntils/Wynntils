@@ -39,7 +39,7 @@ import com.wynntils.models.containers.type.wynncontainers.PetMenuContainer;
 import com.wynntils.models.containers.type.wynncontainers.ScrapMenuContainer;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
-import com.wynntils.screens.base.widgets.ItemSearchButton;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -321,7 +321,7 @@ public class ContainerSearchFeature extends Feature {
             screen.addRenderableWidget(lastItemSearchHelperWidget);
 
             screen.addRenderableWidget(
-                    new ItemSearchButton(renderX + 157, renderY - 20, lastSearchWidget, screen, false));
+                    new ItemFilterUIButton(renderX + 157, renderY - 20, lastSearchWidget, screen, false));
         } else {
             SearchWidget searchWidget = new SearchWidget(
                     renderX + screen.imageWidth - 175,

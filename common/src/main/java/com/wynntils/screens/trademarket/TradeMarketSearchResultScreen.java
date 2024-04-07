@@ -12,7 +12,7 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.screens.base.widgets.ItemSearchButton;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -110,7 +110,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 true);
         this.addRenderableWidget(helperButton);
 
-        this.addRenderableWidget(new ItemSearchButton(renderX + 157, renderY, itemSearchWidget, this, true));
+        this.addRenderableWidget(new ItemFilterUIButton(renderX + 157, renderY, itemSearchWidget, this, true));
 
         WynntilsButton backButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,

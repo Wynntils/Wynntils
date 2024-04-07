@@ -10,12 +10,12 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class ItemSearchButton extends WynntilsButton {
+public class ItemFilterUIButton extends WynntilsButton {
     private final SearchWidget searchWidget;
     private final Screen previousScreen;
     private final boolean supportsSorting;
 
-    public ItemSearchButton(int x, int y, SearchWidget searchWidget, Screen previousScreen, boolean supportsSorting) {
+    public ItemFilterUIButton(int x, int y, SearchWidget searchWidget, Screen previousScreen, boolean supportsSorting) {
         super(x, y, 20, 20, Component.literal("✎"));
         this.searchWidget = searchWidget;
         this.previousScreen = previousScreen;
