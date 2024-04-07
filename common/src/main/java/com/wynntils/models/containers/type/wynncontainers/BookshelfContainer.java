@@ -9,7 +9,9 @@ import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.regex.Pattern;
 
 public class BookshelfContainer extends PersonalStorageContainer {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf");
+
     public BookshelfContainer() {
-        super(Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"), PersonalStorageType.BOOKSHELF);
+        super(TITLE_PATTERN, PersonalStorageType.BOOKSHELF);
     }
 }

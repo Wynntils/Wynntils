@@ -9,11 +9,12 @@ import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
 public class TradeMarketPrimaryContainer extends WynncraftContainer implements ScrollableContainerProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("Trade Market");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a <§2<§a<§2<§a<");
 
     public TradeMarketPrimaryContainer() {
-        super(Pattern.compile("Trade Market"));
+        super(TITLE_PATTERN);
     }
 
     @Override

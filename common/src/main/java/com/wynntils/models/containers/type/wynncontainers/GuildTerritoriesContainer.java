@@ -10,11 +10,12 @@ import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
 public class GuildTerritoriesContainer extends WynncraftContainer implements SearchableContainerProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile(".+: Territories");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§a§lNext Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§a§lPrevious Page");
 
     public GuildTerritoriesContainer() {
-        super(Pattern.compile(".+: Territories"));
+        super(TITLE_PATTERN);
     }
 
     @Override

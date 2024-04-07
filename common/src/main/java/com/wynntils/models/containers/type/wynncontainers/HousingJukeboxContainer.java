@@ -10,11 +10,12 @@ import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
 public class HousingJukeboxContainer extends WynncraftContainer implements SearchableContainerProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("Select Songs");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
     public HousingJukeboxContainer() {
-        super(Pattern.compile("Select Songs"));
+        super(TITLE_PATTERN);
     }
 
     @Override

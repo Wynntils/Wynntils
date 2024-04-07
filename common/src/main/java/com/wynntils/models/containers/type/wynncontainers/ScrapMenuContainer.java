@@ -10,11 +10,12 @@ import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
 public class ScrapMenuContainer extends WynncraftContainer implements SearchableContainerProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("Scrap Rewards");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
     public ScrapMenuContainer() {
-        super(Pattern.compile("Scrap Rewards"));
+        super(TITLE_PATTERN);
     }
 
     @Override

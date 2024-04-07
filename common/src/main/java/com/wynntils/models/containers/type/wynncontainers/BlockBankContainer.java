@@ -9,8 +9,10 @@ import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.regex.Pattern;
 
 public class BlockBankContainer extends PersonalStorageContainer {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank");
+
     public BlockBankContainer() {
-        super(Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank"), PersonalStorageType.BLOCK_BANK);
+        super(TITLE_PATTERN, PersonalStorageType.BLOCK_BANK);
     }
 
     @Override
