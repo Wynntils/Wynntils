@@ -1080,7 +1080,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
                 if (keyString.equalsIgnoreCase(Services.ItemFilter.SORT_KEY)) {
                     if (!supportsSorting) continue;
 
-                    String[] splitSorts = inputString.split(Services.ItemFilter.SORT_LIST_SEPARATOR);
+                    String[] splitSorts = inputString.split(Services.ItemFilter.LIST_SEPARATOR);
 
                     for (String sort : splitSorts) {
                         // Determine if the sort is a valid provider
@@ -1155,7 +1155,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
             // Append the seperator for all sorts except the last
             if (sorts.indexOf(sort) != sorts.size() - 1) {
-                sortBuilder.append(Services.ItemFilter.SORT_LIST_SEPARATOR);
+                sortBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
             }
         }
 
