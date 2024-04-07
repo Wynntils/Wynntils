@@ -57,48 +57,6 @@ public class IntegerValueWidget extends GeneralValueWidget {
 
         this.supportsPercentage = supportsPercentage;
 
-        String singleInputQuery = "";
-        String minInputQuery = "";
-        String maxInputQuery = "";
-        String greaterThanInputQuery = "";
-        String lessThanInputQuery = "";
-
-        // Handle all of the values and determine which query type they fit into
-        for (String value : query) {
-            // Match any only applies to the single input
-            if (value.equals("*")) {
-                allQuery = true;
-                singleInputQuery = value;
-                this.singlePercentage = false;
-                continue;
-            }
-
-            Matcher singleMatcher = SINGLE_PATTERN.matcher(value);
-            Matcher rangedMatcher = RANGED_PATTERN.matcher(value);
-            Matcher greaterThanMatcher = GREATER_THAN_PATTERN.matcher(value);
-            Matcher lessThanMatcher = LESS_THAN_PATTERN.matcher(value);
-
-            // Only allow one of each query type, match the first found in the list
-            // Determine if the query uses the % stat instead
-            // And see if the greater/less than use equal to or not
-            if (singleInputQuery.isEmpty() && singleMatcher.matches()) {
-                singleInputQuery = singleMatcher.group(1);
-                this.singlePercentage = value.endsWith("%") && supportsPercentage;
-            } else if (minInputQuery.isEmpty() && maxInputQuery.isEmpty() && rangedMatcher.matches()) {
-                minInputQuery = rangedMatcher.group(1);
-                maxInputQuery = rangedMatcher.group(2);
-                this.rangedPercentage = value.endsWith("%") && supportsPercentage;
-            } else if (greaterThanInputQuery.isEmpty() && greaterThanMatcher.matches()) {
-                greaterThanInputQuery = greaterThanMatcher.group(2);
-                greaterThanEqual = greaterThanMatcher.group(1).equals(">=");
-                this.greaterThanPercentage = value.endsWith("%") && supportsPercentage;
-            } else if (lessThanInputQuery.isEmpty() && lessThanMatcher.matches()) {
-                lessThanInputQuery = lessThanMatcher.group(2);
-                lessThanEqual = lessThanMatcher.group(1).equals("<=");
-                this.lessThanPercentage = value.endsWith("%") && supportsPercentage;
-            }
-        }
-
         // region Inputs and options
         this.singleInput = new TextInputBoxWidget(
                 getX() + 10,
@@ -263,24 +221,7 @@ public class IntegerValueWidget extends GeneralValueWidget {
         widgets.add(lessThanButton);
         // endregion
 
-        // Set the values for all of the inputs
-        if (!singleInputQuery.isEmpty()) {
-            singleInput.setTextBoxInput(singleInputQuery);
-        }
-
-        if (!minInputQuery.isEmpty() && !maxInputQuery.isEmpty()) {
-            rangedMinInput.setTextBoxInput(minInputQuery);
-            rangedMaxInput.setTextBoxInput(maxInputQuery);
-        }
-
-        if (!greaterThanInputQuery.isEmpty()) {
-            greaterThanInput.setTextBoxInput(greaterThanInputQuery);
-        }
-
-        if (!lessThanInputQuery.isEmpty()) {
-            lessThanInput.setTextBoxInput(lessThanInputQuery);
-        }
-
+        updateValues(query);
         updateQuery();
     }
 
@@ -356,7 +297,6 @@ public class IntegerValueWidget extends GeneralValueWidget {
         // Populate all of the input widgets and set the state for the checkboxes and greater/less than buttons
         // based on the query from the ItemSearchWidget.
         // ignoreUpdate is set to true so no consumers for the input widgets are called
-
         String singleInputQuery = "";
         String minInputQuery = "";
         String maxInputQuery = "";

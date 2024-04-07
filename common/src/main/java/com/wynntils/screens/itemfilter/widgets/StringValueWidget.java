@@ -26,7 +26,7 @@ public class StringValueWidget extends GeneralValueWidget {
 
     private boolean allQuery = false;
     private boolean ignoreUpdate = false;
-    private boolean strict;
+    private boolean strict = false;
 
     public StringValueWidget(String query, ItemFilterScreen filterScreen) {
         super(Component.literal("String Value Widget"), filterScreen);
@@ -41,20 +41,6 @@ public class StringValueWidget extends GeneralValueWidget {
                     updateQuery();
                 }),
                 filterScreen);
-
-        // The query will be strict if it is surrounded in "", don't mark as strict if it is only a single " however
-        this.strict = query.length() > 1 && query.startsWith("\"") && query.endsWith("\"");
-
-        String inputQuery = "";
-
-        // Set the query without the strict marks if it is strict
-        if (!this.strict) {
-            inputQuery = query;
-
-            allQuery = query.equals("*");
-        } else if (query != null) {
-            inputQuery = query.substring(1, query.length() - 1);
-        }
 
         this.strictCheckbox = new WynntilsCheckbox(
                 getX() + 10,
@@ -95,11 +81,11 @@ public class StringValueWidget extends GeneralValueWidget {
                         "screens.wynntils.itemFilter.anyTooltip",
                         filterScreen.getSelectedProvider().getDisplayName())));
 
-        this.entryInput.setTextBoxInput(inputQuery);
-
         widgets.add(this.strictCheckbox);
         widgets.add(this.entryInput);
         widgets.add(this.allCheckbox);
+
+        updateValues(List.of(query));
 
         updateQuery();
     }
@@ -162,7 +148,7 @@ public class StringValueWidget extends GeneralValueWidget {
             // if the checkboxes themselves were not what called updateQuery as the onPress for
             // checkboxes will change their state after this is finished
             if (!ignoreUpdate) {
-                strictCheckbox.selected = false;
+                strictCheckbox.selected = strict;
                 allCheckbox.selected = false;
             }
 

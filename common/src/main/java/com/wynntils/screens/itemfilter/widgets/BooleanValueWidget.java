@@ -9,7 +9,6 @@ import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -18,18 +17,10 @@ public class BooleanValueWidget extends GeneralValueWidget {
     private final WynntilsCheckbox trueCheckbox;
     private final WynntilsCheckbox falseCheckbox;
 
-    private ConfirmedBoolean state;
+    private ConfirmedBoolean state = ConfirmedBoolean.UNCONFIRMED;
 
     public BooleanValueWidget(String query, ItemFilterScreen filterScreen) {
         super(Component.literal("Boolean Value Widget"), filterScreen);
-
-        if (query.toLowerCase(Locale.ROOT).equals("true")) {
-            this.state = ConfirmedBoolean.TRUE;
-        } else if (query.toLowerCase(Locale.ROOT).equals("false")) {
-            this.state = ConfirmedBoolean.FALSE;
-        } else {
-            this.state = ConfirmedBoolean.UNCONFIRMED;
-        }
 
         this.trueCheckbox = new WynntilsCheckbox(
                 getX() + 10,
@@ -61,6 +52,8 @@ public class BooleanValueWidget extends GeneralValueWidget {
 
         widgets.add(this.trueCheckbox);
         widgets.add(this.falseCheckbox);
+
+        updateValues(List.of(query));
 
         updateQuery();
     }

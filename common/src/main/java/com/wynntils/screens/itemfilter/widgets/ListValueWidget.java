@@ -53,12 +53,7 @@ public class ListValueWidget extends GeneralValueWidget {
         this.translationX = translationX;
         this.translationY = translationY;
 
-        // Get which values are enabled from the query and compare against the known valid values
-        enabledValues = this.values.stream()
-                .filter(v -> query.stream().anyMatch(q -> q.equalsIgnoreCase(v)))
-                .collect(Collectors.toList());
-
-        populateValues();
+        updateValues(query);
         updateQuery();
     }
 
