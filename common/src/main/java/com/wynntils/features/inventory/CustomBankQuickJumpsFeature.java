@@ -329,7 +329,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
     private void getCustomJumpDestinations() {
         String configDestinations;
 
-        switch (Models.Bank.getCurrentContainer()) {
+        switch (Models.Bank.getStorageContainerType()) {
             case ACCOUNT_BANK -> configDestinations = accountBankDestinations.get();
             case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
             case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
@@ -340,7 +340,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
             }
         }
 
-        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getCurrentContainer());
+        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getStorageContainerType());
 
         if (customJumpDestinations == null) {
             customJumpDestinations = getDefaultJumpDestinations();
@@ -348,7 +348,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
     }
 
     private List<Integer> getDefaultJumpDestinations() {
-        return switch (Models.Bank.getCurrentContainer()) {
+        return switch (Models.Bank.getStorageContainerType()) {
             case ACCOUNT_BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
             default -> DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default

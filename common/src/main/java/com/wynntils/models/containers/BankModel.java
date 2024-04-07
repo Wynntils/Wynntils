@@ -69,7 +69,7 @@ public class BankModel extends Model {
 
     private boolean editingName;
     private int currentPage = 1;
-    private PersonalStorageType currentContainer = null;
+    private PersonalStorageType storageContainerType = null;
 
     public BankModel() {
         super(List.of());
@@ -82,7 +82,7 @@ public class BankModel extends Model {
             return;
         }
 
-        currentContainer = personalStorageContainer.getPersonalStorageType();
+        storageContainerType = personalStorageContainer.getPersonalStorageType();
 
         currentPage = getCurrentBankPage(screen);
 
@@ -91,7 +91,7 @@ public class BankModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenClose(ScreenClosedEvent e) {
-        currentContainer = null;
+        storageContainerType = null;
         currentPage = 1;
         editingName = false;
     }
@@ -117,7 +117,7 @@ public class BankModel extends Model {
     }
 
     public void saveCurrentPageName(String nameToSet) {
-        switch (currentContainer) {
+        switch (storageContainerType) {
             case ACCOUNT_BANK -> {
                 customBankPageNames.get().put(currentPage, nameToSet);
                 customBankPageNames.touched();
@@ -151,7 +151,7 @@ public class BankModel extends Model {
     }
 
     public void resetCurrentPageName() {
-        switch (currentContainer) {
+        switch (storageContainerType) {
             case ACCOUNT_BANK -> {
                 customBankPageNames.get().remove(currentPage);
                 customBankPageNames.touched();
@@ -181,7 +181,7 @@ public class BankModel extends Model {
     }
 
     public int getFinalPage() {
-        return switch (currentContainer) {
+        return switch (storageContainerType) {
             case ACCOUNT_BANK -> finalBankPage.get();
             case BLOCK_BANK -> finalBlockBankPage.get();
             case BOOKSHELF -> finalBookshelfPage.get();
@@ -193,7 +193,7 @@ public class BankModel extends Model {
     }
 
     public void updateFinalPage() {
-        switch (currentContainer) {
+        switch (storageContainerType) {
             case ACCOUNT_BANK -> {
                 finalBankPage.store(currentPage);
             }
@@ -215,8 +215,8 @@ public class BankModel extends Model {
         }
     }
 
-    public PersonalStorageType getCurrentContainer() {
-        return currentContainer;
+    public PersonalStorageType getStorageContainerType() {
+        return storageContainerType;
     }
 
     public int getCurrentPage() {
@@ -232,7 +232,7 @@ public class BankModel extends Model {
     }
 
     private Map<Integer, String> getCurrentNameMap() {
-        return switch (currentContainer) {
+        return switch (storageContainerType) {
             case ACCOUNT_BANK -> customBankPageNames.get();
             case BLOCK_BANK -> customBlockBankPageNames.get();
             case BOOKSHELF -> customBookshelfPageNames.get();
