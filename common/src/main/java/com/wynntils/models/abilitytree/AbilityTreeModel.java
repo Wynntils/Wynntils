@@ -27,7 +27,7 @@ public class AbilityTreeModel extends Model {
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
-    private Map<ClassType, AbilityTreeInfo> abiliiyTreeMap = new EnumMap<>(ClassType.class);
+    private Map<ClassType, AbilityTreeInfo> abilityTreeMap = new EnumMap<>(ClassType.class);
     private ParsedAbilityTree currentAbilityTree;
 
     public AbilityTreeModel() {
@@ -48,12 +48,12 @@ public class AbilityTreeModel extends Model {
 
             abilityMap.forEach((key, value) -> tempMap.put(ClassType.fromName(key), value));
 
-            abiliiyTreeMap = tempMap;
+            abilityTreeMap = tempMap;
         });
     }
 
     public boolean isLoaded() {
-        return !abiliiyTreeMap.isEmpty();
+        return !abilityTreeMap.isEmpty();
     }
 
     public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
@@ -69,6 +69,6 @@ public class AbilityTreeModel extends Model {
     }
 
     public AbilityTreeInfo getAbilityTree(ClassType type) {
-        return abiliiyTreeMap.get(type);
+        return abilityTreeMap.get(type);
     }
 }
