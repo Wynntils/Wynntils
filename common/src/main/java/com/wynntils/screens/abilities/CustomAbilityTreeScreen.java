@@ -234,16 +234,18 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             node));
                 });
 
+        // We do this "backwards":
+        // First find connection nodes from last page
         List<AbilityTreeSkillNode> multiPageConnectionNodesFromLastPage = abilityTreeInfo.nodes().stream()
-                .filter(node -> node.location().page() == currentPage)
+                .filter(node ->
+                        node.location().page() == currentPage) // currentPage is 0-indexed, this finds the last page
                 .filter(node -> nodeWidgets.stream()
                         .map(AbilityNodeWidget::getNode)
                         .map(AbilityTreeSkillNode::id)
                         .anyMatch(node.connections()::contains))
                 .toList();
 
-        // We do this "backwards":
-        // First find connection nodes from last page, then find the nodes they connect to on this page
+        // Then, find the nodes they connect to on this page
         for (AbilityTreeSkillNode connectionNode : multiPageConnectionNodesFromLastPage) {
             List<AbilityTreeSkillNode> multiPageConnections = nodeWidgets.stream()
                     .map(AbilityNodeWidget::getNode)
@@ -302,8 +304,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 // Then we add the turn
                 addTurnConnection(currentNode, connectionNode, col, row, connectionCol);
 
-                // Finally, we add vertical connections, if the turn is not enough
-                if (Math.abs(row - connectionRow) > 1) {
+                // Finally, we add vertical connections, if the turn is not enough, or if the connection is on the next
+                // page
+                if (Math.abs(row - connectionRow) > 1 || row > connectionRow) {
                     addConnectionsVertically(currentNode, connectionNode, connectionCol, row, connectionRow);
                 }
             }
