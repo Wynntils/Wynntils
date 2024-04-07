@@ -4,11 +4,13 @@
  */
 package com.wynntils.models.abilitytree.parser;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeInfo;
 import com.wynntils.models.abilitytree.type.ArchetypeRequirement;
 import com.wynntils.models.abilitytree.type.ItemInformation;
 import com.wynntils.utils.mc.LoreUtils;
@@ -23,7 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class AbilityTreeParser {
-    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?§l(.+)(§r§. ability)?");
+    // Node patterns
+    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?(?:§f)?§l(.+)((?:§.)? ability)?");
     private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
     private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
@@ -35,7 +38,11 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_REQUIREMENT_NOT_MET = Pattern.compile("§cYou do not meet the requirements");
     private static final Pattern NODE_UNLOCKED = Pattern.compile("§eYou already unlocked this ability");
 
+    // Connection patterns
     private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
+
+    // Archetype patterns
+    private static final Pattern ARCHETYPE_NAME_PATTERN = Pattern.compile("§.§l(.+) Archetype");
 
     public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
             ItemStack itemStack, int page, int slot, int id) {
@@ -175,6 +182,36 @@ public final class AbilityTreeParser {
         return Pair.of(node, state);
     }
 
+    public ArchetypeInfo parseArchetypeFromItem(ItemStack itemStack) {
+        StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
+        Matcher matcher = nameStyledText.getMatcher(ARCHETYPE_NAME_PATTERN);
+
+        if (!matcher.matches()) {
+            // We should not get here, as we should only be calling this method on items that match the pattern
+            WynntilsMod.error("Failed to parse archetype name from item stack: " + itemStack.getHoverName());
+            return null;
+        }
+
+        String name = matcher.group(1);
+
+        List<StyledText> loreStyledText = LoreUtils.getLore(itemStack);
+
+        List<String> description = new ArrayList<>();
+        for (StyledText text : loreStyledText) {
+            description.add(text.getString());
+        }
+
+        // Remove the last two lines of the lore, which are the archetype count and the empty line
+        description.remove(description.size() - 1);
+        description.remove(description.size() - 1);
+
+        return new ArchetypeInfo(
+                name,
+                nameStyledText.getString(),
+                description,
+                new ItemInformation(Item.getId(itemStack.getItem()), itemStack.getDamageValue()));
+    }
+
     public boolean isNodeItem(ItemStack itemStack, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
         return itemStack.getItem() == Items.STONE_AXE
@@ -185,5 +222,12 @@ public final class AbilityTreeParser {
     public boolean isConnectionItem(ItemStack itemStack) {
         return itemStack.getItem() == Items.STONE_AXE
                 && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
+    }
+
+    public boolean isArchetypeItem(ItemStack itemStack) {
+        return itemStack.getItem() == Items.STONE_AXE
+                && StyledText.fromComponent(itemStack.getHoverName())
+                        .getMatcher(ARCHETYPE_NAME_PATTERN)
+                        .matches();
     }
 }
