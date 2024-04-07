@@ -100,12 +100,13 @@ public class BooleanValueWidget extends GeneralValueWidget {
     protected void updateQuery() {
         filterScreen.removeFilter(filterScreen.getSelectedProvider());
 
+        String query;
+
         if (state == ConfirmedBoolean.TRUE) {
             query = "true";
         } else if (state == ConfirmedBoolean.FALSE) {
             query = "false";
         } else {
-            query = "";
             return;
         }
 

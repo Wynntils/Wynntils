@@ -25,6 +25,7 @@ import com.wynntils.screens.itemfilter.widgets.ProviderButton;
 import com.wynntils.screens.itemfilter.widgets.SortWidget;
 import com.wynntils.screens.itemfilter.widgets.StringValueWidget;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -652,15 +654,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
     public void removeFilter(ItemStatProvider<?> provider) {
         // Remove all instances of the provider in the filter list
-        filters = filters.stream()
-                .filter(filter -> {
-                    if (filter.a() == provider) {
-                        return filter.b().isEmpty();
-                    }
-
-                    return true;
-                })
-                .collect(Collectors.toList());
+        filters = filters.stream().filter(filter -> filter.a() != provider).collect(Collectors.toList());
 
         usedProviders =
                 usedProviders.stream().filter(filter -> filter != provider).collect(Collectors.toSet());
@@ -763,16 +757,12 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
             this.selectedProvider = selectedProvider;
             createValueWidget();
         } else {
-            List<String> values = filters.stream()
+            Optional<String> valuesOpt = filters.stream()
                     .filter(value -> value.a() == selectedProvider)
                     .map(Pair::b)
-                    .collect(Collectors.toList());
+                    .findFirst();
 
-            // Ensure we always have at least element in the list
-            // as some providers are only interested in one input
-            if (values.isEmpty()) {
-                values.add("");
-            }
+            List<String> values = valuesOpt.map(s -> List.of(s.split(","))).orElseGet(() -> List.of(""));
 
             valueWidget.updateValues(values);
         }
@@ -921,20 +911,16 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
     }
 
     private GeneralValueWidget getWidgetFromProvider() {
-        List<String> values = filters.stream()
+        Optional<String> valuesOpt = filters.stream()
                 .filter(value -> value.a() == selectedProvider)
                 .map(Pair::b)
-                .collect(Collectors.toList());
+                .findFirst();
 
-        // Ensure we always have at least element in the list
-        // as some providers are only interested in one input
-        if (values.isEmpty()) {
-            values.add("");
-        }
+        List<String> values = valuesOpt.map(s -> List.of(s.split(","))).orElseGet(() -> List.of(""));
 
         if (selectedProvider.getValidInputs().isEmpty()) {
             if (selectedProvider.getType().equals(String.class)) {
-                return new StringValueWidget(values.get(0), this);
+                return new StringValueWidget(values, this);
             } else if (selectedProvider.getType().equals(Boolean.class)) {
                 return new BooleanValueWidget(values.get(0), this);
             } else { // Integer, CappedValue and StatValue
@@ -1103,8 +1089,27 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
                         Services.ItemFilter.getItemStatProvider(keyString);
                 if (itemStatProviderOrError.hasError()) continue;
 
-                filters.add(new Pair<>(itemStatProviderOrError.getValue(), inputString));
                 usedProviders.add(itemStatProviderOrError.getValue());
+
+                String[] splitValues = inputString.split(Services.ItemFilter.LIST_SEPARATOR);
+                StringBuilder valueBuilder = new StringBuilder();
+
+                for (int i = 0; i < splitValues.length; i++) {
+                    String filterValue = splitValues[i];
+                    ErrorOr<StatFilter<?>> statFilter = Services.ItemFilter.getStatFilter(
+                            itemStatProviderOrError.getValue().getType(), filterValue);
+
+                    if (statFilter.hasError()) continue;
+
+                    valueBuilder.append(filterValue);
+
+                    // Append the separator for all values except the last
+                    if (i != splitValues.length - 1) {
+                        valueBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
+                    }
+                }
+
+                filters.add(new Pair<>(itemStatProviderOrError.getValue(), valueBuilder.toString()));
             } else if (!token.isEmpty()) {
                 tempPlain.add(token);
             }

@@ -5,6 +5,7 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
@@ -361,21 +362,19 @@ public class IntegerValueWidget extends GeneralValueWidget {
 
     @Override
     protected void updateQuery() {
-        query = "";
-
         // Remove all of the filters for the current provider
         filterScreen.removeFilter(filterScreen.getSelectedProvider());
 
+        StringBuilder queryBuilder = new StringBuilder();
+
         // Add the single input if it is present and handle the allQuery and possible %
         if (!singleInput.getTextBoxInput().isEmpty()) {
-            query = singleInput.getTextBoxInput();
-            allQuery = query.equals("*");
+            queryBuilder.append(singleInput.getTextBoxInput());
+            allQuery = singleInput.getTextBoxInput().equals("*");
 
             if (singlePercentage && !allQuery) {
-                query += "%";
+                queryBuilder.append("%");
             }
-
-            filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), query));
         } else {
             allQuery = false;
         }
@@ -387,45 +386,49 @@ public class IntegerValueWidget extends GeneralValueWidget {
             allCheckbox.selected = allQuery;
         }
 
-        query = "";
-
         // Handle the ranged query, ensuring both inputs have content
         if (!rangedMinInput.getTextBoxInput().isEmpty()
                 && !rangedMaxInput.getTextBoxInput().isEmpty()) {
-            query = rangedMinInput.getTextBoxInput() + "-" + rangedMaxInput.getTextBoxInput();
-
-            if (rangedPercentage) {
-                query += "%";
+            if (!queryBuilder.isEmpty()) {
+                queryBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
             }
 
-            filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), query));
-        }
+            queryBuilder.append(rangedMinInput.getTextBoxInput()).append("-").append(rangedMaxInput.getTextBoxInput());
 
-        query = "";
+            if (rangedPercentage) {
+                queryBuilder.append("%");
+            }
+        }
 
         // Handle the greater than query, using the button to determine equal to
         if (!greaterThanInput.getTextBoxInput().isEmpty()) {
-            query = (greaterThanEqual ? ">=" : ">") + greaterThanInput.getTextBoxInput();
-
-            if (greaterThanPercentage) {
-                query += "%";
+            if (!queryBuilder.isEmpty()) {
+                queryBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
             }
 
-            filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), query));
-        }
+            queryBuilder.append((greaterThanEqual ? ">=" : ">")).append(greaterThanInput.getTextBoxInput());
 
-        query = "";
+            if (greaterThanPercentage) {
+                queryBuilder.append("%");
+            }
+        }
 
         // Same as greater than but for less than
         if (!lessThanInput.getTextBoxInput().isEmpty()) {
-            query = (lessThanEqual ? "<=" : "<") + lessThanInput.getTextBoxInput();
-
-            if (lessThanPercentage) {
-                query += "%";
+            if (!queryBuilder.isEmpty()) {
+                queryBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
             }
 
-            filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), query));
+            queryBuilder.append((lessThanEqual ? "<=" : "<")).append(lessThanInput.getTextBoxInput());
+
+            if (lessThanPercentage) {
+                queryBuilder.append("%");
+            }
         }
+
+        if (queryBuilder.isEmpty()) return;
+
+        filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), queryBuilder.toString()));
     }
 
     private void toggleGreaterLessThan(boolean greaterThan) {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
@@ -28,7 +29,7 @@ public class StringValueWidget extends GeneralValueWidget {
     private boolean ignoreUpdate = false;
     private boolean strict = false;
 
-    public StringValueWidget(String query, ItemFilterScreen filterScreen) {
+    public StringValueWidget(List<String> query, ItemFilterScreen filterScreen) {
         super(Component.literal("String Value Widget"), filterScreen);
 
         this.entryInput = new TextInputBoxWidget(
@@ -85,7 +86,7 @@ public class StringValueWidget extends GeneralValueWidget {
         widgets.add(this.entryInput);
         widgets.add(this.allCheckbox);
 
-        updateValues(List.of(query));
+        updateValues(query);
 
         updateQuery();
     }
@@ -115,23 +116,39 @@ public class StringValueWidget extends GeneralValueWidget {
         strictCheckbox.selected = false;
         allCheckbox.selected = false;
 
+        StringBuilder valueBuilder = new StringBuilder();
+
         // Update the input widget and checkbox states based on the ItemSearchWidgets query for the
-        // current provider. Check for allQuery or strict
-        if (query.isEmpty()) {
-            entryInput.setTextBoxInput("");
-        } else if (query.get(0).equals("*")) {
-            allQuery = true;
-            allCheckbox.selected = true;
-            entryInput.setTextBoxInput(query.get(0));
-        } else if (query.get(0).length() > 1
-                && query.get(0).startsWith("\"")
-                && query.get(0).endsWith("\"")) {
-            strict = true;
-            strictCheckbox.selected = true;
-            entryInput.setTextBoxInput(query.get(0).substring(1, query.get(0).length() - 1));
-        } else {
-            entryInput.setTextBoxInput(query.get(0));
+        // current provider. Check for allQuery or strict, in which case the query will only be 1 value
+        for (String value : query) {
+            if (value.isEmpty()) {
+                entryInput.setTextBoxInput("");
+                ignoreUpdate = false;
+                return;
+            } else if (value.equals("*")) {
+                allQuery = true;
+                allCheckbox.selected = true;
+                entryInput.setTextBoxInput("*");
+                ignoreUpdate = false;
+                return;
+            } else if (value.length() > 1 && value.startsWith("\"") && value.endsWith("\"")) {
+                // If the query contains any strict value then just set that to the query
+                strict = true;
+                strictCheckbox.selected = true;
+                entryInput.setTextBoxInput(value.substring(1, value.length() - 1));
+                ignoreUpdate = false;
+                return;
+            } else {
+                valueBuilder.append(value);
+
+                // Append the seperator for all sorts except the last
+                if (query.indexOf(value) != query.size() - 1) {
+                    valueBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
+                }
+            }
         }
+
+        entryInput.setTextBoxInput(valueBuilder.toString());
 
         ignoreUpdate = false;
     }
@@ -142,8 +159,6 @@ public class StringValueWidget extends GeneralValueWidget {
         filterScreen.removeFilter(filterScreen.getSelectedProvider());
 
         if (entryInput.getTextBoxInput().isEmpty()) {
-            query = "";
-
             // If no input then the checkboxes should be set to false, but only
             // if the checkboxes themselves were not what called updateQuery as the onPress for
             // checkboxes will change their state after this is finished
@@ -154,6 +169,8 @@ public class StringValueWidget extends GeneralValueWidget {
 
             return;
         }
+
+        String query;
 
         // Determine the query based on the checkbox states and input widget
         if (entryInput.getTextBoxInput().equals("*")) {

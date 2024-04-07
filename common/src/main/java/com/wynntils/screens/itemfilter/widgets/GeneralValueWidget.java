@@ -17,7 +17,6 @@ public abstract class GeneralValueWidget extends AbstractWidget {
     protected final ItemFilterScreen filterScreen;
 
     protected List<AbstractWidget> widgets = new ArrayList<>();
-    protected String query;
 
     protected GeneralValueWidget(Component title, ItemFilterScreen filterScreen) {
         super(150, 30, 195, 145, title);

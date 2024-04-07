@@ -342,7 +342,7 @@ public class ItemFilterService extends Service {
      * @param value the value to parse
      * @return the stat filter, or an error string if the value does not match any stat filters.
      */
-    private <T> ErrorOr<StatFilter<?>> getStatFilter(Class<T> type, String value) {
+    public <T> ErrorOr<StatFilter<?>> getStatFilter(Class<T> type, String value) {
         Optional<? extends StatFilter<?>> statFilterFactoryOpt = statFilters.stream()
                 .filter(filter -> filter.key().equals(type))
                 .map(filter -> filter.value().create(value))

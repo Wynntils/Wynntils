@@ -5,6 +5,7 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
@@ -221,14 +222,20 @@ public class ListValueWidget extends GeneralValueWidget {
 
         // If there are no enabled values, there is no filter for this provider
         if (enabledValues.isEmpty()) {
-            query = "";
             return;
         }
 
-        // For each enabled value add them as a new filter for the current provider
+        StringBuilder queryBuilder = new StringBuilder();
+
         for (String enabledValue : enabledValues) {
-            filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), enabledValue));
+            queryBuilder.append(enabledValue);
+
+            if (enabledValues.indexOf(enabledValue) != enabledValues.size() - 1) {
+                queryBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
+            }
         }
+
+        filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), queryBuilder.toString()));
     }
 
     private class ValueWidget extends AbstractWidget {

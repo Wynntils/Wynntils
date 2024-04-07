@@ -1878,7 +1878,7 @@
   "screens.wynntils.itemFilter.sortToggle": "Click to swap between selecting filters and sorts",
   "screens.wynntils.itemFilter.strict": "Strict Query",
   "screens.wynntils.itemFilter.strictTooltip": "Enable strict matching to only match your query exactly",
-  "screens.wynntils.itemFilter.stringQuery": "String Query: ",
+  "screens.wynntils.itemFilter.stringQuery": "String Query: (comma seperated)",
   "screens.wynntils.itemFilter.unselectedFilter": "Select a filter on the left and then input the values you want to filter by in the options that will appear here",
   "screens.wynntils.itemFilter.unusedFilter": "Unused",
   "screens.wynntils.itemFilter.unusedFilterTooltip": "Show filters not currently in use",
