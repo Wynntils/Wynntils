@@ -45,7 +45,7 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
-import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.services.itemfilter.type.StatProviderFilterMap;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
@@ -63,7 +63,7 @@ import net.minecraft.world.item.ItemStack;
 public class ItemFilterService extends Service {
     public static final String SORT_KEY = "sort";
     public static final String SORT_REVERSE_KEY = "^";
-    public static final String SORT_LIST_SEPARATOR = ",";
+    public static final String LIST_SEPARATOR = ",";
 
     @Persisted
     public final Storage<List<Pair<String, String>>> presets = new Storage<>(new ArrayList<>());
@@ -87,7 +87,7 @@ public class ItemFilterService extends Service {
     }
 
     public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
-        List<StatProviderAndFilterPair<?>> filters = new ArrayList<>();
+        StatProviderFilterMap filters = new StatProviderFilterMap();
         List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
 
         List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges = new ArrayList<>();
@@ -149,7 +149,7 @@ public class ItemFilterService extends Service {
                                     Pair.of(
                                             tokenStartIndex + keyString.length() + i + 1,
                                             tokenStartIndex + keyString.length() + i + 2)));
-                        } else if (stringValue.equals(",")) {
+                        } else if (stringValue.equals(LIST_SEPARATOR)) {
                             colorRanges.add(Pair.of(
                                     ChatFormatting.GOLD,
                                     Pair.of(
@@ -186,27 +186,52 @@ public class ItemFilterService extends Service {
                 if (inputString.isEmpty()) continue;
 
                 ItemStatProvider<?> itemStatProvider = itemStatProviderOrError.getValue();
-                ErrorOr<StatFilter<?>> statFilter = getStatFilter(itemStatProvider.getType(), inputString);
 
-                // If the inputString is invalid, mark the value as ignored and continue to the next token
-                if (statFilter.hasError()) {
+                String[] filterStrings = inputString.split(LIST_SEPARATOR);
+
+                // Add all filters to the list
+                int processedFilterLength = 0;
+                for (String filterString : filterStrings) {
+                    ErrorOr<StatFilter<?>> statFilter = getStatFilter(itemStatProvider.getType(), filterString);
+
+                    // Mark the separator as colored
                     colorRanges.add(Pair.of(
-                            ChatFormatting.RED,
-                            Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
-                    errors.add(statFilter.getError());
-                    continue;
+                            ChatFormatting.GOLD,
+                            Pair.of(
+                                    tokenStartIndex + keyString.length() + processedFilterLength,
+                                    tokenStartIndex + keyString.length() + processedFilterLength + 1)));
+
+                    // If the inputString is invalid, mark the value as ignored and continue to the next token
+                    if (statFilter.hasError()) {
+                        colorRanges.add(Pair.of(
+                                ChatFormatting.RED,
+                                Pair.of(
+                                        tokenStartIndex + keyString.length() + processedFilterLength + 1,
+                                        tokenStartIndex
+                                                + keyString.length()
+                                                + processedFilterLength
+                                                + filterString.length()
+                                                + 1)));
+                        errors.add(statFilter.getError());
+                        processedFilterLength += filterString.length() + 1;
+                        continue;
+                    }
+
+                    // Highlight the value
+                    colorRanges.add(Pair.of(
+                            ChatFormatting.GOLD,
+                            Pair.of(
+                                    tokenStartIndex + keyString.length() + processedFilterLength + 1,
+                                    tokenStartIndex
+                                            + keyString.length()
+                                            + processedFilterLength
+                                            + filterString.length()
+                                            + 1)));
+
+                    // The inputString is valid, add the filter to the list
+                    filters.put(itemStatProvider, statFilter.getValue());
+                    processedFilterLength += filterString.length() + 1;
                 }
-
-                // Highlight the value
-                colorRanges.add(Pair.of(
-                        ChatFormatting.GOLD,
-                        Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
-
-                StatProviderAndFilterPair<?> statProviderAndFilterPair =
-                        StatProviderAndFilterPair.fromPair(itemStatProvider, statFilter.getValue());
-
-                // The inputString is valid, add the filter to the list
-                filters.add(statProviderAndFilterPair);
             } else if (!token.isEmpty()) {
                 // The token is not a filter, add it to the list of plain text tokens
                 plainTextTokens.add(token);
@@ -340,7 +365,7 @@ public class ItemFilterService extends Service {
      * @return true if the item matches all filters, false otherwise
      */
     private boolean filterMatches(ItemSearchQuery searchQuery, WynnItem wynnItem) {
-        return searchQuery.filters().stream().allMatch(o -> o.matches(wynnItem));
+        return searchQuery.filters().matches(wynnItem);
     }
 
     /**
@@ -358,8 +383,7 @@ public class ItemFilterService extends Service {
     }
 
     private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
-        List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(
-                        inputString.split(SORT_LIST_SEPARATOR))
+        List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
                 .map(s -> {

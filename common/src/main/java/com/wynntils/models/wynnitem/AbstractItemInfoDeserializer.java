@@ -171,13 +171,20 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         if (dropMeta.has("type")) {
             JsonElement type = dropMeta.get("type");
 
-            // The type can be either a string or an array of strings
-            if (type.isJsonArray()) {
-                for (JsonElement typeElement : type.getAsJsonArray()) {
-                    types.add(ItemObtainType.fromApiName(typeElement.getAsString()));
+            // The type can be either a string or an array of string
+            try {
+                if (type.isJsonArray()) {
+                    for (JsonElement typeElement : type.getAsJsonArray()) {
+                        types.add(ItemObtainType.fromApiName(typeElement.getAsString()));
+                    }
+                } else {
+                    types.add(ItemObtainType.fromApiName(type.getAsString()));
                 }
-            } else {
-                types.add(ItemObtainType.fromApiName(type.getAsString()));
+            } catch (Exception e) {
+                WynntilsMod.warn(
+                        "Failed to parse obtain types for " + json.get("name").getAsString());
+                WynntilsMod.warn("Obtain types: " + type.toString());
+                return List.of();
             }
         }
 

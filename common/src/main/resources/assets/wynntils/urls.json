@@ -1,6 +1,6 @@
 [
   {
-    "version": 10
+    "version": 11
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -61,7 +61,7 @@
     ],
     "encoding": "wiki",
     "id": "apiWikiDiscoveryQuery",
-    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%{name}"
+    "url": "https://wynncraft.wiki.gg/api.php?action=parse&format=json&prop=wikitext&section=0&page=%{name}"
   },
   {
     "arguments": [
@@ -69,7 +69,7 @@
     ],
     "encoding": "cargo",
     "id": "apiWikiQuestPageQuery",
-    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}"
+    "url": "https://wynncraft.wiki.gg/index.php?title=Special:CargoExport&tables=Quests&&fields=Quests._pageTitle&where=Quests.name+%3D+%{name}&order+by=&limit=2000&format=json"
   },
   {
     "id": "dataAthenaGuildList",
@@ -115,12 +115,12 @@
   },
   {
     "id": "dataStaticGearAdvanced",
-    "md5": "c1a442a84db4f7675b1c06dbf118c9af",
+    "md5": "7cc0f3d523b1423e11f5fcb7a508c2d9",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
     "id": "dataStaticIdentificationKeys",
-    "md5": "2d4bc2b39baf7060b637ceb5ee538b77",
+    "md5": "dcd9d021c6bae9948c7f8c3e5a6a6ae6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/id_keys.json"
   },
   {
@@ -135,7 +135,7 @@
   },
   {
     "id": "dataStaticIngredientsAdvanced",
-    "md5": "56f32c7fb6a2c4dc186f331adc51d3c1",
+    "md5": "db6bd17b8d83e532567e92ad5164c94a",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
@@ -222,7 +222,7 @@
     ],
     "encoding": "wiki",
     "id": "linkWikiLookup",
-    "url": "https://wynncraft.fandom.com/wiki/%{title}"
+    "url": "https://wynncraft.wiki.gg/wiki/%{title}"
   },
   {
     "arguments": [
