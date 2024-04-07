@@ -36,11 +36,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 
 public class CustomAbilityTreeScreen extends WynntilsScreen {
-    // This percentage of the screen's height is used to render this screen
-    private static final float SCREEN_HEIGHT_PERCENT = 0.5f;
-
     private static final int NODE_AREA_OFFSET_X = 85;
-    private static final int NODE_AREA_OFFSET_Y = 25;
+    private static final int NODE_AREA_OFFSET_Y = 23;
 
     private static final int NODE_AREA_WIDTH = 155;
     private static final int NODE_AREA_HEIGHT = 99;
@@ -56,8 +53,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
     private final Map<AbilityTreeLocation, AbilityNodeConnectionWidget> connectionWidgets = new LinkedHashMap();
 
-    // This scale is used to scale the whole screen to fit the screen size
-    private float textureScale = 1f;
     private int currentPage;
     private TreeParseState treeParseState = TreeParseState.PARSING;
 
@@ -72,8 +67,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        textureScale = height * SCREEN_HEIGHT_PERCENT / Texture.ABILITY_TREE_BACKGROUND.height();
-
         this.addRenderableWidget(new AbilityTreePageSelectorButton(
                 UP_ARROW_X,
                 UP_ARROW_Y,
@@ -104,8 +97,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         poseStack.pushPose();
         // Make the drawing origin the start of the texture, centered on the screen
         poseStack.translate(
-                (this.width - Texture.ABILITY_TREE_BACKGROUND.width() * textureScale) / 2,
-                (this.height - Texture.ABILITY_TREE_BACKGROUND.height() * textureScale) / 2,
+                (this.width - Texture.ABILITY_TREE_BACKGROUND.width()) / 2,
+                (this.height - Texture.ABILITY_TREE_BACKGROUND.height()) / 2,
                 0);
 
         final int backgroundWidth = Texture.ABILITY_TREE_BACKGROUND.width();
@@ -116,8 +109,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 0,
                 0,
                 0,
-                backgroundWidth * textureScale,
-                backgroundHeight * textureScale,
+                backgroundWidth,
+                backgroundHeight,
                 backgroundWidth,
                 backgroundHeight);
 
@@ -131,9 +124,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             poseStack,
                             StyledText.fromComponent(treeParseState.getText()),
                             0,
-                            backgroundWidth * textureScale,
+                            backgroundWidth,
                             0,
-                            backgroundHeight * textureScale,
+                            backgroundHeight,
                             0,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
@@ -151,10 +144,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         poseStack.pushPose();
 
         // Set the node area offset
-        poseStack.translate(NODE_AREA_OFFSET_X * textureScale, NODE_AREA_OFFSET_Y * textureScale, 0);
-
-        // Apply texture scale
-        poseStack.scale(textureScale, textureScale, 1);
+        poseStack.translate(NODE_AREA_OFFSET_X, NODE_AREA_OFFSET_Y, 0);
 
         nodeWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         connectionWidgets.values().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -166,9 +156,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         PoseStack poseStack = guiGraphics.pose();
 
         poseStack.pushPose();
-
-        // Apply texture scale
-        poseStack.scale(textureScale, textureScale, 1);
 
         renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
@@ -184,16 +171,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         if (treeParseState != TreeParseState.PARSED) return false;
 
         // Translate the mouse position to match what is rendered on the screen
-        double scaledMouseX = mouseX - (this.width - Texture.ABILITY_TREE_BACKGROUND.width() * textureScale) / 2;
-        double scaledMouseY = mouseY - (this.height - Texture.ABILITY_TREE_BACKGROUND.height() * textureScale) / 2;
-
-        // Actual texture positions are not scaled, only the rendering is
-        scaledMouseY /= textureScale;
-        scaledMouseX /= textureScale;
+        double scaledMouseX = mouseX - (this.width - Texture.ABILITY_TREE_BACKGROUND.width()) / 2;
+        double scaledMouseY = mouseY - (this.height - Texture.ABILITY_TREE_BACKGROUND.height()) / 2;
 
         for (GuiEventListener child : this.children()) {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                if (child.mouseClicked(mouseX, mouseY, button)) {
+            if (child.isMouseOver(scaledMouseX, scaledMouseY)) {
+                if (child.mouseClicked(scaledMouseX, scaledMouseY, button)) {
                     return true;
                 }
             }
@@ -206,7 +189,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (treeParseState != TreeParseState.PARSED) return false;
 
-        setCurrentPage((int) (currentPage - Math.signum(scrollX)));
+        setCurrentPage((int) (currentPage - Math.signum(scrollY)));
         return true;
     }
 
