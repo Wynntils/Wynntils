@@ -27,4 +27,8 @@ public class StatProviderFilterMap {
         return map.entrySet().stream()
                 .allMatch(entry -> entry.getValue().stream().anyMatch(pair -> pair.matches(wynnItem)));
     }
+
+    public List<StatProviderAndFilterPair> values() {
+        return map.values().stream().flatMap(List::stream).toList();
+    }
 }

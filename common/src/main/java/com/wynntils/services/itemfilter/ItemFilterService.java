@@ -43,6 +43,7 @@ import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
+import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
 import com.wynntils.services.itemfilter.type.StatProviderFilterMap;
@@ -88,7 +89,7 @@ public class ItemFilterService extends Service {
 
     public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
         StatProviderFilterMap filters = new StatProviderFilterMap();
-        List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
+        List<SortInfo> sorts = new ArrayList<>();
 
         List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges = new ArrayList<>();
 
@@ -121,8 +122,7 @@ public class ItemFilterService extends Service {
                         continue;
                     }
 
-                    ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
-                            getStatSortOrder(inputString);
+                    ErrorOr<List<SortInfo>> statSortListOrError = getStatSortOrder(inputString);
 
                     if (statSortListOrError.hasError()) {
                         colorRanges.add(Pair.of(
@@ -163,7 +163,7 @@ public class ItemFilterService extends Service {
                             ChatFormatting.YELLOW,
                             Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
 
-                    sortStatProviders.addAll(statSortListOrError.getValue());
+                    sorts.addAll(statSortListOrError.getValue());
 
                     continue;
                 }
@@ -238,7 +238,7 @@ public class ItemFilterService extends Service {
             }
         }
 
-        return new ItemSearchQuery(queryString, filters, sortStatProviders, colorRanges, errors, plainTextTokens);
+        return new ItemSearchQuery(queryString, filters, sorts, colorRanges, errors, plainTextTokens);
     }
 
     /**
@@ -279,8 +279,8 @@ public class ItemFilterService extends Service {
 
             WynnItem wynnItem = wynnItemOpt.get();
 
-            for (Pair<SortDirection, ItemStatProvider<?>> pair : searchQuery.sortStatProviders()) {
-                ItemStatProvider<?> statProvider = pair.value();
+            for (SortInfo sortInfo : searchQuery.sorts()) {
+                ItemStatProvider<?> statProvider = sortInfo.provider();
                 if (statProvider.getValue(wynnItem).isEmpty()) {
                     return false;
                 }
@@ -300,11 +300,11 @@ public class ItemFilterService extends Service {
             WynnItem wynnItem1 = wynnItem1Opt.get();
             WynnItem wynnItem2 = wynnItem2Opt.get();
 
-            for (Pair<SortDirection, ItemStatProvider<?>> providerPair : searchQuery.sortStatProviders()) {
-                int compare = providerPair.value().compare(wynnItem1, wynnItem2);
+            for (SortInfo sortInfo : searchQuery.sorts()) {
+                int compare = sortInfo.provider().compare(wynnItem1, wynnItem2);
 
                 if (compare != 0) {
-                    return switch (providerPair.key()) {
+                    return switch (sortInfo.direction()) {
                         case ASCENDING -> -compare;
                         case DESCENDING -> compare;
                     };
@@ -382,7 +382,7 @@ public class ItemFilterService extends Service {
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
-    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
+    private ErrorOr<List<SortInfo>> getStatSortOrder(String inputString) {
         List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
@@ -407,13 +407,13 @@ public class ItemFilterService extends Service {
             return ErrorOr.error(firstError.get().value().getError());
         }
 
-        List<Pair<SortDirection, ItemStatProvider<?>>> providers = new ArrayList<>();
+        List<SortInfo> sorts = new ArrayList<>();
 
         for (Pair<SortDirection, ErrorOr<ItemStatProvider<?>>> pair : errorsOrProviders) {
-            providers.add(Pair.of(pair.key(), pair.value().getValue()));
+            sorts.add(new SortInfo(pair.key(), pair.value().getValue()));
         }
 
-        return ErrorOr.of(providers);
+        return ErrorOr.of(sorts);
     }
 
     private void registerStatProviders() {

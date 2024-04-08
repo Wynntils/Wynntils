@@ -7,7 +7,8 @@ package com.wynntils.screens.itemfilter.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
-import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.SortDirection;
+import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -25,58 +26,46 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class SortWidget extends AbstractWidget {
+    private final ItemFilterScreen filterScreen;
     private final float translationX;
     private final float translationY;
-    private final ItemFilterScreen filterScreen;
-    private final ItemStatProvider<?> provider;
+
     private final List<Button> buttons = new ArrayList<>();
 
-    private boolean descending;
+    private SortInfo sortInfo;
 
     public SortWidget(
-            int x,
-            int y,
-            ItemStatProvider<?> provider,
-            boolean descending,
-            ItemFilterScreen filterScreen,
-            float translationX,
-            float translationY) {
+            int x, int y, ItemFilterScreen filterScreen, float translationX, float translationY, SortInfo sortInfo) {
         super(x, y, 150, 20, Component.literal("Sort Widget"));
 
         this.filterScreen = filterScreen;
-        this.provider = provider;
-        this.descending = descending;
         this.translationX = translationX;
         this.translationY = translationY;
 
+        this.sortInfo = sortInfo;
+
         Button sortButton = new Button.Builder(
-                        Component.literal(descending ? "v" : "ʌ"), (button) -> toggleSortDirection())
+                        Component.literal(sortInfo.direction() == SortDirection.DESCENDING ? "v" : "ʌ"),
+                        (button) -> toggleSortDirection())
                 .pos(x + width - 70, y)
                 .size(50, 20)
                 .build();
 
         Button upButton = new Button.Builder(
-                        Component.literal("🠝"), (button) -> filterScreen.reorderSort(provider, -1))
+                        Component.literal("🠝"), (button) -> filterScreen.reorderSort(sortInfo, -1))
                 .pos(x + width - 20, y)
                 .size(10, 20)
                 .build();
 
         Button downButton = new Button.Builder(
-                        Component.literal("🠟"), (button) -> filterScreen.reorderSort(provider, 1))
+                        Component.literal("🠟"), (button) -> filterScreen.reorderSort(sortInfo, 1))
                 .pos(x + width - 10, y)
                 .size(10, 20)
                 .build();
 
-        List<Pair<ItemStatProvider<?>, String>> sorts = filterScreen.getSorts();
-
-        // Disable the up/down button if the current provider is at the start/end of the sort
-        for (int i = 0; i < sorts.size(); i++) {
-            if (sorts.get(i).a() == provider) {
-                upButton.active = i != 0;
-                downButton.active = i != sorts.size() - 1;
-                break;
-            }
-        }
+        Pair<Boolean, Boolean> canSortMove = filterScreen.canSortMove(sortInfo);
+        upButton.active = canSortMove.a();
+        downButton.active = canSortMove.b();
 
         buttons.add(sortButton);
         buttons.add(upButton);
@@ -89,7 +78,7 @@ public class SortWidget extends AbstractWidget {
 
         RenderUtils.drawRectBorders(
                 poseStack,
-                descending ? CommonColors.WHITE : CommonColors.BLACK,
+                sortInfo.direction() == SortDirection.DESCENDING ? CommonColors.WHITE : CommonColors.BLACK,
                 getX(),
                 getY(),
                 getX() + width,
@@ -100,7 +89,7 @@ public class SortWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderScrollingString(
                         poseStack,
-                        StyledText.fromString(provider.getDisplayName()),
+                        StyledText.fromString(sortInfo.provider().getDisplayName()),
                         getX() + 2,
                         getY() + (height / 2f),
                         width - 70,
@@ -129,9 +118,11 @@ public class SortWidget extends AbstractWidget {
     }
 
     private void toggleSortDirection() {
-        descending = !descending;
-
-        filterScreen.changeSortOrder(provider, descending);
+        SortInfo oldSortInfo = sortInfo;
+        sortInfo = new SortInfo(
+                sortInfo.direction() == SortDirection.DESCENDING ? SortDirection.ASCENDING : SortDirection.DESCENDING,
+                sortInfo.provider());
+        filterScreen.changeSort(oldSortInfo, sortInfo);
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
@@ -24,8 +23,10 @@ import com.wynntils.screens.itemfilter.widgets.PresetButton;
 import com.wynntils.screens.itemfilter.widgets.ProviderButton;
 import com.wynntils.screens.itemfilter.widgets.SortWidget;
 import com.wynntils.screens.itemfilter.widgets.StringValueWidget;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
-import com.wynntils.services.itemfilter.type.StatFilter;
+import com.wynntils.services.itemfilter.type.SortInfo;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -39,7 +40,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +59,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class ItemFilterScreen extends WynntilsScreen implements TextboxScreen {
+public final class ItemFilterScreen extends WynntilsScreen {
     // Constants
     private static final int MAX_PRESETS = 4;
     private static final int MAX_PROVIDERS_PER_PAGE = 8;
@@ -67,9 +67,10 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
     // Collections
     private List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
+    private Set<ItemStatProvider<?>> usedProviders = new HashSet<>();
     private List<Pair<ItemStatProvider<?>, String>> filters = new ArrayList<>();
     private List<Pair<String, String>> presets;
-    private List<Pair<ItemStatProvider<?>, String>> sorts = new ArrayList<>();
+    private List<SortInfo> sorts = new ArrayList<>();
     private List<SortWidget> sortButtons = new ArrayList<>();
     private List<WynntilsButton> presetButtons = new ArrayList<>();
     private List<WynntilsButton> providerButtons = new ArrayList<>();
@@ -112,7 +113,6 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
     private boolean ignoreUpdate = false;
     private boolean sortMode = false;
     private FilterType filterType = FilterType.ALL;
-    private Set<ItemStatProvider<?>> usedProviders = new HashSet<>();
     private String filterQuery = "";
     private String sortQuery = "";
 
@@ -664,11 +664,13 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
         // Same as above method, sorts aren't required to be repopulated here
     }
 
-    public void addSort(Pair<ItemStatProvider<?>, String> newSort) {
-        sorts = sorts.stream().filter(sort -> sort.a() != newSort.a()).collect(Collectors.toList());
+    public void addSort(SortInfo newSort) {
+        sorts = sorts.stream()
+                .filter(sort -> sort.provider() != newSort.provider())
+                .collect(Collectors.toList());
 
         sorts.add(newSort);
-        usedProviders.add(newSort.a());
+        usedProviders.add(newSort.provider());
 
         createSortQuery();
         populateQuery();
@@ -677,35 +679,19 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
     public void removeSort(ItemStatProvider<?> provider) {
         // Remove all instances of the provider in the sort list
-        sorts = sorts.stream()
-                .filter(sort -> {
-                    if (sort.a() == provider) {
-                        return sort.b().isEmpty();
-                    }
-
-                    return true;
-                })
-                .collect(Collectors.toList());
-
-        usedProviders =
-                usedProviders.stream().filter(filter -> filter != provider).collect(Collectors.toSet());
+        sorts.removeIf(sort -> sort.provider() == provider);
+        usedProviders.removeIf(p -> p == provider);
 
         createSortQuery();
         populateQuery();
         populateSorts();
     }
 
-    public void changeSortOrder(ItemStatProvider<?> provider, boolean descending) {
-        String sortText = descending ? provider.getName() : Services.ItemFilter.SORT_REVERSE_KEY + provider.getName();
-
-        // Change the direction of the sort for the provider
+    public void changeSort(SortInfo oldSortInfo, SortInfo newSortInfo) {
         sorts = sorts.stream()
                 .map(sort -> {
-                    if (sort.a() == provider) {
-                        return new Pair<ItemStatProvider<?>, String>(provider, sortText);
-                    } else {
-                        return sort;
-                    }
+                    if (sort.equals(oldSortInfo)) return newSortInfo;
+                    return sort;
                 })
                 .collect(Collectors.toList());
 
@@ -714,23 +700,14 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
         populateSorts();
     }
 
-    public void reorderSort(ItemStatProvider<?> provider, int direction) {
-        int indexOf = -1;
-
+    public void reorderSort(SortInfo sortInfo, int direction) {
         // Find the index of the provider
-        for (int i = 0; i < sorts.size(); i++) {
-            Pair<ItemStatProvider<?>, String> pair = sorts.get(i);
-
-            if (pair.a() == provider) {
-                indexOf = i;
-                break;
-            }
-        }
+        int indexOf = sorts.indexOf(sortInfo);
 
         // Should never happen but just in case
         if (indexOf == -1) return;
 
-        Pair<ItemStatProvider<?>, String> sort = sorts.get(indexOf);
+        SortInfo sort = sorts.get(indexOf);
 
         // Remove the sort and add it in the new index
         sorts.remove(sort);
@@ -745,8 +722,10 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
         return sortMode;
     }
 
-    public List<Pair<ItemStatProvider<?>, String>> getSorts() {
-        return Collections.unmodifiableList(sorts);
+    public Pair<Boolean, Boolean> canSortMove(SortInfo sortInfo) {
+        // If this sort is not the first or last in the list, it can be moved
+        int index = sorts.indexOf(sortInfo);
+        return Pair.of(index != 0, index != sorts.size() - 1);
     }
 
     public void setSelectedProvider(ItemStatProvider<?> selectedProvider) {
@@ -770,6 +749,10 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
     public ItemStatProvider<?> getSelectedProvider() {
         return selectedProvider;
+    }
+
+    public boolean isProviderInUse(ItemStatProvider<?> provider) {
+        return usedProviders.contains(provider);
     }
 
     private void populateProviders() {
@@ -805,14 +788,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
             ItemStatProvider<?> currentProvider = itemStatProviders.get(currentProviderIndex);
 
             providerButtons.add(new ProviderButton(
-                    7,
-                    yPos,
-                    120,
-                    18,
-                    itemStatProviders.get(currentProviderIndex),
-                    usedProviders.contains(currentProvider),
-                    translationX,
-                    translationY));
+                    7, yPos, 120, 18, this, itemStatProviders.get(currentProviderIndex), translationX, translationY));
 
             yPos += 21;
         }
@@ -891,10 +867,7 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
 
             if (sorts.size() - 1 < currentSortIndex) break;
 
-            boolean descendingSort = !sorts.get(currentSortIndex).b().startsWith(Services.ItemFilter.SORT_REVERSE_KEY);
-
-            sortButtons.add(new SortWidget(
-                    150, yPos, sorts.get(currentSortIndex).a(), descendingSort, this, translationX, translationY));
+            sortButtons.add(new SortWidget(150, yPos, this, translationX, translationY, sorts.get(i)));
 
             yPos += 21;
         }
@@ -1050,85 +1023,28 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
     }
 
     private void parseFilters(String input) {
-        filters = new ArrayList<>();
-        sorts = new ArrayList<>();
-        usedProviders = new HashSet<>();
-        String plainQuery;
+        List<Pair<ItemStatProvider<?>, String>> newFilters = new ArrayList<>();
+        Set<ItemStatProvider<?>> newUsedProviders = new HashSet<>();
 
-        String[] tokens = input.split(" ");
+        ItemSearchQuery searchQuery = Services.ItemFilter.createSearchQuery(input, true);
 
-        List<String> tempPlain = new ArrayList<>();
-
-        // Loop through all tokens in the query
-        for (String token : tokens) {
-            if (token.contains(":")) { // This will be a provider or sort
-                String keyString = token.substring(0, token.indexOf(':'));
-                String inputString = token.substring(token.indexOf(':') + 1);
-
-                // If the key is sort, then the input string will be all of the sort queries
-                if (keyString.equalsIgnoreCase(Services.ItemFilter.SORT_KEY)) {
-                    if (!supportsSorting) continue;
-
-                    String[] splitSorts = inputString.split(Services.ItemFilter.LIST_SEPARATOR);
-
-                    for (String sort : splitSorts) {
-                        // Determine if the sort is a valid provider
-                        ErrorOr<ItemStatProvider<?>> itemStatProviderOrError =
-                                Services.ItemFilter.getItemStatProvider(sort);
-                        if (itemStatProviderOrError.hasError()) continue;
-
-                        sorts.add(new Pair<>(itemStatProviderOrError.getValue(), sort));
-                        usedProviders.add(itemStatProviderOrError.getValue());
-                    }
-
-                    continue;
-                }
-
-                // Determine if the key is a valid provider
-                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError =
-                        Services.ItemFilter.getItemStatProvider(keyString);
-                if (itemStatProviderOrError.hasError()) continue;
-
-                usedProviders.add(itemStatProviderOrError.getValue());
-
-                String[] splitValues = inputString.split(Services.ItemFilter.LIST_SEPARATOR);
-                StringBuilder valueBuilder = new StringBuilder();
-
-                for (int i = 0; i < splitValues.length; i++) {
-                    String filterValue = splitValues[i];
-                    ErrorOr<StatFilter<?>> statFilter = Services.ItemFilter.getStatFilter(
-                            itemStatProviderOrError.getValue().getType(), filterValue);
-
-                    if (statFilter.hasError()) continue;
-
-                    valueBuilder.append(filterValue);
-
-                    // Append the separator for all values except the last
-                    if (i != splitValues.length - 1) {
-                        valueBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
-                    }
-                }
-
-                filters.add(new Pair<>(itemStatProviderOrError.getValue(), valueBuilder.toString()));
-            } else if (!token.isEmpty()) {
-                tempPlain.add(token);
-            }
+        // filters =
+        for (StatProviderAndFilterPair value : searchQuery.filters().values()) {
+            ItemStatProvider itemStatProvider = value.statProvider();
+            newUsedProviders.add(itemStatProvider);
         }
 
-        StringBuilder plainBuilder = new StringBuilder();
+        sorts = searchQuery.sorts();
+        newUsedProviders.addAll(
+                searchQuery.sorts().stream().map(SortInfo::provider).toList());
 
-        // Create the plain query
-        for (String s : tempPlain) {
-            plainBuilder.append(s).append(" ");
-        }
-
-        plainQuery = plainBuilder.toString().trim();
+        usedProviders = newUsedProviders;
 
         createFilterQuery();
         createSortQuery();
 
         ignoreUpdate = true;
-        itemNameInput.setTextBoxInput(plainQuery);
+        itemNameInput.setTextBoxInput(String.join("", searchQuery.plainTextTokens()));
     }
 
     private void createFilterQuery() {
@@ -1158,11 +1074,11 @@ public final class ItemFilterScreen extends WynntilsScreen implements TextboxScr
         StringBuilder sortBuilder = new StringBuilder(Services.ItemFilter.SORT_KEY);
         sortBuilder.append(":");
 
-        for (Pair<ItemStatProvider<?>, String> sort : sorts) {
-            sortBuilder.append(sort.b());
+        for (SortInfo sortInfo : sorts) {
+            sortBuilder.append(sortInfo.provider().getName());
 
             // Append the seperator for all sorts except the last
-            if (sorts.indexOf(sort) != sorts.size() - 1) {
+            if (sorts.indexOf(sortInfo) != sorts.size() - 1) {
                 sortBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
             }
         }
