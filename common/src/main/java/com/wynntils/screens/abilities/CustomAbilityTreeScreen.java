@@ -425,6 +425,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     AbilityArchetypeWidget.SIZE,
                     Component.literal(archetypeInfo.name()),
                     abilityTreeInfo,
+                    parsedAbilityTree,
                     archetypeInfo);
 
             archetypeWidgets.add(archetypeWidget);

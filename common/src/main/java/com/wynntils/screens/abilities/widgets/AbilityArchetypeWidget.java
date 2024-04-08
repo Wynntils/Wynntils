@@ -6,6 +6,7 @@ package com.wynntils.screens.abilities.widgets;
 
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.ArchetypeInfo;
+import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.screens.base.TooltipProvider;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,6 +20,7 @@ public class AbilityArchetypeWidget extends AbstractWidget implements TooltipPro
     public static final int SIZE = 20;
 
     private final AbilityTreeInfo abilityTreeInfo;
+    private final ParsedAbilityTree currentAbilityTree;
     private final ArchetypeInfo archetypeInfo;
 
     public AbilityArchetypeWidget(
@@ -28,9 +30,11 @@ public class AbilityArchetypeWidget extends AbstractWidget implements TooltipPro
             int height,
             Component message,
             AbilityTreeInfo abilityTreeInfo,
+            ParsedAbilityTree currentAbilityTree,
             ArchetypeInfo archetypeInfo) {
         super(x, y, width, height, message);
         this.abilityTreeInfo = abilityTreeInfo;
+        this.currentAbilityTree = currentAbilityTree;
         this.archetypeInfo = archetypeInfo;
     }
 
@@ -48,6 +52,6 @@ public class AbilityArchetypeWidget extends AbstractWidget implements TooltipPro
 
     @Override
     public List<Component> getTooltipLines() {
-        return archetypeInfo.getTooltip();
+        return archetypeInfo.getTooltip(currentAbilityTree);
     }
 }
