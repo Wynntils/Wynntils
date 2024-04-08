@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class StatProviderFilterMap {
     private final Map<ItemStatProvider<?>, List<StatProviderAndFilterPair>> map = new HashMap<>();
@@ -17,6 +18,14 @@ public class StatProviderFilterMap {
     public void put(ItemStatProvider<?> statProvider, StatFilter<?> statFilter) {
         map.computeIfAbsent(statProvider, k -> new ArrayList<>())
                 .add(StatProviderAndFilterPair.fromPair(statProvider, statFilter));
+    }
+
+    public void put(StatProviderAndFilterPair filter) {
+        map.computeIfAbsent(filter.statProvider(), k -> new ArrayList<>()).add(filter);
+    }
+
+    public void putAll(ItemStatProvider<?> statProvider, List<StatProviderAndFilterPair> filters) {
+        map.computeIfAbsent(statProvider, k -> new ArrayList<>()).addAll(filters);
     }
 
     public boolean isEmpty() {
@@ -35,5 +44,13 @@ public class StatProviderFilterMap {
 
     public List<StatProviderAndFilterPair> values() {
         return map.values().stream().flatMap(List::stream).toList();
+    }
+
+    public List<StatProviderAndFilterPair> get(ItemStatProvider<?> selectedProvider) {
+        return Collections.unmodifiableList(map.getOrDefault(selectedProvider, List.of()));
+    }
+
+    public void removeIf(Function<StatProviderAndFilterPair, Boolean> filter) {
+        map.values().forEach(list -> list.removeIf(filter::apply));
     }
 }

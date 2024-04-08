@@ -16,9 +16,12 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
     private final float min;
     private final float max;
 
-    public PercentageStatFilter(float min, float max) {
+    private final boolean equalsInString;
+
+    public PercentageStatFilter(float min, float max, boolean equalsInString) {
         this.min = min;
         this.max = max;
+        this.equalsInString = equalsInString;
     }
 
     @Override
@@ -40,14 +43,26 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
         }
 
         if (min == Integer.MIN_VALUE) {
-            return "<=" + max + "%";
+            return equalsInString ? "<=" + max : "<" + (max + 1);
         }
 
         if (max == Integer.MAX_VALUE) {
-            return ">=" + min + "%";
+            return equalsInString ? ">=" + min : ">" + (min - 1);
         }
 
         return min + "-" + max + "%";
+    }
+
+    public float getMin() {
+        return min;
+    }
+
+    public float getMax() {
+        return max;
+    }
+
+    public boolean isEqualsInString() {
+        return equalsInString;
     }
 
     public static class PercentageStatFilterFactory extends StatFilterFactory<PercentageStatFilter> {
@@ -61,28 +76,28 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
             Matcher matcher = SINGLE_VALUE_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 float value = Float.parseFloat(matcher.group(1));
-                return Optional.of(new PercentageStatFilter(value, value));
+                return Optional.of(new PercentageStatFilter(value, value, true));
             }
 
             matcher = RANGE_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 float min = Float.parseFloat(matcher.group(1));
                 float max = Float.parseFloat(matcher.group(2));
-                return Optional.of(new PercentageStatFilter(min, max));
+                return Optional.of(new PercentageStatFilter(min, max, true));
             }
 
             matcher = GREATER_THAN_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 boolean equal = inputString.charAt(1) == '=';
                 float value = Float.parseFloat(matcher.group(1));
-                return Optional.of(new PercentageStatFilter(equal ? value : value + 1, Integer.MAX_VALUE));
+                return Optional.of(new PercentageStatFilter(equal ? value : value + 1, Float.MAX_VALUE, equal));
             }
 
             matcher = LESS_THAN_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 boolean equal = inputString.charAt(1) == '=';
                 float value = Float.parseFloat(matcher.group(1));
-                return Optional.of(new PercentageStatFilter(Integer.MIN_VALUE, equal ? value : value - 1));
+                return Optional.of(new PercentageStatFilter(Float.MIN_VALUE, equal ? value : value - 1, equal));
             }
 
             return Optional.empty();

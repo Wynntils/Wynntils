@@ -30,6 +30,14 @@ public final class StringStatFilter extends StatFilter<String> {
         return strict ? "\"" + searchLiteral + "\"" : searchLiteral;
     }
 
+    public boolean isStrict() {
+        return strict;
+    }
+
+    public String getSearchLiteral() {
+        return searchLiteral;
+    }
+
     public static class StringStatFilterFactory extends StatFilterFactory<StringStatFilter> {
         private static final Pattern STRICT_FILTER_PATTERN = Pattern.compile("\"(.+)\"");
 

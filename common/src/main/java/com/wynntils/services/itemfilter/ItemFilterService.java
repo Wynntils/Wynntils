@@ -383,7 +383,7 @@ public class ItemFilterService extends Service {
     /**
      * Returns a stat filter for the given value, or an error string if the value does not match any stat filters.
      *
-     * @param type
+     * @param type the type of the item stat provider
      * @param value the value to parse
      * @return the stat filter, or an error string if the value does not match any stat filters.
      */

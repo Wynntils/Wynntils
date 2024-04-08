@@ -5,10 +5,12 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
+import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -17,7 +19,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class ListValueWidget extends GeneralValueWidget {
     private final float translationX;
     private final float translationY;
     private final List<String> values;
+    private final List<StatProviderAndFilterPair> filters;
 
     private boolean draggingScroll = false;
     private double currentUnusedScroll = 0;
@@ -43,19 +45,18 @@ public class ListValueWidget extends GeneralValueWidget {
     private List<String> enabledValues;
 
     public ListValueWidget(
-            float translationX,
-            float translationY,
+            ItemStatProvider<?> itemStatProvider,
+            ItemFilterScreen filterScreen,
             List<String> values,
-            List<String> query,
-            ItemFilterScreen filterScreen) {
-        super(Component.literal("List Value Widget"), filterScreen);
+            List<StatProviderAndFilterPair> filters,
+            float translationX,
+            float translationY) {
+        super(Component.literal("List Value Widget"), itemStatProvider, filterScreen);
 
         this.values = values;
+        this.filters = filters;
         this.translationX = translationX;
         this.translationY = translationY;
-
-        updateValues(query);
-        updateQuery();
     }
 
     @Override
@@ -205,40 +206,38 @@ public class ListValueWidget extends GeneralValueWidget {
         enabledValues.remove(valueName);
     }
 
+    private boolean anyFilterMatches(String valueName) {
+        for (StatProviderAndFilterPair filter : filters) {
+            if (filter.statFilter().matches(List.of(valueName))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
-    public void updateValues(List<String> query) {
+    public void onFiltersChanged(List<StatProviderAndFilterPair> filters) {
         // Update the list of enabled values based on the ItemSearchWidget
-        enabledValues = this.values.stream()
-                .filter(v -> query.stream().anyMatch(q -> q.equalsIgnoreCase(v)))
-                .collect(Collectors.toList());
+        enabledValues = this.values.stream().filter(this::anyFilterMatches).collect(Collectors.toList());
 
         populateValues();
     }
 
     @Override
-    protected void updateQuery() {
-        // Remove all existing filters for the current provider
-        filterScreen.removeFilter(filterScreen.getSelectedProvider());
-
-        // If there are no enabled values, there is no filter for this provider
-        if (enabledValues.isEmpty()) {
-            return;
-        }
-
-        StringBuilder queryBuilder = new StringBuilder();
+    protected List<StatProviderAndFilterPair> getFilterPairs() {
+        List<StatProviderAndFilterPair> filterPairs = new ArrayList<>();
 
         for (String enabledValue : enabledValues) {
-            queryBuilder.append(enabledValue);
-
-            if (enabledValues.indexOf(enabledValue) != enabledValues.size() - 1) {
-                queryBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
-            }
+            new StringStatFilter.StringStatFilterFactory().create(enabledValue).ifPresent(filter -> {
+                filterPairs.add(new StatProviderAndFilterPair(itemStatProvider, filter));
+            });
         }
 
-        filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), queryBuilder.toString()));
+        return filterPairs;
     }
 
-    private class ValueWidget extends AbstractWidget {
+    private final class ValueWidget extends AbstractWidget {
         private static final CustomColor UNUSED_COLOR = new CustomColor(116, 0, 0, 255);
         private static final CustomColor UNUSED_COLOR_BORDER = new CustomColor(220, 0, 0, 255);
         private static final CustomColor USED_COLOR = new CustomColor(0, 116, 0, 255);

@@ -13,8 +13,8 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import java.util.List;
 import java.util.Optional;
 
-public class IntegerValueWidget extends NumericValueWidget {
-    public IntegerValueWidget(
+public class CappedValueWidget extends NumericValueWidget {
+    public CappedValueWidget(
             List<StatProviderAndFilterPair> filters,
             ItemStatProvider<?> itemStatProvider,
             ItemFilterScreen filterScreen) {
@@ -23,33 +23,33 @@ public class IntegerValueWidget extends NumericValueWidget {
 
     @Override
     protected StatFilter getAnyStatFilter() {
-        return new AnyStatFilters.AnyIntegerStatFilter.AnyIntegerStatFilterFactory().create();
+        return new AnyStatFilters.AnyCappedValueStatFilter.AnyCappedValueStatFilterFactory().create();
     }
 
     @Override
     protected Optional<StatFilter> getSingleStatFilter(String value) {
-        return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
+        return new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory()
                 .create(value)
                 .map(f -> f);
     }
 
     @Override
     protected Optional<StatFilter> getRangedStatFilter(String min, String max) {
-        return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
+        return new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory()
                 .create(min + "-" + max)
                 .map(f -> f);
     }
 
     @Override
     protected Optional<StatFilter> getGreaterThanStatFilter(String value, boolean equal) {
-        return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
+        return new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory()
                 .create((equal ? ">=" : ">") + value)
                 .map(f -> f);
     }
 
     @Override
     protected Optional<StatFilter> getLessThanStatFilter(String value, boolean equal) {
-        return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
+        return new RangedStatFilters.RangedCappedValueStatFilter.RangedCappedValueStatFilterFactory()
                 .create((equal ? "<=" : "<") + value)
                 .map(f -> f);
     }

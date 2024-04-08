@@ -13,17 +13,7 @@ import java.util.Optional;
 public class AnyStatFilters {
     private static final String ANY_FILTER_INPUT = "*";
 
-    public static final class AnyStringStatFilter extends StatFilter<String> {
-        @Override
-        public boolean matches(String value) {
-            return true;
-        }
-
-        @Override
-        public String asString() {
-            return ANY_FILTER_INPUT;
-        }
-
+    public static final class AnyStringStatFilter extends AbstractAnyStatFilter<String> {
         public static final class AnyStringStatFilterFactory extends AbstractAnyStatFilterFactory<AnyStringStatFilter> {
             @Override
             protected AnyStringStatFilter getAnyStatFilter() {
@@ -32,17 +22,7 @@ public class AnyStatFilters {
         }
     }
 
-    public static final class AnyIntegerStatFilter extends StatFilter<Integer> {
-        @Override
-        public boolean matches(Integer value) {
-            return true;
-        }
-
-        @Override
-        public String asString() {
-            return ANY_FILTER_INPUT;
-        }
-
+    public static final class AnyIntegerStatFilter extends AbstractAnyStatFilter<Integer> {
         public static final class AnyIntegerStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyIntegerStatFilter> {
             @Override
@@ -52,17 +32,7 @@ public class AnyStatFilters {
         }
     }
 
-    public static final class AnyCappedValueStatFilter extends StatFilter<CappedValue> {
-        @Override
-        public boolean matches(CappedValue value) {
-            return true;
-        }
-
-        @Override
-        public String asString() {
-            return ANY_FILTER_INPUT;
-        }
-
+    public static final class AnyCappedValueStatFilter extends AbstractAnyStatFilter<CappedValue> {
         public static final class AnyCappedValueStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyCappedValueStatFilter> {
             @Override
@@ -72,23 +42,25 @@ public class AnyStatFilters {
         }
     }
 
-    public static final class AnyStatValueStatFilter extends StatFilter<StatValue> {
-        @Override
-        public boolean matches(StatValue value) {
-            return true;
-        }
-
-        @Override
-        public String asString() {
-            return ANY_FILTER_INPUT;
-        }
-
+    public static final class AnyStatValueStatFilter extends AbstractAnyStatFilter<StatValue> {
         public static final class AnyStatValueStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyStatValueStatFilter> {
             @Override
             protected AnyStatValueStatFilter getAnyStatFilter() {
                 return new AnyStatValueStatFilter();
             }
+        }
+    }
+
+    public abstract static class AbstractAnyStatFilter<T> extends StatFilter<T> {
+        @Override
+        protected final boolean matches(T value) {
+            return true;
+        }
+
+        @Override
+        public final String asString() {
+            return ANY_FILTER_INPUT;
         }
     }
 
@@ -100,6 +72,10 @@ public class AnyStatFilters {
             }
 
             return Optional.empty();
+        }
+
+        public final T create() {
+            return getAnyStatFilter();
         }
 
         protected abstract T getAnyStatFilter();

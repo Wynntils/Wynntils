@@ -15,6 +15,7 @@ import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.widgets.BooleanValueWidget;
+import com.wynntils.screens.itemfilter.widgets.CappedValueWidget;
 import com.wynntils.screens.itemfilter.widgets.FilterOptionsButton;
 import com.wynntils.screens.itemfilter.widgets.GeneralValueWidget;
 import com.wynntils.screens.itemfilter.widgets.IntegerValueWidget;
@@ -22,11 +23,13 @@ import com.wynntils.screens.itemfilter.widgets.ListValueWidget;
 import com.wynntils.screens.itemfilter.widgets.PresetButton;
 import com.wynntils.screens.itemfilter.widgets.ProviderButton;
 import com.wynntils.screens.itemfilter.widgets.SortWidget;
+import com.wynntils.screens.itemfilter.widgets.StatValueValueWidget;
 import com.wynntils.screens.itemfilter.widgets.StringValueWidget;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.services.itemfilter.type.StatProviderFilterMap;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -45,7 +48,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,9 +61,22 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.apache.commons.lang3.function.TriFunction;
 import org.lwjgl.glfw.GLFW;
 
 public final class ItemFilterScreen extends WynntilsScreen {
+    // Value Widget Map
+    private static final Map<
+                    Class<?>,
+                    TriFunction<
+                            List<StatProviderAndFilterPair>, ItemStatProvider<?>, ItemFilterScreen, GeneralValueWidget>>
+            VALUE_WIDGET_MAP = Map.of(
+                    String.class, StringValueWidget::new,
+                    Boolean.class, BooleanValueWidget::new,
+                    Integer.class, IntegerValueWidget::new,
+                    StatValue.class, StatValueValueWidget::new,
+                    CappedValueWidget.class, CappedValueWidget::new);
+
     // Constants
     private static final int MAX_PRESETS = 4;
     private static final int MAX_PROVIDERS_PER_PAGE = 8;
@@ -67,8 +84,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     // Collections
     private List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
+    private StatProviderFilterMap filters = new StatProviderFilterMap();
     private Set<ItemStatProvider<?>> usedProviders = new HashSet<>();
-    private List<Pair<ItemStatProvider<?>, String>> filters = new ArrayList<>();
     private List<Pair<String, String>> presets;
     private List<SortInfo> sorts = new ArrayList<>();
     private List<SortWidget> sortButtons = new ArrayList<>();
@@ -110,7 +127,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private final boolean supportsSorting;
     private final Screen previousScreen;
     private ItemStatProvider<?> selectedProvider;
-    private boolean ignoreUpdate = false;
     private boolean sortMode = false;
     private FilterType filterType = FilterType.ALL;
     private String filterQuery = "";
@@ -124,19 +140,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.supportsSorting = supportsSorting;
 
         // region Input widgets
-        itemNameInput = new TextInputBoxWidget(
-                220,
-                5,
-                100,
-                18,
-                (s -> {
-                    if (ignoreUpdate) {
-                        ignoreUpdate = false;
-                    } else {
-                        populateQuery();
-                    }
-                }),
-                this);
+        itemNameInput = new TextInputBoxWidget(220, 5, 100, 18, (s -> updateQueryString()), this);
 
         this.providerSearchWidget = new SearchWidget(
                 7,
@@ -145,7 +149,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 20,
                 (s) -> {
                     providersScrollOffset = 0;
-                    populateProviders();
+                    updateProviderWidgets();
                 },
                 this);
 
@@ -156,15 +160,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 20,
                 supportsSorting,
                 (q -> {
-                    if (ignoreUpdate) {
-                        ignoreUpdate = false;
-                    } else {
-                        parseFilters(q.queryString());
-                        populateProviders();
+                    parseFilters(q.queryString());
+                    updateProviderWidgets();
 
-                        if (sortMode) {
-                            populateSorts();
-                        }
+                    if (sortMode) {
+                        updateSortWidgets();
                     }
                 }),
                 this);
@@ -307,8 +307,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         valueWidget = null;
 
-        populateProviders();
-        populatePresets();
+        updateProviderWidgets();
+        updatePresetWidgets();
     }
 
     @Override
@@ -642,26 +642,20 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.focusedTextInput = focusedTextInput;
     }
 
-    public void addFilter(Pair<ItemStatProvider<?>, String> newFilter) {
-        filters.add(newFilter);
-        usedProviders.add(newFilter.a());
+    public void setFiltersForProvider(ItemStatProvider<?> provider, List<StatProviderAndFilterPair> filterPairs) {
+        // Remove all old filters for the provider
+        filters.removeIf(filter -> filter.statProvider() == provider);
 
-        createFilterQuery();
-        populateQuery();
-        // Sorts are not required to be repopulated here as filters can only be added
-        // when not in sort view mode
-    }
+        // Add the new filters
+        filters.putAll(provider, filterPairs);
 
-    public void removeFilter(ItemStatProvider<?> provider) {
-        // Remove all instances of the provider in the filter list
-        filters = filters.stream().filter(filter -> filter.a() != provider).collect(Collectors.toList());
+        if (filterPairs.isEmpty()) {
+            usedProviders.remove(provider);
+        } else {
+            usedProviders.add(provider);
+        }
 
-        usedProviders =
-                usedProviders.stream().filter(filter -> filter != provider).collect(Collectors.toSet());
-
-        createFilterQuery();
-        populateQuery();
-        // Same as above method, sorts aren't required to be repopulated here
+        updateQueryString();
     }
 
     public void addSort(SortInfo newSort) {
@@ -672,9 +666,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         sorts.add(newSort);
         usedProviders.add(newSort.provider());
 
-        createSortQuery();
-        populateQuery();
-        populateSorts();
+        updateQueryString();
+        updateSortWidgets();
     }
 
     public void removeSort(ItemStatProvider<?> provider) {
@@ -682,9 +675,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         sorts.removeIf(sort -> sort.provider() == provider);
         usedProviders.removeIf(p -> p == provider);
 
-        createSortQuery();
-        populateQuery();
-        populateSorts();
+        updateQueryString();
+        updateSortWidgets();
     }
 
     public void changeSort(SortInfo oldSortInfo, SortInfo newSortInfo) {
@@ -695,9 +687,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 })
                 .collect(Collectors.toList());
 
-        createSortQuery();
-        populateQuery();
-        populateSorts();
+        updateQueryString();
+        updateSortWidgets();
     }
 
     public void reorderSort(SortInfo sortInfo, int direction) {
@@ -713,9 +704,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         sorts.remove(sort);
         sorts.add(indexOf + direction, sort);
 
-        createSortQuery();
-        populateQuery();
-        populateSorts();
+        updateQueryString();
+        updateSortWidgets();
     }
 
     public boolean inSortMode() {
@@ -736,14 +726,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
             this.selectedProvider = selectedProvider;
             createValueWidget();
         } else {
-            Optional<String> valuesOpt = filters.stream()
-                    .filter(value -> value.a() == selectedProvider)
-                    .map(Pair::b)
-                    .findFirst();
-
-            List<String> values = valuesOpt.map(s -> List.of(s.split(","))).orElseGet(() -> List.of(""));
-
-            valueWidget.updateValues(values);
+            List<StatProviderAndFilterPair> filterPairs = filters.get(selectedProvider);
+            valueWidget.onFiltersChanged(filterPairs);
         }
     }
 
@@ -755,7 +739,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         return usedProviders.contains(provider);
     }
 
-    private void populateProviders() {
+    private void updateProviderWidgets() {
         for (AbstractWidget widget : providerButtons) {
             this.removeWidget(widget);
         }
@@ -805,7 +789,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
     }
 
-    private void populatePresets() {
+    private void updatePresetWidgets() {
         for (AbstractWidget widget : presetButtons) {
             this.removeWidget(widget);
         }
@@ -852,7 +836,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
     }
 
-    private void populateSorts() {
+    private void updateSortWidgets() {
         for (AbstractWidget widget : sortButtons) {
             this.removeWidget(widget);
         }
@@ -879,28 +863,24 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         valueWidget = getWidgetFromProvider();
-
         this.addRenderableWidget(valueWidget);
     }
 
     private GeneralValueWidget getWidgetFromProvider() {
-        Optional<String> valuesOpt = filters.stream()
-                .filter(value -> value.a() == selectedProvider)
-                .map(Pair::b)
-                .findFirst();
-
-        List<String> values = valuesOpt.map(s -> List.of(s.split(","))).orElseGet(() -> List.of(""));
+        List<StatProviderAndFilterPair> filterPairs = filters.get(selectedProvider);
 
         if (selectedProvider.getValidInputs().isEmpty()) {
-            if (selectedProvider.getType().equals(String.class)) {
-                return new StringValueWidget(values, this);
-            } else if (selectedProvider.getType().equals(Boolean.class)) {
-                return new BooleanValueWidget(values.get(0), this);
-            } else { // Integer, CappedValue and StatValue
-                return new IntegerValueWidget(values, selectedProvider.getType().equals(StatValue.class), this);
-            }
+            GeneralValueWidget newWidget =
+                    VALUE_WIDGET_MAP.get(selectedProvider.getType()).apply(filterPairs, selectedProvider, this);
+
+            // We need to call this to update the query string,
+            // as calling this in the constructor is too early for some of the inherited classes
+            newWidget.onFiltersChanged(filterPairs);
+
+            return newWidget;
         } else {
-            return new ListValueWidget(translationX, translationY, selectedProvider.getValidInputs(), values, this);
+            return new ListValueWidget(
+                    selectedProvider, this, selectedProvider.getValidInputs(), filterPairs, translationX, translationY);
         }
     }
 
@@ -908,13 +888,13 @@ public final class ItemFilterScreen extends WynntilsScreen {
         providersScrollOffset = MathUtils.clamp(
                 providersScrollOffset + delta, 0, Math.max(0, itemStatProviders.size() - MAX_PROVIDERS_PER_PAGE));
 
-        populateProviders();
+        updateProviderWidgets();
     }
 
     private void scrollSorts(int delta) {
         sortScrollOffset = MathUtils.clamp(sortScrollOffset + delta, 0, Math.max(0, sorts.size() - MAX_SORTS_PER_PAGE));
 
-        populateSorts();
+        updateSortWidgets();
     }
 
     private void scrollPresets(int direction) {
@@ -925,7 +905,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     MathUtils.clamp(presetsScrollOffset + direction, -(presets.size() - 1), (presets.size() - 1));
         }
 
-        populatePresets();
+        updatePresetWidgets();
     }
 
     private void clickPreset(int button, int presetIndex) {
@@ -940,7 +920,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
                 presets = Services.ItemFilter.presets.get();
 
-                populatePresets();
+                updatePresetWidgets();
             } else { // Select the preset
                 itemSearchWidget.setTextBoxInput(presets.get(presetIndex).b());
             }
@@ -955,7 +935,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
                 presets = Services.ItemFilter.presets.get();
 
-                populatePresets();
+                updatePresetWidgets();
             } else if (KeyboardUtils.isControlDown()) { // Delete the preset
                 presets.remove(presetIndex);
 
@@ -966,7 +946,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
                 presetsScrollOffset = Math.max(presetsScrollOffset - 1, 0);
 
-                populatePresets();
+                updatePresetWidgets();
 
                 if (presets.size() <= MAX_PRESETS) {
                     nextPresetButton.visible = false;
@@ -989,7 +969,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             previousPresetButton.visible = true;
         }
 
-        populatePresets();
+        updatePresetWidgets();
     }
 
     private void checkSaveStatus() {
@@ -1012,7 +992,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             sortScrollOffset = 0;
 
-            populateSorts();
+            updateSortWidgets();
         } else {
             for (AbstractWidget widget : sortButtons) {
                 this.removeWidget(widget);
@@ -1028,7 +1008,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         ItemSearchQuery searchQuery = Services.ItemFilter.createSearchQuery(input, true);
 
-        // filters =
+        filters = searchQuery.filters();
         for (StatProviderAndFilterPair value : searchQuery.filters().values()) {
             ItemStatProvider itemStatProvider = value.statProvider();
             newUsedProviders.add(itemStatProvider);
@@ -1040,79 +1020,23 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         usedProviders = newUsedProviders;
 
-        createFilterQuery();
-        createSortQuery();
+        String plainTextString = String.join(" ", searchQuery.plainTextTokens());
 
-        ignoreUpdate = true;
-        itemNameInput.setTextBoxInput(String.join(" ", searchQuery.plainTextTokens()));
+        // Don't want to update the item name if it's the same (avoid recursion loop)
+        if (plainTextString.equals(itemNameInput.getTextBoxInput())) return;
+
+        itemNameInput.setTextBoxInput(plainTextString);
     }
 
-    private void createFilterQuery() {
-        filterQuery = "";
-
-        if (filters.isEmpty()) return;
-
-        StringBuilder filterBuilder = new StringBuilder();
-
-        for (Pair<ItemStatProvider<?>, String> filter : filters) {
-            filterBuilder.append(filter.a().getName()).append(":").append(filter.b());
-
-            // Append a space to all filters besides the last
-            if (!filter.b().isEmpty()) {
-                filterBuilder.append(" ");
-            }
-        }
-
-        filterQuery = filterBuilder.toString().trim();
-    }
-
-    private void createSortQuery() {
-        sortQuery = "";
-
-        if (sorts.isEmpty()) return;
-
-        StringBuilder sortBuilder = new StringBuilder(Services.ItemFilter.SORT_KEY);
-        sortBuilder.append(":");
-
-        for (SortInfo sortInfo : sorts) {
-            sortBuilder.append(sortInfo.provider().getName());
-
-            // Append the seperator for all sorts except the last
-            if (sorts.indexOf(sortInfo) != sorts.size() - 1) {
-                sortBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
-            }
-        }
-
-        sortQuery = sortBuilder.toString();
-    }
-
-    private void populateQuery() {
+    private void updateQueryString() {
         // Create the whole query based on the filters, sorts and the item name
-        StringBuilder totalQuery = new StringBuilder();
+        String queryString =
+                Services.ItemFilter.getItemFilterString(filters, sorts, List.of(itemNameInput.getTextBoxInput()));
 
-        if (!filterQuery.isEmpty()) {
-            totalQuery.append(filterQuery);
-        }
+        // Don't want to update the search widget if the query is the same (avoid recursion loop)
+        if (Objects.equals(itemSearchWidget.getTextBoxInput(), queryString)) return;
 
-        if (!sortQuery.isEmpty()) {
-            if (!totalQuery.isEmpty()) {
-                totalQuery.append(" ");
-            }
-
-            totalQuery.append(sortQuery);
-        }
-
-        if (!itemNameInput.getTextBoxInput().isEmpty()) {
-            if (!totalQuery.isEmpty()) {
-                totalQuery.append(" ");
-            }
-
-            totalQuery.append(itemNameInput.getTextBoxInput());
-        }
-
-        ignoreUpdate = true;
-
-        itemSearchWidget.setTextBoxInput(totalQuery.toString());
+        itemSearchWidget.setTextBoxInput(queryString);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -1184,7 +1108,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         filterType = newFilter;
         providersScrollOffset = 0;
 
-        populateProviders();
+        updateProviderWidgets();
     }
 
     private boolean searchMatches(String name) {

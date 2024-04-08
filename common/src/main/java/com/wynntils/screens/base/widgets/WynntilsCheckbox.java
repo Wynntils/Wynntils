@@ -11,6 +11,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,7 +23,7 @@ public class WynntilsCheckbox extends Checkbox {
     private final int maxTextWidth;
     private final int color;
 
-    private Consumer<Integer> onClick;
+    private BiConsumer<WynntilsCheckbox, Integer> onClick;
     private List<Component> tooltip;
 
     public WynntilsCheckbox(
@@ -44,7 +45,7 @@ public class WynntilsCheckbox extends Checkbox {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
         this.color = CommonColors.WHITE.asInt();
-        this.onClick = onClick;
+        this.onClick = (checkbox, button) -> onClick.accept(button);
     }
 
     public WynntilsCheckbox(
@@ -56,6 +57,23 @@ public class WynntilsCheckbox extends Checkbox {
             boolean selected,
             int maxTextWidth,
             Consumer<Integer> onClick,
+            List<Component> tooltip) {
+        super(x, y, width, height, message, selected);
+        this.maxTextWidth = maxTextWidth;
+        this.color = CommonColors.WHITE.asInt();
+        this.onClick = (checkbox, button) -> onClick.accept(button);
+        this.tooltip = tooltip;
+    }
+
+    public WynntilsCheckbox(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component message,
+            boolean selected,
+            int maxTextWidth,
+            BiConsumer<WynntilsCheckbox, Integer> onClick,
             List<Component> tooltip) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
@@ -119,7 +137,7 @@ public class WynntilsCheckbox extends Checkbox {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
         if (onClick != null) {
-            onClick.accept(button);
+            onClick.accept(this, button);
         }
 
         return super.mouseClicked(mouseX, mouseY, button);

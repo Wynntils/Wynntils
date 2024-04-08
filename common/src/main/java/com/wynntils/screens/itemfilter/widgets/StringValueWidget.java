@@ -4,18 +4,23 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
-import com.wynntils.core.components.Services;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
+import com.wynntils.services.itemfilter.filters.AnyStatFilters;
+import com.wynntils.services.itemfilter.filters.StringStatFilter;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StatFilter;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -25,23 +30,13 @@ public class StringValueWidget extends GeneralValueWidget {
     private final WynntilsCheckbox allCheckbox;
     private final WynntilsCheckbox strictCheckbox;
 
-    private boolean allQuery = false;
-    private boolean ignoreUpdate = false;
-    private boolean strict = false;
+    public StringValueWidget(
+            List<StatProviderAndFilterPair> filters,
+            ItemStatProvider<?> itemStatProvider,
+            ItemFilterScreen filterScreen) {
+        super(Component.literal("String Value Widget"), itemStatProvider, filterScreen);
 
-    public StringValueWidget(List<String> query, ItemFilterScreen filterScreen) {
-        super(Component.literal("String Value Widget"), filterScreen);
-
-        this.entryInput = new TextInputBoxWidget(
-                getX() + 10,
-                getY() + 60,
-                150,
-                20,
-                (s -> {
-                    if (ignoreUpdate) return;
-                    updateQuery();
-                }),
-                filterScreen);
+        this.entryInput = new TextInputBoxWidget(getX() + 10, getY() + 60, 150, 20, (s -> updateQuery()), filterScreen);
 
         this.strictCheckbox = new WynntilsCheckbox(
                 getX() + 10,
@@ -49,14 +44,11 @@ public class StringValueWidget extends GeneralValueWidget {
                 20,
                 20,
                 Component.translatable("screens.wynntils.itemFilter.strict"),
-                this.strict,
+                false,
                 150,
-                (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        this.strict = !this.strict;
-                        ignoreUpdate = true;
+                (button) -> {
+                    if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         updateQuery();
-                        ignoreUpdate = false;
                     }
                 },
                 List.of(Component.translatable("screens.wynntils.itemFilter.strictTooltip")));
@@ -67,15 +59,12 @@ public class StringValueWidget extends GeneralValueWidget {
                 20,
                 20,
                 Component.translatable("screens.wynntils.itemFilter.any"),
-                allQuery,
+                false,
                 25,
-                (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        allQuery = !allQuery;
-                        ignoreUpdate = true;
-                        this.entryInput.setTextBoxInput(allQuery ? "*" : "");
+                (checkbox, button) -> {
+                    if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        this.entryInput.setTextBoxInput(checkbox.isActive() ? "*" : "");
                         updateQuery();
-                        ignoreUpdate = false;
                     }
                 },
                 List.of(Component.translatable(
@@ -85,10 +74,6 @@ public class StringValueWidget extends GeneralValueWidget {
         widgets.add(this.strictCheckbox);
         widgets.add(this.entryInput);
         widgets.add(this.allCheckbox);
-
-        updateValues(query);
-
-        updateQuery();
     }
 
     @Override
@@ -108,88 +93,49 @@ public class StringValueWidget extends GeneralValueWidget {
     }
 
     @Override
-    public void updateValues(List<String> query) {
-        ignoreUpdate = true;
+    public void onFiltersChanged(List<StatProviderAndFilterPair> filters) {
+        // FIXME: This ValueWidget can only handle a single filter of a type at a time for the current provider
+        //        (for example, only one string filter (strict or not)
+        //        while the ItemFilterService supports multiple filters of the same type)
 
-        strict = false;
-        allQuery = false;
         strictCheckbox.selected = false;
         allCheckbox.selected = false;
 
-        StringBuilder valueBuilder = new StringBuilder();
+        StatProviderAndFilterPair filterPair = filters.get(0);
+        StatFilter statFilter = filterPair.statFilter();
 
-        // Update the input widget and checkbox states based on the ItemSearchWidgets query for the
-        // current provider. Check for allQuery or strict, in which case the query will only be 1 value
-        for (String value : query) {
-            if (value.isEmpty()) {
-                entryInput.setTextBoxInput("");
-                ignoreUpdate = false;
-                return;
-            } else if (value.equals("*")) {
-                allQuery = true;
-                allCheckbox.selected = true;
-                entryInput.setTextBoxInput("*");
-                ignoreUpdate = false;
-                return;
-            } else if (value.length() > 1 && value.startsWith("\"") && value.endsWith("\"")) {
-                // If the query contains any strict value then just set that to the query
-                strict = true;
-                strictCheckbox.selected = true;
-                entryInput.setTextBoxInput(value.substring(1, value.length() - 1));
-                ignoreUpdate = false;
-                return;
-            } else {
-                valueBuilder.append(value);
-
-                // Append the seperator for all sorts except the last
-                if (query.indexOf(value) != query.size() - 1) {
-                    valueBuilder.append(Services.ItemFilter.LIST_SEPARATOR);
-                }
-            }
-        }
-
-        entryInput.setTextBoxInput(valueBuilder.toString());
-
-        ignoreUpdate = false;
-    }
-
-    @Override
-    protected void updateQuery() {
-        // Remove all filters for the current provider
-        filterScreen.removeFilter(filterScreen.getSelectedProvider());
-
-        if (entryInput.getTextBoxInput().isEmpty()) {
-            // If no input then the checkboxes should be set to false, but only
-            // if the checkboxes themselves were not what called updateQuery as the onPress for
-            // checkboxes will change their state after this is finished
-            if (!ignoreUpdate) {
-                strictCheckbox.selected = strict;
-                allCheckbox.selected = false;
-            }
-
+        if (statFilter instanceof AnyStatFilters.AnyStringStatFilter) {
+            allCheckbox.selected = true;
             return;
         }
 
-        String query;
-
-        // Determine the query based on the checkbox states and input widget
-        if (entryInput.getTextBoxInput().equals("*")) {
-            query = "*";
-            allQuery = true;
-        } else if (strict) {
-            query = "\"" + entryInput.getTextBoxInput() + "\"";
-            allQuery = false;
+        if (statFilter instanceof StringStatFilter stringStatFilter) {
+            strictCheckbox.selected = stringStatFilter.isStrict();
+            entryInput.setTextBoxInput(stringStatFilter.getSearchLiteral());
         } else {
-            query = entryInput.getTextBoxInput();
-            allQuery = false;
+            WynntilsMod.warn("String Value Widget received a non-string filter: "
+                    + statFilter.getClass().getSimpleName());
+        }
+    }
+
+    @Override
+    protected List<StatProviderAndFilterPair> getFilterPairs() {
+        // FIXME: This ValueWidget can only handle a single filter of a type at a time for the current provider
+        //        (for example, only one string filter (strict or not)
+        //        while the ItemFilterService supports multiple filters of the same type)
+
+        if (allCheckbox.selected) {
+            return List.of(new StatProviderAndFilterPair(itemStatProvider, new AnyStatFilters.AnyStringStatFilter()));
         }
 
-        // Same as above, don't update these when they were what triggered updateQuery
-        if (!ignoreUpdate) {
-            strictCheckbox.selected = strict;
-            allCheckbox.selected = allQuery;
-        }
+        String inputString =
+                strictCheckbox.selected ? "\"" + entryInput.getTextBoxInput() + "\"" : entryInput.getTextBoxInput();
 
-        filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), query));
+        Optional<StringStatFilter> stringStatFilterOpt =
+                new StringStatFilter.StringStatFilterFactory().create(entryInput.getTextBoxInput());
+
+        if (stringStatFilterOpt.isEmpty()) return List.of();
+
+        return List.of(new StatProviderAndFilterPair(itemStatProvider, stringStatFilterOpt.get()));
     }
 }

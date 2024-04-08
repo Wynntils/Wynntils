@@ -36,5 +36,9 @@ public class BooleanStatFilter extends StatFilter<Boolean> {
                 return Optional.empty();
             }
         }
+
+        public BooleanStatFilter fromBoolean(boolean value) {
+            return new BooleanStatFilter(value);
+        }
     }
 }
