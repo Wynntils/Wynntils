@@ -36,11 +36,11 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 
 public class CustomAbilityTreeScreen extends WynntilsScreen {
-    private static final int NODE_AREA_OFFSET_X = 85;
-    private static final int NODE_AREA_OFFSET_Y = 23;
+    private static final int NODE_AREA_OFFSET_X = 81;
+    private static final int NODE_AREA_OFFSET_Y = 22;
 
-    private static final int NODE_AREA_WIDTH = 155;
-    private static final int NODE_AREA_HEIGHT = 99;
+    private static final int NODE_AREA_WIDTH = 156;
+    private static final int NODE_AREA_HEIGHT = 98;
 
     private static final int UP_ARROW_X = 250;
     private static final int UP_ARROW_Y = 117;
@@ -53,14 +53,14 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
     private final Map<AbilityTreeLocation, AbilityNodeConnectionWidget> connectionWidgets = new LinkedHashMap();
 
-    private int currentPage;
+    private float currentScrollPercentage;
     private TreeParseState treeParseState = TreeParseState.PARSING;
 
     public CustomAbilityTreeScreen() {
         super(Component.literal("Ability Tree"));
 
         abilityTreeInfo = Models.AbilityTree.getAbilityTree(Models.Character.getClassType());
-        setCurrentPage(0);
+        setCurrentScrollPercentage(0);
     }
 
     // region Init
@@ -146,8 +146,17 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         // Set the node area offset
         poseStack.translate(NODE_AREA_OFFSET_X, NODE_AREA_OFFSET_Y, 0);
 
+        // Make this area a mask, so we only render the nodes within this area
+        // Make sure it's a bit larger than the actual area, so we don't cut off the nodes
+        RenderUtils.createRectMask(poseStack, -5, -5, NODE_AREA_WIDTH + 10, NODE_AREA_HEIGHT + 5);
+
+        // Translate the nodes based on the current scroll percentage
+        poseStack.translate(0, -NODE_AREA_HEIGHT * currentScrollPercentage, 0);
+
         nodeWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         connectionWidgets.values().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+
+        RenderUtils.clearMask();
 
         poseStack.popPose();
     }
@@ -189,7 +198,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (treeParseState != TreeParseState.PARSED) return false;
 
-        setCurrentPage((int) (currentPage - Math.signum(scrollY)));
+        setCurrentScrollPercentage((float) (currentScrollPercentage - scrollY));
         return true;
     }
 
@@ -197,14 +206,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     // region Page Management
 
-    public void setCurrentPage(int page) {
-        currentPage = MathUtils.clamp(page, 0, Models.AbilityTree.ABILITY_TREE_PAGES - 1);
-
-        reconstructWidgets();
+    public void setCurrentScrollPercentage(float page) {
+        currentScrollPercentage = MathUtils.clamp(page, 0, Models.AbilityTree.ABILITY_TREE_PAGES - 1);
     }
 
-    public int getCurrentPage() {
-        return currentPage;
+    public float getCurrentScrollPercentage() {
+        return currentScrollPercentage;
     }
 
     // endregion
@@ -221,93 +228,115 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         nodeWidgets.clear();
         connectionWidgets.clear();
 
-        abilityTreeInfo.nodes().stream()
-                .filter(node -> node.location().page() == currentPage + 1)
-                .forEach(node -> {
-                    Pair<Integer, Integer> renderLocation = getRenderLocation(node.location());
+        // Add nodes and connections for every page,
+        // we calculate what's rendered based on the current scroll percentage
+        // at render time
+        for (int page = 1; page <= Models.AbilityTree.ABILITY_TREE_PAGES; page++) {
+            int currentPage = page;
 
-                    nodeWidgets.add(new AbilityNodeWidget(
-                            renderLocation.a() - AbilityNodeWidget.SIZE / 2,
-                            renderLocation.b() - AbilityNodeWidget.SIZE / 2,
-                            AbilityNodeWidget.SIZE,
-                            AbilityNodeWidget.SIZE,
-                            node));
-                });
+            int currentPageYRenderOffset = NODE_AREA_HEIGHT * (currentPage - 1);
 
-        // We do this "backwards":
-        // First find connection nodes from last page
-        List<AbilityTreeSkillNode> multiPageConnectionNodesFromLastPage = abilityTreeInfo.nodes().stream()
-                .filter(node ->
-                        node.location().page() == currentPage) // currentPage is 0-indexed, this finds the last page
-                .filter(node -> nodeWidgets.stream()
-                        .map(AbilityNodeWidget::getNode)
-                        .map(AbilityTreeSkillNode::id)
-                        .anyMatch(node.connections()::contains))
-                .toList();
+            List<AbilityNodeWidget> currentPageNodeWidgets = new ArrayList<>();
 
-        // Then, find the nodes they connect to on this page
-        for (AbilityTreeSkillNode connectionNode : multiPageConnectionNodesFromLastPage) {
-            List<AbilityTreeSkillNode> multiPageConnections = nodeWidgets.stream()
-                    .map(AbilityNodeWidget::getNode)
-                    .filter(node -> connectionNode.connections().contains(node.id()))
+            abilityTreeInfo.nodes().stream()
+                    .filter(node -> node.location().page() == currentPage)
+                    .forEach(node -> {
+                        Pair<Integer, Integer> renderLocation = getRenderLocation(node.location());
+
+                        AbilityNodeWidget nodeWidget = new AbilityNodeWidget(
+                                renderLocation.a() - AbilityNodeWidget.SIZE / 2,
+                                renderLocation.b() - AbilityNodeWidget.SIZE / 2 + currentPageYRenderOffset,
+                                AbilityNodeWidget.SIZE,
+                                AbilityNodeWidget.SIZE,
+                                node);
+                        currentPageNodeWidgets.add(nodeWidget);
+                        nodeWidgets.add(nodeWidget);
+                    });
+
+            // We do this "backwards":
+            // First find connection nodes from last page
+            List<AbilityTreeSkillNode> multiPageConnectionNodesFromLastPage = abilityTreeInfo.nodes().stream()
+                    .filter(node -> node.location().page() == currentPage - 1)
+                    .filter(node -> currentPageNodeWidgets.stream()
+                            .map(AbilityNodeWidget::getNode)
+                            .map(AbilityTreeSkillNode::id)
+                            .anyMatch(node.connections()::contains))
                     .toList();
 
-            for (AbilityTreeSkillNode currentNode : multiPageConnections) {
+            // Then, find the nodes they connect to on this page
+            for (AbilityTreeSkillNode connectionNode : multiPageConnectionNodesFromLastPage) {
+                List<AbilityTreeSkillNode> multiPageConnections = currentPageNodeWidgets.stream()
+                        .map(AbilityNodeWidget::getNode)
+                        .filter(node -> connectionNode.connections().contains(node.id()))
+                        .toList();
+
+                for (AbilityTreeSkillNode currentNode : multiPageConnections) {
+                    final int col = currentNode.location().col();
+                    final int row = currentNode.location().row();
+
+                    // Multi page connections are basically the same as vertical connections,
+                    // when the receiving node is the one rendered. But this has to be handled first.
+                    addConnectionsVertically(currentNode, connectionNode, col, 0, row, currentPageYRenderOffset);
+                }
+            }
+
+            for (AbilityNodeWidget nodeWidget : currentPageNodeWidgets) {
+                final AbilityTreeSkillNode currentNode = nodeWidget.getNode();
                 final int col = currentNode.location().col();
                 final int row = currentNode.location().row();
 
-                // Multi page connections are basically the same as vertical connections,
-                // when the receiving node is the one rendered. But this has to be handled first.
-                addConnectionsVertically(currentNode, connectionNode, col, 0, row);
-            }
-        }
+                for (Integer connection : currentNode.connections()) {
+                    Optional<AbilityTreeSkillNode> connectionOptional = abilityTreeInfo.nodes().stream()
+                            .filter(node -> node.id() == connection)
+                            .findFirst();
 
-        for (AbilityNodeWidget nodeWidget : nodeWidgets) {
-            final AbilityTreeSkillNode currentNode = nodeWidget.getNode();
-            final int col = currentNode.location().col();
-            final int row = currentNode.location().row();
+                    if (connectionOptional.isEmpty()) {
+                        WynntilsMod.warn("Unable to find connection node for " + connection);
+                        continue;
+                    }
 
-            for (Integer connection : currentNode.connections()) {
-                Optional<AbilityTreeSkillNode> connectionOptional = abilityTreeInfo.nodes().stream()
-                        .filter(node -> node.id() == connection)
-                        .findFirst();
+                    AbilityTreeSkillNode connectionNode = connectionOptional.get();
 
-                if (connectionOptional.isEmpty()) {
-                    WynntilsMod.warn("Unable to find connection node for " + connection);
-                    continue;
-                }
+                    final int connectionCol = connectionNode.location().col();
+                    final int connectionRow = connectionNode.location().row();
 
-                AbilityTreeSkillNode connectionNode = connectionOptional.get();
+                    // Only horizontal connections are needed for the same column
+                    if (row == connectionRow) {
+                        addConnectionsHorizontally(
+                                currentNode, connectionNode, col, row, connectionCol, currentPageYRenderOffset);
+                        continue;
+                    }
 
-                final int connectionCol = connectionNode.location().col();
-                final int connectionRow = connectionNode.location().row();
+                    // Only vertical connections are needed for the same row
+                    if (col == connectionCol) {
+                        addConnectionsVertically(
+                                currentNode, connectionNode, col, row, connectionRow, currentPageYRenderOffset);
+                        continue;
+                    }
 
-                // Only horizontal connections are needed for the same column
-                if (row == connectionRow) {
-                    addConnectionsHorizontally(currentNode, connectionNode, col, row, connectionCol);
-                    continue;
-                }
+                    // Handle complex connections here
 
-                // Only vertical connections are needed for the same row
-                if (col == connectionCol) {
-                    addConnectionsVertically(currentNode, connectionNode, col, row, connectionRow);
-                    continue;
-                }
+                    // Firstly, we add horizontal connections, if the turn is not enough
+                    if (Math.abs(col - connectionCol) > 1) {
+                        addConnectionsHorizontally(
+                                currentNode, connectionNode, col, row, connectionCol, currentPageYRenderOffset);
+                    }
 
-                // Handle complex connections here
+                    // Then we add the turn
+                    addTurnConnection(currentNode, connectionNode, col, row, connectionCol, currentPageYRenderOffset);
 
-                // Firstly, we add horizontal connections, if the turn is not enough
-                if (Math.abs(col - connectionCol) > 1) {
-                    addConnectionsHorizontally(currentNode, connectionNode, col, row, connectionCol);
-                }
-
-                // Then we add the turn
-                addTurnConnection(currentNode, connectionNode, col, row, connectionCol);
-
-                // Finally, we add vertical connections, if the turn is not enough, or if the connection is on the next
-                // page
-                if (Math.abs(row - connectionRow) > 1 || row > connectionRow) {
-                    addConnectionsVertically(currentNode, connectionNode, connectionCol, row, connectionRow);
+                    // Finally, we add vertical connections, if the turn is not enough, or if the connection is on the
+                    // next
+                    // page
+                    if (Math.abs(row - connectionRow) > 1 || row > connectionRow) {
+                        addConnectionsVertically(
+                                currentNode,
+                                connectionNode,
+                                connectionCol,
+                                row,
+                                connectionRow,
+                                currentPageYRenderOffset);
+                    }
                 }
             }
         }
@@ -330,7 +359,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             AbilityTreeSkillNode connectionNode,
             int currentCol,
             int currentRow,
-            int connectionCol) {
+            int connectionCol,
+            int currentPageYRenderOffset) {
         AbilityTreeLocation location =
                 new AbilityTreeLocation(currentNode.location().page(), currentRow, connectionCol);
         Pair<Integer, Integer> renderLocation = getRenderLocation(location);
@@ -354,7 +384,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 location,
                 new AbilityNodeConnectionWidget(
                         renderLocation.a() - AbilityNodeConnectionWidget.SIZE / 2,
-                        renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2,
+                        renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2 + currentPageYRenderOffset,
                         AbilityNodeConnectionWidget.SIZE,
                         AbilityNodeConnectionWidget.SIZE,
                         merged));
@@ -365,7 +395,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             AbilityTreeSkillNode connectionNode,
             int currentCol,
             int currentRow,
-            int targetCol) {
+            int targetCol,
+            int currentPageYRenderOffset) {
         AbilityTreeSkillNode startNode = currentCol < targetCol ? currentNode : connectionNode;
         AbilityTreeSkillNode endNode = currentCol < targetCol ? connectionNode : currentNode;
 
@@ -387,7 +418,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     location,
                     new AbilityNodeConnectionWidget(
                             renderLocation.a() - AbilityNodeConnectionWidget.SIZE / 2,
-                            renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2,
+                            renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2 + currentPageYRenderOffset,
                             AbilityNodeConnectionWidget.SIZE,
                             AbilityNodeConnectionWidget.SIZE,
                             merged));
@@ -399,7 +430,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             AbilityTreeSkillNode connectionNode,
             int currentCol,
             int currentRow,
-            int targetRow) {
+            int targetRow,
+            int currentPageYRenderOffset) {
         AbilityTreeSkillNode startNode;
         AbilityTreeSkillNode endNode;
         int startRow;
@@ -440,7 +472,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     location,
                     new AbilityNodeConnectionWidget(
                             renderLocation.a() - AbilityNodeConnectionWidget.SIZE / 2,
-                            renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2,
+                            renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2 + currentPageYRenderOffset,
                             AbilityNodeConnectionWidget.SIZE,
                             AbilityNodeConnectionWidget.SIZE,
                             merged));

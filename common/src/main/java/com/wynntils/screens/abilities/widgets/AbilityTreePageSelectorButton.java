@@ -28,8 +28,8 @@ public class AbilityTreePageSelectorButton extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (upDirection && screen.getCurrentPage() == 0) return;
-        if (!upDirection && screen.getCurrentPage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) return;
+        if (upDirection && screen.getCurrentScrollPercentage() == 0) return;
+        if (!upDirection && screen.getCurrentScrollPercentage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) return;
 
         Texture texture = upDirection ? Texture.ABILITY_TREE_UP_ARROW : Texture.ABILITY_TREE_DOWN_ARROW;
 
@@ -39,13 +39,14 @@ public class AbilityTreePageSelectorButton extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Check if we're at the top or bottom of the tree
-        if (upDirection && screen.getCurrentPage() == 0) return true;
-        if (!upDirection && screen.getCurrentPage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) return true;
+        if (upDirection && screen.getCurrentScrollPercentage() == 0) return true;
+        if (!upDirection && screen.getCurrentScrollPercentage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1)
+            return true;
 
         if (upDirection) {
-            screen.setCurrentPage(screen.getCurrentPage() - 1);
+            screen.setCurrentScrollPercentage(screen.getCurrentScrollPercentage() - 0.1f);
         } else {
-            screen.setCurrentPage(screen.getCurrentPage() + 1);
+            screen.setCurrentScrollPercentage(screen.getCurrentScrollPercentage() + 0.1f);
         }
 
         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
