@@ -52,7 +52,9 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
@@ -106,6 +108,23 @@ public class ContainerSearchFeature extends Feature {
 
     @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
+
+    private final Map<Class<? extends SearchableContainerProperty>, Supplier<Boolean>> searchableContainerMap =
+            Map.ofEntries(
+                    Map.entry(AccountBankContainer.class, filterInBank::get),
+                    Map.entry(BlockBankContainer.class, filterInBlockBank::get),
+                    Map.entry(BookshelfContainer.class, filterInBookshelf::get),
+                    Map.entry(CharacterBankContainer.class, filterInBank::get),
+                    Map.entry(ContentBookContainer.class, filterInContentBook::get),
+                    Map.entry(GuildBankContainer.class, filterInGuildBank::get),
+                    Map.entry(GuildMemberListContainer.class, filterInGuildMemberList::get),
+                    Map.entry(GuildTerritoriesContainer.class, filterInGuildTerritories::get),
+                    Map.entry(HousingJukeboxContainer.class, filterInHousingJukebox::get),
+                    Map.entry(HousingListContainer.class, filterInHousingList::get),
+                    Map.entry(JukeboxContainer.class, filterInJukebox::get),
+                    Map.entry(MiscBucketContainer.class, filterInMiscBucket::get),
+                    Map.entry(PetMenuContainer.class, filterInPetMenu::get),
+                    Map.entry(ScrapMenuContainer.class, filterInScrapMenu::get));
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
@@ -252,36 +271,13 @@ public class ContainerSearchFeature extends Feature {
     }
 
     private SearchableContainerProperty getCurrentSearchableContainer() {
-        // FIXME: Do something about this
         if (Models.Container.getCurrentContainer() instanceof SearchableContainerProperty searchableContainer) {
-            if (filterInBank.get() && searchableContainer instanceof AccountBankContainer) {
-                return searchableContainer;
-            } else if (filterInBlockBank.get() && searchableContainer instanceof BlockBankContainer) {
-                return searchableContainer;
-            } else if (filterInBookshelf.get() && searchableContainer instanceof BookshelfContainer) {
-                return searchableContainer;
-            } else if (filterInBank.get() && searchableContainer instanceof CharacterBankContainer) {
-                return searchableContainer;
-            } else if (filterInContentBook.get() && searchableContainer instanceof ContentBookContainer) {
-                return searchableContainer;
-            } else if (filterInGuildBank.get() && searchableContainer instanceof GuildBankContainer) {
-                return searchableContainer;
-            } else if (filterInGuildMemberList.get() && searchableContainer instanceof GuildMemberListContainer) {
-                return searchableContainer;
-            } else if (filterInGuildTerritories.get() && searchableContainer instanceof GuildTerritoriesContainer) {
-                return searchableContainer;
-            } else if (filterInHousingJukebox.get() && searchableContainer instanceof HousingJukeboxContainer) {
-                return searchableContainer;
-            } else if (filterInHousingList.get() && searchableContainer instanceof HousingListContainer) {
-                return searchableContainer;
-            } else if (filterInJukebox.get() && searchableContainer instanceof JukeboxContainer) {
-                return searchableContainer;
-            } else if (filterInMiscBucket.get() && searchableContainer instanceof MiscBucketContainer) {
-                return searchableContainer;
-            } else if (filterInPetMenu.get() && searchableContainer instanceof PetMenuContainer) {
-                return searchableContainer;
-            } else if (filterInScrapMenu.get() && searchableContainer instanceof ScrapMenuContainer) {
-                return searchableContainer;
+            for (Map.Entry<Class<? extends SearchableContainerProperty>, Supplier<Boolean>> entry :
+                    searchableContainerMap.entrySet()) {
+                if (entry.getKey().isInstance(searchableContainer)
+                        && entry.getValue().get()) {
+                    return searchableContainer;
+                }
             }
         }
 
