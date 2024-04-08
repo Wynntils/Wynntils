@@ -14,9 +14,13 @@ import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeInfo;
+import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
+import com.wynntils.screens.abilities.widgets.AbilityArchetypeWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeConnectionWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.abilities.widgets.AbilityTreePageSelectorButton;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -49,9 +53,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private static final int DOWN_ARROW_Y = 117;
 
     private final AbilityTreeInfo abilityTreeInfo;
+    private ParsedAbilityTree parsedAbilityTree;
 
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
     private final Map<AbilityTreeLocation, AbilityNodeConnectionWidget> connectionWidgets = new LinkedHashMap();
+
+    private final List<AbilityArchetypeWidget> archetypeWidgets = new ArrayList<>();
 
     private float currentScrollPercentage;
     private TreeParseState treeParseState = TreeParseState.PARSING;
@@ -116,8 +123,10 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
         if (treeParseState == TreeParseState.PARSED) {
             renderNodes(guiGraphics, mouseX, mouseY, partialTick);
-
             renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
+            // Render tooltips
+            renderTooltip(guiGraphics, mouseX, mouseY);
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -136,6 +145,66 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         }
 
         poseStack.popPose();
+    }
+
+    private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        // Translate the mouse position to match what is rendered on the screen
+        int scaledMouseX = mouseX - (this.width - Texture.ABILITY_TREE_BACKGROUND.width()) / 2;
+        int scaledMouseY = mouseY - (this.height - Texture.ABILITY_TREE_BACKGROUND.height()) / 2;
+
+        // For the node widgets, we need to check if the mouse is over the node,
+        // with the scroll offset applied
+        int nodeWidgetMouseX = scaledMouseX - NODE_AREA_OFFSET_X;
+        int nodeWidgetMouseY = scaledMouseY - NODE_AREA_OFFSET_Y;
+
+        // Only show tooltips if the mouse is within the node area
+        if (nodeWidgetMouseX >= 0
+                && nodeWidgetMouseX <= NODE_AREA_WIDTH
+                && nodeWidgetMouseY >= 0
+                && nodeWidgetMouseY <= NODE_AREA_HEIGHT) {
+            nodeWidgetMouseY += NODE_AREA_HEIGHT * currentScrollPercentage;
+
+            for (AbilityNodeWidget nodeWidget : nodeWidgets) {
+                if (nodeWidget.isMouseOver(nodeWidgetMouseX, nodeWidgetMouseY)) {
+                    List<Component> tooltipLines = nodeWidget.getTooltipLines();
+                    guiGraphics.renderTooltip(
+                            FontRenderer.getInstance().getFont(),
+                            tooltipLines,
+                            Optional.empty(),
+                            scaledMouseX,
+                            scaledMouseY);
+                    return;
+                }
+            }
+        }
+
+        for (AbilityArchetypeWidget archetypeWidget : archetypeWidgets) {
+            if (archetypeWidget.isMouseOver(scaledMouseX, scaledMouseY)) {
+                List<Component> tooltipLines = archetypeWidget.getTooltipLines();
+                guiGraphics.renderTooltip(
+                        FontRenderer.getInstance().getFont(),
+                        tooltipLines,
+                        Optional.empty(),
+                        scaledMouseX,
+                        scaledMouseY);
+                return;
+            }
+        }
+
+        for (GuiEventListener child : this.children()) {
+            if (child instanceof TooltipProvider tooltipProvider) {
+                if (child.isMouseOver(scaledMouseX, scaledMouseY)) {
+                    List<Component> tooltipLines = tooltipProvider.getTooltipLines();
+                    guiGraphics.renderTooltip(
+                            FontRenderer.getInstance().getFont(),
+                            tooltipLines,
+                            Optional.empty(),
+                            scaledMouseX,
+                            scaledMouseY);
+                    return;
+                }
+            }
+        }
     }
 
     private void renderNodes(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -166,6 +235,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
         poseStack.pushPose();
 
+        archetypeWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
         poseStack.popPose();
@@ -218,12 +288,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     // region Node Widget Building
 
-    public void updateAbilityTree() {
-        setTreeParseState(TreeParseState.PARSED);
-
-        reconstructWidgets();
-    }
-
     private void reconstructWidgets() {
         nodeWidgets.clear();
         connectionWidgets.clear();
@@ -248,6 +312,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                                 renderLocation.b() - AbilityNodeWidget.SIZE / 2 + currentPageYRenderOffset,
                                 AbilityNodeWidget.SIZE,
                                 AbilityNodeWidget.SIZE,
+                                parsedAbilityTree,
                                 node);
                         currentPageNodeWidgets.add(nodeWidget);
                         nodeWidgets.add(nodeWidget);
@@ -339,6 +404,32 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     }
                 }
             }
+        }
+
+        int lowerBoxRenderX = NODE_AREA_OFFSET_X;
+        int lowerBoxRenderY = NODE_AREA_OFFSET_Y + NODE_AREA_HEIGHT;
+
+        // 2/3 of the width of the node area, divided by 4, as there are 4 "spaces" between the archetypes
+        int spaceBetweenArchetypes = (NODE_AREA_WIDTH - AbilityArchetypeWidget.SIZE * 3) * 2 / 3 / 4;
+
+        // Render the archetypes in the left half of the lower box
+        int archetypeCount = 0;
+        for (Map.Entry<String, ArchetypeInfo> entry :
+                abilityTreeInfo.archetypeInfoMap().entrySet()) {
+            ArchetypeInfo archetypeInfo = entry.getValue();
+
+            AbilityArchetypeWidget archetypeWidget = new AbilityArchetypeWidget(
+                    lowerBoxRenderX + archetypeCount * (AbilityArchetypeWidget.SIZE + spaceBetweenArchetypes) + 10,
+                    lowerBoxRenderY + 7,
+                    AbilityArchetypeWidget.SIZE,
+                    AbilityArchetypeWidget.SIZE,
+                    Component.literal(archetypeInfo.name()),
+                    abilityTreeInfo,
+                    archetypeInfo);
+
+            archetypeWidgets.add(archetypeWidget);
+
+            archetypeCount++;
         }
     }
 
@@ -485,6 +576,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     public void setTreeParseState(TreeParseState treeParseState) {
         this.treeParseState = treeParseState;
+        parsedAbilityTree = Models.AbilityTree.getCurrentAbilityTree().orElse(null);
+        reconstructWidgets();
     }
 
     public enum TreeParseState {

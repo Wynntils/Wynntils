@@ -5,9 +5,9 @@
 package com.wynntils.models.abilitytree.type;
 
 import com.wynntils.core.text.StyledText;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -25,10 +25,14 @@ public record AbilityTreeSkillNode(
         AbilityTreeLocation location,
         List<Integer> connections) {
     public List<Component> getDescription(AbilityTreeNodeState state, ParsedAbilityTree abilityTree) {
-        List<Component> description = description().stream()
+        List<Component> description = new ArrayList<>();
+
+        description.add(Component.literal(formattedName));
+
+        description.addAll(description().stream()
                 .map(StyledText::fromString)
                 .map(StyledText::getComponent)
-                .collect(Collectors.toList());
+                .toList());
 
         description.add(Component.empty());
 

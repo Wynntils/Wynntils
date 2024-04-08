@@ -60,7 +60,7 @@ public class AbilityTreeModel extends Model {
         this.currentAbilityTree = currentAbilityTree;
 
         if (McUtils.mc().screen instanceof CustomAbilityTreeScreen customAbilityTreeScreen) {
-            customAbilityTreeScreen.updateAbilityTree();
+            customAbilityTreeScreen.setTreeParseState(CustomAbilityTreeScreen.TreeParseState.PARSED);
         }
     }
 
