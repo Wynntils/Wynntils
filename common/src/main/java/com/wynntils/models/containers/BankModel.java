@@ -77,6 +77,8 @@ public class BankModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onScreenInit(ScreenInitEvent e) {
+        storageContainerType = null;
+
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer personalStorageContainer)) {
             return;

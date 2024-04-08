@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.type.WynncraftContainer;
 import com.wynntils.models.containers.type.wynncontainers.AbilityTreeContainer;
@@ -73,6 +74,11 @@ public final class ContainerModel extends Model {
                 break;
             }
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScreenClose(ScreenClosedEvent e) {
+        currentContainer = null;
     }
 
     // TODO: Port the remaining isXScreen to WynncraftContainers
