@@ -28,7 +28,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class NumericValueWidget extends GeneralValueWidget {
+public abstract class NumericValueWidget<T> extends GeneralValueWidget {
     protected final Button greaterThanButton;
     protected final Button lessThanButton;
     protected final TextInputBoxWidget singleInput;
@@ -240,7 +240,7 @@ public abstract class NumericValueWidget extends GeneralValueWidget {
         // Single value
         if (!singleInput.getTextBoxInput().isEmpty()) {
             String value = singleInput.getTextBoxInput();
-            Optional<StatFilter> singleStatFilterOpt = getSingleStatFilter(value);
+            Optional<StatFilter<T>> singleStatFilterOpt = getSingleStatFilter(value);
 
             singleStatFilterOpt.ifPresent(
                     singleStatFilter -> filters.add(new StatProviderAndFilterPair(itemStatProvider, singleStatFilter)));
@@ -251,7 +251,7 @@ public abstract class NumericValueWidget extends GeneralValueWidget {
                 && !rangedMaxInput.getTextBoxInput().isEmpty()) {
             String min = rangedMinInput.getTextBoxInput();
             String max = rangedMaxInput.getTextBoxInput();
-            Optional<StatFilter> rangedStatFilterOpt = getRangedStatFilter(min, max);
+            Optional<StatFilter<T>> rangedStatFilterOpt = getRangedStatFilter(min, max);
 
             rangedStatFilterOpt.ifPresent(
                     rangedStatFilter -> filters.add(new StatProviderAndFilterPair(itemStatProvider, rangedStatFilter)));
@@ -260,7 +260,7 @@ public abstract class NumericValueWidget extends GeneralValueWidget {
         // Greater than value
         if (!greaterThanInput.getTextBoxInput().isEmpty()) {
             String value = greaterThanInput.getTextBoxInput();
-            Optional<StatFilter> greaterThanStatFilterOpt = getGreaterThanStatFilter(value, greaterThanEqual);
+            Optional<StatFilter<T>> greaterThanStatFilterOpt = getGreaterThanStatFilter(value, greaterThanEqual);
 
             greaterThanStatFilterOpt.ifPresent(greaterThanStatFilter ->
                     filters.add(new StatProviderAndFilterPair(itemStatProvider, greaterThanStatFilter)));
@@ -269,7 +269,7 @@ public abstract class NumericValueWidget extends GeneralValueWidget {
         // Less than value
         if (!lessThanInput.getTextBoxInput().isEmpty()) {
             String value = lessThanInput.getTextBoxInput();
-            Optional<StatFilter> lessThanStatFilterOpt = getLessThanStatFilter(value, lessThanEqual);
+            Optional<StatFilter<T>> lessThanStatFilterOpt = getLessThanStatFilter(value, lessThanEqual);
 
             lessThanStatFilterOpt.ifPresent(lessThanStatFilter ->
                     filters.add(new StatProviderAndFilterPair(itemStatProvider, lessThanStatFilter)));
@@ -278,15 +278,15 @@ public abstract class NumericValueWidget extends GeneralValueWidget {
         return filters;
     }
 
-    protected abstract StatFilter getAnyStatFilter();
+    protected abstract StatFilter<T> getAnyStatFilter();
 
-    protected abstract Optional<StatFilter> getSingleStatFilter(String value);
+    protected abstract Optional<StatFilter<T>> getSingleStatFilter(String value);
 
-    protected abstract Optional<StatFilter> getRangedStatFilter(String min, String max);
+    protected abstract Optional<StatFilter<T>> getRangedStatFilter(String min, String max);
 
-    protected abstract Optional<StatFilter> getGreaterThanStatFilter(String value, boolean equal);
+    protected abstract Optional<StatFilter<T>> getGreaterThanStatFilter(String value, boolean equal);
 
-    protected abstract Optional<StatFilter> getLessThanStatFilter(String value, boolean equal);
+    protected abstract Optional<StatFilter<T>> getLessThanStatFilter(String value, boolean equal);
 
     private void updateEqualityButtons() {
         greaterThanButton.setMessage(Component.literal(greaterThanEqual ? ">=" : ">"));

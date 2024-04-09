@@ -13,7 +13,7 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import java.util.List;
 import java.util.Optional;
 
-public class IntegerValueWidget extends NumericValueWidget {
+public class IntegerValueWidget extends NumericValueWidget<Integer> {
     public IntegerValueWidget(
             List<StatProviderAndFilterPair> filters,
             ItemStatProvider<?> itemStatProvider,
@@ -22,33 +22,33 @@ public class IntegerValueWidget extends NumericValueWidget {
     }
 
     @Override
-    protected StatFilter getAnyStatFilter() {
+    protected StatFilter<Integer> getAnyStatFilter() {
         return new AnyStatFilters.AnyIntegerStatFilter.AnyIntegerStatFilterFactory().create();
     }
 
     @Override
-    protected Optional<StatFilter> getSingleStatFilter(String value) {
+    protected Optional<StatFilter<Integer>> getSingleStatFilter(String value) {
         return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
                 .create(value)
                 .map(f -> f);
     }
 
     @Override
-    protected Optional<StatFilter> getRangedStatFilter(String min, String max) {
+    protected Optional<StatFilter<Integer>> getRangedStatFilter(String min, String max) {
         return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
                 .create(min + "-" + max)
                 .map(f -> f);
     }
 
     @Override
-    protected Optional<StatFilter> getGreaterThanStatFilter(String value, boolean equal) {
+    protected Optional<StatFilter<Integer>> getGreaterThanStatFilter(String value, boolean equal) {
         return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
                 .create((equal ? ">=" : ">") + value)
                 .map(f -> f);
     }
 
     @Override
-    protected Optional<StatFilter> getLessThanStatFilter(String value, boolean equal) {
+    protected Optional<StatFilter<Integer>> getLessThanStatFilter(String value, boolean equal) {
         return new RangedStatFilters.RangedIntegerStatFilter.RangedIntegerStatFilterFactory()
                 .create((equal ? "<=" : "<") + value)
                 .map(f -> f);

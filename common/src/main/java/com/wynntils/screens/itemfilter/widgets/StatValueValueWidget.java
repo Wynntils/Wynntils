@@ -12,12 +12,13 @@ import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.services.itemfilter.type.StatValue;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class StatValueValueWidget extends NumericValueWidget {
+public class StatValueValueWidget extends NumericValueWidget<StatValue> {
     private WynntilsCheckbox singlePercentageCheckbox;
     private WynntilsCheckbox rangedPercentageCheckbox;
     private WynntilsCheckbox greaterThanPercentageCheckbox;
@@ -141,12 +142,12 @@ public class StatValueValueWidget extends NumericValueWidget {
     }
 
     @Override
-    protected StatFilter getAnyStatFilter() {
+    protected StatFilter<StatValue> getAnyStatFilter() {
         return new AnyStatFilters.AnyStatValueStatFilter();
     }
 
     @Override
-    protected Optional<StatFilter> getSingleStatFilter(String value) {
+    protected Optional<StatFilter<StatValue>> getSingleStatFilter(String value) {
         if (singlePercentageCheckbox.selected) {
             return new PercentageStatFilter.PercentageStatFilterFactory()
                     .create(value + "%")
@@ -159,7 +160,7 @@ public class StatValueValueWidget extends NumericValueWidget {
     }
 
     @Override
-    protected Optional<StatFilter> getRangedStatFilter(String min, String max) {
+    protected Optional<StatFilter<StatValue>> getRangedStatFilter(String min, String max) {
         if (rangedPercentageCheckbox.selected) {
             return new PercentageStatFilter.PercentageStatFilterFactory()
                     .create(min + "-" + max + "%")
@@ -172,7 +173,7 @@ public class StatValueValueWidget extends NumericValueWidget {
     }
 
     @Override
-    protected Optional<StatFilter> getGreaterThanStatFilter(String value, boolean equal) {
+    protected Optional<StatFilter<StatValue>> getGreaterThanStatFilter(String value, boolean equal) {
         if (greaterThanPercentageCheckbox.selected) {
             return new PercentageStatFilter.PercentageStatFilterFactory()
                     .create((equal ? ">=" : ">") + value + "%")
@@ -185,7 +186,7 @@ public class StatValueValueWidget extends NumericValueWidget {
     }
 
     @Override
-    protected Optional<StatFilter> getLessThanStatFilter(String value, boolean equal) {
+    protected Optional<StatFilter<StatValue>> getLessThanStatFilter(String value, boolean equal) {
         if (lessThanPercentageCheckbox.selected) {
             return new PercentageStatFilter.PercentageStatFilterFactory()
                     .create((equal ? "<=" : "<") + value + "%")
