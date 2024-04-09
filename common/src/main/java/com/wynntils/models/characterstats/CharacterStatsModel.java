@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -23,6 +23,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -75,6 +76,29 @@ public final class CharacterStatsModel extends Model {
 
     public void hideCoordinates(boolean shouldHide) {
         coordinatesSegment.setHidden(shouldHide);
+    }
+
+    public double getHeight() {
+        // iteratively find the first non-air block below the player
+        double endY = (int) Math.ceil(McUtils.player().position().y) - 1;
+        while (McUtils.mc()
+                .level
+                .getBlockState(new BlockPos(
+                        McUtils.player().blockPosition().getX(),
+                        (int) endY,
+                        McUtils.player().blockPosition().getZ()))
+                .isAir()) {
+            endY--;
+        }
+
+        // add the floor height to the result to account for half-blocks
+        endY += McUtils.mc()
+                .level
+                .getBlockFloorHeight(new BlockPos(
+                        McUtils.player().blockPosition().getX(),
+                        (int) endY,
+                        McUtils.player().blockPosition().getZ()));
+        return McUtils.player().position().y - endY;
     }
 
     /**
