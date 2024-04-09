@@ -46,8 +46,7 @@ public class CombatFunctions {
     public static class HeightFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            // number of blocks of air below the player
-
+            // iteratively find the first non-air block below the player
             double endY = (int) Math.ceil(McUtils.player().position().y) - 1;
             while (McUtils.mc()
                     .level
@@ -58,6 +57,8 @@ public class CombatFunctions {
                     .isAir()) {
                 endY--;
             }
+
+            // add the floor height to the result to account for half-blocks
             endY += McUtils.mc()
                     .level
                     .getBlockFloorHeight(new BlockPos(
