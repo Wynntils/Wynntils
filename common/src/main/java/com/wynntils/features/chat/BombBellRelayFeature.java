@@ -18,11 +18,11 @@ import org.lwjgl.glfw.GLFW;
 public class BombBellRelayFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind relayPartyKeybind =
-            new KeyBind("Relay Bomb to Party", GLFW.GLFW_KEY_UNKNOWN, true, this::relayToParty);
+            new KeyBind("Relay Bomb to Party", GLFW.GLFW_KEY_UNKNOWN, true, () -> relayTo("p"));
 
     @RegisterKeyBind
     private final KeyBind relayGuildKeybind =
-            new KeyBind("Relay Bomb to Guild", GLFW.GLFW_KEY_UNKNOWN, true, this::relayToGuild);
+            new KeyBind("Relay Bomb to Guild", GLFW.GLFW_KEY_UNKNOWN, true, () -> relayTo("g"));
 
     private String getAndFormatLastBomb() {
         BombInfo lastBomb = Models.Bomb.getLastBomb();
@@ -33,7 +33,7 @@ public class BombBellRelayFeature extends Feature {
                 + lastBomb.getRemainingString() + " remaining";
     }
 
-    private void relayToParty() {
+    private void relayTo(String prefix) {
         String lastBomb = getAndFormatLastBomb();
         if (lastBomb == null) {
             Managers.Notification.queueMessage(Component.translatable("feature.wynntils.bombBellRelay.noKnownBombs")
@@ -41,17 +41,6 @@ public class BombBellRelayFeature extends Feature {
             return;
         }
 
-        Handlers.Command.queueCommand("p " + lastBomb);
-    }
-
-    private void relayToGuild() {
-        String lastBomb = getAndFormatLastBomb();
-        if (lastBomb == null) {
-            Managers.Notification.queueMessage(Component.translatable("feature.wynntils.bombBellRelay.noKnownBombs")
-                    .withStyle(ChatFormatting.DARK_RED));
-            return;
-        }
-
-        Handlers.Command.queueCommand("g " + lastBomb);
+        Handlers.Command.queueCommand(prefix + " " + lastBomb);
     }
 }
