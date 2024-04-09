@@ -255,7 +255,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(summaryParts.get(i).key().get()),
                             dividedWidth * 35,
-                            dividedHeight * (11 + i * 2),
+                            dividedHeight * (10 + i * 2),
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -284,7 +284,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             dividedHeight * 23,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
         // endregion
