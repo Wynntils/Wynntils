@@ -255,7 +255,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             poseStack,
                             StyledText.fromString(summaryParts.get(i).key().get()),
                             dividedWidth * 35,
-                            dividedHeight * (11 + i * 2),
+                            dividedHeight * (10 + i * 2),
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -284,7 +284,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                             dividedHeight * 23,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
         // endregion
@@ -487,6 +487,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
     public void doScroll(double scrollAmount) {
         int scrollableWidgets = Math.max(0, loadoutWidgets.size() - MAX_LOADOUTS_PER_PAGE);
+        if (scrollableWidgets == 0) return;
         float scrollableRatio = (float) scrollableWidgets / loadoutWidgets.size();
         float maxScrollOffset = (4 * (loadoutWidgets.size() - 1) - 43) / scrollableRatio;
         scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollAmount / 50));
