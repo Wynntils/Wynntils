@@ -28,7 +28,7 @@ public class BombBellRelayFeature extends Feature {
         BombInfo lastBomb = Models.Bomb.getLastBomb();
         if (lastBomb == null) return null;
 
-        // Intentionally not localized as the majority of the playerbase speaks English
+        // This is not localized as it is sent to other players
         return lastBomb.bomb().getName() + " bomb thrown on " + lastBomb.server() + " with "
                 + lastBomb.getRemainingString() + " remaining";
     }
