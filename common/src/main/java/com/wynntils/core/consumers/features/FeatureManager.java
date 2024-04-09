@@ -15,6 +15,7 @@ import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MythicFoundFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
+import com.wynntils.features.chat.BombBellRelayFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
 import com.wynntils.features.chat.ChatItemFeature;
 import com.wynntils.features.chat.ChatMentionFeature;
@@ -192,6 +193,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new LootrunFeature());
 
         // region chat
+        registerFeature(new BombBellRelayFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new ChatMentionFeature());

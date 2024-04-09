@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -13,6 +13,7 @@ import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +107,10 @@ public final class BombModel extends Model {
         return BOMBS.asSet();
     }
 
+    public BombInfo getLastBomb() {
+        return BOMBS.getLastBomb();
+    }
+
     private static final class ActiveBombContainer {
         private final Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
 
@@ -128,6 +133,15 @@ public final class BombModel extends Model {
 
         public void remove(BombInfo removed) {
             bombs.remove(new BombKey(removed.server(), removed.bomb()));
+        }
+
+        /**
+         * @return Newest bomb bell received, or null if none exist
+         */
+        public BombInfo getLastBomb() {
+            return bombs.values().stream()
+                    .max(Comparator.comparingLong(BombInfo::startTime))
+                    .orElse(null);
         }
     }
 
