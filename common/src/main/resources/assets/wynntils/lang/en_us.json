@@ -1540,6 +1540,8 @@
   "function.wynntils.healthMax.name": "Health[max]",
   "function.wynntils.healthPct.description": "Your current health as percentage of max",
   "function.wynntils.healthPct.name": "Health[%%]",
+  "function.wynntils.height.description": "The number of air blocks below you",
+  "function.wynntils.height.name": "Height",
   "function.wynntils.heldItemCurrentDurability.description": "Current durability of the item in your hand",
   "function.wynntils.heldItemCurrentDurability.name": "Held Item Current Durability",
   "function.wynntils.heldItemMaxDurability.description": "Max durability of the item in your hand",

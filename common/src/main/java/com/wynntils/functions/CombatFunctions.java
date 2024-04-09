@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -7,7 +7,9 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+import net.minecraft.core.BlockPos;
 
 public class CombatFunctions {
     public static class AreaDamagePerSecondFunction extends Function<Integer> {
@@ -38,6 +40,36 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("adavg");
+        }
+    }
+
+    public static class HeightFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            // number of blocks of air below the player
+
+            double endY = (int) Math.ceil(McUtils.player().position().y) - 1;
+            while (McUtils.mc()
+                    .level
+                    .getBlockState(new BlockPos(
+                            McUtils.player().blockPosition().getX(),
+                            (int) endY,
+                            McUtils.player().blockPosition().getZ()))
+                    .isAir()) {
+                endY--;
+            }
+            endY += McUtils.mc()
+                    .level
+                    .getBlockFloorHeight(new BlockPos(
+                            McUtils.player().blockPosition().getX(),
+                            (int) endY,
+                            McUtils.player().blockPosition().getZ()));
+            return McUtils.player().position().y - endY;
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("agl", "altitude");
         }
     }
 }
