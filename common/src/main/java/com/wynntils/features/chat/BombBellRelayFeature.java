@@ -41,6 +41,6 @@ public class BombBellRelayFeature extends Feature {
             return;
         }
 
-        Handlers.Command.queueCommand(prefix + " " + lastBomb);
+        Handlers.Command.sendCommandImmediately(prefix + " " + lastBomb);
     }
 }
