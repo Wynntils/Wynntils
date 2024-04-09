@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -11,10 +11,17 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
 
 public class AnyStatFilters {
+    private static final String ANY_FILTER_INPUT = "*";
+
     public static final class AnyStringStatFilter extends StatFilter<String> {
         @Override
         public boolean matches(String value) {
             return true;
+        }
+
+        @Override
+        public String asString() {
+            return ANY_FILTER_INPUT;
         }
 
         public static final class AnyStringStatFilterFactory extends AbstractAnyStatFilterFactory<AnyStringStatFilter> {
@@ -29,6 +36,11 @@ public class AnyStatFilters {
         @Override
         public boolean matches(Integer value) {
             return true;
+        }
+
+        @Override
+        public String asString() {
+            return ANY_FILTER_INPUT;
         }
 
         public static final class AnyIntegerStatFilterFactory
@@ -46,6 +58,11 @@ public class AnyStatFilters {
             return true;
         }
 
+        @Override
+        public String asString() {
+            return ANY_FILTER_INPUT;
+        }
+
         public static final class AnyCappedValueStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyCappedValueStatFilter> {
             @Override
@@ -61,6 +78,11 @@ public class AnyStatFilters {
             return true;
         }
 
+        @Override
+        public String asString() {
+            return ANY_FILTER_INPUT;
+        }
+
         public static final class AnyStatValueStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyStatValueStatFilter> {
             @Override
@@ -71,8 +93,6 @@ public class AnyStatFilters {
     }
 
     private abstract static class AbstractAnyStatFilterFactory<T> extends StatFilterFactory<T> {
-        private static final String ANY_FILTER_INPUT = "*";
-
         @Override
         public final Optional<T> create(String inputString) {
             if (inputString.equals(ANY_FILTER_INPUT)) {

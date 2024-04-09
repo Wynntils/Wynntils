@@ -6,6 +6,7 @@ package com.wynntils.services.itemfilter.type;
 
 import com.wynntils.models.items.WynnItem;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,10 @@ public class StatProviderFilterMap {
         // We find a match if all the stat providers have at least one filter that matches the item.
         return map.entrySet().stream()
                 .allMatch(entry -> entry.getValue().stream().anyMatch(pair -> pair.matches(wynnItem)));
+    }
+
+    public Map<ItemStatProvider<?>, List<StatProviderAndFilterPair>> entries() {
+        return Collections.unmodifiableMap(map);
     }
 
     public List<StatProviderAndFilterPair> values() {

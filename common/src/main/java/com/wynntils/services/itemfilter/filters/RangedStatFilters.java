@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -28,6 +28,23 @@ public final class RangedStatFilters {
             return value >= min && value <= max;
         }
 
+        @Override
+        public String asString() {
+            if (min == max) {
+                return Integer.toString(min);
+            }
+
+            if (min == Integer.MIN_VALUE) {
+                return "<=" + max;
+            }
+
+            if (max == Integer.MAX_VALUE) {
+                return ">=" + min;
+            }
+
+            return min + "-" + max;
+        }
+
         public static class RangedIntegerStatFilterFactory extends RangedStatFilterFactory<RangedIntegerStatFilter> {
             @Override
             protected RangedIntegerStatFilter getRangedStatFilter(int min, int max) {
@@ -48,6 +65,23 @@ public final class RangedStatFilters {
         @Override
         protected boolean matches(CappedValue value) {
             return value.current() >= min && value.current() <= max;
+        }
+
+        @Override
+        public String asString() {
+            if (min == max) {
+                return Integer.toString(min);
+            }
+
+            if (min == Integer.MIN_VALUE) {
+                return "<=" + max;
+            }
+
+            if (max == Integer.MAX_VALUE) {
+                return ">=" + min;
+            }
+
+            return min + "-" + max;
         }
 
         public static class RangedCappedValueStatFilterFactory
@@ -80,6 +114,23 @@ public final class RangedStatFilters {
                     max,
                     value.possibleValues().range().low(),
                     value.possibleValues().range().high());
+        }
+
+        @Override
+        public String asString() {
+            if (min == max) {
+                return Integer.toString(min);
+            }
+
+            if (min == Integer.MIN_VALUE) {
+                return "<=" + max;
+            }
+
+            if (max == Integer.MAX_VALUE) {
+                return ">=" + min;
+            }
+
+            return min + "-" + max;
         }
 
         public static class RangedStatValueStatFilterFactory

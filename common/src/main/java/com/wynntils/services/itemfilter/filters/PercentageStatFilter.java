@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -31,6 +31,23 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
         float percentage = StatCalculator.getPercentage(value.statActualValue(), value.possibleValues());
 
         return percentage >= min && percentage <= max;
+    }
+
+    @Override
+    public String asString() {
+        if (min == max) {
+            return min + "%";
+        }
+
+        if (min == Integer.MIN_VALUE) {
+            return "<=" + max + "%";
+        }
+
+        if (max == Integer.MAX_VALUE) {
+            return ">=" + min + "%";
+        }
+
+        return min + "-" + max + "%";
     }
 
     public static class PercentageStatFilterFactory extends StatFilterFactory<PercentageStatFilter> {

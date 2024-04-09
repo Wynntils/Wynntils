@@ -1044,7 +1044,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         createSortQuery();
 
         ignoreUpdate = true;
-        itemNameInput.setTextBoxInput(String.join("", searchQuery.plainTextTokens()));
+        itemNameInput.setTextBoxInput(String.join(" ", searchQuery.plainTextTokens()));
     }
 
     private void createFilterQuery() {
