@@ -1286,6 +1286,8 @@
   "function.wynntils.arrowShieldCount.name": "Arrow Shield Count",
   "function.wynntils.auraTimer.description": "The time left before aura strikes",
   "function.wynntils.auraTimer.name": "Aura Timer",
+  "function.wynntils.blocksAboveGround.description": "How many blocks you are above the ground (the number of air blocks below you)",
+  "function.wynntils.blocksAboveGround.name": "Above Ground",
   "function.wynntils.bps.description": "Player speed in blocks per second",
   "function.wynntils.bps.name": "Player Speed",
   "function.wynntils.bpsXz.description": "Player speed in blocks per second excluding vertical movement",
