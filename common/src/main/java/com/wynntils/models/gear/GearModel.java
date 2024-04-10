@@ -66,6 +66,7 @@ public final class GearModel extends Model {
                         && gearBoxItem
                                 .getLevelRange()
                                 .inRange(gear.requirements().level())
+                        // Do not include items that cannot drop normally (eg. merchant only, event, etc)
                         && gear.metaInfo().dropRestrictions() != GearDropRestrictions.NEVER)
                 .toList();
         possibilitiesCache.put(gearBoxItem, possibleGear);
