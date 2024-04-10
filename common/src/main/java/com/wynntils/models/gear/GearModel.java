@@ -7,6 +7,7 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -64,7 +65,8 @@ public final class GearModel extends Model {
                         && canBeGearBox(gear)
                         && gearBoxItem
                                 .getLevelRange()
-                                .inRange(gear.requirements().level()))
+                                .inRange(gear.requirements().level())
+                        && gear.metaInfo().dropRestrictions() != GearDropRestrictions.NEVER)
                 .toList();
         possibilitiesCache.put(gearBoxItem, possibleGear);
 
