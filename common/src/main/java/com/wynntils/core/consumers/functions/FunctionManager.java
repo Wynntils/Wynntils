@@ -441,9 +441,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.StatusEffectActiveFunction());
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
 
-        registerFunction(new CombatFunctions.AboveGroundFunction());
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
+        registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());

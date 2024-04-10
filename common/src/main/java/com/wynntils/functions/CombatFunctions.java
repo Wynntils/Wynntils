@@ -41,7 +41,7 @@ public class CombatFunctions {
         }
     }
 
-    public static class AboveGroundFunction extends Function<Double> {
+    public static class BlocksAboveGroundFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Models.CharacterStats.getBlocksAboveGround();
