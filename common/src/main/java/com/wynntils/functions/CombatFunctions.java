@@ -41,15 +41,15 @@ public class CombatFunctions {
         }
     }
 
-    public static class HeightFunction extends Function<Double> {
+    public static class AboveGroundFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHeight();
+            return Models.CharacterStats.getBlocksAboveGround();
         }
 
         @Override
         protected List<String> getAliases() {
-            return List.of("agl", "altitude");
+            return List.of("agl", "above_ground_level");
         }
     }
 }

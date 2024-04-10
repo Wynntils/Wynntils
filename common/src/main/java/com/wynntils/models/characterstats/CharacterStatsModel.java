@@ -78,7 +78,7 @@ public final class CharacterStatsModel extends Model {
         coordinatesSegment.setHidden(shouldHide);
     }
 
-    public double getHeight() {
+    public double getBlocksAboveGround() {
         // iteratively find the first non-air block below the player
         double endY = (int) Math.ceil(McUtils.player().position().y) - 1;
         while (McUtils.mc()
