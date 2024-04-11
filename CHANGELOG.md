@@ -1,3 +1,10 @@
+## [1.1.11](https://github.com/Wynntils/Artemis/compare/v1.1.10...v1.1.11) (2024-04-11)
+
+
+### Bug Fixes
+
+* Make blocks_above_ground function handle an edge-case hang ([#2401](https://github.com/Wynntils/Artemis/issues/2401)) ([66aab05](https://github.com/Wynntils/Artemis/commit/66aab05d68b2d2d2b7ca931323e0ae2e1e9d5a3b))
+
 ## [1.1.10](https://github.com/Wynntils/Artemis/compare/v1.1.9...v1.1.10) (2024-04-11)
 
 
@@ -19,6 +26,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2391](https://github.com/Wynntils/Artemis/issues/2391)) ([6b50c88](https://github.com/Wynntils/Artemis/commit/6b50c88893ad192a1d5a88121ce87a891178a952))
 * [auto-generated] Update urls.json [ci skip] ([#2393](https://github.com/Wynntils/Artemis/issues/2393)) ([1dd9336](https://github.com/Wynntils/Artemis/commit/1dd9336851658b5f9f9c370bf19e00292113f965))
+* **release:** v1.1.10 [skip ci] ([d549799](https://github.com/Wynntils/Artemis/commit/d5497998b3beba4193757e92f9cff8f4f0ca82bf))
 
 ## [1.1.9](https://github.com/Wynntils/Artemis/compare/v1.1.8...v1.1.9) (2024-04-06)
 
@@ -58,16 +66,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#2381](https://github.com/Wynntils/Artemis/issues/2381)) ([dea63cd](https://github.com/Wynntils/Artemis/commit/dea63cd048744915581270e2c849b1da43fcfdb8))
 * [auto-generated] Update urls.json [ci skip] ([#2384](https://github.com/Wynntils/Artemis/issues/2384)) ([2ff2468](https://github.com/Wynntils/Artemis/commit/2ff24685c3e2053861ba4d0ea1e007ea81541689))
 * **release:** v1.1.7 [skip ci] ([545ea38](https://github.com/Wynntils/Artemis/commit/545ea38ae96f8c61f492a3a95a71e290f4302777))
-
-## [1.1.6](https://github.com/Wynntils/Artemis/compare/v1.1.5...v1.1.6) (2024-03-25)
-
-
-### Bug Fixes
-
-* Fix NpcDialogueFeature legacy mode not displaying text when translations are off ([#2382](https://github.com/Wynntils/Artemis/issues/2382)) ([5c0d6e3](https://github.com/Wynntils/Artemis/commit/5c0d6e305e6f3959295e3b2699d231a2146eef03))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.6 [skip ci] ([79b35e8](https://github.com/Wynntils/Artemis/commit/79b35e8f469d75f1dea5e9cc76da2ecf73067317))
 
