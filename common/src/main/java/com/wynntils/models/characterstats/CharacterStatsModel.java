@@ -89,6 +89,10 @@ public final class CharacterStatsModel extends Model {
                         McUtils.player().blockPosition().getZ()))
                 .isAir()) {
             endY--;
+
+            if (endY < -64) {
+                break;
+            }
         }
 
         // add the floor height to the result to account for half-blocks
