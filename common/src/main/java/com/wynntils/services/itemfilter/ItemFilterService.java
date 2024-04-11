@@ -358,7 +358,8 @@ public class ItemFilterService extends Service {
         String sortInfoString =
                 sortInfos.isEmpty() ? "" : SORT_KEY + ":" + String.join(LIST_SEPARATOR, sortInfoStrings);
 
-        return String.join(" ", plainTextTokens) + " " + filterString + " " + sortInfoString;
+        String plainTextString = String.join(" ", plainTextTokens);
+        return (plainTextString + " " + filterString + " " + sortInfoString).trim();
     }
 
     /**
