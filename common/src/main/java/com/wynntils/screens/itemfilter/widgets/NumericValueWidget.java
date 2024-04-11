@@ -83,7 +83,8 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
                 25,
                 (checkbox, button) -> {
                     if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        singleInput.setTextBoxInput(checkbox.isActive() ? "*" : "");
+                        singleInput.setTextBoxInput(
+                                checkbox.isActive() ? getAnyStatFilter().asString() : "");
                         updateQuery();
                     }
                 },
@@ -186,6 +187,7 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
             if (statFilter instanceof AnyStatFilters.AbstractAnyStatFilter<?>) {
                 // All checkbox
                 allCheckbox.selected = true;
+                singleInput.setTextBoxInput(getAnyStatFilter().asString());
 
                 // Although we already know that this provider will always match, we still want to populate the inputs
                 continue;
