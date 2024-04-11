@@ -1,9 +1,36 @@
+## [1.1.10](https://github.com/Wynntils/Artemis/compare/v1.1.9...v1.1.10) (2024-04-11)
+
+
+### New Features
+
+* Above ground function ([#2398](https://github.com/Wynntils/Artemis/issues/2398)) ([e835269](https://github.com/Wynntils/Artemis/commit/e8352696c1a182e53a80ef4b6f2c6a7e0d5b8991))
+* Add OR support for item filters [ci skip] ([#2392](https://github.com/Wynntils/Artemis/issues/2392)) ([47bb948](https://github.com/Wynntils/Artemis/commit/47bb948e03d4f7bb65a58ec78567bebdc8b652b5))
+* Bomb Bell Relay Keybinds [skip ci] ([#2397](https://github.com/Wynntils/Artemis/issues/2397)) ([8fa3e3a](https://github.com/Wynntils/Artemis/commit/8fa3e3af5431bd0f18bcd053a1524aa021818408))
+
+
+### Bug Fixes
+
+* Don't render lootrun path chests on air or barriers [skip ci] ([#2400](https://github.com/Wynntils/Artemis/issues/2400)) ([404ea39](https://github.com/Wynntils/Artemis/commit/404ea39f53674b0db0f078afdc18e768430acf3c))
+* Horse keybind does not stop on vanish message [skip ci] ([#2395](https://github.com/Wynntils/Artemis/issues/2395)) ([f94aa06](https://github.com/Wynntils/Artemis/commit/f94aa064c94f9ff117c9c43bea4093c60a917d73))
+* Loadouts misalignment and disappearing when deleting [skip ci] ([#2396](https://github.com/Wynntils/Artemis/issues/2396)) ([cb7adc8](https://github.com/Wynntils/Artemis/commit/cb7adc848e7ebafd4bb51166fa25c86492cf98a1))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2391](https://github.com/Wynntils/Artemis/issues/2391)) ([6b50c88](https://github.com/Wynntils/Artemis/commit/6b50c88893ad192a1d5a88121ce87a891178a952))
+* [auto-generated] Update urls.json [ci skip] ([#2393](https://github.com/Wynntils/Artemis/issues/2393)) ([1dd9336](https://github.com/Wynntils/Artemis/commit/1dd9336851658b5f9f9c370bf19e00292113f965))
+
 ## [1.1.9](https://github.com/Wynntils/Artemis/compare/v1.1.8...v1.1.9) (2024-04-06)
 
 
 ### Bug Fixes
 
 * Parse set data to fix skill point model saving skill requirements incorrectly ([#2343](https://github.com/Wynntils/Artemis/issues/2343)) ([ed39445](https://github.com/Wynntils/Artemis/commit/ed39445db1db2bc54d685049a643bd35a14a22b4))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.9 [skip ci] ([9136594](https://github.com/Wynntils/Artemis/commit/9136594c431bb34ad18b04a078b80003d23e7ba4))
 
 ## [1.1.8](https://github.com/Wynntils/Artemis/compare/v1.1.7...v1.1.8) (2024-04-04)
 
@@ -43,28 +70,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.6 [skip ci] ([79b35e8](https://github.com/Wynntils/Artemis/commit/79b35e8f469d75f1dea5e9cc76da2ecf73067317))
-
-## [1.1.5](https://github.com/Wynntils/Artemis/compare/v1.1.4...v1.1.5) (2024-03-22)
-
-
-### New Features
-
-* Migrate to wiki.gg [skip ci] ([#2378](https://github.com/Wynntils/Artemis/issues/2378)) ([ad6bc3b](https://github.com/Wynntils/Artemis/commit/ad6bc3b9f3719d15075f70b3bb3394058fd9e949))
-* Skill point loadouts smooth scrolling ([#2348](https://github.com/Wynntils/Artemis/issues/2348)) ([634ef94](https://github.com/Wynntils/Artemis/commit/634ef944be73643ae4b5be7b1012468eee7bca14))
-
-
-### Bug Fixes
-
-* fix item data failing to load if ItemObtainType is unknown ([#2380](https://github.com/Wynntils/Artemis/issues/2380)) ([328354c](https://github.com/Wynntils/Artemis/commit/328354c178fd5673c96757ac0c0902159229a705))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2379](https://github.com/Wynntils/Artemis/issues/2379)) ([bc5da6f](https://github.com/Wynntils/Artemis/commit/bc5da6f1f6a30c81be3a104a716e573d10a9d67e))
-* **release:** v1.1.5 [skip ci] ([43a6ccc](https://github.com/Wynntils/Artemis/commit/43a6ccc15ed2fa0adab49c4ab37e8089df29b688))
-
-
-### Code Refactoring
-
-* streamline event handling in StyledText by using StyledText[#from](https://github.com/Wynntils/Artemis/issues/from)Parts almost everywhere [skip ci] ([#2377](https://github.com/Wynntils/Artemis/issues/2377)) ([989243d](https://github.com/Wynntils/Artemis/commit/989243da325b6fb5b2dc301267db5539f63c8065))
 
