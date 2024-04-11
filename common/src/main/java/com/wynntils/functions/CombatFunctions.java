@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -38,6 +38,18 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("adavg");
+        }
+    }
+
+    public static class BlocksAboveGroundFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.CharacterStats.getBlocksAboveGround();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("agl", "above_ground_level");
         }
     }
 }

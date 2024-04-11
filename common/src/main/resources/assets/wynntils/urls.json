@@ -85,8 +85,8 @@
   },
   {
     "id": "dataStaticAbilities",
-    "md5": "69b6987c0bc3b76224718b4bad7d48a5",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/abilities.json"
+    "md5": "986503d68ae7433ab125366f382cb914",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/abilities.json"
   },
   {
     "id": "dataStaticCaveInfo",
@@ -185,7 +185,7 @@
   },
   {
     "id": "dataStaticServices",
-    "md5": "20c6bad6dddac9fdf32b582764e266ef",
+    "md5": "183e76811f0b598649753c870e158444",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
   },
   {
