@@ -202,15 +202,31 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
 
                 // Greater than (or equals) value if min is not the minimum value, and max is the maximum value
                 if (rangedStatFilter.getMin() != Integer.MIN_VALUE && rangedStatFilter.getMax() == Integer.MAX_VALUE) {
-                    greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin()));
-                    greaterThanEqual = rangedStatFilter.isEqualsInString();
+                    if (rangedStatFilter.isEqualsInString()) {
+                        greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin()));
+                        greaterThanEqual = true;
+
+                    } else {
+                        // When equality is not enabled, we need to subtract 1 from the value,
+                        // as getMin() returns the lowest included value
+                        greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin() - 1));
+                        greaterThanEqual = false;
+                    }
                     continue;
                 }
 
                 // Less than (or equals) value if max is not the maximum value, and min is the minimum value
                 if (rangedStatFilter.getMax() != Integer.MAX_VALUE && rangedStatFilter.getMin() == Integer.MIN_VALUE) {
-                    lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax()));
-                    lessThanEqual = rangedStatFilter.isEqualsInString();
+                    if (rangedStatFilter.isEqualsInString()) {
+                        lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax()));
+                        lessThanEqual = true;
+
+                    } else {
+                        // When equality is not enabled, we need to add 1 to the value,
+                        // as getMax() returns the highest included value
+                        lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax() + 1));
+                        lessThanEqual = false;
+                    }
                     continue;
                 }
 
