@@ -63,7 +63,7 @@ public class StringValueWidget extends GeneralValueWidget {
                 25,
                 (checkbox, button) -> {
                     if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        this.entryInput.setTextBoxInput(checkbox.isActive() ? "*" : "");
+                        this.entryInput.setTextBoxInput(checkbox.selected() ? "*" : "");
                         updateQuery();
                     }
                 },

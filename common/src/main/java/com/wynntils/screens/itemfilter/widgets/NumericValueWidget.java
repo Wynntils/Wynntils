@@ -84,7 +84,7 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
                 (checkbox, button) -> {
                     if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                         singleInput.setTextBoxInput(
-                                checkbox.isActive() ? getAnyStatFilter().asString() : "");
+                                checkbox.selected() ? getAnyStatFilter().asString() : "");
                         updateQuery();
                     }
                 },
