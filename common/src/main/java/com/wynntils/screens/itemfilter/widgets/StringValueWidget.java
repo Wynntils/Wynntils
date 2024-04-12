@@ -126,15 +126,15 @@ public class StringValueWidget extends GeneralValueWidget {
         //        (for example, only one string filter (strict or not)
         //        while the ItemFilterService supports multiple filters of the same type)
 
-        if (allCheckbox.selected) {
+        if (allCheckbox.selected()) {
             return List.of(new StatProviderAndFilterPair(itemStatProvider, new AnyStatFilters.AnyStringStatFilter()));
         }
 
         String inputString =
-                strictCheckbox.selected ? "\"" + entryInput.getTextBoxInput() + "\"" : entryInput.getTextBoxInput();
+                strictCheckbox.selected() ? "\"" + entryInput.getTextBoxInput() + "\"" : entryInput.getTextBoxInput();
 
         Optional<StringStatFilter> stringStatFilterOpt =
-                new StringStatFilter.StringStatFilterFactory().create(entryInput.getTextBoxInput());
+                new StringStatFilter.StringStatFilterFactory().create(inputString);
 
         if (stringStatFilterOpt.isEmpty()) return List.of();
 
