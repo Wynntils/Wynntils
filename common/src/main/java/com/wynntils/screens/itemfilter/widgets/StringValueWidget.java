@@ -101,6 +101,8 @@ public class StringValueWidget extends GeneralValueWidget {
         strictCheckbox.selected = false;
         allCheckbox.selected = false;
 
+        if (filters.isEmpty()) return;
+
         StatProviderAndFilterPair filterPair = filters.get(0);
         StatFilter statFilter = filterPair.statFilter();
 
