@@ -46,11 +46,9 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.GuiGraphics;
@@ -85,9 +83,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
     // Collections
     private List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
     private StatProviderFilterMap filters = new StatProviderFilterMap();
-    private Set<ItemStatProvider<?>> usedProviders = new HashSet<>();
-    private List<Pair<String, String>> presets;
     private List<SortInfo> sorts = new ArrayList<>();
+    private List<Pair<String, String>> presets;
     private List<SortWidget> sortButtons = new ArrayList<>();
     private List<WynntilsButton> presetButtons = new ArrayList<>();
     private List<WynntilsButton> providerButtons = new ArrayList<>();
@@ -649,12 +646,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
         // Add the new filters
         filters.putAll(provider, filterPairs);
 
-        if (filterPairs.isEmpty()) {
-            usedProviders.remove(provider);
-        } else {
-            usedProviders.add(provider);
-        }
-
         updateQueryString();
     }
 
@@ -664,7 +655,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 .collect(Collectors.toList());
 
         sorts.add(newSort);
-        usedProviders.add(newSort.provider());
 
         updateQueryString();
         updateSortWidgets();
@@ -673,7 +663,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     public void removeSort(ItemStatProvider<?> provider) {
         // Remove all instances of the provider in the sort list
         sorts.removeIf(sort -> sort.provider() == provider);
-        usedProviders.removeIf(p -> p == provider);
 
         updateQueryString();
         updateSortWidgets();
@@ -736,7 +725,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     public boolean isProviderInUse(ItemStatProvider<?> provider) {
-        return usedProviders.contains(provider);
+        return filters.containsKey(provider) || sorts.stream().anyMatch(sort -> sort.provider() == provider);
     }
 
     private void updateProviderWidgets() {
@@ -753,11 +742,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         // Filter the providers if not using the ALL type
         if (filterType == FilterType.USED) {
             itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
-                    .filter(provider -> usedProviders.contains(provider))
+                    .filter(this::isProviderInUse)
                     .toList();
         } else if (filterType == FilterType.UNUSED) {
             itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
-                    .filter(provider -> !usedProviders.contains(provider))
+                    .filter(provider -> !isProviderInUse(provider))
                     .toList();
         }
 
@@ -1003,22 +992,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     private void parseFilters(String input) {
-        List<Pair<ItemStatProvider<?>, String>> newFilters = new ArrayList<>();
-        Set<ItemStatProvider<?>> newUsedProviders = new HashSet<>();
-
         ItemSearchQuery searchQuery = Services.ItemFilter.createSearchQuery(input, true);
 
         filters = searchQuery.filters();
-        for (StatProviderAndFilterPair value : searchQuery.filters().values()) {
-            ItemStatProvider itemStatProvider = value.statProvider();
-            newUsedProviders.add(itemStatProvider);
-        }
-
         sorts = searchQuery.sorts();
-        newUsedProviders.addAll(
-                searchQuery.sorts().stream().map(SortInfo::provider).toList());
-
-        usedProviders = newUsedProviders;
 
         String plainTextString = String.join(" ", searchQuery.plainTextTokens());
 

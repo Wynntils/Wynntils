@@ -53,4 +53,8 @@ public class StatProviderFilterMap {
     public void removeIf(Function<StatProviderAndFilterPair, Boolean> filter) {
         map.values().forEach(list -> list.removeIf(filter::apply));
     }
+
+    public boolean containsKey(ItemStatProvider<?> provider) {
+        return map.containsKey(provider);
+    }
 }
