@@ -889,8 +889,14 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             return newWidget;
         } else {
-            return new ListValueWidget(
+            ListValueWidget listValueWidget = new ListValueWidget(
                     selectedProvider, this, selectedProvider.getValidInputs(), filterPairs, translationX, translationY);
+
+            // Update the query string
+            // This could be moved to the constructor but it's better to keep it here for consistency
+            listValueWidget.onFiltersChanged(filterPairs);
+
+            return listValueWidget;
         }
     }
 
