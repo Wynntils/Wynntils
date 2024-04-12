@@ -230,6 +230,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.apply")))
                 .build();
+        applyButton.active = false;
 
         this.addRenderableWidget(applyButton);
         // endregion
@@ -939,6 +940,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 updatePresetWidgets();
             } else { // Select the preset
                 itemSearchWidget.setTextBoxInput(presets.get(presetIndex).b());
+                updateStateFromItemSearchWidget();
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (KeyboardUtils.isShiftDown()) { // Shift the preset down
@@ -1041,6 +1043,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (Objects.equals(itemSearchWidget.getTextBoxInput(), queryString)) return;
 
         itemSearchWidget.setTextBoxInput(queryString);
+        // The active button does not need to be active,
+        // as the changes are only made when the user interacted
+        // with other widgets than the search widget itself
+        applyButton.active = false;
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
