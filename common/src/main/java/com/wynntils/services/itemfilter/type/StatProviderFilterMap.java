@@ -6,7 +6,6 @@ package com.wynntils.services.itemfilter.type;
 
 import com.wynntils.models.items.WynnItem;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class StatProviderFilterMap {
     }
 
     public Map<ItemStatProvider<?>, List<StatProviderAndFilterPair>> entries() {
-        return Collections.unmodifiableMap(map);
+        return Map.copyOf(map);
     }
 
     public List<StatProviderAndFilterPair> values() {
@@ -47,7 +46,7 @@ public class StatProviderFilterMap {
     }
 
     public List<StatProviderAndFilterPair> get(ItemStatProvider<?> selectedProvider) {
-        return Collections.unmodifiableList(map.getOrDefault(selectedProvider, List.of()));
+        return List.copyOf(map.getOrDefault(selectedProvider, List.of()));
     }
 
     public void removeIf(Function<StatProviderAndFilterPair, Boolean> filter) {
