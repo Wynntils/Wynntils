@@ -101,9 +101,13 @@ public class StatValueValueWidget extends NumericValueWidget<StatValue> {
         // FIXME: This ValueWidget can only handle a single filter of a type at a time for the current provider
         //        (for example, only one single value filter, one ranged value filter, etc.,
         //        while the ItemFilterService supports multiple filters of the same type)
-        // FIXME: Additionally, this widget
+        // FIXME: Additionally, this widget needs to handle "percentage" filters differently than "value" filters,
+        //        (for example, you should be able to add both a "percentage" filter and a "value" filter for the type,
+        //        like ranged)
         super.onFiltersChanged(filters);
 
+        singlePercentageCheckbox.selected = false;
+        rangedPercentageCheckbox.selected = false;
         greaterThanPercentageCheckbox.selected = false;
         lessThanPercentageCheckbox.selected = false;
 
@@ -114,27 +118,29 @@ public class StatValueValueWidget extends NumericValueWidget<StatValue> {
             if (filter instanceof PercentageStatFilter percentageFilter) {
                 // Single value, if min and max are equal
                 if (percentageFilter.getMin() == percentageFilter.getMax()) {
+                    singlePercentageCheckbox.selected = true;
                     singleInput.setTextBoxInput(String.valueOf(percentageFilter.getMin()));
                     continue;
                 }
 
                 // Greater than (or equals) value if min is not the minimum value, and max is the maximum value
                 if (percentageFilter.getMin() != Float.MIN_VALUE && percentageFilter.getMax() == Float.MAX_VALUE) {
-                    greaterThanInput.setTextBoxInput(String.valueOf(percentageFilter.getMin()));
                     greaterThanEqual = percentageFilter.isEqualsInString();
                     greaterThanPercentageCheckbox.selected = true;
+                    greaterThanInput.setTextBoxInput(String.valueOf(percentageFilter.getMin()));
                     continue;
                 }
 
                 // Less than (or equals) value if max is not the maximum value, and min is the minimum value
                 if (percentageFilter.getMax() != Float.MAX_VALUE && percentageFilter.getMin() == Float.MIN_VALUE) {
-                    lessThanInput.setTextBoxInput(String.valueOf(percentageFilter.getMax()));
                     lessThanEqual = percentageFilter.isEqualsInString();
                     lessThanPercentageCheckbox.selected = true;
+                    lessThanInput.setTextBoxInput(String.valueOf(percentageFilter.getMax()));
                     continue;
                 }
 
                 // Ranged value, any other case
+                rangedPercentageCheckbox.selected = true;
                 rangedMinInput.setTextBoxInput(String.valueOf(percentageFilter.getMin()));
                 rangedMaxInput.setTextBoxInput(String.valueOf(percentageFilter.getMax()));
             }

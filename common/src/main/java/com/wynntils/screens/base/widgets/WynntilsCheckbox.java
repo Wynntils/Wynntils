@@ -136,10 +136,13 @@ public class WynntilsCheckbox extends Checkbox {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
+        // Do the click before the onClick so that the checkbox is updated before the consumer is called.
+        boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
+
         if (onClick != null) {
             onClick.accept(this, button);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return superClicked;
     }
 }
