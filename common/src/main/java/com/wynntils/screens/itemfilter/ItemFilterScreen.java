@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -94,6 +95,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private final SearchWidget previousSearchWidget;
     private final SearchWidget providerSearchWidget;
     private final TextInputBoxWidget itemNameInput;
+    private Button applyButton;
     private Button savePresetButton;
     private FilterOptionsButton allButton;
     private FilterOptionsButton usedButton;
@@ -153,17 +155,15 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.itemSearchWidget = new ItemSearchWidget(
                 0,
                 -22,
-                Texture.ITEM_FILTER_BACKGROUND.width() - 20,
+                Texture.ITEM_FILTER_BACKGROUND.width() - 40,
                 20,
                 supportsSorting,
-                (q -> {
-                    parseFilters(q.queryString());
-                    updateProviderWidgets();
+                (query) -> {
+                    if (applyButton == null) return;
 
-                    if (sortMode) {
-                        updateSortWidgets();
-                    }
-                }),
+                    applyButton.active = true;
+                    // Changes are only made when the user presses the apply button
+                },
                 this);
 
         this.itemSearchWidget.setTextBoxInput(previousSearchWidget.getTextBoxInput());
@@ -189,7 +189,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.addRenderableWidget(providerSearchWidget);
 
         helperButton = new ItemSearchHelperWidget(
-                Texture.ITEM_FILTER_BACKGROUND.width() - 37,
+                Texture.ITEM_FILTER_BACKGROUND.width() - 57,
                 -19,
                 (int) (Texture.INFO.width() / 1.7f),
                 (int) (Texture.INFO.height() / 1.7f),
@@ -220,6 +220,17 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 .build();
 
         this.addRenderableWidget(returnButton);
+
+        applyButton = new Button.Builder(Component.literal("✔").withStyle(ChatFormatting.GREEN), (button -> {
+                    updateStateFromItemSearchWidget();
+                    this.applyButton.active = false;
+                }))
+                .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 39, -22)
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.apply")))
+                .build();
+
+        this.addRenderableWidget(applyButton);
         // endregion
 
         // region Preset buttons
@@ -778,6 +789,15 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
     }
 
+    private void updateStateFromItemSearchWidget() {
+        parseFilters();
+        updateProviderWidgets();
+
+        if (sortMode) {
+            updateSortWidgets();
+        }
+    }
+
     private void updatePresetWidgets() {
         for (AbstractWidget widget : presetButtons) {
             this.removeWidget(widget);
@@ -991,8 +1011,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
     }
 
-    private void parseFilters(String input) {
-        ItemSearchQuery searchQuery = Services.ItemFilter.createSearchQuery(input, true);
+    private void parseFilters() {
+        ItemSearchQuery searchQuery = Services.ItemFilter.createSearchQuery(itemSearchWidget.getTextBoxInput(), true);
 
         filters = searchQuery.filters();
         sorts = searchQuery.sorts();
