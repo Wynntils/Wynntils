@@ -16,6 +16,7 @@ import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -65,9 +66,9 @@ public final class ShamanMaskModel extends Model {
     public void onStatusChange(StatusEffectsChangedEvent event) {
         if (currentMaskType != ShamanMaskType.AWAKENED) return;
 
-        List<StatusEffect> awakenedEffects = Models.StatusEffect.getStatusEffects().stream()
+        Optional<StatusEffect> awakenedEffects = Models.StatusEffect.getStatusEffects().stream()
                 .filter(statusEffect -> AWAKENED_STATUS_EFFECT.equals(statusEffect.getName()))
-                .toList();
+                .findFirst();
 
         if (awakenedEffects.isEmpty()) {
             currentMaskType = previousMaskType;
