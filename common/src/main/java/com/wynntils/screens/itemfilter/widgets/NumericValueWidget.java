@@ -255,7 +255,8 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
         //        while the ItemFilterService supports multiple filters of the same type)
 
         // All checkbox
-        if (allCheckbox.selected()) {
+        if (allCheckbox.selected()
+                || singleInput.getTextBoxInput().equals(getAnyStatFilter().asString())) {
             return List.of(new StatProviderAndFilterPair(itemStatProvider, getAnyStatFilter()));
         }
 
