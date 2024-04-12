@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -154,5 +154,18 @@ public final class StringUtils {
 
         return Base64.getDecoder()
                 .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Converts a float to a string, but if the float is an integer, it will return the integer as a string
+     * @param value the float to convert
+     * @return the float as a string
+     */
+    public static String floatToSimpleString(float value) {
+        if (value == (int) value) {
+            return Integer.toString((int) value);
+        } else {
+            return Float.toString(value);
+        }
     }
 }
