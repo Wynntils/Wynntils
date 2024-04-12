@@ -178,8 +178,14 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
         lessThanEqual = false;
         allCheckbox.selected = false;
 
-        // FIXME: As the fixme above states, this ValueWidget can only handle a single filter of a type at a time for
-        // the current provider
+        singleInput.resetTextBoxInput();
+        rangedMinInput.resetTextBoxInput();
+        rangedMaxInput.resetTextBoxInput();
+        greaterThanInput.resetTextBoxInput();
+        lessThanInput.resetTextBoxInput();
+
+        // FIXME: As the fixme above states, this ValueWidget can only handle
+        //        a single filter of a type at a time for the current provider.
         //        This implementation will only use the last filter of each type
         for (StatProviderAndFilterPair filterPair : filters) {
             StatFilter statFilter = filterPair.statFilter();
@@ -203,14 +209,14 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
                 // Greater than (or equals) value if min is not the minimum value, and max is the maximum value
                 if (rangedStatFilter.getMin() != Integer.MIN_VALUE && rangedStatFilter.getMax() == Integer.MAX_VALUE) {
                     if (rangedStatFilter.isEqualsInString()) {
-                        greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin()));
                         greaterThanEqual = true;
+                        greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin()));
 
                     } else {
                         // When equality is not enabled, we need to subtract 1 from the value,
                         // as getMin() returns the lowest included value
-                        greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin() - 1));
                         greaterThanEqual = false;
+                        greaterThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMin() - 1));
                     }
                     continue;
                 }
@@ -218,14 +224,14 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
                 // Less than (or equals) value if max is not the maximum value, and min is the minimum value
                 if (rangedStatFilter.getMax() != Integer.MAX_VALUE && rangedStatFilter.getMin() == Integer.MIN_VALUE) {
                     if (rangedStatFilter.isEqualsInString()) {
-                        lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax()));
                         lessThanEqual = true;
+                        lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax()));
 
                     } else {
                         // When equality is not enabled, we need to add 1 to the value,
                         // as getMax() returns the highest included value
-                        lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax() + 1));
                         lessThanEqual = false;
+                        lessThanInput.setTextBoxInput(String.valueOf(rangedStatFilter.getMax() + 1));
                     }
                     continue;
                 }
