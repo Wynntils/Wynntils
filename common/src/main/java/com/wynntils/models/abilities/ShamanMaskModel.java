@@ -6,11 +6,14 @@ package com.wynntils.models.abilities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
+import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -18,8 +21,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ShamanMaskModel extends Model {
     private static final Pattern AWAKENED_PATTERN = Pattern.compile("^§[0-9a-f]§lAwakened$");
+    private static final StyledText AWAKENED_STATUS_EFFECT = StyledText.fromString("§7Awakened");
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
+    private ShamanMaskType previousMaskType = ShamanMaskType.NONE;
 
     public ShamanMaskModel() {
         super(List.of());
@@ -30,6 +35,7 @@ public final class ShamanMaskModel extends Model {
         StyledText title = StyledText.fromComponent(event.getComponent());
 
         if (title.matches(AWAKENED_PATTERN)) {
+            previousMaskType = currentMaskType;
             currentMaskType = ShamanMaskType.AWAKENED;
             ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
             WynntilsMod.postEvent(maskEvent);
@@ -52,6 +58,19 @@ public final class ShamanMaskModel extends Model {
             if (maskEvent.isCanceled()) {
                 event.setCanceled(true);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onStatusChange(StatusEffectsChangedEvent event) {
+        if (currentMaskType != ShamanMaskType.AWAKENED) return;
+
+        List<StatusEffect> awakenedEffects = Models.StatusEffect.getStatusEffects().stream()
+                .filter(statusEffect -> AWAKENED_STATUS_EFFECT.equals(statusEffect.getName()))
+                .toList();
+
+        if (awakenedEffects.isEmpty()) {
+            currentMaskType = previousMaskType;
         }
     }
 
