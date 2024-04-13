@@ -43,6 +43,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     Boolean.class, BooleanValueWidget::new,
                     Integer.class, IntegerValueWidget::new,
                     StatValue.class, StatValueValueWidget::new,
-                    CappedValueWidget.class, CappedValueWidget::new);
+                    CappedValue.class, CappedValueWidget::new);
 
     // Constants
     private static final int MAX_PRESETS = 4;
