@@ -10,6 +10,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.SortDirection;
+import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -18,7 +20,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ public class ProviderButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
 
-    private final boolean inUse;
+    private final ItemFilterScreen filterScreen;
     private final float translationX;
     private final float translationY;
     private final ItemStatProvider<?> provider;
@@ -40,16 +41,15 @@ public class ProviderButton extends WynntilsButton {
             int y,
             int width,
             int height,
+            ItemFilterScreen filterScreen,
             ItemStatProvider<?> provider,
-            boolean inUse,
             float translationX,
             float translationY) {
         super(x, y, width, height, Component.literal(provider.getTranslatedName()));
-
-        this.provider = provider;
-        this.inUse = inUse;
+        this.filterScreen = filterScreen;
         this.translationX = translationX;
         this.translationY = translationY;
+        this.provider = provider;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ProviderButton extends WynntilsButton {
         if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
             if (itemFilterScreen.inSortMode()) {
                 if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                    itemFilterScreen.addSort(new Pair<>(provider, provider.getName()));
+                    itemFilterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
                 } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                     itemFilterScreen.removeSort(provider);
                 }
@@ -99,7 +99,7 @@ public class ProviderButton extends WynntilsButton {
                 if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                     itemFilterScreen.setSelectedProvider(provider);
                 } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                    itemFilterScreen.removeFilter(provider);
+                    itemFilterScreen.setFiltersForProvider(provider, null);
                 }
             }
         }
@@ -117,7 +117,7 @@ public class ProviderButton extends WynntilsButton {
             }
         }
 
-        return inUse ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER;
+        return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER;
     }
 
     private CustomColor getBorderColor() {
@@ -127,6 +127,6 @@ public class ProviderButton extends WynntilsButton {
             }
         }
 
-        return inUse ? ENABLED_COLOR : DISABLED_COLOR;
+        return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR : DISABLED_COLOR;
     }
 }

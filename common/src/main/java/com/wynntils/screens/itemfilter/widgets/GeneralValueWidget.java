@@ -5,6 +5,8 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,14 +16,16 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public abstract class GeneralValueWidget extends AbstractWidget {
-    protected final ItemFilterScreen filterScreen;
+    protected final ItemStatProvider<?> itemStatProvider;
+    private final ItemFilterScreen filterScreen;
 
     protected List<AbstractWidget> widgets = new ArrayList<>();
 
-    protected GeneralValueWidget(Component title, ItemFilterScreen filterScreen) {
+    protected GeneralValueWidget(Component title, ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
         super(150, 30, 195, 145, title);
 
         this.filterScreen = filterScreen;
+        this.itemStatProvider = itemStatProvider;
     }
 
     @Override
@@ -58,14 +62,14 @@ public abstract class GeneralValueWidget extends AbstractWidget {
         return false;
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        return false;
+    public abstract void onFiltersChanged(List<StatProviderAndFilterPair> filters);
+
+    protected abstract List<StatProviderAndFilterPair> getFilterPairs();
+
+    protected final void updateQuery() {
+        List<StatProviderAndFilterPair> filterPairs = getFilterPairs();
+        filterScreen.setFiltersForProvider(itemStatProvider, filterPairs);
     }
-
-    public abstract void updateValues(List<String> query);
-
-    protected abstract void updateQuery();
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

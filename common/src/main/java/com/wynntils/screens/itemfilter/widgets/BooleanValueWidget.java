@@ -6,8 +6,10 @@ package com.wynntils.screens.itemfilter.widgets;
 
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
+import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.ConfirmedBoolean;
-import com.wynntils.utils.type.Pair;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -19,8 +21,8 @@ public class BooleanValueWidget extends GeneralValueWidget {
 
     private ConfirmedBoolean state = ConfirmedBoolean.UNCONFIRMED;
 
-    public BooleanValueWidget(String query, ItemFilterScreen filterScreen) {
-        super(Component.literal("Boolean Value Widget"), filterScreen);
+    public BooleanValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
+        super(Component.literal("Boolean Value Widget"), itemStatProvider, filterScreen);
 
         this.trueCheckbox = new WynntilsCheckbox(
                 getX() + 10,
@@ -52,10 +54,6 @@ public class BooleanValueWidget extends GeneralValueWidget {
 
         widgets.add(this.trueCheckbox);
         widgets.add(this.falseCheckbox);
-
-        updateValues(List.of(query));
-
-        updateQuery();
     }
 
     @Override
@@ -79,37 +77,39 @@ public class BooleanValueWidget extends GeneralValueWidget {
     }
 
     @Override
-    public void updateValues(List<String> query) {
-        // Update the checkboxes from the searchWidget query for the current provider.
-        if (query.get(0).equalsIgnoreCase("true")) {
+    public void onFiltersChanged(List<StatProviderAndFilterPair> filters) {
+        // Default values
+        state = ConfirmedBoolean.UNCONFIRMED;
+        trueCheckbox.selected = false;
+        falseCheckbox.selected = false;
+
+        // If there are no filters, return
+        if (filters.isEmpty()) return;
+
+        // Otherwise, get the first filter (and ignore the rest)
+        StatProviderAndFilterPair filter = filters.get(0);
+
+        // Update the state according to the filter
+        if (filter.statFilter().matches(List.of(true))) {
             state = ConfirmedBoolean.TRUE;
             trueCheckbox.selected = true;
             falseCheckbox.selected = false;
-        } else if (query.get(0).equalsIgnoreCase("false")) {
+        } else if (filter.statFilter().matches(List.of(false))) {
             state = ConfirmedBoolean.FALSE;
             trueCheckbox.selected = false;
             falseCheckbox.selected = true;
-        } else {
-            state = ConfirmedBoolean.UNCONFIRMED;
-            trueCheckbox.selected = false;
-            falseCheckbox.selected = false;
         }
     }
 
     @Override
-    protected void updateQuery() {
-        filterScreen.removeFilter(filterScreen.getSelectedProvider());
-
-        String query;
-
-        if (state == ConfirmedBoolean.TRUE) {
-            query = "true";
-        } else if (state == ConfirmedBoolean.FALSE) {
-            query = "false";
-        } else {
-            return;
+    protected List<StatProviderAndFilterPair> getFilterPairs() {
+        if (state == ConfirmedBoolean.UNCONFIRMED) {
+            return List.of();
         }
 
-        filterScreen.addFilter(new Pair<>(filterScreen.getSelectedProvider(), query));
+        BooleanStatFilter statFilter =
+                new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == ConfirmedBoolean.TRUE);
+
+        return List.of(new StatProviderAndFilterPair(itemStatProvider, statFilter));
     }
 }

@@ -36,6 +36,7 @@ import com.wynntils.services.itemfilter.statproviders.QualityTierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.RarityStatProvider;
 import com.wynntils.services.itemfilter.statproviders.SkillReqStatProvider;
 import com.wynntils.services.itemfilter.statproviders.SkillStatProvider;
+import com.wynntils.services.itemfilter.statproviders.TargetStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
@@ -43,8 +44,10 @@ import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
+import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.services.itemfilter.type.StatProviderFilterMap;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.CappedValue;
@@ -54,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -88,7 +92,7 @@ public class ItemFilterService extends Service {
 
     public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
         StatProviderFilterMap filters = new StatProviderFilterMap();
-        List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
+        List<SortInfo> sorts = new ArrayList<>();
 
         List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges = new ArrayList<>();
 
@@ -121,8 +125,7 @@ public class ItemFilterService extends Service {
                         continue;
                     }
 
-                    ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
-                            getStatSortOrder(inputString);
+                    ErrorOr<List<SortInfo>> statSortListOrError = getStatSortOrder(inputString);
 
                     if (statSortListOrError.hasError()) {
                         colorRanges.add(Pair.of(
@@ -163,7 +166,7 @@ public class ItemFilterService extends Service {
                             ChatFormatting.YELLOW,
                             Pair.of(tokenStartIndex + keyString.length() + 1, tokenStartIndex + token.length())));
 
-                    sortStatProviders.addAll(statSortListOrError.getValue());
+                    sorts.addAll(statSortListOrError.getValue());
 
                     continue;
                 }
@@ -238,7 +241,7 @@ public class ItemFilterService extends Service {
             }
         }
 
-        return new ItemSearchQuery(queryString, filters, sortStatProviders, colorRanges, errors, plainTextTokens);
+        return new ItemSearchQuery(queryString, filters, sorts, colorRanges, errors, plainTextTokens);
     }
 
     /**
@@ -248,7 +251,7 @@ public class ItemFilterService extends Service {
      * If the item is not a WynnItem, this method always returns false.
      *
      * @param searchQuery the search query
-     * @param itemStack the item to check
+     * @param itemStack   the item to check
      * @return true if the item matches the search query, false otherwise
      */
     public boolean matches(ItemSearchQuery searchQuery, ItemStack itemStack) {
@@ -266,7 +269,8 @@ public class ItemFilterService extends Service {
 
     /**
      * Filters and sorts the given list of items according to the given search query.
-     * @param searchQuery the search query
+     *
+     * @param searchQuery  the search query
      * @param originalList the list of items to filter and sort
      * @return the filtered and sorted list of items
      */
@@ -279,8 +283,8 @@ public class ItemFilterService extends Service {
 
             WynnItem wynnItem = wynnItemOpt.get();
 
-            for (Pair<SortDirection, ItemStatProvider<?>> pair : searchQuery.sortStatProviders()) {
-                ItemStatProvider<?> statProvider = pair.value();
+            for (SortInfo sortInfo : searchQuery.sorts()) {
+                ItemStatProvider<?> statProvider = sortInfo.provider();
                 if (statProvider.getValue(wynnItem).isEmpty()) {
                     return false;
                 }
@@ -300,11 +304,11 @@ public class ItemFilterService extends Service {
             WynnItem wynnItem1 = wynnItem1Opt.get();
             WynnItem wynnItem2 = wynnItem2Opt.get();
 
-            for (Pair<SortDirection, ItemStatProvider<?>> providerPair : searchQuery.sortStatProviders()) {
-                int compare = providerPair.value().compare(wynnItem1, wynnItem2);
+            for (SortInfo sortInfo : searchQuery.sorts()) {
+                int compare = sortInfo.provider().compare(wynnItem1, wynnItem2);
 
                 if (compare != 0) {
-                    return switch (providerPair.key()) {
+                    return switch (sortInfo.direction()) {
                         case ASCENDING -> -compare;
                         case DESCENDING -> compare;
                     };
@@ -318,7 +322,50 @@ public class ItemFilterService extends Service {
     }
 
     /**
+     * Returns a string representation of the filters and sort order in the given filter map.
+     * The resulting string is not guranateed to be the same as the input string to create the filter map,
+     * but a string generated from this method, passed to {@link #createSearchQuery(String, boolean)} then passed back,
+     * is guaranteed to be the same as the previous resulting string.
+     *
+     * @param filterMap       the filter map
+     * @param sortInfos       the sort infos, in order
+     * @param plainTextTokens the plain text tokens,
+     * @return a string representation of the filters and sort order in the given filter map.
+     */
+    public String getItemFilterString(
+            StatProviderFilterMap filterMap, List<SortInfo> sortInfos, List<String> plainTextTokens) {
+        List<String> filterStrings = new ArrayList<>();
+        for (Map.Entry<ItemStatProvider<?>, List<StatProviderAndFilterPair>> entry :
+                filterMap.entries().entrySet()) {
+            ItemStatProvider<?> itemStatProvider = entry.getKey();
+            List<StatFilter> filters = entry.getValue().stream()
+                    .map(StatProviderAndFilterPair::statFilter)
+                    .toList();
+
+            String filterString = itemStatProvider.getName() + ":"
+                    + String.join(
+                            LIST_SEPARATOR,
+                            filters.stream().map(StatFilter::asString).toList());
+            filterStrings.add(filterString);
+        }
+        String filterString = String.join(" ", filterStrings);
+
+        List<String> sortInfoStrings = sortInfos.stream()
+                .map(sortInfo -> {
+                    String directionString = sortInfo.direction() == SortDirection.DESCENDING ? "" : SORT_REVERSE_KEY;
+                    return directionString + sortInfo.provider().getName();
+                })
+                .toList();
+        String sortInfoString =
+                sortInfos.isEmpty() ? "" : SORT_KEY + ":" + String.join(LIST_SEPARATOR, sortInfoStrings);
+
+        String plainTextString = String.join(" ", plainTextTokens);
+        return (plainTextString + " " + filterString + " " + sortInfoString).trim();
+    }
+
+    /**
      * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
+     *
      * @param name an alias of the stat provider
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
@@ -338,7 +385,7 @@ public class ItemFilterService extends Service {
     /**
      * Returns a stat filter for the given value, or an error string if the value does not match any stat filters.
      *
-     * @param type
+     * @param type the type of the item stat provider
      * @param value the value to parse
      * @return the stat filter, or an error string if the value does not match any stat filters.
      */
@@ -382,7 +429,7 @@ public class ItemFilterService extends Service {
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
-    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
+    private ErrorOr<List<SortInfo>> getStatSortOrder(String inputString) {
         List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
@@ -407,13 +454,13 @@ public class ItemFilterService extends Service {
             return ErrorOr.error(firstError.get().value().getError());
         }
 
-        List<Pair<SortDirection, ItemStatProvider<?>>> providers = new ArrayList<>();
+        List<SortInfo> sorts = new ArrayList<>();
 
         for (Pair<SortDirection, ErrorOr<ItemStatProvider<?>>> pair : errorsOrProviders) {
-            providers.add(Pair.of(pair.key(), pair.value().getValue()));
+            sorts.add(new SortInfo(pair.key(), pair.value().getValue()));
         }
 
-        return ErrorOr.of(providers);
+        return ErrorOr.of(sorts);
     }
 
     private void registerStatProviders() {
@@ -438,6 +485,7 @@ public class ItemFilterService extends Service {
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
         registerStatProvider(new HealthStatProvider());
+        registerStatProvider(new TargetStatProvider());
 
         // Profession Stats
         registerStatProvider(new ProfessionStatProvider());
