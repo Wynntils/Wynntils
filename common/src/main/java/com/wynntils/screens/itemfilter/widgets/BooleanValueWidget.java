@@ -103,6 +103,10 @@ public class BooleanValueWidget extends GeneralValueWidget {
 
     @Override
     protected List<StatProviderAndFilterPair> getFilterPairs() {
+        if (state == ConfirmedBoolean.UNCONFIRMED) {
+            return List.of();
+        }
+
         BooleanStatFilter statFilter =
                 new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == ConfirmedBoolean.TRUE);
 
