@@ -165,7 +165,7 @@ public final class StringUtils {
         if (value == (int) value) {
             return Integer.toString((int) value);
         } else {
-            return Float.toString(value);
+            return String.format("%.2f", value);
         }
     }
 }
