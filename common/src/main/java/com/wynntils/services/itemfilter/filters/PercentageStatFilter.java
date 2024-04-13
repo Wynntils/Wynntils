@@ -43,16 +43,16 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
             return StringUtils.floatToSimpleString(min) + "%";
         }
 
-        if (min == Integer.MIN_VALUE) {
-            return equalsInString
+        if (min == Float.MIN_VALUE) {
+            return (equalsInString
                     ? "<=" + StringUtils.floatToSimpleString(min)
-                    : "<" + StringUtils.floatToSimpleString(max + 1);
+                    : "<" + StringUtils.floatToSimpleString(max + 1)) + "%";
         }
 
-        if (max == Integer.MAX_VALUE) {
-            return equalsInString
+        if (max == Float.MAX_VALUE) {
+            return (equalsInString
                     ? ">=" + StringUtils.floatToSimpleString(min)
-                    : ">" + StringUtils.floatToSimpleString(min - 1);
+                    : ">" + StringUtils.floatToSimpleString(min - 1)) + "%";
         }
 
         return StringUtils.floatToSimpleString(min) + "-" + StringUtils.floatToSimpleString(max) + "%";
