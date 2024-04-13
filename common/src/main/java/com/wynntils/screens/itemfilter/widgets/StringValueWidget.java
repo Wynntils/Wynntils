@@ -30,10 +30,7 @@ public class StringValueWidget extends GeneralValueWidget {
     private final WynntilsCheckbox allCheckbox;
     private final WynntilsCheckbox strictCheckbox;
 
-    public StringValueWidget(
-            List<StatProviderAndFilterPair> filters,
-            ItemStatProvider<?> itemStatProvider,
-            ItemFilterScreen filterScreen) {
+    public StringValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
         super(Component.literal("String Value Widget"), itemStatProvider, filterScreen);
 
         this.entryInput = new TextInputBoxWidget(getX() + 10, getY() + 60, 150, 20, (s -> updateQuery()), filterScreen);

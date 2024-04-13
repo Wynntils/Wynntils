@@ -9,16 +9,11 @@ import com.wynntils.services.itemfilter.filters.AnyStatFilters;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
-import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
-import java.util.List;
 import java.util.Optional;
 
 public class IntegerValueWidget extends NumericValueWidget<Integer> {
-    public IntegerValueWidget(
-            List<StatProviderAndFilterPair> filters,
-            ItemStatProvider<?> itemStatProvider,
-            ItemFilterScreen filterScreen) {
-        super(filters, itemStatProvider, filterScreen);
+    public IntegerValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
+        super(itemStatProvider, filterScreen);
     }
 
     @Override

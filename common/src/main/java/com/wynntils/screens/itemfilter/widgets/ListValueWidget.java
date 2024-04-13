@@ -36,7 +36,8 @@ public class ListValueWidget extends GeneralValueWidget {
     private final float translationX;
     private final float translationY;
     private final List<String> values;
-    private final List<StatProviderAndFilterPair> filters;
+
+    private List<StatProviderAndFilterPair> filters;
 
     private boolean draggingScroll = false;
     private double currentUnusedScroll = 0;
@@ -48,13 +49,11 @@ public class ListValueWidget extends GeneralValueWidget {
             ItemStatProvider<?> itemStatProvider,
             ItemFilterScreen filterScreen,
             List<String> values,
-            List<StatProviderAndFilterPair> filters,
             float translationX,
             float translationY) {
         super(Component.literal("List Value Widget"), itemStatProvider, filterScreen);
 
         this.values = values;
-        this.filters = filters;
         this.translationX = translationX;
         this.translationY = translationY;
     }
@@ -218,6 +217,8 @@ public class ListValueWidget extends GeneralValueWidget {
 
     @Override
     public void onFiltersChanged(List<StatProviderAndFilterPair> filters) {
+        this.filters = filters;
+
         // Update the list of enabled values based on the ItemSearchWidget
         enabledValues = this.values.stream().filter(this::anyFilterMatches).collect(Collectors.toList());
 

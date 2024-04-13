@@ -21,10 +21,7 @@ public class BooleanValueWidget extends GeneralValueWidget {
 
     private ConfirmedBoolean state = ConfirmedBoolean.UNCONFIRMED;
 
-    public BooleanValueWidget(
-            List<StatProviderAndFilterPair> filters,
-            ItemStatProvider<?> itemStatProvider,
-            ItemFilterScreen filterScreen) {
+    public BooleanValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
         super(Component.literal("Boolean Value Widget"), itemStatProvider, filterScreen);
 
         this.trueCheckbox = new WynntilsCheckbox(

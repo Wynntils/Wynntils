@@ -19,16 +19,13 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class StatValueValueWidget extends NumericValueWidget<StatValue> {
-    private WynntilsCheckbox singlePercentageCheckbox;
-    private WynntilsCheckbox rangedPercentageCheckbox;
-    private WynntilsCheckbox greaterThanPercentageCheckbox;
-    private WynntilsCheckbox lessThanPercentageCheckbox;
+    private final WynntilsCheckbox singlePercentageCheckbox;
+    private final WynntilsCheckbox rangedPercentageCheckbox;
+    private final WynntilsCheckbox greaterThanPercentageCheckbox;
+    private final WynntilsCheckbox lessThanPercentageCheckbox;
 
-    public StatValueValueWidget(
-            List<StatProviderAndFilterPair> filters,
-            ItemStatProvider<?> itemStatProvider,
-            ItemFilterScreen filterScreen) {
-        super(filters, itemStatProvider, filterScreen);
+    public StatValueValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
+        super(itemStatProvider, filterScreen);
 
         singlePercentageCheckbox = new WynntilsCheckbox(
                 getX() + 165,

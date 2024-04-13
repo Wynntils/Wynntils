@@ -9,17 +9,12 @@ import com.wynntils.services.itemfilter.filters.AnyStatFilters;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
-import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.CappedValue;
-import java.util.List;
 import java.util.Optional;
 
 public class CappedValueWidget extends NumericValueWidget<CappedValue> {
-    public CappedValueWidget(
-            List<StatProviderAndFilterPair> filters,
-            ItemStatProvider<?> itemStatProvider,
-            ItemFilterScreen filterScreen) {
-        super(filters, itemStatProvider, filterScreen);
+    public CappedValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
+        super(itemStatProvider, filterScreen);
     }
 
     @Override

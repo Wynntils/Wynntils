@@ -41,11 +41,8 @@ public abstract class NumericValueWidget<T> extends GeneralValueWidget {
     protected boolean greaterThanEqual = false;
     protected boolean lessThanEqual = false;
 
-    protected NumericValueWidget(
-            List<StatProviderAndFilterPair> filters,
-            ItemStatProvider<?> itemStatProvider,
-            ItemFilterScreen filterScreen) {
-        super(Component.literal("Integer Value Widget"), itemStatProvider, filterScreen);
+    protected NumericValueWidget(ItemStatProvider<?> itemStatProvider, ItemFilterScreen filterScreen) {
+        super(Component.literal("Numeric Value Widget"), itemStatProvider, filterScreen);
 
         this.singleInput = new TextInputBoxWidget(getX() + 10, getY() + 12, 50, 20, (s -> updateQuery()), filterScreen);
         this.rangedMinInput =

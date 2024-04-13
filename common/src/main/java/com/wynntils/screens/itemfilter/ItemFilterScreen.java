@@ -49,6 +49,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -60,15 +61,11 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.function.TriFunction;
 import org.lwjgl.glfw.GLFW;
 
 public final class ItemFilterScreen extends WynntilsScreen {
     // Value Widget Map
-    private static final Map<
-                    Class<?>,
-                    TriFunction<
-                            List<StatProviderAndFilterPair>, ItemStatProvider<?>, ItemFilterScreen, GeneralValueWidget>>
+    private static final Map<Class<?>, BiFunction<ItemStatProvider<?>, ItemFilterScreen, GeneralValueWidget>>
             VALUE_WIDGET_MAP = Map.of(
                     String.class, StringValueWidget::new,
                     Boolean.class, BooleanValueWidget::new,
@@ -882,7 +879,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         if (selectedProvider.getValidInputs().isEmpty()) {
             GeneralValueWidget newWidget =
-                    VALUE_WIDGET_MAP.get(selectedProvider.getType()).apply(filterPairs, selectedProvider, this);
+                    VALUE_WIDGET_MAP.get(selectedProvider.getType()).apply(selectedProvider, this);
 
             // We need to call this to update the query string,
             // as calling this in the constructor is too early for some of the inherited classes
@@ -891,7 +888,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             return newWidget;
         } else {
             ListValueWidget listValueWidget = new ListValueWidget(
-                    selectedProvider, this, selectedProvider.getValidInputs(), filterPairs, translationX, translationY);
+                    selectedProvider, this, selectedProvider.getValidInputs(), translationX, translationY);
 
             // Update the query string
             // This could be moved to the constructor but it's better to keep it here for consistency
