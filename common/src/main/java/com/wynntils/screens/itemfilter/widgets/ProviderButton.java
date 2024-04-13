@@ -99,7 +99,7 @@ public class ProviderButton extends WynntilsButton {
                 if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                     itemFilterScreen.setSelectedProvider(provider);
                 } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                    itemFilterScreen.setFiltersForProvider(provider, List.of());
+                    itemFilterScreen.setFiltersForProvider(provider, null);
                 }
             }
         }

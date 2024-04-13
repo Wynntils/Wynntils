@@ -51,6 +51,9 @@ public class StatProviderFilterMap {
 
     public void removeIf(Function<StatProviderAndFilterPair, Boolean> filter) {
         map.values().forEach(list -> list.removeIf(filter::apply));
+
+        // Remove any empty lists.
+        map.entrySet().removeIf(entry -> entry.getValue().isEmpty());
     }
 
     public boolean containsKey(ItemStatProvider<?> provider) {

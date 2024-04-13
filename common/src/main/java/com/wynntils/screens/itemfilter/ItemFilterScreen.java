@@ -654,7 +654,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
         filters.removeIf(filter -> filter.statProvider() == provider);
 
         // Add the new filters
-        filters.putAll(provider, filterPairs);
+        if (filterPairs != null) {
+            filters.putAll(provider, filterPairs);
+        }
 
         updateQueryString();
     }
