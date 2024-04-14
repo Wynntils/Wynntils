@@ -4,10 +4,14 @@
  */
 package com.wynntils.models.abilitytree.type;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class contains all relevant info to a specific class' ability tree.
  */
-public record AbilityTreeInfo(List<AbilityTreeSkillNode> nodes, Map<String, ArchetypeInfo> archetypeInfoMap) {}
+
+// The archetypeInfoMap is a LinkedHashMap because the order of the archetypes is important
+@SuppressWarnings("CollectionDeclaredAsConcreteClass")
+public record AbilityTreeInfo(
+        List<AbilityTreeSkillNode> nodes, LinkedHashMap<String, ArchetypeInfo> archetypeInfoMap) {}

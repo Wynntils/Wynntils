@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class UnprocessedAbilityTreeInfo {
 
     private final Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
     private final Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
-    private final Map<String, ArchetypeInfo> archetypeMap = new HashMap<>();
+    private final LinkedHashMap<String, ArchetypeInfo> archetypeMap = new LinkedHashMap<>();
     private boolean processed = false;
 
     private void addNodeFromItem(ItemStack itemStack, int page, int slot) {
