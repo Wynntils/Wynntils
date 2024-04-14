@@ -12,10 +12,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionNode;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.AbilityTreeInstance;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
+import com.wynntils.models.abilitytree.type.AbilityTreeQueryState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ArchetypeInfo;
-import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.screens.abilities.widgets.AbilityArchetypeWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeConnectionWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
@@ -53,7 +54,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private static final int DOWN_ARROW_Y = 117;
 
     private final AbilityTreeInfo abilityTreeInfo;
-    private ParsedAbilityTree parsedAbilityTree;
 
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
     private final Map<AbilityTreeLocation, AbilityNodeConnectionWidget> connectionWidgets = new LinkedHashMap();
@@ -61,12 +61,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private final List<AbilityArchetypeWidget> archetypeWidgets = new ArrayList<>();
 
     private float currentScrollPercentage;
-    private TreeParseState treeParseState = TreeParseState.PARSING;
 
     public CustomAbilityTreeScreen() {
         super(Component.literal("Ability Tree"));
 
-        abilityTreeInfo = Models.AbilityTree.getAbilityTree(Models.Character.getClassType());
+        abilityTreeInfo = Models.AbilityTree.getAbilityTreeInfo().orElse(null);
+
         setCurrentScrollPercentage(0);
     }
 
@@ -121,7 +121,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 backgroundWidth,
                 backgroundHeight);
 
-        if (treeParseState == TreeParseState.PARSED) {
+        if (Models.AbilityTree.getAbilityTreeQueryState().isReady()) {
             renderNodes(guiGraphics, mouseX, mouseY, partialTick);
             renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -131,7 +131,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            StyledText.fromComponent(treeParseState.getText()),
+                            StyledText.fromComponent(Models.AbilityTree.getAbilityTreeQueryState()
+                                    .getComponent()),
                             0,
                             backgroundWidth,
                             0,
@@ -247,7 +248,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (treeParseState != TreeParseState.PARSED) return false;
+        if (!Models.AbilityTree.getAbilityTreeQueryState().isReady()) return false;
 
         // Translate the mouse position to match what is rendered on the screen
         double scaledMouseX = mouseX - (this.width - Texture.ABILITY_TREE_BACKGROUND.width()) / 2;
@@ -266,7 +267,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (treeParseState != TreeParseState.PARSED) return false;
+        if (!Models.AbilityTree.getAbilityTreeQueryState().isReady()) return false;
 
         setCurrentScrollPercentage((float) (currentScrollPercentage - scrollY));
         return true;
@@ -286,9 +287,25 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     // endregion
 
+    // region Events from Model
+
+    public void onAbilityTreeQueryStateChanged(AbilityTreeQueryState newState) {
+        switch (newState) {
+            case PARSED:
+                reconstructWidgets(Models.AbilityTree.getAbilityTreeInstance()
+                        .orElseThrow(() -> new IllegalStateException(
+                                "No ability tree instance found, but the query state got set to PARSED.")));
+                break;
+            default:
+                break;
+        }
+    }
+
+    // endregion
+
     // region Node Widget Building
 
-    private void reconstructWidgets() {
+    private void reconstructWidgets(AbilityTreeInstance abilityTreeInstance) {
         nodeWidgets.clear();
         connectionWidgets.clear();
 
@@ -312,7 +329,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                                 renderLocation.b() - AbilityNodeWidget.SIZE / 2 + currentPageYRenderOffset,
                                 AbilityNodeWidget.SIZE,
                                 AbilityNodeWidget.SIZE,
-                                parsedAbilityTree,
+                                abilityTreeInstance,
                                 node);
                         currentPageNodeWidgets.add(nodeWidget);
                         nodeWidgets.add(nodeWidget);
@@ -425,7 +442,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     AbilityArchetypeWidget.SIZE,
                     Component.literal(archetypeInfo.name()),
                     abilityTreeInfo,
-                    parsedAbilityTree,
+                    abilityTreeInstance,
                     archetypeInfo);
 
             archetypeWidgets.add(archetypeWidget);
@@ -568,32 +585,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             AbilityNodeConnectionWidget.SIZE,
                             AbilityNodeConnectionWidget.SIZE,
                             merged));
-        }
-    }
-
-    // endregion
-
-    // region Parse State Logic
-
-    public void setTreeParseState(TreeParseState treeParseState) {
-        this.treeParseState = treeParseState;
-        parsedAbilityTree = Models.AbilityTree.getCurrentAbilityTree().orElse(null);
-        reconstructWidgets();
-    }
-
-    public enum TreeParseState {
-        PARSING(Component.translatable("screens.wynntils.abilityTree.parsing")),
-        PARSED(null),
-        FAILED(Component.translatable("screens.wynntils.abilityTree.parseFailed"));
-
-        private final Component text;
-
-        TreeParseState(Component text) {
-            this.text = text;
-        }
-
-        public Component getText() {
-            return text;
         }
     }
 

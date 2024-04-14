@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 
 public record ArchetypeInfo(
         String name, String formattedName, List<String> description, ItemInformation itemInformation) {
-    public List<Component> getTooltip(ParsedAbilityTree abilityTree) {
+    public List<Component> getTooltip(AbilityTreeInstance abilityTree) {
         // The tooltip consists of the name and description
         int archetypeCount = (int) abilityTree.nodes().keySet().stream()
                 .filter(node -> node.archetype() != null)

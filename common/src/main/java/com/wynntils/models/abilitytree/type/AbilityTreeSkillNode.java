@@ -24,7 +24,7 @@ public record AbilityTreeSkillNode(
         String archetype,
         AbilityTreeLocation location,
         List<Integer> connections) {
-    public List<Component> getDescription(AbilityTreeNodeState state, ParsedAbilityTree abilityTree) {
+    public List<Component> getDescription(AbilityTreeNodeState state, AbilityTreeInstance abilityTree) {
         List<Component> description = new ArrayList<>();
 
         description.add(Component.literal(formattedName));

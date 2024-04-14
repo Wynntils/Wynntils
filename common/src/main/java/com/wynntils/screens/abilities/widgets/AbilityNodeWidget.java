@@ -4,9 +4,9 @@
  */
 package com.wynntils.screens.abilities.widgets;
 
+import com.wynntils.models.abilitytree.type.AbilityTreeInstance;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
-import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.screens.base.TooltipProvider;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,13 +20,13 @@ import net.minecraft.world.item.ItemStack;
 public class AbilityNodeWidget extends AbstractWidget implements TooltipProvider {
     public static final int SIZE = 20;
 
-    private final ParsedAbilityTree currentAbilityTree;
+    private final AbilityTreeInstance abilityTreeInstance;
     private final AbilityTreeSkillNode node;
 
     public AbilityNodeWidget(
-            int x, int y, int width, int height, ParsedAbilityTree currentAbilityTree, AbilityTreeSkillNode node) {
+            int x, int y, int width, int height, AbilityTreeInstance abilityTreeInstance, AbilityTreeSkillNode node) {
         super(x, y, width, height, Component.literal(node.name()));
-        this.currentAbilityTree = currentAbilityTree;
+        this.abilityTreeInstance = abilityTreeInstance;
         this.node = node;
     }
 
@@ -34,7 +34,7 @@ public class AbilityNodeWidget extends AbstractWidget implements TooltipProvider
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
-        AbilityTreeNodeState nodeState = currentAbilityTree.getNodeState(node);
+        AbilityTreeNodeState nodeState = abilityTreeInstance.getNodeState(node);
         int damage =
                 switch (nodeState) {
                     case UNREACHABLE, REQUIREMENT_NOT_MET -> node.itemInformation()
@@ -60,6 +60,6 @@ public class AbilityNodeWidget extends AbstractWidget implements TooltipProvider
 
     @Override
     public List<Component> getTooltipLines() {
-        return node.getDescription(currentAbilityTree.getNodeState(node), currentAbilityTree);
+        return node.getDescription(abilityTreeInstance.getNodeState(node), abilityTreeInstance);
     }
 }

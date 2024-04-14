@@ -5,13 +5,18 @@
 package com.wynntils.models.abilitytree;
 
 import com.google.common.reflect.TypeToken;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
-import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
+import com.wynntils.models.abilitytree.type.AbilityTreeInstance;
+import com.wynntils.models.abilitytree.type.AbilityTreeQueryState;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -21,14 +26,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class AbilityTreeModel extends Model {
     public static final int ABILITY_TREE_PAGES = 7;
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
+    // Ability Tree Infos sourced from our data (remote)
     private Map<ClassType, AbilityTreeInfo> abilityTreeMap = new EnumMap<>(ClassType.class);
-    private ParsedAbilityTree currentAbilityTree;
+
+    // Parsed Ability Tree Instance and State
+    private AbilityTreeInstance abilityTreeInstance = null;
+    private AbilityTreeQueryState abilityTreeQueryState = null;
 
     public AbilityTreeModel() {
         super(List.of());
@@ -52,23 +62,95 @@ public class AbilityTreeModel extends Model {
         });
     }
 
-    public boolean isLoaded() {
-        return !abilityTreeMap.isEmpty();
+    @SubscribeEvent
+    public void onScreenClosed(ScreenClosedEvent event) {
+        if (!(event.getScreen() instanceof CustomAbilityTreeScreen)) return;
+
+        abilityTreeInstance = null;
+        abilityTreeQueryState = null;
     }
 
-    public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
-        this.currentAbilityTree = currentAbilityTree;
+    public void openCustomAbilityTreeScreen() {
+        if (abilityTreeInstance != null || abilityTreeQueryState != null) {
+            WynntilsMod.warn("Opened an ability tree screen while one was already open. This should not happen.");
+            // try continuing anyway
+        }
 
-        if (McUtils.mc().screen instanceof CustomAbilityTreeScreen customAbilityTreeScreen) {
-            customAbilityTreeScreen.setTreeParseState(CustomAbilityTreeScreen.TreeParseState.PARSED);
+        abilityTreeInstance = null;
+        abilityTreeQueryState = null;
+
+        // Check if the player has a class parsed
+        if (Models.Character.getClassType() == ClassType.NONE) {
+            setAbilityTreeQueryState(AbilityTreeQueryState.ERROR_CLASS_NOT_PARSED);
+        }
+
+        // Check if we have the ability tree info for the class
+        if (Models.Character.hasCharacter() && !abilityTreeMap.containsKey(Models.Character.getClassType())) {
+            setAbilityTreeQueryState(AbilityTreeQueryState.ERROR_NO_CLASS_DATA);
+        }
+
+        // Start parsing the ability tree instance, if there are no errors
+        if (abilityTreeQueryState == null) {
+            setAbilityTreeQueryState(AbilityTreeQueryState.PARSING);
+            ABILITY_TREE_CONTAINER_QUERIES.parseAbilityTree(abilityTreeMap.get(Models.Character.getClassType()));
+        }
+
+        // Open the custom ability tree screen
+        McUtils.mc().setScreen(new CustomAbilityTreeScreen());
+    }
+
+    public void setAbilityTreeInstance(AbilityTreeInfo abilityTreeInfo, AbilityTreeInstance abilityTreeInstance) {
+        if (abilityTreeInfo == null || abilityTreeInstance == null) {
+            // We have an error, set the state to error
+            setAbilityTreeQueryState(AbilityTreeQueryState.ERROR_PARSING_INSTANCE);
+            return;
+        }
+
+        // Validate that the ability tree instance matches the ability tree info
+        if (!validateAbilityTreeInstance(abilityTreeInfo, abilityTreeInstance)) {
+            // We have an error, set the state to error
+            setAbilityTreeQueryState(AbilityTreeQueryState.ERROR_API_INFO_OUTDATED);
+            return;
+        }
+
+        this.abilityTreeInstance = abilityTreeInstance;
+        setAbilityTreeQueryState(AbilityTreeQueryState.PARSED);
+    }
+
+    public Optional<AbilityTreeInfo> getAbilityTreeInfo() {
+        return Optional.ofNullable(abilityTreeMap.get(Models.Character.getClassType()));
+    }
+
+    public Optional<AbilityTreeInstance> getAbilityTreeInstance() {
+        return Optional.ofNullable(abilityTreeInstance);
+    }
+
+    public AbilityTreeQueryState getAbilityTreeQueryState() {
+        return abilityTreeQueryState;
+    }
+
+    private void setAbilityTreeQueryState(AbilityTreeQueryState abilityTreeQueryState) {
+        this.abilityTreeQueryState = abilityTreeQueryState;
+
+        if (McUtils.mc().screen instanceof CustomAbilityTreeScreen abilityTreeScreen) {
+            abilityTreeScreen.onAbilityTreeQueryStateChanged(abilityTreeQueryState);
         }
     }
 
-    public Optional<ParsedAbilityTree> getCurrentAbilityTree() {
-        return Optional.ofNullable(currentAbilityTree);
-    }
+    private boolean validateAbilityTreeInstance(
+            AbilityTreeInfo abilityTreeInfo, AbilityTreeInstance abilityTreeInstance) {
+        // Firstly, check node counts
+        if (abilityTreeInfo.nodes().size() != abilityTreeInstance.nodes().size()) {
+            return false;
+        }
 
-    public AbilityTreeInfo getAbilityTree(ClassType type) {
-        return abilityTreeMap.get(type);
+        // Secondly, check if all nodes can be found in the instance
+        for (AbilityTreeSkillNode node : abilityTreeInfo.nodes()) {
+            if (!abilityTreeInstance.nodes().containsKey(node)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
