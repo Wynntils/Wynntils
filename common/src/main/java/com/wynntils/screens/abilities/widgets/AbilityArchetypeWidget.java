@@ -42,7 +42,7 @@ public class AbilityArchetypeWidget extends AbstractWidget implements TooltipPro
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack =
                 new ItemStack(Item.byId(archetypeInfo.itemInformation().itemId()));
-        itemStack.setDamageValue(archetypeInfo.itemInformation().getUnlockedDamage());
+        itemStack.setDamageValue(archetypeInfo.itemInformation().damage());
 
         guiGraphics.renderItem(itemStack, this.getX(), this.getY());
     }
