@@ -52,9 +52,9 @@ import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
-import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.token.TokenModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.war.GuildWarTowerModel;
 import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
@@ -84,6 +84,7 @@ public final class Models {
     public static final GearModel Gear = new GearModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
+    public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
@@ -112,7 +113,6 @@ public final class Models {
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
-    public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final TradeMarketModel TradeMarket = new TradeMarketModel();
     public static final WarModel War = new WarModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
