@@ -635,6 +635,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
             onClose();
             return true;
+        } else if (keyCode == GLFW.GLFW_KEY_ENTER && applyButton.active) {
+            updateStateFromItemSearchWidget();
+            applyButton.active = false;
         }
 
         return focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers);
