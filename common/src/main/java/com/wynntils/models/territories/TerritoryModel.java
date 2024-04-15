@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -66,6 +66,13 @@ public final class TerritoryModel extends Model {
 
     public TerritoryProfile getTerritoryProfile(String name) {
         return territoryProfileMap.get(name);
+    }
+
+    public TerritoryProfile getTerritoryProfileFromShortName(String shortName) {
+        return territoryProfileMap.values().stream()
+                .filter(profile -> profile.getName().startsWith(shortName))
+                .findFirst()
+                .orElse(null);
     }
 
     public Stream<String> getTerritoryNames() {

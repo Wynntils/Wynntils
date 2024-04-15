@@ -1,28 +1,36 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
 
+import com.wynntils.core.components.Models;
+import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.type.GuildResourceValues;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public final class TerritoryAttackTimer {
+    private final TerritoryProfile territoryProfile;
+
     private final String territory;
     private final int minutes;
     private final int seconds;
 
-    private String defense;
+    private GuildResourceValues defense;
 
     public TerritoryAttackTimer(String territory, int minutes, int seconds) {
+        this.territoryProfile = Models.Territory.getTerritoryProfileFromShortName(territory);
         this.territory = territory;
         this.minutes = minutes;
         this.seconds = seconds;
-        this.defense = "Unknown";
+        this.defense = null;
     }
 
     public String asString() {
-        return ChatFormatting.GRAY + territory + ChatFormatting.YELLOW + " (" + defense + ")" + ChatFormatting.AQUA
-                + " " + timerString();
+        return ChatFormatting.GRAY + territory + ChatFormatting.YELLOW + " ("
+                + (defense == null ? "Unknown" : defense.getAsString()) + ")" + ChatFormatting.AQUA + " "
+                + timerString();
     }
 
     public int asSeconds() {
@@ -37,15 +45,19 @@ public final class TerritoryAttackTimer {
         return territory;
     }
 
-    public String defense() {
+    public GuildResourceValues defense() {
         return defense;
     }
 
     public boolean isDefenseKnown() {
-        return !defense.equals("Unknown");
+        return defense != null;
     }
 
-    public void setDefense(String defense) {
+    public Optional<TerritoryProfile> territoryProfile() {
+        return Optional.ofNullable(territoryProfile);
+    }
+
+    public void setDefense(GuildResourceValues defense) {
         this.defense = defense;
     }
 }
