@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -19,6 +19,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -31,6 +32,9 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
     public final Config<Float> fontScale = new Config<>(1.0f);
+
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.enabledTemplate")
+    public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
 
     private StyledText[] cachedLines = new StyledText[0];
 
@@ -65,7 +69,7 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-        if (!Models.WorldState.onWorld()) return;
+        if (!isRendered()) return;
 
         renderTemplate(poseStack, bufferSource, cachedLines, getTextScale());
     }
@@ -127,4 +131,9 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {}
+
+    public boolean isRendered(){
+        ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
+        return !enabledOrError.hasError() && enabledOrError.getValue();
+    };
 }
