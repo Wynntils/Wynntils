@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -13,6 +13,13 @@ public class WarFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Models.TowerAuraTimer.getRemainingTimeUntilAura() / 1000d;
+        }
+    }
+
+    public static class VolleyTimerFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.TowerAuraTimer.getRemainingTimeUntilVolley() / 1000d;
         }
     }
 }
