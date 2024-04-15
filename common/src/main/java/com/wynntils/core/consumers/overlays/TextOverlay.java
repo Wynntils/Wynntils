@@ -132,8 +132,9 @@ public abstract class TextOverlay extends DynamicOverlay {
     @Override
     protected void onConfigUpdate(Config<?> config) {}
 
-    public boolean isRendered(){
+    public boolean isRendered() {
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
-    };
+    }
+    ;
 }
