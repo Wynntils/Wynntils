@@ -9,16 +9,26 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
+import com.wynntils.models.territories.TerritoryAttackTimer;
 import com.wynntils.services.map.pois.MarkerPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
     @Override
     public Stream<MarkerInfo> getMarkerInfos() {
-        return Models.GuildAttackTimer.getAttackTimers().stream()
+        List<TerritoryAttackTimer> attackTimers = Models.GuildAttackTimer.getAttackTimers();
+
+        int lowestTimer = attackTimers.stream()
+                .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
+                .mapToInt(TerritoryAttackTimer::asSeconds)
+                .min()
+                .orElse(0);
+
+        return attackTimers.stream()
                 .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
                 .map(attackTimer -> {
                     CustomColor beaconColor = attackTimer.defense() == null
@@ -33,21 +43,29 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
                                     .get()
                                     .getCenterLocation()
                                     .asLocation(),
-                            Texture.WALL,
+                            lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL,
                             beaconColor,
-                            beaconColor,
-                            CommonColors.WHITE);
+                            CommonColors.WHITE,
+                            beaconColor);
                 });
     }
 
     @Override
     public Stream<MarkerPoi> getPois() {
-        return Models.GuildAttackTimer.getAttackTimers().stream()
+        List<TerritoryAttackTimer> attackTimers = Models.GuildAttackTimer.getAttackTimers();
+
+        int lowestTimer = attackTimers.stream()
+                .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
+                .mapToInt(TerritoryAttackTimer::asSeconds)
+                .min()
+                .orElse(0);
+
+        return attackTimers.stream()
                 .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
                 .map(attackTimer -> new MarkerPoi(
                         attackTimer.territoryProfile().get().getCenterLocation(),
                         attackTimer.territory(),
-                        Texture.WALL));
+                        lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL));
     }
 
     @Override

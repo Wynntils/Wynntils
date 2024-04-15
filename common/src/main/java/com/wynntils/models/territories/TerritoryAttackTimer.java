@@ -28,8 +28,10 @@ public final class TerritoryAttackTimer {
     }
 
     public String asString() {
-        return ChatFormatting.GRAY + territory + ChatFormatting.YELLOW + " ("
-                + (defense == null ? "Unknown" : defense.getAsString()) + ")" + ChatFormatting.AQUA + " "
+        ChatFormatting defenseColor = this.defense == null ? ChatFormatting.YELLOW : this.defense.getDefenceColor();
+        String defense = this.defense == null ? "Unknown" : this.defense.getAsString();
+
+        return ChatFormatting.GRAY + territory + defenseColor + " (" + defense + ")" + ChatFormatting.AQUA + " "
                 + timerString();
     }
 

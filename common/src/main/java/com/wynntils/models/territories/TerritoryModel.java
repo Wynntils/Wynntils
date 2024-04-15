@@ -68,6 +68,11 @@ public final class TerritoryModel extends Model {
         return territoryProfileMap.get(name);
     }
 
+    /**
+     * Get the territory profile from a short name. This is used when the territory name is cut off, like scoreboards.
+     * @param shortName The short name of the territory
+     * @return The territory profile, or null if not found
+     */
     public TerritoryProfile getTerritoryProfileFromShortName(String shortName) {
         return territoryProfileMap.values().stream()
                 .filter(profile -> profile.getName().startsWith(shortName))
