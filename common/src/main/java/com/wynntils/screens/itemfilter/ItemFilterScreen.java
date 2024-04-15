@@ -220,6 +220,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         this.addRenderableWidget(returnButton);
 
+        boolean activeApply = applyButton != null && applyButton.active;
+
         applyButton = new Button.Builder(Component.literal("✔").withStyle(ChatFormatting.GREEN), (button -> {
                     updateStateFromItemSearchWidget();
                     this.applyButton.active = false;
@@ -228,7 +230,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.apply")))
                 .build();
-        applyButton.active = false;
+        applyButton.active = activeApply;
 
         this.addRenderableWidget(applyButton);
         // endregion
