@@ -6,6 +6,7 @@ Artemis
 [![GitHub](https://img.shields.io/github/downloads/Wynntils/Artemis/total?logo=github)](https://github.com/Wynntils/Artemis/releases)
 [![License](https://img.shields.io/badge/license-LGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
 
+
 <div align="center">
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=20%>
 
