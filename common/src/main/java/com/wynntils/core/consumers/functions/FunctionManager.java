@@ -542,6 +542,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyLeaderFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
+        registerFunction(new WarFunctions.VolleyTimerFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
