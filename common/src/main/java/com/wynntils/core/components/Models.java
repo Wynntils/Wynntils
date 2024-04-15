@@ -84,7 +84,7 @@ public final class Models {
     public static final GearModel Gear = new GearModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
-    public static final GuildWarTowerModel TowerAuraTimer = new GuildWarTowerModel();
+    public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
     public static final IngredientModel Ingredient = new IngredientModel();
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();

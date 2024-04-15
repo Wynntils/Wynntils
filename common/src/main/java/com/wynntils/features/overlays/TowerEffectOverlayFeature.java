@@ -98,7 +98,7 @@ public class TowerEffectOverlayFeature extends Feature {
     }
 
     private void renderAuraVignette(PoseStack poseStack) {
-        long remainingTimeUntilAura = Models.TowerAuraTimer.getRemainingTimeUntilAura();
+        long remainingTimeUntilAura = Models.GuildWarTower.getRemainingTimeUntilAura();
         if (remainingTimeUntilAura <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
@@ -106,14 +106,14 @@ public class TowerEffectOverlayFeature extends Feature {
                 auraVignetteColor.get(),
                 MathUtils.map(
                         remainingTimeUntilAura,
-                        Models.TowerAuraTimer.getEffectLength(),
+                        Models.GuildWarTower.getEffectLength(),
                         0,
                         0,
                         auraVignetteIntensity.get()));
     }
 
     private void renderVolleyVignette(PoseStack poseStack) {
-        long remainingTimeUntilVolley = Models.TowerAuraTimer.getRemainingTimeUntilVolley();
+        long remainingTimeUntilVolley = Models.GuildWarTower.getRemainingTimeUntilVolley();
         if (remainingTimeUntilVolley <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
@@ -121,7 +121,7 @@ public class TowerEffectOverlayFeature extends Feature {
                 volleyVignetteColor.get(),
                 MathUtils.map(
                         remainingTimeUntilVolley,
-                        Models.TowerAuraTimer.getEffectLength(),
+                        Models.GuildWarTower.getEffectLength(),
                         0,
                         0,
                         volleyVignetteIntensity.get()));

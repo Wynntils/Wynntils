@@ -12,14 +12,14 @@ public class WarFunctions {
     public static class AuraTimerFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.TowerAuraTimer.getRemainingTimeUntilAura() / 1000d;
+            return Models.GuildWarTower.getRemainingTimeUntilAura() / 1000d;
         }
     }
 
     public static class VolleyTimerFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.TowerAuraTimer.getRemainingTimeUntilVolley() / 1000d;
+            return Models.GuildWarTower.getRemainingTimeUntilVolley() / 1000d;
         }
     }
 }
