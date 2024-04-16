@@ -1095,6 +1095,8 @@
   "feature.wynntils.telemetry.description": "Adds the ability to send anonymous crash data to Wynntils.",
   "feature.wynntils.telemetry.name": "Telemetry",
   "feature.wynntils.territoryAttackTimerOverlay.description": "Adds an overlay to see when the next guild war attack will start.",
+  "feature.wynntils.territoryAttackTimerOverlay.displayBeaconBeam.description": "Should a beacon beam be displayed when a territory is under attack?",
+  "feature.wynntils.territoryAttackTimerOverlay.displayBeaconBeam.name": "Display Beacon Beam",
   "feature.wynntils.territoryAttackTimerOverlay.name": "Guild Attack Timers",
   "feature.wynntils.territoryAttackTimerOverlay.overlay.territoryAttackTimer.disableAttackTimersOnScoreboard.description": "Should guild attack timers be removed from the scoreboard? This option only works if Guild Attack Timers is turned on.",
   "feature.wynntils.territoryAttackTimerOverlay.overlay.territoryAttackTimer.disableAttackTimersOnScoreboard.name": "Disable Guild Attack Timers on Scoreboard",

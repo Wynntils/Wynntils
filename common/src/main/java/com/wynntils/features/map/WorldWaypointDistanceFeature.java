@@ -167,7 +167,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 displayPositionY - scale.get() * backgroundHeight,
                                 displayPositionY + scale.get() * backgroundHeight,
                                 0,
-                                renderedMarker.markerInfo.beaconColor(),
+                                renderedMarker.markerInfo.textColor(),
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 textShadow.get(),
@@ -213,7 +213,13 @@ public class WorldWaypointDistanceFeature extends Feature {
                 DUMMY_WAYPOINT
                         .getPointerPoi()
                         .renderAt(
-                                poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, scale.get(), 1);
+                                poseStack,
+                                bufferSource,
+                                pointerDisplayPositionX,
+                                pointerDisplayPositionY,
+                                false,
+                                scale.get(),
+                                1);
                 bufferSource.endBatch();
                 poseStack.popPose();
             }
