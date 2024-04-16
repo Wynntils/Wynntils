@@ -82,7 +82,6 @@ public final class Models {
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
     public static final GearModel Gear = new GearModel();
-    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
@@ -121,5 +120,6 @@ public final class Models {
 
     // Models with constructor dependencies, ordered alphabetically as far as possible
     public static final ActivityModel Activity = new ActivityModel(Marker);
+    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
     public static final LootrunModel Lootrun = new LootrunModel(Marker);
 }
