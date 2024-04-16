@@ -105,7 +105,10 @@ public class RevealNicknamesFeature extends Feature {
 
                     StyledTextPart newPart = new StyledTextPart(username + "/", newStyle, null, Style.EMPTY);
                     StyledTextPart oldPart = new StyledTextPart(
-                            currentPart.getString(null, PartStyle.StyleType.NONE), newStyle, null, Style.EMPTY);
+                            currentPart.getString(null, PartStyle.StyleType.NONE),
+                            newStyle.withItalic(true),
+                            null,
+                            Style.EMPTY);
 
                     changes.remove(currentPart);
                     changes.add(newPart);
