@@ -68,7 +68,7 @@ public final class StringUtils {
     }
 
     public static String encodeUrl(String url) {
-        return UrlEscapers.urlFragmentEscaper().escape(url);
+        return UrlEscapers.urlPathSegmentEscaper().escape(url);
     }
 
     public static String createSlug(String input) {
