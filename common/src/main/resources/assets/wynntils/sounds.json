@@ -27,6 +27,11 @@
       "wynntils:tracker-update"
     ]
   },
+  "war.horn": {
+    "sounds": [
+      "wynntils:war-horn"
+    ]
+  },
   "wybel.purr": {
     "sounds": [
       "wynntils:wybel-purr",
