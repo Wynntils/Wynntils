@@ -21,7 +21,7 @@ import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.MapCommand;
 import com.wynntils.commands.OnlineMembersCommand;
-import com.wynntils.commands.PlayerGuildCommand;
+import com.wynntils.commands.PlayerCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServersCommand;
 import com.wynntils.commands.StatisticsCommand;
@@ -187,7 +187,7 @@ public final class ClientCommandManager extends Manager {
         registerCommand(new LootrunCommand());
         registerCommand(new MapCommand());
         registerCommand(new OnlineMembersCommand());
-        registerCommand(new PlayerGuildCommand());
+        registerCommand(new PlayerCommand());
         registerCommand(new QuestCommand());
         registerCommand(new ServersCommand());
         registerCommand(new StatisticsCommand());
