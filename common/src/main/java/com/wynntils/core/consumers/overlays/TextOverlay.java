@@ -136,5 +136,4 @@ public abstract class TextOverlay extends DynamicOverlay {
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
     }
-    ;
 }
