@@ -220,6 +220,13 @@
     "url": "https://api.wynncraft.com/v3/guild/%{name}"
   },
   {
+    "arguments": [
+      "username"
+    ],
+    "id": "dataWynncraftPlayer",
+    "url": "https://api.wynncraft.com/v3/player/%{username}"
+  },
+  {
     "id": "dataWynncraftTerritoryListV3",
     "url": "https://api.wynncraft.com/v3/guild/list/territory"
   },

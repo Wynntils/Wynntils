@@ -41,6 +41,7 @@
   "command.wynntils.lootrun.undoSuccessful": "Successfully undid movements.",
   "command.wynntils.map.description": "Manage map related settings",
   "command.wynntils.onlineMembers.lookingUp": "Looking up online members...",
+  "command.wynntils.player.lookingUp": "Looking up player stats...",
   "command.wynntils.quest.description": "List, show and track quests",
   "command.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "command.wynntils.reloadCaches.reloading": "Reloading caches...",
