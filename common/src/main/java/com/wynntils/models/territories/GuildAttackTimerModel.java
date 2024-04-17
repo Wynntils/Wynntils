@@ -118,12 +118,15 @@ public final class GuildAttackTimerModel extends Model {
             }
         }
 
+        // FIXME: This model should use chat messages to parse new wars,
+        //        and only fall back to scoreboard on first join.
         List<TerritoryAttackTimer> oldTimers = attackTimers;
         attackTimers = newList;
 
-        // Signal events for the new vars
+        // Signal events for the new wars
         for (TerritoryAttackTimer attackTimer : attackTimers) {
-            if (attackTimers.stream()
+            // If the timer is already in the old timers, skip it
+            if (oldTimers.stream()
                     .anyMatch(territoryAttackTimer ->
                             territoryAttackTimer.territory().equals(attackTimer.territory()))) {
                 continue;
