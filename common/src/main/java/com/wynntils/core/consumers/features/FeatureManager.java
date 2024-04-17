@@ -53,6 +53,7 @@ import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
@@ -233,6 +234,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
+        registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
         // endregion

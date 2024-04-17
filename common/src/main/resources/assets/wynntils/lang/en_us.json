@@ -1255,6 +1255,8 @@
   "feature.wynntils.updates.updating": "Auto-updating...",
   "feature.wynntils.userFeature.userEnabled.description": "Should this feature be enabled?",
   "feature.wynntils.userFeature.userEnabled.name": "Enabled",
+  "feature.wynntils.warHorn.description": "Plays a war horn sound when a war is queued.",
+  "feature.wynntils.warHorn.name": "War Horn",
   "feature.wynntils.worldWaypointDistance.backgroundOpacity.description": "What level of opacity should text background have?",
   "feature.wynntils.worldWaypointDistance.backgroundOpacity.name": "Background Opacity",
   "feature.wynntils.worldWaypointDistance.bottomBoundingDistance.description": "How far should off-screen indicator be from bottom of the screen?",
