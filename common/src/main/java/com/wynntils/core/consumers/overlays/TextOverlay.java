@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -137,5 +137,4 @@ public abstract class TextOverlay extends DynamicOverlay {
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
     }
-    ;
 }
