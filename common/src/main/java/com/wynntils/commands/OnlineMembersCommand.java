@@ -46,11 +46,11 @@ public class OnlineMembersCommand extends Command {
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.argument("guildName", StringArgumentType.greedyString())
                         .suggests(GUILD_SUGGESTION_PROVIDER)
-                        .executes(this::getGuildJson))
+                        .executes(this::lookupGuild))
                 .executes(this::syntaxError);
     }
 
-    private int getGuildJson(CommandContext<CommandSourceStack> context) {
+    private int lookupGuild(CommandContext<CommandSourceStack> context) {
         CompletableFuture.runAsync(() -> {
             CompletableFuture<MutableComponent> completableFuture =
                     getGuildJson(context.getArgument("guildName", String.class));
