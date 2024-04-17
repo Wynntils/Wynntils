@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
 
-import java.net.URLEncoder;
+import com.google.common.net.UrlEscapers;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -68,7 +68,7 @@ public final class StringUtils {
     }
 
     public static String encodeUrl(String url) {
-        return URLEncoder.encode(url, StandardCharsets.UTF_8);
+        return UrlEscapers.urlPathSegmentEscaper().escape(url);
     }
 
     public static String createSlug(String input) {
