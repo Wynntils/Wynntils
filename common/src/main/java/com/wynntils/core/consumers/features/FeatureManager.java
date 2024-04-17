@@ -79,6 +79,7 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
+import com.wynntils.features.overlays.BombBellOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
@@ -267,6 +268,7 @@ public final class FeatureManager extends Manager {
 
         // region overlays
         registerFeature(new ArrowShieldTrackerOverlayFeature());
+        registerFeature(new BombBellOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
