@@ -213,6 +213,13 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/urls.json"
   },
   {
+    "arguments": [
+      "name"
+    ],
+    "id": "dataWynncraftGuild",
+    "url": "https://api.wynncraft.com/v3/guild/%{name}"
+  },
+  {
     "id": "dataWynncraftTerritoryListV3",
     "url": "https://api.wynncraft.com/v3/guild/list/territory"
   },

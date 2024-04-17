@@ -49,6 +49,7 @@ public enum UrlId {
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
     DATA_STATIC_TOMES("dataStaticTomes"),
     DATA_STATIC_URLS("dataStaticUrls"),
+    DATA_WYNNCRAFT_GUILD("dataWynncraftGuild"),
     DATA_WYNNCRAFT_TERRITORY_LIST("dataWynncraftTerritoryListV3"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
