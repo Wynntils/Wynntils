@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.territories;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -13,6 +14,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.models.marker.MarkerModel;
+import com.wynntils.models.territories.event.GuildWarQueuedEvent;
 import com.wynntils.models.territories.markers.GuildAttackMarkerProvider;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.type.Pair;
@@ -116,7 +118,22 @@ public final class GuildAttackTimerModel extends Model {
             }
         }
 
+        // FIXME: This model should use chat messages to parse new wars,
+        //        and only fall back to scoreboard on first join.
+        List<TerritoryAttackTimer> oldTimers = attackTimers;
         attackTimers = newList;
+
+        // Signal events for the new wars
+        for (TerritoryAttackTimer attackTimer : attackTimers) {
+            // If the timer is already in the old timers, skip it
+            if (oldTimers.stream()
+                    .anyMatch(territoryAttackTimer ->
+                            territoryAttackTimer.territory().equals(attackTimer.territory()))) {
+                continue;
+            }
+
+            WynntilsMod.postEvent(new GuildWarQueuedEvent(attackTimer));
+        }
     }
 
     void resetTimers() {
