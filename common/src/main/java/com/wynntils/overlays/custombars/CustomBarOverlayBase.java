@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
@@ -19,7 +19,7 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
     public final Config<String> valueTemplate = new Config<>("");
 
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
-    public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
+    public final Config<String> enabledTemplate = new Config<>("");
 
     protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
         super(id, overlaySize);

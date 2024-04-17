@@ -34,7 +34,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.enabledTemplate")
-    public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
+    public final Config<String> enabledTemplate = new Config<>("");
 
     private StyledText[] cachedLines = new StyledText[0];
 
@@ -69,6 +69,7 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+        if (enabledTemplate.get().isBlank() && !Models.WorldState.onWorld()) return;
         if (!isRendered()) return;
 
         renderTemplate(poseStack, bufferSource, cachedLines, getTextScale());
@@ -132,8 +133,9 @@ public abstract class TextOverlay extends DynamicOverlay {
     @Override
     protected void onConfigUpdate(Config<?> config) {}
 
-    public boolean isRendered(){
+    public boolean isRendered() {
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
-    };
+    }
+    ;
 }
