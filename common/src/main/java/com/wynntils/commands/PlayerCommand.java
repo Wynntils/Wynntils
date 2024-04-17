@@ -21,6 +21,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -44,13 +45,26 @@ public class PlayerCommand extends Command {
     }
 
     @Override
+    public List<String> getAliases() {
+        return List.of("pl");
+    }
+
+    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
         return base.then(Commands.literal("guild")
                         .then(Commands.argument("username", StringArgumentType.word())
                                 .suggests(PLAYER_NAME_SUGGESTION_PROVIDER)
                                 .executes(this::lookupPlayerGuild)))
+                .then(Commands.literal("g")
+                        .then(Commands.argument("username", StringArgumentType.word())
+                                .suggests(PLAYER_NAME_SUGGESTION_PROVIDER)
+                                .executes(this::lookupPlayerGuild)))
                 .then(Commands.literal("lastseen")
+                        .then(Commands.argument("username", StringArgumentType.word())
+                                .suggests(PLAYER_NAME_SUGGESTION_PROVIDER)
+                                .executes(this::lookupPlayerLastSeen)))
+                .then(Commands.literal("ls")
                         .then(Commands.argument("username", StringArgumentType.word())
                                 .suggests(PLAYER_NAME_SUGGESTION_PROVIDER)
                                 .executes(this::lookupPlayerLastSeen)))
