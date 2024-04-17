@@ -41,7 +41,7 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
 
     @Override
     public boolean isRendered() {
-        if (valueTemplate.get().isEmpty()) return false;
+        if (valueTemplate.get().isEmpty() || enabledTemplate.get().isEmpty()) return false;
 
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
