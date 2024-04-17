@@ -530,8 +530,12 @@ public class TestStyledText {
 
         StyledText styledText = StyledText.fromComponent(component);
 
+        // The reconstructed componenet differs in that StyledText always adds components as a sibling to an empty
+        // component
         Assertions.assertEquals(
-                component, styledText.getComponent(), "StyledText.getComponent() returned an unexpected value.");
+                component.toFlatList(),
+                styledText.getComponent().toFlatList(),
+                "StyledText.getComponent() returned an unexpected value.");
     }
 
     @Test
@@ -836,7 +840,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 component.getStyle().getHoverEvent(),
-                styledText.getComponent().getStyle().getHoverEvent(),
+                styledText.getComponent().toFlatList().get(0).getStyle().getHoverEvent(),
                 "StyledText.fromComponent() did not inherit the correct hover event.");
     }
 }
