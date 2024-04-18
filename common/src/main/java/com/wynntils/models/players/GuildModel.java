@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -125,6 +126,40 @@ public class GuildModel extends Model {
 
     public Optional<GuildProfile> getGuildProfile(String name) {
         return Optional.ofNullable(guildProfileMap.get(name));
+    }
+
+    public Set<String> getAllGuilds() {
+        return guildProfileMap.keySet();
+    }
+
+    public String getGuildNameFromString(String input) {
+        // Check for exact guild name
+        if (guildProfileMap.containsKey(input)) {
+            return input;
+        }
+
+        // Check for case insensitive name
+        for (String key : guildProfileMap.keySet()) {
+            if (key.equalsIgnoreCase(input)) {
+                return key;
+            }
+        }
+
+        // Check for prefix
+        for (GuildProfile profile : guildProfileMap.values()) {
+            if (profile.prefix().equals(input)) {
+                return profile.name();
+            }
+        }
+
+        // Check for case insensitive prefix
+        for (GuildProfile profile : guildProfileMap.values()) {
+            if (profile.prefix().equalsIgnoreCase(input)) {
+                return profile.name();
+            }
+        }
+
+        return input;
     }
 
     public CustomColor getColor(String guildName) {
