@@ -69,7 +69,6 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-        if (enabledTemplate.get().isBlank() && !Models.WorldState.onWorld()) return;
         if (!isRendered()) return;
 
         renderTemplate(poseStack, bufferSource, cachedLines, getTextScale());
@@ -134,6 +133,12 @@ public abstract class TextOverlay extends DynamicOverlay {
     protected void onConfigUpdate(Config<?> config) {}
 
     public boolean isRendered() {
+        // If the enabled template is empty,
+        // the overlay is rendered when the player is in the world.
+        if (enabledTemplate.get().isEmpty()) return Models.WorldState.onWorld();
+
+        // If the enabled template is not empty,
+        // the overlay is rendered when the template is true.
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
     }

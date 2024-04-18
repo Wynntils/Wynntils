@@ -5,6 +5,7 @@
 package com.wynntils.overlays.custombars;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.BarOverlay;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
@@ -41,8 +42,15 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
 
     @Override
     public boolean isRendered() {
-        if (valueTemplate.get().isEmpty() || enabledTemplate.get().isEmpty()) return false;
+        // If the text template is empty, the overlay is not rendered.
+        if (valueTemplate.get().isEmpty()) return false;
 
+        // If the enabled template is empty,
+        // the overlay is rendered when the player is in the world.
+        if (enabledTemplate.get().isEmpty()) return Models.WorldState.onWorld();
+
+        // If the enabled template is not empty,
+        // the overlay is rendered when the template evaluates to true.
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
     }
