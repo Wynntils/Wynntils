@@ -95,6 +95,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private final TextInputBoxWidget itemNameInput;
     private Button applyButton;
     private Button savePresetButton;
+    private Button toggleSortButton;
     private FilterOptionsButton allButton;
     private FilterOptionsButton usedButton;
     private FilterOptionsButton unusedButton;
@@ -126,8 +127,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private ItemStatProvider<?> selectedProvider;
     private boolean sortMode = false;
     private FilterType filterType = FilterType.ALL;
-    private String filterQuery = "";
-    private String sortQuery = "";
 
     private ItemFilterScreen(SearchWidget searchWidget, Screen previousScreen, boolean supportsSorting) {
         super(Component.literal("Item Filter Screen"));
@@ -142,7 +141,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.providerSearchWidget = new SearchWidget(
                 7,
                 5,
-                100,
+                supportsSorting ? 100 : 120,
                 20,
                 (s) -> {
                     providersScrollOffset = 0;
@@ -204,13 +203,19 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.addRenderableWidget(presetNameInput);
 
         // region State buttons
-        Button toggleSortButton = new Button.Builder(Component.literal("🔄"), (button -> toggleSortMode()))
-                .pos(108, 5)
-                .size(20, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.sortToggle")))
-                .build();
+        if (this.supportsSorting) {
+            toggleSortButton = new Button.Builder(
+                            Component.literal(sortMode ? "🔍" : "⇅"), (button -> toggleSortMode()))
+                    .pos(108, 5)
+                    .size(20, 20)
+                    .tooltip(Tooltip.create(Component.translatable(
+                            sortMode
+                                    ? "screens.wynntils.itemFilter.filterToggle"
+                                    : "screens.wynntils.itemFilter.sortToggle")))
+                    .build();
 
-        this.addRenderableWidget(toggleSortButton);
+            this.addRenderableWidget(toggleSortButton);
+        }
 
         Button returnButton = new Button.Builder(Component.literal("⏎"), (button -> onClose()))
                 .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 18, -22)
@@ -1023,6 +1028,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             sortButtons = new ArrayList<>();
         }
+
+        toggleSortButton.setMessage(Component.literal(sortMode ? "🔍" : "⇅"));
+        toggleSortButton.setTooltip(Tooltip.create(Component.translatable(
+                sortMode ? "screens.wynntils.itemFilter.filterToggle" : "screens.wynntils.itemFilter.sortToggle")));
     }
 
     private void parseFilters() {
