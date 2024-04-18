@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.commands;
@@ -20,6 +20,8 @@ import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.MapCommand;
+import com.wynntils.commands.OnlineMembersCommand;
+import com.wynntils.commands.PlayerCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServersCommand;
 import com.wynntils.commands.StatisticsCommand;
@@ -184,6 +186,8 @@ public final class ClientCommandManager extends Manager {
         registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new MapCommand());
+        registerCommand(new OnlineMembersCommand());
+        registerCommand(new PlayerCommand());
         registerCommand(new QuestCommand());
         registerCommand(new ServersCommand());
         registerCommand(new StatisticsCommand());
