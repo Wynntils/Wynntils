@@ -412,12 +412,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.MobTotemFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
+        registerFunction(new WorldFunctions.NewestWorldFunction());
         registerFunction(new WorldFunctions.PingFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
         registerFunction(new WorldFunctions.WorldStateFunction());
+        registerFunction(new WorldFunctions.WorldUptimeFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
@@ -510,6 +512,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
         registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
+
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());

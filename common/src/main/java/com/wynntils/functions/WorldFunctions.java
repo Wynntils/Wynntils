@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -62,7 +62,44 @@ public class WorldFunctions {
 
         @Override
         protected List<String> getAliases() {
-            return List.of("world_uptime", "uptime");
+            return List.of("uptime");
+        }
+    }
+
+    public static class NewestWorldFunction extends Function<String> {
+        private static final String NO_DATA = "<unknown>";
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String server = Models.ServerList.getNewestServer();
+
+            if (server == null) {
+                return NO_DATA;
+            }
+
+            return server;
+        }
+    }
+
+    public static class WorldUptimeFunction extends Function<String> {
+        private static final String NO_DATA = "<unknown>";
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String worldName = arguments.getArgument("worldName").getStringValue();
+            ServerProfile server = Models.ServerList.getServer(worldName);
+
+            if (server == null) {
+                return NO_DATA;
+            }
+
+            return server.getUptime();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("worldName", String.class, null)));
         }
     }
 

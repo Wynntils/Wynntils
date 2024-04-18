@@ -7,6 +7,7 @@ package com.wynntils.overlays;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -27,11 +28,16 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
 
     @Override
     protected String getTemplate() {
-        return "";
+        return "§7Your World: §b({current_world}) §e{current_world_uptime}\n§7Newest World: §b({newest_world}) §e{world_uptime(newest_world)}";
     }
 
     @Override
     protected String getPreviewTemplate() {
-        return "";
+        return "§7Your World: §b(WC1) §e6:32\n§7Newest World: §b(WC12) §e0:21";
+    }
+
+    @Override
+    public boolean isRenderedDefault() {
+        return KeyboardUtils.isKeyDown(McUtils.mc().options.keyPlayerList.key.getValue());
     }
 }

@@ -49,8 +49,8 @@ public class MinecraftFunctions {
     public static class KeyPressedFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            FunctionArguments.Argument<Integer> keyCode = arguments.getArgument("keyCode");
-            return KeyboardUtils.isKeyDown(keyCode.getValue());
+            int keyCode = arguments.getArgument("keyCode").getIntegerValue();
+            return KeyboardUtils.isKeyDown(keyCode);
         }
 
         @Override
