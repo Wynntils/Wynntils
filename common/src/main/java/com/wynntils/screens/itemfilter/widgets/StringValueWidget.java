@@ -134,6 +134,7 @@ public class StringValueWidget extends GeneralValueWidget {
                 new StringStatFilter.StringStatFilterFactory().create(inputString);
 
         if (stringStatFilterOpt.isEmpty()) return List.of();
+        if (stringStatFilterOpt.get().asString().isEmpty()) return List.of();
 
         return List.of(new StatProviderAndFilterPair(itemStatProvider, stringStatFilterOpt.get()));
     }
