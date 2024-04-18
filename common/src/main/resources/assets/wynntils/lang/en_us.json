@@ -1873,7 +1873,7 @@
   "screens.wynntils.itemFilter.presetHelp3": "Shift + Left click to move preset up",
   "screens.wynntils.itemFilter.presetHelp4": "Shift + Right click to move preset down",
   "screens.wynntils.itemFilter.presetName": "Preset Name: ",
-  "screens.wynntils.itemFilter.providerHelp1": "Middle click to filter any value for this",
+  "screens.wynntils.itemFilter.providerHelp1": "Middle click to query any value for this filter",
   "screens.wynntils.itemFilter.providerHelp2": "Right click to remove this filter from the query",
   "screens.wynntils.itemFilter.return": "Return to previous screen with new query",
   "screens.wynntils.itemFilter.scrollDown": "Scroll down",
