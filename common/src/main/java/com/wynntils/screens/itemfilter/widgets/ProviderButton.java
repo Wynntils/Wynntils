@@ -9,9 +9,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
+import com.wynntils.services.itemfilter.filters.AnyStatFilters;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.SortInfo;
+import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -35,6 +37,7 @@ public class ProviderButton extends WynntilsButton {
     private final float translationX;
     private final float translationY;
     private final ItemStatProvider<?> provider;
+    private final List<Component> tooltip;
 
     public ProviderButton(
             int x,
@@ -50,6 +53,19 @@ public class ProviderButton extends WynntilsButton {
         this.translationX = translationX;
         this.translationY = translationY;
         this.provider = provider;
+
+        // Boolean is currently the only stat type to not support "any" so don't
+        // add the tooltip mentioning it
+        if (provider.getType().equals(Boolean.class)) {
+            this.tooltip = List.of(
+                    Component.literal(provider.getDescription()),
+                    Component.translatable("screens.wynntils.itemFilter.providerHelp2"));
+        } else {
+            this.tooltip = List.of(
+                    Component.literal(provider.getDescription()),
+                    Component.translatable("screens.wynntils.itemFilter.providerHelp1"),
+                    Component.translatable("screens.wynntils.itemFilter.providerHelp2"));
+        }
     }
 
     @Override
@@ -76,13 +92,7 @@ public class ProviderButton extends WynntilsButton {
                         1.0f);
 
         if (this.isHovered) {
-            McUtils.mc()
-                    .screen
-                    .setTooltipForNextRenderPass(Lists.transform(
-                            List.of(
-                                    Component.literal(provider.getDescription()),
-                                    Component.translatable("screens.wynntils.itemFilter.providerHelp")),
-                            Component::getVisualOrderText));
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
     }
 
@@ -101,6 +111,14 @@ public class ProviderButton extends WynntilsButton {
                 } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                     itemFilterScreen.setFiltersForProvider(provider, null);
                 }
+            }
+
+            // Boolean does not support the any filter
+            if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && !provider.getType().equals(Boolean.class)) {
+                // Technically this should use the any stat filter for the correct type but this works
+                filterScreen.setFiltersForProvider(
+                        provider,
+                        List.of(new StatProviderAndFilterPair(provider, new AnyStatFilters.AnyStringStatFilter())));
             }
         }
 
