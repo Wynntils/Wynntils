@@ -29,9 +29,6 @@ import net.minecraft.network.chat.Component;
 
 public class ListValueWidget extends GeneralValueWidget {
     private static final int MAX_OPTIONS_PER_PAGE = 6;
-    private static final int SCROLLBAR_HEIGHT = 20;
-    private static final int SCROLLBAR_WIDTH = 6;
-    private static final int SCROLLBAR_RENDER_X = 180;
 
     private final float translationX;
     private final float translationY;
@@ -206,6 +203,8 @@ public class ListValueWidget extends GeneralValueWidget {
     }
 
     private boolean anyFilterMatches(String valueName) {
+        if (filters == null) return false;
+
         for (StatProviderAndFilterPair filter : filters) {
             if (filter.statFilter().matches(List.of(valueName))) {
                 return true;

@@ -84,7 +84,7 @@ public class BooleanValueWidget extends GeneralValueWidget {
         falseCheckbox.selected = false;
 
         // If there are no filters, return
-        if (filters.isEmpty()) return;
+        if (filters == null || filters.isEmpty()) return;
 
         // Otherwise, get the first filter (and ignore the rest)
         StatProviderAndFilterPair filter = filters.get(0);

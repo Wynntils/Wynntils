@@ -16,8 +16,12 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public abstract class GeneralValueWidget extends AbstractWidget {
+    protected static final int SCROLLBAR_HEIGHT = 20;
+    protected static final int SCROLLBAR_WIDTH = 6;
+    protected static final int SCROLLBAR_RENDER_X = 188;
+
     protected final ItemStatProvider<?> itemStatProvider;
-    private final ItemFilterScreen filterScreen;
+    protected final ItemFilterScreen filterScreen;
 
     protected List<AbstractWidget> widgets = new ArrayList<>();
 
