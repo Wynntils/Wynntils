@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.models.containers.type.RewardContainer;
 import java.util.regex.Pattern;
 
