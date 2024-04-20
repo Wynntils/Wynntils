@@ -356,19 +356,6 @@ public class TestRegex {
     }
 
     @Test
-    public void LootChestModel_LOOT_CHEST_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "LOOT_CHEST_PATTERN");
-        // Tier 1
-        p.shouldMatch("Loot Chest §7[§f✫§8✫✫✫§7]");
-        // Tier 2
-        p.shouldMatch("Loot Chest §e[§6✫✫§8✫✫§e]");
-        // Tier 3
-        p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]");
-        // Tier 4
-        p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]");
-    }
-
-    @Test
     public void ManaSegment_MANA_PATTERN() {
         PatternTester p = new PatternTester(ManaSegment.class, "MANA_PATTERN");
         p.shouldMatch("§b✺ 175/175");

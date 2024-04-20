@@ -9,7 +9,7 @@ import com.wynntils.models.containers.type.RewardContainer;
 import java.util.regex.Pattern;
 
 public class LootChestContainer extends RewardContainer {
-    private static final Pattern TITLE_PATTERN = Models.LootChest.LOOT_CHEST_PATTERN;
+    private static final Pattern TITLE_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
     public LootChestContainer() {
         super(TITLE_PATTERN);

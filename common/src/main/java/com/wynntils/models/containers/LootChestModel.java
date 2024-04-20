@@ -41,8 +41,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
-    // Test in LootChestModel_LOOT_CHEST_PATTERN
-    public static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
