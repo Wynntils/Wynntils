@@ -154,7 +154,11 @@ public class StringValueWidget extends GeneralValueWidget {
                 widgets.add(new StringWidget(getX(), renderY, "", false));
             } else {
                 String currentInput = filters.get(currentValue).statFilter().asString();
-                boolean strict = currentInput.startsWith("\"") && currentInput.endsWith("\"");
+                boolean strict = false;
+
+                if (filters.get(currentValue).statFilter() instanceof StringStatFilter stringStatFilter) {
+                    strict = stringStatFilter.isStrict();
+                }
 
                 if (strict) {
                     currentInput = currentInput.substring(1, currentInput.length() - 1);
