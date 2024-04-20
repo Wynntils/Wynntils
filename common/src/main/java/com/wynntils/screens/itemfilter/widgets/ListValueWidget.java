@@ -203,8 +203,6 @@ public class ListValueWidget extends GeneralValueWidget {
     }
 
     private boolean anyFilterMatches(String valueName) {
-        if (filters == null) return false;
-
         for (StatProviderAndFilterPair filter : filters) {
             if (filter.statFilter().matches(List.of(valueName))) {
                 return true;
