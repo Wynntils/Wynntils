@@ -262,7 +262,7 @@ public class StringValueWidget extends GeneralValueWidget {
                 .size(85, 20)
                 .build();
 
-        if (filters.isEmpty()) {
+        if (this.filters.isEmpty()) {
             this.filters.add(new StatProviderAndFilterPair(itemStatProvider, null));
         }
 
