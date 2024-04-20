@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -7,17 +7,22 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.StringUtils;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
 public class ServersCommand extends Command {
@@ -29,27 +34,49 @@ public class ServersCommand extends Command {
     }
 
     @Override
+    protected List<String> getAliases() {
+        return List.of("s", "srv");
+    }
+
+    @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base) {
-        return base.then(Commands.literal("list")
-                        .then(Commands.literal("up").executes(this::serverUptimeList))
-                        .executes(this::serverList)
-                        .build())
-                .then(Commands.literal("info")
-                        .then(Commands.argument("server", StringArgumentType.word())
-                                .executes(this::serverInfo))
-                        .build())
+        LiteralCommandNode<CommandSourceStack> listBuilder = Commands.literal("list")
+                .then(Commands.literal("up").executes(this::serverUptimeList))
+                .executes(this::serverList)
+                .build();
+
+        LiteralCommandNode<CommandSourceStack> infoBuilder = Commands.literal("info")
+                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .executes(this::serverInfo)
+                .build();
+
+        LiteralArgumentBuilder<CommandSourceStack> infoAliasBuilder = Commands.literal("i")
+                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .executes(this::serverInfo);
+
+        LiteralCommandNode<CommandSourceStack> soulpointsBuilder = Commands.literal("soulpoints")
+                .executes(this::serverSoulpointsList)
+                .build();
+
+        return base.then(listBuilder)
+                .then(infoBuilder)
+                .then(Commands.literal("l").executes(this::serverList))
+                .then(Commands.literal("ul").executes(this::serverUptimeList))
+                .then(Commands.literal("up").executes(this::serverUptimeList))
+                .then(Commands.literal("soul").executes(this::serverSoulpointsList))
+                .then(Commands.literal("s").executes(this::serverSoulpointsList))
+                .then(infoAliasBuilder)
                 .executes(this::syntaxError);
     }
 
     private int serverInfo(CommandContext<CommandSourceStack> context) {
-        if (!Models.ServerList.forceUpdate(UPDATE_TIME_OUT_MS)) {
-            context.getSource()
-                    .sendFailure(Component.literal("Network problems; using cached data")
-                            .withStyle(ChatFormatting.RED));
+        String server;
+        try {
+            server = context.getArgument("server", String.class);
+        } catch (Exception e) {
+            server = Models.WorldState.getCurrentWorldName();
         }
-
-        String server = context.getArgument("server", String.class);
 
         if (server.startsWith("wc")) server = server.toUpperCase(Locale.ROOT);
 
@@ -67,12 +94,19 @@ public class ServersCommand extends Command {
         }
 
         Set<String> players = serverProfile.getPlayers();
-        MutableComponent message = Component.literal(server + ":" + "\n")
-                .withStyle(ChatFormatting.GOLD)
-                .append(Component.literal("Uptime: " + serverProfile.getUptime() + "\n")
-                        .withStyle(ChatFormatting.DARK_AQUA))
-                .append(Component.literal("Online players on " + server + ": " + players.size() + "\n")
-                        .withStyle(ChatFormatting.DARK_AQUA));
+        MutableComponent message = Component.empty()
+                .append(getServerComponent(server).withStyle(ChatFormatting.GOLD))
+                .append(Component.literal(":" + "\n")
+                        .withStyle(ChatFormatting.GOLD)
+                        .append(Component.literal("Uptime: ")
+                                .withStyle(ChatFormatting.DARK_AQUA)
+                                .append(Component.literal(serverProfile.getUptime() + "\n")
+                                        .withStyle(ChatFormatting.AQUA)))
+                        .append(Component.literal("Online players on ")
+                                .withStyle(ChatFormatting.DARK_AQUA)
+                                .append(Component.literal(server).withStyle(ChatFormatting.AQUA))
+                                .append(Component.literal(": ").withStyle(ChatFormatting.DARK_AQUA))
+                                .append(Component.literal(players.size() + "\n").withStyle(ChatFormatting.AQUA))));
 
         if (players.isEmpty()) {
             message.append(Component.literal("No players!").withStyle(ChatFormatting.AQUA));
@@ -86,12 +120,6 @@ public class ServersCommand extends Command {
     }
 
     private int serverList(CommandContext<CommandSourceStack> context) {
-        if (!Models.ServerList.forceUpdate(3000)) {
-            context.getSource()
-                    .sendFailure(Component.literal("Network problems; using cached data")
-                            .withStyle(ChatFormatting.RED));
-        }
-
         MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
 
         for (String serverType : Models.ServerList.getWynnServerTypes()) {
@@ -105,8 +133,14 @@ public class ServersCommand extends Command {
                             StringUtils.capitalizeFirst(serverType) + " (" + currentTypeServers.size() + "):\n")
                     .withStyle(ChatFormatting.GOLD));
 
-            message.append(
-                    Component.literal(String.join(", ", currentTypeServers)).withStyle(ChatFormatting.AQUA));
+            String lastServer = currentTypeServers.get(currentTypeServers.size() - 1);
+            for (String server : currentTypeServers) {
+                message.append(getServerComponent(server).withStyle(ChatFormatting.AQUA));
+
+                if (!server.equals(lastServer)) {
+                    message.append(Component.literal(", ").withStyle(ChatFormatting.DARK_AQUA));
+                }
+            }
         }
 
         context.getSource().sendSuccess(() -> message, false);
@@ -115,20 +149,47 @@ public class ServersCommand extends Command {
     }
 
     private int serverUptimeList(CommandContext<CommandSourceStack> context) {
-        if (!Models.ServerList.forceUpdate(3000)) {
-            context.getSource()
-                    .sendFailure(Component.literal("Network problems; using cached data")
-                            .withStyle(ChatFormatting.RED));
-        }
-
         List<String> sortedServers = Models.ServerList.getServersSortedOnUptime();
 
-        MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.DARK_AQUA);
+        MutableComponent message = Component.literal("Server list:").withStyle(ChatFormatting.GOLD);
         for (String server : sortedServers) {
             message.append("\n");
-            message.append(Component.literal(
-                            server + ": " + Models.ServerList.getServer(server).getUptime())
-                    .withStyle(ChatFormatting.AQUA));
+            message.append(getServerComponent(server)
+                    .withStyle(ChatFormatting.DARK_AQUA)
+                    .append(Component.literal(
+                                    ": " + Models.ServerList.getServer(server).getUptime())
+                            .withStyle(ChatFormatting.AQUA)));
+        }
+
+        context.getSource().sendSuccess(() -> message, false);
+
+        return 1;
+    }
+
+    private int serverSoulpointsList(CommandContext<CommandSourceStack> context) {
+        List<ServerProfile> soulPointServers = Models.ServerList.getServersSortedOnUptime().stream()
+                .map(Models.ServerList::getServer)
+                .filter(Objects::nonNull)
+                .filter(server -> server.getUptimeInMinutes() % 20 >= 10)
+                .sorted(Comparator.comparing(server -> 20 - (server.getUptimeInMinutes() % 20)))
+                .toList();
+
+        MutableComponent message = Component.literal("Soul point server list:").withStyle(ChatFormatting.GOLD);
+        for (ServerProfile server : soulPointServers) {
+            int minutesUntilSoulPoint = 20 - (server.getUptimeInMinutes() % 20);
+
+            // 1-2 minutes before - Green
+            // 3-4 minutes before - Yellow
+            // 5+ minutes before - Red
+            ChatFormatting timeColor = minutesUntilSoulPoint <= 2
+                    ? ChatFormatting.GREEN
+                    : (minutesUntilSoulPoint <= 4 ? ChatFormatting.YELLOW : ChatFormatting.RED);
+
+            message.append("\n");
+            message.append(getServerComponent(server.getServerName())
+                    .withStyle(ChatFormatting.DARK_AQUA)
+                    .append(Component.literal(": In " + minutesUntilSoulPoint + "m")
+                            .withStyle(timeColor)));
         }
 
         context.getSource().sendSuccess(() -> message, false);
@@ -139,5 +200,20 @@ public class ServersCommand extends Command {
     private int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
+    }
+
+    private MutableComponent getServerComponent(String server) {
+        return Component.literal(server)
+                .withStyle(style -> style.withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        Component.literal("Click to switch to ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.literal(server).withStyle(ChatFormatting.WHITE))
+                                .append(Component.literal("\n(Requires ")
+                                        .withStyle(ChatFormatting.DARK_PURPLE)
+                                        .append(Component.literal("HERO").withStyle(ChatFormatting.LIGHT_PURPLE))
+                                        .append(Component.literal(" rank)").withStyle(ChatFormatting.DARK_PURPLE))))))
+                .withStyle(style ->
+                        style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/switch " + server)));
     }
 }
