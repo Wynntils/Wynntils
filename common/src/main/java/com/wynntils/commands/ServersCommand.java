@@ -50,6 +50,10 @@ public class ServersCommand extends Command {
                 .executes(this::serverInfo)
                 .build();
 
+        LiteralArgumentBuilder<CommandSourceStack> infoAliasBuilder = Commands.literal("i")
+                .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .executes(this::serverInfo);
+
         LiteralCommandNode<CommandSourceStack> soulpointsBuilder = Commands.literal("soulpoints")
                 .executes(this::serverSoulpointsList)
                 .build();
@@ -61,7 +65,7 @@ public class ServersCommand extends Command {
                 .then(Commands.literal("up").executes(this::serverUptimeList))
                 .then(Commands.literal("soul").executes(this::serverSoulpointsList))
                 .then(Commands.literal("s").executes(this::serverSoulpointsList))
-                .then(Commands.literal("i").redirect(infoBuilder))
+                .then(infoAliasBuilder)
                 .executes(this::syntaxError);
     }
 
