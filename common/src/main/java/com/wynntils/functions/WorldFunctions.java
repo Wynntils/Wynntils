@@ -39,19 +39,25 @@ public class WorldFunctions {
         }
     }
 
-    public static class CurrentWorldUptimeFunction extends Function<String> {
+    public static class WorldUptimeFunction extends Function<String> {
         private static final String NO_DATA = "<unknown>";
         private static final String NO_WORLD = "<not on world>";
 
         @Override
         public String getValue(FunctionArguments arguments) {
-            if (!Models.WorldState.onWorld()) {
-                return NO_WORLD;
+            String worldName = arguments.getArgument("worldName").getStringValue();
+
+            // Replace world name with the current server, if not provided
+            // This is done for backwards compatibility with the old function
+            if (worldName.isEmpty()) {
+                if (!Models.WorldState.onWorld()) {
+                    return NO_WORLD;
+                }
+
+                worldName = Models.WorldState.getCurrentWorldName();
             }
 
-            String currentWorldName = Models.WorldState.getCurrentWorldName();
-
-            ServerProfile server = Models.ServerList.getServer(currentWorldName);
+            ServerProfile server = Models.ServerList.getServer(worldName);
 
             if (server == null) {
                 return NO_DATA;
@@ -61,8 +67,14 @@ public class WorldFunctions {
         }
 
         @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("worldName", String.class, "")));
+        }
+
+        @Override
         protected List<String> getAliases() {
-            return List.of("uptime");
+            return List.of("uptime", "current_world_uptime");
         }
     }
 
@@ -78,28 +90,6 @@ public class WorldFunctions {
             }
 
             return server;
-        }
-    }
-
-    public static class WorldUptimeFunction extends Function<String> {
-        private static final String NO_DATA = "<unknown>";
-
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            String worldName = arguments.getArgument("worldName").getStringValue();
-            ServerProfile server = Models.ServerList.getServer(worldName);
-
-            if (server == null) {
-                return NO_DATA;
-            }
-
-            return server.getUptime();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("worldName", String.class, null)));
         }
     }
 
