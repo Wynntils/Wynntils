@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -12,10 +12,12 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.type.LootChestType;
 import com.wynntils.models.containers.type.MythicFind;
+import com.wynntils.models.containers.type.RewardContainer;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.EmeraldItem;
@@ -29,6 +31,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -37,6 +41,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
+    // Test in LootChestModel_LOOT_CHEST_PATTERN
+    public static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
@@ -96,10 +102,9 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre event) {
-        if (Models.Container.isLootOrRewardChest(
-                StyledText.fromComponent(event.getTitle()).getStringWithoutFormatting())) {
-            nextExpectedLootContainerId = event.getContainerId();
+    public void onScreenInit(ScreenInitEvent e) {
+        if (Models.Container.getCurrentContainer() instanceof RewardContainer rewardContainer) {
+            nextExpectedLootContainerId = rewardContainer.getContainerId();
 
             openedChestCount.store(openedChestCount.get() + 1);
             dryCount.store(dryCount.get() + 1);
@@ -129,6 +134,10 @@ public final class LootChestModel extends Model {
                 resetDryStatistics();
             }
         }
+    }
+
+    public LootChestType getChestType(Screen screen) {
+        return LootChestType.fromTitle(screen);
     }
 
     private void processItemFind(ItemStack itemStack) {
