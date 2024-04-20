@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -43,7 +42,6 @@ public final class TerritoryModel extends Model {
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
-    private static final int MAX_ERRORS = 5;
 
     // This is territory POIs as returned by the advancement from Wynncraft
     private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
@@ -55,12 +53,11 @@ public final class TerritoryModel extends Model {
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
-    private final ScheduledFuture<?> timerFuture;
 
     public TerritoryModel() {
         super(List.of());
 
-        timerFuture = timerExecutor.scheduleWithFixedDelay(
+        timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
