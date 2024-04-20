@@ -21,19 +21,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ServerListModel extends Model {
+    private static final int SERVER_UPDATE_MS = 15000;
+
     private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
+
+    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     private Map<String, ServerProfile> availableServers = new HashMap<>();
 
     public ServerListModel() {
         super(List.of());
 
-        updateServerList();
+        timerExecutor.scheduleWithFixedDelay(this::updateServerList, 0, SERVER_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public List<String> getWynnServerTypes() {
@@ -42,6 +48,12 @@ public final class ServerListModel extends Model {
 
     public Set<String> getServers() {
         return availableServers.keySet();
+    }
+
+    public String getNewestServer() {
+        return getServers().stream()
+                .max(Comparator.comparingLong(profile -> getServer(profile).getFirstSeen()))
+                .orElse(null);
     }
 
     public List<String> getServersSortedOnUptime() {
