@@ -20,11 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ServerListModel extends Model {
@@ -78,17 +76,6 @@ public final class ServerListModel extends Model {
         return availableServers.get(worldId);
     }
 
-    public boolean forceUpdate(int timeOutMs) {
-        CompletableFuture<Boolean> future = updateServerList();
-        try {
-            future.get(timeOutMs, TimeUnit.MILLISECONDS);
-            return true;
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            // if timeout is reached, return false
-            return false;
-        }
-    }
-
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.HUB && event.getNewState() != WorldState.CONNECTING) return;
@@ -110,6 +97,16 @@ public final class ServerListModel extends Model {
 
             long serverTime = dl.getResponseTimestamp();
             for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+                JsonElement serverElement = entry.getValue();
+
+                if (!serverElement.isJsonObject()) {
+                    WynntilsMod.warn("Server element is not a JsonObject: " + serverElement);
+                    continue;
+                }
+
+                // Inject the server name into the server profile
+                serverElement.getAsJsonObject().addProperty("serverName", entry.getKey());
+
                 ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
                 profile.matchTime(serverTime);
 
