@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.item;
@@ -335,5 +335,9 @@ public class ItemHandler extends Handler {
     public void resetProfiling() {
         profilingTimes.clear();
         profilingCounts.clear();
+    }
+
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
     }
 }

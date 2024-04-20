@@ -6,8 +6,8 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 
-public final class TeleportScrollAnnotator implements ItemAnnotator {
+public final class TeleportScrollAnnotator implements GameItemAnnotator {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("^§b(.*) Teleport Scroll$");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- §7Teleports to: §f(.*)");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -30,6 +30,23 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     @Override
     public String getName() {
         return statType.getApiName();
+    }
+
+    @Override
+    public String getDisplayName() {
+        // A few overrides for clearer names
+        // and to show units for non raw stats
+        if (statType.getKey().equals("MISC_LEVELED_XP_BONUS")) {
+            return "XP From Lv. Content";
+        } else if (statType.getKey().equals("MISC_LEVELED_LOOT_BONUS")) {
+            return "Loot From Lv. Content";
+        } else {
+            return switch (statType.getUnit()) {
+                case PERCENT, PER_3_S, PER_5_S -> statType.getDisplayName() + "("
+                        + statType.getUnit().getDisplayName() + ")";
+                default -> statType.getDisplayName();
+            };
+        }
     }
 
     @Override

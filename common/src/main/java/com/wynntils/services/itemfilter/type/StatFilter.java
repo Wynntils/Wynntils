@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -17,4 +17,6 @@ public abstract class StatFilter<T> {
     public boolean matches(List<T> values) {
         return values.stream().anyMatch(this::matches);
     }
+
+    public abstract String asString();
 }

@@ -25,6 +25,7 @@ import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.InteractiveContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -266,7 +267,7 @@ public class ContainerSearchFeature extends Feature {
         ItemSearchWidget searchWidget = new ItemSearchWidget(
                 renderX + screen.imageWidth - 175,
                 renderY - 20,
-                175,
+                155,
                 20,
                 false,
                 query -> {
@@ -284,7 +285,7 @@ public class ContainerSearchFeature extends Feature {
         screen.addRenderableWidget(lastSearchWidget);
 
         lastItemSearchHelperWidget = new ItemSearchHelperWidget(
-                renderX + screen.imageWidth - 11,
+                renderX + screen.imageWidth - 31,
                 renderY - 14,
                 Texture.INFO.width() / 3,
                 Texture.INFO.height() / 3,
@@ -292,6 +293,9 @@ public class ContainerSearchFeature extends Feature {
                 true);
 
         screen.addRenderableWidget(lastItemSearchHelperWidget);
+
+        screen.addRenderableWidget(
+                new ItemFilterUIButton(renderX + 157, renderY - 20, lastSearchWidget, screen, false));
     }
 
     private void matchItems(ItemSearchQuery searchQuery, ChestMenu chestMenu) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -21,6 +21,11 @@ public class SkillReqStatProvider extends ItemStatProvider<Integer> {
     @Override
     public String getName() {
         return skill.getApiName() + "Req";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return skill.getDisplayName() + " Required";
     }
 
     @Override

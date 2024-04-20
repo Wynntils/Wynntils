@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -12,6 +12,7 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -86,7 +87,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         itemSearchWidget = new ItemSearchWidget(
                 renderX,
                 renderY,
-                175,
+                155,
                 20,
                 true,
                 (query) -> {
@@ -101,13 +102,15 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         itemSearchWidget.setTextBoxInput(Models.TradeMarket.getLastSearchFilter());
 
         WynntilsButton helperButton = new ItemSearchHelperWidget(
-                renderX + 160,
+                renderX + 140,
                 renderY + 4,
                 (int) (Texture.INFO.width() / 2f),
                 (int) (Texture.INFO.height() / 2f),
                 Texture.INFO,
                 true);
         this.addRenderableWidget(helperButton);
+
+        this.addRenderableWidget(new ItemFilterUIButton(renderX + 157, renderY, itemSearchWidget, this, true));
 
         WynntilsButton backButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,

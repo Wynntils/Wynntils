@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -7,8 +7,8 @@ package com.wynntils.models.items.annotators.gui;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class IngredientPouchAnnotator implements ItemAnnotator {
+public final class IngredientPouchAnnotator implements GuiItemAnnotator {
     private static final StyledText INGREDIENT_POUCH_NAME = StyledText.fromString("§6Ingredient Pouch");
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN =
             Pattern.compile("^§f(\\d+) x §7([^§]*)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
