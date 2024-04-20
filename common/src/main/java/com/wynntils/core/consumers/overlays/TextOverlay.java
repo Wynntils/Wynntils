@@ -132,14 +132,23 @@ public abstract class TextOverlay extends DynamicOverlay {
     @Override
     protected void onConfigUpdate(Config<?> config) {}
 
-    public boolean isRendered() {
+    public final boolean isRendered() {
         // If the enabled template is empty,
         // the overlay is rendered when the player is in the world.
-        if (enabledTemplate.get().isEmpty()) return Models.WorldState.onWorld();
+        if (enabledTemplate.get().isEmpty()) return isRenderedDefault();
 
         // If the enabled template is not empty,
         // the overlay is rendered when the template is true.
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
+    }
+
+    /**
+     * Returns whether the overlay is rendered with the default (empty) template.
+     *
+     * @return whether the overlay is rendered with the default (empty) template
+     */
+    public boolean isRenderedDefault() {
+        return Models.WorldState.onWorld();
     }
 }
