@@ -47,6 +47,7 @@ public class ServersCommand extends Command {
 
         LiteralCommandNode<CommandSourceStack> infoBuilder = Commands.literal("info")
                 .then(Commands.argument("server", StringArgumentType.word()).executes(this::serverInfo))
+                .executes(this::serverInfo)
                 .build();
 
         LiteralCommandNode<CommandSourceStack> soulpointsBuilder = Commands.literal("soulpoints")
@@ -65,7 +66,12 @@ public class ServersCommand extends Command {
     }
 
     private int serverInfo(CommandContext<CommandSourceStack> context) {
-        String server = context.getArgument("server", String.class);
+        String server;
+        try {
+            server = context.getArgument("server", String.class);
+        } catch (Exception e) {
+            server = Models.WorldState.getCurrentWorldName();
+        }
 
         if (server.startsWith("wc")) server = server.toUpperCase(Locale.ROOT);
 
