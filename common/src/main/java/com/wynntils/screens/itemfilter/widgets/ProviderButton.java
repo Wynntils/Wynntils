@@ -110,6 +110,7 @@ public class ProviderButton extends WynntilsButton {
                     itemFilterScreen.setSelectedProvider(provider);
                 } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                     itemFilterScreen.setFiltersForProvider(provider, null);
+                    itemFilterScreen.setSelectedProvider(provider);
                 }
             }
 
@@ -119,6 +120,10 @@ public class ProviderButton extends WynntilsButton {
                 filterScreen.setFiltersForProvider(
                         provider,
                         List.of(new StatProviderAndFilterPair(provider, new AnyStatFilters.AnyStringStatFilter())));
+
+                if (!itemFilterScreen.inSortMode()) {
+                    itemFilterScreen.setSelectedProvider(provider);
+                }
             }
         }
 

@@ -670,10 +670,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         updateQueryString();
-
-        if (provider == selectedProvider) {
-            valueWidget.onFiltersChanged(filterPairs);
-        }
     }
 
     public void addSort(SortInfo newSort) {
