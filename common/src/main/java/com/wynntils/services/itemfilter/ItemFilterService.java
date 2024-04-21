@@ -38,6 +38,7 @@ import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
+import com.wynntils.services.itemfilter.type.ItemFilterType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
@@ -81,7 +82,8 @@ public class ItemFilterService extends Service {
         return statFilters.stream().map(Pair::value).toList();
     }
 
-    public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
+    public ItemSearchQuery createSearchQuery(
+            String queryString, boolean supportsSorting, List<ItemFilterType> supportedFilterTypes) {
         StatProviderFilterMap filters = new StatProviderFilterMap();
         List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
 
@@ -117,7 +119,7 @@ public class ItemFilterService extends Service {
                     }
 
                     ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
-                            getStatSortOrder(inputString);
+                            getStatSortOrder(inputString, supportedFilterTypes);
 
                     if (statSortListOrError.hasError()) {
                         colorRanges.add(Pair.of(
@@ -163,7 +165,8 @@ public class ItemFilterService extends Service {
                     continue;
                 }
 
-                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(keyString);
+                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError =
+                        getItemStatProvider(keyString, supportedFilterTypes);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
@@ -243,7 +246,7 @@ public class ItemFilterService extends Service {
      * If the item is not a WynnItem, this method always returns false.
      *
      * @param searchQuery the search query
-     * @param itemStack the item to check
+     * @param itemStack   the item to check
      * @return true if the item matches the search query, false otherwise
      */
     public boolean matches(ItemSearchQuery searchQuery, ItemStack itemStack) {
@@ -261,7 +264,8 @@ public class ItemFilterService extends Service {
 
     /**
      * Filters and sorts the given list of items according to the given search query.
-     * @param searchQuery the search query
+     *
+     * @param searchQuery  the search query
      * @param originalList the list of items to filter and sort
      * @return the filtered and sorted list of items
      */
@@ -314,11 +318,15 @@ public class ItemFilterService extends Service {
 
     /**
      * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
-     * @param name an alias of the stat provider
+     *
+     * @param name                 an alias of the stat provider
+     * @param supportedFilterTypes the list of supported provider types
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
-    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name) {
+    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name, List<ItemFilterType> supportedFilterTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
+                .filter(provider -> supportedFilterTypes.contains(ItemFilterType.GENERIC)
+                        || provider.getFilterTypes().stream().anyMatch(supportedFilterTypes::contains))
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))
                 .findFirst();
@@ -377,7 +385,8 @@ public class ItemFilterService extends Service {
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
-    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
+    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(
+            String inputString, List<ItemFilterType> supportedFilterTypes) {
         List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
@@ -391,7 +400,7 @@ public class ItemFilterService extends Service {
                 .toList();
 
         List<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> errorsOrProviders = providerNamesWithDirection.stream()
-                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value())))
+                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value(), supportedFilterTypes)))
                 .toList();
 
         Optional<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> firstError = errorsOrProviders.stream()

@@ -55,7 +55,7 @@ public class ItemSearchWidget extends SearchWidget {
                 supportedFilterTypes);
         this.supportsSorting = supportsSorting;
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting);
+        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting, supportedFilterTypes);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting);
+        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting, supportedFilterTypes);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
         if (searchQuery.errors().isEmpty()) {
