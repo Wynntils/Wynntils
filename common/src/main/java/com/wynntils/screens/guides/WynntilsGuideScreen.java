@@ -7,7 +7,6 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
-import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -16,8 +15,6 @@ import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
-    private WynntilsButton helperButton;
-
     protected WynntilsGuideScreen(Component component) {
         super(component);
 
@@ -29,15 +26,6 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
     @Override
     protected void doInit() {
         super.doInit();
-
-        helperButton = new ItemSearchHelperWidget(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 17,
-                -19,
-                (int) (Texture.INFO.width() / 1.7f),
-                (int) (Texture.INFO.height() / 1.7f),
-                Texture.INFO,
-                true);
-        this.addRenderableWidget(helperButton);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -73,19 +61,6 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         }
 
         reloadElementsList(itemSearchWidget.getSearchQuery());
-    }
-
-    @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-
-        // Don't want right click clearing the text input
-        if (helperButton != null && helperButton.mouseClicked(mouseX - translationX, mouseY - translationY, button)) {
-            return false;
-        }
-
-        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     protected abstract void reloadElementsList(ItemSearchQuery searchQuery);

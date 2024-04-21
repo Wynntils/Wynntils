@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -100,15 +100,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // On reloads, this should not change anything
         itemSearchWidget.setTextBoxInput(Models.TradeMarket.getLastSearchFilter());
 
-        WynntilsButton helperButton = new ItemSearchHelperWidget(
-                renderX + 160,
-                renderY + 4,
-                (int) (Texture.INFO.width() / 2f),
-                (int) (Texture.INFO.height() / 2f),
-                Texture.INFO,
-                true);
-        this.addRenderableWidget(helperButton);
-
         WynntilsButton backButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
                 renderY + Texture.CONTAINER_SIDEBAR.height(),
@@ -160,10 +151,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         updateItems();
 
-        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
-
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(poseStack);
+
+        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
 
         // Render item tooltip
         super.renderTooltip(guiGraphics, mouseX, mouseY);
