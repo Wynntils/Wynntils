@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.models.containers.type.RewardContainer;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.mc.McUtils;
@@ -25,7 +26,7 @@ public class MythicBlockerFeature extends Feature {
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
-        if (!Models.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
+        if (!(Models.Container.getCurrentContainer() instanceof RewardContainer)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
