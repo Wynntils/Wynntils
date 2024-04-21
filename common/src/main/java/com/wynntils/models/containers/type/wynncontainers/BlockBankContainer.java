@@ -6,6 +6,8 @@ package com.wynntils.models.containers.type.wynncontainers;
 
 import com.wynntils.models.containers.type.PersonalStorageContainer;
 import com.wynntils.models.containers.type.PersonalStorageType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class BlockBankContainer extends PersonalStorageContainer {
@@ -16,7 +18,7 @@ public class BlockBankContainer extends PersonalStorageContainer {
     }
 
     @Override
-    public boolean supportsAdvancedSearch() {
-        return false;
+    public List<ItemProviderType> supportedProviderTypes() {
+        return List.of(ItemProviderType.COUNTED);
     }
 }

@@ -21,6 +21,6 @@ public class UsesStatProvider extends ItemStatProvider<CappedValue> {
 
     @Override
     public List<ItemProviderType> getFilterTypes() {
-        return List.of(ItemProviderType.DURABLE);
+        return List.of(ItemProviderType.COUNTED);
     }
 }

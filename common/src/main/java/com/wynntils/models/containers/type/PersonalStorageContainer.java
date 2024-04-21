@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.containers.type;
 
+import com.wynntils.services.itemfilter.type.ItemProviderType;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class PersonalStorageContainer extends AbstractWynncraftContainer implements SearchableContainerProperty {
@@ -48,7 +50,7 @@ public class PersonalStorageContainer extends AbstractWynncraftContainer impleme
     }
 
     @Override
-    public boolean supportsAdvancedSearch() {
-        return true;
+    public List<ItemProviderType> supportedProviderTypes() {
+        return List.of(ItemProviderType.GENERIC);
     }
 }

@@ -8,6 +8,8 @@ import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class ContentBookContainer extends AbstractWynncraftContainer
@@ -46,7 +48,7 @@ public class ContentBookContainer extends AbstractWynncraftContainer
     }
 
     @Override
-    public boolean supportsAdvancedSearch() {
-        return false;
+    public List<ItemProviderType> supportedProviderTypes() {
+        return List.of();
     }
 }

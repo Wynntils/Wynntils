@@ -41,7 +41,7 @@ public enum ItemProviderType {
     VALUED,
 
     /**
-     * A filter for items that have counts, such as stacks of items.
+     * A filter for items that have counts or uses, such as stacks of items.
      */
     COUNTED,
 
@@ -51,7 +51,7 @@ public enum ItemProviderType {
     TIERED,
 
     /**
-     * A filter for items that have durability or have uses.
+     * A filter for items that have durability.
      */
     DURABLE,
 
