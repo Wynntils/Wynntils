@@ -11,7 +11,12 @@ package com.wynntils.services.itemfilter.type;
  */
 public enum ItemProviderType {
     /**
-     * A generic item filter. If this is present, the filter can be used for any item.
+     * A filter for all items. If this is present, the filter can be used for any item.
+     */
+    ALL,
+
+    /**
+     * A generic item filter. For providers that do not fit into any other category.
      */
     GENERIC,
 

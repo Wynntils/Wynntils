@@ -326,7 +326,7 @@ public class ItemFilterService extends Service {
     private ErrorOr<ItemStatProvider<?>> getItemStatProvider(
             String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
-                .filter(provider -> supportedProviderTypes.contains(ItemProviderType.GENERIC)
+                .filter(provider -> supportedProviderTypes.contains(ItemProviderType.ALL)
                         || provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))

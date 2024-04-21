@@ -19,6 +19,6 @@ public class BlockBankContainer extends PersonalStorageContainer {
 
     @Override
     public List<ItemProviderType> supportedProviderTypes() {
-        return List.of(ItemProviderType.COUNTED);
+        return List.of();
     }
 }

@@ -96,7 +96,7 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
         // Stats
         counter = 0;
         List<ItemStatProvider<?>> itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
-                .filter(itemStatProvider -> supportedProviderTypes.contains(ItemProviderType.GENERIC)
+                .filter(itemStatProvider -> supportedProviderTypes.contains(ItemProviderType.ALL)
                         || itemStatProvider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .toList();
         for (ItemStatProvider<?> itemStatProvider : itemStatProviders) {

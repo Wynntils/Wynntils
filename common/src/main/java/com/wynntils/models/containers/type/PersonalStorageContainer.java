@@ -5,6 +5,7 @@
 package com.wynntils.models.containers.type;
 
 import com.wynntils.services.itemfilter.type.ItemProviderType;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -51,6 +52,6 @@ public class PersonalStorageContainer extends AbstractWynncraftContainer impleme
 
     @Override
     public List<ItemProviderType> supportedProviderTypes() {
-        return List.of(ItemProviderType.GENERIC);
+        return Arrays.stream(ItemProviderType.values()).toList();
     }
 }

@@ -30,7 +30,9 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
     private List<GuideTomeItemStack> allTomeItems = List.of();
 
     private WynntilsTomeGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.tomeGuide.name"), List.of(ItemProviderType.GEAR));
+        super(
+                Component.translatable("screens.wynntils.wynntilsGuides.tomeGuide.name"),
+                List.of(ItemProviderType.GENERIC, ItemProviderType.GEAR));
     }
 
     public static Screen create() {

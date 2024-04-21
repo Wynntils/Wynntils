@@ -24,6 +24,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -89,7 +90,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 renderY,
                 175,
                 20,
-                List.of(ItemProviderType.GENERIC),
+                Arrays.stream(ItemProviderType.values()).toList(),
                 true,
                 (query) -> {
                     saveSearchFilter(query);

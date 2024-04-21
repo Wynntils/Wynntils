@@ -34,7 +34,7 @@ public final class WynntilsIngredientGuideScreen
     private WynntilsIngredientGuideScreen() {
         super(
                 Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"),
-                List.of(ItemProviderType.INGREDIENT));
+                List.of(ItemProviderType.GENERIC, ItemProviderType.INGREDIENT, ItemProviderType.PROFESSION));
     }
 
     public static Screen create() {

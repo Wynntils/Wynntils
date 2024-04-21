@@ -33,7 +33,7 @@ public final class WynntilsCharmGuideScreen
     private WynntilsCharmGuideScreen() {
         super(
                 Component.translatable("screens.wynntils.wynntilsGuides.charmGuide.name"),
-                List.of(ItemProviderType.GEAR, ItemProviderType.GEAR_INSTANCE));
+                List.of(ItemProviderType.GENERIC, ItemProviderType.GEAR, ItemProviderType.GEAR_INSTANCE));
     }
 
     public static Screen create() {
