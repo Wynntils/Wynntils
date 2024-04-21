@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.type.wynncontainers.SeaskipperContainer;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -28,7 +29,7 @@ public class CustomSeaskipperScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
-        if (!Models.Container.isSeaskipper(event.getScreen().getTitle())) return;
+        if (!(Models.Container.getCurrentContainer() instanceof SeaskipperContainer)) return;
         if (McUtils.player().isShiftKeyDown()) return;
 
         if (!Models.Seaskipper.isProfileLoaded()) {

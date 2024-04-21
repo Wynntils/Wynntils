@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.type.wynncontainers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -21,7 +22,7 @@ public class SkillPointLoadoutsFeature extends Feature {
     @SubscribeEvent
     public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
-        if (!Models.Container.isCharacterInfoScreen(screen)) return;
+        if (!(Models.Container.getCurrentContainer() instanceof CharacterInfoContainer)) return;
 
         screen.addRenderableWidget(
                 new LoadoutScreenButton(screen.width / 2 - LoadoutScreenButton.BUTTON_WIDTH / 2, screen.topPos - 24));
