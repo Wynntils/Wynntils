@@ -39,7 +39,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -259,7 +259,7 @@ public class ContainerSearchFeature extends Feature {
                     renderY - 20,
                     175,
                     20,
-                    List.of(ItemFilterType.GENERIC),
+                    List.of(ItemProviderType.GENERIC),
                     false,
                     query -> {
                         lastSearchQuery = query;

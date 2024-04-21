@@ -5,11 +5,11 @@
 package com.wynntils.services.itemfilter.type;
 
 /**
- * Represents the type of item filter.
- * Item filter types are used to determine if the current container supports the filter.
- * An item filter can have multiple types, but it must have at least one.
+ * Represents the type of item provider.
+ * Item provider types are used to determine if the current container supports the filter.
+ * An item provider can have multiple types, but it must have at least one.
  */
-public enum ItemFilterType {
+public enum ItemProviderType {
     /**
      * A generic item filter. If this is present, the filter can be used for any item.
      */

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -26,7 +26,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ItemSearchWidget extends SearchWidget {
-    private final List<ItemFilterType> supportedFilterTypes;
+    private final List<ItemProviderType> supportedProviderTypes;
     private final boolean supportsSorting;
     private final ItemSearchHelperWidget helperWidget;
 
@@ -39,12 +39,12 @@ public class ItemSearchWidget extends SearchWidget {
             int y,
             int width,
             int height,
-            List<ItemFilterType> supportedFilterTypes,
+            List<ItemProviderType> supportedProviderTypes,
             boolean supportsSorting,
             Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
-        this.supportedFilterTypes = supportedFilterTypes;
+        this.supportedProviderTypes = supportedProviderTypes;
         this.helperWidget = new ItemSearchHelperWidget(
                 x + width - 14,
                 y + 6,
@@ -52,10 +52,10 @@ public class ItemSearchWidget extends SearchWidget {
                 Texture.INFO.height() / 3,
                 Texture.INFO,
                 true,
-                supportedFilterTypes);
+                supportedProviderTypes);
         this.supportsSorting = supportsSorting;
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting, supportedFilterTypes);
+        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting, supportedProviderTypes);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting, supportedFilterTypes);
+        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting, supportedProviderTypes);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
         if (searchQuery.errors().isEmpty()) {

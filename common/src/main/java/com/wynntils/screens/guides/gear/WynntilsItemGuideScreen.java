@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -30,7 +30,7 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
     private List<GuideGearItemStack> allGearItems = List.of();
 
     private WynntilsItemGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"), List.of(ItemFilterType.GEAR));
+        super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"), List.of(ItemProviderType.GEAR));
     }
 
     public static Screen create() {

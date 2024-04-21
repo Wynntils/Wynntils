@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class TotalPriceStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
-    public List<ItemFilterType> getFilterTypes() {
-        return List.of(ItemFilterType.VALUED);
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.VALUED);
     }
 }

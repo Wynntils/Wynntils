@@ -5,7 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
@@ -21,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 public class ItemSearchHelperWidget extends BasicTexturedButton {
     private static final int ELEMENTS_PER_PAGE = 4;
 
-    private final List<ItemFilterType> supportedFilterTypes;
+    private final List<ItemProviderType> supportedProviderTypes;
     private final List<List<Component>> tooltipPages = new ArrayList<>();
 
     private int page = 0;
@@ -33,9 +33,9 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
             int height,
             Texture texture,
             boolean scaleTexture,
-            List<ItemFilterType> supportedFilterTypes) {
+            List<ItemProviderType> supportedProviderTypes) {
         super(x, y, width, height, texture, (b) -> {}, List.of(), scaleTexture);
-        this.supportedFilterTypes = supportedFilterTypes;
+        this.supportedProviderTypes = supportedProviderTypes;
 
         generateTooltipPages();
     }
@@ -96,8 +96,8 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
         // Stats
         counter = 0;
         List<ItemStatProvider<?>> itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
-                .filter(itemStatProvider -> supportedFilterTypes.contains(ItemFilterType.GENERIC)
-                        || itemStatProvider.getFilterTypes().stream().anyMatch(supportedFilterTypes::contains))
+                .filter(itemStatProvider -> supportedProviderTypes.contains(ItemProviderType.GENERIC)
+                        || itemStatProvider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .toList();
         for (ItemStatProvider<?> itemStatProvider : itemStatProviders) {
             currentTooltip.add(Component.empty());

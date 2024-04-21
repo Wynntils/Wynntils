@@ -6,7 +6,7 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class RarityStatProvider extends ItemStatProvider<String> {
     }
 
     @Override
-    public List<ItemFilterType> getFilterTypes() {
-        return List.of(ItemFilterType.GEAR);
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR);
     }
 }

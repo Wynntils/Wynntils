@@ -38,7 +38,7 @@ import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
@@ -83,7 +83,7 @@ public class ItemFilterService extends Service {
     }
 
     public ItemSearchQuery createSearchQuery(
-            String queryString, boolean supportsSorting, List<ItemFilterType> supportedFilterTypes) {
+            String queryString, boolean supportsSorting, List<ItemProviderType> supportedProviderTypes) {
         StatProviderFilterMap filters = new StatProviderFilterMap();
         List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class ItemFilterService extends Service {
                     }
 
                     ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
-                            getStatSortOrder(inputString, supportedFilterTypes);
+                            getStatSortOrder(inputString, supportedProviderTypes);
 
                     if (statSortListOrError.hasError()) {
                         colorRanges.add(Pair.of(
@@ -166,7 +166,7 @@ public class ItemFilterService extends Service {
                 }
 
                 ErrorOr<ItemStatProvider<?>> itemStatProviderOrError =
-                        getItemStatProvider(keyString, supportedFilterTypes);
+                        getItemStatProvider(keyString, supportedProviderTypes);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
@@ -320,13 +320,14 @@ public class ItemFilterService extends Service {
      * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
      *
      * @param name                 an alias of the stat provider
-     * @param supportedFilterTypes the list of supported provider types
+     * @param supportedProviderTypes the list of supported provider types
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
-    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name, List<ItemFilterType> supportedFilterTypes) {
+    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(
+            String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
-                .filter(provider -> supportedFilterTypes.contains(ItemFilterType.GENERIC)
-                        || provider.getFilterTypes().stream().anyMatch(supportedFilterTypes::contains))
+                .filter(provider -> supportedProviderTypes.contains(ItemProviderType.GENERIC)
+                        || provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))
                 .findFirst();
@@ -386,7 +387,7 @@ public class ItemFilterService extends Service {
     }
 
     private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(
-            String inputString, List<ItemFilterType> supportedFilterTypes) {
+            String inputString, List<ItemProviderType> supportedProviderTypes) {
         List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
@@ -400,7 +401,7 @@ public class ItemFilterService extends Service {
                 .toList();
 
         List<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> errorsOrProviders = providerNamesWithDirection.stream()
-                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value(), supportedFilterTypes)))
+                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value(), supportedProviderTypes)))
                 .toList();
 
         Optional<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> firstError = errorsOrProviders.stream()

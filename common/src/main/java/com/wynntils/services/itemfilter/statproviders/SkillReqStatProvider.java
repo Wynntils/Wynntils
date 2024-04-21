@@ -7,7 +7,7 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -40,7 +40,7 @@ public class SkillReqStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
-    public List<ItemFilterType> getFilterTypes() {
-        return List.of(ItemFilterType.GEAR);
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR);
     }
 }

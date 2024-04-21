@@ -13,7 +13,7 @@ import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.Pair;
@@ -52,8 +52,8 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     }
 
     @Override
-    public List<ItemFilterType> getFilterTypes() {
-        return List.of(ItemFilterType.GEAR, ItemFilterType.GEAR_INSTANCE, ItemFilterType.INGREDIENT);
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR, ItemProviderType.GEAR_INSTANCE, ItemProviderType.INGREDIENT);
     }
 
     private List<StatValue> handleIngredientItem(IngredientItem ingredientItem) {

@@ -34,7 +34,7 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
      * Returns the type of filter this stat provider is for.
      * @return The type of filter this stat provider is for
      */
-    public abstract List<ItemFilterType> getFilterTypes();
+    public abstract List<ItemProviderType> getFilterTypes();
 
     public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];

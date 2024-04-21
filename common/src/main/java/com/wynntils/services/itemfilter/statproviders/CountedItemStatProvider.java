@@ -6,7 +6,7 @@ package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.CountedItemProperty;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class CountedItemStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
-    public List<ItemFilterType> getFilterTypes() {
-        return List.of(ItemFilterType.COUNTED);
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.COUNTED);
     }
 }

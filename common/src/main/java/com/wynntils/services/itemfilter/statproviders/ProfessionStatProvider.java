@@ -7,7 +7,7 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
@@ -22,8 +22,8 @@ public class ProfessionStatProvider extends ItemStatProvider<String> {
     }
 
     @Override
-    public List<ItemFilterType> getFilterTypes() {
-        return List.of(ItemFilterType.PROFESSION);
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.PROFESSION);
     }
 
     @Override

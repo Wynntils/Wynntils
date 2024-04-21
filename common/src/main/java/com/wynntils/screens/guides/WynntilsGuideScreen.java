@@ -10,14 +10,14 @@ import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
-    protected WynntilsGuideScreen(Component component, List<ItemFilterType> supportedFilterTypes) {
+    protected WynntilsGuideScreen(Component component, List<ItemProviderType> supportedProviderTypes) {
         super(component);
 
         // Override the search widget with our own
@@ -26,7 +26,7 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
                 -22,
                 Texture.CONTENT_BOOK_BACKGROUND.width(),
                 20,
-                supportedFilterTypes,
+                supportedProviderTypes,
                 true,
                 q -> reloadElements(),
                 this);

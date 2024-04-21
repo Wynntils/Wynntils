@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
-import com.wynntils.services.itemfilter.type.ItemFilterType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -34,7 +34,7 @@ public final class WynntilsIngredientGuideScreen
     private WynntilsIngredientGuideScreen() {
         super(
                 Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"),
-                List.of(ItemFilterType.INGREDIENT));
+                List.of(ItemProviderType.INGREDIENT));
     }
 
     public static Screen create() {
