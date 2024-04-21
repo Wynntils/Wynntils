@@ -4,13 +4,13 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
-import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
-public class ContentBookContainer extends WynncraftContainer
+public class ContentBookContainer extends AbstractWynncraftContainer
         implements SearchableContainerProperty, FullscreenContainerProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile("§f\uE000\uE072");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Scroll Down");

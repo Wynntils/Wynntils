@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
-import com.wynntils.models.containers.type.WynncraftContainer;
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import java.util.regex.Pattern;
 
-public class SeaskipperContainer extends WynncraftContainer {
+public class SeaskipperContainer extends AbstractWynncraftContainer {
     private static final Pattern TITLE_PATTERN = Pattern.compile("V.S.S. Seaskipper");
 
     public SeaskipperContainer() {

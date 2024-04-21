@@ -4,12 +4,12 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
-import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
-public class GuildMemberListContainer extends WynncraftContainer implements SearchableContainerProperty {
+public class GuildMemberListContainer extends AbstractWynncraftContainer implements SearchableContainerProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile(".+: Members");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§a§lNext Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§a§lPrevious Page");

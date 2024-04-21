@@ -7,7 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.containers.type.WynncraftContainer;
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.wynncontainers.AbilityTreeContainer;
 import com.wynntils.models.containers.type.wynncontainers.AccountBankContainer;
 import com.wynntils.models.containers.type.wynncontainers.BlockBankContainer;
@@ -50,8 +50,8 @@ public final class ContainerModel extends Model {
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
     public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
-    private static final List<WynncraftContainer> containerTypes = new ArrayList<>();
-    private WynncraftContainer currentContainer = null;
+    private static final List<AbstractWynncraftContainer> containerTypes = new ArrayList<>();
+    private AbstractWynncraftContainer currentContainer = null;
 
     public ContainerModel() {
         super(List.of());
@@ -65,7 +65,7 @@ public final class ContainerModel extends Model {
 
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        for (WynncraftContainer container : containerTypes) {
+        for (AbstractWynncraftContainer container : containerTypes) {
             if (container.isScreen(screen)) {
                 currentContainer = container;
                 currentContainer.setContainerId(screen.getMenu().containerId);
@@ -79,7 +79,7 @@ public final class ContainerModel extends Model {
         currentContainer = null;
     }
 
-    public WynncraftContainer getCurrentContainer() {
+    public AbstractWynncraftContainer getCurrentContainer() {
         return currentContainer;
     }
 
@@ -113,7 +113,7 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new TradeMarketSecondaryContainer());
     }
 
-    private void registerWynncraftContainer(WynncraftContainer container) {
+    private void registerWynncraftContainer(AbstractWynncraftContainer container) {
         containerTypes.add(container);
     }
 }
