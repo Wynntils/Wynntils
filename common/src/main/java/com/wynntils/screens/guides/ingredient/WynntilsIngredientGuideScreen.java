@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.ingredient;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.services.itemfilter.type.ItemFilterType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -31,7 +32,9 @@ public final class WynntilsIngredientGuideScreen
     private List<GuideIngredientItemStack> allIngredientItems = List.of();
 
     private WynntilsIngredientGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"));
+        super(
+                Component.translatable("screens.wynntils.wynntilsGuides.ingredientGuide.name"),
+                List.of(ItemFilterType.INGREDIENT));
     }
 
     public static Screen create() {

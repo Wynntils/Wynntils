@@ -16,6 +16,7 @@ import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.trademarket.widgets.PresetButton;
+import com.wynntils.services.itemfilter.type.ItemFilterType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -88,6 +89,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 renderY,
                 175,
                 20,
+                List.of(ItemFilterType.GENERIC),
                 true,
                 (query) -> {
                     saveSearchFilter(query);

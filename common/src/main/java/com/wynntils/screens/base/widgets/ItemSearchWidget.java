@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.services.itemfilter.type.ItemFilterType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -16,6 +17,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -24,6 +26,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ItemSearchWidget extends SearchWidget {
+    private final List<ItemFilterType> supportedFilterTypes;
     private final boolean supportsSorting;
     private final ItemSearchHelperWidget helperWidget;
 
@@ -36,12 +39,20 @@ public class ItemSearchWidget extends SearchWidget {
             int y,
             int width,
             int height,
+            List<ItemFilterType> supportedFilterTypes,
             boolean supportsSorting,
             Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
+        this.supportedFilterTypes = supportedFilterTypes;
         this.helperWidget = new ItemSearchHelperWidget(
-                x + width - 14, y + 6, Texture.INFO.width() / 3, Texture.INFO.height() / 3, Texture.INFO, true);
+                x + width - 14,
+                y + 6,
+                Texture.INFO.width() / 3,
+                Texture.INFO.height() / 3,
+                Texture.INFO,
+                true,
+                supportedFilterTypes);
         this.supportsSorting = supportsSorting;
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
         this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting);

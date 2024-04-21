@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -13,6 +13,7 @@ import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.services.itemfilter.type.ItemFilterType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.Pair;
@@ -48,6 +49,11 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
         }
 
         return List.of();
+    }
+
+    @Override
+    public List<ItemFilterType> getFilterTypes() {
+        return List.of(ItemFilterType.GEAR, ItemFilterType.GEAR_INSTANCE, ItemFilterType.INGREDIENT);
     }
 
     private List<StatValue> handleIngredientItem(IngredientItem ingredientItem) {

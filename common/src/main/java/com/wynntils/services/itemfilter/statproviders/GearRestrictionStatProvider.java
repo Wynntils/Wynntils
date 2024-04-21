@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.services.itemfilter.type.ItemFilterType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
@@ -15,5 +16,10 @@ public class GearRestrictionStatProvider extends ItemStatProvider<String> {
         if (!(wynnItem instanceof GearItem gearItem)) return List.of();
 
         return List.of(gearItem.getItemInfo().metaInfo().restrictions().name());
+    }
+
+    @Override
+    public List<ItemFilterType> getFilterTypes() {
+        return List.of(ItemFilterType.GEAR);
     }
 }
