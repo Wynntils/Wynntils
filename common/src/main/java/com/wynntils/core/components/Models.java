@@ -95,7 +95,7 @@ public final class Models {
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PartyModel Party = new PartyModel();
-    public static final InventoryModel PlayerInventory = new InventoryModel();
+    public static final InventoryModel Inventory = new InventoryModel();
     public static final PlayerModel Player = new PlayerModel();
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();

@@ -200,7 +200,7 @@ public class TokenModel extends Model {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        inventoryWatchers.values().forEach(Models.PlayerInventory::unregisterWatcher);
+        inventoryWatchers.values().forEach(Models.Inventory::unregisterWatcher);
 
         Set<TokenGatekeeper> oldGatekeepers = new HashSet<>(activeGatekeepers.values());
 
@@ -216,7 +216,7 @@ public class TokenModel extends Model {
     private void addGatekeeper(int entityId, TokenGatekeeper gatekeeper) {
         TokenInventoryWatcher watcher = new TokenInventoryWatcher(gatekeeper);
         inventoryWatchers.put(gatekeeper, watcher);
-        Models.PlayerInventory.registerWatcher(watcher);
+        Models.Inventory.registerWatcher(watcher);
         activeGatekeepers.put(entityId, gatekeeper);
 
         WynntilsMod.postEvent(new TokenGatekeeperEvent.Added(gatekeeper));
@@ -225,7 +225,7 @@ public class TokenModel extends Model {
     private void removeGatekeeper(int entityId, TokenGatekeeper gatekeeper) {
         activeGatekeepers.remove(entityId);
         InventoryWatcher watcher = inventoryWatchers.get(gatekeeper);
-        Models.PlayerInventory.unregisterWatcher(watcher);
+        Models.Inventory.unregisterWatcher(watcher);
         inventoryWatchers.remove(gatekeeper);
 
         WynntilsMod.postEvent(new TokenGatekeeperEvent.Removed(gatekeeper));

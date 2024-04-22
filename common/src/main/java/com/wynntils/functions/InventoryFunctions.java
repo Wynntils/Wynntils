@@ -81,14 +81,14 @@ public class InventoryFunctions {
     public static class CappedInventorySlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getInventorySlots();
+            return Models.Inventory.getInventorySlots();
         }
     }
 
     public static class CappedIngredientPouchSlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getIngredientPouchSlots();
+            return Models.Inventory.getIngredientPouchSlots();
         }
     }
 
@@ -172,7 +172,7 @@ public class InventoryFunctions {
     public static class InventoryFreeFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getInventorySlots().getRemaining();
+            return Models.Inventory.getInventorySlots().getRemaining();
         }
 
         @Override
@@ -184,7 +184,7 @@ public class InventoryFunctions {
     public static class InventoryUsedFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getInventorySlots().current();
+            return Models.Inventory.getInventorySlots().current();
         }
 
         @Override
@@ -196,7 +196,7 @@ public class InventoryFunctions {
     public static class IngredientPouchOpenSlotsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getIngredientPouchSlots().getRemaining();
+            return Models.Inventory.getIngredientPouchSlots().getRemaining();
         }
 
         @Override
@@ -208,7 +208,7 @@ public class InventoryFunctions {
     public static class IngredientPouchUsedSlotsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.PlayerInventory.getIngredientPouchSlots().current();
+            return Models.Inventory.getIngredientPouchSlots().current();
         }
 
         @Override

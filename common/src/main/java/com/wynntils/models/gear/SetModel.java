@@ -67,7 +67,7 @@ public class SetModel extends Model {
      */
     public Set<String> getUniqueSetNames() {
         Set<String> returnable = new HashSet<>();
-        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
             Optional<GearItem> gear = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (gear.isPresent()
                     && gear.get().getGearTier() == GearTier.SET
@@ -81,7 +81,7 @@ public class SetModel extends Model {
     public int getTrueCount(String setName) {
         int trueCount = 0;
 
-        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
             Optional<SetItemProperty> setItemProperty =
                     Models.Item.asWynnItemProperty(itemStack, SetItemProperty.class);
             if (setItemProperty.isEmpty() || setItemProperty.get().getSetInfo().isEmpty()) continue;
