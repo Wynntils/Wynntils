@@ -7,7 +7,7 @@ package com.wynntils.models.containers.containers.reward;
 import com.wynntils.models.containers.Container;
 import java.util.regex.Pattern;
 
-public class RewardContainer extends Container {
+public abstract class RewardContainer extends Container {
     protected RewardContainer(Pattern titlePattern) {
         super(titlePattern);
     }

@@ -4,12 +4,11 @@
  */
 package com.wynntils.models.containers;
 
-import com.wynntils.models.containers.type.ContainerProperty;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 
-public abstract class Container implements ContainerProperty {
+public abstract class Container {
     private final Predicate<Screen> screenPredicate;
 
     private int containerId;
@@ -19,17 +18,14 @@ public abstract class Container implements ContainerProperty {
                 screen -> titlePattern.matcher(screen.getTitle().getString()).matches();
     }
 
-    @Override
     public void setContainerId(int containerId) {
         this.containerId = containerId;
     }
 
-    @Override
     public int getContainerId() {
         return containerId;
     }
 
-    @Override
     public boolean isScreen(Screen screen) {
         return screenPredicate.test(screen);
     }

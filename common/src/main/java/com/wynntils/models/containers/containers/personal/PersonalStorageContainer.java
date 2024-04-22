@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class PersonalStorageContainer extends Container implements SearchableContainerProperty {
+public abstract class PersonalStorageContainer extends Container implements SearchableContainerProperty {
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a <§2<§a<§2<§a<");
 
