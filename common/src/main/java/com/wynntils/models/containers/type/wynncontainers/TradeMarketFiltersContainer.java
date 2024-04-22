@@ -4,11 +4,11 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.ScrollableContainerProperty;
-import com.wynntils.models.containers.type.WynncraftContainer;
 import java.util.regex.Pattern;
 
-public class TradeMarketFiltersContainer extends WynncraftContainer implements ScrollableContainerProperty {
+public class TradeMarketFiltersContainer extends AbstractWynncraftContainer implements ScrollableContainerProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\\[Pg\\. \\d] Filter Items");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Forward to §fPage \\d+");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Back to §fPage \\d+");

@@ -6,7 +6,7 @@ package com.wynntils.models.containers.type;
 
 import java.util.regex.Pattern;
 
-public class RewardContainer extends WynncraftContainer {
+public class RewardContainer extends AbstractWynncraftContainer {
     protected RewardContainer(Pattern titlePattern) {
         super(titlePattern);
     }

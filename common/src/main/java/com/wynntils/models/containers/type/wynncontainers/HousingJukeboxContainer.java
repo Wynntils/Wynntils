@@ -4,12 +4,14 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
-import com.wynntils.models.containers.type.WynncraftContainer;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class HousingJukeboxContainer extends WynncraftContainer implements SearchableContainerProperty {
+public class HousingJukeboxContainer extends AbstractWynncraftContainer implements SearchableContainerProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile("Select Songs");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
@@ -44,7 +46,7 @@ public class HousingJukeboxContainer extends WynncraftContainer implements Searc
     }
 
     @Override
-    public boolean supportsAdvancedSearch() {
-        return false;
+    public List<ItemProviderType> supportedProviderTypes() {
+        return List.of();
     }
 }

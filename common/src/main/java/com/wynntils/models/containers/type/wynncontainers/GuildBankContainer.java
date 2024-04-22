@@ -4,12 +4,15 @@
  */
 package com.wynntils.models.containers.type.wynncontainers;
 
+import com.wynntils.models.containers.type.AbstractWynncraftContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
-import com.wynntils.models.containers.type.WynncraftContainer;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class GuildBankContainer extends WynncraftContainer implements SearchableContainerProperty {
+public class GuildBankContainer extends AbstractWynncraftContainer implements SearchableContainerProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile(".+: Bank \\(.+\\)");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§a§lNext Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§a§lPrevious Page");
@@ -44,7 +47,7 @@ public class GuildBankContainer extends WynncraftContainer implements Searchable
     }
 
     @Override
-    public boolean supportsAdvancedSearch() {
-        return true;
+    public List<ItemProviderType> supportedProviderTypes() {
+        return Arrays.stream(ItemProviderType.values()).toList();
     }
 }
