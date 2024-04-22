@@ -7,33 +7,32 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.containers.type.AbstractWynncraftContainer;
-import com.wynntils.models.containers.type.wynncontainers.AbilityTreeContainer;
-import com.wynntils.models.containers.type.wynncontainers.AccountBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.BlockBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.BookshelfContainer;
-import com.wynntils.models.containers.type.wynncontainers.ChallengeRewardContainer;
-import com.wynntils.models.containers.type.wynncontainers.CharacterBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.CharacterInfoContainer;
-import com.wynntils.models.containers.type.wynncontainers.ContentBookContainer;
-import com.wynntils.models.containers.type.wynncontainers.DailyRewardContainer;
-import com.wynntils.models.containers.type.wynncontainers.FlyingChestContainer;
-import com.wynntils.models.containers.type.wynncontainers.GuildBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.GuildMemberListContainer;
-import com.wynntils.models.containers.type.wynncontainers.GuildTerritoriesContainer;
-import com.wynntils.models.containers.type.wynncontainers.HousingJukeboxContainer;
-import com.wynntils.models.containers.type.wynncontainers.HousingListContainer;
-import com.wynntils.models.containers.type.wynncontainers.JukeboxContainer;
-import com.wynntils.models.containers.type.wynncontainers.LobbyContainer;
-import com.wynntils.models.containers.type.wynncontainers.LootChestContainer;
-import com.wynntils.models.containers.type.wynncontainers.MiscBucketContainer;
-import com.wynntils.models.containers.type.wynncontainers.ObjectiveRewardContainer;
-import com.wynntils.models.containers.type.wynncontainers.PetMenuContainer;
-import com.wynntils.models.containers.type.wynncontainers.ScrapMenuContainer;
-import com.wynntils.models.containers.type.wynncontainers.SeaskipperContainer;
-import com.wynntils.models.containers.type.wynncontainers.TradeMarketFiltersContainer;
-import com.wynntils.models.containers.type.wynncontainers.TradeMarketPrimaryContainer;
-import com.wynntils.models.containers.type.wynncontainers.TradeMarketSecondaryContainer;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.personal.AccountBankContainer;
+import com.wynntils.models.containers.containers.personal.BlockBankContainer;
+import com.wynntils.models.containers.containers.personal.BookshelfContainer;
+import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer;
+import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
+import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
+import com.wynntils.models.containers.containers.GuildBankContainer;
+import com.wynntils.models.containers.containers.GuildMemberListContainer;
+import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
+import com.wynntils.models.containers.containers.HousingJukeboxContainer;
+import com.wynntils.models.containers.containers.HousingListContainer;
+import com.wynntils.models.containers.containers.JukeboxContainer;
+import com.wynntils.models.containers.containers.LobbyContainer;
+import com.wynntils.models.containers.containers.reward.LootChestContainer;
+import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
+import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
+import com.wynntils.models.containers.containers.PetMenuContainer;
+import com.wynntils.models.containers.containers.ScrapMenuContainer;
+import com.wynntils.models.containers.containers.SeaskipperContainer;
+import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
+import com.wynntils.models.containers.containers.TradeMarketPrimaryContainer;
+import com.wynntils.models.containers.containers.TradeMarketSecondaryContainer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -50,8 +49,8 @@ public final class ContainerModel extends Model {
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
     public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
-    private static final List<AbstractWynncraftContainer> containerTypes = new ArrayList<>();
-    private AbstractWynncraftContainer currentContainer = null;
+    private static final List<Container> containerTypes = new ArrayList<>();
+    private Container currentContainer = null;
 
     public ContainerModel() {
         super(List.of());
@@ -65,7 +64,7 @@ public final class ContainerModel extends Model {
 
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        for (AbstractWynncraftContainer container : containerTypes) {
+        for (Container container : containerTypes) {
             if (container.isScreen(screen)) {
                 currentContainer = container;
                 currentContainer.setContainerId(screen.getMenu().containerId);
@@ -79,7 +78,7 @@ public final class ContainerModel extends Model {
         currentContainer = null;
     }
 
-    public AbstractWynncraftContainer getCurrentContainer() {
+    public Container getCurrentContainer() {
         return currentContainer;
     }
 
@@ -113,7 +112,7 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new TradeMarketSecondaryContainer());
     }
 
-    private void registerWynncraftContainer(AbstractWynncraftContainer container) {
+    private void registerWynncraftContainer(Container container) {
         containerTypes.add(container);
     }
 }

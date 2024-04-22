@@ -11,7 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
-import com.wynntils.models.containers.type.InventoryWatcher;
+import com.wynntils.models.inventory.InventoryWatcher;
 import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.models.token.type.TokenGatekeeper;

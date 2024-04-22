@@ -17,7 +17,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.containers.type.LootChestType;
 import com.wynntils.models.containers.type.MythicFind;
-import com.wynntils.models.containers.type.RewardContainer;
+import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.EmeraldItem;

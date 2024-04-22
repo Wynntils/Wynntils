@@ -16,7 +16,7 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
-import com.wynntils.models.containers.type.RewardContainer;
+import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.utils.mc.McUtils;

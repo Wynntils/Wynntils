@@ -22,7 +22,7 @@ import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
-import com.wynntils.models.containers.PlayerInventoryModel;
+import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.dungeon.DungeonModel;
 import com.wynntils.models.elements.ElementModel;
@@ -95,7 +95,7 @@ public final class Models {
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PartyModel Party = new PartyModel();
-    public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
+    public static final InventoryModel PlayerInventory = new InventoryModel();
     public static final PlayerModel Player = new PlayerModel();
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();

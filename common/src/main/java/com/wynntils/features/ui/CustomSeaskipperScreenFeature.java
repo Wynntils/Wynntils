@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.models.containers.type.wynncontainers.SeaskipperContainer;
+import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
