@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.containers.type.PersonalStorageContainer;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.List;
 import java.util.Map;

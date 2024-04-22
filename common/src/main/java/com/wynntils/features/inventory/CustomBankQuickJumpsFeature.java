@@ -15,7 +15,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.models.containers.type.PersonalStorageContainer;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.type.PersonalStorageType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;

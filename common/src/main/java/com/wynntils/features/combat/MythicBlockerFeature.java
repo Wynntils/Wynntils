@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerCloseEvent;
-import com.wynntils.models.containers.type.RewardContainer;
+import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.mc.McUtils;

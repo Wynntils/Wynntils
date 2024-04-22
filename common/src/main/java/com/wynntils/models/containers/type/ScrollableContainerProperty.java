@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 /**
  * Marker interface for properties that are used in containers that can be scrolled.
  */
-public interface ScrollableContainerProperty extends ContainerProperty {
+public interface ScrollableContainerProperty {
     Pattern getNextItemPattern();
 
     Pattern getPreviousItemPattern();
