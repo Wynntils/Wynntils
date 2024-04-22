@@ -173,7 +173,8 @@ public class ItemFilterService extends Service {
                     continue;
                 }
 
-                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(keyString, supportedProviderTypes);
+                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError =
+                        getItemStatProvider(keyString, supportedProviderTypes);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
@@ -265,8 +266,8 @@ public class ItemFilterService extends Service {
 
         return filterMatches(searchQuery, wynnItemOpt.get())
                 && itemNameMatches(
-                searchQuery,
-                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+                        searchQuery,
+                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
     }
 
     /**
@@ -346,8 +347,8 @@ public class ItemFilterService extends Service {
 
             String filterString = itemStatProvider.getName() + ":"
                     + String.join(
-                    LIST_SEPARATOR,
-                    filters.stream().map(StatFilter::asString).toList());
+                            LIST_SEPARATOR,
+                            filters.stream().map(StatFilter::asString).toList());
             filterStrings.add(filterString);
         }
         String filterString = String.join(" ", filterStrings);
@@ -431,11 +432,12 @@ public class ItemFilterService extends Service {
     private boolean itemNameMatches(ItemSearchQuery searchQuery, String itemName) {
         return searchQuery.plainTextTokens().isEmpty()
                 || itemName.toLowerCase(Locale.ROOT)
-                .contains(
-                        String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
+                        .contains(
+                                String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
-    private ErrorOr<List<SortInfo>> getStatSortOrder(String inputString, List<ItemProviderType> supportedProviderTypes) {
+    private ErrorOr<List<SortInfo>> getStatSortOrder(
+            String inputString, List<ItemProviderType> supportedProviderTypes) {
         List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
