@@ -41,9 +41,10 @@ public final class MapRenderer {
 
     // The minimum and maximum zoom values. This is the range of the zoom.
     // The minimum zoom is where the map is at its smallest, and the maximum zoom is where the map is at its largest.
-    // The ratio is 10:1 when the zoom is at it's minimum, 1:5 when the zoom is at it's maximum.
-    public static final float MIN_ZOOM = 0.1f;
-    public static final float MAX_ZOOM = 5f;
+    // The ratio is 20:1 when the zoom is at it's minimum, 1:10 when the zoom is at it's maximum.
+    // The zoom is adjusted by GUI scale, to make sure these ratios are consistent across all GUI scales.
+    public static final float MIN_ZOOM = 0.2f;
+    public static final float MAX_ZOOM = 10f;
 
     // These don't have significance, they are just used to calculate the zoom,
     // and are cached for performance.
@@ -58,7 +59,16 @@ public final class MapRenderer {
     // - Steps are 1-based (1 to ZOOM_STEPS), so we subtract 1 from the step to get the correct zoom value,
     //   to ensure that the real zoom values are in the range [MIN_ZOOM, MAX_ZOOM] (including the boundaries).
     public static float getZoomFromSteps(float step) {
-        return (float) Math.exp(MIN_ZOOM_LOG + (MAX_ZOOM_LOG - MIN_ZOOM_LOG) * (step - 1) / (ZOOM_STEPS - 1));
+        double guiScale = McUtils.guiScale();
+        double logGuiScale = Math.log(guiScale);
+
+        // log(MIN_ZOOM / guiScale) = log(MIN_ZOOM) - log(guiScale)
+        double logMinZoomGuiScale = MIN_ZOOM_LOG - logGuiScale;
+        // log(MAX_ZOOM / guiScale) = log(MAX_ZOOM) - log(guiScale)
+        double logMaxZoomGuiScale = MAX_ZOOM_LOG - logGuiScale;
+
+        return (float) Math.exp(
+                logMinZoomGuiScale + (logMaxZoomGuiScale - logMinZoomGuiScale) * (step - 1) / (ZOOM_STEPS - 1));
     }
 
     public static void renderMapQuad(
