@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.horse.type.HorseTier;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class HorseAnnotator implements ItemAnnotator {
+public final class HorseAnnotator implements GameItemAnnotator {
     private static final Pattern HORSE_PATTERN = Pattern.compile("^§f(.*) Horse$");
     private static final Pattern HORSE_TIER_PATTERN = Pattern.compile("^§7Tier (\\d)$");
     private static final Pattern HORSE_LEVEL_PATTERN = Pattern.compile("^§6Speed: (\\d+)/(\\d+)$");
