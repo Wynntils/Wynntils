@@ -327,15 +327,14 @@ public class ItemFilterService extends Service {
     /**
      * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
      *
-     * @param name                 an alias of the stat provider
+     * @param name                   an alias of the stat provider
      * @param supportedProviderTypes the list of supported provider types
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
     private ErrorOr<ItemStatProvider<?>> getItemStatProvider(
             String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
-                .filter(provider -> supportedProviderTypes.contains(ItemProviderType.ALL)
-                        || provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
+                .filter(provider -> provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))
                 .findFirst();

@@ -9,7 +9,6 @@ import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.PersonalStorageType;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -56,6 +55,6 @@ public abstract class PersonalStorageContainer extends Container implements Sear
 
     @Override
     public List<ItemProviderType> supportedProviderTypes() {
-        return Arrays.stream(ItemProviderType.values()).toList();
+        return ItemProviderType.normalTypes();
     }
 }
