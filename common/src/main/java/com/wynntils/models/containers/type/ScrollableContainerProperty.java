@@ -9,6 +9,9 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
+/**
+ * Marker interface for properties that are used in containers that can be scrolled.
+ */
 public interface ScrollableContainerProperty {
     Pattern getNextItemPattern();
 

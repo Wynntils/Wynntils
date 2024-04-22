@@ -7,6 +7,7 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.EnumUtils;
 import java.util.Arrays;
@@ -27,5 +28,10 @@ public class GearRestrictionStatProvider extends ItemStatProvider<String> {
         return Arrays.stream(GearRestrictions.values())
                 .map(gearRestriction -> EnumUtils.toNiceString(gearRestriction).replace(" ", "_"))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR);
     }
 }

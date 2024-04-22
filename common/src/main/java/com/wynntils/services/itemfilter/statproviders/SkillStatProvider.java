@@ -9,6 +9,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 
@@ -42,5 +43,11 @@ public class SkillStatProvider extends ItemStatProvider<Integer> {
                 .filter(id -> id.statType() instanceof SkillStatType)
                 .map(StatActualValue::value)
                 .toList();
+    }
+
+    @Override
+    public List<ItemProviderType> getFilterTypes() {
+        // Skill stats are either fixed in gear
+        return List.of(ItemProviderType.GEAR);
     }
 }

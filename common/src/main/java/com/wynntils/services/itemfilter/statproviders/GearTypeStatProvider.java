@@ -7,6 +7,7 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.EnumUtils;
 import java.util.List;
@@ -36,5 +37,10 @@ public class GearTypeStatProvider extends ItemStatProvider<String> {
                 EnumUtils.toNiceString(GearType.DAGGER.name()),
                 EnumUtils.toNiceString(GearType.BOW.name()),
                 EnumUtils.toNiceString(GearType.RELIK.name()));
+    }
+
+    @Override
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR);
     }
 }

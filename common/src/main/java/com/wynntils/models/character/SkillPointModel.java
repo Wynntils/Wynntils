@@ -93,7 +93,7 @@ public class SkillPointModel extends Model {
         List<String> armourNames = new ArrayList<>();
         List<String> accessoryNames = new ArrayList<>();
 
-        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isEmpty()) continue;
             WynnItem wynnItem = wynnItemOptional.get();
@@ -308,7 +308,7 @@ public class SkillPointModel extends Model {
         craftedSkillPoints = new EnumMap<>(Skill.class);
         setBonusSkillPoints = new EnumMap<>(Skill.class);
 
-        for (ItemStack itemStack : Models.PlayerInventory.getEquippedItems()) {
+        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
             calculateSingleGearSkillPoints(itemStack);
         }
 

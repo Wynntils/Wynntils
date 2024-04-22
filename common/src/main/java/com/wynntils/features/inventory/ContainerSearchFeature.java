@@ -14,42 +14,37 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
-import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
-import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
+import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.GuildBankContainer;
+import com.wynntils.models.containers.containers.GuildMemberListContainer;
+import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
+import com.wynntils.models.containers.containers.HousingJukeboxContainer;
+import com.wynntils.models.containers.containers.HousingListContainer;
+import com.wynntils.models.containers.containers.JukeboxContainer;
+import com.wynntils.models.containers.containers.PetMenuContainer;
+import com.wynntils.models.containers.containers.ScrapMenuContainer;
+import com.wynntils.models.containers.containers.personal.AccountBankContainer;
+import com.wynntils.models.containers.containers.personal.BlockBankContainer;
+import com.wynntils.models.containers.containers.personal.BookshelfContainer;
+import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
+import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
-import com.wynntils.models.containers.type.wynncontainers.AccountBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.BlockBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.BookshelfContainer;
-import com.wynntils.models.containers.type.wynncontainers.CharacterBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.ContentBookContainer;
-import com.wynntils.models.containers.type.wynncontainers.GuildBankContainer;
-import com.wynntils.models.containers.type.wynncontainers.GuildMemberListContainer;
-import com.wynntils.models.containers.type.wynncontainers.GuildTerritoriesContainer;
-import com.wynntils.models.containers.type.wynncontainers.HousingJukeboxContainer;
-import com.wynntils.models.containers.type.wynncontainers.HousingListContainer;
-import com.wynntils.models.containers.type.wynncontainers.JukeboxContainer;
-import com.wynntils.models.containers.type.wynncontainers.MiscBucketContainer;
-import com.wynntils.models.containers.type.wynncontainers.PetMenuContainer;
-import com.wynntils.models.containers.type.wynncontainers.ScrapMenuContainer;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
-import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Locale;
 import java.util.Map;
@@ -134,7 +129,6 @@ public class ContainerSearchFeature extends Feature {
     private long guildBankLastSearch = 0;
 
     private SearchWidget lastSearchWidget;
-    private ItemSearchHelperWidget lastItemSearchHelperWidget;
     private SearchableContainerProperty currentContainer;
     private boolean autoSearching = false;
     private ItemSearchQuery lastSearchQuery;
@@ -152,22 +146,6 @@ public class ContainerSearchFeature extends Feature {
         if (currentContainer == null) return;
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
-    }
-
-    // This might not be needed in 1.20
-    // Render the tooltip last
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onContainerRender(ContainerRenderEvent event) {
-        if (lastItemSearchHelperWidget == null) return;
-
-        if (lastItemSearchHelperWidget.isHovered()) {
-            event.getGuiGraphics()
-                    .renderComponentTooltip(
-                            FontRenderer.getInstance().getFont(),
-                            lastItemSearchHelperWidget.getTooltipLines(),
-                            event.getMouseX(),
-                            event.getMouseY());
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -202,7 +180,6 @@ public class ContainerSearchFeature extends Feature {
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
         lastSearchQuery = null;
-        lastItemSearchHelperWidget = null;
         currentContainer = null;
         autoSearching = false;
         guildBankLastSearch = 0;
@@ -228,16 +205,6 @@ public class ContainerSearchFeature extends Feature {
         }
 
         tryAutoSearch(abstractContainerScreen);
-    }
-
-    @SubscribeEvent
-    public void onInventoryMouseClick(InventoryMouseClickedEvent event) {
-        if (lastItemSearchHelperWidget == null) return;
-
-        if (lastItemSearchHelperWidget.mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
-            event.setCanceled(true);
-            return;
-        }
     }
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
@@ -291,6 +258,7 @@ public class ContainerSearchFeature extends Feature {
                     renderY - 20,
                     155,
                     20,
+                    currentContainer.supportedProviderTypes(),
                     false,
                     query -> {
                         lastSearchQuery = query;
@@ -305,16 +273,6 @@ public class ContainerSearchFeature extends Feature {
             lastSearchWidget = searchWidget;
 
             screen.addRenderableWidget(lastSearchWidget);
-
-            lastItemSearchHelperWidget = new ItemSearchHelperWidget(
-                    renderX + screen.imageWidth - 31,
-                    renderY - 14,
-                    Texture.INFO.width() / 3,
-                    Texture.INFO.height() / 3,
-                    Texture.INFO,
-                    true);
-
-            screen.addRenderableWidget(lastItemSearchHelperWidget);
 
             screen.addRenderableWidget(
                     new ItemFilterUIButton(renderX + 157, renderY - 20, lastSearchWidget, screen, false));
