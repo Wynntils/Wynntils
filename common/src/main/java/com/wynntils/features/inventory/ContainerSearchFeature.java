@@ -274,8 +274,13 @@ public class ContainerSearchFeature extends Feature {
 
             screen.addRenderableWidget(lastSearchWidget);
 
-            screen.addRenderableWidget(
-                    new ItemFilterUIButton(renderX + 157, renderY - 20, lastSearchWidget, screen, false));
+            screen.addRenderableWidget(new ItemFilterUIButton(
+                    renderX + 157,
+                    renderY - 20,
+                    lastSearchWidget,
+                    screen,
+                    false,
+                    currentContainer.supportedProviderTypes()));
         } else {
             SearchWidget searchWidget = new SearchWidget(
                     renderX + screen.imageWidth - 175,

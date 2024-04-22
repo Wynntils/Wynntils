@@ -9,7 +9,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -18,6 +17,7 @@ import com.wynntils.screens.itemfilter.widgets.FilterOptionsButton;
 import com.wynntils.screens.itemfilter.widgets.PresetButton;
 import com.wynntils.screens.itemfilter.widgets.ProviderButton;
 import com.wynntils.screens.itemfilter.widgets.SortWidget;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortInfo;
@@ -60,6 +60,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private static final int MAX_SORTS_PER_PAGE = 7;
 
     // Collections
+    private final List<ItemProviderType> supportedProviderTypes;
     private List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
     private StatProviderFilterMap filters = new StatProviderFilterMap();
     private List<SortInfo> sorts = new ArrayList<>();
@@ -82,7 +83,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private FilterOptionsButton selectedFilterButton;
     private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget presetNameInput;
-    private WynntilsButton helperButton;
     private WynntilsButton nextPresetButton;
     private WynntilsButton previousPresetButton;
 
@@ -105,13 +105,19 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private final Screen previousScreen;
     private boolean sortMode = false;
     private FilterType filterType = FilterType.ALL;
+    private ItemStatProvider<?> selectedProvider;
 
-    private ItemFilterScreen(SearchWidget searchWidget, Screen previousScreen, boolean supportsSorting) {
+    private ItemFilterScreen(
+            SearchWidget searchWidget,
+            Screen previousScreen,
+            boolean supportsSorting,
+            List<ItemProviderType> supportedProviderTypes) {
         super(Component.literal("Item Filter Screen"));
 
         this.previousSearchWidget = searchWidget;
         this.previousScreen = previousScreen;
         this.supportsSorting = supportsSorting;
+        this.supportedProviderTypes = supportedProviderTypes;
 
         // region Input widgets
         itemNameInput = new TextInputBoxWidget(220, 5, 100, 18, (s -> updateQueryString()), this);
@@ -132,6 +138,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 -22,
                 Texture.ITEM_FILTER_BACKGROUND.width() - 40,
                 20,
+                supportedProviderTypes,
                 supportsSorting,
                 (query) -> {
                     if (applyButton == null) return;
@@ -150,8 +157,12 @@ public final class ItemFilterScreen extends WynntilsScreen {
         presets = Services.ItemFilter.presets.get();
     }
 
-    public static Screen create(SearchWidget searchWidget, Screen previousScreen, boolean supportsSorting) {
-        return new ItemFilterScreen(searchWidget, previousScreen, supportsSorting);
+    public static Screen create(
+            SearchWidget searchWidget,
+            Screen previousScreen,
+            boolean supportsSorting,
+            List<ItemProviderType> supportedProviderTypes) {
+        return new ItemFilterScreen(searchWidget, previousScreen, supportsSorting, supportedProviderTypes);
     }
 
     @Override
@@ -163,16 +174,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         this.addRenderableWidget(itemSearchWidget);
         this.addRenderableWidget(providerSearchWidget);
-
-        helperButton = new ItemSearchHelperWidget(
-                Texture.ITEM_FILTER_BACKGROUND.width() - 57,
-                -19,
-                (int) (Texture.INFO.width() / 1.7f),
-                (int) (Texture.INFO.height() / 1.7f),
-                Texture.INFO,
-                true);
-
-        this.addRenderableWidget(helperButton);
 
         this.addRenderableWidget(itemNameInput);
 
@@ -430,11 +431,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         double adjustedMouseX = mouseX - translationX;
         double adjustedMouseY = mouseY - translationY;
-
-        // Don't want to clear the text when right clicking
-        if (helperButton.mouseClicked(adjustedMouseX, adjustedMouseY, button)) {
-            return false;
-        }
 
         if (!draggingProviderScroll && itemStatProviders.size() > MAX_PROVIDERS_PER_PAGE) {
             if (MathUtils.isInside(
@@ -699,6 +695,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         providerButtons = new ArrayList<>();
 
         itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(itemStatProvider -> supportedProviderTypes.contains(ItemProviderType.ALL)
+                        || itemStatProvider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(provider -> searchMatches(provider.getDisplayName()))
                 .toList();
 
@@ -923,7 +921,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     private void parseFilters() {
-        ItemSearchQuery searchQuery = Services.ItemFilter.createSearchQuery(itemSearchWidget.getTextBoxInput(), true);
+        ItemSearchQuery searchQuery =
+                Services.ItemFilter.createSearchQuery(itemSearchWidget.getTextBoxInput(), true, supportedProviderTypes);
 
         filters = searchQuery.filters();
         sorts = searchQuery.sorts();

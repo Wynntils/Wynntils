@@ -18,20 +18,31 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
+    private List<ItemProviderType> supportedProviderTypes;
+
     protected WynntilsGuideScreen(Component component, List<ItemProviderType> supportedProviderTypes) {
         super(component);
 
+        this.supportedProviderTypes = supportedProviderTypes;
+
         // Override the search widget with our own
         this.searchWidget = new ItemSearchWidget(
-                0, -22, Texture.CONTENT_BOOK_BACKGROUND.width() - 24, 20, true, q -> reloadElements(), this);
+                0,
+                -22,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 24,
+                20,
+                supportedProviderTypes,
+                true,
+                q -> reloadElements(),
+                this);
     }
 
     @Override
     protected void doInit() {
         super.doInit();
 
-        this.addRenderableWidget(
-                new ItemFilterUIButton(Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true));
+        this.addRenderableWidget(new ItemFilterUIButton(
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true, supportedProviderTypes));
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),

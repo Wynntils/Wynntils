@@ -104,7 +104,13 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // On reloads, this should not change anything
         itemSearchWidget.setTextBoxInput(Models.TradeMarket.getLastSearchFilter());
 
-        this.addRenderableWidget(new ItemFilterUIButton(renderX + 157, renderY, itemSearchWidget, this, true));
+        this.addRenderableWidget(new ItemFilterUIButton(
+                renderX + 157,
+                renderY,
+                itemSearchWidget,
+                this,
+                true,
+                Arrays.stream(ItemProviderType.values()).toList()));
 
         WynntilsButton backButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
