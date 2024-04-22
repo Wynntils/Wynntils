@@ -63,5 +63,10 @@ public enum ItemProviderType {
     /**
      * A filter for items that have a profession.
      */
-    PROFESSION
+    PROFESSION,
+
+    /**
+     * Special filter for territory items.
+     */
+    TERRITORY;
 }

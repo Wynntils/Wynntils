@@ -7,11 +7,11 @@ package com.wynntils.models.territories.type;
 import net.minecraft.ChatFormatting;
 
 public enum GuildResource {
-    EMERALD(ChatFormatting.GREEN, "Emeralds", ""),
-    ORE(ChatFormatting.WHITE, "Ores", "Ⓑ"),
+    EMERALDS(ChatFormatting.GREEN, "Emeralds", ""),
+    ORE(ChatFormatting.WHITE, "Ore", "Ⓑ"),
     WOOD(ChatFormatting.GOLD, "Wood", "Ⓒ"),
-    FISH(ChatFormatting.AQUA, "Fishes", "Ⓚ"),
-    CROPS(ChatFormatting.YELLOW, "Crops", "Ⓙ");
+    FISH(ChatFormatting.AQUA, "Fish", "Ⓚ"),
+    CROP(ChatFormatting.YELLOW, "Crop", "Ⓙ");
 
     private final ChatFormatting color;
     private final String name;
@@ -25,7 +25,7 @@ public enum GuildResource {
 
     public static GuildResource fromName(String name) {
         for (GuildResource resource : values()) {
-            if (resource.getName().equalsIgnoreCase(name) || resource.name().equalsIgnoreCase(name)) {
+            if (resource.getName().equalsIgnoreCase(name)) {
                 return resource;
             }
         }

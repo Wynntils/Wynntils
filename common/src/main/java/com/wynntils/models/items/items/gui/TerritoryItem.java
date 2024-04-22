@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class TerritoryItem extends GuiItem {
     private final String name;
-    private final Map<GuildResource, Integer> generation;
+    private final Map<GuildResource, Integer> production;
     private final Map<GuildResource, TerritoryStorage> storage;
     private final int treasuryBonus;
     private final List<String> alerts;
@@ -20,13 +20,13 @@ public class TerritoryItem extends GuiItem {
 
     public TerritoryItem(
             String name,
-            Map<GuildResource, Integer> generation,
+            Map<GuildResource, Integer> production,
             Map<GuildResource, TerritoryStorage> storage,
             int treasuryBonus,
             List<String> alerts,
             Map<TerritoryUpgrade, Integer> upgrades) {
         this.name = name;
-        this.generation = generation;
+        this.production = production;
         this.storage = storage;
         this.treasuryBonus = treasuryBonus;
         this.alerts = alerts;
@@ -37,8 +37,8 @@ public class TerritoryItem extends GuiItem {
         return name;
     }
 
-    public Map<GuildResource, Integer> getGeneration() {
-        return generation;
+    public Map<GuildResource, Integer> getProduction() {
+        return production;
     }
 
     public Map<GuildResource, TerritoryStorage> getStorage() {
@@ -61,7 +61,7 @@ public class TerritoryItem extends GuiItem {
     public String toString() {
         return "TerritoryItem{" + "name='"
                 + name + '\'' + ", generation="
-                + generation + ", storage="
+                + production + ", storage="
                 + storage + ", treasuryBonus="
                 + treasuryBonus + ", alerts="
                 + alerts + ", upgrades="

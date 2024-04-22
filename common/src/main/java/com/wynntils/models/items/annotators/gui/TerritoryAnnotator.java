@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class TerritoryAnnotator implements ItemAnnotator {
     private static final Pattern NAME_PATTERN =
-            Pattern.compile("§.(?:§l)?(?:\\[§c§l!§4§l\\] §f)?(?<name>.+)( \\(HQ\\))?");
+            Pattern.compile("§.(?:§l)?(?:\\[§c§l!§4§l\\] §f)?(?<name>[^\\(\\)]+)( \\(HQ\\))?");
     private static final Pattern GENERATOR_PATTERN =
             Pattern.compile("§.(?:[ⒷⒸⓀⒿ] )?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
     private static final Pattern STORAGE_PATTERN =
@@ -50,7 +50,7 @@ public class TerritoryAnnotator implements ItemAnnotator {
         String territoryName = matcher.group("name");
         Map<GuildResource, Integer> generation = new EnumMap<>(GuildResource.class);
         Map<GuildResource, TerritoryStorage> storage = new EnumMap<>(GuildResource.class);
-        int treasuryBonus = 0;
+        int treasuryBonus = -1;
         List<String> alerts = new ArrayList<>();
         Map<TerritoryUpgrade, Integer> upgrades = new EnumMap<>(TerritoryUpgrade.class);
 
@@ -70,7 +70,7 @@ public class TerritoryAnnotator implements ItemAnnotator {
                 int amount = Integer.parseInt(storageMatcher.group("current"));
                 int max = Integer.parseInt(storageMatcher.group("max"));
                 String type = storageMatcher.group("type");
-                GuildResource resource = type == null ? GuildResource.EMERALD : GuildResource.fromSymbol(type);
+                GuildResource resource = type == null ? GuildResource.EMERALDS : GuildResource.fromSymbol(type);
                 storage.put(resource, new TerritoryStorage(amount, max));
                 continue;
             }
