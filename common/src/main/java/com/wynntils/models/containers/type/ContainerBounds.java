@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers.type;
@@ -23,7 +23,7 @@ public record ContainerBounds(int startRow, int startCol, int endRow, int endCol
         List<Integer> slots = new ArrayList<>();
         // All container slots are numbered from 0 to (totalRows * 9) - 1
         for (int slot = 0; slot < (endRow + 1) * 9; slot++) {
-            if (isInBounds(slot,  startRow, startCol, endRow, endCol)) {
+            if (isInBounds(slot, startRow, startCol, endRow, endCol)) {
                 slots.add(slot);
             }
         }
