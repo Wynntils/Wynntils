@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.type;
@@ -21,6 +21,24 @@ public enum GuildResource {
         this.color = color;
         this.name = name;
         this.symbol = symbol;
+    }
+
+    public static GuildResource fromName(String name) {
+        for (GuildResource resource : values()) {
+            if (resource.getName().equalsIgnoreCase(name) || resource.name().equalsIgnoreCase(name)) {
+                return resource;
+            }
+        }
+        return null;
+    }
+
+    public static GuildResource fromSymbol(String symbol) {
+        for (GuildResource resource : values()) {
+            if (resource.getSymbol().equalsIgnoreCase(symbol)) {
+                return resource;
+            }
+        }
+        return null;
     }
 
     public ChatFormatting getColor() {
