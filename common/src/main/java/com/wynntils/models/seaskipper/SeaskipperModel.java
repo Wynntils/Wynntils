@@ -13,7 +13,8 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.containers.type.wynncontainers.SeaskipperContainer;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
@@ -49,10 +50,10 @@ public final class SeaskipperModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre event) {
-        if (!Models.Container.isSeaskipper(event.getTitle())) return;
+    public void onScreenInit(ScreenInitEvent e) {
+        if (!(Models.Container.getCurrentContainer() instanceof SeaskipperContainer seaskipperContainer)) return;
 
-        containerId = event.getContainerId();
+        containerId = seaskipperContainer.getContainerId();
         availableDestinations = new ArrayList<>();
     }
 

@@ -4,13 +4,14 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.MouseScrollEvent;
-import com.wynntils.models.containers.type.InteractiveContainerType;
+import com.wynntils.models.containers.type.ScrollableContainerProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Optional;
@@ -32,17 +33,19 @@ public class ContainerScrollFeature extends Feature {
 
         boolean scrollBack = event.isScrollingUp() ^ invertScroll.get();
 
-        Optional<Integer> slot = InteractiveContainerType.getScrollButton(gui, scrollBack);
+        if (Models.Container.getCurrentContainer() instanceof ScrollableContainerProperty scrollableContainer) {
+            Optional<Integer> slot = scrollableContainer.getScrollButton(gui, scrollBack);
 
-        if (slot.isEmpty()) return;
+            if (slot.isEmpty()) return;
 
-        // Prevent the scroll from being handled by the game
-        event.setCanceled(true);
+            // Prevent the scroll from being handled by the game
+            event.setCanceled(true);
 
-        ContainerUtils.clickOnSlot(
-                slot.get(),
-                gui.getMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                gui.getMenu().getItems());
+            ContainerUtils.clickOnSlot(
+                    slot.get(),
+                    gui.getMenu().containerId,
+                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    gui.getMenu().getItems());
+        }
     }
 }

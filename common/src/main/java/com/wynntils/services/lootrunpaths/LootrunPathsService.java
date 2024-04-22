@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
@@ -17,6 +17,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.containers.type.wynncontainers.LootChestContainer;
 import com.wynntils.services.lootrunpaths.event.LootrunPathCacheRefreshEvent;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.services.lootrunpaths.type.LootrunPath;
@@ -313,7 +314,7 @@ public final class LootrunPathsService extends Service {
     public void onOpen(ScreenOpenedEvent.Post event) {
         if (state != LootrunState.RECORDING) return;
         if (recordingInformation.getLastChest() == null) return;
-        if (!Models.Container.isLootChest(event.getScreen())) return;
+        if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) return;
 
         recording.chests().add(recordingInformation.getLastChest());
         recordingInformation.setDirty(true);
