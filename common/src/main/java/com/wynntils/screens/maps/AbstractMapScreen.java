@@ -290,6 +290,21 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
+    protected void renderZoomLevel(PoseStack poseStack, int mouseX, int mouseY) {
+        if (!KeyboardUtils.isShiftDown()) return;
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString("Zoom " + Math.round(currentZoomStep)),
+                        renderX + renderedBorderXOffset + mapWidth - 40,
+                        this.renderHeight - this.renderedBorderYOffset - 10,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.OUTLINE);
+    }
+
     protected void renderMapButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         PoseStack poseStack = guiGraphics.pose();
 

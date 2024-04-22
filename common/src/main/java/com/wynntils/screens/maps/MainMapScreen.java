@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -289,6 +289,8 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         renderCoordinates(poseStack, mouseX, mouseY);
+
+        renderZoomLevel(poseStack, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
