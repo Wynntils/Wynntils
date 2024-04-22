@@ -215,7 +215,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         if (firstInit) {
             BoundingBox textureBoundingBox =
-                    BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
+                    BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
 
             // When in an unmapped area, center to the middle of the map if the feature is enabled
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
@@ -279,7 +279,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     centerZ,
                     mapCenterX,
                     mapCenterZ,
-                    currentZoom,
+                    zoomRenderScale,
                     CommonColors.LIGHT_BLUE.asInt(),
                     CommonColors.BLACK.asInt());
         }
@@ -327,7 +327,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderPois(
                 pois.collect(Collectors.toList()),
                 poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .poiScale
                         .get(),
@@ -428,8 +428,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
-                    int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-                    int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+                    int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
+                    int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
                 }
@@ -449,8 +449,8 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void setCompassToMouseCoords(double mouseX, double mouseY) {
-        double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
-        double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
+        double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
+        double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
         Location compassLocation = Location.containing(gameX, 0, gameZ);
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);

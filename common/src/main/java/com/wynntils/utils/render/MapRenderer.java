@@ -32,12 +32,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 public final class MapRenderer {
-    // ZOOM_STEPS is the number of steps the zoom can take, [1, ZOOM_STEPS] (inclusive).
-    // Steps can be thought of as a percentage of the zoom,
-    // with 1 being the minimum zoom, and ZOOM_STEPS being the maximum zoom.
-    public static final int ZOOM_STEPS = 100;
+    // ZOOM_LEVELS is the number of steps the zoom can take, [1, ZOOM_LEVELS] (inclusive).
+    // Levels can be thought of as a percentage of the zoom,
+    // with 1 being the minimum zoom, and ZOOM_LEVELS being the maximum zoom.
+    public static final int ZOOM_LEVELS = 100;
+
     // This value should be the nearest step to the default zoom, 1.0f.
-    public static final int DEFAULT_ZOOM_STEP = 60;
+    public static final int DEFAULT_ZOOM_LEVEL = 60;
 
     // The minimum and maximum zoom values. This is the range of the zoom.
     // The minimum zoom is where the map is at its smallest, and the maximum zoom is where the map is at its largest.
@@ -58,7 +59,7 @@ public final class MapRenderer {
     // - This means that the zoom values for each step become exponentially larger.
     // - Steps are 1-based (1 to ZOOM_STEPS), so we subtract 1 from the step to get the correct zoom value,
     //   to ensure that the real zoom values are in the range [MIN_ZOOM, MAX_ZOOM] (including the boundaries).
-    public static float getZoomFromSteps(float step) {
+    public static float getZoomFromSteps(float zoomLevel) {
         double guiScale = McUtils.guiScale();
         double logGuiScale = Math.log(guiScale);
 
@@ -68,7 +69,7 @@ public final class MapRenderer {
         double logMaxZoomGuiScale = MAX_ZOOM_LOG - logGuiScale;
 
         return (float) Math.exp(
-                logMinZoomGuiScale + (logMaxZoomGuiScale - logMinZoomGuiScale) * (step - 1) / (ZOOM_STEPS - 1));
+                logMinZoomGuiScale + (logMaxZoomGuiScale - logMinZoomGuiScale) * (zoomLevel - 1) / (ZOOM_LEVELS - 1));
     }
 
     public static void renderMapQuad(

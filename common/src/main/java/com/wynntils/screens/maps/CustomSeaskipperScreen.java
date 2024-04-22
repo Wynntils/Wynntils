@@ -385,7 +385,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         renderDestinations(
                 destinationPois,
                 poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 1,
                 mouseX,
                 mouseY);
@@ -404,14 +404,14 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 getRenderedDestinations(pois, textureBoundingBox, poiScale, mouseX, mouseY);
 
         if (renderRoutes) {
-            float poiRenderX = MapRenderer.getRenderX(currentLocationPoi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(currentLocationPoi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(currentLocationPoi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(currentLocationPoi, mapCenterZ, centerZ, zoomRenderScale);
 
             for (SeaskipperDestinationPoi poi : destinationPois.stream()
                     .filter(SeaskipperDestinationPoi::isAvailable)
                     .toList()) {
-                float x = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-                float z = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+                float x = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+                float z = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
                 RenderUtils.drawLine(
                         poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x, z, 0, 1);
@@ -424,13 +424,14 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
             SeaskipperDestinationPoi poi = filteredPois.get(i);
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             if (hideTerritoryBorders) {
-                poi.renderAtWithoutBorders(poseStack, bufferSource, poiRenderX, poiRenderZ, currentZoom);
+                poi.renderAtWithoutBorders(poseStack, bufferSource, poiRenderX, poiRenderZ, zoomRenderScale);
             } else {
-                poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hoveredPoi == poi, poiScale, currentZoom);
+                poi.renderAt(
+                        poseStack, bufferSource, poiRenderX, poiRenderZ, hoveredPoi == poi, poiScale, zoomRenderScale);
             }
         }
 
@@ -451,11 +452,11 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             if (location == null) continue;
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-            float poiWidth = poi.getWidth(currentZoom, poiScale);
-            float poiHeight = poi.getHeight(currentZoom, poiScale);
+            float poiWidth = poi.getWidth(zoomRenderScale, poiScale);
+            float poiHeight = poi.getHeight(zoomRenderScale, poiScale);
 
             BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);

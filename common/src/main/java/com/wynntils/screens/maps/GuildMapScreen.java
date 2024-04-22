@@ -234,8 +234,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         for (Poi poi : filteredPois) {
             if (!(poi instanceof TerritoryPoi territoryPoi)) continue;
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
                 Optional<Poi> routePoi = filteredPois.stream()
@@ -244,8 +244,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
                 // Only render connection if the other poi is also in the filtered pois
                 if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
-                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, currentZoom);
-                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, currentZoom);
+                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, zoomRenderScale);
+                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, zoomRenderScale);
 
                     RenderUtils.drawLine(poseStack, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 0, 1);
                 }
@@ -259,10 +259,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
             Poi poi = filteredPois.get(i);
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-            poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
+            poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hovered == poi, poiScale, zoomRenderScale);
         }
 
         bufferSource.endBatch();
@@ -283,8 +283,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 && hovered instanceof TerritoryPoi territoryPoi) {
             Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
             Location location = new Location(gameX, 0, gameZ);
 
             if (hovered instanceof WaypointPoi) {
@@ -348,7 +348,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderPois(
                 renderedPois,
                 poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 1,
                 mouseX,
                 mouseY);
