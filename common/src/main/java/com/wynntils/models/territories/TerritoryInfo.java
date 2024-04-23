@@ -129,7 +129,7 @@ public class TerritoryInfo {
                 case ORE -> resourceColors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
                 case FISH -> resourceColors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
                 case WOOD -> resourceColors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
-                case CROP -> resourceColors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
+                case CROPS -> resourceColors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
             }
         }
     }
