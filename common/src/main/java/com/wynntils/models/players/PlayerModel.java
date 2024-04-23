@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -120,7 +120,10 @@ public final class PlayerModel extends Model {
     }
 
     private void loadUser(UUID uuid, String userName) {
+        // Avoid fetching the same user multiple times
         if (fetching.contains(uuid)) return;
+        if (users.containsKey(uuid)) return;
+
         if (errorCount >= MAX_ERRORS) {
             // Athena is having problems, skip this
             return;
