@@ -34,8 +34,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
-    private static final int ERROR_TIMEOUT_MINUTE = 1;
+
+    // If there is a failure with the API, give it time to recover
+    private static final int ERROR_TIMEOUT_MINUTE = 5;
+
+    // Max amount of overall lookup errors
     private static final int MAX_ERRORS = 5;
+
+    // Max amount of errors for a single user,
+    // before disabling lookups for them
+    private static final int MAX_USER_ERRORS = 3;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
@@ -45,15 +53,17 @@ public final class PlayerModel extends Model {
     // Count of errors in the last minute, to avoid spamming the API
     private final TimedSet<Object> errors =
             new TimedSet<>(ERROR_TIMEOUT_MINUTE, TimeUnit.MINUTES, true, ConcurrentHashMap::newKeySet);
+    private final Map<UUID, Integer> userFailures = new ConcurrentHashMap<>();
 
     public PlayerModel() {
         super(List.of());
         errors.clear();
+        userFailures.clear();
     }
 
     // Returns true if the player is on the same server and is not a npc
     public boolean isLocalPlayer(Player player) {
-        return !isNpc(player) && !(isPlayerGhost(player));
+        return !isNpc(player) && !isPlayerGhost(player);
     }
 
     public boolean isLocalPlayer(String name) {
@@ -81,12 +91,14 @@ public final class PlayerModel extends Model {
 
     public void reset() {
         errors.clear();
+        userFailures.clear();
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
             clearUserCache();
+            reset();
         }
         if (event.getNewState() == WorldState.WORLD) {
             clearGhostCache();
@@ -134,6 +146,11 @@ public final class PlayerModel extends Model {
             return;
         }
 
+        if (userFailures.getOrDefault(uuid, 0) >= MAX_USER_ERRORS) {
+            // User has had too many failures, skip this
+            return;
+        }
+
         fetching.add(uuid); // temporary, avoid extra loads
         nameMap.put(uuid, userName);
 
@@ -153,10 +170,20 @@ public final class PlayerModel extends Model {
                 onError -> {
                     errors.put(System.currentTimeMillis());
 
+                    // Save user failures
+                    userFailures.computeIfAbsent(uuid, k -> 0);
+                    userFailures.compute(uuid, (k, v) -> v + 1);
+
                     // Only log the error once
                     if (errors.size() == MAX_ERRORS + 1) {
-                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups for "
-                                + ERROR_TIMEOUT_MINUTE + " minutes.");
+                        WynntilsMod.error(
+                                "Athena user lookup has repeating failures. Disabling future lookups temporarily.");
+                    }
+
+                    // Only log the error once
+                    if (userFailures.get(uuid) == MAX_USER_ERRORS + 1) {
+                        WynntilsMod.error("Athena user lookup has repeating failures for user " + userName
+                                + ". Disabling future lookups for the user, until a reset.");
                     }
                 });
     }
