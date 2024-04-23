@@ -67,28 +67,15 @@ public enum ItemProviderType {
     /**
      * Special filter for territory items.
      */
-    TERRITORY(true);
-
-    /**
-     * Whether this item provider type is special.
-     * Special providers are not included in {@link ItemProviderType#normalTypes()}.
-     */
-    private final boolean isSpecial;
-
-    ItemProviderType() {
-        this(false);
-    }
-
-    ItemProviderType(boolean isSpecial) {
-        this.isSpecial = isSpecial;
-    }
-
+    TERRITORY;
     /**
      * Returns all non-special item provider types.
      * @return A list of all non-special item provider types.
      */
     public static List<ItemProviderType> normalTypes() {
-        return Arrays.stream(values()).filter(type -> !type.isSpecial).collect(Collectors.toList());
+        return Arrays.stream(values())
+                .filter(type -> !specialTypes().contains(type))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -96,6 +83,6 @@ public enum ItemProviderType {
      * @return A list of all special item provider types.
      */
     public static List<ItemProviderType> specialTypes() {
-        return Arrays.stream(values()).filter(type -> type.isSpecial).collect(Collectors.toList());
+        return List.of(TERRITORY);
     }
 }
