@@ -603,8 +603,6 @@
   "feature.wynntils.minimap.overlay.minimap.renderRemoteFriendPlayers.name": "渲染其他好友",
   "feature.wynntils.minimap.overlay.minimap.renderRemotePartyPlayers.description": "是否渲染其他队友的头像？这需要开启 Hades 特性。",
   "feature.wynntils.minimap.overlay.minimap.renderRemotePartyPlayers.name": "渲染其他队友",
-  "feature.wynntils.minimap.overlay.minimap.scale.description": "小地图的缩放比例应为多少？",
-  "feature.wynntils.minimap.overlay.minimap.scale.name": "小地图缩放",
   "feature.wynntils.minimap.overlay.minimap.showCompass.description": "是否显示方位（N, E, S, W）在小地图上？",
   "feature.wynntils.minimap.overlay.minimap.showCompass.name": "显示指南针方向",
   "feature.wynntils.minimap.overlay.territory.name": "领地",
