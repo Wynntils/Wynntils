@@ -11,7 +11,7 @@ public enum GuildResource {
     ORE(ChatFormatting.WHITE, "Ore", "Ⓑ"),
     WOOD(ChatFormatting.GOLD, "Wood", "Ⓒ"),
     FISH(ChatFormatting.AQUA, "Fish", "Ⓚ"),
-    CROP(ChatFormatting.YELLOW, "Crop", "Ⓙ");
+    CROPS(ChatFormatting.YELLOW, "Crops", "Ⓙ");
 
     private final ChatFormatting color;
     private final String name;
