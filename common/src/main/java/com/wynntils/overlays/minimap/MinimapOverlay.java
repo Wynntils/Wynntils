@@ -48,6 +48,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
+    // FIXME: This should really by "zoomLevel". Fix when introducing the new map data framework
     @Persisted
     public final Config<Integer> scaleSteps = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
 
@@ -98,7 +99,7 @@ public class MinimapOverlay extends Overlay {
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
     }
 
-    public void adjustZoomStep(int delta) {
+    public void adjustZoomLevel(int delta) {
         scaleSteps.setValue(scaleSteps.get() + delta);
     }
 
@@ -121,10 +122,10 @@ public class MinimapOverlay extends Overlay {
         double playerX = McUtils.player().getX();
         double playerZ = McUtils.player().getZ();
 
-        final float zoomScale = MapRenderer.getZoomFromSteps(scaleSteps.get());
+        final float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(scaleSteps.get());
 
         BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(
-                BoundingBox.centered((float) playerX, (float) playerZ, width * zoomScale, height * zoomScale));
+                BoundingBox.centered((float) playerX, (float) playerZ, width * zoomRenderScale, height * zoomRenderScale));
 
         List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
 
@@ -174,7 +175,7 @@ public class MinimapOverlay extends Overlay {
                     textureZ,
                     width * extraFactor,
                     height * extraFactor,
-                    zoomScale);
+                    zoomRenderScale);
         }
 
         // disable rotation if necessary
@@ -182,7 +183,7 @@ public class MinimapOverlay extends Overlay {
             poseStack.popPose();
         }
 
-        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomScale, textureBoundingCircle);
+        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, textureBoundingCircle);
 
         // cursor
         MapRenderer.renderCursor(

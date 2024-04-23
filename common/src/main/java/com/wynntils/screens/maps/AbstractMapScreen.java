@@ -71,9 +71,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float mapCenterX;
     protected float mapCenterZ;
 
-    // Zooming updates currentZoomStep, but we also cache the currentZoom for rendering
+    // Zooming updates zoomLevel, but we also cache zoomRenderScale for rendering
     protected float zoomLevel = MapRenderer.DEFAULT_ZOOM_LEVEL;
-    protected float zoomRenderScale = MapRenderer.getZoomFromSteps(zoomLevel);
+    protected float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
 
     protected Poi hovered = null;
 
@@ -225,7 +225,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        adjustZoomStep((float) (2f * deltaY));
+        adjustZoomLevel((float) (2f * deltaY));
         return true;
     }
 
@@ -237,12 +237,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
         if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
             // Take steps of 2 to make it easier to zoom in and out
-            adjustZoomStep(2);
+            adjustZoomLevel(2);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
             // Take steps of 2 to make it easier to zoom in and out
-            adjustZoomStep(-2);
+            adjustZoomLevel(-2);
             return true;
         }
 
@@ -385,7 +385,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void centerMap() {
         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
-        setZoomStep(0);
+        setZoomLevel(0);
     }
 
     protected boolean isPlayerInsideMainArea() {
@@ -393,18 +393,18 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }
 
-    protected void adjustZoomStep(float delta) {
+    protected void adjustZoomLevel(float delta) {
         zoomLevel = MathUtils.clamp(zoomLevel + delta, 1, MapRenderer.ZOOM_LEVELS);
         recalculateZoom();
     }
 
-    protected void setZoomStep(float zoomStep) {
-        zoomLevel = MathUtils.clamp(zoomStep, 1, MapRenderer.ZOOM_LEVELS);
+    protected void setZoomLevel(float zoomLevel) {
+        this.zoomLevel = MathUtils.clamp(zoomLevel, 1, MapRenderer.ZOOM_LEVELS);
         recalculateZoom();
     }
 
     protected void recalculateZoom() {
-        this.zoomRenderScale = MapRenderer.getZoomFromSteps(zoomLevel);
+        this.zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
     }
 
     protected void updateMapCenter(float newX, float newZ) {

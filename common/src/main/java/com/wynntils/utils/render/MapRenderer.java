@@ -32,7 +32,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 public final class MapRenderer {
-    // ZOOM_LEVELS is the number of steps the zoom can take, [1, ZOOM_LEVELS] (inclusive).
+    // The possible zoom levels range between [1, ZOOM_LEVELS] (inclusive).
     // Levels can be thought of as a percentage of the zoom,
     // with 1 being the minimum zoom, and ZOOM_LEVELS being the maximum zoom.
     public static final int ZOOM_LEVELS = 100;
@@ -53,13 +53,13 @@ public final class MapRenderer {
     private static final double MAX_ZOOM_LOG = Math.log(MAX_ZOOM);
 
     // Zoom is calculated using exponential interpolation between MIN_ZOOM and MAX_ZOOM.
-    // The result is that the zoom increases uniformly for all steps, no matter the current zoom.
+    // The result is that the zoom increases uniformly for all levels, no matter the current zoom.
     // To achieve this, we need to exponentially increase the zoom value for each step.
     // - Taking the log of the zoom value, and then linearly interpolating between the log values.
-    // - This means that the zoom values for each step become exponentially larger.
-    // - Steps are 1-based (1 to ZOOM_STEPS), so we subtract 1 from the step to get the correct zoom value,
+    // - This means that the zoom values for each level become exponentially larger.
+    // - Steps are 1-based (1 to ZOOM_LEVELS), so we subtract 1 from the level to get the correct zoom value,
     //   to ensure that the real zoom values are in the range [MIN_ZOOM, MAX_ZOOM] (including the boundaries).
-    public static float getZoomFromSteps(float zoomLevel) {
+    public static float getZoomRenderScaleFromLevel(float zoomLevel) {
         double guiScale = McUtils.guiScale();
         double logGuiScale = Math.log(guiScale);
 
