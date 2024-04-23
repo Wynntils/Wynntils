@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.3
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           token: ${{ secrets.PRIVATE_TOKEN }}
@@ -21,19 +21,19 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4.2.1
         with:
           distribution: "temurin"
           java-version: 17
 
       - name: Cache Gradle data
-        uses: actions/cache@v3
+        uses: actions/cache@v4.0.2
         with:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
       - name: Format with spotless
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: spotlessApply
 
@@ -47,11 +47,11 @@ jobs:
           commit_message: 'ci: spotless formatting'
 
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: buildDependents -x spotlessCheck -x test
 
       - name: Test with Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: test -x spotlessCheck
