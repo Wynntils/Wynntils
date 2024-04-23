@@ -191,7 +191,7 @@ public final class PlayerModel extends Model {
     }
 
     private void saveUserFailures(UUID uuid, String userName) {
-        userFailures.computeIfAbsent(uuid, k -> 0);
+        userFailures.putIfAbsent(uuid, 0);
         userFailures.compute(uuid, (k, v) -> v + 1);
 
         // Only log the error once
