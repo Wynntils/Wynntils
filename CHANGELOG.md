@@ -1,3 +1,10 @@
+## [1.1.13](https://github.com/Wynntils/Artemis/compare/v1.1.12...v1.1.13) (2024-04-23)
+
+
+### Bug Fixes
+
+* Fix minimap disabling/crashing when changing the minimap's configs ([#2423](https://github.com/Wynntils/Artemis/issues/2423)) ([9d85b5a](https://github.com/Wynntils/Artemis/commit/9d85b5a092c8a30f5bc0f136083f0cae9bcb8da5))
+
 ## [1.1.12](https://github.com/Wynntils/Artemis/compare/v1.1.11...v1.1.12) (2024-04-23)
 
 
@@ -19,6 +26,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2403](https://github.com/Wynntils/Artemis/issues/2403)) ([fab7e3f](https://github.com/Wynntils/Artemis/commit/fab7e3f80f976289ee66e9137962e6e96bfa13e3))
 * [auto-generated] Update urls.json [ci skip] ([#2413](https://github.com/Wynntils/Artemis/issues/2413)) ([3b2f44d](https://github.com/Wynntils/Artemis/commit/3b2f44d5f28769e6de3613896269b90ce40d36ae))
+* **release:** v1.1.12 [skip ci] ([230bc0b](https://github.com/Wynntils/Artemis/commit/230bc0bc0dfe24246973a4bdcf37ef1800b25d6a))
 
 
 ### Code Refactoring
@@ -73,17 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.9 [skip ci] ([9136594](https://github.com/Wynntils/Artemis/commit/9136594c431bb34ad18b04a078b80003d23e7ba4))
-
-## [1.1.8](https://github.com/Wynntils/Artemis/compare/v1.1.7...v1.1.8) (2024-04-04)
-
-
-### Bug Fixes
-
-* Fix item record crashing if there is a faulty item, fix item saving mode ([#2386](https://github.com/Wynntils/Artemis/issues/2386)) ([0e368b7](https://github.com/Wynntils/Artemis/commit/0e368b74e255c0ee6ad1bc15819c554b56dbb394))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2387](https://github.com/Wynntils/Artemis/issues/2387)) ([28da619](https://github.com/Wynntils/Artemis/commit/28da6197ba4ad25872954af3da87ee4df5069eb0))
-* **release:** v1.1.8 [skip ci] ([26192fa](https://github.com/Wynntils/Artemis/commit/26192fa9500ebfc43831e01958ef81c922e6a9e0))
 
