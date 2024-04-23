@@ -49,7 +49,7 @@ public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
     @Persisted
-    public final Config<Integer> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
+    public final Config<Float> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
 
     @Persisted
     public final Config<Float> poiScale = new Config<>(0.6f);
@@ -98,8 +98,13 @@ public class MinimapOverlay extends Overlay {
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
     }
 
+    public void setZoomLevel(float level) {
+        // Clamp zoom levels to allowed interval
+        zoomLevel.setValue(MathUtils.clamp(level, 1, MapRenderer.ZOOM_LEVELS));
+    }
+
     public void adjustZoomLevel(int delta) {
-        zoomLevel.setValue(zoomLevel.get() + delta);
+        setZoomLevel(zoomLevel.get() + delta);
     }
 
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
@@ -498,9 +503,9 @@ public class MinimapOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (config == zoomLevel && (zoomLevel.get() < 1 || zoomLevel.get() > MapRenderer.ZOOM_LEVELS)) {
-            // Clamp scale steps to prevent weird zoom levels
-            zoomLevel.setValue(MathUtils.clamp(zoomLevel.get(), 1, MapRenderer.ZOOM_LEVELS));
+        if (config == zoomLevel) {
+            // Make sure it is a valid level
+            setZoomLevel(zoomLevel.get());
         }
     }
 

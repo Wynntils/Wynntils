@@ -38,7 +38,7 @@ public final class MapRenderer {
     public static final int ZOOM_LEVELS = 100;
 
     // This value should be the nearest step to the default zoom, 1.0f.
-    public static final int DEFAULT_ZOOM_LEVEL = 60;
+    public static final float DEFAULT_ZOOM_LEVEL = 60;
 
     // The minimum and maximum zoom values. This is the range of the zoom.
     // The minimum zoom is where the map is at its smallest, and the maximum zoom is where the map is at its largest.
