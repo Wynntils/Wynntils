@@ -5,8 +5,8 @@
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.TerritoryStorage;
@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public class TerritoryAnnotator implements ItemAnnotator {
+public class TerritoryAnnotator implements GuiItemAnnotator {
     private static final Pattern NAME_PATTERN =
             Pattern.compile("§.(?:§l)?(?:\\[§c§l!§4§l\\] §f)?(?<name>[^\\(\\)]+)( \\(HQ\\))?");
     private static final Pattern GENERATOR_PATTERN =

@@ -71,7 +71,7 @@ public enum ItemProviderType {
 
     /**
      * Whether this item provider type is special.
-     * Special providers are not included in {@link ItemProviderType#ALL}.
+     * Special providers are not included in {@link ItemProviderType#normalTypes()}.
      */
     private final boolean isSpecial;
 
