@@ -145,7 +145,8 @@ public final class PlayerModel extends Model {
         if (fetching.contains(uuid)) return;
         if (users.containsKey(uuid) || usersWithoutWynntilsAccount.contains(uuid)) return;
 
-        if (errors.size() >= MAX_ERRORS) {
+        // Call getEntries to clear old entries
+        if (errors.getEntries().size() >= MAX_ERRORS) {
             // Athena is having problems, skip this
             return;
         }
@@ -194,7 +195,8 @@ public final class PlayerModel extends Model {
         userFailures.compute(uuid, (k, v) -> v + 1);
 
         // Only log the error once
-        if (errors.size() == MAX_ERRORS) {
+        // Call getEntries to clear old entries
+        if (errors.getEntries().size() == MAX_ERRORS) {
             WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups temporarily.");
         }
 
