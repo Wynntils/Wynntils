@@ -71,13 +71,13 @@ public final class PlayerModel extends Model {
 
     public boolean isLocalPlayer(String name) {
         // Wynn uses TeamNames for player names that are online
-        return !isNpc(StyledText.fromString(name))
+        return !isNpcName(StyledText.fromString(name))
                 && McUtils.mc().level.getScoreboard().getTeamNames().contains(name);
     }
 
     public boolean isNpc(Player player) {
         StyledText scoreboardName = StyledText.fromString(player.getScoreboardName());
-        return isNpc(scoreboardName);
+        return isNpcName(scoreboardName) || isNpcUuid(player.getUUID());
     }
 
     public boolean isPlayerGhost(Player player) {
@@ -93,6 +93,7 @@ public final class PlayerModel extends Model {
     }
 
     public void reset() {
+        fetching.clear();
         errors.clear();
         userFailures.clear();
     }
@@ -100,7 +101,7 @@ public final class PlayerModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
-            clearUserCache();
+            clearNameMap();
             reset();
         }
         if (event.getNewState() == WorldState.WORLD) {
@@ -113,7 +114,7 @@ public final class PlayerModel extends Model {
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
         StyledText name = StyledText.fromString(player.getGameProfile().getName());
-        if (isNpc(name)) return; // avoid player npcs
+        if (!isLocalPlayer(player)) return; // avoid player npcs
 
         loadUser(player.getUUID(), name.getString());
     }
@@ -167,7 +168,11 @@ public final class PlayerModel extends Model {
                         return;
                     }
 
-                    if (!json.has("user")) return;
+                    if (!json.has("user")) {
+                        fetching.remove(uuid);
+                        saveUserFailures(uuid, userName);
+                        return;
+                    }
 
                     WynntilsUser user = WynntilsMod.GSON.fromJson(json.getAsJsonObject("user"), WynntilsUser.class);
 
@@ -180,28 +185,27 @@ public final class PlayerModel extends Model {
                 onError -> {
                     errors.put(System.currentTimeMillis());
 
-                    // Save user failures
-                    userFailures.computeIfAbsent(uuid, k -> 0);
-                    userFailures.compute(uuid, (k, v) -> v + 1);
-
-                    // Only log the error once
-                    if (errors.size() == MAX_ERRORS + 1) {
-                        WynntilsMod.error(
-                                "Athena user lookup has repeating failures. Disabling future lookups temporarily.");
-                    }
-
-                    // Only log the error once
-                    if (userFailures.get(uuid) == MAX_USER_ERRORS + 1) {
-                        WynntilsMod.error("Athena user lookup has repeating failures for user " + userName
-                                + ". Disabling future lookups for the user, until a reset.");
-                    }
+                    saveUserFailures(uuid, userName);
                 });
     }
 
-    private void clearUserCache() {
-        fetching.clear();
-        users.clear();
-        usersWithoutWynntilsAccount.clear();
+    private void saveUserFailures(UUID uuid, String userName) {
+        userFailures.computeIfAbsent(uuid, k -> 0);
+        userFailures.compute(uuid, (k, v) -> v + 1);
+
+        // Only log the error once
+        if (errors.size() == MAX_ERRORS) {
+            WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups temporarily.");
+        }
+
+        // Only log the error once
+        if (userFailures.get(uuid) == MAX_USER_ERRORS) {
+            WynntilsMod.error("Athena user lookup has repeating failures for user " + userName
+                    + ". Disabling future lookups for the user, until a reset.");
+        }
+    }
+
+    private void clearNameMap() {
         nameMap.clear();
     }
 
@@ -209,8 +213,15 @@ public final class PlayerModel extends Model {
         ghosts.clear();
     }
 
-    private boolean isNpc(StyledText name) {
+    private boolean isNpcName(StyledText name) {
         // FIXME: Maybe make a better check using more native StyledText operations?
         return name.contains("\u0001") || name.contains("§");
+    }
+
+    private boolean isNpcUuid(UUID uuid) {
+        // All players have UUID version 4,
+        // while most NPCs have UUID version 2
+        // Starting Wynncraft 2.1, all NPCs will have UUID version 2
+        return uuid.version() == 2;
     }
 }
