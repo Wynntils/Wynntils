@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.TrinketItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class TrinketAnnotator implements ItemAnnotator {
+public final class TrinketAnnotator implements GameItemAnnotator {
     private static final Pattern TRINKET_PATTERN = Pattern.compile("^§[5abcdef](.*?)(?: \\[(\\d+)/(\\d+)\\])?$");
     private static final Pattern TRINKET_LORE_PATTERN = Pattern.compile("^§7Right-Click to (use|toggle)$");
 

@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class GearAnnotator implements ItemAnnotator {
+public final class GearAnnotator implements GameItemAnnotator {
     private static final Pattern GEAR_PATTERN =
             Pattern.compile("^(?:§f⬡ )?(?<rarity>§[5abcdef])(?<unidentified>Unidentified )?(?:Shiny )?(?<name>.+)$");
 
