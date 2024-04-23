@@ -394,14 +394,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }
 
-    protected void adjustZoomLevel(float delta) {
-        setZoomLevel(zoomLevel + delta);
-    }
-
     protected void setZoomLevel(float zoomLevel) {
         this.zoomLevel = MathUtils.clamp(zoomLevel, 1, MapRenderer.ZOOM_LEVELS);
         // Recalculate the cached zoom render scale
         this.zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(this.zoomLevel);
+    }
+
+    protected void adjustZoomLevel(float delta) {
+        setZoomLevel(zoomLevel + delta);
     }
 
     protected void updateMapCenter(float newX, float newZ) {
