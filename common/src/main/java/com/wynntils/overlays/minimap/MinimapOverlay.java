@@ -100,7 +100,12 @@ public class MinimapOverlay extends Overlay {
 
     public void setZoomLevel(float level) {
         // Clamp zoom levels to allowed interval
-        zoomLevel.setValue(MathUtils.clamp(level, 1, MapRenderer.ZOOM_LEVELS));
+        float clampedLevel = MathUtils.clamp(level, 1, MapRenderer.ZOOM_LEVELS);
+
+        // If the level is the same, do nothing (avoid recursion loop)
+        if (clampedLevel == zoomLevel.get()) return;
+
+        zoomLevel.setValue(clampedLevel);
     }
 
     public void adjustZoomLevel(int delta) {
