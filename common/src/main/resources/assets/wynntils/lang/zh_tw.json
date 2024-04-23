@@ -376,8 +376,6 @@
   "feature.wynntils.minimap.overlay.minimap.renderRemoteFriendPlayers.name": "顯示朋友",
   "feature.wynntils.minimap.overlay.minimap.renderRemotePartyPlayers.description": "在地圖上，要顯示您的派對成員嗎？ 這需要 Hades",
   "feature.wynntils.minimap.overlay.minimap.renderRemotePartyPlayers.name": "顯示派對成員",
-  "feature.wynntils.minimap.overlay.minimap.scale.description": "小地圖顯示的環境要多大？",
-  "feature.wynntils.minimap.overlay.minimap.scale.name": "小地圖環境規模",
   "feature.wynntils.minimap.overlay.minimap.showCompass.description": "主要方向 (N/E/S/W) 要如何在小地圖上顯示？",
   "feature.wynntils.minimap.overlay.minimap.showCompass.name": "顯示主要方向",
   "feature.wynntils.mythicBlocker.closingBlocked": "您不可以關這位箱子應為裡面有神話物品！",
