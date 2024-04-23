@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
@@ -11,11 +11,12 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class TimedSet<T> implements Iterable<T> {
-    private final Set<TimedEntry> entries = new HashSet<>();
+    private final Set<TimedEntry> entries;
 
     private final long timeJump;
     private final boolean autoClear;
@@ -23,6 +24,13 @@ public class TimedSet<T> implements Iterable<T> {
     public TimedSet(long duration, TimeUnit unit, boolean autoClear) {
         timeJump = unit.toMillis(duration);
         this.autoClear = autoClear;
+        entries = new HashSet<>();
+    }
+
+    public TimedSet(long duration, TimeUnit unit, boolean autoClear, Supplier<Set<TimedEntry>> setSupplier) {
+        timeJump = unit.toMillis(duration);
+        this.autoClear = autoClear;
+        entries = setSupplier.get();
     }
 
     public TimedSet(long duration, TimeUnit unit) {
