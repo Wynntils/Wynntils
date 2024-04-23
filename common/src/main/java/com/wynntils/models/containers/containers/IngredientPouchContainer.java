@@ -18,6 +18,7 @@ public class IngredientPouchContainer extends Container implements Highlightable
 
     @Override
     public ContainerBounds getBounds() {
-        return new ContainerBounds(0, 0, 2, 8);
+        // Includes both the pouch and the player inventory
+        return new ContainerBounds(0, 0, 6, 8);
     }
 }

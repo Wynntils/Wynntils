@@ -163,6 +163,12 @@ public class ProfessionHighlightFeature extends Feature {
         }
 
         @Override
+        public void setFocused(boolean focused) {
+            // We don't want the button to be focused, ever
+            // (this is weird quirk of the vanilla button system)
+        }
+
+        @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             if (!isMouseOver(mouseX, mouseY)) return false;
 
