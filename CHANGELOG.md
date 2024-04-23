@@ -1,9 +1,43 @@
+## [1.1.12](https://github.com/Wynntils/Artemis/compare/v1.1.11...v1.1.12) (2024-04-23)
+
+
+### New Features
+
+* Add Enabled Template to TextOverlay [skip ci] ([#2407](https://github.com/Wynntils/Artemis/issues/2407)) ([b8b289c](https://github.com/Wynntils/Artemis/commit/b8b289c94b9e2aa9bdd270a422394548fb72550f))
+* Add exponential interpolation map zooming [skip ci] ([#2373](https://github.com/Wynntils/Artemis/issues/2373)) ([54bc3af](https://github.com/Wynntils/Artemis/commit/54bc3af66cd500466dfd91fb1b51756b29e5af4e))
+* Introduce provider types for ItemStatProviders and SearchableContainers [skip ci] ([#2418](https://github.com/Wynntils/Artemis/issues/2418)) ([983d50f](https://github.com/Wynntils/Artemis/commit/983d50f03ab13d00e5edbb51c41827979420c15e))
+* Parse territory items, add territory item properties, advanced search for territory list [skip ci] ([#2421](https://github.com/Wynntils/Artemis/issues/2421)) ([7d337ed](https://github.com/Wynntils/Artemis/commit/7d337ed80692d329085cb136537ed0df60f53786))
+
+
+### Bug Fixes
+
+* Make Wynntils much smarter about user info requests to greatly reduce Athena load ([#2422](https://github.com/Wynntils/Artemis/issues/2422)) ([4681f99](https://github.com/Wynntils/Artemis/commit/4681f998bf38b1b8c17dd0bbe66ae8a473e40baf))
+* Parse awakened bar & mask correctly [skip ci] ([#2402](https://github.com/Wynntils/Artemis/issues/2402)) ([80c0aa9](https://github.com/Wynntils/Artemis/commit/80c0aa94525b968195d6432f37ec1ed4f5cdc7c9))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2403](https://github.com/Wynntils/Artemis/issues/2403)) ([fab7e3f](https://github.com/Wynntils/Artemis/commit/fab7e3f80f976289ee66e9137962e6e96bfa13e3))
+* [auto-generated] Update urls.json [ci skip] ([#2413](https://github.com/Wynntils/Artemis/issues/2413)) ([3b2f44d](https://github.com/Wynntils/Artemis/commit/3b2f44d5f28769e6de3613896269b90ce40d36ae))
+
+
+### Code Refactoring
+
+* Container design rehaul [skip ci] ([#2419](https://github.com/Wynntils/Artemis/issues/2419)) ([0297eeb](https://github.com/Wynntils/Artemis/commit/0297eebb4f3ee32f748412ecc8cf1138a4c6b72a))
+* Remove InteractiveContainerType and replace with WynncraftContainers [skip ci] ([#2416](https://github.com/Wynntils/Artemis/issues/2416)) ([0e1027e](https://github.com/Wynntils/Artemis/commit/0e1027e5e76523435e14ea2a82b733f56bf33d31))
+* Sort ItemAnnotators into Game and Gui annotators [skip ci] ([#2420](https://github.com/Wynntils/Artemis/issues/2420)) ([efe98de](https://github.com/Wynntils/Artemis/commit/efe98de5414c7d020a012bdc19c5f0b30a5cc920))
+
 ## [1.1.11](https://github.com/Wynntils/Artemis/compare/v1.1.10...v1.1.11) (2024-04-11)
 
 
 ### Bug Fixes
 
 * Make blocks_above_ground function handle an edge-case hang ([#2401](https://github.com/Wynntils/Artemis/issues/2401)) ([66aab05](https://github.com/Wynntils/Artemis/commit/66aab05d68b2d2d2b7ca931323e0ae2e1e9d5a3b))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.11 [skip ci] ([a8683c7](https://github.com/Wynntils/Artemis/commit/a8683c799405e48d0eaa94bce868ebf36bfcf744))
 
 ## [1.1.10](https://github.com/Wynntils/Artemis/compare/v1.1.9...v1.1.10) (2024-04-11)
 
@@ -52,18 +86,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2387](https://github.com/Wynntils/Artemis/issues/2387)) ([28da619](https://github.com/Wynntils/Artemis/commit/28da6197ba4ad25872954af3da87ee4df5069eb0))
 * **release:** v1.1.8 [skip ci] ([26192fa](https://github.com/Wynntils/Artemis/commit/26192fa9500ebfc43831e01958ef81c922e6a9e0))
-
-## [1.1.7](https://github.com/Wynntils/Artemis/compare/v1.1.6...v1.1.7) (2024-04-02)
-
-
-### Bug Fixes
-
-* Always apply url changes from the remote urls.json ([#2385](https://github.com/Wynntils/Artemis/issues/2385)) ([e643a26](https://github.com/Wynntils/Artemis/commit/e643a262205538b3f566b5a410da4407b3ad8017))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2381](https://github.com/Wynntils/Artemis/issues/2381)) ([dea63cd](https://github.com/Wynntils/Artemis/commit/dea63cd048744915581270e2c849b1da43fcfdb8))
-* [auto-generated] Update urls.json [ci skip] ([#2384](https://github.com/Wynntils/Artemis/issues/2384)) ([2ff2468](https://github.com/Wynntils/Artemis/commit/2ff24685c3e2053861ba4d0ea1e007ea81541689))
-* **release:** v1.1.7 [skip ci] ([545ea38](https://github.com/Wynntils/Artemis/commit/545ea38ae96f8c61f492a3a95a71e290f4302777))
 
