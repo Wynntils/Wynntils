@@ -10,6 +10,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.territories.type.GuildResource;
+import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
@@ -38,6 +40,12 @@ import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertsStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryNameStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryProductionStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryStorageStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryTreasuryStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryUpgradeLevelStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
@@ -319,15 +327,14 @@ public class ItemFilterService extends Service {
     /**
      * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
      *
-     * @param name                 an alias of the stat provider
+     * @param name                   an alias of the stat provider
      * @param supportedProviderTypes the list of supported provider types
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
     private ErrorOr<ItemStatProvider<?>> getItemStatProvider(
             String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
-                .filter(provider -> supportedProviderTypes.contains(ItemProviderType.ALL)
-                        || provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
+                .filter(provider -> provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))
                 .findFirst();
@@ -459,6 +466,21 @@ public class ItemFilterService extends Service {
         }
 
         registerStatProvider(new FavoriteStatProvider());
+
+        // Territory stat providers
+        registerStatProvider(new TerritoryNameStatProvider());
+
+        for (GuildResource resource : GuildResource.values()) {
+            registerStatProvider(new TerritoryProductionStatProvider(resource));
+            registerStatProvider(new TerritoryStorageStatProvider(resource));
+        }
+
+        for (TerritoryUpgrade upgrade : TerritoryUpgrade.values()) {
+            registerStatProvider(new TerritoryUpgradeLevelStatProvider(upgrade));
+        }
+
+        registerStatProvider(new TerritoryTreasuryStatProvider());
+        registerStatProvider(new TerritoryAlertsStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {

@@ -4,17 +4,16 @@
  */
 package com.wynntils.services.itemfilter.type;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Represents the type of item provider.
  * Item provider types are used to determine if the current container supports the filter.
  * An item provider can have multiple types, but it must have at least one.
  */
 public enum ItemProviderType {
-    /**
-     * A filter for all items. If this is present, the filter can be used for any item.
-     */
-    ALL,
-
     /**
      * A generic item filter. For providers that do not fit into any other category.
      */
@@ -63,5 +62,27 @@ public enum ItemProviderType {
     /**
      * A filter for items that have a profession.
      */
-    PROFESSION
+    PROFESSION,
+
+    /**
+     * Special filter for territory items.
+     */
+    TERRITORY;
+    /**
+     * Returns all non-special item provider types.
+     * @return A list of all non-special item provider types.
+     */
+    public static List<ItemProviderType> normalTypes() {
+        return Arrays.stream(values())
+                .filter(type -> !specialTypes().contains(type))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns all special item provider types.
+     * @return A list of all special item provider types.
+     */
+    public static List<ItemProviderType> specialTypes() {
+        return List.of(TERRITORY);
+    }
 }
