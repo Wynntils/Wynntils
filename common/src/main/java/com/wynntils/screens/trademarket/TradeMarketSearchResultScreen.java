@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -16,6 +16,7 @@ import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.trademarket.widgets.PresetButton;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -23,6 +24,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -88,6 +90,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 renderY,
                 175,
                 20,
+                Arrays.stream(ItemProviderType.values()).toList(),
                 true,
                 (query) -> {
                     saveSearchFilter(query);
@@ -99,15 +102,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Set the last search filter, if we opened a new screen
         // On reloads, this should not change anything
         itemSearchWidget.setTextBoxInput(Models.TradeMarket.getLastSearchFilter());
-
-        WynntilsButton helperButton = new ItemSearchHelperWidget(
-                renderX + 160,
-                renderY + 4,
-                (int) (Texture.INFO.width() / 2f),
-                (int) (Texture.INFO.height() / 2f),
-                Texture.INFO,
-                true);
-        this.addRenderableWidget(helperButton);
 
         WynntilsButton backButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
@@ -160,10 +154,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         updateItems();
 
-        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
-
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(poseStack);
+
+        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
 
         // Render item tooltip
         super.renderTooltip(guiGraphics, mouseX, mouseY);

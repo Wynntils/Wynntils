@@ -238,19 +238,6 @@ public class TestRegex {
     }
 
     @Test
-    public void ContainerModel_LOOT_CHEST_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "LOOT_CHEST_PATTERN");
-        // Tier 1
-        p.shouldMatch("Loot Chest §7[§f✫§8✫✫✫§7]");
-        // Tier 2
-        p.shouldMatch("Loot Chest §e[§6✫✫§8✫✫§e]");
-        // Tier 3
-        p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]");
-        // Tier 4
-        p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]");
-    }
-
-    @Test
     public void CoordinatesSegment_COORDINATES_PATTERN() {
         PatternTester p = new PatternTester(CoordinatesSegment.class, "COORDINATES_PATTERN");
         p.shouldMatch("§7457§f N§7 -1576");
@@ -708,6 +695,13 @@ public class TestRegex {
     public void WynnItemParser_SKILL_REQ_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "SKILL_REQ_PATTERN");
         p.shouldMatch("§a✔§7 Intelligence Min: 38");
+    }
+
+    @Test
+    public void WynnItemParser_MISC_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "MISC_REQ_PATTERN");
+        p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
+        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light");
     }
 
     @Test

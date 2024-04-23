@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -16,6 +16,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.containers.reward.LootChestContainer;
+import com.wynntils.models.containers.type.LootChestType;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -23,13 +25,11 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
@@ -93,7 +93,7 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @Persisted
-    public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
+    public final Config<LootChestType> minTierForAutoWaypoint = new Config<>(LootChestType.TIER_3);
 
     @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
@@ -156,14 +156,15 @@ public class MainMapFeature extends Feature {
         if (lastChestPos == null) return;
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
-        Matcher matcher = Models.Container.lootChestMatcher(event.getScreen());
-        if (!matcher.matches()) {
+        if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) {
             lastChestPos = null;
             return;
         }
 
-        ChestTier tier = ChestTier.fromColorChar(matcher.group(1).charAt(1));
-        if (tier.ordinal() < minTierForAutoWaypoint.get().ordinal()) {
+        LootChestType chestType = Models.LootChest.getChestType(event.getScreen());
+        if (chestType == null) return;
+
+        if (chestType.ordinal() < minTierForAutoWaypoint.get().ordinal()) {
             lastChestPos = null;
             return;
         }
@@ -171,54 +172,20 @@ public class MainMapFeature extends Feature {
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
                 location,
-                tier.getWaypointName(),
+                chestType.getWaypointName(),
                 CommonColors.WHITE,
-                tier.getWaypointTexture(),
+                chestType.getWaypointTexture(),
                 CustomPoi.Visibility.DEFAULT);
 
         if (customPois.get().stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
             customPois.get().add(newPoi);
 
             // TODO: Replace this notification with a popup
-            Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
-                    .withStyle(ChatFormatting.AQUA));
+            Managers.Notification.queueMessage(
+                    Component.literal("Added new waypoint for " + chestType.getWaypointName())
+                            .withStyle(ChatFormatting.AQUA));
 
             customPois.touched();
-        }
-    }
-
-    public enum ChestTier {
-        TIER_1(Texture.CHEST_T1, "Loot Chest 1", ChatFormatting.GRAY),
-        TIER_2(Texture.CHEST_T2, "Loot Chest 2", ChatFormatting.YELLOW),
-        TIER_3(Texture.CHEST_T3, "Loot Chest 3", ChatFormatting.DARK_PURPLE),
-        TIER_4(Texture.CHEST_T4, "Loot Chest 4", ChatFormatting.DARK_AQUA);
-
-        private final Texture waypointTexture;
-        private final String waypointName;
-        private final ChatFormatting color;
-
-        ChestTier(Texture waypointTexture, String waypointName, ChatFormatting color) {
-            this.waypointTexture = waypointTexture;
-            this.waypointName = waypointName;
-            this.color = color;
-        }
-
-        private Texture getWaypointTexture() {
-            return waypointTexture;
-        }
-
-        private String getWaypointName() {
-            return waypointName;
-        }
-
-        private static ChestTier fromColorChar(char c) {
-            for (ChestTier tier : values()) {
-                if (tier.color.getChar() == c) {
-                    return tier;
-                }
-            }
-
-            return null;
         }
     }
 }

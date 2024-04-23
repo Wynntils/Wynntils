@@ -1,8 +1,8 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.containers.type;
+package com.wynntils.models.inventory;
 
 import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
