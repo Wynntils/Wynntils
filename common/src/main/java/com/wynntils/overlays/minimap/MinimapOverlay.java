@@ -48,9 +48,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
-    // FIXME: This should really by "zoomLevel". Fix when introducing the new map data framework
     @Persisted
-    public final Config<Integer> scaleSteps = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
+    public final Config<Integer> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
 
     @Persisted
     public final Config<Float> poiScale = new Config<>(0.6f);
@@ -100,7 +99,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     public void adjustZoomLevel(int delta) {
-        scaleSteps.setValue(scaleSteps.get() + delta);
+        zoomLevel.setValue(zoomLevel.get() + delta);
     }
 
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
@@ -122,7 +121,7 @@ public class MinimapOverlay extends Overlay {
         double playerX = McUtils.player().getX();
         double playerZ = McUtils.player().getZ();
 
-        final float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(scaleSteps.get());
+        final float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel.get());
 
         BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(
                 BoundingBox.centered((float) playerX, (float) playerZ, width * zoomRenderScale, height * zoomRenderScale));
@@ -498,9 +497,9 @@ public class MinimapOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (config == scaleSteps && (scaleSteps.get() < 1 || scaleSteps.get() > MapRenderer.ZOOM_LEVELS)) {
+        if (config == zoomLevel && (zoomLevel.get() < 1 || zoomLevel.get() > MapRenderer.ZOOM_LEVELS)) {
             // Clamp scale steps to prevent weird zoom levels
-            scaleSteps.setValue(MathUtils.clamp(scaleSteps.get(), 1, MapRenderer.ZOOM_LEVELS));
+            zoomLevel.setValue(MathUtils.clamp(zoomLevel.get(), 1, MapRenderer.ZOOM_LEVELS));
         }
     }
 
