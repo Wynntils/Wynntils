@@ -17,11 +17,13 @@ import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -32,18 +34,21 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
+    private static final int ERROR_TIMEOUT_MINUTE = 1;
     private static final int MAX_ERRORS = 5;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
-    private int errorCount;
     private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
+
+    // Count of errors in the last minute, to avoid spamming the API
+    private final TimedSet<Object> errors =
+            new TimedSet<>(ERROR_TIMEOUT_MINUTE, TimeUnit.MINUTES, true, ConcurrentHashMap::newKeySet);
 
     public PlayerModel() {
         super(List.of());
-
-        errorCount = 0;
+        errors.clear();
     }
 
     // Returns true if the player is on the same server and is not a npc
@@ -75,7 +80,7 @@ public final class PlayerModel extends Model {
     }
 
     public void reset() {
-        errorCount = 0;
+        errors.clear();
     }
 
     @SubscribeEvent
@@ -124,7 +129,7 @@ public final class PlayerModel extends Model {
         if (fetching.contains(uuid)) return;
         if (users.containsKey(uuid)) return;
 
-        if (errorCount >= MAX_ERRORS) {
+        if (errors.size() >= MAX_ERRORS) {
             // Athena is having problems, skip this
             return;
         }
@@ -146,9 +151,12 @@ public final class PlayerModel extends Model {
                     RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
-                    errorCount++;
-                    if (errorCount >= MAX_ERRORS) {
-                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups.");
+                    errors.put(System.currentTimeMillis());
+
+                    // Only log the error once
+                    if (errors.size() == MAX_ERRORS + 1) {
+                        WynntilsMod.error("Athena user lookup has repeating failures. Disabling future lookups for "
+                                + ERROR_TIMEOUT_MINUTE + " minutes.");
                     }
                 });
     }
