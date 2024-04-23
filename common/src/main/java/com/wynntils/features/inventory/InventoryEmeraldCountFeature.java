@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
-import com.wynntils.models.containers.type.wynncontainers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;

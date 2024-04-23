@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.CosmeticItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public final class CosmeticTierAnnotator implements ItemAnnotator {
+public final class CosmeticTierAnnotator implements GuiItemAnnotator {
     private static final Pattern COSMETIC_PATTERN =
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
 
