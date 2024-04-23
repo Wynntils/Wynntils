@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients;
@@ -7,6 +7,7 @@ package com.wynntils.models.ingredients;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.ingredients.type.IngredientInfo;
+import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import java.util.List;
@@ -23,8 +24,8 @@ public class IngredientModel extends Model {
             ChatFormatting.AQUA, 3);
     private final IngredientInfoRegistry ingredientInfoRegistry = new IngredientInfoRegistry();
 
-    public IngredientModel() {
-        super(List.of());
+    public IngredientModel(WynnItemModel wynnItem) {
+        super(List.of(wynnItem));
     }
 
     public int getTierFromColorCode(String tierColor) {

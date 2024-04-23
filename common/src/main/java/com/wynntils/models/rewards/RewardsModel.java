@@ -15,6 +15,7 @@ import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
+import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
@@ -25,8 +26,8 @@ public class RewardsModel extends Model {
     private final TomeInfoRegistry tomeInfoRegistry = new TomeInfoRegistry();
     private final CharmInfoRegistry charmInfoRegistry = new CharmInfoRegistry();
 
-    public RewardsModel() {
-        super(List.of());
+    public RewardsModel(WynnItemModel wynnItemModel) {
+        super(List.of(wynnItemModel));
     }
 
     @Override
