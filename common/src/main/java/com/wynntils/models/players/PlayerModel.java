@@ -52,7 +52,8 @@ public final class PlayerModel extends Model {
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
-    // Count of errors in the last minute, to avoid spamming the API
+    // The size of this set is the count of errors in the last ERROR_TIMEOUT_MINUTE minutes.
+    // This is used to avoid spamming the API.
     private final TimedSet<Object> errors =
             new TimedSet<>(ERROR_TIMEOUT_MINUTE, TimeUnit.MINUTES, true, ConcurrentHashMap::newKeySet);
     private final Map<UUID, Integer> userFailures = new ConcurrentHashMap<>();
@@ -161,8 +162,8 @@ public final class PlayerModel extends Model {
                 json -> {
                     if (json.has("message") && json.get("message").getAsString().equals(ATHENA_USER_NOT_FOUND)) {
                         // This user does not exist in our database, stop requesting it
-                        fetching.remove(uuid);
                         usersWithoutWynntilsAccount.add(uuid);
+                        fetching.remove(uuid);
                         return;
                     }
 
