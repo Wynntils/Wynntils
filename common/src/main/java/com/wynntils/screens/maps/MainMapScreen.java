@@ -222,7 +222,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                             .centerWhenUnmapped
                             .get()
                     && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
-                centerMap();
+                centerMapOnWorld();
             }
 
             firstInit = false;

@@ -162,7 +162,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (firstInit) {
             // When outside of the main map, center to the middle of the map
             if (!isPlayerInsideMainArea()) {
-                centerMap();
+                centerMapOnWorld();
             }
 
             firstInit = false;

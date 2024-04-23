@@ -43,7 +43,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     // Constants
     private static final int MAX_DESTINATIONS = 10;
     private static final int SCROLL_HEIGHT = 220;
-    private static final int ZOOM_TO_DESTINATION_LEVEL = 20;
+    private static final int DEFAULT_ZOOM_LEVEL = 20;
 
     // Toggleable options
     private boolean hideTerritoryBorders = false;
@@ -182,7 +182,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         // Only center the map and reload possible pois for first init
         if (firstInit) {
-            centerMap();
+            centerMapAroundPlayer();
+            setZoomLevel(DEFAULT_ZOOM_LEVEL);
             reloadDestinationPois();
             firstInit = false;
         }
@@ -641,7 +642,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         updateMapCenter(
                 destination.getLocation().getX(), destination.getLocation().getZ());
 
-        setZoomLevel(ZOOM_TO_DESTINATION_LEVEL);
+        setZoomLevel(DEFAULT_ZOOM_LEVEL);
     }
 
     private void reloadButtons() {
