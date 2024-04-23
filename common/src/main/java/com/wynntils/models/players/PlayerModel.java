@@ -33,6 +33,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
+    private static final String ATHENA_USER_NOT_FOUND = "User not found";
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
 
     // If there is a failure with the API, give it time to recover
@@ -46,6 +47,7 @@ public final class PlayerModel extends Model {
     private static final int MAX_USER_ERRORS = 3;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
+    private final Set<UUID> usersWithoutWynntilsAccount = ConcurrentHashMap.newKeySet();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
@@ -139,7 +141,7 @@ public final class PlayerModel extends Model {
     private void loadUser(UUID uuid, String userName) {
         // Avoid fetching the same user multiple times
         if (fetching.contains(uuid)) return;
-        if (users.containsKey(uuid)) return;
+        if (users.containsKey(uuid) || usersWithoutWynntilsAccount.contains(uuid)) return;
 
         if (errors.size() >= MAX_ERRORS) {
             // Athena is having problems, skip this
@@ -157,6 +159,13 @@ public final class PlayerModel extends Model {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(
                 json -> {
+                    if (json.has("message") && json.get("message").getAsString().equals(ATHENA_USER_NOT_FOUND)) {
+                        // This user does not exist in our database, stop requesting it
+                        fetching.remove(uuid);
+                        usersWithoutWynntilsAccount.add(uuid);
+                        return;
+                    }
+
                     if (!json.has("user")) return;
 
                     WynntilsUser user = WynntilsMod.GSON.fromJson(json.getAsJsonObject("user"), WynntilsUser.class);
@@ -189,7 +198,9 @@ public final class PlayerModel extends Model {
     }
 
     private void clearUserCache() {
+        fetching.clear();
         users.clear();
+        usersWithoutWynntilsAccount.clear();
         nameMap.clear();
     }
 
