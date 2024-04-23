@@ -291,7 +291,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomLevel(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderZoomWidget(PoseStack poseStack, int mouseX, int mouseY) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         FontRenderer.getInstance()
@@ -394,17 +394,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void adjustZoomLevel(float delta) {
-        zoomLevel = MathUtils.clamp(zoomLevel + delta, 1, MapRenderer.ZOOM_LEVELS);
-        recalculateZoom();
+        setZoomLevel(zoomLevel + delta);
     }
 
     protected void setZoomLevel(float zoomLevel) {
         this.zoomLevel = MathUtils.clamp(zoomLevel, 1, MapRenderer.ZOOM_LEVELS);
-        recalculateZoom();
-    }
-
-    protected void recalculateZoom() {
-        this.zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
+        // Recalculate the cached zoom render scale
+        this.zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(this.zoomLevel);
     }
 
     protected void updateMapCenter(float newX, float newZ) {

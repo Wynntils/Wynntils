@@ -221,7 +221,7 @@ public class MinimapOverlay extends Overlay {
             float height,
             double playerX,
             double playerZ,
-            float zoomScale,
+            float zoomRenderScale,
             BoundingCircle textureBoundingCircle) {
         float sinRotationRadians;
         float cosRotationRadians;
@@ -235,7 +235,7 @@ public class MinimapOverlay extends Overlay {
             cosRotationRadians = 0f;
         }
 
-        float currentZoom = 1f / zoomScale;
+        float currentZoom = 1f / zoomRenderScale;
 
         Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
 
@@ -257,8 +257,8 @@ public class MinimapOverlay extends Overlay {
 
         Poi[] pois = poisToRender.toArray(Poi[]::new);
         for (Poi poi : pois) {
-            float dX = (poi.getLocation().getX() - (float) playerX) / zoomScale;
-            float dZ = (poi.getLocation().getZ() - (float) playerZ) / zoomScale;
+            float dX = (poi.getLocation().getX() - (float) playerX) / zoomRenderScale;
+            float dZ = (poi.getLocation().getZ() - (float) playerZ) / zoomRenderScale;
 
             if (followPlayerRotation.get()) {
                 float tempdX = dX * cosRotationRadians - dZ * sinRotationRadians;
@@ -290,8 +290,8 @@ public class MinimapOverlay extends Overlay {
             PoiLocation compassLocation = waypointPoi.getLocation();
             if (compassLocation == null) return;
 
-            float compassOffsetX = (compassLocation.getX() - (float) playerX) / zoomScale;
-            float compassOffsetZ = (compassLocation.getZ() - (float) playerZ) / zoomScale;
+            float compassOffsetX = (compassLocation.getX() - (float) playerX) / zoomRenderScale;
+            float compassOffsetZ = (compassLocation.getZ() - (float) playerZ) / zoomRenderScale;
 
             if (followPlayerRotation.get()) {
                 float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
@@ -348,7 +348,7 @@ public class MinimapOverlay extends Overlay {
                                 compassRenderZ,
                                 false,
                                 poiScale.get(),
-                                1f / zoomScale);
+                                1f / zoomRenderScale);
                 poseStack.popPose();
             } else {
                 waypointPoi.renderAt(
@@ -365,7 +365,7 @@ public class MinimapOverlay extends Overlay {
             FontRenderer fontRenderer = FontRenderer.getInstance();
             Font font = fontRenderer.getFont();
 
-            String text = StringUtils.integerToShortString(Math.round(distance * zoomScale)) + "m";
+            String text = StringUtils.integerToShortString(Math.round(distance * zoomRenderScale)) + "m";
             float w = font.width(text) / 2f, h = font.lineHeight / 2f;
 
             RenderUtils.drawRect(
