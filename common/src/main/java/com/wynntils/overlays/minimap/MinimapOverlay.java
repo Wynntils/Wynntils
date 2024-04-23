@@ -123,8 +123,8 @@ public class MinimapOverlay extends Overlay {
 
         final float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel.get());
 
-        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(
-                BoundingBox.centered((float) playerX, (float) playerZ, width * zoomRenderScale, height * zoomRenderScale));
+        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
+                (float) playerX, (float) playerZ, width * zoomRenderScale, height * zoomRenderScale));
 
         List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
 
@@ -182,7 +182,8 @@ public class MinimapOverlay extends Overlay {
             poseStack.popPose();
         }
 
-        renderPois(poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, textureBoundingCircle);
+        renderPois(
+                poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, textureBoundingCircle);
 
         // cursor
         MapRenderer.renderCursor(
