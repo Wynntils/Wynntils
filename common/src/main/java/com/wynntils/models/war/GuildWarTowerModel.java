@@ -107,6 +107,6 @@ public class GuildWarTowerModel extends Model {
 
         warBattleInfo = null;
 
-        WynntilsMod.postEvent(new GuildWarEvent.Ended(warBattleInfo));
+        WynntilsMod.postEvent(new GuildWarEvent.Ended(oldBattleInfo));
     }
 }

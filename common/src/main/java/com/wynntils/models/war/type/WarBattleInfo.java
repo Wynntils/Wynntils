@@ -36,8 +36,8 @@ public class WarBattleInfo {
         return states.get(states.size() - 1);
     }
 
-    public long getTotalLength() {
-        return states.get(states.size() - 1).timestamp() - states.get(0).timestamp();
+    public long getTotalLengthSeconds() {
+        return (states.get(states.size() - 1).timestamp() - states.get(0).timestamp()) / 1000L;
     }
 
     public long getDps(long seconds) {
@@ -48,7 +48,7 @@ public class WarBattleInfo {
         List<WarTowerState> relevantStates =
                 states.stream().filter(state -> state.timestamp() >= start).toList();
 
-        return relevantStates.size() < 2
+        return relevantStates.size() < 2 || seconds == 0
                 ? 0
                 : (relevantStates.get(0).health()
                                 - relevantStates.get(relevantStates.size() - 1).health())
@@ -62,16 +62,16 @@ public class WarBattleInfo {
 
     public RangedValue getTowerDps() {
         WarTowerState currentState = getCurrentState();
-        // Tower DPS needs to be doubled to calculate correctly
-        return RangedValue.of((int) (currentState.damage().low() * currentState.attackSpeed() * 2), (int)
+        // Tower max DPS needs to be doubled to calculate correctly
+        return RangedValue.of((int) (currentState.damage().low() * currentState.attackSpeed()), (int)
                 (currentState.damage().high() * currentState.attackSpeed() * 2));
     }
 
     public long getEstimatedTimeRemaining() {
         WarTowerState currentState = getCurrentState();
         long effectiveHp = getTowerEffectiveHp();
-        long dps = getDps(getTotalLength());
-        return dps == 0 ? Long.MAX_VALUE : effectiveHp / dps;
+        long dps = getDps(getTotalLengthSeconds());
+        return dps == 0 ? -1L : effectiveHp / dps;
     }
 
     public void addNewState(WarTowerState towerState) {

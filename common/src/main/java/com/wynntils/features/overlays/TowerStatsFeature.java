@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.overlays;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -13,11 +12,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.models.war.type.WarTowerState;
-import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.RangedValue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,19 +25,6 @@ public class TowerStatsFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> printTowerStatsOnEnd = new Config<>(true);
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        WarBattleInfo warBattleInfo = new WarBattleInfo(
-                "Emerald Forest North",
-                "Titans Valor",
-                new WarTowerState(12500, 5.2d, RangedValue.of(55, 210), 1.3, 1713971246L));
-        warBattleInfo.addNewState(new WarTowerState(900, 7.2d, RangedValue.of(260, 1100), 2.6, 1713971292L));
-
-        if (event.getNewState() == WorldState.WORLD) {
-            WynntilsMod.postEvent(new GuildWarEvent.Ended(warBattleInfo));
-        }
-    }
 
     @SubscribeEvent
     public void onWarEnd(GuildWarEvent.Ended event) {
@@ -65,15 +48,15 @@ public class TowerStatsFeature extends Feature {
 
         message = message.append(Component.literal("\uD83D\uDD51 Time in War: ")
                         .withStyle(ChatFormatting.GOLD)
-                        .append(Component.literal(
-                                        "%s".formatted(StringUtils.formatDuration(warBattleInfo.getTotalLength())))
+                        .append(Component.literal("%s"
+                                        .formatted(StringUtils.formatDuration(warBattleInfo.getTotalLengthSeconds())))
                                 .withStyle(ChatFormatting.WHITE)))
                 .append(Component.literal("\n"))
                 .append(Component.literal("⚔ DPS: ")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal("%s"
                                         .formatted(StringUtils.integerToShortString(
-                                                warBattleInfo.getDps(warBattleInfo.getTotalLength()))))
+                                                warBattleInfo.getDps(warBattleInfo.getTotalLengthSeconds()))))
                                 .withStyle(ChatFormatting.WHITE)))
                 .append(Component.literal("\n"));
 
