@@ -61,6 +61,9 @@ public class TomeInfoRegistry {
     }
 
     private void loadTomeInfoRegistry() {
+        if (!Models.WynnItem.hasObtainInfo()) return;
+        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_TOMES);
         dl.handleJsonObject(json -> {
             Gson gson = new GsonBuilder()
