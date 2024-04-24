@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
+import java.util.List;
 import java.util.Optional;
 
 public class WarFunctions {
@@ -146,6 +147,75 @@ public class WarFunctions {
             if (warBattleInfoOpt.isEmpty()) return -1d;
 
             return warBattleInfoOpt.get().getCurrentState().attackSpeed();
+        }
+    }
+
+    public static class TimeInWarFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+
+            if (warBattleInfoOpt.isEmpty()) return -1;
+
+            // Should be a long, but functions don't support longs
+            return (int) warBattleInfoOpt.get().getTotalLength();
+        }
+    }
+
+    public static class TowerEffectiveHpFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+
+            if (warBattleInfoOpt.isEmpty()) return -1;
+
+            // Should be a long, but functions don't support longs
+            return (int) warBattleInfoOpt.get().getTowerEffectiveHp();
+        }
+    }
+
+    public static class TowerDpsFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+
+            if (warBattleInfoOpt.isEmpty()) return CappedValue.EMPTY;
+
+            // Technically this is a RangedValue, but functions don't support RangedValue
+            RangedValue towerDps = warBattleInfoOpt.get().getTowerDps();
+            return new CappedValue(towerDps.low(), towerDps.high());
+        }
+    }
+
+    public static class TeamDpsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+
+            if (warBattleInfoOpt.isEmpty()) return -1;
+
+            // Should be a long, but functions don't support longs
+            return (int) warBattleInfoOpt
+                    .get()
+                    .getDps(arguments.getArgument("seconds").getIntegerValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("seconds", Integer.class, null)));
+        }
+    }
+
+    public static class EstimatedTimeToFinishWarFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+
+            if (warBattleInfoOpt.isEmpty()) return -1;
+
+            // Should be a long, but functions don't support longs
+            return (int) warBattleInfoOpt.get().getEstimatedTimeRemaining();
         }
     }
 }

@@ -548,10 +548,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.CurrentTowerDamageFunction());
         registerFunction(new WarFunctions.CurrentTowerDefenseFunction());
         registerFunction(new WarFunctions.CurrentTowerHealthFunction());
+        registerFunction(new WarFunctions.EstimatedTimeToFinishWarFunction());
         registerFunction(new WarFunctions.InitialTowerAttackSpeedFunction());
         registerFunction(new WarFunctions.InitialTowerDamageFunction());
         registerFunction(new WarFunctions.InitialTowerDefenseFunction());
         registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.TeamDpsFunction());
+        registerFunction(new WarFunctions.TimeInWarFunction());
+        registerFunction(new WarFunctions.TowerDpsFunction());
+        registerFunction(new WarFunctions.TowerEffectiveHpFunction());
         registerFunction(new WarFunctions.TowerOwnerFunction());
         registerFunction(new WarFunctions.TowerTerritoryFunction());
         registerFunction(new WarFunctions.VolleyTimerFunction());

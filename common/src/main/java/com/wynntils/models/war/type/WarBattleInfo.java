@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.war.type;
 
+import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,25 @@ public class WarBattleInfo {
                 : (relevantStates.get(0).health()
                                 - relevantStates.get(relevantStates.size() - 1).health())
                         / seconds;
+    }
+
+    public long getTowerEffectiveHp() {
+        WarTowerState currentState = getCurrentState();
+        return (long) Math.floor(currentState.health() / (1 - currentState.defense() / 100));
+    }
+
+    public RangedValue getTowerDps() {
+        WarTowerState currentState = getCurrentState();
+        // Tower DPS needs to be doubled to calculate correctly
+        return RangedValue.of((int) (currentState.damage().low() * currentState.attackSpeed() * 2), (int)
+                (currentState.damage().high() * currentState.attackSpeed() * 2));
+    }
+
+    public long getEstimatedTimeRemaining() {
+        WarTowerState currentState = getCurrentState();
+        long effectiveHp = getTowerEffectiveHp();
+        long dps = getDps(getTotalLength());
+        return dps == 0 ? Long.MAX_VALUE : effectiveHp / dps;
     }
 
     public void addNewState(WarTowerState towerState) {
