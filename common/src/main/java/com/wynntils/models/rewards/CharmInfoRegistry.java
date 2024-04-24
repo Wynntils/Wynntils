@@ -10,8 +10,8 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearMetaInfo;
@@ -40,8 +40,6 @@ public class CharmInfoRegistry {
     private Map<String, CharmInfo> charmInfoLookup = Map.of();
 
     public CharmInfoRegistry() {
-        WynntilsMod.registerEventListener(this);
-
         reloadData();
     }
 
@@ -58,6 +56,9 @@ public class CharmInfoRegistry {
     }
 
     private void loadCharmInfoRegistry() {
+        if (!Models.WynnItem.hasObtainInfo()) return;
+        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_CHARMS);
         dl.handleJsonObject(json -> {
             Gson gson = new GsonBuilder()
