@@ -63,8 +63,7 @@ public class TowerStatsFeature extends Feature {
                             warBattleInfo.getTerritory(), warBattleInfo.getOwnerGuild(), endTowerState));
         }
 
-        message = message.append(getSeparatorComponent("Tower Stats - DPS", SEPARATOR_LENGTH))
-                .append(Component.literal("\uD83D\uDD51 Time in War: ")
+        message = message.append(Component.literal("\uD83D\uDD51 Time in War: ")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal(
                                         "%s".formatted(StringUtils.formatDuration(warBattleInfo.getTotalLength())))
