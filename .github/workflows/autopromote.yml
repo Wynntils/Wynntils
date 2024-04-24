@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4
       - name: merge
         uses: mtanzi/action-automerge@v1
         id: merge
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v4.1.3
+        uses: actions/checkout@v4
       - name: merge
         uses: mtanzi/action-automerge@v1
         id: merge
