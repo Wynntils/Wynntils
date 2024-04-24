@@ -13,6 +13,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.models.war.event.GuildWarTowerEffectEvent;
+import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.models.war.type.WarTowerState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
@@ -32,11 +33,7 @@ public class GuildWarTowerModel extends Model {
         Handlers.BossBar.registerBar(WarTowerBar);
     }
 
-    // The state of the tower on the start of the war
-    private WarTowerState initialTowerState;
-
-    // Updated on every tower damage event
-    private WarTowerState currentTowerState;
+    private WarBattleInfo warBattleInfo = null;
 
     private long lastAuraProc = 0;
     private long lastVolleyProc = 0;
@@ -82,26 +79,34 @@ public class GuildWarTowerModel extends Model {
         return Math.max(-1, getEffectLength() - (System.currentTimeMillis() - getLastVolleyProc()));
     }
 
-    public Optional<WarTowerState> getInitialTowerState() {
-        return Optional.ofNullable(initialTowerState);
+    public Optional<WarBattleInfo> getWarBattleInfo() {
+        return Optional.ofNullable(warBattleInfo);
     }
 
-    public Optional<WarTowerState> getCurrentTowerState() {
-        return Optional.ofNullable(currentTowerState);
-    }
-
-    public void onTowerDamaged(WarTowerState towerState) {
-        if (initialTowerState == null) {
-            initialTowerState = towerState;
-            WynntilsMod.postEvent(new GuildWarEvent.Started());
+    public void onTowerDamaged(String guild, String territory, WarTowerState towerState) {
+        // If the previous territory is different from the current territory, reset the tower state
+        // This should not happen, but it's a safety measure
+        if (warBattleInfo != null && !warBattleInfo.getTerritory().equals(territory)) {
+            WynntilsMod.warn("War tower territory was not reset correctly, warBattleInfo has %s, war bar has %s"
+                    .formatted(warBattleInfo.getTerritory(), territory));
+            resetTowerState();
         }
 
-        currentTowerState = towerState;
+        if (warBattleInfo == null) {
+            warBattleInfo = new WarBattleInfo(territory, guild, towerState);
+            WynntilsMod.postEvent(new GuildWarEvent.Started(warBattleInfo));
+        } else {
+            warBattleInfo.addNewState(towerState);
+        }
     }
 
     public void resetTowerState() {
-        initialTowerState = null;
-        currentTowerState = null;
-        WynntilsMod.postEvent(new GuildWarEvent.Ended());
+        if (warBattleInfo == null) return;
+
+        WarBattleInfo oldBattleInfo = warBattleInfo;
+
+        warBattleInfo = null;
+
+        WynntilsMod.postEvent(new GuildWarEvent.Ended(warBattleInfo));
     }
 }

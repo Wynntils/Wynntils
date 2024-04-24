@@ -7,7 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.war.type.WarTowerState;
+import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
 import java.util.Optional;
@@ -32,22 +32,22 @@ public class WarFunctions {
     public static class TowerOwnerFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            Optional<WarTowerState> initialTowerStateOpt = Models.GuildWarTower.getInitialTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (initialTowerStateOpt.isEmpty()) return "-";
+            if (warBattleInfoOpt.isEmpty()) return "-";
 
-            return initialTowerStateOpt.get().ownerGuild();
+            return warBattleInfoOpt.get().getOwnerGuild();
         }
     }
 
     public static class TowerTerritoryFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            Optional<WarTowerState> initialTowerStateOpt = Models.GuildWarTower.getInitialTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (initialTowerStateOpt.isEmpty()) return "-";
+            if (warBattleInfoOpt.isEmpty()) return "-";
 
-            return initialTowerStateOpt.get().territory();
+            return warBattleInfoOpt.get().getTerritory();
         }
     }
 
@@ -57,22 +57,22 @@ public class WarFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             // Technically this should be a long, but functions don't support longs
-            Optional<WarTowerState> initialTowerStateOpt = Models.GuildWarTower.getInitialTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (initialTowerStateOpt.isEmpty()) return -1;
+            if (warBattleInfoOpt.isEmpty()) return -1;
 
-            return (int) initialTowerStateOpt.get().health();
+            return (int) warBattleInfoOpt.get().getInitialState().health();
         }
     }
 
-    public static class InitialTowerDefenseFunction extends Function<Integer> {
+    public static class InitialTowerDefenseFunction extends Function<Double> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            Optional<WarTowerState> initialTowerStateOpt = Models.GuildWarTower.getInitialTowerState();
+        public Double getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (initialTowerStateOpt.isEmpty()) return -1;
+            if (warBattleInfoOpt.isEmpty()) return -1d;
 
-            return initialTowerStateOpt.get().defense();
+            return warBattleInfoOpt.get().getInitialState().defense();
         }
     }
 
@@ -80,11 +80,11 @@ public class WarFunctions {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             // Technically this is a RangedValue, but functions don't support RangedValue
-            Optional<WarTowerState> initialTowerStateOpt = Models.GuildWarTower.getInitialTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (initialTowerStateOpt.isEmpty()) return CappedValue.EMPTY;
+            if (warBattleInfoOpt.isEmpty()) return CappedValue.EMPTY;
 
-            RangedValue damage = initialTowerStateOpt.get().damage();
+            RangedValue damage = warBattleInfoOpt.get().getInitialState().damage();
             return new CappedValue(damage.low(), damage.high());
         }
     }
@@ -92,11 +92,11 @@ public class WarFunctions {
     public static class InitialTowerAttackSpeedFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            Optional<WarTowerState> initialTowerStateOpt = Models.GuildWarTower.getInitialTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (initialTowerStateOpt.isEmpty()) return -1d;
+            if (warBattleInfoOpt.isEmpty()) return -1d;
 
-            return initialTowerStateOpt.get().attackSpeed();
+            return warBattleInfoOpt.get().getInitialState().attackSpeed();
         }
     }
 
@@ -106,22 +106,22 @@ public class WarFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             // Technically this should be a long, but functions don't support longs
-            Optional<WarTowerState> currentTowerStateOpt = Models.GuildWarTower.getCurrentTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (currentTowerStateOpt.isEmpty()) return -1;
+            if (warBattleInfoOpt.isEmpty()) return -1;
 
-            return (int) currentTowerStateOpt.get().health();
+            return (int) warBattleInfoOpt.get().getCurrentState().health();
         }
     }
 
-    public static class CurrentTowerDefenseFunction extends Function<Integer> {
+    public static class CurrentTowerDefenseFunction extends Function<Double> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            Optional<WarTowerState> currentTowerStateOpt = Models.GuildWarTower.getCurrentTowerState();
+        public Double getValue(FunctionArguments arguments) {
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (currentTowerStateOpt.isEmpty()) return -1;
+            if (warBattleInfoOpt.isEmpty()) return -1d;
 
-            return currentTowerStateOpt.get().defense();
+            return warBattleInfoOpt.get().getCurrentState().defense();
         }
     }
 
@@ -129,11 +129,11 @@ public class WarFunctions {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             // Technically this is a RangedValue, but functions don't support RangedValue
-            Optional<WarTowerState> currentTowerStateOpt = Models.GuildWarTower.getCurrentTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (currentTowerStateOpt.isEmpty()) return CappedValue.EMPTY;
+            if (warBattleInfoOpt.isEmpty()) return CappedValue.EMPTY;
 
-            RangedValue damage = currentTowerStateOpt.get().damage();
+            RangedValue damage = warBattleInfoOpt.get().getCurrentState().damage();
             return new CappedValue(damage.low(), damage.high());
         }
     }
@@ -141,11 +141,11 @@ public class WarFunctions {
     public static class CurrentTowerAttackSpeedFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            Optional<WarTowerState> currentTowerStateOpt = Models.GuildWarTower.getCurrentTowerState();
+            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
 
-            if (currentTowerStateOpt.isEmpty()) return -1d;
+            if (warBattleInfoOpt.isEmpty()) return -1d;
 
-            return currentTowerStateOpt.get().attackSpeed();
+            return warBattleInfoOpt.get().getCurrentState().attackSpeed();
         }
     }
 }

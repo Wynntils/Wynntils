@@ -22,15 +22,13 @@ public class WarTowerBar extends TrackedBar {
     @Override
     public void onUpdateName(Matcher match) {
         WarTowerState towerState = new WarTowerState(
-                match.group("guild"),
-                match.group("territory"),
                 Long.parseLong(match.group("health")),
-                Integer.parseInt(match.group("defense")),
+                Double.parseDouble(match.group("defense")),
                 RangedValue.of(Integer.parseInt(match.group("damagemin")), Integer.parseInt(match.group("damagemax"))),
-                Double.parseDouble(match.group("attackspeed")));
+                Double.parseDouble(match.group("attackspeed")),
+                System.currentTimeMillis());
 
-        // Update the tower state
-        Models.GuildWarTower.onTowerDamaged(towerState);
+        Models.GuildWarTower.onTowerDamaged(match.group("guild"), match.group("territory"), towerState);
     }
 
     @Override
