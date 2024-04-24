@@ -544,6 +544,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyLeaderFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
+        registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());
+        registerFunction(new WarFunctions.CurrentTowerDamageFunction());
+        registerFunction(new WarFunctions.CurrentTowerDefenseFunction());
+        registerFunction(new WarFunctions.CurrentTowerHealthFunction());
+        registerFunction(new WarFunctions.InitialTowerAttackSpeedFunction());
+        registerFunction(new WarFunctions.InitialTowerDamageFunction());
+        registerFunction(new WarFunctions.InitialTowerDefenseFunction());
+        registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.TowerOwnerFunction());
+        registerFunction(new WarFunctions.TowerTerritoryFunction());
         registerFunction(new WarFunctions.VolleyTimerFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
