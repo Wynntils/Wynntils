@@ -43,8 +43,6 @@ public class TomeInfoRegistry {
     private Map<String, TomeInfo> tomeInfoLookup = Map.of();
 
     public TomeInfoRegistry() {
-        WynntilsMod.registerEventListener(this);
-
         reloadData();
     }
 
