@@ -1198,6 +1198,7 @@
   "feature.wynntils.towerEffectOverlay.volleyVignetteIntensity.name": "Vignette Intensity for Volley",
   "feature.wynntils.towerStats.description": "Adds an overlay to see statistics about the current guild war tower.",
   "feature.wynntils.towerStats.name": "Tower Stats",
+  "feature.wynntils.towerStats.overlay.towerStats.name": "Tower Stats Overlay",
   "feature.wynntils.towerStats.printTowerStatsOnEnd.description": "Should the tower stats be printed to chat when the war ends?",
   "feature.wynntils.towerStats.printTowerStatsOnEnd.name": "Print Tower Stats on War End",
   "feature.wynntils.tradeMarketAutoOpenChat.description": "Automatically open chat when using the trade market.",

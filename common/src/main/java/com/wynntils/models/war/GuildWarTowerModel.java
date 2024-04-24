@@ -25,7 +25,7 @@ public class GuildWarTowerModel extends Model {
     private static final StyledText AURA_TITLE = StyledText.fromString("§4§n/!\\§7 Tower §6Aura");
     private static final StyledText VOLLEY_TITLE = StyledText.fromString("§4§n/!\\§7 Tower §dVolley");
 
-    public final TrackedBar WarTowerBar = new WarTowerBar();
+    private final TrackedBar WarTowerBar = new WarTowerBar();
 
     public GuildWarTowerModel() {
         super(List.of());
