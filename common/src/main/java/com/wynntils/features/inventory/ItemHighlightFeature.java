@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -143,7 +143,7 @@ public class ItemHighlightFeature extends Feature {
     @Persisted
     public final Config<Float> hotbarOpacity = new Config<>(.5f);
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled.get()) return;
 
