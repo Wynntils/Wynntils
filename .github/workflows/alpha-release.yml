@@ -21,13 +21,13 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
-      - name: Set up version.json
-        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
-
       - uses: actions/setup-node@v4
         with:
           node-version: 16
       - run: npm install conventional-changelog-conventionalcommits
+
+      - name: Set up version.json
+        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
 
       - name: Create changelog
         id: changelog
