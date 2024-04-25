@@ -1,9 +1,27 @@
+## [1.1.14](https://github.com/Wynntils/Artemis/compare/v1.1.13...v1.1.14) (2024-04-25)
+
+
+### Bug Fixes
+
+* Detect flying chests correctly ([#2428](https://github.com/Wynntils/Artemis/issues/2428)) ([6dd95b8](https://github.com/Wynntils/Artemis/commit/6dd95b872fd0627663b380c612b7335c255ff60c))
+* Fix crops resource name causing TerritoryAnnotator to crash [skip ci] ([#2425](https://github.com/Wynntils/Artemis/issues/2425)) ([dd6174f](https://github.com/Wynntils/Artemis/commit/dd6174fb7ce135a663e91615abbdefdc4e20361d))
+
+
+### Miscellaneous Chores
+
+* Update mod dependency and ci versions [skip ci] ([#2426](https://github.com/Wynntils/Artemis/issues/2426)) ([12438f3](https://github.com/Wynntils/Artemis/commit/12438f3f1d8ecf52f2ab0faf4b18e2edbeccebdc))
+
 ## [1.1.13](https://github.com/Wynntils/Artemis/compare/v1.1.12...v1.1.13) (2024-04-23)
 
 
 ### Bug Fixes
 
 * Fix minimap disabling/crashing when changing the minimap's configs ([#2423](https://github.com/Wynntils/Artemis/issues/2423)) ([9d85b5a](https://github.com/Wynntils/Artemis/commit/9d85b5a092c8a30f5bc0f136083f0cae9bcb8da5))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.1.13 [skip ci] ([75c0a0d](https://github.com/Wynntils/Artemis/commit/75c0a0d0b0bb57608c677d7ef74e2ca4f1d09c4b))
 
 ## [1.1.12](https://github.com/Wynntils/Artemis/compare/v1.1.11...v1.1.12) (2024-04-23)
 
@@ -69,16 +87,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#2391](https://github.com/Wynntils/Artemis/issues/2391)) ([6b50c88](https://github.com/Wynntils/Artemis/commit/6b50c88893ad192a1d5a88121ce87a891178a952))
 * [auto-generated] Update urls.json [ci skip] ([#2393](https://github.com/Wynntils/Artemis/issues/2393)) ([1dd9336](https://github.com/Wynntils/Artemis/commit/1dd9336851658b5f9f9c370bf19e00292113f965))
 * **release:** v1.1.10 [skip ci] ([d549799](https://github.com/Wynntils/Artemis/commit/d5497998b3beba4193757e92f9cff8f4f0ca82bf))
-
-## [1.1.9](https://github.com/Wynntils/Artemis/compare/v1.1.8...v1.1.9) (2024-04-06)
-
-
-### Bug Fixes
-
-* Parse set data to fix skill point model saving skill requirements incorrectly ([#2343](https://github.com/Wynntils/Artemis/issues/2343)) ([ed39445](https://github.com/Wynntils/Artemis/commit/ed39445db1db2bc54d685049a643bd35a14a22b4))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.9 [skip ci] ([9136594](https://github.com/Wynntils/Artemis/commit/9136594c431bb34ad18b04a078b80003d23e7ba4))
 
