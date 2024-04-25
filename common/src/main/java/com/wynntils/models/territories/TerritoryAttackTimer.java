@@ -10,56 +10,34 @@ import com.wynntils.models.territories.type.GuildResourceValues;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
-public final class TerritoryAttackTimer {
-    private final TerritoryProfile territoryProfile;
+public record TerritoryAttackTimer(TerritoryProfile territoryProfile, long timerEnd) {
+    public String asString() {
+        Optional<GuildResourceValues> defense = defense();
+        ChatFormatting defenseColor =
+                defense.isEmpty() ? ChatFormatting.GRAY : defense.get().getDefenceColor();
+        String defenseString = defense.isEmpty() ? "Unknown" : defense.get().getAsString();
 
-    private final String territory;
-    private final int minutes;
-    private final int seconds;
-
-    private GuildResourceValues defense;
-
-    public TerritoryAttackTimer(String territory, int minutes, int seconds) {
-        this.territoryProfile = Models.Territory.getTerritoryProfileFromShortName(territory);
-        this.territory = territory;
-        this.minutes = minutes;
-        this.seconds = seconds;
-        this.defense = null;
+        return ChatFormatting.GRAY + territoryProfile.getFriendlyName() + defenseColor + " (" + defenseString + ")"
+                + ChatFormatting.AQUA + " " + timerString();
     }
 
-    public String asString() {
-        ChatFormatting defenseColor = this.defense == null ? ChatFormatting.YELLOW : this.defense.getDefenceColor();
-        String defense = this.defense == null ? "Unknown" : this.defense.getAsString();
+    public int getMinutesRemaining() {
+        return (int) ((timerEnd - System.currentTimeMillis()) / 60000);
+    }
 
-        return ChatFormatting.GRAY + territory + defenseColor + " (" + defense + ")" + ChatFormatting.AQUA + " "
-                + timerString();
+    public int getSecondsRemaining() {
+        return (int) ((timerEnd - System.currentTimeMillis()) / 1000) % 60;
     }
 
     public int asSeconds() {
-        return minutes * 60 + seconds;
+        return getMinutesRemaining() * 60 + getSecondsRemaining();
     }
 
     public String timerString() {
-        return "%02d:%02d".formatted(minutes, seconds);
+        return "%02d:%02d".formatted(getMinutesRemaining(), getSecondsRemaining());
     }
 
-    public String territory() {
-        return territory;
-    }
-
-    public GuildResourceValues defense() {
-        return defense;
-    }
-
-    public boolean isDefenseKnown() {
-        return defense != null;
-    }
-
-    public Optional<TerritoryProfile> territoryProfile() {
-        return Optional.ofNullable(territoryProfile);
-    }
-
-    public void setDefense(GuildResourceValues defense) {
-        this.defense = defense;
+    public Optional<GuildResourceValues> defense() {
+        return Models.GuildAttackTimer.getDefenseForTerritory(territoryProfile);
     }
 }
