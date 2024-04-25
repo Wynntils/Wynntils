@@ -23,31 +23,23 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
         List<TerritoryAttackTimer> attackTimers = Models.GuildAttackTimer.getAttackTimers();
 
         int lowestTimer = attackTimers.stream()
-                .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
                 .mapToInt(TerritoryAttackTimer::asSeconds)
                 .min()
                 .orElse(0);
 
-        return attackTimers.stream()
-                .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
-                .map(attackTimer -> {
-                    CustomColor beaconColor = attackTimer.defense() == null
-                            ? CommonColors.WHITE
-                            : CustomColor.fromChatFormatting(
-                                    attackTimer.defense().getDefenceColor());
+        return attackTimers.stream().map(attackTimer -> {
+            CustomColor beaconColor = attackTimer.defense().isEmpty()
+                    ? CommonColors.WHITE
+                    : CustomColor.fromChatFormatting(attackTimer.defense().get().getDefenceColor());
 
-                    return new MarkerInfo(
-                            attackTimer.territory(),
-                            () -> attackTimer
-                                    .territoryProfile()
-                                    .get()
-                                    .getCenterLocation()
-                                    .asLocation(),
-                            lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL,
-                            beaconColor,
-                            CommonColors.WHITE,
-                            beaconColor);
-                });
+            return new MarkerInfo(
+                    attackTimer.territoryProfile().getFriendlyName(),
+                    () -> attackTimer.territoryProfile().getCenterLocation().asLocation(),
+                    lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL,
+                    beaconColor,
+                    CommonColors.WHITE,
+                    beaconColor);
+        });
     }
 
     @Override
@@ -55,16 +47,14 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
         List<TerritoryAttackTimer> attackTimers = Models.GuildAttackTimer.getAttackTimers();
 
         int lowestTimer = attackTimers.stream()
-                .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
                 .mapToInt(TerritoryAttackTimer::asSeconds)
                 .min()
                 .orElse(0);
 
         return attackTimers.stream()
-                .filter(attackTimer -> attackTimer.territoryProfile().isPresent())
                 .map(attackTimer -> new MarkerPoi(
-                        attackTimer.territoryProfile().get().getCenterLocation(),
-                        attackTimer.territory(),
+                        attackTimer.territoryProfile().getCenterLocation(),
+                        attackTimer.territoryProfile().getFriendlyName(),
                         lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL));
     }
 

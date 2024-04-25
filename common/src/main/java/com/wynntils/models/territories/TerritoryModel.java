@@ -19,6 +19,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,11 +68,15 @@ public final class TerritoryModel extends Model {
 
     /**
      * Get the territory profile from a short name. This is used when the territory name is cut off, like scoreboards.
-     * @param shortName The short name of the territory
+     *
+     * @param shortName           The short name of the territory
+     * @param excludedTerritories Territories to exclude from the search
      * @return The territory profile, or null if not found
      */
-    public TerritoryProfile getTerritoryProfileFromShortName(String shortName) {
+    public TerritoryProfile getTerritoryProfileFromShortName(
+            String shortName, Collection<TerritoryProfile> excludedTerritories) {
         return territoryProfileMap.values().stream()
+                .filter(profile -> !excludedTerritories.contains(profile))
                 .filter(profile -> profile.getName().startsWith(shortName))
                 .findFirst()
                 .orElse(null);
