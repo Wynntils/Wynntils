@@ -104,6 +104,7 @@ import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
 import com.wynntils.features.overlays.TowerEffectOverlayFeature;
+import com.wynntils.features.overlays.TowerStatsFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -297,6 +298,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
         registerFeature(new TowerEffectOverlayFeature());
+        registerFeature(new TowerStatsFeature());
         // endregion
 
         // region players
