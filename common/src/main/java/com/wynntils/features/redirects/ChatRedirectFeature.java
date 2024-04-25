@@ -80,6 +80,9 @@ public class ChatRedirectFeature extends Feature {
     @Persisted
     public final Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
+    @Persisted
+    public final Config<RedirectAction> guildBank = new Config<>(RedirectAction.REDIRECT);
+
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
@@ -87,15 +90,16 @@ public class ChatRedirectFeature extends Feature {
         register(new EmptyManaBankRedirector());
         register(new FriendJoinRedirector());
         register(new FriendLeaveRedirector());
+        register(new GuildBankRedirector());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
-        register(new HousingTeleportArrivalRedirector());
         register(new HousingTeleportArrivalCooldownRedirector());
-        register(new HousingTeleportDepartureRedirector());
+        register(new HousingTeleportArrivalRedirector());
         register(new HousingTeleportDepartureCooldownRedirector());
+        register(new HousingTeleportDepartureRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
@@ -974,6 +978,36 @@ public class ChatRedirectFeature extends Feature {
             return StyledText.fromComponent(
                     Component.translatable("feature.wynntils.chatRedirect.unusedPoints.notificationSkill", pointsString)
                             .withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
+    private final class GuildBankRedirector extends SimpleRedirector {
+        private static final String DEPOSIT_SYMBOL = "←";
+        private static final String WITHDRAW_SYMBOL = "→";
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§3\\[INFO\\]§b (?<player>.+) (?<transactiontype>withdrew|deposited) (?<count>\\d+)x (?<item>.+) (?:from|to) the Guild Bank \\((?<banktype>Everyone|High Ranked)\\)$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return guildBank.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            String player = matcher.group("player");
+            String transactionType = matcher.group("transactiontype");
+            String count = matcher.group("count");
+            String item = matcher.group("item");
+            String bankType = matcher.group("banktype");
+
+            return StyledText.fromString(
+                    ChatFormatting.AQUA + (transactionType.equals("withdrew") ? WITHDRAW_SYMBOL : DEPOSIT_SYMBOL) + " "
+                            + player + " " + count + "x " + item + " (" + bankType + ") ");
         }
     }
 }
