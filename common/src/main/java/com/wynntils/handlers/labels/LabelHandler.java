@@ -45,7 +45,7 @@ public class LabelHandler extends Handler {
 
             if (packedItem.id() == Entity.DATA_CUSTOM_NAME.getId()) {
                 Optional<Component> value = (Optional<Component>) packedItem.value();
-                if (value.isEmpty()) return;
+                if (value.isEmpty()) continue;
 
                 Component oldNameComponent = entity.getCustomName();
                 StyledText oldName =
@@ -53,7 +53,7 @@ public class LabelHandler extends Handler {
                 StyledText newName = StyledText.fromComponent(value.get());
 
                 // Sometimes there is no actual change; ignore it then
-                if (newName.equals(oldName)) return;
+                if (newName.equals(oldName)) continue;
 
                 LabelInfo labelInfo = tryIdentifyLabel(newName, entity.position());
 
