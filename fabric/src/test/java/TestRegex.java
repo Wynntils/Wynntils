@@ -29,6 +29,7 @@ import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
@@ -722,5 +723,11 @@ public class TestRegex {
         PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
         p.shouldMatch("§3§otest item§b§o [24%]À");
         p.shouldMatch("§3§oAbsorbant Skirt of the Skyraider§b§o [100%]À");
+    }
+
+    @Test
+    public void WarTowerBar_TOWER_BAR_PATTERN() {
+        PatternTester p = new PatternTester(WarTowerBar.class, "TOWER_BAR_PATTERN");
+        p.shouldMatch("§3[SEPC] §bEfilim South Plains Tower§7 - §4❤ 390000§7 (§610.0%§7) - §c☠ 1300-1949§7 (§b0.5x§7)");
     }
 }
