@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -39,6 +39,7 @@ import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -82,6 +83,7 @@ import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -89,6 +91,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -577,13 +580,22 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         MixinHelper.post(new TeleportEntityEvent(entity, position));
     }
 
-    @Inject(
+    @ModifyArg(
             method = "handleSetEntityData(Lnet/minecraft/network/protocol/game/ClientboundSetEntityDataPacket;)V",
-            at = @At("HEAD"))
-    private void handleSetEntityDataPre(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
-        if (!isRenderThread()) return;
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/network/syncher/SynchedEntityData;assignValues(Ljava/util/List;)V"),
+            index = 0)
+    private List<SynchedEntityData.DataValue<?>> handleSetEntityDataPre(
+            List<SynchedEntityData.DataValue<?>> packedItems,
+            @Local(argsOnly = true) ClientboundSetEntityDataPacket packet) {
+        if (!isRenderThread()) return packedItems;
 
-        MixinHelper.post(new SetEntityDataEvent(packet));
+        SetEntityDataEvent event = new SetEntityDataEvent(packet);
+        MixinHelper.post(event);
+        return event.getPackedItems();
     }
 
     @Inject(
