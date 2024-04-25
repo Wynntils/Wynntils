@@ -48,7 +48,7 @@ public class StringFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             RangedValue value = arguments.getArgument("value").getRangedValue();
-            return StringUtils.integerToShortString(value.low()) + "/" + StringUtils.integerToShortString(value.high());
+            return StringUtils.integerToShortString(value.low()) + "-" + StringUtils.integerToShortString(value.high());
         }
 
         @Override
