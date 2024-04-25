@@ -16,13 +16,13 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.widgets.FilterOptionsButton;
 import com.wynntils.screens.itemfilter.widgets.PresetButton;
 import com.wynntils.screens.itemfilter.widgets.ProviderButton;
+import com.wynntils.screens.itemfilter.widgets.ProviderFilterListWidget;
 import com.wynntils.screens.itemfilter.widgets.SortWidget;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
-import com.wynntils.services.itemfilter.type.StatProviderFilterMap;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -38,7 +38,9 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,12 +64,12 @@ public final class ItemFilterScreen extends WynntilsScreen {
     // Collections
     private final List<ItemProviderType> supportedProviderTypes;
     private List<ItemStatProvider<?>> itemStatProviders = new ArrayList<>();
-    private StatProviderFilterMap filters = new StatProviderFilterMap();
     private List<SortInfo> sorts = new ArrayList<>();
     private List<Pair<String, String>> presets;
     private List<SortWidget> sortButtons = new ArrayList<>();
     private List<WynntilsButton> presetButtons = new ArrayList<>();
     private List<WynntilsButton> providerButtons = new ArrayList<>();
+    private Map<ItemStatProvider<?>, List<StatProviderAndFilterPair>> filterMap = new HashMap<>();
 
     // Renderables
     private final SearchWidget itemSearchWidget;
@@ -81,6 +83,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private FilterOptionsButton usedButton;
     private FilterOptionsButton unusedButton;
     private FilterOptionsButton selectedFilterButton;
+    private ProviderFilterListWidget filterWidget;
     private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget presetNameInput;
     private WynntilsButton nextPresetButton;
@@ -299,6 +302,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.addRenderableWidget(unusedButton);
         // endregion
 
+        filterWidget = null;
+
         updateProviderWidgets();
         updatePresetWidgets();
     }
@@ -314,7 +319,22 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         RenderUtils.drawTexturedRect(poseStack, Texture.ITEM_FILTER_BACKGROUND, 0, 0);
 
-        if (sortMode && sorts.isEmpty()) {
+        if (selectedProvider == null && !sortMode) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.itemFilter.unselectedFilter")),
+                            147,
+                            345,
+                            63,
+                            123,
+                            200,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        } else if (sortMode && sorts.isEmpty()) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
@@ -483,6 +503,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         double adjustedMouseX = mouseX - translationX;
         double adjustedMouseY = mouseY - translationY;
 
+        // Prevent scrolling issues in the filter widget by triggering mouse released when no longer hovering it
+        if (filterWidget != null && !filterWidget.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+            filterWidget.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+        }
+
         if (draggingProviderScroll) {
             int renderY = 24;
             int scrollAreaStartY = renderY + 9;
@@ -513,6 +538,12 @@ public final class ItemFilterScreen extends WynntilsScreen {
             return true;
         }
 
+        for (GuiEventListener listener : this.children) {
+            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                return listener.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+            }
+        }
+
         return false;
     }
 
@@ -521,14 +552,14 @@ public final class ItemFilterScreen extends WynntilsScreen {
         double adjustedMouseX = mouseX - translationX;
         double adjustedMouseY = mouseY - translationY;
 
-        for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                listener.mouseReleased(adjustedMouseX, adjustedMouseY, button);
-            }
-        }
-
         draggingProviderScroll = false;
         draggingSortScroll = false;
+
+        for (GuiEventListener listener : this.children) {
+            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                return listener.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+            }
+        }
 
         return true;
     }
@@ -540,8 +571,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
         double scrollValue = -Math.signum(deltaY);
 
         for (GuiEventListener listener : this.children) {
-            if (listener.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY)) {
-                return true;
+            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                if (listener.mouseScrolled(adjustedMouseX, adjustedMouseY, deltaX, deltaY)) {
+                    return true;
+                }
             }
         }
 
@@ -615,14 +648,20 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     public void setFiltersForProvider(ItemStatProvider<?> provider, List<StatProviderAndFilterPair> filterPairs) {
         // Remove all old filters for the provider
-        filters.removeIf(filter -> filter.statProvider() == provider);
+        filterMap.remove(provider);
 
         // Add the new filters
         if (filterPairs != null && !filterPairs.isEmpty()) {
-            filters.putAll(provider, filterPairs);
+            filterMap.put(provider, filterPairs);
         }
 
         updateQueryString();
+    }
+
+    public void updateFilterWidget() {
+        if (filterWidget != null && selectedProvider != null) {
+            filterWidget.onFiltersChanged(filterMap.getOrDefault(selectedProvider, List.of()));
+        }
     }
 
     public void addSort(SortInfo newSort) {
@@ -683,8 +722,18 @@ public final class ItemFilterScreen extends WynntilsScreen {
         return Pair.of(index != 0, index != sorts.size() - 1);
     }
 
+    public void setSelectedProvider(ItemStatProvider<?> selectedProvider) {
+        this.selectedProvider = selectedProvider;
+
+        createValueWidget();
+    }
+
+    public ItemStatProvider<?> getSelectedProvider() {
+        return selectedProvider;
+    }
+
     public boolean isProviderInUse(ItemStatProvider<?> provider) {
-        return filters.containsKey(provider) || sorts.stream().anyMatch(sort -> sort.provider() == provider);
+        return filterMap.containsKey(provider) || sorts.stream().anyMatch(sort -> sort.provider() == provider);
     }
 
     private void updateProviderWidgets() {
@@ -723,6 +772,17 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             yPos += 21;
         }
+
+        if (selectedProvider != null) {
+            Stream<ItemStatProvider<?>> providerList = Services.ItemFilter.getItemStatProviders().stream();
+
+            ItemStatProvider<?> newSelected = providerList
+                    .filter(provider -> provider.getName().equals(selectedProvider.getName()))
+                    .findFirst()
+                    .orElse(null);
+
+            setSelectedProvider(newSelected);
+        }
     }
 
     private void updateStateFromItemSearchWidget() {
@@ -732,6 +792,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (sortMode) {
             updateSortWidgets();
         }
+
+        updateFilterWidget();
     }
 
     private void updatePresetWidgets() {
@@ -800,6 +862,20 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             yPos += 21;
         }
+    }
+
+    private void createValueWidget() {
+        if (filterWidget != null) {
+            this.removeWidget(filterWidget);
+        }
+
+        filterWidget = new ProviderFilterListWidget(
+                this,
+                selectedProvider,
+                filterMap.getOrDefault(selectedProvider, List.of()),
+                translationX,
+                translationY);
+        this.addRenderableWidget(filterWidget);
     }
 
     private void scrollProviders(int delta) {
@@ -904,6 +980,11 @@ public final class ItemFilterScreen extends WynntilsScreen {
         itemNameInput.visible = !sortMode;
 
         if (sortMode) {
+            if (filterWidget != null) {
+                selectedProvider = null;
+                this.removeWidget(filterWidget);
+            }
+
             sortScrollOffset = 0;
 
             updateSortWidgets();
@@ -924,7 +1005,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         ItemSearchQuery searchQuery =
                 Services.ItemFilter.createSearchQuery(itemSearchWidget.getTextBoxInput(), true, supportedProviderTypes);
 
-        filters = searchQuery.filters();
+        filterMap = new HashMap<>(searchQuery.filters().entries());
         sorts = searchQuery.sorts();
 
         String plainTextString = String.join(" ", searchQuery.plainTextTokens());
@@ -938,7 +1019,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private void updateQueryString() {
         // Create the whole query based on the filters, sorts and the item name
         String queryString =
-                Services.ItemFilter.getItemFilterString(filters, sorts, List.of(itemNameInput.getTextBoxInput()));
+                Services.ItemFilter.getItemFilterString(filterMap, sorts, List.of(itemNameInput.getTextBoxInput()));
 
         // Don't want to update the search widget if the query is the same (avoid recursion loop)
         if (Objects.equals(itemSearchWidget.getTextBoxInput(), queryString)) return;
@@ -948,6 +1029,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
         // as the changes are only made when the user interacted
         // with other widgets than the search widget itself
         applyButton.active = false;
+
+        savePresetButton.active = !presetNameInput.getTextBoxInput().isEmpty()
+                && !itemSearchWidget.getTextBoxInput().isEmpty();
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {

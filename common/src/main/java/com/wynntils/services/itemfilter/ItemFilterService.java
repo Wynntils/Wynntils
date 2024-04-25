@@ -336,10 +336,11 @@ public class ItemFilterService extends Service {
      * @return a string representation of the filters and sort order in the given filter map.
      */
     public String getItemFilterString(
-            StatProviderFilterMap filterMap, List<SortInfo> sortInfos, List<String> plainTextTokens) {
+            Map<ItemStatProvider<?>, List<StatProviderAndFilterPair>> filterMap,
+            List<SortInfo> sortInfos,
+            List<String> plainTextTokens) {
         List<String> filterStrings = new ArrayList<>();
-        for (Map.Entry<ItemStatProvider<?>, List<StatProviderAndFilterPair>> entry :
-                filterMap.entries().entrySet()) {
+        for (Map.Entry<ItemStatProvider<?>, List<StatProviderAndFilterPair>> entry : filterMap.entrySet()) {
             ItemStatProvider<?> itemStatProvider = entry.getKey();
             List<StatFilter> filters = entry.getValue().stream()
                     .map(StatProviderAndFilterPair::statFilter)

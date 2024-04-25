@@ -14,6 +14,7 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
 import com.wynntils.services.itemfilter.type.SortInfo;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
+import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -22,7 +23,9 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -32,6 +35,15 @@ public class ProviderButton extends WynntilsButton {
     private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(255, 0, 0, 255);
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 116, 0, 255);
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
+    private static final Map<Class<?>, AnyStatFilters.AbstractAnyStatFilter> anyMap = Map.of(
+            String.class,
+            new AnyStatFilters.AnyStringStatFilter(),
+            Integer.class,
+            new AnyStatFilters.AnyIntegerStatFilter(),
+            CappedValue.class,
+            new AnyStatFilters.AnyCappedValueStatFilter(),
+            StatValue.class,
+            new AnyStatFilters.AnyStatValueStatFilter());
 
     private final ItemFilterScreen filterScreen;
     private final float translationX;
@@ -105,14 +117,21 @@ public class ProviderButton extends WynntilsButton {
                 } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                     itemFilterScreen.removeSort(provider);
                 }
-            }
+            } else {
+                if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    itemFilterScreen.setSelectedProvider(provider);
+                } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    itemFilterScreen.setFiltersForProvider(provider, null);
+                } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                    AnyStatFilters.AbstractAnyStatFilter anyFilter = anyMap.getOrDefault(provider.getType(), null);
 
-            // Boolean does not support the any filter
-            if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && !provider.getType().equals(Boolean.class)) {
-                // Technically this should use the any stat filter for the correct type but this works
-                filterScreen.setFiltersForProvider(
-                        provider,
-                        List.of(new StatProviderAndFilterPair(provider, new AnyStatFilters.AnyStringStatFilter())));
+                    if (anyFilter != null) {
+                        filterScreen.setFiltersForProvider(
+                                provider, List.of(new StatProviderAndFilterPair(provider, anyFilter)));
+                    }
+                }
+
+                filterScreen.updateFilterWidget();
             }
         }
 
@@ -123,10 +142,22 @@ public class ProviderButton extends WynntilsButton {
     public void onPress() {}
 
     private CustomColor getRectColor() {
+        if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
+            if (itemFilterScreen.getSelectedProvider() == provider) {
+                return CommonColors.GRAY;
+            }
+        }
+
         return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR_BORDER : DISABLED_COLOR_BORDER;
     }
 
     private CustomColor getBorderColor() {
+        if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
+            if (itemFilterScreen.getSelectedProvider() == provider) {
+                return CommonColors.WHITE;
+            }
+        }
+
         return filterScreen.isProviderInUse(provider) ? ENABLED_COLOR : DISABLED_COLOR;
     }
 }
