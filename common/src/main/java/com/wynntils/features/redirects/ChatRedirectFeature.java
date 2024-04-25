@@ -1005,9 +1005,9 @@ public class ChatRedirectFeature extends Feature {
             String item = matcher.group("item");
             String bankType = matcher.group("banktype");
 
-            return StyledText.fromString(
-                    ChatFormatting.AQUA + (transactionType.equals("withdrew") ? WITHDRAW_SYMBOL : DEPOSIT_SYMBOL) + " "
-                            + player + " " + count + "x " + item + " (" + bankType + ") ");
+            return StyledText.fromString(ChatFormatting.AQUA
+                    + (transactionType.equals("withdrew") ? WITHDRAW_SYMBOL : DEPOSIT_SYMBOL) + ChatFormatting.DARK_AQUA
+                    + " " + player + " " + count + "x " + item + " (" + bankType + ") ");
         }
     }
 }
