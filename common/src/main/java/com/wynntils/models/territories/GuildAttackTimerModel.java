@@ -48,7 +48,7 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
     private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
-            "§3\\[WAR\\]§c The war for (?<guild>.+) will start in (?<remaining>.+) (?<type>minutes|seconds)\\.");
+            "§3\\[WAR\\]§c The war for (?<territory>.+) will start in (?<remaining>.+) (?<type>minutes|seconds)\\.");
     private static final Pattern CAPTURED_PATTERN =
             Pattern.compile("§3\\[WAR\\]§c \\[(?<guild>.+)\\] has captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
@@ -75,7 +75,7 @@ public final class GuildAttackTimerModel extends Model {
             long remaining = Long.parseLong(matcher.group("remaining"));
             long timerEnd = (matcher.group("type").equals("minutes") ? remaining * 60 : remaining) * 1000
                     + System.currentTimeMillis();
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(matcher.group("guild"));
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(matcher.group("territory"));
 
             if (territoryProfile == null) {
                 WynntilsMod.warn("Received war message for unknown territory: " + matcher.group("guild"));
