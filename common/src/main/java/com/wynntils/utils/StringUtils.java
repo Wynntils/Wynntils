@@ -59,12 +59,26 @@ public final class StringUtils {
     /**
      * Format an integer to have SI suffixes, if it is sufficiently large
      */
-    public static String integerToShortString(int count) {
-        if (count < 1000) return Integer.toString(count);
+    public static String integerToShortString(long count) {
+        if (count < 1000) return Long.toString(count);
         int exp = (int) (Math.log(count) / Math.log(1000));
         DecimalFormat format = new DecimalFormat("0.#");
         String value = format.format(count / Math.pow(1000, exp));
         return String.format("%s%c", value, "kMBTPE".charAt(exp - 1));
+    }
+
+    public static String formatDuration(long seconds) {
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long remainingSeconds = seconds % 60;
+
+        if (hours > 0) {
+            return String.format("%dh %02dm %02ds", hours, minutes, remainingSeconds);
+        } else if (minutes > 0) {
+            return String.format("%dm %02ds", minutes, remainingSeconds);
+        } else {
+            return String.format("%ds", remainingSeconds);
+        }
     }
 
     public static String encodeUrl(String url) {
