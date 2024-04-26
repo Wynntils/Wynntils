@@ -117,6 +117,7 @@ public class InequalityStatValueFilterWidget extends InequalityNumericFilterWidg
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
     public void updateY(int y) {
         super.updateY(y);
 

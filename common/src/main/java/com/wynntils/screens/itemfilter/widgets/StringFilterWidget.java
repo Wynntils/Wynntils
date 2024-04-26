@@ -110,6 +110,7 @@ public class StringFilterWidget extends GeneralFilterWidget {
         return false;
     }
 
+    @Override
     public void updateY(int y) {
         setY(y);
 

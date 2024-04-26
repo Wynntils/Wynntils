@@ -106,6 +106,7 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
         return false;
     }
 
+    @Override
     public void updateY(int y) {
         setY(y);
 

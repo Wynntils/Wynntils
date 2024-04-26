@@ -85,6 +85,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
         return false;
     }
 
+    @Override
     public void updateY(int y) {
         setY(y);
 

@@ -92,6 +92,7 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
         return false;
     }
 
+    @Override
     public void updateY(int y) {
         setY(y);
 
