@@ -12,9 +12,11 @@ import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
 public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
+    private final Button removeButton;
     private final TextInputBoxWidget entryInput;
 
     private boolean ignoreUpdate = false;
@@ -26,7 +28,7 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
         this.entryInput = new TextInputBoxWidget(
                 getX(),
                 getY(),
-                getWidth() - 22,
+                width - 54,
                 getHeight(),
                 (s -> {
                     if (ignoreUpdate) return;
@@ -34,17 +36,25 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
                     parent.updateQuery();
                 }),
                 filterScreen);
+
+        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+                .pos(getX() + width - 20, getY())
+                .size(20, 20)
+                .build();
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         entryInput.render(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (entryInput.isMouseOver(mouseX, mouseY)) {
             return entryInput.mouseClicked(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseClicked(mouseX, mouseY, button);
         }
 
         return false;
@@ -54,6 +64,8 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (entryInput.isMouseOver(mouseX, mouseY)) {
             return entryInput.mouseReleased(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseReleased(mouseX, mouseY, button);
         }
 
         return false;
@@ -63,6 +75,7 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
         setY(y);
 
         entryInput.setY(y);
+        removeButton.setY(y);
     }
 
     @Override

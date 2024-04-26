@@ -86,7 +86,7 @@ public class InequalityStatValueFilterWidget extends InequalityNumericFilterWidg
         }
 
         this.percentageCheckbox = new WynntilsCheckbox(
-                getX() + getWidth() - 20,
+                getX() + getWidth() - 52,
                 getY(),
                 20,
                 20,

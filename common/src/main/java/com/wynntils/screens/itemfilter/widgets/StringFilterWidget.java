@@ -12,10 +12,12 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class StringFilterWidget extends GeneralFilterWidget {
+    private final Button removeButton;
     private final TextInputBoxWidget entryInput;
     private final WynntilsCheckbox strictCheckbox;
 
@@ -31,7 +33,7 @@ public class StringFilterWidget extends GeneralFilterWidget {
             ItemFilterScreen filterScreen) {
         super(x, y, width, height, Component.literal("String Filter Widget"), parent);
 
-        int inputWidth = width - 24;
+        int inputWidth = width - 77;
 
         this.entryInput = new TextInputBoxWidget(
                 getX(),
@@ -68,12 +70,18 @@ public class StringFilterWidget extends GeneralFilterWidget {
                     }
                 }),
                 List.of(Component.translatable("screens.wynntils.itemFilter.strictTooltip")));
+
+        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+                .pos(getX() + inputWidth + 54, getY())
+                .size(20, 20)
+                .build();
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         entryInput.render(guiGraphics, mouseX, mouseY, partialTick);
         strictCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -82,6 +90,8 @@ public class StringFilterWidget extends GeneralFilterWidget {
             return entryInput.mouseClicked(mouseX, mouseY, button);
         } else if (strictCheckbox.isMouseOver(mouseX, mouseY)) {
             return strictCheckbox.mouseClicked(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseClicked(mouseX, mouseY, button);
         }
 
         return false;
@@ -93,6 +103,8 @@ public class StringFilterWidget extends GeneralFilterWidget {
             return entryInput.mouseReleased(mouseX, mouseY, button);
         } else if (strictCheckbox.isMouseOver(mouseX, mouseY)) {
             return strictCheckbox.mouseReleased(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseReleased(mouseX, mouseY, button);
         }
 
         return false;
@@ -103,6 +115,7 @@ public class StringFilterWidget extends GeneralFilterWidget {
 
         entryInput.setY(y);
         strictCheckbox.setY(y);
+        removeButton.setY(y);
     }
 
     @Override

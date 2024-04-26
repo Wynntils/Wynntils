@@ -18,9 +18,11 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
 public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
+    private final Button removeButton;
     private final TextInputBoxWidget minInput;
     private final TextInputBoxWidget maxInput;
 
@@ -33,7 +35,7 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
         this.minInput = new TextInputBoxWidget(
                 getX(),
                 getY(),
-                55,
+                50,
                 getHeight(),
                 (s -> {
                     if (ignoreUpdate) return;
@@ -43,9 +45,9 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
                 filterScreen);
 
         this.maxInput = new TextInputBoxWidget(
-                getX() + 72,
+                getX() + 67,
                 getY(),
-                55,
+                50,
                 getHeight(),
                 (s -> {
                     if (ignoreUpdate) return;
@@ -53,18 +55,24 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
                     parent.updateQuery();
                 }),
                 filterScreen);
+
+        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+                .pos(getX() + width - 20, getY())
+                .size(20, 20)
+                .build();
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         minInput.render(guiGraphics, mouseX, mouseY, partialTick);
         maxInput.render(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
                         StyledText.fromString("-"),
-                        getX() + 64,
+                        getX() + 59,
                         getY() + 11,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -78,6 +86,8 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
             return minInput.mouseClicked(mouseX, mouseY, button);
         } else if (maxInput.isMouseOver(mouseX, mouseY)) {
             return maxInput.mouseClicked(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseClicked(mouseX, mouseY, button);
         }
 
         return false;
@@ -89,6 +99,8 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
             return minInput.mouseReleased(mouseX, mouseY, button);
         } else if (maxInput.isMouseOver(mouseX, mouseY)) {
             return maxInput.mouseReleased(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseReleased(mouseX, mouseY, button);
         }
 
         return false;
@@ -99,6 +111,7 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
 
         minInput.setY(y);
         maxInput.setY(y);
+        removeButton.setY(y);
     }
 
     @Override

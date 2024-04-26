@@ -74,7 +74,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
                                 }
 
                                 widgets.add(FilterWidgetFactory.createFilterWidget(
-                                        provider.getType(), getX() + 5, renderY, 150, 20, null, this, filterScreen));
+                                        provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen));
 
                                 scroll(1);
 
@@ -238,6 +238,8 @@ public class ProviderFilterListWidget extends AbstractWidget {
     public void createWidgets() {
         widgets = new ArrayList<>();
 
+        scrollOffset = 0;
+
         if (!filterPairs.isEmpty()) {
             for (StatProviderAndFilterPair filterPair : filterPairs) {
                 if (filterPair.statFilter() instanceof AnyStatFilters.AbstractAnyStatFilter) {
@@ -293,7 +295,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
         for (StatProviderAndFilterPair filterPair : filterPairs) {
             filterWidget = FilterWidgetFactory.createFilterWidget(
-                    provider.getType(), getX() + 5, renderY, 150, 20, filterPair, this, filterScreen);
+                    provider.getType(), getX() + 5, renderY, 175, 20, filterPair, this, filterScreen);
 
             if (filterWidget != null) {
                 if (renderY < getY() || renderY > getY() + getScrollbarHeight()) {
@@ -341,6 +343,13 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
 
         filterScreen.setFiltersForProvider(provider, filterPairs);
+    }
+
+    public void removeWidget(GeneralFilterWidget filterWidget) {
+        widgets.remove(filterWidget);
+
+        updateQuery();
+        createWidgets();
     }
 
     public ItemStatProvider<?> getProvider() {
@@ -452,11 +461,11 @@ public class ProviderFilterListWidget extends AbstractWidget {
     private GeneralFilterWidget getNumericFilterWidget(int renderY) {
         return switch (numericChoice) {
             case SINGLE -> FilterWidgetFactory.createSingleWidget(
-                    provider.getType(), getX() + 5, renderY, 150, 20, null, this, filterScreen);
+                    provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
             case RANGED -> FilterWidgetFactory.createRangedWidget(
-                    provider.getType(), getX() + 5, renderY, 150, 20, null, this, filterScreen);
+                    provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
             case INEQUALITY -> FilterWidgetFactory.createInequalityWidget(
-                    provider.getType(), getX() + 5, renderY, 150, 20, null, this, filterScreen);
+                    provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
         };
     }
 

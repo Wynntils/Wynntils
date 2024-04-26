@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidget {
+    private final Button removeButton;
     private final Button inequalityButton;
     private final TextInputBoxWidget entryInput;
 
@@ -32,7 +33,7 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
         this.entryInput = new TextInputBoxWidget(
                 getX(),
                 getY(),
-                getWidth() - 44,
+                width - 76,
                 getHeight(),
                 (s -> {
                     if (ignoreUpdate) return;
@@ -42,7 +43,12 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
                 filterScreen);
 
         this.inequalityButton = new Button.Builder(Component.literal(inequalityType.getMessage()), null)
-                .pos(getX() + getWidth() - 42, getY())
+                .pos(getX() + width - 74, getY())
+                .size(20, 20)
+                .build();
+
+        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+                .pos(getX() + width - 20, getY())
                 .size(20, 20)
                 .build();
     }
@@ -51,12 +57,15 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         entryInput.render(guiGraphics, mouseX, mouseY, partialTick);
         inequalityButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (entryInput.isMouseOver(mouseX, mouseY)) {
             return entryInput.mouseClicked(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseClicked(mouseX, mouseY, button);
         } else if (inequalityButton.isMouseOver(mouseX, mouseY)) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 cycleInequality(1);
@@ -76,6 +85,8 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
             return entryInput.mouseReleased(mouseX, mouseY, button);
         } else if (inequalityButton.isMouseOver(mouseX, mouseY)) {
             return inequalityButton.mouseReleased(mouseX, mouseY, button);
+        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
+            return removeButton.mouseReleased(mouseX, mouseY, button);
         }
 
         return false;
@@ -86,6 +97,7 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
 
         entryInput.setY(y);
         inequalityButton.setY(y);
+        removeButton.setY(y);
     }
 
     @Override
