@@ -59,7 +59,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
                 poseStack, getBorderColor(), getX(), getY(), getX() + width - 18, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
-                .renderScrollingString(
+                .renderScrollingText(
                         poseStack,
                         StyledText.fromString(valueName),
                         getX() + 2,

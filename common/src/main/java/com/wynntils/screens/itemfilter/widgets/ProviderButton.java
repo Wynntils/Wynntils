@@ -89,7 +89,7 @@ public class ProviderButton extends WynntilsButton {
         RenderUtils.drawRectBorders(poseStack, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 1, 2);
 
         FontRenderer.getInstance()
-                .renderScrollingString(
+                .renderScrollingText(
                         poseStack,
                         StyledText.fromString(provider.getDisplayName()),
                         getX() + 2,
