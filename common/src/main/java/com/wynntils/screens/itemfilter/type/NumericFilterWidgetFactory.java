@@ -7,7 +7,6 @@ package com.wynntils.screens.itemfilter.type;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.screens.itemfilter.widgets.GeneralFilterWidget;
 import com.wynntils.screens.itemfilter.widgets.ProviderFilterListWidget;
-import com.wynntils.screens.itemfilter.widgets.StringFilterWidget;
 import com.wynntils.screens.itemfilter.widgets.numeric.InequalityCappedValueFilterWidget;
 import com.wynntils.screens.itemfilter.widgets.numeric.InequalityIntegerFilterWidget;
 import com.wynntils.screens.itemfilter.widgets.numeric.InequalityStatValueFilterWidget;
@@ -25,7 +24,7 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.Map;
 import java.util.function.Function;
 
-public final class FilterWidgetFactory {
+public final class NumericFilterWidgetFactory {
     private static final Map<Class<?>, Function<WidgetParams, GeneralFilterWidget>> singleWidgetMap = Map.of(
             Integer.class,
             params -> new SingleIntegerFilterWidget(
@@ -120,10 +119,6 @@ public final class FilterWidgetFactory {
             StatProviderAndFilterPair filterPair,
             ProviderFilterListWidget parent,
             ItemFilterScreen filterScreen) {
-        if (type.equals(String.class)) {
-            return new StringFilterWidget(x, y, width, height, filterPair, parent, filterScreen);
-        }
-
         if (type.equals(Integer.class)) {
             if (filterPair.statFilter() instanceof RangedStatFilters.RangedIntegerStatFilter rangedFilter) {
                 if (rangedFilter.getMin() == rangedFilter.getMax()) {

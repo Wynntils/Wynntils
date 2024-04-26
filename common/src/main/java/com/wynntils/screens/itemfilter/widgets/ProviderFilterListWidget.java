@@ -7,7 +7,7 @@ package com.wynntils.screens.itemfilter.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
-import com.wynntils.screens.itemfilter.type.FilterWidgetFactory;
+import com.wynntils.screens.itemfilter.type.NumericFilterWidgetFactory;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
@@ -78,8 +78,8 @@ public class ProviderFilterListWidget extends AbstractWidget {
                                     renderY = widgets.get(widgets.size() - 1).getY() + 24;
                                 }
 
-                                widgets.add(FilterWidgetFactory.createFilterWidget(
-                                        provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen));
+                                widgets.add(
+                                        new StringFilterWidget(getX() + 5, renderY, 175, 20, null, this, filterScreen));
 
                                 scroll(1);
 
@@ -317,8 +317,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
         GeneralFilterWidget filterWidget;
 
         for (StatProviderAndFilterPair filterPair : filterPairs) {
-            filterWidget = FilterWidgetFactory.createFilterWidget(
-                    provider.getType(), getX() + 5, renderY, 175, 20, filterPair, this, filterScreen);
+            if (filterPair.statProvider().getType().equals(String.class)) {
+                filterWidget = new StringFilterWidget(getX() + 5, renderY, 175, 20, filterPair, this, filterScreen);
+            } else {
+                filterWidget = NumericFilterWidgetFactory.createFilterWidget(
+                        provider.getType(), getX() + 5, renderY, 175, 20, filterPair, this, filterScreen);
+            }
 
             if (filterWidget != null) {
                 if (renderY < getY() || renderY > getY() + getScrollbarHeight()) {
@@ -483,11 +487,11 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
     private GeneralFilterWidget getNumericFilterWidget(int renderY) {
         return switch (numericChoice) {
-            case SINGLE -> FilterWidgetFactory.createSingleWidget(
+            case SINGLE -> NumericFilterWidgetFactory.createSingleWidget(
                     provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
-            case RANGED -> FilterWidgetFactory.createRangedWidget(
+            case RANGED -> NumericFilterWidgetFactory.createRangedWidget(
                     provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
-            case INEQUALITY -> FilterWidgetFactory.createInequalityWidget(
+            case INEQUALITY -> NumericFilterWidgetFactory.createInequalityWidget(
                     provider.getType(), getX() + 5, renderY, 175, 20, null, this, filterScreen);
         };
     }
