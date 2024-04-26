@@ -28,6 +28,11 @@ public class TerritoryProductionStatProvider extends TerritoryStatProvider<Integ
     }
 
     @Override
+    public String getDisplayName() {
+        return guildResource.getName() + " Production";
+    }
+
+    @Override
     public List<String> getAliases() {
         return List.of(
                 guildResource.getName().toLowerCase(Locale.ROOT) + "Production",

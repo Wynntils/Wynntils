@@ -744,8 +744,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         providerButtons = new ArrayList<>();
 
         itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
-                .filter(itemStatProvider -> supportedProviderTypes.contains(ItemProviderType.ALL)
-                        || itemStatProvider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
+                .filter(itemStatProvider ->
+                        itemStatProvider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(provider -> searchMatches(provider.getDisplayName()))
                 .toList();
 

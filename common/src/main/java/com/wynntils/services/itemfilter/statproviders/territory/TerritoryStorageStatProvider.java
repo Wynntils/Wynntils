@@ -32,6 +32,11 @@ public class TerritoryStorageStatProvider extends TerritoryStatProvider<CappedVa
     }
 
     @Override
+    public String getDisplayName() {
+        return guildResource.getName() + " Storage";
+    }
+
+    @Override
     public List<String> getAliases() {
         return List.of(guildResource.getName().toLowerCase(Locale.ROOT) + "Str");
     }

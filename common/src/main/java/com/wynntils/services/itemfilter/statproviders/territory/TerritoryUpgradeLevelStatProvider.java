@@ -28,6 +28,11 @@ public class TerritoryUpgradeLevelStatProvider extends TerritoryStatProvider<Int
     }
 
     @Override
+    public String getDisplayName() {
+        return territoryUpgrade.getName() + " Level";
+    }
+
+    @Override
     public String getDescription() {
         return getTranslation("description", territoryUpgrade.getName());
     }
