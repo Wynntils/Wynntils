@@ -45,6 +45,7 @@ import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -92,6 +93,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
+        Handlers.Item.registerAnnotator(new TerritoryAnnotator());
 
         // ItemAnnotators
         // This must be done last

@@ -47,6 +47,6 @@ public class GuildTerritoriesContainer extends Container implements SearchableCo
 
     @Override
     public List<ItemProviderType> supportedProviderTypes() {
-        return List.of();
+        return List.of(ItemProviderType.TERRITORY);
     }
 }
