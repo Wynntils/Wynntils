@@ -1868,6 +1868,7 @@
   "screens.wynntils.itemFilter.booleanTrue": "True",
   "screens.wynntils.itemFilter.filterToggle": "Click to swap to selecting filters",
   "screens.wynntils.itemFilter.itemName": "Item Name: ",
+  "screens.wynntils.itemFilter.noFilters": "Add a new filter using the button below. To query for any value, middle click the filter button on the left",
   "screens.wynntils.itemFilter.noProviders": "No filters matching your current search/type",
   "screens.wynntils.itemFilter.noSorts": "Select a filter to sort by via the list on the left and reorder them here",
   "screens.wynntils.itemFilter.percentageTooltip": "Query for %% values instead of raw values?",

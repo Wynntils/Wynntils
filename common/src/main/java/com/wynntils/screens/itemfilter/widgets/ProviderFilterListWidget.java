@@ -5,6 +5,7 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.screens.itemfilter.type.FilterWidgetFactory;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
@@ -13,7 +14,11 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -125,6 +130,24 @@ public class ProviderFilterListWidget extends AbstractWidget {
         } else if (addNumericFilterButton != null) {
             addNumericFilterButton.render(guiGraphics, mouseX, mouseY, partialTick);
             numericChoiceButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (widgets.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics.pose(),
+                            StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.noFilters")),
+                            getX(),
+                            getX() + getWidth(),
+                            getY(),
+                            getY() + getScrollableArea(),
+                            180,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            return;
         }
 
         for (GeneralFilterWidget widget : widgets) {
