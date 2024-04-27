@@ -10,13 +10,14 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Optional;
 
 public class UsesStatProvider extends ItemStatProvider<CappedValue> {
     @Override
-    public List<CappedValue> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof UsesItemProperty usesItemProperty)) return List.of();
+    public Optional<CappedValue> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof UsesItemProperty usesItemProperty)) return Optional.empty();
 
-        return List.of(usesItemProperty.getUses());
+        return Optional.of(usesItemProperty.getUses());
     }
 
     @Override
