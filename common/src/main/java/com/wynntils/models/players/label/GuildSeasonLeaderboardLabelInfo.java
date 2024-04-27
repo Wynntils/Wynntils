@@ -7,14 +7,16 @@ package com.wynntils.models.players.label;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import com.wynntils.utils.mc.type.Location;
+import net.minecraft.world.entity.Entity;
 
 public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
     private final String guild;
     private final int place;
     private final long score;
 
-    public GuildSeasonLeaderboardLabelInfo(StyledText label, Location location, String guild, int place, long score) {
-        super(label, location);
+    public GuildSeasonLeaderboardLabelInfo(
+            StyledText label, Location location, Entity entity, String guild, int place, long score) {
+        super(label, location, entity);
         this.guild = guild;
         this.place = place;
         this.score = score;
@@ -40,6 +42,7 @@ public class GuildSeasonLeaderboardLabelInfo extends LabelInfo {
                 + score + ", label="
                 + label + ", name='"
                 + name + '\'' + ", location="
-                + location + '}';
+                + location + ", entity="
+                + entity + '}';
     }
 }

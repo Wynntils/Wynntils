@@ -10,15 +10,17 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import com.wynntils.handlers.labels.type.LabelParser;
+import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,6 +30,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class LabelHandler extends Handler {
     private final List<LabelParser> parsers = new ArrayList<>();
+
+    private final List<LabelInfo> liveLabels = new ArrayList<>();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntitySetData(SetEntityDataEvent event) {
@@ -55,7 +59,7 @@ public class LabelHandler extends Handler {
                 // Sometimes there is no actual change; ignore it then
                 if (newName.equals(oldName)) continue;
 
-                LabelInfo labelInfo = tryIdentifyLabel(newName, entity.position());
+                LabelInfo labelInfo = tryIdentifyLabel(newName, entity);
 
                 EntityLabelChangedEvent labelChangedEvent =
                         new EntityLabelChangedEvent(entity, newName, oldName, labelInfo);
@@ -79,13 +83,30 @@ public class LabelHandler extends Handler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntitiesRemoved(RemoveEntitiesEvent event) {
+        List<LabelInfo> removedLabels = liveLabels.stream()
+                .filter(label -> event.getEntityIds().contains(label.getEntity().getId()))
+                .toList();
+
+        liveLabels.removeAll(removedLabels);
+        WynntilsMod.postEvent(new LabelsRemovedEvent(removedLabels));
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        List<LabelInfo> oldLabels = new ArrayList<>(liveLabels);
+        liveLabels.clear();
+        WynntilsMod.postEvent(new LabelsRemovedEvent(oldLabels));
+    }
+
     public void registerParser(LabelParser labelParser) {
         parsers.add(labelParser);
     }
 
-    private LabelInfo tryIdentifyLabel(StyledText name, Position position) {
+    private LabelInfo tryIdentifyLabel(StyledText name, Entity entity) {
         for (LabelParser parser : parsers) {
-            LabelInfo info = parser.getInfo(name, Location.containing(position));
+            LabelInfo info = parser.getInfo(name, Location.containing(entity.position()), entity);
 
             if (info == null) continue;
 

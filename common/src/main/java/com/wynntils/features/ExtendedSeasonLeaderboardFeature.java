@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelInfo;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -101,6 +102,11 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
                         .withStyle(ChatFormatting.GREEN));
 
         event.setName(StyledText.fromComponent(newLabel));
+    }
+
+    @SubscribeEvent
+    public void onLabelsRemoved(LabelsRemovedEvent event) {
+        labelInfos.removeAll(event.getRemovedLabels());
     }
 
     @SubscribeEvent
