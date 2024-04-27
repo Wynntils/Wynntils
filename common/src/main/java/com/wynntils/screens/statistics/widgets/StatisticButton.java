@@ -12,10 +12,11 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.services.statistics.type.StatisticEntry;
 import com.wynntils.services.statistics.type.StatisticKind;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -51,21 +52,20 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
         CustomColor backgroundColor = getButtonBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
-        int maxTextWidth = this.width - 2;
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                statistic.getName(),
-                                maxTextWidth,
-                                FontRenderer.getInstance().getFont())),
+                        StyledText.fromString(statistic.getName()),
                         this.getX() + 2,
                         this.getY() + 1,
-                        0,
+                        this.width - 3,
+                        screen.getTranslationX(),
+                        screen.getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        1f);
     }
 
     private CustomColor getButtonBackgroundColor() {
@@ -114,6 +114,9 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
         lines.add(Component.literal(statistic.getName()).withStyle(ChatFormatting.BOLD));
         lines.add(Component.translatable(
                 "screens.wynntils.statistics.total", statistic.getFormattedValue(entry.total())));
+        lines.add(Component.translatable(
+                "screens.wynntils.statistics.lastModified",
+                entry.lastModified() == 0 ? "-" : StringUtils.formatDateTime(entry.lastModified())));
         lines.add(Component.empty());
 
         if (isSelected()) {
@@ -132,7 +135,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.RED));
 
-        return lines;
+        return ComponentUtils.wrapTooltips(lines, 250);
     }
 
     private boolean isSelected() {

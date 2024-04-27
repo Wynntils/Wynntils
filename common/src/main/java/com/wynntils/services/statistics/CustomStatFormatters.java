@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics;
@@ -30,5 +30,6 @@ public final class CustomStatFormatters {
     };
 
     public static StatFormatter FORMATTED_NUMBER = (number) ->
-            NumberFormat.getIntegerInstance(Locale.US).format(number) + " (" + StringUtils.formatAmount(number) + ")";
+            NumberFormat.getIntegerInstance(Locale.US).format(number).replace(',', '.') + " ("
+                    + StringUtils.formatAmount(number) + ")";
 }

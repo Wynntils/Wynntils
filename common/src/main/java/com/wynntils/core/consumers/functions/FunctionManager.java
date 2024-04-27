@@ -25,6 +25,7 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.StatisticFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
@@ -392,6 +393,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatDurationFunction());
+        registerFunction(new StringFunctions.FormatDateFunction());
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.FormatRangedFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
@@ -550,6 +552,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.FriendsFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
+
+        registerFunction(new StatisticFunctions.StatisticsTotalFunction());
+        registerFunction(new StatisticFunctions.StatisticsCountFunction());
+        registerFunction(new StatisticFunctions.StatisticsMinFunction());
+        registerFunction(new StatisticFunctions.StatisticsMaxFunction());
+        registerFunction(new StatisticFunctions.StatisticsAverageFunction());
+        registerFunction(new StatisticFunctions.StatisticsFirstModifiedFunction());
+        registerFunction(new StatisticFunctions.StatisticsLastModifiedFunction());
+        registerFunction(new StatisticFunctions.StatisticsFormattedFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
         registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());
