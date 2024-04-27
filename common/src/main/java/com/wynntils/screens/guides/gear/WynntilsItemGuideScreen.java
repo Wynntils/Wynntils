@@ -53,6 +53,11 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.itemGuide.name"));
 
+        renderDescription(
+                poseStack,
+                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
+                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
+
         renderVersion(poseStack);
 
         renderItemsHeader(poseStack);

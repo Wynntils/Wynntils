@@ -2129,6 +2129,8 @@
   "screens.wynntils.wynntilsGuides.export.description": "Export favorites to your clipboard",
   "screens.wynntils.wynntilsGuides.export.name": "Export Favorites",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "Exported %s favorites!",
+  "screens.wynntils.wynntilsGuides.filterHelper": "You can filter for items by typing in the search bar or by using the filter screen, which can be accessed by clicking the button in the top right corner.",
+  "screens.wynntils.wynntilsGuides.guideDescription": "Here you can see all the items this guide has.",
   "screens.wynntils.wynntilsGuides.import.description": "Import favorites from your clipboard",
   "screens.wynntils.wynntilsGuides.import.name": "Import Favorites",
   "screens.wynntils.wynntilsGuides.importedFavorites": "Imported %s favorites!",
