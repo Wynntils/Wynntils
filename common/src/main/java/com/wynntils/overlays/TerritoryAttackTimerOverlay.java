@@ -44,7 +44,9 @@ public class TerritoryAttackTimerOverlay extends Overlay {
                         VerticalAlignment.TOP,
                         HorizontalAlignment.RIGHT,
                         OverlayPosition.AnchorSection.TOP_RIGHT),
-                new OverlaySize(200, 110));
+                new OverlaySize(250, 110),
+                HorizontalAlignment.RIGHT,
+                VerticalAlignment.TOP);
 
         updateTextRenderSetting();
     }
