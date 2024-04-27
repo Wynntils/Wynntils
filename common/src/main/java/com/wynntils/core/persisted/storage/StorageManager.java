@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.storage;
@@ -130,8 +130,12 @@ public final class StorageManager extends Manager {
         JsonObject storageJson = new JsonObject();
 
         storages.forEach((jsonName, storage) -> {
-            JsonElement jsonElem = Managers.Json.GSON.toJsonTree(storage.get(), storageTypes.get(storage));
-            storageJson.add(jsonName, jsonElem);
+            try {
+                JsonElement jsonElem = Managers.Json.GSON.toJsonTree(storage.get(), storageTypes.get(storage));
+                storageJson.add(jsonName, jsonElem);
+            } catch (Throwable t) {
+                WynntilsMod.error("Failed to save storage " + jsonName, t);
+            }
         });
 
         Managers.Json.savePreciousJson(userStorageFile, storageJson);
