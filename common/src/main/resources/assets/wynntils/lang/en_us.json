@@ -2234,7 +2234,7 @@
   "service.wynntils.itemFilter.stat.powderSlots.name": "Powder Slots",
   "service.wynntils.itemFilter.stat.price.description": "Price of the item",
   "service.wynntils.itemFilter.stat.price.name": "Price",
-  "service.wynntils.itemFilter.stat.profession.description": "Whether the item a %s profession item",
+  "service.wynntils.itemFilter.stat.profession.description": "Whether the item is a %s profession item",
   "service.wynntils.itemFilter.stat.qualityTier.description": "Quality Tier of the item (professions)",
   "service.wynntils.itemFilter.stat.qualityTier.name": "Quality Tier",
   "service.wynntils.itemFilter.stat.rarity.description": "Rarity of the item",
