@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.statistics.widgets;
@@ -21,7 +21,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -35,16 +34,11 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
     private static final CustomColor TRACKED_BUTTON_COLOR_HOVERED = new CustomColor(126, 211, 106);
 
-    private final Pair<StatisticKind, StatisticEntry> statistic;
+    private final StatisticKind statistic;
     private final WynntilsStatisticsScreen screen;
 
     public StatisticButton(
-            int x,
-            int y,
-            int width,
-            int height,
-            Pair<StatisticKind, StatisticEntry> statistic,
-            WynntilsStatisticsScreen screen) {
+            int x, int y, int width, int height, StatisticKind statistic, WynntilsStatisticsScreen screen) {
         super(x, y, width, height, Component.literal("Statistics Button"));
         this.statistic = statistic;
         this.screen = screen;
@@ -62,7 +56,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
                 .renderText(
                         poseStack,
                         StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                statistic.a().getName(),
+                                statistic.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),
                         this.getX() + 2,
@@ -86,24 +80,24 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isSelected()) {
-                screen.setHighlightedButton(null);
+                screen.setHighlightedStatisticKind(null);
             } else {
-                screen.setHighlightedButton(this);
+                screen.setHighlightedStatisticKind(this.statistic);
             }
             return true;
         }
 
         if (KeyboardUtils.isShiftDown() && button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Services.Statistics.resetStatistic(statistic.a());
+            if (Services.Statistics.screenOverallMode.get()) {
+                Services.Statistics.resetStatisticOverall(statistic);
+            } else {
+                Services.Statistics.resetStatisticForCharacter(statistic);
+            }
             screen.reloadElements();
             return true;
         }
 
         return true;
-    }
-
-    public Pair<StatisticKind, StatisticEntry> getStatistic() {
-        return statistic;
     }
 
     @Override
@@ -113,10 +107,13 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     public List<Component> getTooltipLines() {
         List<Component> lines = new ArrayList<>();
 
-        lines.add(Component.literal(statistic.a().getName()).withStyle(ChatFormatting.BOLD));
+        StatisticEntry entry = Services.Statistics.screenOverallMode.get()
+                ? Services.Statistics.getOverallStatistic(statistic)
+                : Services.Statistics.getStatistic(statistic);
+
+        lines.add(Component.literal(statistic.getName()).withStyle(ChatFormatting.BOLD));
         lines.add(Component.translatable(
-                "screens.wynntils.statistics.total",
-                statistic.a().getFormattedValue(statistic.b().total())));
+                "screens.wynntils.statistics.total", statistic.getFormattedValue(entry.total())));
         lines.add(Component.empty());
 
         if (isSelected()) {
@@ -128,7 +125,10 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));
         }
-        lines.add(Component.translatable("screens.wynntils.statistics.shiftMiddleClickToReset")
+
+        lines.add((Services.Statistics.screenOverallMode.get()
+                        ? Component.translatable("screens.wynntils.statistics.shiftMiddleClickToResetOverall")
+                        : Component.translatable("screens.wynntils.statistics.shiftMiddleClickToResetCurrent"))
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.RED));
 
@@ -136,6 +136,6 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     }
 
     private boolean isSelected() {
-        return screen.getHighlightedButton() == this;
+        return screen.getHighlightedStatisticKind() == this.statistic;
     }
 }
