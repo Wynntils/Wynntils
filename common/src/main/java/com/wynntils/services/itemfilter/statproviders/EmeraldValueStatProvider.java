@@ -9,13 +9,14 @@ import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class EmeraldValueStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof EmeraldValuedItemProperty emeraldValuedItemProperty)) return List.of();
+    public Optional<Integer> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof EmeraldValuedItemProperty emeraldValuedItemProperty)) return Optional.empty();
 
-        return List.of(emeraldValuedItemProperty.getEmeraldValue());
+        return Optional.of(emeraldValuedItemProperty.getEmeraldValue());
     }
 
     @Override

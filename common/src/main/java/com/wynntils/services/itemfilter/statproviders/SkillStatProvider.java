@@ -8,10 +8,11 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
-import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class SkillStatProvider extends ItemStatProvider<Integer> {
     private final Skill skill;
@@ -36,13 +37,14 @@ public class SkillStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty)) return List.of();
+    public Optional<Integer> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty)) return Optional.empty();
 
-        return identifiableItemProperty.getIdentifications().stream()
+        return identifiableItemProperty.getPossibleValues().stream()
                 .filter(id -> id.statType() instanceof SkillStatType)
-                .map(StatActualValue::value)
-                .toList();
+                .filter(id -> ((SkillStatType) id.statType()).getSkill() == skill)
+                .map(StatPossibleValues::baseValue)
+                .findFirst();
     }
 
     @Override

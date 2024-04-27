@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.emeraldpouch;
@@ -88,6 +88,8 @@ public final class WynntilsEmeraldPouchGuideScreen
         poseStack.translate(translationX, translationY, 1f);
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.emeraldPouch.name"));
+
+        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
 
         renderVersion(poseStack);
 

@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.TerritoryUpgrade;
@@ -43,7 +44,7 @@ import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
-import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertsStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryNameStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryProductionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryStorageStatProvider;
@@ -386,8 +387,8 @@ public class ItemFilterService extends Service {
             String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
                 .filter(provider -> provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
-                .filter(filter ->
-                        filter.getName().equals(name) || filter.getAliases().contains(name))
+                .filter(filter -> filter.getName().equalsIgnoreCase(name)
+                        || filter.getAliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(name)))
                 .findFirst();
 
         if (itemStatProviderOpt.isPresent()) {
@@ -504,7 +505,9 @@ public class ItemFilterService extends Service {
         registerStatProvider(new TargetStatProvider());
 
         // Profession Stats
-        registerStatProvider(new ProfessionStatProvider());
+        for (ProfessionType type : ProfessionType.values()) {
+            registerStatProvider(new ProfessionStatProvider(type));
+        }
         registerStatProvider(new QualityTierStatProvider());
 
         // Dynamic Item Stats
@@ -532,7 +535,7 @@ public class ItemFilterService extends Service {
         }
 
         registerStatProvider(new TerritoryTreasuryStatProvider());
-        registerStatProvider(new TerritoryAlertsStatProvider());
+        registerStatProvider(new TerritoryAlertStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {

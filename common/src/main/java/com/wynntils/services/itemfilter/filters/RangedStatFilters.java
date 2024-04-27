@@ -20,7 +20,7 @@ public final class RangedStatFilters {
         }
 
         @Override
-        protected boolean matches(Integer value) {
+        public boolean matches(Integer value) {
             return value >= min && value <= max;
         }
 
@@ -38,7 +38,7 @@ public final class RangedStatFilters {
         }
 
         @Override
-        protected boolean matches(CappedValue value) {
+        public boolean matches(CappedValue value) {
             return value.current() >= min && value.current() <= max;
         }
 
@@ -57,7 +57,7 @@ public final class RangedStatFilters {
         }
 
         @Override
-        protected boolean matches(StatValue value) {
+        public boolean matches(StatValue value) {
             if (value.statActualValue() != null) {
                 return value.statActualValue().value() >= min
                         && value.statActualValue().value() <= max;

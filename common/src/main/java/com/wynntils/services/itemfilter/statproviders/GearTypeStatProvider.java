@@ -11,13 +11,15 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.EnumUtils;
 import java.util.List;
+import java.util.Optional;
 
 public class GearTypeStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof GearTypeItemProperty gearTypeItemProperty)) return List.of();
+    public Optional<String> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof GearTypeItemProperty gearTypeItemProperty)) return Optional.empty();
 
-        return List.of(gearTypeItemProperty.getGearType().name());
+        return Optional.of(
+                EnumUtils.toNiceString(gearTypeItemProperty.getGearType().name()));
     }
 
     @Override
