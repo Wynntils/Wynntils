@@ -90,12 +90,8 @@ public final class StatisticFunctions {
             String statisticKey = arguments.getArgument("statisticKey").getStringValue();
             int value = arguments.getArgument("value").getIntegerValue();
 
-            StatisticKind statisticKind;
-            try {
-                statisticKind = StatisticKind.from(statisticKey);
-            } catch (IllegalArgumentException e) {
-                return "-";
-            }
+            StatisticKind statisticKind = StatisticKind.from(statisticKey);
+            if (statisticKind == null) return "-";
 
             return statisticKind.getFormattedValue(value);
         }
@@ -134,12 +130,8 @@ public final class StatisticFunctions {
             String statisticKey = arguments.getArgument("statisticKey").getStringValue();
             boolean overall = arguments.getArgument("overall").getBooleanValue();
 
-            StatisticKind statisticKind;
-            try {
-                statisticKind = StatisticKind.from(statisticKey);
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
+            StatisticKind statisticKind = StatisticKind.from(statisticKey);
+            if (statisticKind == null) return null;
 
             StatisticEntry statistic = overall
                     ? Services.Statistics.getOverallStatistic(statisticKind)
