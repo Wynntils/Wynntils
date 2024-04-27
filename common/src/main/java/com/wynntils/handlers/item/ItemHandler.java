@@ -344,4 +344,8 @@ public class ItemHandler extends Handler {
         profilingTimes.clear();
         profilingCounts.clear();
     }
+
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
+    }
 }

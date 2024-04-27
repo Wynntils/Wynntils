@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -14,62 +14,50 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class RangedStatFilters {
-    public static class RangedIntegerStatFilter extends StatFilter<Integer> {
-        private final int min;
-        private final int max;
-
-        public RangedIntegerStatFilter(int min, int max) {
-            this.min = min;
-            this.max = max;
+    public static class RangedIntegerStatFilter extends AbstractRangedStatFilter<Integer> {
+        public RangedIntegerStatFilter(int min, int max, boolean equalsInString) {
+            super(min, max, equalsInString);
         }
 
         @Override
-        protected boolean matches(Integer value) {
+        public boolean matches(Integer value) {
             return value >= min && value <= max;
         }
 
         public static class RangedIntegerStatFilterFactory extends RangedStatFilterFactory<RangedIntegerStatFilter> {
             @Override
-            protected RangedIntegerStatFilter getRangedStatFilter(int min, int max) {
-                return new RangedIntegerStatFilter(min, max);
+            protected RangedIntegerStatFilter getRangedStatFilter(int min, int max, boolean equalsInString) {
+                return new RangedIntegerStatFilter(min, max, equalsInString);
             }
         }
     }
 
-    public static class RangedCappedValueStatFilter extends StatFilter<CappedValue> {
-        private final int min;
-        private final int max;
-
-        public RangedCappedValueStatFilter(int min, int max) {
-            this.min = min;
-            this.max = max;
+    public static class RangedCappedValueStatFilter extends AbstractRangedStatFilter<CappedValue> {
+        public RangedCappedValueStatFilter(int min, int max, boolean equalsInString) {
+            super(min, max, equalsInString);
         }
 
         @Override
-        protected boolean matches(CappedValue value) {
+        public boolean matches(CappedValue value) {
             return value.current() >= min && value.current() <= max;
         }
 
         public static class RangedCappedValueStatFilterFactory
                 extends RangedStatFilterFactory<RangedCappedValueStatFilter> {
             @Override
-            protected RangedCappedValueStatFilter getRangedStatFilter(int min, int max) {
-                return new RangedCappedValueStatFilter(min, max);
+            protected RangedCappedValueStatFilter getRangedStatFilter(int min, int max, boolean equalsInString) {
+                return new RangedCappedValueStatFilter(min, max, equalsInString);
             }
         }
     }
 
-    public static class RangedStatValueStatFilter extends StatFilter<StatValue> {
-        private final int min;
-        private final int max;
-
-        public RangedStatValueStatFilter(int min, int max) {
-            this.min = min;
-            this.max = max;
+    public static class RangedStatValueStatFilter extends AbstractRangedStatFilter<StatValue> {
+        public RangedStatValueStatFilter(int min, int max, boolean equalsInString) {
+            super(min, max, equalsInString);
         }
 
         @Override
-        protected boolean matches(StatValue value) {
+        public boolean matches(StatValue value) {
             if (value.statActualValue() != null) {
                 return value.statActualValue().value() >= min
                         && value.statActualValue().value() <= max;
@@ -85,9 +73,51 @@ public final class RangedStatFilters {
         public static class RangedStatValueStatFilterFactory
                 extends RangedStatFilterFactory<RangedStatValueStatFilter> {
             @Override
-            protected RangedStatValueStatFilter getRangedStatFilter(int min, int max) {
-                return new RangedStatValueStatFilter(min, max);
+            protected RangedStatValueStatFilter getRangedStatFilter(int min, int max, boolean equalsInString) {
+                return new RangedStatValueStatFilter(min, max, equalsInString);
             }
+        }
+    }
+
+    public abstract static class AbstractRangedStatFilter<T> extends StatFilter<T> {
+        protected final int min;
+        protected final int max;
+
+        protected final boolean equalsInString;
+
+        protected AbstractRangedStatFilter(int min, int max, boolean equalsInString) {
+            this.min = min;
+            this.max = max;
+            this.equalsInString = equalsInString;
+        }
+
+        @Override
+        public String asString() {
+            if (min == max) {
+                return Integer.toString(min);
+            }
+
+            if (min == Integer.MIN_VALUE) {
+                return equalsInString ? "<=" + max : "<" + (max + 1);
+            }
+
+            if (max == Integer.MAX_VALUE) {
+                return equalsInString ? ">=" + min : ">" + (min - 1);
+            }
+
+            return min + "-" + max;
+        }
+
+        public int getMin() {
+            return min;
+        }
+
+        public int getMax() {
+            return max;
+        }
+
+        public boolean isEqualsInString() {
+            return equalsInString;
         }
     }
 
@@ -103,33 +133,33 @@ public final class RangedStatFilters {
 
             if (matcher.matches()) {
                 int value = Integer.parseInt(inputString);
-                return Optional.of(getRangedStatFilter(value, value));
+                return Optional.of(getRangedStatFilter(value, value, true));
             }
 
             matcher = RANGE_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 int min = Integer.parseInt(matcher.group(1));
                 int max = Integer.parseInt(matcher.group(2));
-                return Optional.of(getRangedStatFilter(min, max));
+                return Optional.of(getRangedStatFilter(min, max, true));
             }
 
             matcher = GREATER_THAN_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 boolean equal = inputString.charAt(1) == '=';
                 int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
-                return Optional.of(getRangedStatFilter(equal ? value : value + 1, Integer.MAX_VALUE));
+                return Optional.of(getRangedStatFilter(equal ? value : value + 1, Integer.MAX_VALUE, equal));
             }
 
             matcher = LESS_THAN_PATTERN.matcher(inputString);
             if (matcher.matches()) {
                 boolean equal = inputString.charAt(1) == '=';
                 int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
-                return Optional.of(getRangedStatFilter(Integer.MIN_VALUE, equal ? value : value - 1));
+                return Optional.of(getRangedStatFilter(Integer.MIN_VALUE, equal ? value : value - 1, equal));
             }
 
             return Optional.empty();
         }
 
-        protected abstract T getRangedStatFilter(int min, int max);
+        protected abstract T getRangedStatFilter(int min, int max, boolean equalsInString);
     }
 }
