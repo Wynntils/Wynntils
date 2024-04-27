@@ -71,6 +71,19 @@ public class StringFunctions {
         }
     }
 
+    public static class FormatDateFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return StringUtils.formatDateTime(arguments.getArgument("timestamp").getLongValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("timestamp", Number.class, null)));
+        }
+    }
+
     public static class StringFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 public final class StringUtils {
     private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
@@ -181,5 +182,10 @@ public final class StringUtils {
         } else {
             return String.format("%.2f", value);
         }
+    }
+
+    public static String formatDateTime(long timeMillis) {
+        // Format: 2023-01-01 12:00
+        return DateFormatUtils.format(timeMillis, "yyyy-MM-dd HH:mm");
     }
 }
