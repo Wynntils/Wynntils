@@ -2205,6 +2205,7 @@
   "screens.wynntils.statistics.average": "Average: %s",
   "screens.wynntils.statistics.count": "Count: %s",
   "screens.wynntils.statistics.description": "See all your statistics in one place.",
+  "screens.wynntils.statistics.lastModified": "Last Change: %s",
   "screens.wynntils.statistics.leftClickToUnselect": "Left click to unselect",
   "screens.wynntils.statistics.leftClickToView": "Left click to view",
   "screens.wynntils.statistics.max": "Max: %s",
