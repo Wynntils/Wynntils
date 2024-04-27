@@ -387,8 +387,8 @@ public class ItemFilterService extends Service {
             String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
                 .filter(provider -> provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
-                .filter(filter ->
-                        filter.getName().equals(name) || filter.getAliases().contains(name))
+                .filter(filter -> filter.getName().equalsIgnoreCase(name)
+                        || filter.getAliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(name)))
                 .findFirst();
 
         if (itemStatProviderOpt.isPresent()) {
