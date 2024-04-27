@@ -8,12 +8,15 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.colors.CustomColor;
@@ -63,6 +66,9 @@ public class GuildModel extends Model {
 
     public GuildModel() {
         super(List.of());
+
+        Handlers.Label.registerParser(new GuildSeasonLeaderboardHeaderLabelParser());
+        Handlers.Label.registerParser(new GuildSeasonLeaderboardLabelParser());
 
         loadGuildList();
     }
