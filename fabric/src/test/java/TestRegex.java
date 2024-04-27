@@ -25,6 +25,7 @@ import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
@@ -729,5 +730,12 @@ public class TestRegex {
     public void WarTowerBar_TOWER_BAR_PATTERN() {
         PatternTester p = new PatternTester(WarTowerBar.class, "TOWER_BAR_PATTERN");
         p.shouldMatch("§3[SEPC] §bEfilim South Plains Tower§7 - §4❤ 390000§7 (§610.0%§7) - §c☠ 1300-1949§7 (§b0.5x§7)");
+    }
+
+    @Test
+    public void GuildSeasonLeaderboardLabelParser_GUILD_SEASON_LEADERBOARD_PATTERN() {
+        PatternTester p = new PatternTester(GuildSeasonLeaderboardLabelParser.class, "GUILD_SEASON_LEADERBOARD_LABEL");
+        p.shouldMatch("§6§l1§7 - §bIdiot Co§d (11 396 656 SR)");
+        p.shouldMatch("§62§7 - §bSequoia§d (11 057 047 SR)");
     }
 }

@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WarTowerBar extends TrackedBar {
+    // Test in WarTowerBar_TOWER_BAR_PATTERN
     private static final Pattern TOWER_BAR_PATTERN = Pattern.compile(
             "§3\\[(?<guild>.+)\\] §b(?<territory>.+) Tower§7 - §4. (?<health>.+)§7 \\(§6(?<defense>.+)%§7\\) - §..{1,2} (?<damagemin>.+)-(?<damagemax>.+)§7 \\(§b(?<attackspeed>.+)x§7\\)");
 
