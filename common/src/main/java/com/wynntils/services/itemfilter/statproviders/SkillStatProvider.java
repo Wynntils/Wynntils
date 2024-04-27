@@ -8,7 +8,7 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
-import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
@@ -39,9 +39,10 @@ public class SkillStatProvider extends ItemStatProvider<Integer> {
     public List<Integer> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty)) return List.of();
 
-        return identifiableItemProperty.getIdentifications().stream()
+        return identifiableItemProperty.getPossibleValues().stream()
                 .filter(id -> id.statType() instanceof SkillStatType)
-                .map(StatActualValue::value)
+                .filter(id -> ((SkillStatType) id.statType()).getSkill() == skill)
+                .map(StatPossibleValues::baseValue)
                 .toList();
     }
 
