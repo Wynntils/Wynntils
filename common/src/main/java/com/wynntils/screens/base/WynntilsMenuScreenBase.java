@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
@@ -117,11 +117,11 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         TextShadow.NONE);
     }
 
-    protected float getTranslationX() {
+    public float getTranslationX() {
         return (this.width - Texture.CONTENT_BOOK_BACKGROUND.width()) / 2f;
     }
 
-    protected float getTranslationY() {
+    public float getTranslationY() {
         return (this.height - Texture.CONTENT_BOOK_BACKGROUND.height()) / 2f;
     }
 }
