@@ -12,14 +12,15 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.EnumUtils;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GearRestrictionStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof GearItem gearItem)) return List.of();
+    public Optional<String> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof GearItem gearItem)) return Optional.empty();
 
-        return List.of(gearItem.getItemInfo().metaInfo().restrictions().name());
+        return Optional.of(gearItem.getItemInfo().metaInfo().restrictions().name());
     }
 
     @Override

@@ -11,14 +11,15 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RarityStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof GearTierItemProperty gearTierItemProperty)) return List.of();
+    public Optional<String> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof GearTierItemProperty gearTierItemProperty)) return Optional.empty();
 
-        return List.of(gearTierItemProperty.getGearTier().getName());
+        return Optional.of(gearTierItemProperty.getGearTier().getName());
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.type.GuildResource;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class TerritoryProductionStatProvider extends TerritoryStatProvider<Integer> {
     private final GuildResource guildResource;
@@ -17,9 +18,9 @@ public class TerritoryProductionStatProvider extends TerritoryStatProvider<Integ
     }
 
     @Override
-    public List<Integer> getValue(TerritoryItem territoryItem) {
+    public Optional<Integer> getValue(TerritoryItem territoryItem) {
         Integer generation = territoryItem.getProduction().get(guildResource);
-        return generation == null ? List.of() : List.of(generation);
+        return generation == null ? Optional.empty() : Optional.of(generation);
     }
 
     @Override

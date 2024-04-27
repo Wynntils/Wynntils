@@ -8,7 +8,6 @@ import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.ConfirmedBoolean;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -51,11 +50,11 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
                 });
 
         if (filterPair != null) {
-            if (filterPair.statFilter().matches(List.of(true))) {
+            if (filterPair.statFilter().matches(true)) {
                 state = ConfirmedBoolean.TRUE;
                 trueCheckbox.selected = true;
                 falseCheckbox.selected = false;
-            } else if (filterPair.statFilter().matches(List.of(false))) {
+            } else if (filterPair.statFilter().matches(false)) {
                 state = ConfirmedBoolean.FALSE;
                 trueCheckbox.selected = false;
                 falseCheckbox.selected = true;

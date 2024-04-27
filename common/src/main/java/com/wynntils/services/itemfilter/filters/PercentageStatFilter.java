@@ -26,7 +26,7 @@ public class PercentageStatFilter extends StatFilter<StatValue> {
     }
 
     @Override
-    protected boolean matches(StatValue value) {
+    public boolean matches(StatValue value) {
         // If the item is not revealed, we can't filter percentage
         if (value.statActualValue() == null) {
             return false;

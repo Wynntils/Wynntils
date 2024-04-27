@@ -10,12 +10,13 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ItemTypeStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(WynnItem wynnItem) {
-        return List.of(wynnItem.getClass().getSimpleName().replace("Item", ""));
+    public Optional<String> getValue(WynnItem wynnItem) {
+        return Optional.of(wynnItem.getClass().getSimpleName().replace("Item", ""));
     }
 
     @Override

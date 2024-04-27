@@ -54,7 +54,7 @@ public class AnyStatFilters {
 
     public abstract static class AbstractAnyStatFilter<T> extends StatFilter<T> {
         @Override
-        protected final boolean matches(T value) {
+        public final boolean matches(T value) {
             return true;
         }
 
