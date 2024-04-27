@@ -11,10 +11,11 @@ import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class TotalPriceStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
+    public Optional<Integer> getValue(WynnItem wynnItem) {
         TradeMarketPriceInfo priceInfo = wynnItem.getData().getOrCalculate(WynnItemData.EMERALD_PRICE_KEY, () -> {
             TradeMarketPriceInfo calculatedInfo =
                     Models.TradeMarket.calculateItemPriceInfo(wynnItem.getData().get(WynnItemData.ITEMSTACK_KEY));
@@ -22,10 +23,10 @@ public class TotalPriceStatProvider extends ItemStatProvider<Integer> {
         });
 
         if (priceInfo == TradeMarketPriceInfo.EMPTY) {
-            return List.of();
+            return Optional.empty();
         }
 
-        return List.of(priceInfo.totalPrice());
+        return Optional.of(priceInfo.totalPrice());
     }
 
     @Override

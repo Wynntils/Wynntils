@@ -7,6 +7,7 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -17,14 +18,18 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
+    private List<ItemProviderType> supportedProviderTypes;
+
     protected WynntilsGuideScreen(Component component, List<ItemProviderType> supportedProviderTypes) {
         super(component);
+
+        this.supportedProviderTypes = supportedProviderTypes;
 
         // Override the search widget with our own
         this.searchWidget = new ItemSearchWidget(
                 0,
                 -22,
-                Texture.CONTENT_BOOK_BACKGROUND.width(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 24,
                 20,
                 supportedProviderTypes,
                 true,
@@ -35,6 +40,9 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
     @Override
     protected void doInit() {
         super.doInit();
+
+        this.addRenderableWidget(new ItemFilterUIButton(
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true, supportedProviderTypes));
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),

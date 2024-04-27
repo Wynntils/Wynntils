@@ -54,6 +54,11 @@ public final class WynntilsCharmGuideScreen
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
 
+        renderDescription(
+                poseStack,
+                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
+                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
+
         renderVersion(poseStack);
 
         renderItemsHeader(poseStack);

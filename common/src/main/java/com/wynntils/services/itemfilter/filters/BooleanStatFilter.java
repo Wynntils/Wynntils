@@ -20,6 +20,11 @@ public class BooleanStatFilter extends StatFilter<Boolean> {
         return this.value == value;
     }
 
+    @Override
+    public String asString() {
+        return Boolean.toString(value);
+    }
+
     public static class BooleanStatFilterFactory extends StatFilterFactory<BooleanStatFilter> {
         @Override
         public Optional<BooleanStatFilter> create(String inputString) {
@@ -30,6 +35,10 @@ public class BooleanStatFilter extends StatFilter<Boolean> {
             } else {
                 return Optional.empty();
             }
+        }
+
+        public BooleanStatFilter fromBoolean(boolean value) {
+            return new BooleanStatFilter(value);
         }
     }
 }

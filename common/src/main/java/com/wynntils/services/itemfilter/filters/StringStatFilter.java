@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -23,6 +23,19 @@ public final class StringStatFilter extends StatFilter<String> {
     @Override
     public boolean matches(String value) {
         return strict ? value.equalsIgnoreCase(searchLiteral) : StringUtils.containsIgnoreCase(value, searchLiteral);
+    }
+
+    @Override
+    public String asString() {
+        return strict ? "\"" + searchLiteral + "\"" : searchLiteral;
+    }
+
+    public boolean isStrict() {
+        return strict;
+    }
+
+    public String getSearchLiteral() {
+        return searchLiteral;
     }
 
     public static class StringStatFilterFactory extends StatFilterFactory<StringStatFilter> {

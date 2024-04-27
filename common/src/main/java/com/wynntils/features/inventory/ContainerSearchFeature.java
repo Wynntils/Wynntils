@@ -37,6 +37,7 @@ import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
@@ -255,7 +256,7 @@ public class ContainerSearchFeature extends Feature {
             ItemSearchWidget searchWidget = new ItemSearchWidget(
                     renderX + screen.imageWidth - 175,
                     renderY - 20,
-                    175,
+                    155,
                     20,
                     currentContainer.supportedProviderTypes(),
                     false,
@@ -272,6 +273,14 @@ public class ContainerSearchFeature extends Feature {
             lastSearchWidget = searchWidget;
 
             screen.addRenderableWidget(lastSearchWidget);
+
+            screen.addRenderableWidget(new ItemFilterUIButton(
+                    renderX + 157,
+                    renderY - 20,
+                    lastSearchWidget,
+                    screen,
+                    false,
+                    currentContainer.supportedProviderTypes()));
         } else {
             SearchWidget searchWidget = new SearchWidget(
                     renderX + screen.imageWidth - 175,
