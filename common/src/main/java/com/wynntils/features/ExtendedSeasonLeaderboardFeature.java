@@ -8,17 +8,18 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
+import com.wynntils.handlers.labels.type.LabelInfo;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelInfo;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelInfo;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ExtendedSeasonLeaderboardFeature extends Feature {
-    private final List<GuildSeasonLeaderboardLabelInfo> labelInfos = new ArrayList<>();
+    private final Map<Integer, GuildSeasonLeaderboardLabelInfo> labelInfos = new HashMap<>();
 
     @Persisted
     private final Config<Boolean> useShortSeasonRankingStrings = new Config<>(false);
@@ -34,22 +35,62 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
         if (event.getLabelInfo() instanceof GuildSeasonLeaderboardLabelInfo guildSeasonLeaderboardLabelInfo) {
-            labelInfos.add(guildSeasonLeaderboardLabelInfo);
+            labelInfos.put(guildSeasonLeaderboardLabelInfo.getPlace(), guildSeasonLeaderboardLabelInfo);
         }
     }
 
     @SubscribeEvent
     public void onLabelChanged(EntityLabelChangedEvent event) {
-        if (event.getLabelInfo().isEmpty()
-                || !(event.getLabelInfo().get()
-                        instanceof GuildSeasonLeaderboardLabelInfo guildSeasonLeaderboardLabelInfo)) {
+        if (event.getLabelInfo().isEmpty()) return;
+
+        LabelInfo labelInfo = event.getLabelInfo().get();
+
+        if (labelInfo instanceof GuildSeasonLeaderboardHeaderLabelInfo) {
+            // Reset every label that is for a place higher than 10
+            // A page only has 10 entries, the header only changes when we switch seasons
+            // so we do this to make sure the 10th place is not calculated from the old 11th place data
+            List<GuildSeasonLeaderboardLabelInfo> labelsToRemove = labelInfos.values().stream()
+                    .filter(info -> info.getPlace() > 10)
+                    .toList();
+
+            labelsToRemove.forEach(labelInfoToRemove -> labelInfos.remove(labelInfoToRemove.getPlace()));
+
+            // We also need to update the "last" displayed label, as it is the one that is displayed on the 10th place
+            labelInfos.values().stream()
+                    .filter(info -> info.getPlace() % 10 == 0)
+                    .forEach(this::updateLeaderboardEntityName);
+
             return;
         }
 
+        if (!(labelInfo instanceof GuildSeasonLeaderboardLabelInfo guildSeasonLeaderboardLabelInfo)) {
+            return;
+        }
+
+        // Update the changed label data
+        labelInfos.put(guildSeasonLeaderboardLabelInfo.getPlace(), guildSeasonLeaderboardLabelInfo);
+
+        // Cancel the event to prevent the label from being changed
+        event.setCanceled(true);
+
+        // Update this entity's name
+        updateLeaderboardEntityName(guildSeasonLeaderboardLabelInfo);
+
+        // Also update the name of the entity that is "before" this entity in ranking
+        // But only, if this is not the "first" entity in ranking (the first element that is displayed on the page)
+        if (guildSeasonLeaderboardLabelInfo.getPlace() % 10 != 1) {
+            labelInfos.values().stream()
+                    .filter(info -> info.getPlace() == guildSeasonLeaderboardLabelInfo.getPlace() - 1)
+                    .findFirst()
+                    .ifPresent(this::updateLeaderboardEntityName);
+        }
+    }
+
+    private void updateLeaderboardEntityName(GuildSeasonLeaderboardLabelInfo guildSeasonLeaderboardLabelInfo) {
         // Find the label info that is "after" the current label info, in ranking
-        GuildSeasonLeaderboardLabelInfo nextLabelInfo = labelInfos.stream()
-                .filter(labelInfo -> labelInfo.getPlace() > guildSeasonLeaderboardLabelInfo.getPlace())
-                .min(Comparator.comparingInt(GuildSeasonLeaderboardLabelInfo::getPlace))
+        GuildSeasonLeaderboardLabelInfo nextLabelInfo = labelInfos.values().stream()
+                .filter(info -> info.getPlace() == guildSeasonLeaderboardLabelInfo.getPlace() + 1)
+                .findFirst()
                 .orElse(null);
 
         Optional<GuildProfile> guildProfile = Models.Guild.getGuildProfile(guildSeasonLeaderboardLabelInfo.getGuild());
@@ -101,12 +142,14 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
                 .append(Component.literal(" (+" + (nextLabelInfo == null ? "???" : scoreDiffString) + ")")
                         .withStyle(ChatFormatting.GREEN));
 
-        event.setName(StyledText.fromComponent(newLabel));
+        guildSeasonLeaderboardLabelInfo.getEntity().setCustomName(newLabel);
     }
 
     @SubscribeEvent
     public void onLabelsRemoved(LabelsRemovedEvent event) {
-        labelInfos.removeAll(event.getRemovedLabels());
+        event.getRemovedLabels().stream()
+                .filter(labelInfo -> labelInfo instanceof GuildSeasonLeaderboardLabelInfo)
+                .forEach(labelInfo -> labelInfos.remove(((GuildSeasonLeaderboardLabelInfo) labelInfo).getPlace()));
     }
 
     @SubscribeEvent

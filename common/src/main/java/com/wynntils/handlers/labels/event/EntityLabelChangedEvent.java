@@ -8,8 +8,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
 public class EntityLabelChangedEvent extends Event {
     private final Entity entity;
     private final StyledText oldName;

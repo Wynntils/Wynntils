@@ -19,7 +19,9 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -31,7 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class LabelHandler extends Handler {
     private final List<LabelParser> parsers = new ArrayList<>();
 
-    private final List<LabelInfo> liveLabels = new ArrayList<>();
+    private final Map<Integer, LabelInfo> liveLabels = new HashMap<>();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntitySetData(SetEntityDataEvent event) {
@@ -60,10 +62,19 @@ public class LabelHandler extends Handler {
                 if (newName.equals(oldName)) continue;
 
                 LabelInfo labelInfo = tryIdentifyLabel(newName, entity);
+                if (labelInfo != null) {
+                    liveLabels.put(entity.getId(), labelInfo);
+                }
 
                 EntityLabelChangedEvent labelChangedEvent =
                         new EntityLabelChangedEvent(entity, newName, oldName, labelInfo);
                 WynntilsMod.postEvent(labelChangedEvent);
+
+                // If the event was cancelled, remove the name change data
+                if (labelChangedEvent.isCanceled()) {
+                    oldNameData = packedItem;
+                    continue;
+                }
 
                 // If the event changed the name, update the data
                 if (!labelChangedEvent.getName().equals(newName)) {
@@ -76,26 +87,30 @@ public class LabelHandler extends Handler {
             }
         }
 
-        // If the name was changed, replace the old data with the new one
-        if (newCustomNameData != null) {
+        // If the name was removed, remove the old data
+        if (oldNameData != null) {
             event.removePackedItem(oldNameData);
+        }
+
+        // If the name was changed, add the new data
+        if (newCustomNameData != null) {
             event.addPackedItem(newCustomNameData);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntitiesRemoved(RemoveEntitiesEvent event) {
-        List<LabelInfo> removedLabels = liveLabels.stream()
+        List<LabelInfo> removedLabels = liveLabels.values().stream()
                 .filter(label -> event.getEntityIds().contains(label.getEntity().getId()))
                 .toList();
 
-        liveLabels.removeAll(removedLabels);
+        removedLabels.forEach(label -> liveLabels.remove(label.getEntity().getId()));
         WynntilsMod.postEvent(new LabelsRemovedEvent(removedLabels));
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        List<LabelInfo> oldLabels = new ArrayList<>(liveLabels);
+        List<LabelInfo> oldLabels = new ArrayList<>(liveLabels.values());
         liveLabels.clear();
         WynntilsMod.postEvent(new LabelsRemovedEvent(oldLabels));
     }

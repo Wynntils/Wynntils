@@ -13,7 +13,9 @@ public abstract class LabelInfo implements Comparable<LabelInfo> {
     protected final StyledText label;
     protected final String name;
     protected final Location location;
-    protected final Entity entity;
+
+    // Must be transient, we don't want to serialize this to JSON
+    protected final transient Entity entity;
 
     protected LabelInfo(StyledText label, Location location, Entity entity) {
         this.label = label;
