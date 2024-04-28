@@ -124,7 +124,7 @@ public final class LootChestModel extends Model {
 
         GearBoxItem gearBox = gearBoxItem.get();
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
-            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
+            WynntilsMod.postEvent(new MythicFoundEvent(itemStack, false));
 
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
                 storeMythicFind(itemStack, gearBox.getLevelRange());

@@ -20,8 +20,10 @@ public enum StatisticKind {
     MYTHICS_FOUND(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    // LOOTRUNS_CHALLENGES_COMPLETED is actually LOOTRUNS_PULLS_COMPLETED,
+    // but we can't rename it without storage upfixers (i18n is already updated though)
     LOOTRUNS_CHALLENGES_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
-    LOOTRUNS_CHALLENGES_WITHOUT_MYTHIC(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_PULLS_WITHOUT_MYTHIC(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
     LOOTRUNS_REWARD_PULLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_REWARD_REROLLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),

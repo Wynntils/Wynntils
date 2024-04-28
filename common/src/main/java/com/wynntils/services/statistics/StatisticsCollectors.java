@@ -54,8 +54,10 @@ public final class StatisticsCollectors {
     public void onMythicFoundEvent(MythicFoundEvent event) {
         Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
 
-        Services.Statistics.addToStatistics(
-                StatisticKind.LOOTRUNS_CHALLENGES_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
+        if (event.isLootrunEndReward()) {
+            Services.Statistics.addToStatistics(
+                    StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
+        }
     }
 
     @SubscribeEvent

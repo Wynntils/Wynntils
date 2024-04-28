@@ -312,7 +312,7 @@ public class LootrunModel extends Model {
                 GearItem gearItem = gearItemOpt.get();
 
                 if (gearItem.getGearTier() == GearTier.MYTHIC) {
-                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
+                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
                     dryPulls.store(0);
                 }
             }
