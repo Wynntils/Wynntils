@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.items.WynnItem;
@@ -29,6 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -123,6 +127,22 @@ public class ItemHandler extends Handler {
 
         for (int i = 0; i < newItems.size(); i++) {
             onItemStackUpdate(existingItems.get(i), newItems.get(i));
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntitySpawn(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+        if (!(entity instanceof ItemEntity itemEntity)) return;
+
+        // Item entities can have an item that needs to be annotated
+        for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
+            if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
+                if (!(packedItem.value() instanceof ItemStack itemStack)) return;
+
+                annotate(itemStack);
+                return;
+            }
         }
     }
 

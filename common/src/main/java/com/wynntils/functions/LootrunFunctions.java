@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -37,6 +37,18 @@ public class LootrunFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("dry_b", "dry_boxes_count");
+        }
+    }
+
+    public static class DryPullsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.dryPulls.get();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("dry_p", "dry_pulls_count");
         }
     }
 

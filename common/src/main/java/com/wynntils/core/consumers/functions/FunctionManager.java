@@ -511,6 +511,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.DryBoxesFunction());
+        registerFunction(new LootrunFunctions.DryPullsFunction());
         registerFunction(new LootrunFunctions.DryStreakFunction());
         registerFunction(new LootrunFunctions.HighestDryStreakFunction());
         registerFunction(new LootrunFunctions.LastDryStreakFunction());
