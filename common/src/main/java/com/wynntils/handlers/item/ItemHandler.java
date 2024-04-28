@@ -133,7 +133,7 @@ public class ItemHandler extends Handler {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
         if (!(entity instanceof ItemEntity itemEntity)) return;
 
-        // Item entities can have item's that need to be annotated
+        // Item entities can have an item that need to be annotated
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
             if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
