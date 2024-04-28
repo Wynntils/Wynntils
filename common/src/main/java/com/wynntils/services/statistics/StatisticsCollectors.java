@@ -1,10 +1,14 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.containers.containers.reward.RewardContainer;
+import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.spells.event.SpellEvent;
@@ -44,5 +48,20 @@ public final class StatisticsCollectors {
         Services.Statistics.addToStatistics(
                 StatisticKind.LOOTRUNS_CHALLENGES_COMPLETED, event.getChallengesCompleted());
         Services.Statistics.addToStatistics(StatisticKind.LOOTRUNS_TIME_ELAPSED, event.getTimeElapsed());
+    }
+
+    @SubscribeEvent
+    public void onMythicFoundEvent(MythicFoundEvent event) {
+        Services.Statistics.increaseStatistics(StatisticKind.MYTHICS_FOUND);
+
+        Services.Statistics.addToStatistics(
+                StatisticKind.LOOTRUNS_CHALLENGES_WITHOUT_MYTHIC, Models.LootChest.dryPulls.get());
+    }
+
+    @SubscribeEvent
+    public void onRewardContainerOpened(ScreenInitEvent e) {
+        if (Models.Container.getCurrentContainer() instanceof RewardContainer rewardContainer) {
+            Services.Statistics.increaseStatistics(StatisticKind.LOOTRUNS_CHESTS_OPENED);
+        }
     }
 }

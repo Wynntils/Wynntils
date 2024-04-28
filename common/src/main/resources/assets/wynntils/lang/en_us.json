@@ -2432,7 +2432,9 @@
   "service.wynntils.updates.result.pending": "Update was already downloaded. It will apply on shutdown.",
   "service.wynntils.updates.result.successful": "Successfully downloaded Wynntils/Artemis update. It will apply on shutdown.",
   "statistics.wynntils.damageDealt.name": "Damage dealt",
-  "statistics.wynntils.lootrunsChallengesCompleted.name": "Lootruns challenges completed",
+  "statistics.wynntils.lootrunsChallengesCompleted.name": "Lootrun pulls",
+  "statistics.wynntils.lootrunsChallengesWithoutMythic.name": "Lootrun pulls without mythic",
+  "statistics.wynntils.lootrunsChestsOpened.name": "Lootrun chests opened",
   "statistics.wynntils.lootrunsCompleted.name": "Lootruns completed",
   "statistics.wynntils.lootrunsExperienceGained.name": "Lootrun experience gained",
   "statistics.wynntils.lootrunsFailed.name": "Lootruns failed",
@@ -2440,6 +2442,7 @@
   "statistics.wynntils.lootrunsRewardPulls.name": "Lootrun reward pulls",
   "statistics.wynntils.lootrunsRewardRerolls.name": "Lootrun reward rerolls",
   "statistics.wynntils.lootrunsTimeElapsed.name": "Lootrun time elapsed",
+  "statistics.wynntils.mythicsFound.name": "Mythics found",
   "statistics.wynntils.spellsCast.name": "Spells cast",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }
