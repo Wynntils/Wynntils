@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics.type;
@@ -11,20 +11,25 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.stats.StatFormatter;
 
 public enum StatisticKind {
+    // region Gameplay
     DAMAGE_DEALT(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     SPELLS_CAST(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    // endregion
 
     // region Lootruns
-
+    MYTHICS_FOUND(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    // LOOTRUNS_CHALLENGES_COMPLETED is actually LOOTRUNS_PULLS_COMPLETED,
+    // but we can't rename it without storage upfixers (i18n is already updated though)
     LOOTRUNS_CHALLENGES_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_PULLS_WITHOUT_MYTHIC(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
     LOOTRUNS_REWARD_PULLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_REWARD_REROLLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_EXPERIENCE_GAINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
-    LOOTRUNS_MOBS_KILLED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED);
-
+    LOOTRUNS_MOBS_KILLED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_CHESTS_OPENED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
     // endregion
 
     private final StatFormatter formatter;
