@@ -83,6 +83,9 @@ public class ChatRedirectFeature extends Feature {
     @Persisted
     public final Config<RedirectAction> guildBank = new Config<>(RedirectAction.REDIRECT);
 
+    @Persisted
+    public final Config<RedirectAction> guildRewards = new Config<>(RedirectAction.REDIRECT);
+
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
@@ -91,6 +94,7 @@ public class ChatRedirectFeature extends Feature {
         register(new FriendJoinRedirector());
         register(new FriendLeaveRedirector());
         register(new GuildBankRedirector());
+        register(new GuildRewardRedirector());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
@@ -1008,6 +1012,33 @@ public class ChatRedirectFeature extends Feature {
             return StyledText.fromString(ChatFormatting.AQUA
                     + (transactionType.equals("withdrew") ? WITHDRAW_SYMBOL : DEPOSIT_SYMBOL) + ChatFormatting.DARK_AQUA
                     + " " + player + " " + count + "x " + item + " (" + bankType + ") ");
+        }
+    }
+
+    private final class GuildRewardRedirector extends SimpleRedirector {
+        private static final String REWARD_SYMBOL = "→";
+
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§3\\[INFO\\]§b (?<sender>.+) rewarded §3(?<reward>.+)§b to (?<recipient>.+)\\.\\n§3Rewards can be claimed in the Member Menu\\.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return guildRewards.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            String sender = matcher.group("sender");
+            String reward = matcher.group("reward");
+            String recipient = matcher.group("recipient");
+
+            return StyledText.fromString(ChatFormatting.AQUA + sender + ChatFormatting.DARK_AQUA + " " + REWARD_SYMBOL
+                    + " " + ChatFormatting.AQUA + recipient + ChatFormatting.DARK_AQUA + ": " + reward);
         }
     }
 }

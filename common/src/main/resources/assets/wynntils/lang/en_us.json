@@ -178,6 +178,8 @@
   "feature.wynntils.chatRedirect.guildBank.name": "Guild Bank Message Filtering",
   "feature.wynntils.chatRedirect.guildContribution.description": "How should guild XP contribution messages appear?",
   "feature.wynntils.chatRedirect.guildContribution.name": "Guild Contribution Message Filtering",
+  "feature.wynntils.chatRedirect.guildRewards.description": "How should guild reward messages appear?",
+  "feature.wynntils.chatRedirect.guildRewards.name": "Guild Reward Message Filtering",
   "feature.wynntils.chatRedirect.heal.description": "How should messages about healing appear?",
   "feature.wynntils.chatRedirect.heal.name": "Heal Message Filtering",
   "feature.wynntils.chatRedirect.horse.description": "How should messages relating to your horse appear?",
