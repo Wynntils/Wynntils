@@ -62,6 +62,8 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
     public boolean isEnabled() {
         TerritoryAttackTimerOverlayFeature feature =
                 Managers.Feature.getFeatureInstance(TerritoryAttackTimerOverlayFeature.class);
-        return feature.isEnabled() && feature.displayBeaconBeam.get();
+        return feature.isEnabled()
+                && feature.displayBeaconBeam.get()
+                && !Models.Lootrun.getState().isRunning();
     }
 }
