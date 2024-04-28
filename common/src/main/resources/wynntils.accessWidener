@@ -39,6 +39,7 @@ accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/world/entity/Entity DATA_CUSTOM_NAME Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/entity/Entity DATA_CUSTOM_NAME_VISIBLE Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/item/ItemEntity DATA_ITEM Lnet/minecraft/network/syncher/EntityDataAccessor;
 accessible field net/minecraft/world/item/ItemStack count I
 accessible field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
 accessible method net/minecraft/client/gui/components/AbstractSelectionList getRowBottom (I)I
