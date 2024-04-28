@@ -164,9 +164,6 @@ public final class LootChestModel extends Model {
     public void onEntitySpawn(SetEntityDataEvent event) {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
         if (!(entity instanceof ItemEntity itemEntity)) return;
-        if (checkedItemEntities.contains(itemEntity.getUUID())) return;
-
-        checkedItemEntities.add(itemEntity.getUUID());
 
         // We only care about items that are close to the lootrun master
         // If we don't know where the lootrun master is, we probably don't care
@@ -177,6 +174,12 @@ public final class LootChestModel extends Model {
                 > Math.pow(LOOTRUN_MASTER_REWARDS_RADIUS, 2)) {
             return;
         }
+
+        // Check if we've already checked this item entity
+        // Otherwise duplication can occur
+        if (checkedItemEntities.contains(itemEntity.getUUID())) return;
+
+        checkedItemEntities.add(itemEntity.getUUID());
 
         // Detect lootrun end reward items by checking the appearing item entities
         // This is much more reliable than checking the item in the chest,
