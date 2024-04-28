@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun;
@@ -18,14 +18,20 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
 import com.wynntils.handlers.particle.type.ParticleType;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
+import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
 import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
@@ -36,6 +42,7 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
+import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
@@ -54,10 +61,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Vector2d;
 
@@ -100,10 +111,19 @@ public class LootrunModel extends Model {
     // Beacon positions are sometimes off by a few blocks
     private static final int TASK_POSITION_ERROR = 3;
 
+    private static final int LOOTRUN_MASTER_REWARDS_RADIUS = 20;
+    private static final String LOOTRUN_MASTER_NAME = "Lootrun Master";
+
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
             new LootrunBeaconMarkerProvider();
+
+    @Persisted
+    public final Storage<Integer> dryPulls = new Storage<>(0);
+
+    private Location closestLootrunMasterLocation = null;
+    private Set<UUID> checkedItemEntities = new HashSet<>();
 
     private Map<LootrunLocation, Set<TaskLocation>> taskLocations = new HashMap<>();
 
@@ -247,6 +267,62 @@ public class LootrunModel extends Model {
         } else if (lootrunFailedBuilder != null) {
             parseFailedMessages(styledText);
         }
+    }
+
+    @SubscribeEvent
+    public void onNpcLabelFound(LabelIdentifiedEvent event) {
+        if (event.getLabelInfo() instanceof NpcLabelInfo npcLabelInfo) {
+            if (npcLabelInfo.getName().equals(LOOTRUN_MASTER_NAME)) {
+                closestLootrunMasterLocation = event.getLabelInfo().getLocation();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntitySpawn(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+        if (!(entity instanceof ItemEntity itemEntity)) return;
+
+        // We only care about items that are close to the lootrun master
+        // If we don't know where the lootrun master is, we probably don't care
+        if (closestLootrunMasterLocation == null) return;
+
+        // Check if the item is close enough to the lootrun master
+        if (closestLootrunMasterLocation.toBlockPos().distSqr(itemEntity.blockPosition())
+                > Math.pow(LOOTRUN_MASTER_REWARDS_RADIUS, 2)) {
+            return;
+        }
+
+        // Check if we've already checked this item entity
+        // Otherwise duplication can occur
+        if (checkedItemEntities.contains(itemEntity.getUUID())) return;
+
+        checkedItemEntities.add(itemEntity.getUUID());
+
+        // Detect lootrun end reward items by checking the appearing item entities
+        // This is much more reliable than checking the item in the chest,
+        // as the chest can be rerolled, etc.
+        for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
+            if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
+                if (!(packedItem.value() instanceof ItemStack itemStack)) return;
+
+                Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+                if (gearItemOpt.isEmpty()) return;
+
+                GearItem gearItem = gearItemOpt.get();
+
+                if (gearItem.getGearTier() == GearTier.MYTHIC) {
+                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
+                    dryPulls.store(0);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLootrunCompleted(LootrunFinishedEvent.Completed event) {
+        dryPulls.store(dryPulls.get() + event.getRewardPulls());
+        checkedItemEntities.clear();
     }
 
     @SubscribeEvent

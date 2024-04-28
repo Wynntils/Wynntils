@@ -66,13 +66,13 @@ public class MythicFoundFeature extends Feature {
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
-                        .append(Component.literal(Models.LootChest.dryPulls.get() + " pulls")
+                        .append(Component.literal(Models.Lootrun.dryPulls.get() + " pulls")
                                 .withStyle(ChatFormatting.GOLD)))
                 .append(Component.literal(" without a mythic.").withStyle(ChatFormatting.LIGHT_PURPLE)));
     }
 
     private static void sendNormalDryStreakMessage(StyledText itemName) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found a ")
+        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found an ")
                 .withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(itemName.getComponent())
                 .append(Component.literal(" in chest ")
