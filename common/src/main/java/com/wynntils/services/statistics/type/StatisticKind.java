@@ -14,11 +14,10 @@ public enum StatisticKind {
     // region Gameplay
     DAMAGE_DEALT(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     SPELLS_CAST(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
-    MYTHICS_FOUND(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     // endregion
 
     // region Lootruns
-
+    MYTHICS_FOUND(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     LOOTRUNS_CHALLENGES_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
