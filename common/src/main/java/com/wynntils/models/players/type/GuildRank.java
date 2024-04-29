@@ -5,12 +5,12 @@
 package com.wynntils.models.players.type;
 
 public enum GuildRank {
-    RECRUIT("Recruit", ""),
-    RECRUITER("Recruiter", "★"),
-    CAPTAIN("Captain", "★★"),
-    STRATEGIST("Strategist", "★★★"),
+    OWNER("Owner", "★★★★★"),
     CHIEF("Chief", "★★★★"),
-    OWNER("Owner", "★★★★★");
+    STRATEGIST("Strategist", "★★★"),
+    CAPTAIN("Captain", "★★"),
+    RECRUITER("Recruiter", "★"),
+    RECRUIT("Recruit", "");
 
     private final String name;
     private final String stars;
@@ -34,7 +34,7 @@ public enum GuildRank {
 
     public static GuildRank fromName(String string) {
         for (GuildRank rank : values()) {
-            if (rank.name.equalsIgnoreCase(string)) {
+            if (rank.getName().equalsIgnoreCase(string)) {
                 return rank;
             }
         }
