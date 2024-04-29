@@ -63,12 +63,18 @@ public record WynnPlayerInfo(
                         return null;
                     }
 
-                    Optional<String> guildJoinedTimestampOpt = guild.guildMembers().stream()
-                            .filter(guildMember -> guildMember.username().equals(playerUsername))
-                            .map(GuildMemberInfo::joinTimestamp)
-                            .findFirst();
+                    String guildJoinedTimestamp;
 
-                    String guildJoinedTimestamp = guildJoinedTimestampOpt.orElse(null);
+                    if (guild == null) {
+                        guildJoinedTimestamp = null;
+                    } else {
+                        Optional<String> guildJoinedTimestampOpt = guild.guildMembers().stream()
+                                .filter(guildMember -> guildMember.username().equals(playerUsername))
+                                .map(GuildMemberInfo::joinTimestamp)
+                                .findFirst();
+
+                        guildJoinedTimestamp = guildJoinedTimestampOpt.orElse(null);
+                    }
 
                     return new WynnPlayerInfo(
                             playerUsername,
