@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.models.players.type.Guild;
-import com.wynntils.models.players.type.GuildMember;
+import com.wynntils.models.players.type.GuildInfo;
+import com.wynntils.models.players.type.GuildMemberInfo;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
@@ -49,10 +49,10 @@ public class OnlineMembersCommand extends Command {
 
     private int lookupGuild(CommandContext<CommandSourceStack> context) {
         CompletableFuture.runAsync(() -> {
-            CompletableFuture<Guild> completableFuture =
+            CompletableFuture<GuildInfo> completableFuture =
                     Models.Guild.getGuild(context.getArgument("guildName", String.class));
 
-            Guild guild;
+            GuildInfo guild;
 
             try {
                 guild = completableFuture.get();
@@ -73,13 +73,13 @@ public class OnlineMembersCommand extends Command {
                     .append(Component.literal(" members currently online:").withStyle(ChatFormatting.GRAY));
 
             for (GuildRank guildRank : GuildRank.values()) {
-                List<GuildMember> onlineRankMembers = guild.getOnlineMembersbyRank(guildRank);
+                List<GuildMemberInfo> onlineRankMembers = guild.getOnlineMembersbyRank(guildRank);
 
                 if (!onlineRankMembers.isEmpty()) {
                     response.append(Component.literal("\n" + guildRank.getGuildDescription() + ":\n")
                             .withStyle(ChatFormatting.GOLD));
 
-                    for (GuildMember guildMember : onlineRankMembers) {
+                    for (GuildMemberInfo guildMember : onlineRankMembers) {
                         response.append(
                                 Component.literal(guildMember.username()).withStyle(ChatFormatting.AQUA));
 

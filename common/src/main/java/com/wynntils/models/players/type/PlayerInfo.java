@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public record Player(
+public record PlayerInfo(
         String username,
         boolean online,
         String server,
@@ -27,9 +27,9 @@ public record Player(
         String guildPrefix,
         GuildRank guildRank,
         String guildJoinTimestamp) {
-    public static class PlayerDeserializer implements JsonDeserializer<Player> {
+    public static class PlayerDeserializer implements JsonDeserializer<PlayerInfo> {
         @Override
-        public Player deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
+        public PlayerInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
@@ -51,9 +51,9 @@ public record Player(
                     GuildRank guildRank =
                             GuildRank.fromName(guildInfo.get("rank").getAsString());
 
-                    CompletableFuture<Guild> completableFuture = Models.Guild.getGuild(guildName);
+                    CompletableFuture<GuildInfo> completableFuture = Models.Guild.getGuild(guildName);
 
-                    Guild guild;
+                    GuildInfo guild;
 
                     try {
                         guild = completableFuture.get();
@@ -65,12 +65,12 @@ public record Player(
 
                     Optional<String> guildJoinedTimestampOpt = guild.guildMembers().stream()
                             .filter(guildMember -> guildMember.username().equals(playerUsername))
-                            .map(GuildMember::joinTimestamp)
+                            .map(GuildMemberInfo::joinTimestamp)
                             .findFirst();
 
                     String guildJoinedTimestamp = guildJoinedTimestampOpt.orElse(null);
 
-                    return new Player(
+                    return new PlayerInfo(
                             playerUsername,
                             online,
                             onlineServer,
@@ -80,7 +80,7 @@ public record Player(
                             guildRank,
                             guildJoinedTimestamp);
                 } else {
-                    return new Player(playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);
+                    return new PlayerInfo(playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);
                 }
             }
         }

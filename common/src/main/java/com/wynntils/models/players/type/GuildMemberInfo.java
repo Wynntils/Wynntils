@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.players.type;
 
-public record GuildMember(
+public record GuildMemberInfo(
         String username,
         GuildRank rank,
         boolean online,

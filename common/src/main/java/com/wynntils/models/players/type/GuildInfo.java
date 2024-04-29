@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record Guild(
+public record GuildInfo(
         String name,
         String prefix,
         int level,
@@ -24,10 +24,10 @@ public record Guild(
         String createdTimestamp,
         int totalMembers,
         int onlineMembers,
-        List<GuildMember> guildMembers) {
-    public static class GuildDeserializer implements JsonDeserializer<Guild> {
+        List<GuildMemberInfo> guildMembers) {
+    public static class GuildDeserializer implements JsonDeserializer<GuildInfo> {
         @Override
-        public Guild deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
+        public GuildInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
@@ -50,7 +50,7 @@ public record Guild(
             int totalMembers = guildMembersJson.get("total").getAsInt();
             int onlineMembers = jsonObject.get("online").getAsInt();
 
-            List<GuildMember> guildMembers = new ArrayList<>();
+            List<GuildMemberInfo> guildMembers = new ArrayList<>();
 
             for (String rank : guildMembersJson.keySet()) {
                 if (rank.equals("total")) continue;
@@ -69,7 +69,7 @@ public record Guild(
                     int contributionRank = memberInfo.get("contributionRank").getAsInt();
                     String joinedTimestamp = memberInfo.get("joined").getAsString();
 
-                    guildMembers.add(new GuildMember(
+                    guildMembers.add(new GuildMemberInfo(
                             username,
                             currentGuildRank,
                             isOnline,
@@ -80,7 +80,7 @@ public record Guild(
                 }
             }
 
-            return new Guild(
+            return new GuildInfo(
                     name,
                     prefix,
                     level,
@@ -94,7 +94,7 @@ public record Guild(
         }
     }
 
-    public List<GuildMember> getOnlineMembersbyRank(GuildRank guildRank) {
+    public List<GuildMemberInfo> getOnlineMembersbyRank(GuildRank guildRank) {
         return guildMembers.stream()
                 .filter(guildMember -> guildMember.rank() == guildRank && guildMember.online())
                 .collect(Collectors.toList());

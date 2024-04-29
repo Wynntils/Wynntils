@@ -19,7 +19,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
-import com.wynntils.models.players.type.Guild;
+import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
@@ -43,7 +43,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class GuildModel extends Model {
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
-            .registerTypeHierarchyAdapter(Guild.class, new Guild.GuildDeserializer())
+            .registerTypeHierarchyAdapter(GuildInfo.class, new GuildInfo.GuildDeserializer())
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
@@ -172,15 +172,15 @@ public class GuildModel extends Model {
         return input;
     }
 
-    public CompletableFuture<Guild> getGuild(String inputName) {
-        CompletableFuture<Guild> future = new CompletableFuture<>();
+    public CompletableFuture<GuildInfo> getGuild(String inputName) {
+        CompletableFuture<GuildInfo> future = new CompletableFuture<>();
 
         String guildToSearch = getGuildNameFromString(inputName);
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildToSearch));
         apiResponse.handleJsonObject(
                 json -> {
-                    Type type = new TypeToken<Guild>() {}.getType();
+                    Type type = new TypeToken<GuildInfo>() {}.getType();
 
                     future.complete(GUILD_PROFILE_GSON.fromJson(json, type));
                 },
