@@ -134,9 +134,9 @@ public class PlayerCommand extends Command {
         completableFuture.whenComplete((player, throwable) -> {
             if (throwable != null) {
                 McUtils.sendMessageToClient(Component.literal(
-                                "Unable to view player guild for " + context.getArgument("username", String.class))
+                                "Unable to view player last seen for " + context.getArgument("username", String.class))
                         .withStyle(ChatFormatting.RED));
-                WynntilsMod.error("Error trying to parse player guild", throwable);
+                WynntilsMod.error("Error trying to parse player last seen", throwable);
             } else {
                 if (player == null) {
                     McUtils.sendMessageToClient(
