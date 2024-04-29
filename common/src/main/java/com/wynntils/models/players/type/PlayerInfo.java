@@ -80,7 +80,8 @@ public record PlayerInfo(
                             guildRank,
                             guildJoinedTimestamp);
                 } else {
-                    return new PlayerInfo(playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);
+                    return new PlayerInfo(
+                            playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);
                 }
             }
         }
