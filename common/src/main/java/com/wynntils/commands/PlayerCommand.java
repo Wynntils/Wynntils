@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -67,52 +66,56 @@ public class PlayerCommand extends Command {
     }
 
     private int lookupPlayerGuild(CommandContext<CommandSourceStack> context) {
-        CompletableFuture.runAsync(() -> {
-            CompletableFuture<PlayerInfo> completableFuture =
-                    Models.Player.getPlayer(context.getArgument("username", String.class));
+        CompletableFuture<PlayerInfo> completableFuture =
+                Models.Player.getPlayer(context.getArgument("username", String.class));
 
-            PlayerInfo player;
-
-            try {
-                player = completableFuture.get();
-            } catch (InterruptedException | ExecutionException e) {
-                completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(
-                        Component.literal("Error trying to parse player stats").withStyle(ChatFormatting.RED)));
-                return;
-            }
-
-            MutableComponent response = Component.literal(player.username()).withStyle(ChatFormatting.DARK_AQUA);
-
-            if (player.guildName() != null) {
-                response.append(Component.literal(" is a ")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(Component.literal(player.guildRank().getGuildDescription())
-                                .withStyle(ChatFormatting.AQUA)
-                                .append(Component.literal(" of ")
-                                        .withStyle(ChatFormatting.GRAY)
-                                        .append(Component.literal(
-                                                        player.guildName() + " [" + player.guildPrefix() + "]")
-                                                .withStyle(ChatFormatting.AQUA)))));
-
-                // Should only be null if the player lookup succeeded but the guild lookup did not
-                if (player.guildJoinTimestamp() != null) {
-                    try {
-                        Date joinedDate = DATE_FORMAT.parse(player.guildJoinTimestamp());
-                        long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
-
-                        response.append(Component.literal("\nThey have been in the guild for ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                        .withStyle(ChatFormatting.AQUA)));
-                    } catch (ParseException e) {
-                        WynntilsMod.error("Error when trying to parse player joined guild date.", e);
-                    }
-                }
+        completableFuture.whenComplete((player, throwable) -> {
+            if (throwable != null) {
+                McUtils.sendMessageToClient(Component.literal(
+                                "Unable to view player guild for " + context.getArgument("username", String.class))
+                        .withStyle(ChatFormatting.RED));
+                WynntilsMod.error("Error trying to parse player guild", throwable);
             } else {
-                response.append(Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
-            }
+                if (player == null) {
+                    McUtils.sendMessageToClient(
+                            Component.literal("Unknown player " + context.getArgument("username", String.class))
+                                    .withStyle(ChatFormatting.RED));
+                    return;
+                }
 
-            completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(response));
+                MutableComponent response = Component.literal(player.username()).withStyle(ChatFormatting.DARK_AQUA);
+
+                if (player.guildName() != null) {
+                    response.append(Component.literal(" is a ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal(player.guildRank().getGuildDescription())
+                                    .withStyle(ChatFormatting.AQUA)
+                                    .append(Component.literal(" of ")
+                                            .withStyle(ChatFormatting.GRAY)
+                                            .append(Component.literal(
+                                                            player.guildName() + " [" + player.guildPrefix() + "]")
+                                                    .withStyle(ChatFormatting.AQUA)))));
+
+                    // Should only be null if the player lookup succeeded but the guild lookup did not
+                    if (player.guildJoinTimestamp() != null) {
+                        try {
+                            Date joinedDate = DATE_FORMAT.parse(player.guildJoinTimestamp());
+                            long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
+
+                            response.append(Component.literal("\nThey have been in the guild for ")
+                                    .withStyle(ChatFormatting.GRAY)
+                                    .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
+                                            .withStyle(ChatFormatting.AQUA)));
+                        } catch (ParseException e) {
+                            WynntilsMod.error("Error when trying to parse player joined guild date.", e);
+                        }
+                    }
+                } else {
+                    response.append(Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
+                }
+
+                McUtils.sendMessageToClient(response);
+            }
         });
 
         context.getSource()
@@ -125,41 +128,45 @@ public class PlayerCommand extends Command {
     }
 
     private int lookupPlayerLastSeen(CommandContext<CommandSourceStack> context) {
-        CompletableFuture.runAsync(() -> {
-            CompletableFuture<PlayerInfo> completableFuture =
-                    Models.Player.getPlayer(context.getArgument("username", String.class));
+        CompletableFuture<PlayerInfo> completableFuture =
+                Models.Player.getPlayer(context.getArgument("username", String.class));
 
-            PlayerInfo player;
-
-            try {
-                player = completableFuture.get();
-            } catch (InterruptedException | ExecutionException e) {
-                completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(
-                        Component.literal("Error trying to parse player stats").withStyle(ChatFormatting.RED)));
-                return;
-            }
-
-            MutableComponent response = Component.literal(player.username()).withStyle(ChatFormatting.AQUA);
-
-            if (player.online()) {
-                response.append(Component.literal(" is online on ")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(Component.literal(player.server()).withStyle(ChatFormatting.GOLD)));
+        completableFuture.whenComplete((player, throwable) -> {
+            if (throwable != null) {
+                McUtils.sendMessageToClient(Component.literal(
+                                "Unable to view player guild for " + context.getArgument("username", String.class))
+                        .withStyle(ChatFormatting.RED));
+                WynntilsMod.error("Error trying to parse player guild", throwable);
             } else {
-                try {
-                    Date joinedDate = DATE_FORMAT.parse(player.lastJoinTimestamp());
-                    long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
-
-                    response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
-                            .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                    .withStyle(ChatFormatting.GOLD)
-                                    .append(Component.literal("ago").withStyle(ChatFormatting.GRAY)));
-                } catch (ParseException e) {
-                    WynntilsMod.error("Error when trying to parse player last join.", e);
+                if (player == null) {
+                    McUtils.sendMessageToClient(
+                            Component.literal("Unknown player " + context.getArgument("username", String.class))
+                                    .withStyle(ChatFormatting.RED));
+                    return;
                 }
-            }
 
-            completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(response));
+                MutableComponent response = Component.literal(player.username()).withStyle(ChatFormatting.AQUA);
+
+                if (player.online()) {
+                    response.append(Component.literal(" is online on ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(Component.literal(player.server()).withStyle(ChatFormatting.GOLD)));
+                } else {
+                    try {
+                        Date joinedDate = DATE_FORMAT.parse(player.lastJoinTimestamp());
+                        long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
+
+                        response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
+                                .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.literal("ago").withStyle(ChatFormatting.GRAY)));
+                    } catch (ParseException e) {
+                        WynntilsMod.error("Error when trying to parse player last join", e);
+                    }
+                }
+
+                McUtils.sendMessageToClient(response);
+            }
         });
 
         context.getSource()
