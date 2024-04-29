@@ -27,7 +27,7 @@ public record WynnPlayerInfo(
         String guildPrefix,
         GuildRank guildRank,
         String guildJoinTimestamp) {
-    public static class PlayerDeserializer implements JsonDeserializer<WynnPlayerInfo> {
+    public static class WynnPlayerInfoDeserializer implements JsonDeserializer<WynnPlayerInfo> {
         @Override
         public WynnPlayerInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
