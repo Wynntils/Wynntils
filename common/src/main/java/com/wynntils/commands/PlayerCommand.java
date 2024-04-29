@@ -11,7 +11,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.models.players.type.PlayerInfo;
+import com.wynntils.models.players.type.WynnPlayerInfo;
 import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.mc.McUtils;
 import java.text.ParseException;
@@ -66,7 +66,7 @@ public class PlayerCommand extends Command {
     }
 
     private int lookupPlayerGuild(CommandContext<CommandSourceStack> context) {
-        CompletableFuture<PlayerInfo> completableFuture =
+        CompletableFuture<WynnPlayerInfo> completableFuture =
                 Models.Player.getPlayer(context.getArgument("username", String.class));
 
         completableFuture.whenComplete((player, throwable) -> {
@@ -128,7 +128,7 @@ public class PlayerCommand extends Command {
     }
 
     private int lookupPlayerLastSeen(CommandContext<CommandSourceStack> context) {
-        CompletableFuture<PlayerInfo> completableFuture =
+        CompletableFuture<WynnPlayerInfo> completableFuture =
                 Models.Player.getPlayer(context.getArgument("username", String.class));
 
         completableFuture.whenComplete((player, throwable) -> {

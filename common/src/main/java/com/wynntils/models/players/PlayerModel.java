@@ -17,6 +17,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
+import com.wynntils.models.players.type.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -40,8 +41,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class PlayerModel extends Model {
     private static final Gson PLAYER_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(
-                    com.wynntils.models.players.type.PlayerInfo.class,
-                    new com.wynntils.models.players.type.PlayerInfo.PlayerDeserializer())
+                    WynnPlayerInfo.class,
+                    new WynnPlayerInfo.PlayerDeserializer())
             .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
@@ -200,13 +201,13 @@ public final class PlayerModel extends Model {
                 });
     }
 
-    public CompletableFuture<com.wynntils.models.players.type.PlayerInfo> getPlayer(String username) {
-        CompletableFuture<com.wynntils.models.players.type.PlayerInfo> future = new CompletableFuture<>();
+    public CompletableFuture<WynnPlayerInfo> getPlayer(String username) {
+        CompletableFuture<WynnPlayerInfo> future = new CompletableFuture<>();
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
         apiResponse.handleJsonObject(
                 json -> {
-                    Type type = new TypeToken<com.wynntils.models.players.type.PlayerInfo>() {}.getType();
+                    Type type = new TypeToken<WynnPlayerInfo>() {}.getType();
 
                     future.complete(PLAYER_GSON.fromJson(json, type));
                 },

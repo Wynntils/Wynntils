@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public record PlayerInfo(
+public record WynnPlayerInfo(
         String username,
         boolean online,
         String server,
@@ -27,9 +27,9 @@ public record PlayerInfo(
         String guildPrefix,
         GuildRank guildRank,
         String guildJoinTimestamp) {
-    public static class PlayerDeserializer implements JsonDeserializer<PlayerInfo> {
+    public static class PlayerDeserializer implements JsonDeserializer<WynnPlayerInfo> {
         @Override
-        public PlayerInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
+        public WynnPlayerInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
@@ -70,7 +70,7 @@ public record PlayerInfo(
 
                     String guildJoinedTimestamp = guildJoinedTimestampOpt.orElse(null);
 
-                    return new PlayerInfo(
+                    return new WynnPlayerInfo(
                             playerUsername,
                             online,
                             onlineServer,
@@ -80,7 +80,7 @@ public record PlayerInfo(
                             guildRank,
                             guildJoinedTimestamp);
                 } else {
-                    return new PlayerInfo(
+                    return new WynnPlayerInfo(
                             playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);
                 }
             }
