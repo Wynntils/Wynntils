@@ -73,6 +73,9 @@ public enum Texture {
     ARROW_LEFT_ICON("icons/generic/arrow_left_icon.png", 16, 16),
     BOAT_ICON("icons/generic/boat_icon.png", 15, 14),
     CHALLENGES_ICON("icons/generic/challenges_icon.png", 9, 14),
+    CHECKMARK_GRAY("icons/generic/check_gray.png", 16, 16),
+    CHECKMARK_GREEN("icons/generic/check_green.png", 16, 16),
+    CHECKMARK_YELLOW("icons/generic/check_yellow.png", 16, 16),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
@@ -80,8 +83,8 @@ public enum Texture {
     INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
-    QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
     QUESTION_MARK("icons/generic/question_mark.png", 4, 7),
+    QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
@@ -210,6 +213,14 @@ public enum Texture {
     DESTINATION_LIST("seaskipper/destination_list_background.png", 151, 226),
     TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
+
+    // region Territory Magagement Background
+    TERRITORY_MANAGEMENT_BACKGROUND("territory_management/territory_management_background.png", 256, 136),
+    TERRITORY_ITEM("territory_management/territory.png", 16, 16),
+    TERRITORY_ITEM_HQ("territory_management/territory_hq.png", 16, 16),
+    TERRITORY_ITEM_ALERT("territory_management/territory_alert.png", 16, 16),
+    TERRITORY_SIDEBAR("territory_management/territory_sidebar.png", 20, 136),
+    TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
