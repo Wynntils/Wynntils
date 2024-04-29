@@ -23,10 +23,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -218,10 +223,16 @@ public class ItemHandler extends Handler {
      * It might have additional lines added, but these are not checked.
      */
     private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
-        List<StyledText> firstLines = LoreUtils.getLore(firstItem);
-        List<StyledText> secondLines = LoreUtils.getLore(secondItem);
-        int firstLinesLen = firstLines.size();
-        int secondLinesLen = secondLines.size();
+        ListTag firstLoreTags = LoreUtils.getLoreTag(firstItem);
+        ListTag secondLoreTags = LoreUtils.getLoreTag(secondItem);
+
+        // Tags implement equals, so we can use this to check if the lore is identical
+        // This is the most common short-circuit case
+        if (Objects.equals(firstLoreTags, secondLoreTags)) return true;
+
+        // Continue, as we allow 3 lines to differ
+        int firstLinesLen = firstLoreTags.size();
+        int secondLinesLen = secondLoreTags.size();
 
         // Only allow a maximum number of additional lines in the longer tooltip
         if (Math.abs(firstLinesLen - secondLinesLen) > 3) return false;
@@ -231,8 +242,8 @@ public class ItemHandler extends Handler {
         if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
 
         for (int i = 0; i < linesToCheck; i++) {
-            StyledText firstLine = firstLines.get(i);
-            StyledText secondLine = secondLines.get(i);
+            StyledText firstLine = StyledText.fromJson(firstLoreTags.get(i).getAsString());
+            StyledText secondLine = StyledText.fromJson(secondLoreTags.get(i).getAsString());
 
             if (!firstLine.equals(secondLine)) return false;
         }
