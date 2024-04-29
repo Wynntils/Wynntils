@@ -7,10 +7,12 @@ package com.wynntils.models.players;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -23,6 +25,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,9 +33,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -166,6 +173,78 @@ public class GuildModel extends Model {
         }
 
         return input;
+    }
+
+    public CompletableFuture<MutableComponent> getGuildOnlineMembers(String inputName) {
+        CompletableFuture<MutableComponent> future = new CompletableFuture<>();
+
+        String guildToSearch = getGuildNameFromString(inputName);
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildToSearch));
+        apiResponse.handleJsonObject(
+                json -> {
+                    if (!json.has("name")) {
+                        future.complete(Component.literal("Unable to check online members for " + guildToSearch)
+                                .withStyle(ChatFormatting.RED));
+                        return;
+                    }
+
+                    MutableComponent response = Component.literal(
+                                    json.get("name").getAsString() + " ["
+                                            + json.get("prefix").getAsString() + "]")
+                            .withStyle(ChatFormatting.DARK_AQUA);
+
+                    response.append(Component.literal(" has ").withStyle(ChatFormatting.GRAY));
+
+                    JsonObject guildMembers = json.getAsJsonObject("members");
+
+                    int totalCount = guildMembers.get("total").getAsInt();
+                    int onlineCount = json.get("online").getAsInt();
+
+                    response.append(Component.literal(onlineCount + "/" + totalCount)
+                                    .withStyle(ChatFormatting.GOLD))
+                            .append(Component.literal(" members currently online:")
+                                    .withStyle(ChatFormatting.GRAY));
+
+                    for (String rank : guildMembers.keySet()) {
+                        if (rank.equals("total")) continue;
+
+                        GuildRank guildRank = GuildRank.fromName(rank);
+
+                        JsonObject roleMembers = guildMembers.getAsJsonObject(rank);
+
+                        List<String> onlineMembers = new ArrayList<>();
+
+                        for (String username : roleMembers.keySet()) {
+                            JsonObject memberInfo = roleMembers.getAsJsonObject(username);
+
+                            if (memberInfo.get("online").getAsBoolean()) {
+                                onlineMembers.add(username);
+                            }
+                        }
+
+                        if (onlineMembers.isEmpty()) continue;
+
+                        if (guildRank != null) {
+                            response.append(Component.literal("\n" + guildRank.getGuildDescription() + ":\n")
+                                    .withStyle(ChatFormatting.GOLD));
+                        }
+
+                        for (String guildMember : onlineMembers) {
+                            response.append(Component.literal(guildMember).withStyle(ChatFormatting.AQUA));
+
+                            if (onlineMembers.indexOf(guildMember) != onlineMembers.size() - 1) {
+                                response.append(Component.literal(", ").withStyle(ChatFormatting.GRAY));
+                            }
+                        }
+                    }
+
+                    future.complete(response);
+                },
+                onError -> future.complete(Component.literal("Unable to check online members for " + guildToSearch)
+                        .withStyle(ChatFormatting.RED)));
+
+        return future;
     }
 
     public CustomColor getColor(String guildName) {
