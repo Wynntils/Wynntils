@@ -20,6 +20,7 @@ import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -78,7 +79,7 @@ public final class TerritoryModel extends Model {
         return territoryProfileMap.values().stream()
                 .filter(profile -> !excludedTerritories.contains(profile))
                 .filter(profile -> profile.getName().startsWith(shortName))
-                .findFirst()
+                .min(Comparator.comparing(TerritoryProfile::getName))
                 .orElse(null);
     }
 
