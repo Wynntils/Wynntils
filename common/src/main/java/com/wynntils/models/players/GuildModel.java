@@ -41,11 +41,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildModel extends Model {
-    private static final Gson GUILD_GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(Guild.class, new Guild.GuildDeserializer())
-            .create();
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
+            .registerTypeHierarchyAdapter(Guild.class, new Guild.GuildDeserializer())
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
@@ -184,7 +182,7 @@ public class GuildModel extends Model {
                 json -> {
                     Type type = new TypeToken<Guild>() {}.getType();
 
-                    future.complete(GUILD_GSON.fromJson(json, type));
+                    future.complete(GUILD_PROFILE_GSON.fromJson(json, type));
                 },
                 onError -> future.complete(null));
 
