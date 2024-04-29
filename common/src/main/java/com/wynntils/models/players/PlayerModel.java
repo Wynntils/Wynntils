@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.players;
 
-import com.google.gson.JsonObject;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -15,13 +17,12 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
-import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.TimedSet;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -37,6 +38,11 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
+    private static final Gson PLAYER_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(
+                    com.wynntils.models.players.type.Player.class,
+                    new com.wynntils.models.players.type.Player.PlayerDeserializer())
+            .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
 
@@ -197,78 +203,12 @@ public final class PlayerModel extends Model {
     public CompletableFuture<com.wynntils.models.players.type.Player> getPlayer(String username) {
         CompletableFuture<com.wynntils.models.players.type.Player> future = new CompletableFuture<>();
 
-        ApiResponse playerApiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
-        playerApiResponse.handleJsonObject(
-                playerJson -> {
-                    if (!playerJson.has("username")) {
-                        future.complete(null);
-                    } else {
-                        String playerUsername = playerJson.get("username").getAsString();
-                        boolean online = playerJson.get("online").getAsBoolean();
-                        String onlineServer = playerJson.get("server").isJsonNull()
-                                ? null
-                                : playerJson.get("server").getAsString();
-                        String lastJoinTimestamp = playerJson.get("lastJoin").getAsString();
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
+        apiResponse.handleJsonObject(
+                json -> {
+                    Type type = new TypeToken<com.wynntils.models.players.type.Player>() {}.getType();
 
-                        if (!playerJson.get("guild").isJsonNull()) {
-                            JsonObject guildInfo = playerJson.getAsJsonObject("guild");
-
-                            String guildName = guildInfo.get("name").getAsString();
-                            String guildPrefix = guildInfo.get("prefix").getAsString();
-                            GuildRank guildRank =
-                                    GuildRank.fromName(guildInfo.get("rank").getAsString());
-
-                            ApiResponse guildApiResponse =
-                                    Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildName));
-                            guildApiResponse.handleJsonObject(
-                                    guildJson -> {
-                                        if (!guildJson.has("name")) {
-                                            future.complete(new com.wynntils.models.players.type.Player(
-                                                    playerUsername,
-                                                    online,
-                                                    onlineServer,
-                                                    lastJoinTimestamp,
-                                                    null,
-                                                    null,
-                                                    null,
-                                                    null));
-                                            return;
-                                        }
-
-                                        String guildJoinTimestamp = guildJson
-                                                .getAsJsonObject("members")
-                                                .getAsJsonObject(
-                                                        guildRank.getName().toLowerCase(Locale.ROOT))
-                                                .getAsJsonObject(playerJson
-                                                        .get("username")
-                                                        .getAsString())
-                                                .get("joined")
-                                                .getAsString();
-
-                                        future.complete(new com.wynntils.models.players.type.Player(
-                                                playerUsername,
-                                                online,
-                                                onlineServer,
-                                                lastJoinTimestamp,
-                                                guildName,
-                                                guildPrefix,
-                                                guildRank,
-                                                guildJoinTimestamp));
-                                    },
-                                    onError -> future.complete(new com.wynntils.models.players.type.Player(
-                                            playerUsername,
-                                            online,
-                                            onlineServer,
-                                            lastJoinTimestamp,
-                                            null,
-                                            null,
-                                            null,
-                                            null)));
-                        } else {
-                            future.complete(new com.wynntils.models.players.type.Player(
-                                    playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null));
-                        }
-                    }
+                    future.complete(PLAYER_GSON.fromJson(json, type));
                 },
                 onError -> future.complete(null));
 

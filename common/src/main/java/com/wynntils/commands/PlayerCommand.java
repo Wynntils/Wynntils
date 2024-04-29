@@ -94,16 +94,19 @@ public class PlayerCommand extends Command {
                                                         player.guildName() + " [" + player.guildPrefix() + "]")
                                                 .withStyle(ChatFormatting.AQUA)))));
 
-                try {
-                    Date joinedDate = DATE_FORMAT.parse(player.guildJoinTimestamp());
-                    long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
+                // Should only be null if the player lookup succeeded but the guild lookup did not
+                if (player.guildJoinTimestamp() != null) {
+                    try {
+                        Date joinedDate = DATE_FORMAT.parse(player.guildJoinTimestamp());
+                        long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
 
-                    response.append(Component.literal("\nThey have been in the guild for ")
-                            .withStyle(ChatFormatting.GRAY)
-                            .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                    .withStyle(ChatFormatting.AQUA)));
-                } catch (ParseException e) {
-                    WynntilsMod.error("Error when trying to parse player joined guild date.", e);
+                        response.append(Component.literal("\nThey have been in the guild for ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
+                                        .withStyle(ChatFormatting.AQUA)));
+                    } catch (ParseException e) {
+                        WynntilsMod.error("Error when trying to parse player joined guild date.", e);
+                    }
                 }
             } else {
                 response.append(Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
