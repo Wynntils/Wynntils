@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.item;
@@ -29,9 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
