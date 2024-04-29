@@ -44,6 +44,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuildModel extends Model {
+    private static final Gson GUILD_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(Guild.class, new Guild.GuildDeserializer())
+            .create();
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
             .create();
@@ -182,68 +185,9 @@ public class GuildModel extends Model {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildToSearch));
         apiResponse.handleJsonObject(
                 json -> {
-                    if (!json.has("name")) {
-                        future.complete(null);
-                        return;
-                    }
+                    Type type = new TypeToken<Guild>() {}.getType();
 
-                    String name = json.get("name").getAsString();
-                    String prefix = json.get("prefix").getAsString();
-                    int level = json.get("level").getAsInt();
-                    int xpPercent = json.get("xpPercent").getAsInt();
-                    int territories = json.get("territories").getAsInt();
-                    long wars = json.get("wars").isJsonNull()
-                            ? 0L
-                            : json.get("wars").getAsLong();
-                    String createdTimestamp = json.get("created").getAsString();
-
-                    JsonObject guildMembersJson = json.getAsJsonObject("members");
-
-                    int totalMembers = guildMembersJson.get("total").getAsInt();
-                    int onlineMembers = json.get("online").getAsInt();
-
-                    List<GuildMember> guildMembers = new ArrayList<>();
-
-                    for (String rank : guildMembersJson.keySet()) {
-                        if (rank.equals("total")) continue;
-
-                        GuildRank currentGuildRank = GuildRank.fromName(rank);
-
-                        JsonObject roleMembers = guildMembersJson.getAsJsonObject(rank);
-
-                        for (String username : roleMembers.keySet()) {
-                            JsonObject memberInfo = roleMembers.getAsJsonObject(username);
-                            boolean isOnline = memberInfo.get("online").getAsBoolean();
-                            String onlineServer = memberInfo.get("server").isJsonNull()
-                                    ? null
-                                    : memberInfo.get("server").getAsString();
-                            long contributedXp = memberInfo.get("contributed").getAsLong();
-                            int contributionRank =
-                                    memberInfo.get("contributionRank").getAsInt();
-                            String joinedTimestamp = memberInfo.get("joined").getAsString();
-
-                            guildMembers.add(new GuildMember(
-                                    username,
-                                    currentGuildRank,
-                                    isOnline,
-                                    onlineServer,
-                                    contributedXp,
-                                    contributionRank,
-                                    joinedTimestamp));
-                        }
-                    }
-
-                    future.complete(new Guild(
-                            name,
-                            prefix,
-                            level,
-                            xpPercent,
-                            territories,
-                            wars,
-                            createdTimestamp,
-                            totalMembers,
-                            onlineMembers,
-                            guildMembers));
+                    future.complete(GUILD_GSON.fromJson(json, type));
                 },
                 onError -> future.complete(null));
 
