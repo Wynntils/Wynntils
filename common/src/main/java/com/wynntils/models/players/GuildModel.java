@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -18,6 +19,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
+import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
@@ -30,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -40,6 +43,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class GuildModel extends Model {
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
+            .registerTypeHierarchyAdapter(GuildInfo.class, new GuildInfo.GuildDeserializer())
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
@@ -166,6 +170,23 @@ public class GuildModel extends Model {
         }
 
         return input;
+    }
+
+    public CompletableFuture<GuildInfo> getGuild(String inputName) {
+        CompletableFuture<GuildInfo> future = new CompletableFuture<>();
+
+        String guildToSearch = getGuildNameFromString(inputName);
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildToSearch));
+        apiResponse.handleJsonObject(
+                json -> {
+                    Type type = new TypeToken<GuildInfo>() {}.getType();
+
+                    future.complete(GUILD_PROFILE_GSON.fromJson(json, type));
+                },
+                onError -> future.complete(null));
+
+        return future;
     }
 
     public CustomColor getColor(String guildName) {

@@ -34,7 +34,7 @@ public enum GuildRank {
 
     public static GuildRank fromName(String string) {
         for (GuildRank rank : values()) {
-            if (rank.name.equalsIgnoreCase(string)) {
+            if (rank.getName().equalsIgnoreCase(string)) {
                 return rank;
             }
         }
