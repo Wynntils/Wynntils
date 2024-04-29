@@ -15,6 +15,8 @@ import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildMemberInfo;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.mc.McUtils;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
@@ -74,7 +76,11 @@ public class OnlineMembersCommand extends Command {
                                 .withStyle(ChatFormatting.GOLD))
                         .append(Component.literal(" members currently online:").withStyle(ChatFormatting.GRAY));
 
-                for (GuildRank guildRank : GuildRank.values()) {
+                List<GuildRank> guildRanks = Arrays.asList(GuildRank.values());
+                // Reversed so online members are sorted from most to least important
+                Collections.reverse(guildRanks);
+
+                for (GuildRank guildRank : guildRanks) {
                     List<GuildMemberInfo> onlineRankMembers = guild.getOnlineMembersbyRank(guildRank);
 
                     if (!onlineRankMembers.isEmpty()) {

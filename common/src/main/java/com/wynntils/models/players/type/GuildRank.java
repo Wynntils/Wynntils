@@ -5,12 +5,12 @@
 package com.wynntils.models.players.type;
 
 public enum GuildRank {
-    OWNER("Owner", "★★★★★"),
-    CHIEF("Chief", "★★★★"),
-    STRATEGIST("Strategist", "★★★"),
-    CAPTAIN("Captain", "★★"),
+    RECRUIT("Recruit", ""),
     RECRUITER("Recruiter", "★"),
-    RECRUIT("Recruit", "");
+    CAPTAIN("Captain", "★★"),
+    STRATEGIST("Strategist", "★★★"),
+    CHIEF("Chief", "★★★★"),
+    OWNER("Owner", "★★★★★");
 
     private final String name;
     private final String stars;
