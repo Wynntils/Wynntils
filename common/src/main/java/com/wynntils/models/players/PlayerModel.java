@@ -18,12 +18,8 @@ import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.TimedSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,18 +31,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
-    private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
 
@@ -204,69 +194,48 @@ public final class PlayerModel extends Model {
                 });
     }
 
-    public CompletableFuture<MutableComponent> getPlayerGuild(String username) {
-        CompletableFuture<MutableComponent> future = new CompletableFuture<>();
+    public CompletableFuture<com.wynntils.models.players.type.Player> getPlayer(String username) {
+        CompletableFuture<com.wynntils.models.players.type.Player> future = new CompletableFuture<>();
 
         ApiResponse playerApiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
         playerApiResponse.handleJsonObject(
                 playerJson -> {
-                    if (playerJson.has("Error")) {
-                        future.complete(
-                                Component.literal("Unknown player " + username).withStyle(ChatFormatting.RED));
-                    } else if (!playerJson.has("username")) { // Handles multi selector
-                        // Display all UUID's for known players with this username
-                        // with click events to run the command with the UUID instead.
-                        // Multi selector doesn't give any other identifiable
-                        // information besides rank which doesn't really help
-                        MutableComponent response = Component.literal("Multiple players found with the username ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.literal(username).withStyle(ChatFormatting.RED))
-                                .append(Component.literal(":").withStyle(ChatFormatting.GRAY));
-
-                        for (String uuid : playerJson.keySet()) {
-                            MutableComponent current = Component.literal("\n")
-                                    .append(Component.literal(uuid)
-                                            .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.UNDERLINE));
-
-                            current.withStyle(style -> style.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/player guild " + uuid)));
-
-                            response.append(current);
-                        }
-
-                        future.complete(response);
+                    if (!playerJson.has("username")) {
+                        future.complete(null);
                     } else {
-                        MutableComponent response = Component.literal(
-                                        playerJson.get("username").getAsString())
-                                .withStyle(ChatFormatting.DARK_AQUA);
+                        String playerUsername = playerJson.get("username").getAsString();
+                        boolean online = playerJson.get("online").getAsBoolean();
+                        String onlineServer = playerJson.get("server").isJsonNull()
+                                ? null
+                                : playerJson.get("server").getAsString();
+                        String lastJoinTimestamp = playerJson.get("lastJoin").getAsString();
 
                         if (!playerJson.get("guild").isJsonNull()) {
                             JsonObject guildInfo = playerJson.getAsJsonObject("guild");
-                            String name = guildInfo.get("name").getAsString();
-                            String prefix = guildInfo.get("prefix").getAsString();
 
+                            String guildName = guildInfo.get("name").getAsString();
+                            String guildPrefix = guildInfo.get("prefix").getAsString();
                             GuildRank guildRank =
                                     GuildRank.fromName(guildInfo.get("rank").getAsString());
 
-                            response.append(Component.literal(" is a ")
-                                    .withStyle(ChatFormatting.GRAY)
-                                    .append(Component.literal(guildRank.getGuildDescription())
-                                            .withStyle(ChatFormatting.AQUA)
-                                            .append(Component.literal(" of ")
-                                                    .withStyle(ChatFormatting.GRAY)
-                                                    .append(Component.literal(name + " [" + prefix + "]")
-                                                            .withStyle(ChatFormatting.AQUA)))));
-
                             ApiResponse guildApiResponse =
-                                    Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", name));
+                                    Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildName));
                             guildApiResponse.handleJsonObject(
                                     guildJson -> {
                                         if (!guildJson.has("name")) {
-                                            future.complete(response);
+                                            future.complete(new com.wynntils.models.players.type.Player(
+                                                    playerUsername,
+                                                    online,
+                                                    onlineServer,
+                                                    lastJoinTimestamp,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null));
                                             return;
                                         }
 
-                                        String joined = guildJson
+                                        String guildJoinTimestamp = guildJson
                                                 .getAsJsonObject("members")
                                                 .getAsJsonObject(
                                                         guildRank.getName().toLowerCase(Locale.ROOT))
@@ -276,106 +245,32 @@ public final class PlayerModel extends Model {
                                                 .get("joined")
                                                 .getAsString();
 
-                                        try {
-                                            Date joinedDate = DATE_FORMAT.parse(joined);
-                                            long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
-
-                                            response.append(Component.literal("\nThey have been in the guild for ")
-                                                    .withStyle(ChatFormatting.GRAY)
-                                                    .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                                            .withStyle(ChatFormatting.AQUA)));
-                                        } catch (ParseException e) {
-                                            WynntilsMod.error(
-                                                    "Error when trying to parse player joined guild date.", e);
-                                        }
-
-                                        future.complete(response);
+                                        future.complete(new com.wynntils.models.players.type.Player(
+                                                playerUsername,
+                                                online,
+                                                onlineServer,
+                                                lastJoinTimestamp,
+                                                guildName,
+                                                guildPrefix,
+                                                guildRank,
+                                                guildJoinTimestamp));
                                     },
-                                    onError -> future.complete(response));
+                                    onError -> future.complete(new com.wynntils.models.players.type.Player(
+                                            playerUsername,
+                                            online,
+                                            onlineServer,
+                                            lastJoinTimestamp,
+                                            null,
+                                            null,
+                                            null,
+                                            null)));
                         } else {
-                            response.append(
-                                    Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
-
-                            future.complete(response);
+                            future.complete(new com.wynntils.models.players.type.Player(
+                                    playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null));
                         }
                     }
                 },
-                onError -> future.complete(Component.literal("Unable to get player guild for " + username)
-                        .withStyle(ChatFormatting.RED)));
-
-        return future;
-    }
-
-    public CompletableFuture<MutableComponent> getPlayerLastSeen(String username) {
-        CompletableFuture<MutableComponent> future = new CompletableFuture<>();
-
-        ApiResponse playerApiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
-        playerApiResponse.handleJsonObject(
-                playerJson -> {
-                    if (playerJson.has("Error")) {
-                        future.complete(
-                                Component.literal("Unknown player " + username).withStyle(ChatFormatting.RED));
-                    } else if (!playerJson.has("username")) { // Handles multi selector
-                        // Display all UUID's for known players with this username
-                        // with click events to run the command with the UUID instead.
-                        // Multi selector doesn't give any other identifiable
-                        // information besides rank which doesn't really help
-                        MutableComponent response = Component.literal("Multiple players found with the username ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.literal(username).withStyle(ChatFormatting.RED))
-                                .append(Component.literal(":").withStyle(ChatFormatting.GRAY));
-
-                        for (String uuid : playerJson.keySet()) {
-                            MutableComponent current = Component.literal("\n")
-                                    .append(Component.literal(uuid)
-                                            .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.UNDERLINE));
-
-                            current.withStyle(style -> style.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/player lastseen " + uuid)));
-
-                            response.append(current);
-                        }
-
-                        future.complete(response);
-                    } else {
-                        MutableComponent response;
-
-                        if (playerJson.get("online").getAsBoolean()) {
-                            response = Component.literal(
-                                            playerJson.get("username").getAsString())
-                                    .withStyle(ChatFormatting.AQUA)
-                                    .append(Component.literal(" is online on ")
-                                            .withStyle(ChatFormatting.GRAY)
-                                            .append(Component.literal(playerJson
-                                                            .get("server")
-                                                            .getAsString())
-                                                    .withStyle(ChatFormatting.GOLD)));
-                        } else {
-                            try {
-                                Date joinedDate = DATE_FORMAT.parse(
-                                        playerJson.get("lastJoin").getAsString());
-                                long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
-
-                                response = Component.literal(
-                                                playerJson.get("username").getAsString())
-                                        .withStyle(ChatFormatting.AQUA)
-                                        .append(Component.literal(" was last seen ")
-                                                .withStyle(ChatFormatting.GRAY))
-                                        .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                                .withStyle(ChatFormatting.GOLD)
-                                                .append(Component.literal("ago").withStyle(ChatFormatting.GRAY)));
-                            } catch (ParseException e) {
-                                WynntilsMod.error("Error when trying to parse player last join.", e);
-                                response = Component.literal("Failed to get player last seen")
-                                        .withStyle(ChatFormatting.RED);
-                            }
-                        }
-
-                        future.complete(response);
-                    }
-                },
-                onError -> future.complete(Component.literal("Unable to get player last seen for " + username)
-                        .withStyle(ChatFormatting.RED)));
+                onError -> future.complete(null));
 
         return future;
     }

@@ -8,7 +8,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.players.type.Guild;
@@ -58,7 +57,6 @@ public class OnlineMembersCommand extends Command {
             try {
                 guild = completableFuture.get();
             } catch (InterruptedException | ExecutionException e) {
-                WynntilsMod.error("Error trying to parse guild online members");
                 completableFuture.whenComplete((result, throwable) ->
                         McUtils.sendMessageToClient(Component.literal("Error trying to parse guild online members")
                                 .withStyle(ChatFormatting.RED)));
