@@ -174,7 +174,7 @@ public class GuildModel extends Model {
         return input;
     }
 
-    public CompletableFuture<Guild> getGuildOnlineMembers(String inputName) {
+    public CompletableFuture<Guild> getGuild(String inputName) {
         CompletableFuture<Guild> future = new CompletableFuture<>();
 
         String guildToSearch = getGuildNameFromString(inputName);

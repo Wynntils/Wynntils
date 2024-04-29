@@ -50,7 +50,7 @@ public class OnlineMembersCommand extends Command {
     private int lookupGuild(CommandContext<CommandSourceStack> context) {
         CompletableFuture.runAsync(() -> {
             CompletableFuture<Guild> completableFuture =
-                    Models.Guild.getGuildOnlineMembers(context.getArgument("guildName", String.class));
+                    Models.Guild.getGuild(context.getArgument("guildName", String.class));
 
             Guild guild;
 
