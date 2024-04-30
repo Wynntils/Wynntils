@@ -85,12 +85,12 @@
   },
   {
     "id": "dataStaticAbilities",
-    "md5": "986503d68ae7433ab125366f382cb914",
+    "md5": "fd5e9a5b76988ae00265695ee90d622a",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/abilities.json"
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "26f32fb8e2a8d31c49747a8410a63acb",
+    "md5": "8d329a3c3d31d2c05cf594d2dd016609",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
   },
   {

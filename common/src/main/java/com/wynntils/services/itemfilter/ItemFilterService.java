@@ -10,6 +10,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.territories.type.GuildResource;
+import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.services.itemfilter.filters.AnyStatFilters;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
@@ -38,6 +40,13 @@ import com.wynntils.services.itemfilter.statproviders.TierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertsStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryNameStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryProductionStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryStorageStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryTreasuryStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryUpgradeLevelStatProvider;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.SortDirection;
@@ -81,7 +90,8 @@ public class ItemFilterService extends Service {
         return statFilters.stream().map(Pair::value).toList();
     }
 
-    public ItemSearchQuery createSearchQuery(String queryString, boolean supportsSorting) {
+    public ItemSearchQuery createSearchQuery(
+            String queryString, boolean supportsSorting, List<ItemProviderType> supportedProviderTypes) {
         StatProviderFilterMap filters = new StatProviderFilterMap();
         List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders = new ArrayList<>();
 
@@ -117,7 +127,7 @@ public class ItemFilterService extends Service {
                     }
 
                     ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> statSortListOrError =
-                            getStatSortOrder(inputString);
+                            getStatSortOrder(inputString, supportedProviderTypes);
 
                     if (statSortListOrError.hasError()) {
                         colorRanges.add(Pair.of(
@@ -163,7 +173,8 @@ public class ItemFilterService extends Service {
                     continue;
                 }
 
-                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError = getItemStatProvider(keyString);
+                ErrorOr<ItemStatProvider<?>> itemStatProviderOrError =
+                        getItemStatProvider(keyString, supportedProviderTypes);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
                 if (itemStatProviderOrError.hasError()) {
@@ -243,7 +254,7 @@ public class ItemFilterService extends Service {
      * If the item is not a WynnItem, this method always returns false.
      *
      * @param searchQuery the search query
-     * @param itemStack the item to check
+     * @param itemStack   the item to check
      * @return true if the item matches the search query, false otherwise
      */
     public boolean matches(ItemSearchQuery searchQuery, ItemStack itemStack) {
@@ -261,7 +272,8 @@ public class ItemFilterService extends Service {
 
     /**
      * Filters and sorts the given list of items according to the given search query.
-     * @param searchQuery the search query
+     *
+     * @param searchQuery  the search query
      * @param originalList the list of items to filter and sort
      * @return the filtered and sorted list of items
      */
@@ -314,11 +326,15 @@ public class ItemFilterService extends Service {
 
     /**
      * Returns an item stat provider for the given alias, or an error string if the alias does not match any stat providers.
-     * @param name an alias of the stat provider
+     *
+     * @param name                   an alias of the stat provider
+     * @param supportedProviderTypes the list of supported provider types
      * @return the item stat provider, or an error string if the alias does not match any stat providers.
      */
-    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(String name) {
+    private ErrorOr<ItemStatProvider<?>> getItemStatProvider(
+            String name, List<ItemProviderType> supportedProviderTypes) {
         Optional<ItemStatProvider<?>> itemStatProviderOpt = itemStatProviders.stream()
+                .filter(provider -> provider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
                 .filter(filter ->
                         filter.getName().equals(name) || filter.getAliases().contains(name))
                 .findFirst();
@@ -377,7 +393,8 @@ public class ItemFilterService extends Service {
                                 String.join(" ", searchQuery.plainTextTokens()).toLowerCase(Locale.ROOT));
     }
 
-    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(String inputString) {
+    private ErrorOr<List<Pair<SortDirection, ItemStatProvider<?>>>> getStatSortOrder(
+            String inputString, List<ItemProviderType> supportedProviderTypes) {
         List<Pair<SortDirection, String>> providerNamesWithDirection = Arrays.stream(inputString.split(LIST_SEPARATOR))
                 .map(String::trim)
                 .filter(s -> !s.isBlank())
@@ -391,7 +408,7 @@ public class ItemFilterService extends Service {
                 .toList();
 
         List<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> errorsOrProviders = providerNamesWithDirection.stream()
-                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value())))
+                .map(pair -> Pair.of(pair.key(), getItemStatProvider(pair.value(), supportedProviderTypes)))
                 .toList();
 
         Optional<Pair<SortDirection, ErrorOr<ItemStatProvider<?>>>> firstError = errorsOrProviders.stream()
@@ -449,6 +466,21 @@ public class ItemFilterService extends Service {
         }
 
         registerStatProvider(new FavoriteStatProvider());
+
+        // Territory stat providers
+        registerStatProvider(new TerritoryNameStatProvider());
+
+        for (GuildResource resource : GuildResource.values()) {
+            registerStatProvider(new TerritoryProductionStatProvider(resource));
+            registerStatProvider(new TerritoryStorageStatProvider(resource));
+        }
+
+        for (TerritoryUpgrade upgrade : TerritoryUpgrade.values()) {
+            registerStatProvider(new TerritoryUpgradeLevelStatProvider(upgrade));
+        }
+
+        registerStatProvider(new TerritoryTreasuryStatProvider());
+        registerStatProvider(new TerritoryAlertsStatProvider());
     }
 
     private void registerStatProvider(ItemStatProvider<?> statProvider) {

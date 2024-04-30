@@ -7,37 +7,34 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
-import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
-    private WynntilsButton helperButton;
-
-    protected WynntilsGuideScreen(Component component) {
+    protected WynntilsGuideScreen(Component component, List<ItemProviderType> supportedProviderTypes) {
         super(component);
 
         // Override the search widget with our own
         this.searchWidget = new ItemSearchWidget(
-                0, -22, Texture.CONTENT_BOOK_BACKGROUND.width(), 20, true, q -> reloadElements(), this);
+                0,
+                -22,
+                Texture.CONTENT_BOOK_BACKGROUND.width(),
+                20,
+                supportedProviderTypes,
+                true,
+                q -> reloadElements(),
+                this);
     }
 
     @Override
     protected void doInit() {
         super.doInit();
-
-        helperButton = new ItemSearchHelperWidget(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 17,
-                -19,
-                (int) (Texture.INFO.width() / 1.7f),
-                (int) (Texture.INFO.height() / 1.7f),
-                Texture.INFO,
-                true);
-        this.addRenderableWidget(helperButton);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -73,19 +70,6 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         }
 
         reloadElementsList(itemSearchWidget.getSearchQuery());
-    }
-
-    @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        final float translationX = getTranslationX();
-        final float translationY = getTranslationY();
-
-        // Don't want right click clearing the text input
-        if (helperButton != null && helperButton.mouseClicked(mouseX - translationX, mouseY - translationY, button)) {
-            return false;
-        }
-
-        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     protected abstract void reloadElementsList(ItemSearchQuery searchQuery);

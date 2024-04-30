@@ -2,14 +2,13 @@
  * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.containers;
+package com.wynntils.models.inventory;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.models.containers.type.InventoryAccessory;
-import com.wynntils.models.containers.type.InventoryWatcher;
+import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -27,7 +26,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class PlayerInventoryModel extends Model {
+public final class InventoryModel extends Model {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
@@ -35,7 +34,7 @@ public final class PlayerInventoryModel extends Model {
     private final InventoryWatcher emptySlotWatcher = new InventoryWatcher(ItemStack::isEmpty);
     private final List<InventoryWatcher> watchers = new ArrayList<>(List.of(emptySlotWatcher));
 
-    public PlayerInventoryModel() {
+    public InventoryModel() {
         super(List.of());
     }
 
