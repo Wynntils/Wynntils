@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
@@ -178,18 +179,10 @@ public final class PartStyle {
     }
 
     public Style getStyle() {
-        Style reconstructedStyle = Style.EMPTY
-                .withObfuscated(obfuscated)
-                .withBold(bold)
-                .withStrikethrough(strikethrough)
-                .withUnderlined(underlined)
-                .withItalic(italic)
-                .withClickEvent(clickEvent)
-                .withHoverEvent(hoverEvent);
-
-        if (color != CustomColor.NONE) {
-            reconstructedStyle = reconstructedStyle.withColor(color.asInt());
-        }
+        // Optimization: Use raw Style constructor, instead of the builder.
+        TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt());
+        Style reconstructedStyle = new Style(
+                textColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent, null, null);
 
         return reconstructedStyle;
     }
@@ -223,6 +216,14 @@ public final class PartStyle {
 
     public boolean isItalic() {
         return italic;
+    }
+
+    public ClickEvent getClickEvent() {
+        return clickEvent;
+    }
+
+    public HoverEvent getHoverEvent() {
+        return hoverEvent;
     }
 
     public PartStyle withBold(boolean bold) {
