@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.bossbar;
@@ -112,7 +112,6 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateProgress(UUID id, float progress) {
             handleBarUpdate(id, trackedBar -> {
-                event.setCanceled(true);
                 trackedBar.getEvent().setProgress(progress);
                 trackedBar.onUpdateProgress(progress);
             });
