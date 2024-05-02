@@ -121,7 +121,7 @@ public class WorldWaypointDistanceFeature extends Feature {
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
         for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
-            if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) return;
+            if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) continue;
 
             float backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.distanceText);
             float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
