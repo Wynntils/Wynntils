@@ -66,6 +66,7 @@ import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
+import com.wynntils.features.inventory.ItemFavoriteHotkeyFeature;
 import com.wynntils.features.inventory.ItemHighlightFeature;
 import com.wynntils.features.inventory.ItemLockFeature;
 import com.wynntils.features.inventory.ItemScreenshotFeature;
@@ -248,6 +249,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
+        registerFeature(new ItemFavoriteHotkeyFeature());
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
