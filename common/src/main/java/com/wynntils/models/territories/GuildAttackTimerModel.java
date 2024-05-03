@@ -20,13 +20,16 @@ import com.wynntils.models.territories.markers.GuildAttackMarkerProvider;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -55,9 +58,10 @@ public final class GuildAttackTimerModel extends Model {
 
     private static final GuildAttackMarkerProvider GUILD_ATTACK_MARKER_PROVIDER = new GuildAttackMarkerProvider();
 
-    private final Map<TerritoryProfile, GuildResourceValues> territoryDefenses = new HashMap<>();
-    private final Map<TerritoryProfile, TerritoryAttackTimer> chatAttackTimers = new HashMap<>();
-    private final Map<TerritoryProfile, TerritoryAttackTimer> scoreboardAttackTimers = new HashMap<>();
+    private final Map<String, GuildResourceValues> territoryDefenses = new HashMap<>();
+    private final Map<String, TerritoryAttackTimer> chatAttackTimers = new HashMap<>();
+    private final Map<String, TerritoryAttackTimer> scoreboardAttackTimers = new HashMap<>();
+    private final TimedSet<String> capturedTerritories = new TimedSet<>(10, TimeUnit.SECONDS, true);
 
     public GuildAttackTimerModel(MarkerModel marker) {
         super(List.of(marker));
@@ -75,43 +79,37 @@ public final class GuildAttackTimerModel extends Model {
             long remaining = Long.parseLong(matcher.group("remaining"));
             long timerEnd = (matcher.group("type").equals("minutes") ? remaining * 60 : remaining) * 1000
                     + System.currentTimeMillis();
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(matcher.group("territory"));
 
-            if (territoryProfile == null) {
-                WynntilsMod.warn("Received war message for unknown territory: " + matcher.group("guild"));
-                return;
-            }
+            String territory = matcher.group("territory");
+            TerritoryAttackTimer scoreboardTimer = scoreboardAttackTimers.remove(territory);
 
-            TerritoryAttackTimer scoreboardTimer = scoreboardAttackTimers.remove(territoryProfile);
-
-            TerritoryAttackTimer attackTimer = new TerritoryAttackTimer(territoryProfile, timerEnd);
-            TerritoryAttackTimer oldTimer = chatAttackTimers.put(territoryProfile, attackTimer);
+            TerritoryAttackTimer attackTimer = new TerritoryAttackTimer(territory, timerEnd);
+            TerritoryAttackTimer oldTimer = chatAttackTimers.put(territory, attackTimer);
 
             // If we didn't have a timer before, post an event
             if (oldTimer == null && scoreboardTimer == null) {
                 WynntilsMod.postEvent(new GuildWarQueuedEvent(attackTimer));
             }
+            return;
         }
 
         matcher = event.getOriginalStyledText().getMatcher(CAPTURED_PATTERN);
         if (matcher.matches()) {
             // Remove the attack timer for the territory, if it exists
             // (the captured message appears for both owned and attacked territories)
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(matcher.group("territory"));
+            String territory = matcher.group("territory");
 
-            if (territoryProfile == null) {
-                WynntilsMod.warn("Received captured message for unknown territory: " + matcher.group("territory"));
-                return;
-            }
-
-            chatAttackTimers.remove(territoryProfile);
-            scoreboardAttackTimers.remove(territoryProfile);
+            chatAttackTimers.remove(territory);
+            scoreboardAttackTimers.remove(territory);
+            capturedTerritories.put(territory);
+            return;
         }
 
         matcher = event.getOriginalStyledText().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (matcher.matches()) {
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(matcher.group(1));
-            territoryDefenses.put(territoryProfile, GuildResourceValues.fromString(matcher.group(2)));
+            String territory = matcher.group(1);
+            territoryDefenses.put(territory, GuildResourceValues.fromString(matcher.group(2)));
+            return;
         }
     }
 
@@ -122,8 +120,8 @@ public final class GuildAttackTimerModel extends Model {
 
         long currentTime = System.currentTimeMillis();
 
-        List<TerritoryProfile> removedTimers = new ArrayList<>();
-        for (Map.Entry<TerritoryProfile, TerritoryAttackTimer> entry : chatAttackTimers.entrySet()) {
+        List<String> removedTimers = new ArrayList<>();
+        for (Map.Entry<String, TerritoryAttackTimer> entry : chatAttackTimers.entrySet()) {
             if (entry.getValue().timerEnd() < currentTime) {
                 removedTimers.add(entry.getKey());
             }
@@ -133,7 +131,7 @@ public final class GuildAttackTimerModel extends Model {
 
         removedTimers.clear();
 
-        for (Map.Entry<TerritoryProfile, TerritoryAttackTimer> entry : scoreboardAttackTimers.entrySet()) {
+        for (Map.Entry<String, TerritoryAttackTimer> entry : scoreboardAttackTimers.entrySet()) {
             if (entry.getValue().timerEnd() < currentTime) {
                 removedTimers.add(entry.getKey());
             }
@@ -148,7 +146,7 @@ public final class GuildAttackTimerModel extends Model {
 
     public Optional<TerritoryAttackTimer> getAttackTimerForTerritory(String territory) {
         return getUpcomingTimers()
-                .filter(t -> t.territoryProfile().getFriendlyName().equals(territory))
+                .filter(t -> t.territoryName().equals(territory))
                 .findFirst();
     }
 
@@ -157,56 +155,61 @@ public final class GuildAttackTimerModel extends Model {
                 .filter(t -> t.timerEnd() > System.currentTimeMillis());
     }
 
-    public Optional<GuildResourceValues> getDefenseForTerritory(TerritoryProfile territory) {
+    public Optional<GuildResourceValues> getDefenseForTerritory(String territory) {
         return Optional.ofNullable(territoryDefenses.get(territory));
     }
 
     void processScoreboardChanges(ScoreboardSegment segment) {
-        Set<TerritoryProfile> usedProfiles = new HashSet<>();
+        Set<String> usedTerritories = new HashSet<>();
 
         for (StyledText line : segment.getContent()) {
             Matcher matcher = line.getMatcher(GUILD_ATTACK_PATTERN);
 
             if (matcher.matches()) {
-                String territory = matcher.group(3);
+                String shortTerritoryName = matcher.group(3);
 
                 // Scoreboard cuts off long territory names, so we need to "guess" the full name
                 // There could be multiple matches, so we need to sort by the timer difference, the closest one is the
                 // correct one
                 Optional<TerritoryAttackTimer> chatTimerOpt = chatAttackTimers.values().stream()
-                        .filter(timer ->
-                                timer.territoryProfile().getFriendlyName().startsWith(territory))
+                        .filter(timer -> timer.territoryName().startsWith(shortTerritoryName))
                         .min((a, b) -> (int) (a.timerEnd() - b.timerEnd()));
 
                 // If we found a chat timer, use it
                 if (chatTimerOpt.isPresent()) {
                     // Don't put a new timer in for scoreboard if we already have one from chat
-                    usedProfiles.add(chatTimerOpt.get().territoryProfile());
+                    usedTerritories.add(chatTimerOpt.get().territoryName());
                     continue;
                 }
 
                 // Only use the scoreboard timer if we didn't find a chat timer
                 // (eg. we joined the server after the war was announced)
                 TerritoryProfile territoryProfile =
-                        Models.Territory.getTerritoryProfileFromShortName(territory, usedProfiles);
+                        Models.Territory.getTerritoryProfileFromShortName(shortTerritoryName, usedTerritories);
 
                 if (territoryProfile == null) {
-                    if (usedProfiles.stream()
-                            .noneMatch(ex -> ex.getFriendlyName().equals(territory))) {
-                        WynntilsMod.warn("Received scoreboard attack timer for unknown territory: " + territory);
+                    if (usedTerritories.stream().noneMatch(ex -> ex.equals(shortTerritoryName))) {
+                        WynntilsMod.warn(
+                                "Received scoreboard attack timer for unknown territory: " + shortTerritoryName);
                     }
+
                     continue;
                 }
 
-                usedProfiles.add(territoryProfile);
+                String fullTerritoryName = territoryProfile.getFriendlyName();
+
+                // Don't put a new timer in for scoreboard if it was captured recently
+                if (capturedTerritories.stream().anyMatch(t -> Objects.equals(t, fullTerritoryName))) continue;
+
+                usedTerritories.add(fullTerritoryName);
 
                 int minutes = Integer.parseInt(matcher.group(1));
                 int seconds = Integer.parseInt(matcher.group(2));
 
                 long timerEnd = (minutes * 60L + seconds) * 1000 + System.currentTimeMillis();
 
-                TerritoryAttackTimer timer = new TerritoryAttackTimer(territoryProfile, timerEnd);
-                TerritoryAttackTimer oldTimer = scoreboardAttackTimers.put(territoryProfile, timer);
+                TerritoryAttackTimer timer = new TerritoryAttackTimer(fullTerritoryName, timerEnd);
+                TerritoryAttackTimer oldTimer = scoreboardAttackTimers.put(fullTerritoryName, timer);
 
                 // If we didn't have a timer before, post an event
                 if (oldTimer == null) {

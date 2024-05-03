@@ -5,20 +5,19 @@
 package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
-public record TerritoryAttackTimer(TerritoryProfile territoryProfile, long timerEnd) {
+public record TerritoryAttackTimer(String territoryName, long timerEnd) {
     public String asString() {
         Optional<GuildResourceValues> defense = defense();
         ChatFormatting defenseColor =
                 defense.isEmpty() ? ChatFormatting.GRAY : defense.get().getDefenceColor();
         String defenseString = defense.isEmpty() ? "Unknown" : defense.get().getAsString();
 
-        return ChatFormatting.GRAY + territoryProfile.getFriendlyName() + defenseColor + " (" + defenseString + ")"
-                + ChatFormatting.AQUA + " " + timerString();
+        return ChatFormatting.GRAY + territoryName + defenseColor + " (" + defenseString + ")" + ChatFormatting.AQUA
+                + " " + timerString();
     }
 
     public int getMinutesRemaining() {
@@ -38,6 +37,6 @@ public record TerritoryAttackTimer(TerritoryProfile territoryProfile, long timer
     }
 
     public Optional<GuildResourceValues> defense() {
-        return Models.GuildAttackTimer.getDefenseForTerritory(territoryProfile);
+        return Models.GuildAttackTimer.getDefenseForTerritory(territoryName);
     }
 }
