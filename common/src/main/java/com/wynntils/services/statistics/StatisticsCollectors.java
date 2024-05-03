@@ -11,6 +11,7 @@ import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
+import com.wynntils.models.raid.event.RaidFinishedEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.services.statistics.type.StatisticKind;
@@ -57,6 +58,46 @@ public final class StatisticsCollectors {
         if (event.isLootrunEndReward()) {
             Services.Statistics.addToStatistics(
                     StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
+        }
+    }
+
+    @SubscribeEvent
+    public void onRaidCompleted(RaidFinishedEvent.Completed event) {
+        switch (event.getRaid()) {
+            case NEST_OF_THE_GROOTSLANGS -> Services.Statistics.addToStatistics(
+                    StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED, event.getRaidTime());
+            case ORPHIONS_NEXUS_OF_LIGHT -> Services.Statistics.addToStatistics(
+                    StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED, event.getRaidTime());
+            case THE_CANYON_COLOSSUS -> Services.Statistics.addToStatistics(
+                    StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED, event.getRaidTime());
+            case THE_NAMELESS_ANOMALY -> Services.Statistics.addToStatistics(
+                    StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED, event.getRaidTime());
+        }
+    }
+
+    @SubscribeEvent
+    public void onRaidFailed(RaidFinishedEvent.Failed event) {
+        switch (event.getRaid()) {
+            case NEST_OF_THE_GROOTSLANGS -> {
+                Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_FAILED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED, event.getRaidTime());
+            }
+            case ORPHIONS_NEXUS_OF_LIGHT -> {
+                Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_FAILED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED, event.getRaidTime());
+            }
+            case THE_CANYON_COLOSSUS -> {
+                Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_FAILED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED, event.getRaidTime());
+            }
+            case THE_NAMELESS_ANOMALY -> {
+                Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_FAILED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED, event.getRaidTime());
+            }
         }
     }
 

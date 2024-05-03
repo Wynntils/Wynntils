@@ -29,7 +29,18 @@ public enum StatisticKind {
     LOOTRUNS_REWARD_REROLLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_EXPERIENCE_GAINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_MOBS_KILLED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
-    LOOTRUNS_CHESTS_OPENED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
+    LOOTRUNS_CHESTS_OPENED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    // endregion
+
+    // region Raids
+    NEST_OF_THE_GROOTSLANGS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
+    ORPHIONS_NEXUS_OF_LIGHT_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
+    THE_CANYON_COLOSSUS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    THE_CANYON_COLOSSUS_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
+    THE_NAMELESS_ANOMALY_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    THE_NAMELESS_ANOMALY_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED);
     // endregion
 
     private final StatFormatter formatter;
