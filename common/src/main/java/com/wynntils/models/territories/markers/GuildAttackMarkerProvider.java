@@ -10,11 +10,13 @@ import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.territories.TerritoryAttackTimer;
+import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.map.pois.MarkerPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
@@ -27,19 +29,29 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
                 .min()
                 .orElse(0);
 
-        return attackTimers.stream().map(attackTimer -> {
-            CustomColor beaconColor = attackTimer.defense().isEmpty()
-                    ? CommonColors.WHITE
-                    : CustomColor.fromChatFormatting(attackTimer.defense().get().getDefenceColor());
+        return attackTimers.stream()
+                .map(attackTimer -> {
+                    CustomColor beaconColor = attackTimer.defense().isEmpty()
+                            ? CommonColors.WHITE
+                            : CustomColor.fromChatFormatting(
+                                    attackTimer.defense().get().getDefenceColor());
 
-            return new MarkerInfo(
-                    attackTimer.territoryProfile().getFriendlyName(),
-                    () -> attackTimer.territoryProfile().getCenterLocation().asLocation(),
-                    lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL,
-                    beaconColor,
-                    CommonColors.WHITE,
-                    beaconColor);
-        });
+                    TerritoryProfile territoryProfile =
+                            Models.Territory.getTerritoryProfile(attackTimer.territoryName());
+
+                    if (territoryProfile == null) {
+                        return null;
+                    }
+
+                    return new MarkerInfo(
+                            attackTimer.territoryName(),
+                            () -> territoryProfile.getCenterLocation().asLocation(),
+                            lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL,
+                            beaconColor,
+                            CommonColors.WHITE,
+                            beaconColor);
+                })
+                .filter(Objects::nonNull);
     }
 
     @Override
@@ -52,10 +64,20 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
                 .orElse(0);
 
         return attackTimers.stream()
-                .map(attackTimer -> new MarkerPoi(
-                        attackTimer.territoryProfile().getCenterLocation(),
-                        attackTimer.territoryProfile().getFriendlyName(),
-                        lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL));
+                .map(attackTimer -> {
+                    TerritoryProfile territoryProfile =
+                            Models.Territory.getTerritoryProfile(attackTimer.territoryName());
+
+                    if (territoryProfile == null) {
+                        return null;
+                    }
+
+                    return new MarkerPoi(
+                            territoryProfile.getCenterLocation(),
+                            territoryProfile.getFriendlyName(),
+                            lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL);
+                })
+                .filter(Objects::nonNull);
     }
 
     @Override
