@@ -74,11 +74,9 @@ public final class TerritoryModel extends Model {
      * @param excludedTerritories Territories to exclude from the search
      * @return The territory profile, or null if not found
      */
-    public TerritoryProfile getTerritoryProfileFromShortName(
-            String shortName, Collection<TerritoryProfile> excludedTerritories) {
+    public TerritoryProfile getTerritoryProfileFromShortName(String shortName, Collection<String> excludedTerritories) {
         return territoryProfileMap.values().stream()
-                .filter(profile -> excludedTerritories.stream()
-                        .noneMatch(ex -> ex.getName().equals(profile.getName())))
+                .filter(profile -> excludedTerritories.stream().noneMatch(ex -> ex.equals(profile.getName())))
                 .filter(profile -> profile.getName().startsWith(shortName))
                 .min(Comparator.comparing(TerritoryProfile::getName))
                 .orElse(null);
