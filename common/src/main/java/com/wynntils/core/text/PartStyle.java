@@ -5,16 +5,25 @@
 package com.wynntils.core.text;
 
 import com.wynntils.utils.colors.CustomColor;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
+    private static final Int2ObjectMap<ChatFormatting> INTEGER_TO_CHATFORMATTING_MAP = Arrays.stream(
+                    ChatFormatting.values())
+            .filter(ChatFormatting::isColor)
+            .collect(
+                    () -> new Int2ObjectOpenHashMap<>(ChatFormatting.values().length),
+                    (map, cf) -> map.put(cf.getColor(), cf),
+                    Int2ObjectMap::putAll);
 
     private final StyledTextPart owner;
 
@@ -124,13 +133,10 @@ public final class PartStyle {
         if (!skipFormatting) {
             // 1. Color
             if (color != CustomColor.NONE) {
-                Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
-                        .filter(ChatFormatting::isColor)
-                        .filter(c -> c.getColor() == color.asInt())
-                        .findFirst();
+                ChatFormatting chatFormatting = INTEGER_TO_CHATFORMATTING_MAP.get(color.asInt());
 
-                if (chatFormatting.isPresent()) {
-                    styleString.append(STYLE_PREFIX).append(chatFormatting.get().getChar());
+                if (chatFormatting != null) {
+                    styleString.append(STYLE_PREFIX).append(chatFormatting.getChar());
                 } else {
                     styleString.append(STYLE_PREFIX).append(color.toHexString());
                 }
@@ -178,18 +184,10 @@ public final class PartStyle {
     }
 
     public Style getStyle() {
-        Style reconstructedStyle = Style.EMPTY
-                .withObfuscated(obfuscated)
-                .withBold(bold)
-                .withStrikethrough(strikethrough)
-                .withUnderlined(underlined)
-                .withItalic(italic)
-                .withClickEvent(clickEvent)
-                .withHoverEvent(hoverEvent);
-
-        if (color != CustomColor.NONE) {
-            reconstructedStyle = reconstructedStyle.withColor(color.asInt());
-        }
+        // Optimization: Use raw Style constructor, instead of the builder.
+        TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt());
+        Style reconstructedStyle = new Style(
+                textColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent, null, null);
 
         return reconstructedStyle;
     }
@@ -223,6 +221,14 @@ public final class PartStyle {
 
     public boolean isItalic() {
         return italic;
+    }
+
+    public ClickEvent getClickEvent() {
+        return clickEvent;
+    }
+
+    public HoverEvent getHoverEvent() {
+        return hoverEvent;
     }
 
     public PartStyle withBold(boolean bold) {
