@@ -13,9 +13,9 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidBossStartedEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
-import com.wynntils.models.raid.event.RaidFinishedEvent;
+import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
-import com.wynntils.models.raid.type.Raid;
+import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.EnumMap;
@@ -47,7 +47,7 @@ public class RaidModel extends Model {
 
     private long raidStartTime;
     private long roomStartTime;
-    private Raid currentRaid = null;
+    private RaidKind currentRaid = null;
     private RaidRoomType currentRoom = null;
 
     public RaidModel() {
@@ -60,7 +60,7 @@ public class RaidModel extends Model {
         StyledText styledText = StyledText.fromComponent(component);
 
         if (currentRaid == null) {
-            currentRaid = Raid.fromTitle(styledText);
+            currentRaid = RaidKind.fromTitle(styledText);
 
             if (currentRaid != null) {
                 // In a raid, set to intro room and start timer
@@ -71,12 +71,12 @@ public class RaidModel extends Model {
             if (styledText.equals(RAID_COMPLETE)) {
                 int timeTaken = (int) ((System.currentTimeMillis() - raidStartTime) / 1000);
                 // Raid has been completed, post event with time taken in seconds
-                WynntilsMod.postEvent(new RaidFinishedEvent.Completed(currentRaid, timeTaken));
+                WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, timeTaken));
 
                 checkForNewPersonalBest(currentRaid, timeTaken);
             } else if (styledText.equals(RAID_FAILED)) {
                 // Raid failed, post event with time elapsed in seconds
-                WynntilsMod.postEvent(new RaidFinishedEvent.Failed(
+                WynntilsMod.postEvent(new RaidEndedEvent.Failed(
                         currentRaid, (int) ((System.currentTimeMillis() - raidStartTime) / 1000)));
             } else {
                 return;
@@ -130,11 +130,11 @@ public class RaidModel extends Model {
         roomTimers.clear();
     }
 
-    public int getRaidBestTime(Raid raid) {
-        return bestTimes.get().getOrDefault(raid.getName(), -1);
+    public int getRaidBestTime(RaidKind raidKind) {
+        return bestTimes.get().getOrDefault(raidKind.getName(), -1);
     }
 
-    public Raid getCurrentRaid() {
+    public RaidKind getCurrentRaid() {
         return currentRaid;
     }
 
@@ -190,19 +190,19 @@ public class RaidModel extends Model {
         }
     }
 
-    private void checkForNewPersonalBest(Raid raid, int time) {
-        if (bestTimes.get().get(raid.getName()) == null) {
-            bestTimes.get().put(raid.getName(), time);
+    private void checkForNewPersonalBest(RaidKind raidKind, int time) {
+        if (bestTimes.get().get(raidKind.getName()) == null) {
+            bestTimes.get().put(raidKind.getName(), time);
             bestTimes.touched();
         } else {
-            int currentBestTime = bestTimes.get().get(raid.getName());
+            int currentBestTime = bestTimes.get().get(raidKind.getName());
 
             // New time is faster
             if (currentBestTime > time) {
-                bestTimes.get().put(raid.getName(), time);
+                bestTimes.get().put(raidKind.getName(), time);
                 bestTimes.touched();
 
-                WynntilsMod.postEvent(new RaidNewBestTimeEvent(raid, time));
+                WynntilsMod.postEvent(new RaidNewBestTimeEvent(raidKind, time));
             }
         }
     }

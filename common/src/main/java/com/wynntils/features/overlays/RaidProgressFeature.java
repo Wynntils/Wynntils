@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.raid.event.RaidFinishedEvent;
+import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.overlays.RaidProgressOverlay;
 import com.wynntils.utils.mc.McUtils;
@@ -32,7 +32,7 @@ public class RaidProgressFeature extends Feature {
     public final Config<Boolean> playSoundOnBest = new Config<>(true);
 
     @SubscribeEvent
-    public void onRaidCompleted(RaidFinishedEvent.Completed event) {
+    public void onRaidCompleted(RaidEndedEvent.Completed event) {
         if (!printTimes.get()) return;
 
         int minutes = event.getRaidTime() / 60;

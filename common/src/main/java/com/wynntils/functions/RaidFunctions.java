@@ -7,7 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.raid.type.Raid;
+import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class RaidFunctions {
     public static class CurrentRaidFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            Raid currentRaid = Models.Raid.getCurrentRaid();
+            RaidKind currentRaid = Models.Raid.getCurrentRaid();
 
             return currentRaid == null ? "" : currentRaid.getName();
         }
@@ -90,11 +90,12 @@ public class RaidFunctions {
     public static class RaidPersonalBestTimeFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            Raid raid = Raid.fromName(arguments.getArgument("raidName").getStringValue());
+            RaidKind raidKind =
+                    RaidKind.fromName(arguments.getArgument("raidName").getStringValue());
 
-            if (raid == null) return -1;
+            if (raidKind == null) return -1;
 
-            return Models.Raid.getRaidBestTime(raid);
+            return Models.Raid.getRaidBestTime(raidKind);
         }
 
         @Override

@@ -4,21 +4,21 @@
  */
 package com.wynntils.models.raid.event;
 
-import com.wynntils.models.raid.type.Raid;
+import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class RaidChallengeEvent extends Event {
-    private final Raid raid;
+    private final RaidKind raidKind;
     private final RaidRoomType challengeRoom;
 
-    protected RaidChallengeEvent(Raid raid, RaidRoomType challengeRoom) {
-        this.raid = raid;
+    protected RaidChallengeEvent(RaidKind raidKind, RaidRoomType challengeRoom) {
+        this.raidKind = raidKind;
         this.challengeRoom = challengeRoom;
     }
 
-    public Raid getRaid() {
-        return raid;
+    public RaidKind getRaid() {
+        return raidKind;
     }
 
     public RaidRoomType getChallengeRoom() {
@@ -26,14 +26,14 @@ public abstract class RaidChallengeEvent extends Event {
     }
 
     public static class Started extends RaidChallengeEvent {
-        public Started(Raid raid, RaidRoomType challengeRoom) {
-            super(raid, challengeRoom);
+        public Started(RaidKind raidKind, RaidRoomType challengeRoom) {
+            super(raidKind, challengeRoom);
         }
     }
 
     public static class Completed extends RaidChallengeEvent {
-        public Completed(Raid raid, RaidRoomType challengeRoom) {
-            super(raid, challengeRoom);
+        public Completed(RaidKind raidKind, RaidRoomType challengeRoom) {
+            super(raidKind, challengeRoom);
         }
     }
 }

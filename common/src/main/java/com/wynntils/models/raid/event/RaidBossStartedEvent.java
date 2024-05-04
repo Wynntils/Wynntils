@@ -4,17 +4,17 @@
  */
 package com.wynntils.models.raid.event;
 
-import com.wynntils.models.raid.type.Raid;
+import com.wynntils.models.raid.type.RaidKind;
 import net.minecraftforge.eventbus.api.Event;
 
 public class RaidBossStartedEvent extends Event {
-    private final Raid raid;
+    private final RaidKind raidKind;
 
-    public RaidBossStartedEvent(Raid raid) {
-        this.raid = raid;
+    public RaidBossStartedEvent(RaidKind raidKind) {
+        this.raidKind = raidKind;
     }
 
-    public Raid getRaid() {
-        return raid;
+    public RaidKind getRaid() {
+        return raidKind;
     }
 }

@@ -8,7 +8,7 @@ import com.wynntils.core.text.StyledText;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public enum Raid {
+public enum RaidKind {
     NEST_OF_THE_GROOTSLANGS(
             "Nest of the Grootslangs",
             StyledText.fromString("§2§kNest§f §2§kof§f §2§kThe§f §2§kGrootslangs"),
@@ -36,27 +36,27 @@ public enum Raid {
     private final List<Pattern> instructionsPatterns;
     private final StyledText bossLabel;
 
-    Raid(String name, StyledText entryTitle, List<Pattern> instructionsPatterns, StyledText bossLabel) {
+    RaidKind(String name, StyledText entryTitle, List<Pattern> instructionsPatterns, StyledText bossLabel) {
         this.name = name;
         this.entryTitle = entryTitle;
         this.instructionsPatterns = instructionsPatterns;
         this.bossLabel = bossLabel;
     }
 
-    public static Raid fromTitle(StyledText title) {
-        for (Raid raid : Raid.values()) {
-            if (raid.getEntryTitle().equals(title)) {
-                return raid;
+    public static RaidKind fromTitle(StyledText title) {
+        for (RaidKind raidKind : RaidKind.values()) {
+            if (raidKind.getEntryTitle().equals(title)) {
+                return raidKind;
             }
         }
 
         return null;
     }
 
-    public static Raid fromName(String name) {
-        for (Raid raid : Raid.values()) {
-            if (raid.getName().equalsIgnoreCase(name)) {
-                return raid;
+    public static RaidKind fromName(String name) {
+        for (RaidKind raidKind : RaidKind.values()) {
+            if (raidKind.getName().equalsIgnoreCase(name)) {
+                return raidKind;
             }
         }
 

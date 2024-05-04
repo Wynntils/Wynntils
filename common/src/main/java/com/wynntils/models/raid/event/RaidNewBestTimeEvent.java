@@ -4,20 +4,20 @@
  */
 package com.wynntils.models.raid.event;
 
-import com.wynntils.models.raid.type.Raid;
+import com.wynntils.models.raid.type.RaidKind;
 import net.minecraftforge.eventbus.api.Event;
 
 public class RaidNewBestTimeEvent extends Event {
-    private final Raid raid;
+    private final RaidKind raidKind;
     private final int time;
 
-    public RaidNewBestTimeEvent(Raid raid, int time) {
-        this.raid = raid;
+    public RaidNewBestTimeEvent(RaidKind raidKind, int time) {
+        this.raidKind = raidKind;
         this.time = time;
     }
 
-    public Raid getRaid() {
-        return raid;
+    public RaidKind getRaid() {
+        return raidKind;
     }
 
     public int getTime() {
