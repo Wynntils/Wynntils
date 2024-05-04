@@ -1815,7 +1815,7 @@
   "function.wynntils.raidPersonalBestTime.description": "The fastest time taken to beat the specified raid in seconds",
   "function.wynntils.raidPersonalBestTime.name": "Raid Personal Best Time",
   "function.wynntils.raidRoomTime.argument.roomName": "The room type to get the time taken to complete for. One of CHALLENGE_1, CHALLENGE_2 or CHALLENGE_3",
-  "function.wynntils.raidRoomTime.description": "How long did it take to complete the specified raid room in seconds",
+  "function.wynntils.raidRoomTime.description": "How long it took to complete the specified raid room in seconds",
   "function.wynntils.raidRoomTime.name": "Raid Room Time",
   "function.wynntils.shamanMask.argument.isColored": "Should the name be colored according to the mask's color?",
   "function.wynntils.shamanMask.argument.useShortName": "Should the short name be used instead of the full name?",
