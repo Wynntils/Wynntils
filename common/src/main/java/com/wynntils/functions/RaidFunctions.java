@@ -42,10 +42,10 @@ public class RaidFunctions {
         }
     }
 
-    public static class CurrentRaidTimeFunction extends Function<Integer> {
+    public static class CurrentRaidTimeFunction extends Function<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1;
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
 
             return Models.Raid.currentRaidTime();
         }
@@ -56,26 +56,35 @@ public class RaidFunctions {
         }
     }
 
-    public static class CurrentRaidRoomTimeFunction extends Function<Integer> {
+    public static class CurrentRaidRoomTimeFunction extends Function<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1;
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
             // Room should never be null if the raid is not but just in case the tracking fails
-            if (Models.Raid.getCurrentRoom() == null) return -1;
+            if (Models.Raid.getCurrentRoom() == null) return -1L;
 
             return Models.Raid.currentRoomTime();
         }
     }
 
-    public static class RaidRoomTimeFunction extends Function<Integer> {
+    public static class RaidIntermissionTimeFunction extends Function<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1;
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
+
+            return Models.Raid.getIntermissionTime();
+        }
+    }
+
+    public static class RaidRoomTimeFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
 
             RaidRoomType roomType =
                     RaidRoomType.fromName(arguments.getArgument("roomName").getStringValue());
 
-            if (roomType == null) return -1;
+            if (roomType == null) return -1L;
 
             return Models.Raid.getRoomTime(roomType);
         }
@@ -87,13 +96,13 @@ public class RaidFunctions {
         }
     }
 
-    public static class RaidPersonalBestTimeFunction extends Function<Integer> {
+    public static class RaidPersonalBestTimeFunction extends Function<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Long getValue(FunctionArguments arguments) {
             RaidKind raidKind =
                     RaidKind.fromName(arguments.getArgument("raidName").getStringValue());
 
-            if (raidKind == null) return -1;
+            if (raidKind == null) return -1L;
 
             return Models.Raid.getRaidBestTime(raidKind);
         }

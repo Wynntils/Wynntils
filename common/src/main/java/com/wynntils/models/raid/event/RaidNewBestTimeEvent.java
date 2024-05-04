@@ -9,9 +9,9 @@ import net.minecraftforge.eventbus.api.Event;
 
 public class RaidNewBestTimeEvent extends Event {
     private final RaidKind raidKind;
-    private final int time;
+    private final long time;
 
-    public RaidNewBestTimeEvent(RaidKind raidKind, int time) {
+    public RaidNewBestTimeEvent(RaidKind raidKind, long time) {
         this.raidKind = raidKind;
         this.time = time;
     }
@@ -20,7 +20,7 @@ public class RaidNewBestTimeEvent extends Event {
         return raidKind;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 }

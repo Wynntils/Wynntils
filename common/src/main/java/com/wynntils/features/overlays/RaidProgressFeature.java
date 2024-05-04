@@ -35,14 +35,16 @@ public class RaidProgressFeature extends Feature {
     public void onRaidCompleted(RaidEndedEvent.Completed event) {
         if (!printTimes.get()) return;
 
-        int minutes = event.getRaidTime() / 60;
-        int seconds = event.getRaidTime() % 60;
+        long minutes = (event.getRaidTime() / 1000) / 60;
+        long seconds = (event.getRaidTime() / 1000) % 60;
+        long milliseconds = event.getRaidTime() % 1000;
 
         McUtils.sendMessageToClient(Component.translatable(
                         "feature.wynntils.raidProgress.completedRaid",
                         event.getRaid().getName(),
                         minutes,
-                        seconds)
+                        seconds,
+                        milliseconds)
                 .withStyle(ChatFormatting.AQUA));
     }
 
@@ -50,14 +52,16 @@ public class RaidProgressFeature extends Feature {
     public void onRaidPersonalBest(RaidNewBestTimeEvent event) {
         if (!printTimes.get()) return;
 
-        int minutes = event.getTime() / 60;
-        int seconds = event.getTime() % 60;
+        long minutes = (event.getTime() / 1000) / 60;
+        long seconds = (event.getTime() / 1000) % 60;
+        long milliseconds = event.getTime() % 1000;
 
         McUtils.sendMessageToClient(Component.translatable(
                         "feature.wynntils.raidProgress.personalBest",
                         event.getRaid().getName(),
                         minutes,
-                        seconds)
+                        seconds,
+                        milliseconds)
                 .withStyle(ChatFormatting.GOLD));
 
         if (playSoundOnBest.get()) {

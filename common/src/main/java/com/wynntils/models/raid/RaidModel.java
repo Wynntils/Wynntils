@@ -41,9 +41,9 @@ public class RaidModel extends Model {
     private static final StyledText RAID_FAILED = StyledText.fromString("§4Raid Failed!");
 
     @Persisted
-    public final Storage<Map<String, Integer>> bestTimes = new Storage<>(new TreeMap<>());
+    public final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
-    private final Map<RaidRoomType, Integer> roomTimers = new EnumMap<>(RaidRoomType.class);
+    private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
 
     private long raidStartTime;
     private long roomStartTime;
@@ -71,8 +71,8 @@ public class RaidModel extends Model {
         }
 
         if (styledText.equals(RAID_COMPLETE)) {
-            int timeTaken = (int) ((System.currentTimeMillis() - raidStartTime) / 1000);
-            // Raid has been completed, post event with time taken in seconds
+            long timeTaken = System.currentTimeMillis() - raidStartTime;
+            // Raid has been completed, post event with time taken in milliseconds
             WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, timeTaken));
 
             checkForNewPersonalBest(currentRaid, timeTaken);
@@ -81,9 +81,8 @@ public class RaidModel extends Model {
             currentRoom = null;
             roomTimers.clear();
         } else if (styledText.equals(RAID_FAILED)) {
-            // Raid failed, post event with time elapsed in seconds
-            WynntilsMod.postEvent(new RaidEndedEvent.Failed(
-                    currentRaid, (int) ((System.currentTimeMillis() - raidStartTime) / 1000)));
+            // Raid failed, post event with time elapsed in milliseconds
+            WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, System.currentTimeMillis() - raidStartTime));
 
             currentRaid = null;
             currentRoom = null;
@@ -133,8 +132,8 @@ public class RaidModel extends Model {
         roomTimers.clear();
     }
 
-    public int getRaidBestTime(RaidKind raidKind) {
-        return bestTimes.get().getOrDefault(raidKind.getName(), -1);
+    public long getRaidBestTime(RaidKind raidKind) {
+        return bestTimes.get().getOrDefault(raidKind.getName(), -1L);
     }
 
     public RaidKind getCurrentRaid() {
@@ -145,20 +144,37 @@ public class RaidModel extends Model {
         return currentRoom;
     }
 
-    public int getRoomTime(RaidRoomType roomType) {
+    public long getRoomTime(RaidRoomType roomType) {
         if (roomType == currentRoom) {
             return currentRoomTime();
         }
 
-        return roomTimers.getOrDefault(roomType, -1);
+        return roomTimers.getOrDefault(roomType, -1L);
     }
 
-    public int currentRaidTime() {
-        return (int) (System.currentTimeMillis() - raidStartTime) / 1000;
+    public long currentRaidTime() {
+        return System.currentTimeMillis() - raidStartTime;
     }
 
-    public int currentRoomTime() {
-        return (int) (System.currentTimeMillis() - roomStartTime) / 1000;
+    public long currentRoomTime() {
+        return System.currentTimeMillis() - roomStartTime;
+    }
+
+    public long getIntermissionTime() {
+        long currentTime = System.currentTimeMillis();
+        long timeSpentInChallenges = 0;
+
+        for (long time : roomTimers.values()) {
+            timeSpentInChallenges += time;
+        }
+
+        long intermissionTime = currentTime - raidStartTime - timeSpentInChallenges;
+
+        if (inChallengeRoom() || currentRoom == RaidRoomType.BOSS_FIGHT) {
+            intermissionTime -= (currentTime - roomStartTime);
+        }
+
+        return intermissionTime;
     }
 
     private boolean inChallengeRoom() {
@@ -187,18 +203,18 @@ public class RaidModel extends Model {
         if (inChallengeRoom() || inBossFight()) {
             roomStartTime = System.currentTimeMillis();
         } else if (inPowerupRoom()) {
-            int roomTime = (int) (System.currentTimeMillis() - roomStartTime) / 1000;
+            long roomTime = System.currentTimeMillis() - roomStartTime;
             roomTimers.put(previousRoom, roomTime);
             roomStartTime = System.currentTimeMillis();
         }
     }
 
-    private void checkForNewPersonalBest(RaidKind raidKind, int time) {
+    private void checkForNewPersonalBest(RaidKind raidKind, long time) {
         if (bestTimes.get().get(raidKind.getName()) == null) {
             bestTimes.get().put(raidKind.getName(), time);
             bestTimes.touched();
         } else {
-            int currentBestTime = bestTimes.get().get(raidKind.getName());
+            long currentBestTime = bestTimes.get().get(raidKind.getName());
 
             // New time is faster
             if (currentBestTime > time) {

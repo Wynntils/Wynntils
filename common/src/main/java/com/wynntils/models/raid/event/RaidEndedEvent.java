@@ -9,9 +9,9 @@ import net.minecraftforge.eventbus.api.Event;
 
 public abstract class RaidEndedEvent extends Event {
     private final RaidKind raidKind;
-    private final int raidTime;
+    private final long raidTime;
 
-    protected RaidEndedEvent(RaidKind raidKind, int raidTime) {
+    protected RaidEndedEvent(RaidKind raidKind, long raidTime) {
         this.raidKind = raidKind;
         this.raidTime = raidTime;
     }
@@ -20,18 +20,18 @@ public abstract class RaidEndedEvent extends Event {
         return raidKind;
     }
 
-    public int getRaidTime() {
+    public long getRaidTime() {
         return raidTime;
     }
 
     public static class Completed extends RaidEndedEvent {
-        public Completed(RaidKind raidKind, int raidTime) {
+        public Completed(RaidKind raidKind, long raidTime) {
             super(raidKind, raidTime);
         }
     }
 
     public static class Failed extends RaidEndedEvent {
-        public Failed(RaidKind raidKind, int raidTime) {
+        public Failed(RaidKind raidKind, long raidTime) {
             super(raidKind, raidTime);
         }
     }
