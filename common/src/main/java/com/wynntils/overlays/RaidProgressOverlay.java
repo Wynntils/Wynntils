@@ -145,19 +145,16 @@ public class RaidProgressOverlay extends TextOverlay {
     }
 
     private String getTotalTemplate() {
-        if (totalIntermission.get()) {
-            if (showMilliseconds.get()) {
-                return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(raid_time;1000);60));2);\":\";leading_zeros(int(mod(div(raid_time;1000);60));2);\".\";leading_zeros(int(mod(raid_time;1000));3)))}";
-            }
+        String timeToUse = totalIntermission.get() ? "raid_time" : "sub(raid_time;raid_intermission_time)";
 
-            return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(raid_time;1000);60));2);\":\";leading_zeros(int(mod(div(raid_time;1000);60));2)))}";
-        } else {
-            if (showMilliseconds.get()) {
-                return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(sub(raid_time;raid_intermission_time);1000);60));2);\":\";leading_zeros(int(mod(div(sub(raid_time;raid_intermission_time);1000);60));2);\".\";leading_zeros(int(mod(sub(raid_time;raid_intermission_time);1000));3)))}";
-            }
-
-            return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(sub(raid_time;raid_intermission_time);1000);60));2);\":\";leading_zeros(int(mod(div(sub(raid_time;raid_intermission_time);1000);60));2)))}";
+        if (showMilliseconds.get()) {
+            return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(" + timeToUse
+                    + ";1000);60));2);\":\";leading_zeros(int(mod(div(" + timeToUse
+                    + ";1000);60));2);\".\";leading_zeros(int(mod(" + timeToUse + ";1000));3)))}";
         }
+
+        return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(" + timeToUse
+                + ";1000);60));2);\":\";leading_zeros(int(mod(div(" + timeToUse + ";1000);60));2)))}";
     }
 
     private String getTotalPreview() {
