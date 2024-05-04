@@ -7,7 +7,6 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -21,6 +20,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -65,9 +65,7 @@ public final class GearModel extends Model {
                         && canBeGearBox(gear)
                         && gearBoxItem
                                 .getLevelRange()
-                                .inRange(gear.requirements().level())
-                        // Do not include items that cannot drop normally (eg. merchant only, event, etc)
-                        && gear.metaInfo().dropRestrictions() != GearDropRestrictions.NEVER)
+                                .inRange(gear.requirements().level()))
                 .toList();
         possibilitiesCache.put(gearBoxItem, possibleGear);
 
@@ -76,10 +74,10 @@ public final class GearModel extends Model {
 
     public boolean canBeGearBox(GearInfo gear) {
         // If an item is pre-identified, it cannot be in a gear box
-        // If all the ways we can obtain this is by merchants, it cannot be in a gear box
+        // Also check that the item has a source that can drop boxed items
         return !gear.metaInfo().preIdentified()
                 && gear.metaInfo().obtainInfo().stream()
-                        .anyMatch(o -> !o.sourceType().isMerchant());
+                        .anyMatch(x -> ItemObtainType.BOXED_ITEMS.contains(x.sourceType()));
     }
 
     @Override

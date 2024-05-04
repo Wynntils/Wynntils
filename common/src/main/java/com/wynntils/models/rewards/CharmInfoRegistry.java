@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -14,7 +14,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
@@ -115,21 +114,13 @@ public class CharmInfoRegistry {
         }
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName) {
-            GearDropRestrictions dropRestrictions = parseDropRestrictions(json);
             GearRestrictions restrictions = parseRestrictions(json);
             ItemMaterial material = parseOtherMaterial(json);
 
             List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
 
             return new GearMetaInfo(
-                    dropRestrictions,
-                    restrictions,
-                    material,
-                    obtainInfo,
-                    Optional.empty(),
-                    Optional.empty(),
-                    true,
-                    false);
+                    restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);
         }
 
         private ItemMaterial parseOtherMaterial(JsonObject json) {

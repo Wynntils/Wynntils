@@ -14,7 +14,6 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -72,7 +71,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     protected GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
-        GearDropRestrictions dropRestrictions = parseDropRestrictions(json);
         GearRestrictions restrictions = parseRestrictions(json);
         ItemMaterial material = parseMaterial(json, type);
 
@@ -85,14 +83,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         return new GearMetaInfo(
-                dropRestrictions,
-                restrictions,
-                material,
-                obtainInfo,
-                loreOpt,
-                apiNameOpt,
-                allowCraftsman,
-                preIdentifiedItem);
+                restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman, preIdentifiedItem);
     }
 
     protected List<ItemObtainInfo> parseObtainInfo(JsonObject json, String name) {
@@ -144,13 +135,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         if (lore == null) return Optional.empty();
 
         return Optional.of(StyledText.fromString(lore));
-    }
-
-    protected GearDropRestrictions parseDropRestrictions(JsonObject json) {
-        String restrictions = JsonUtils.getNullableJsonString(json, "dropRestriction");
-        if (restrictions == null) return GearDropRestrictions.NORMAL;
-
-        return GearDropRestrictions.fromString(restrictions);
     }
 
     protected GearRestrictions parseRestrictions(JsonObject json) {
