@@ -67,20 +67,23 @@ public class RaidModel extends Model {
                 currentRoom = RaidRoomType.INTRO;
                 raidStartTime = System.currentTimeMillis();
             }
-        } else {
-            if (styledText.equals(RAID_COMPLETE)) {
-                int timeTaken = (int) ((System.currentTimeMillis() - raidStartTime) / 1000);
-                // Raid has been completed, post event with time taken in seconds
-                WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, timeTaken));
+            return;
+        }
 
-                checkForNewPersonalBest(currentRaid, timeTaken);
-            } else if (styledText.equals(RAID_FAILED)) {
-                // Raid failed, post event with time elapsed in seconds
-                WynntilsMod.postEvent(new RaidEndedEvent.Failed(
-                        currentRaid, (int) ((System.currentTimeMillis() - raidStartTime) / 1000)));
-            } else {
-                return;
-            }
+        if (styledText.equals(RAID_COMPLETE)) {
+            int timeTaken = (int) ((System.currentTimeMillis() - raidStartTime) / 1000);
+            // Raid has been completed, post event with time taken in seconds
+            WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, timeTaken));
+
+            checkForNewPersonalBest(currentRaid, timeTaken);
+
+            currentRaid = null;
+            currentRoom = null;
+            roomTimers.clear();
+        } else if (styledText.equals(RAID_FAILED)) {
+            // Raid failed, post event with time elapsed in seconds
+            WynntilsMod.postEvent(new RaidEndedEvent.Failed(
+                    currentRaid, (int) ((System.currentTimeMillis() - raidStartTime) / 1000)));
 
             currentRaid = null;
             currentRoom = null;
