@@ -1059,6 +1059,8 @@
   "feature.wynntils.raidProgress.overlay.raidProgress.showIntermission.name": "Show Intermission Timer",
   "feature.wynntils.raidProgress.overlay.raidProgress.showMilliseconds.description": "Should the timers show milliseconds?",
   "feature.wynntils.raidProgress.overlay.raidProgress.showMilliseconds.name": "Show Milliseconds",
+  "feature.wynntils.raidProgress.overlay.raidProgress.totalIntermission.description": "Should the total raid time include intermission times?",
+  "feature.wynntils.raidProgress.overlay.raidProgress.totalIntermission.name": "Total Time include Intermission",
   "feature.wynntils.raidProgress.personalBest": "New personal best for %s! Beaten in %d:%d:%d!",
   "feature.wynntils.raidProgress.playSoundOnBest.description": "Should a sound be played when you get a new personal best time?",
   "feature.wynntils.raidProgress.playSoundOnBest.name": "Play sound on PB",
