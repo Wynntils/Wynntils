@@ -12,8 +12,17 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class RaidProgressOverlay extends TextOverlay {
     private static final String TEMPLATE =
-            "{concat(\"§6§l§n\";current_raid;\"\\n\\n§dChallenge 1: \";if_str(eq(raid_room_time(\"challenge_1\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"challenge_1\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"challenge_1\");60));2)));\"\\n§dChallenge 2: \";if_str(eq(raid_room_time(\"challenge_2\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"challenge_2\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"challenge_2\");60));2)));\"\\n§dChallenge 3: \";if_str(eq(raid_room_time(\"challenge_3\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"challenge_3\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"challenge_3\");60));2)));\"\\n\\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"boss_fight\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"boss_fight\");60));2)));\"\\n\\n§5Total: \";concat(\"§b\";leading_zeros(int(div(raid_time;60));2);\":\";leading_zeros(int(mod(raid_time;60));2)))}";
+            """
+            {concat(\"§6§l§n\";current_raid;\"
 
+            §dChallenge 1: \";if_str(eq(raid_room_time(\"challenge_1\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"challenge_1\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"challenge_1\");60));2)));\"
+            §dChallenge 2: \";if_str(eq(raid_room_time(\"challenge_2\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"challenge_2\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"challenge_2\");60));2)));\"
+            §dChallenge 3: \";if_str(eq(raid_room_time(\"challenge_3\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"challenge_3\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"challenge_3\");60));2)));\"
+
+            §4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(raid_room_time(\"boss_fight\");60));2);\":\";leading_zeros(int(mod(raid_room_time(\"boss_fight\");60));2)));\"
+
+            §5Total: \";concat(\"§b\";leading_zeros(int(div(raid_time;60));2);\":\";leading_zeros(int(mod(raid_time;60));2)))}
+            """;
     private static final String PREVIEW_TEMPLATE =
             """
             §6§l§nNest of the Grootslangs
