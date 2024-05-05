@@ -46,6 +46,10 @@ public enum StatisticKind {
     THE_NAMELESS_ANOMALY_SUCCEEDED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     THE_NAMELESS_ANOMALY_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED);
     // endregion
+  
+    // region Wars
+    WARS_JOINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
+    // endregion
 
     private final StatFormatter formatter;
     private final StatisticType type;
