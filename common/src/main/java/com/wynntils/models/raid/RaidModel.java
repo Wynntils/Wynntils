@@ -18,11 +18,14 @@ import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.mc.McUtils;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,7 +44,7 @@ public class RaidModel extends Model {
     private static final StyledText RAID_FAILED = StyledText.fromString("§4Raid Failed!");
 
     @Persisted
-    public final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
     private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
 
@@ -127,9 +130,16 @@ public class RaidModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        currentRaid = null;
-        currentRoom = null;
-        roomTimers.clear();
+        // Only want to send the message once the user has returned to an actual world
+        if (currentRaid != null && event.getNewState() == WorldState.WORLD) {
+            currentRaid = null;
+            currentRoom = null;
+            roomTimers.clear();
+
+            McUtils.sendMessageToClient(Component.literal(
+                            "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
+                    .withStyle(ChatFormatting.DARK_RED));
+        }
     }
 
     public long getRaidBestTime(RaidKind raidKind) {
