@@ -396,7 +396,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-                // If shift is not held down, clear all waypoints to only add have the new one
+                // If shift is not held down, clear all waypoints to only have the new one
                 if (!KeyboardUtils.isShiftDown()) {
                     Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
                 }
