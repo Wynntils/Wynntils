@@ -142,7 +142,7 @@ public class GearInfoRegistry {
 
             int powderSlots = JsonUtils.getNullableJsonInt(json, "powderSlots");
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName, type);
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
