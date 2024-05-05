@@ -48,23 +48,27 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
         if (event.getWrappedScreenClass() != TerritoryManagementScreen.class) return;
 
+        boolean shouldOpen = false;
+
         switch (shiftBehaviorConfig.get()) {
             case NONE -> {
-                event.setOpenScreen(true);
-                customScreenOpened = true;
+                shouldOpen = true;
             }
             case ENABLED_IF_SHIFT_HELD -> {
                 if (shiftClickedTerritoryItem) {
-                    event.setOpenScreen(true);
-                    customScreenOpened = true;
+                    shouldOpen = true;
                 }
             }
             case DISABLED_IF_SHIFT_HELD -> {
                 if (!shiftClickedTerritoryItem) {
-                    event.setOpenScreen(true);
-                    customScreenOpened = true;
+                    shouldOpen = true;
                 }
             }
+        }
+
+        if (shouldOpen) {
+            event.setOpenScreen(true);
+            customScreenOpened = true;
         }
     }
 
