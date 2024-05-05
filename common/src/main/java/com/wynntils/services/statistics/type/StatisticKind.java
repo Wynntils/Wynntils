@@ -44,7 +44,7 @@ public enum StatisticKind {
     THE_CANYON_COLOSSUS_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
     THE_NAMELESS_ANOMALY_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     THE_NAMELESS_ANOMALY_SUCCEEDED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
-    THE_NAMELESS_ANOMALY_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED);
+    THE_NAMELESS_ANOMALY_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
     // endregion
   
     // region Wars
