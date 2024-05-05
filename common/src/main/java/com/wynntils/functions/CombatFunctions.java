@@ -53,10 +53,18 @@ public class CombatFunctions {
         }
     }
 
-    public static class RepeatedSpellNameFunction extends Function<String> {
+    public static class LastSpellNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.Spell.getLastSpellName();
+            return arguments.getArgument("burst").getBooleanValue()
+                    ? Models.Spell.getLastBurstSpellName()
+                    : Models.Spell.getLastSpellName();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, true)));
         }
 
         @Override
@@ -65,10 +73,18 @@ public class CombatFunctions {
         }
     }
 
-    public static class RepeatedSpellCountFunction extends Function<Integer> {
+    public static class LastSpellRepeatCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Spell.getRepeatedSpellCount();
+            return arguments.getArgument("burst").getBooleanValue()
+                    ? Models.Spell.getRepeatedBurstSpellCount()
+                    : Models.Spell.getRepeatedSpellCount();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, true)));
         }
 
         @Override
@@ -77,10 +93,18 @@ public class CombatFunctions {
         }
     }
 
-    public static class RepeatedSpellTicksFunction extends Function<Integer> {
+    public static class TicksSinceLastSpellFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Spell.getTicksSinceCast();
+            return arguments.getArgument("burst").getBooleanValue()
+                    ? Models.Spell.getTicksSinceCastBurst()
+                    : Models.Spell.getTicksSinceCast();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, true)));
         }
 
         @Override

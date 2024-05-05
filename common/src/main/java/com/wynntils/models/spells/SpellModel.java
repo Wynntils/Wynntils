@@ -37,8 +37,11 @@ public class SpellModel extends Model {
     private final SpellSegment spellSegment = new SpellSegment();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+    private String lastBurstSpellName = "";
     private String lastSpellName = "";
+    private int repeatedBurstSpellCount = 0;
     private int repeatedSpellCount = 0;
+    private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
 
     public SpellModel() {
@@ -114,39 +117,68 @@ public class SpellModel extends Model {
 
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast e) {
+        ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
+
+        if (e.getSpellType().getName().equals(lastBurstSpellName)) {
+            repeatedBurstSpellCount++;
+        } else {
+            repeatedBurstSpellCount = 1;
+        }
         if (e.getSpellType().getName().equals(lastSpellName)) {
             repeatedSpellCount++;
-            return;
+        } else {
+            repeatedSpellCount = 1;
         }
+
+        lastBurstSpellName = e.getSpellType().getName();
         lastSpellName = e.getSpellType().getName();
-        repeatedSpellCount = 1;
     }
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        if (lastSpellName.isEmpty()) return;
-        ticksSinceCast++;
-        if (ticksSinceCast >= SPELL_COST_RESET_TICKS) {
-            lastSpellName = "";
-            repeatedSpellCount = 0;
-            ticksSinceCast = 0;
+        if (!lastBurstSpellName.isEmpty()) {
+            ticksSinceCastBurst++;
+        }
+        if (!lastSpellName.isEmpty()) {
+            ticksSinceCast++;
+        }
+
+        if (ticksSinceCastBurst >= SPELL_COST_RESET_TICKS) {
+            lastBurstSpellName = "";
+            repeatedBurstSpellCount = 0;
+            ticksSinceCastBurst = 0;
         }
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
+        lastBurstSpellName = "";
         lastSpellName = "";
+        repeatedBurstSpellCount = 0;
         repeatedSpellCount = 0;
+        ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
+    }
+
+    public String getLastBurstSpellName() {
+        return lastBurstSpellName;
     }
 
     public String getLastSpellName() {
         return lastSpellName;
     }
 
+    public int getRepeatedBurstSpellCount() {
+        return repeatedBurstSpellCount;
+    }
+
     public int getRepeatedSpellCount() {
         return repeatedSpellCount;
+    }
+
+    public int getTicksSinceCastBurst() {
+        return ticksSinceCastBurst;
     }
 
     public int getTicksSinceCast() {
