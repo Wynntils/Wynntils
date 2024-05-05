@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.FileUtils;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -29,7 +30,7 @@ public class WeeklyConfigBackupFeature extends Feature {
         long currentTime = System.currentTimeMillis();
         long lastBackupTime = lastBackup.get();
 
-        if (currentTime - lastBackupTime >= BACKUP_INTERVAL_DAYS * 24 * 60 * 60 * 1000) {
+        if (currentTime - lastBackupTime >= TimeUnit.DAYS.toMillis(BACKUP_INTERVAL_DAYS)) {
             FileUtils.mkdir(BACKUPS_DIR);
 
             File userConfigFile = Managers.Config.getUserConfigFile();
