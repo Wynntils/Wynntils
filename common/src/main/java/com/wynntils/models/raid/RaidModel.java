@@ -20,6 +20,7 @@ import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class RaidModel extends Model {
     // For boss intermission look for BOSS_FIGHT_LABEL label.
     // For boss fight look for the boss' label.
     // For raid completion/failure use RAID_COMPLETE or RAID_FAILED title.
+    public static final int ROOM_TIMERS_COUNT = 5;
     private static final StyledText BLACKSMITH_LABEL = StyledText.fromString("§dBlacksmith");
     private static final StyledText BOSS_FIGHT_LABEL = StyledText.fromString("§4§l[§cBoss Fight§4§l]");
     // Title gradually builds up to full "§a§lRAID COMPLETED!"
@@ -74,18 +76,21 @@ public class RaidModel extends Model {
         }
 
         if (styledText.equals(RAID_COMPLETE)) {
-            long timeTaken = System.currentTimeMillis() - raidStartTime;
-            // Raid has been completed, post event with time taken in milliseconds
-            WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, timeTaken));
+            // Add the boss time to room timers
+            long bossTime = System.currentTimeMillis() - roomStartTime;
+            roomTimers.put(RaidRoomType.BOSS_FIGHT, bossTime);
 
-            checkForNewPersonalBest(currentRaid, timeTaken);
+            // Raid has been completed, post event with timers
+            WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, getAllRoomTimes(), currentRaidTime()));
+
+            checkForNewPersonalBest(currentRaid, currentRaidTime());
 
             currentRaid = null;
             currentRoom = null;
             roomTimers.clear();
         } else if (styledText.equals(RAID_FAILED)) {
-            // Raid failed, post event with time elapsed in milliseconds
-            WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, System.currentTimeMillis() - raidStartTime));
+            // Raid failed, post event with timers
+            WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
 
             currentRaid = null;
             currentRoom = null;
@@ -217,6 +222,19 @@ public class RaidModel extends Model {
             roomTimers.put(previousRoom, roomTime);
             roomStartTime = System.currentTimeMillis();
         }
+    }
+
+    private List<Long> getAllRoomTimes() {
+        List<Long> allRoomTimes = new ArrayList<>();
+
+        // Order is challenge 1, 2, 3, boss, intermission, total
+        allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_1));
+        allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_2));
+        allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_3));
+        allRoomTimes.add(getRoomTime(RaidRoomType.BOSS_FIGHT));
+        allRoomTimes.add(getIntermissionTime());
+
+        return allRoomTimes;
     }
 
     private void checkForNewPersonalBest(RaidKind raidKind, long time) {

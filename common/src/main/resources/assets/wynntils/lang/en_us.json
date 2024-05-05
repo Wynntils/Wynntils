@@ -1050,7 +1050,6 @@
   "feature.wynntils.quickCast.safeCasting.name": "Safe Casting",
   "feature.wynntils.quickCast.spellCooldown.description": "Cooldown before casting another spell in ticks",
   "feature.wynntils.quickCast.spellCooldown.name": "Spell Cooldown",
-  "feature.wynntils.raidProgress.completedRaid": "Completed %s in %d:%d:%d!",
   "feature.wynntils.raidProgress.description": "Add an overlay for showing progress in raids",
   "feature.wynntils.raidProgress.name": "Raid Progress",
   "feature.wynntils.raidProgress.overlay.raidProgress.description": "Show current raid room progress",
