@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -85,6 +86,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
 
     // Mode-specific data
     private boolean selectionMode;
+    private String territoryToBeClicked;
     private Set<String> selectedTerritories = new HashSet<>();
 
     public TerritoryManagementHolder() {
@@ -115,7 +117,19 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             territories.put(absSlot, Pair.of(itemStack, territoryItem));
 
             if (!isSinglePage()) {
-                updateTerritoryItemSelection(territoryItem, slot);
+                // There are three cases where we need to do clicking:
+                // Normal mode:
+                // 1. The territory item is marked to be clicked
+
+                // Selection mode:
+                // 1. The territory item is selected, but it is no longer in the selected list
+                // 2. The territory item is not selected, but it is in the selected list
+
+                if (Objects.equals(territoryToBeClicked, territoryItem.getName())
+                        || (selectedTerritories.contains(territoryItem.getName()) && !territoryItem.isSelected())
+                        || (!selectedTerritories.contains(territoryItem.getName()) && territoryItem.isSelected())) {
+                    clickOnTerritory(territoryItem, slot);
+                }
             }
         }
 
@@ -202,6 +216,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         territories = new Int2ObjectAVLTreeMap<>();
         territoryConnections = new HashMap<>();
         selectionMode = false;
+        territoryToBeClicked = null;
         selectedTerritories = new HashSet<>();
     }
 
@@ -288,27 +303,35 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                 selectedTerritories.add(territoryItem.getName());
             }
 
-            // Click on the territory item to select/deselect it
-            int absSlot = territories.int2ObjectEntrySet().stream()
-                    .filter(entry -> entry.getValue().b().getName().equals(territoryItem.getName()))
-                    .mapToInt(Map.Entry::getKey)
-                    .findFirst()
-                    .orElse(-1);
-
-            int itemPage = absSlot / ITEMS_PER_PAGE;
-
-            if (absSlot == -1) {
-                WynntilsMod.warn("Could not find the slot for the territory item when trying to select it: "
-                        + territoryItem.getName());
+            if (!isSinglePage()) return;
+        } else {
+            if (!Models.War.isWarActive()) {
+                Handlers.Command.sendCommandImmediately("gu territory " + territoryItem.getName());
                 return;
             }
 
-            if (!isSinglePage() && currentPage != itemPage) return;
-
-            updateTerritoryItemSelection(territoryItem, getRelativeSlot(absSlot));
-        } else {
-            Handlers.Command.sendCommandImmediately("gu territory " + territoryItem.getName());
+            territoryToBeClicked = territoryItem.getName();
         }
+
+        // Click on the territory item to select/deselect it
+        int absSlot = territories.int2ObjectEntrySet().stream()
+                .filter(entry -> entry.getValue().b().getName().equals(territoryItem.getName()))
+                .mapToInt(Map.Entry::getKey)
+                .findFirst()
+                .orElse(-1);
+
+        int itemPage = absSlot / ITEMS_PER_PAGE;
+
+        if (absSlot == -1) {
+            WynntilsMod.warn("Could not find the slot for the territory item when trying to click it: "
+                    + territoryItem.getName());
+            return;
+        }
+
+        // If the item is not on the current page, we'll eventually go to the page
+        if (currentPage != itemPage) return;
+
+        clickOnTerritory(territoryItem, getRelativeSlot(absSlot));
     }
 
     public Texture getApplyButtonTexture() {
@@ -374,18 +397,12 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         }
     }
 
-    private void updateTerritoryItemSelection(TerritoryItem territoryItem, int slot) {
-        // There are two cases where we need to do special handling:
-        // 1. The territory item is selected, but it is no longer in the selected list
-        // 2. The territory item is not selected, but it is in the selected list
-        if ((selectedTerritories.contains(territoryItem.getName()) && !territoryItem.isSelected())
-                || (!selectedTerritories.contains(territoryItem.getName()) && territoryItem.isSelected())) {
-            ContainerUtils.clickOnSlot(
-                    slot,
-                    wrappedScreen.getWrappedScreenInfo().containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    wrappedScreen.getWrappedScreenInfo().containerMenu().getItems());
-        }
+    private void clickOnTerritory(TerritoryItem territoryItem, int slot) {
+        ContainerUtils.clickOnSlot(
+                slot,
+                wrappedScreen.getWrappedScreenInfo().containerId(),
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                wrappedScreen.getWrappedScreenInfo().containerMenu().getItems());
     }
 
     private boolean isSinglePage() {

@@ -112,10 +112,11 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     public void onMenuOpenPre(MenuEvent.MenuOpenedEvent.Pre event) {
         if (!openTerritoryManagement) return;
 
+        openTerritoryManagement = false;
+
         // We cannot use ContainerModel here, as it is too early in the event chain.
         if (!StyledText.fromComponent(event.getTitle()).matches(MANAGE_TITLE_PATTERN)) return;
 
-        openTerritoryManagement = false;
         event.setCanceled(true);
 
         AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
