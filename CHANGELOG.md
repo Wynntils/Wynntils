@@ -1,3 +1,19 @@
+## [1.2.1](https://github.com/Wynntils/Artemis/compare/v1.2.0...v1.2.1) (2024-05-05)
+
+
+### New Features
+
+* Add keybind to open territory management [skip ci] ([#2454](https://github.com/Wynntils/Artemis/issues/2454)) ([78f302d](https://github.com/Wynntils/Artemis/commit/78f302daf4bb314c23bf2ca7a73647f2821c673a))
+* Click territory pois to set marker on guild map [skip ci] ([#2455](https://github.com/Wynntils/Artemis/issues/2455)) ([83712b8](https://github.com/Wynntils/Artemis/commit/83712b82d161cdace71c10ac9f1f08adb783a890))
+* Make territory attack timer bold if the player is standing in it ([#2458](https://github.com/Wynntils/Artemis/issues/2458)) ([8f1aadf](https://github.com/Wynntils/Artemis/commit/8f1aadf0f05ce37607c458953a323ea90bff3766))
+
+
+### Bug Fixes
+
+* Fix PlayerCommand not using the correct date format [skip ci] ([#2456](https://github.com/Wynntils/Artemis/issues/2456)) ([b748bb2](https://github.com/Wynntils/Artemis/commit/b748bb2fff8312353a4265ffd230d484373d5933))
+* Fix territory connections not working due to some connections not being displayed as bidirectional [skip ci] ([#2453](https://github.com/Wynntils/Artemis/issues/2453)) ([ea97818](https://github.com/Wynntils/Artemis/commit/ea978187f9b229d5071c9ab653c999f3812ced68)), closes [#1](https://github.com/Wynntils/Artemis/issues/1)
+* Fix Territory Management Screen not working in wars [skip ci] ([#2457](https://github.com/Wynntils/Artemis/issues/2457)) ([89a108c](https://github.com/Wynntils/Artemis/commit/89a108ce0ac43779e19787747311376429f6d127))
+
 ## [1.2.0](https://github.com/Wynntils/Artemis/compare/v1.1.14...v1.2.0) (2024-05-05)
 
 
@@ -54,6 +70,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2452](https://github.com/Wynntils/Artemis/issues/2452)) ([4493d0e](https://github.com/Wynntils/Artemis/commit/4493d0edd9532022dbce5b45211b889b95732591))
+* **release:** v1.2.0 [skip ci] ([fe4d7cc](https://github.com/Wynntils/Artemis/commit/fe4d7cc28f7d1af786cfdb35e2169f33e218e974))
 
 
 ### Code Refactoring
@@ -115,16 +132,4 @@
 * Container design rehaul [skip ci] ([#2419](https://github.com/Wynntils/Artemis/issues/2419)) ([0297eeb](https://github.com/Wynntils/Artemis/commit/0297eebb4f3ee32f748412ecc8cf1138a4c6b72a))
 * Remove InteractiveContainerType and replace with WynncraftContainers [skip ci] ([#2416](https://github.com/Wynntils/Artemis/issues/2416)) ([0e1027e](https://github.com/Wynntils/Artemis/commit/0e1027e5e76523435e14ea2a82b733f56bf33d31))
 * Sort ItemAnnotators into Game and Gui annotators [skip ci] ([#2420](https://github.com/Wynntils/Artemis/issues/2420)) ([efe98de](https://github.com/Wynntils/Artemis/commit/efe98de5414c7d020a012bdc19c5f0b30a5cc920))
-
-## [1.1.11](https://github.com/Wynntils/Artemis/compare/v1.1.10...v1.1.11) (2024-04-11)
-
-
-### Bug Fixes
-
-* Make blocks_above_ground function handle an edge-case hang ([#2401](https://github.com/Wynntils/Artemis/issues/2401)) ([66aab05](https://github.com/Wynntils/Artemis/commit/66aab05d68b2d2d2b7ca931323e0ae2e1e9d5a3b))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.11 [skip ci] ([a8683c7](https://github.com/Wynntils/Artemis/commit/a8683c799405e48d0eaa94bce868ebf36bfcf744))
 
