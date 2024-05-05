@@ -1,3 +1,65 @@
+## [1.2.0](https://github.com/Wynntils/Artemis/compare/v1.1.14...v1.2.0) (2024-05-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Release Wynntils 1.2.0
+
+### New Features
+
+* Add an overall mode the statistics page ([#2432](https://github.com/Wynntils/Artemis/issues/2432)) ([31e4c5d](https://github.com/Wynntils/Artemis/commit/31e4c5ddd7ec45e09248185c935327b270b88a12))
+* Add beacons/POIs for territories with queued war timers ([#2406](https://github.com/Wynntils/Artemis/issues/2406)) ([4d023bf](https://github.com/Wynntils/Artemis/commit/4d023bf425b4567b846298a98834098557e27bca))
+* Add ExtendedSeasonLeaderboardFeature ([#2431](https://github.com/Wynntils/Artemis/issues/2431)) ([5e80f8e](https://github.com/Wynntils/Artemis/commit/5e80f8e01fa2af91e4a6f068a6dda4c3c53258eb))
+* Add guild bank redirector in ChatRedirectFeature ([#2430](https://github.com/Wynntils/Artemis/issues/2430)) ([171a012](https://github.com/Wynntils/Artemis/commit/171a0123853cccb8a76387bbc362be66a5606423))
+* Add mythic pull dry streaks and some new lootrun statistics ([#2435](https://github.com/Wynntils/Artemis/issues/2435)) ([c4b6f1a](https://github.com/Wynntils/Artemis/commit/c4b6f1a01b75b1a4b7ba72b5a808e880330c4cf3))
+* Add onlinemembers and player command ([#2412](https://github.com/Wynntils/Artemis/issues/2412)) ([53f63de](https://github.com/Wynntils/Artemis/commit/53f63ded9bd78cd9e2440a2af7413b228a7e7731))
+* Add ProfessionHighlightFeature ([#2424](https://github.com/Wynntils/Artemis/issues/2424)) ([2bff405](https://github.com/Wynntils/Artemis/commit/2bff405aa1b4eb1f03c2b27eb89508f6addf2890))
+* Add RevealNicknamesFeature ([#2408](https://github.com/Wynntils/Artemis/issues/2408)) ([ad4c00f](https://github.com/Wynntils/Artemis/commit/ad4c00fff07a2b00e2983b0606ed88a7dd0e8864))
+* Add ServerUptimeInfoOverlay ([#2414](https://github.com/Wynntils/Artemis/issues/2414)) ([a8ef08a](https://github.com/Wynntils/Artemis/commit/a8ef08a617fabf4f9622384f7d8b40c6e890d9ef))
+* Add soulpoint subcommand and aliases for server commands, click-to-switch server texts, fix formatting issues, command no longer hands the game ([#2415](https://github.com/Wynntils/Artemis/issues/2415)) ([aa94e6e](https://github.com/Wynntils/Artemis/commit/aa94e6ecd2bcbdcaf7f8dfe1c854f0936b1cd2b4))
+* Add statistics functions, add overall support for statistics command ([#2434](https://github.com/Wynntils/Artemis/issues/2434)) ([ebde28b](https://github.com/Wynntils/Artemis/commit/ebde28bb238a2f39de3073aa236ab824f5142978))
+* Add TerritoryManagementScreen ([#2439](https://github.com/Wynntils/Artemis/issues/2439)) ([e9035c9](https://github.com/Wynntils/Artemis/commit/e9035c946e28222435d6c584758462440f51704a))
+* Add timer and vignette overlay, sound effect and functions for tower volley and tower aura ([#2405](https://github.com/Wynntils/Artemis/issues/2405)) ([9b169fd](https://github.com/Wynntils/Artemis/commit/9b169fd5a773fb713129b4255c9f5a659c183652))
+* Add TowerStatsFeature and TowerStatsOverlay ([#2427](https://github.com/Wynntils/Artemis/issues/2427)) ([7613756](https://github.com/Wynntils/Artemis/commit/7613756512a28b4e10c0be7322cd27924f1708a7))
+* Add war statistics and WarSinceFunction ([#2451](https://github.com/Wynntils/Artemis/issues/2451)) ([8e07892](https://github.com/Wynntils/Artemis/commit/8e07892e8562f4c126597c539332e4d7199f481c))
+* Add WarHornFeature ([#2411](https://github.com/Wynntils/Artemis/issues/2411)) ([16b682c](https://github.com/Wynntils/Artemis/commit/16b682c79e46a45021a79b6d26410569479d6455))
+* Add WeeklyConfigBackupFeature ([#2449](https://github.com/Wynntils/Artemis/issues/2449)) ([a58ef62](https://github.com/Wynntils/Artemis/commit/a58ef62e48b4fdba26b70e4b5ee5e341361bfde4))
+* Bomb Bell Overlay ([#2409](https://github.com/Wynntils/Artemis/issues/2409)) ([460dc41](https://github.com/Wynntils/Artemis/commit/460dc41fad68d22930b1596b5de1bb096da327e0))
+* Handle territory timers in a more advanced way to make sure they always appear as accurate as they can ([#2429](https://github.com/Wynntils/Artemis/issues/2429)) ([eee5682](https://github.com/Wynntils/Artemis/commit/eee5682aba3d93a8185e2311d3ed1391affa0946))
+* Item Filter GUI ([#2417](https://github.com/Wynntils/Artemis/issues/2417)) ([ec77450](https://github.com/Wynntils/Artemis/commit/ec7745062f0d4737c457d46c01a882807368379d))
+* Raid progress overlay and print times feature ([#2446](https://github.com/Wynntils/Artemis/issues/2446)) ([b4e5c43](https://github.com/Wynntils/Artemis/commit/b4e5c436049236a2119ab87cc0596e9c1536d082))
+* Redirect guild reward messages ([#2437](https://github.com/Wynntils/Artemis/issues/2437)) ([bfdb3fa](https://github.com/Wynntils/Artemis/commit/bfdb3fa72130d1b26b20b7b35cb55bc4dd954ddf))
+* Release Wynntils 1.2.0 ([c104c45](https://github.com/Wynntils/Artemis/commit/c104c452b734e295a0cd9735ab4322576bdcdd41))
+* Spell Recast Functions [skip ci] ([#2448](https://github.com/Wynntils/Artemis/issues/2448)) ([f216c38](https://github.com/Wynntils/Artemis/commit/f216c38e766aa6838d36901cb2a4c0287d15846e))
+
+
+### Bug Fixes
+
+* Fix CrowdSourcedData races by using concurrent collections ([#2447](https://github.com/Wynntils/Artemis/issues/2447)) ([e580f9c](https://github.com/Wynntils/Artemis/commit/e580f9ca01a32c9431487225a436894cfb4aaa2d))
+* Fix TerritoryModel[#get](https://github.com/Wynntils/Artemis/issues/get)TerritoryProfileFromShortName not having a stable order ([#2442](https://github.com/Wynntils/Artemis/issues/2442)) ([adfcf50](https://github.com/Wynntils/Artemis/commit/adfcf5052cfa185fbc9c08e3e3732801e6cd483d))
+* Fix WorldWaypointDistanceFeature not rendering all waypoint markers correctly ([1af00a8](https://github.com/Wynntils/Artemis/commit/1af00a834ee23c8facb769303b51cfbf1d2f3f31))
+* Make boss-bars update, if they are rendered, but tracked ([675c681](https://github.com/Wynntils/Artemis/commit/675c6816d3c447b9a22e0fec8ad733128f6a108b))
+* Make guild map compass behaviour consistent with main map [skip ci] ([#2450](https://github.com/Wynntils/Artemis/issues/2450)) ([b43bbe6](https://github.com/Wynntils/Artemis/commit/b43bbe644a6f50d63a8deda9ee8feec3fd3fac4b))
+* Make GuildAttackTimerModel use string territory names instead of profiles ([#2445](https://github.com/Wynntils/Artemis/issues/2445)) ([0467354](https://github.com/Wynntils/Artemis/commit/0467354cb197b11b6ba3a7d88b0957e8bab5723b))
+* Use proper url encoding [skip ci] ([#2410](https://github.com/Wynntils/Artemis/issues/2410)) ([c510838](https://github.com/Wynntils/Artemis/commit/c510838f3faa83e30416715eb666e0eb4c78697e))
+* Use the new dropMeta info for showing item guesses [skip ci] ([#2399](https://github.com/Wynntils/Artemis/issues/2399)) ([81337ca](https://github.com/Wynntils/Artemis/commit/81337ca53501904b7956733b957c474e09611f8f))
+
+
+### Performance Improvements
+
+* Multiple `StyledText` optimizations [skip ci] ([#2444](https://github.com/Wynntils/Artemis/issues/2444)) ([91e84e2](https://github.com/Wynntils/Artemis/commit/91e84e2f329f9d6f483e101957de7b23d74eeeac))
+* Optimize ItemHandler lore soft matching [skip ci] ([#2440](https://github.com/Wynntils/Artemis/issues/2440)) ([14de02f](https://github.com/Wynntils/Artemis/commit/14de02f834ca434d227908f26b880d94e45a4921))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2452](https://github.com/Wynntils/Artemis/issues/2452)) ([4493d0e](https://github.com/Wynntils/Artemis/commit/4493d0edd9532022dbce5b45211b889b95732591))
+
+
+### Code Refactoring
+
+* Move onlinemembers and player command json handling to models ([#2438](https://github.com/Wynntils/Artemis/issues/2438)) ([b0437cb](https://github.com/Wynntils/Artemis/commit/b0437cb3b364ac64f7d600a234d009dbc7c092e0))
+
 ## [1.1.14](https://github.com/Wynntils/Artemis/compare/v1.1.13...v1.1.14) (2024-04-25)
 
 
@@ -9,6 +71,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v1.1.14 [skip ci] ([a301276](https://github.com/Wynntils/Artemis/commit/a301276d41aeaf260c02097c3bdc2cce2f45c161))
 * Update mod dependency and ci versions [skip ci] ([#2426](https://github.com/Wynntils/Artemis/issues/2426)) ([12438f3](https://github.com/Wynntils/Artemis/commit/12438f3f1d8ecf52f2ab0faf4b18e2edbeccebdc))
 
 ## [1.1.13](https://github.com/Wynntils/Artemis/compare/v1.1.12...v1.1.13) (2024-04-23)
@@ -64,27 +127,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.11 [skip ci] ([a8683c7](https://github.com/Wynntils/Artemis/commit/a8683c799405e48d0eaa94bce868ebf36bfcf744))
-
-## [1.1.10](https://github.com/Wynntils/Artemis/compare/v1.1.9...v1.1.10) (2024-04-11)
-
-
-### New Features
-
-* Above ground function ([#2398](https://github.com/Wynntils/Artemis/issues/2398)) ([e835269](https://github.com/Wynntils/Artemis/commit/e8352696c1a182e53a80ef4b6f2c6a7e0d5b8991))
-* Add OR support for item filters [ci skip] ([#2392](https://github.com/Wynntils/Artemis/issues/2392)) ([47bb948](https://github.com/Wynntils/Artemis/commit/47bb948e03d4f7bb65a58ec78567bebdc8b652b5))
-* Bomb Bell Relay Keybinds [skip ci] ([#2397](https://github.com/Wynntils/Artemis/issues/2397)) ([8fa3e3a](https://github.com/Wynntils/Artemis/commit/8fa3e3af5431bd0f18bcd053a1524aa021818408))
-
-
-### Bug Fixes
-
-* Don't render lootrun path chests on air or barriers [skip ci] ([#2400](https://github.com/Wynntils/Artemis/issues/2400)) ([404ea39](https://github.com/Wynntils/Artemis/commit/404ea39f53674b0db0f078afdc18e768430acf3c))
-* Horse keybind does not stop on vanish message [skip ci] ([#2395](https://github.com/Wynntils/Artemis/issues/2395)) ([f94aa06](https://github.com/Wynntils/Artemis/commit/f94aa064c94f9ff117c9c43bea4093c60a917d73))
-* Loadouts misalignment and disappearing when deleting [skip ci] ([#2396](https://github.com/Wynntils/Artemis/issues/2396)) ([cb7adc8](https://github.com/Wynntils/Artemis/commit/cb7adc848e7ebafd4bb51166fa25c86492cf98a1))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2391](https://github.com/Wynntils/Artemis/issues/2391)) ([6b50c88](https://github.com/Wynntils/Artemis/commit/6b50c88893ad192a1d5a88121ce87a891178a952))
-* [auto-generated] Update urls.json [ci skip] ([#2393](https://github.com/Wynntils/Artemis/issues/2393)) ([1dd9336](https://github.com/Wynntils/Artemis/commit/1dd9336851658b5f9f9c370bf19e00292113f965))
-* **release:** v1.1.10 [skip ci] ([d549799](https://github.com/Wynntils/Artemis/commit/d5497998b3beba4193757e92f9cff8f4f0ca82bf))
 
