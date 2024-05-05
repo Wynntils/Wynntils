@@ -70,11 +70,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return GearType.fromString(typeString);
     }
 
-    protected GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
+    protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
         ItemMaterial material = parseMaterial(json, type);
 
-        List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
+        List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
         Optional<StyledText> loreOpt = parseLore(json);
         Optional<String> apiNameOpt = Optional.ofNullable(apiName);
@@ -86,12 +86,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman, preIdentifiedItem);
     }
 
-    protected List<ItemObtainInfo> parseObtainInfo(JsonObject json, String name) {
+    protected List<ItemObtainInfo> parseObtainInfo(JsonObject json) {
         List<ItemObtainInfo> obtainInfo = new ArrayList<>();
-
-        // Add crowd-sourced information
-        List<ItemObtainInfo> obtainCrowdSourced = Models.WynnItem.getObtainInfo(name);
-        obtainInfo.addAll(obtainCrowdSourced);
 
         // Add API-obtained information
         String apiObtainName =

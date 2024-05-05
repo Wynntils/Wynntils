@@ -104,7 +104,7 @@ public class CharmInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no tier");
             }
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName);
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
             CharmRequirements requirements = parseCharmRequirements(json);
 
             // Base stats are parsed the same way as variable stats
@@ -113,11 +113,11 @@ public class CharmInfoRegistry {
             return new CharmInfo(displayName, tier, metaInfo, requirements, variableStats);
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName) {
+        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
             GearRestrictions restrictions = parseRestrictions(json);
             ItemMaterial material = parseOtherMaterial(json);
 
-            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
+            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
             return new GearMetaInfo(
                     restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);

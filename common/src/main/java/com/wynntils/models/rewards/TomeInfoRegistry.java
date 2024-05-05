@@ -116,7 +116,7 @@ public class TomeInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tome variant");
             }
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName);
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
             TomeRequirements requirements = parseTomeRequirements(json);
 
             JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
@@ -170,11 +170,11 @@ public class TomeInfoRegistry {
             return list;
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName) {
+        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
             GearRestrictions restrictions = parseRestrictions(json);
             ItemMaterial material = parseOtherMaterial(json);
 
-            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
+            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
             return new GearMetaInfo(
                     restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);
