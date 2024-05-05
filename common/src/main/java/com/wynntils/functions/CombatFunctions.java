@@ -52,4 +52,40 @@ public class CombatFunctions {
             return List.of("agl", "above_ground_level");
         }
     }
+
+    public static class RepeatedSpellNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Spell.getLastSpellName();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("recast_name");
+        }
+    }
+
+    public static class RepeatedSpellCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Spell.getRepeatedSpellCount();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("recast_count");
+        }
+    }
+
+    public static class RepeatedSpellTicksFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Spell.getTicksSinceCast();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("recast_ticks");
+        }
+    }
 }

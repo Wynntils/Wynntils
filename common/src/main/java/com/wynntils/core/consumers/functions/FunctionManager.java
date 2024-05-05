@@ -444,6 +444,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
         registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.RepeatedSpellNameFunction());
+        registerFunction(new CombatFunctions.RepeatedSpellCountFunction());
+        registerFunction(new CombatFunctions.RepeatedSpellTicksFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());

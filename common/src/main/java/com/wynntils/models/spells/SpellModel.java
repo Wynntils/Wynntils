@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -17,6 +18,7 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,9 @@ public class SpellModel extends Model {
     private final SpellSegment spellSegment = new SpellSegment();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+    private String lastSpellName = "";
+    private int repeatedSpellCount = 0;
+    private int ticksSinceCast = 0;
 
     public SpellModel() {
         super(List.of());
@@ -104,6 +109,47 @@ public class SpellModel extends Model {
             WynntilsMod.postEvent(
                     new SpellEvent.Completed(spell, partialSpellSource, SpellType.fromSpellDirectionArray(spell)));
         }
+    }
+
+    @SubscribeEvent
+    public void onSpellCast(SpellEvent.Cast e) {
+        ticksSinceCast = 0;
+        if (e.getSpellType().getName().equals(lastSpellName)) {
+            repeatedSpellCount++;
+            return;
+        }
+        lastSpellName = e.getSpellType().getName();
+        repeatedSpellCount = 1;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (lastSpellName.isEmpty()) return;
+        ticksSinceCast++;
+        if (ticksSinceCast >= 60) {
+            lastSpellName = "";
+            repeatedSpellCount = 0;
+            ticksSinceCast = 0;
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent e) {
+        lastSpellName = "";
+        repeatedSpellCount = 0;
+        ticksSinceCast = 0;
+    }
+
+    public String getLastSpellName() {
+        return lastSpellName;
+    }
+
+    public int getRepeatedSpellCount() {
+        return repeatedSpellCount;
+    }
+
+    public int getTicksSinceCast() {
+        return ticksSinceCast;
     }
 
     private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {
