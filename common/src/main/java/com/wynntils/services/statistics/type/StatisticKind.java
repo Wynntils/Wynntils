@@ -29,7 +29,11 @@ public enum StatisticKind {
     LOOTRUNS_REWARD_REROLLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_EXPERIENCE_GAINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
     LOOTRUNS_MOBS_KILLED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
-    LOOTRUNS_CHESTS_OPENED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
+    LOOTRUNS_CHESTS_OPENED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    // endregion
+
+    // region Wars
+    WARS_JOINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT);
     // endregion
 
     private final StatFormatter formatter;

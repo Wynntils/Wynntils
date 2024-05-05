@@ -580,6 +580,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.TowerOwnerFunction());
         registerFunction(new WarFunctions.TowerTerritoryFunction());
         registerFunction(new WarFunctions.VolleyTimerFunction());
+        registerFunction(new WarFunctions.WarsSinceFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
