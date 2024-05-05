@@ -63,6 +63,8 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     private static final int APPLY_CONFIRMED_DAMAGE = 20;
 
     private static final int REQUEST_LOAD_DELAY = 5;
+    // If the page is not loaded after this delay, force the next page load
+    private static final int FORCED_PAGE_LOAD_DELAY = 20;
 
     // Highlighters
     private final List<TerritoryHighlighter> highlighters = new ArrayList<>();
@@ -75,6 +77,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     private int requestedPage;
     private int loadedItems;
     private long nextRequestTicks;
+    private long lastItemLoadedTicks;
 
     // Territory data
     private Int2ObjectSortedMap<Pair<ItemStack, TerritoryItem>> territories = new Int2ObjectAVLTreeMap<>();
@@ -116,6 +119,8 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             }
         }
 
+        lastItemLoadedTicks = McUtils.player().tickCount;
+
         updateRenderedItems();
 
         // Reset the requested page, after loading the page
@@ -130,6 +135,14 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (McUtils.player().tickCount >= lastItemLoadedTicks + FORCED_PAGE_LOAD_DELAY) {
+            // Force the next page load
+            requestedPage = -1;
+            loadedItems = 0;
+            nextRequestTicks = McUtils.player().tickCount;
+            lastItemLoadedTicks = Integer.MAX_VALUE;
+        }
+
         // Try to cycle through the pages, if there are more than one
         if (McUtils.player().tickCount < nextRequestTicks) return;
         if (isSinglePage()) return;
@@ -185,6 +198,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         requestedPage = -1;
         loadedItems = 0;
         nextRequestTicks = Integer.MAX_VALUE;
+        lastItemLoadedTicks = Integer.MAX_VALUE;
         territories = new Int2ObjectAVLTreeMap<>();
         territoryConnections = new HashMap<>();
         selectionMode = false;
@@ -281,11 +295,15 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                     .findFirst()
                     .orElse(-1);
 
+            int itemPage = absSlot / ITEMS_PER_PAGE;
+
             if (absSlot == -1) {
                 WynntilsMod.warn("Could not find the slot for the territory item when trying to select it: "
                         + territoryItem.getName());
                 return;
             }
+
+            if (!isSinglePage() && currentPage != itemPage) return;
 
             updateTerritoryItemSelection(territoryItem, getRelativeSlot(absSlot));
         } else {
