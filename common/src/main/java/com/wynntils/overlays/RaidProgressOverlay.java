@@ -31,7 +31,7 @@ public class RaidProgressOverlay extends TextOverlay {
     public RaidProgressOverlay() {
         super(
                 new OverlayPosition(
-                        60,
+                        120,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
