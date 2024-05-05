@@ -9,20 +9,26 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
+import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.type.TerritoryConnectionType;
+import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +64,8 @@ public final class TerritoryModel extends Model {
 
     public TerritoryModel() {
         super(List.of());
+
+        Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
 
         timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
@@ -162,6 +170,55 @@ public final class TerritoryModel extends Model {
             territoryPoiMap.put(
                     entry.getKey(), new TerritoryPoi(() -> getTerritoryProfile(entry.getKey()), entry.getValue()));
         }
+    }
+
+    public Map<TerritoryItem, TerritoryConnectionType> getUnconnectedTerritories(List<TerritoryItem> territoryItems) {
+        TerritoryItem hqTerritory = territoryItems.stream()
+                .filter(TerritoryItem::isHeadquarters)
+                .findFirst()
+                .orElse(null);
+
+        // If there is no headquarters, there is no connected territories
+        if (hqTerritory == null) {
+            return territoryItems.stream()
+                    .collect(Collectors.toMap(item -> item, item -> TerritoryConnectionType.UNCONNECTED));
+        }
+
+        // Start a BFS from the headquarters
+        Set<TerritoryItem> connectedTerritories = new HashSet<>();
+        connectedTerritories.add(hqTerritory);
+
+        Deque<TerritoryItem> queue = new LinkedList<>();
+        queue.add(hqTerritory);
+
+        while (!queue.isEmpty()) {
+            TerritoryItem current = queue.poll();
+
+            for (TerritoryItem territoryItem : territoryItems) {
+                if (connectedTerritories.contains(territoryItem)) continue;
+
+                TerritoryInfo territoryInfo =
+                        getTerritoryPoiFromAdvancement(territoryItem.getName()).getTerritoryInfo();
+                if (territoryInfo != null && territoryInfo.getTradingRoutes().contains(current.getName())) {
+                    connectedTerritories.add(territoryItem);
+                    queue.add(territoryItem);
+                }
+            }
+        }
+
+        return territoryItems.stream().collect(Collectors.toMap(item -> item, item -> {
+            if (item.isHeadquarters()) return TerritoryConnectionType.HEADQUARTERS;
+
+            TerritoryInfo hqTerritoryInfo =
+                    getTerritoryPoiFromAdvancement(hqTerritory.getName()).getTerritoryInfo();
+            if (hqTerritoryInfo != null && hqTerritoryInfo.getTradingRoutes().contains(item.getName())) {
+                return TerritoryConnectionType.HEADQUARTERS_CONNECTION;
+            }
+
+            return connectedTerritories.contains(item)
+                    ? TerritoryConnectionType.CONNECTED
+                    : TerritoryConnectionType.UNCONNECTED;
+        }));
     }
 
     private void updateTerritoryProfileMap() {
