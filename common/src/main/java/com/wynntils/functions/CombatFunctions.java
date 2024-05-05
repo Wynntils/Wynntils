@@ -64,7 +64,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, true)));
+                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -84,7 +84,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, true)));
+                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
@@ -104,7 +104,7 @@ public class CombatFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, true)));
+                    List.of(new FunctionArguments.Argument<>("burst", Boolean.class, false)));
         }
 
         @Override
