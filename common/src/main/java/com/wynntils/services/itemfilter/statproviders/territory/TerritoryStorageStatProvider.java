@@ -6,7 +6,6 @@ package com.wynntils.services.itemfilter.statproviders.territory;
 
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.type.GuildResource;
-import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Locale;
@@ -21,10 +20,7 @@ public class TerritoryStorageStatProvider extends TerritoryStatProvider<CappedVa
 
     @Override
     public Optional<CappedValue> getValue(TerritoryItem territoryItem) {
-        TerritoryStorage territoryStorage = territoryItem.getStorage().get(guildResource);
-        return territoryStorage == null
-                ? Optional.empty()
-                : Optional.of(new CappedValue(territoryStorage.current(), territoryStorage.max()));
+        return Optional.ofNullable(territoryItem.getStorage().get(guildResource));
     }
 
     @Override

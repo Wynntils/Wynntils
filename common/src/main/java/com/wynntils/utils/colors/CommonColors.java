@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -21,6 +21,7 @@ public final class CommonColors {
     public static final CustomColor LIGHT_GRAY = CustomColor.fromInt(0xadadad).withAlpha(255);
     public static final CustomColor GRAY = CustomColor.fromInt(0x636363).withAlpha(255);
     public static final CustomColor DARK_GRAY = CustomColor.fromInt(0x101010).withAlpha(255);
+    public static final CustomColor TITLE_GRAY = CustomColor.fromInt(0x404040).withAlpha(255);
     public static final CustomColor PINK = CustomColor.fromInt(0xffb7b7).withAlpha(255);
     public static final CustomColor LIGHT_GREEN = CustomColor.fromInt(0x49ff59).withAlpha(255);
     public static final CustomColor LIGHT_BLUE = CustomColor.fromInt(0x00e9ff).withAlpha(255);

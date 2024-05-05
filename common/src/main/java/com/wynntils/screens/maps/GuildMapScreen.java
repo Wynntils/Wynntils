@@ -15,7 +15,6 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
@@ -33,6 +32,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -400,7 +400,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         for (GuildResource value : GuildResource.values()) {
             int generation = territoryInfo.getGeneration(value);
-            TerritoryStorage storage = territoryInfo.getStorage(value);
+            CappedValue storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
                 StyledText formattedGenerated = StyledText.fromString(

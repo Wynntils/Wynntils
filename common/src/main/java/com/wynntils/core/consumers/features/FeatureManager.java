@@ -133,6 +133,7 @@ import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
+import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.ProfessionHighlightFeature;
@@ -343,6 +344,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
+        registerFeature(new CustomTerritoryManagementScreenFeature());
         registerFeature(new CustomTradeMarketResultScreenFeature());
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new ProfessionHighlightFeature());

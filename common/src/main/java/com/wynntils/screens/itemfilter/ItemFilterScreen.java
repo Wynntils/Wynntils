@@ -1028,7 +1028,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
         // The active button does not need to be active,
         // as the changes are only made when the user interacted
         // with other widgets than the search widget itself
-        applyButton.active = false;
+        if (applyButton != null) {
+            applyButton.active = false;
+        }
 
         savePresetButton.active = !presetNameInput.getTextBoxInput().isEmpty()
                 && !itemSearchWidget.getTextBoxInput().isEmpty();

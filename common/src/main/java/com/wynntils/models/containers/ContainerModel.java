@@ -11,6 +11,7 @@ import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
+import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.models.containers.containers.HousingJukeboxContainer;
@@ -98,6 +99,7 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new DailyRewardContainer());
         registerWynncraftContainer(new FlyingChestContainer());
         registerWynncraftContainer(new GuildBankContainer());
+        registerWynncraftContainer(new GuildManagementContainer());
         registerWynncraftContainer(new GuildMemberListContainer());
         registerWynncraftContainer(new GuildTerritoriesContainer());
         registerWynncraftContainer(new HousingJukeboxContainer());

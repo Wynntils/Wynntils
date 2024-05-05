@@ -45,10 +45,13 @@ import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryDefenseStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryNameStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryOverallProductionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryProductionStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryStorageStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryTreasuryStatProvider;
+import com.wynntils.services.itemfilter.statproviders.territory.TerritoryUpgradeCountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryUpgradeLevelStatProvider;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
@@ -525,6 +528,7 @@ public class ItemFilterService extends Service {
         // Territory stat providers
         registerStatProvider(new TerritoryNameStatProvider());
 
+        registerStatProvider(new TerritoryOverallProductionStatProvider());
         for (GuildResource resource : GuildResource.values()) {
             registerStatProvider(new TerritoryProductionStatProvider(resource));
             registerStatProvider(new TerritoryStorageStatProvider(resource));
@@ -534,6 +538,8 @@ public class ItemFilterService extends Service {
             registerStatProvider(new TerritoryUpgradeLevelStatProvider(upgrade));
         }
 
+        registerStatProvider(new TerritoryDefenseStatProvider());
+        registerStatProvider(new TerritoryUpgradeCountStatProvider());
         registerStatProvider(new TerritoryTreasuryStatProvider());
         registerStatProvider(new TerritoryAlertStatProvider());
     }

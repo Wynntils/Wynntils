@@ -12,7 +12,7 @@ import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class TerritoryStatProvider<T extends Comparable<T>> extends ItemStatProvider<T> {
+abstract class TerritoryStatProvider<T extends Comparable<T>> extends ItemStatProvider<T> {
     @Override
     public final Optional<T> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof TerritoryItem territoryItem) {
