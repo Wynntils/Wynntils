@@ -25,8 +25,8 @@ jobs:
         with:
           node-version: 16
       - run: |
-          npm install conventional-changelog-conventionalcommits
-          npm install conventional-recommended-bump
+          npm install conventional-changelog-conventionalcommits@7.0.2
+          npm install conventional-recommended-bump@9.0.0
 
       - name: Set up version.json
         run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
