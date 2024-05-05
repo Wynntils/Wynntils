@@ -33,7 +33,8 @@ public enum ItemObtainType {
     SPECIAL_MOB_DROP("specialdrop", "Specific Mob Drop"),
     UNOBTAINABLE("unobtainable", "Unobtainable");
 
-    public static final List<ItemObtainType> BOXED_ITEMS = List.of( // All sources that possibly drop boxed items
+    // All sources that possibly drop boxed items
+    public static final List<ItemObtainType> BOXED_ITEMS = List.of(
             LOOT_CHEST,
             NORMAL_MOB_DROP,
             BOSS_ALTAR,
