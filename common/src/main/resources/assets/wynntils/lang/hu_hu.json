@@ -106,7 +106,6 @@
   "feature.wynntils.customSeaskipperScreen.pointerType.name": "Fő Térkép Játékos Jelölés Típusa",
   "feature.wynntils.dataStorage.dryBoxes.description": "Száraz Doboz a Funkció Változóhoz",
   "feature.wynntils.dataStorage.dryBoxes.name": "Száraz Doboz",
-  "feature.wynntils.dataStorage.dryCount.description": "Száraz Számlálás a Funkció Változóhoz",
   "feature.wynntils.dataStorage.dryCount.name": "Száraz Számláló",
   "feature.wynntils.dataStorage.name": "Adat Tároló",
   "feature.wynntils.dialogueOptionOverride.name": "Dialógus Gomb Felülírás",
