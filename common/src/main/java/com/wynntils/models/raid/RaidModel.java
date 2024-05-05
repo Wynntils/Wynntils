@@ -227,7 +227,7 @@ public class RaidModel extends Model {
     private List<Long> getAllRoomTimes() {
         List<Long> allRoomTimes = new ArrayList<>();
 
-        // Order is challenge 1, 2, 3, boss, intermission, total
+        // Order is challenge 1, 2, 3, boss, intermission
         allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_1));
         allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_2));
         allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_3));
