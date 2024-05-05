@@ -26,7 +26,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// FIXME: Extend feature with configs, shift to open default, etc.
 @ConfigCategory(Category.UI)
 public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final Pattern TERRITORY_MANAGE_ITEM_PATTERN = Pattern.compile("§e§lTerritories \\[.+\\]");
