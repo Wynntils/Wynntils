@@ -38,6 +38,7 @@ public class RaidModel extends Model {
     // For boss intermission look for BOSS_FIGHT_LABEL label.
     // For boss fight look for the boss' label.
     // For raid completion/failure use RAID_COMPLETE or RAID_FAILED title.
+    public static final int MAX_CHALLENGES = 3;
     public static final int ROOM_TIMERS_COUNT = 5;
     private static final StyledText BLACKSMITH_LABEL = StyledText.fromString("§dBlacksmith");
     private static final StyledText BOSS_FIGHT_LABEL = StyledText.fromString("§4§l[§cBoss Fight§4§l]");
@@ -232,7 +233,9 @@ public class RaidModel extends Model {
         allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_2));
         allRoomTimes.add(getRoomTime(RaidRoomType.CHALLENGE_3));
         allRoomTimes.add(getRoomTime(RaidRoomType.BOSS_FIGHT));
-        allRoomTimes.add(getIntermissionTime());
+        // Need to add boss time to get correct intermission time since
+        // currentRoom will still be boss room when getIntermissionTime() is called
+        allRoomTimes.add(getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT));
 
         return allRoomTimes;
     }

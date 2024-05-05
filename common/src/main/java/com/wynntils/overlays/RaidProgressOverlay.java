@@ -13,8 +13,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class RaidProgressOverlay extends TextOverlay {
-    private static final int MAX_CHALLENGES = 3;
-
     private String template;
 
     private String previewTemplate;
@@ -66,11 +64,11 @@ public class RaidProgressOverlay extends TextOverlay {
         StringBuilder templateBuilder = new StringBuilder("{concat(\"§6§l§n\";current_raid;\"\n\";");
         StringBuilder previewBuilder = new StringBuilder("§6§l§nNest of the Grootslangs\n\n");
 
-        for (int i = 0; i < MAX_CHALLENGES; i++) {
+        for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
             templateBuilder.append(getChallengeTemplate(i + 1));
         }
 
-        for (int i = 0; i < MAX_CHALLENGES; i++) {
+        for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
             previewBuilder.append(getChallengePreview(i + 1));
         }
 

@@ -25,6 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class RaidProgressFeature extends Feature {
+    private static final String TIME_FORMAT = "%02d:%02d.%03d\n";
+
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final RaidProgressOverlay raidProgressOverlay = new RaidProgressOverlay();
 
@@ -53,63 +55,23 @@ public class RaidProgressFeature extends Feature {
 
         raidComponents.append(Component.literal("\n\n"));
 
-        raidComponents.append(Component.literal("Challenge 1: ").withStyle(ChatFormatting.LIGHT_PURPLE));
+        for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
+            raidComponents.append(
+                    Component.literal("Challenge " + (i + 1) + ": ").withStyle(ChatFormatting.LIGHT_PURPLE));
+            raidComponents.append(formatTime(event.getRoomTimes().get(i)));
+        }
 
-        long challengeOneMinutes = (event.getRoomTimes().get(0) / 1000) / 60;
-        long challengeOneSeconds = (event.getRoomTimes().get(0) / 1000) % 60;
-        long challengeOneMilliseconds = event.getRoomTimes().get(0) % 1000;
-        String challengeOneTime =
-                String.format("%02d:%02d.%03d\n", challengeOneMinutes, challengeOneSeconds, challengeOneMilliseconds);
-
-        raidComponents.append(Component.literal(challengeOneTime).withStyle(ChatFormatting.AQUA));
-
-        raidComponents.append(Component.literal("Challenge 2: ").withStyle(ChatFormatting.LIGHT_PURPLE));
-
-        long challengeTwoMinutes = (event.getRoomTimes().get(1) / 1000) / 60;
-        long challengeTwoSeconds = (event.getRoomTimes().get(1) / 1000) % 60;
-        long challengeTwoMilliseconds = event.getRoomTimes().get(1) % 1000;
-        String challengeTwoTime =
-                String.format("%02d:%02d.%03d\n", challengeTwoMinutes, challengeTwoSeconds, challengeTwoMilliseconds);
-
-        raidComponents.append(Component.literal(challengeTwoTime).withStyle(ChatFormatting.AQUA));
-
-        raidComponents.append(Component.literal("Challenge 3: ").withStyle(ChatFormatting.LIGHT_PURPLE));
-
-        long challengeThreeMinutes = (event.getRoomTimes().get(2) / 1000) / 60;
-        long challengeThreeSeconds = (event.getRoomTimes().get(2) / 1000) % 60;
-        long challengeThreeMilliseconds = event.getRoomTimes().get(2) % 1000;
-        String challengeThreeTime = String.format(
-                "%02d:%02d.%03d\n\n", challengeThreeMinutes, challengeThreeSeconds, challengeThreeMilliseconds);
-
-        raidComponents.append(Component.literal(challengeThreeTime).withStyle(ChatFormatting.AQUA));
+        raidComponents.append(Component.literal("\n"));
 
         raidComponents.append(Component.literal("Boss: ").withStyle(ChatFormatting.DARK_RED));
-
-        long bossMinutes = (event.getRoomTimes().get(3) / 1000) / 60;
-        long bossSeconds = (event.getRoomTimes().get(3) / 1000) % 60;
-        long bossMilliseconds = event.getRoomTimes().get(3) % 1000;
-        String bossTime = String.format("%02d:%02d.%03d\n\n", bossMinutes, bossSeconds, bossMilliseconds);
-
-        raidComponents.append(Component.literal(bossTime).withStyle(ChatFormatting.AQUA));
+        raidComponents.append(formatTime(event.getRoomTimes().get(3)));
+        raidComponents.append(Component.literal("\n"));
 
         raidComponents.append(Component.literal("Intermission: ").withStyle(ChatFormatting.DARK_GRAY));
-
-        long intermissionMinutes = (event.getRoomTimes().get(4) / 1000) / 60;
-        long intermissionSeconds = (event.getRoomTimes().get(4) / 1000) % 60;
-        long intermissionMilliseconds = event.getRoomTimes().get(4) % 1000;
-        String intermissionTime =
-                String.format("%02d:%02d.%03d\n", intermissionMinutes, intermissionSeconds, intermissionMilliseconds);
-
-        raidComponents.append(Component.literal(intermissionTime).withStyle(ChatFormatting.AQUA));
+        raidComponents.append(formatTime(event.getRoomTimes().get(4)));
 
         raidComponents.append(Component.literal("Total: ").withStyle(ChatFormatting.DARK_PURPLE));
-
-        long totalMinutes = (event.getRaidTime() / 1000) / 60;
-        long totalSeconds = (event.getRaidTime() / 1000) % 60;
-        long totalMilliseconds = event.getRaidTime() % 1000;
-        String totalTime = String.format("%02d:%02d.%03d", totalMinutes, totalSeconds, totalMilliseconds);
-
-        raidComponents.append(Component.literal(totalTime).withStyle(ChatFormatting.AQUA));
+        raidComponents.append(formatTime(event.getRaidTime()));
 
         McUtils.sendMessageToClient(raidComponents);
     }
@@ -134,5 +96,13 @@ public class RaidProgressFeature extends Feature {
         if (playSoundOnBest.get()) {
             McUtils.playSoundAmbient(SoundEvents.FIREWORK_ROCKET_LARGE_BLAST);
         }
+    }
+
+    private String formatTime(long time) {
+        long minutes = (time / 1000) / 60;
+        long seconds = (time / 1000) % 60;
+        long milliseconds = time % 1000;
+
+        return String.format(TIME_FORMAT, minutes, seconds, milliseconds);
     }
 }
