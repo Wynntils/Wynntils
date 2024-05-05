@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -37,19 +37,19 @@ public final class ConfigManager extends Manager {
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
 
-    private final File userConfig;
+    private final File userConfigFile;
     private JsonObject configObject;
 
     public ConfigManager() {
         super(List.of());
 
-        userConfig = new File(
+        userConfigFile = new File(
                 CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
     }
 
     public void init() {
         // First, we load the config file
-        configObject = Managers.Json.loadPreciousJson(userConfig);
+        configObject = Managers.Json.loadPreciousJson(userConfigFile);
 
         // Register all features and overlays
         Managers.Feature.getFeatures().forEach(this::registerFeature);
@@ -58,7 +58,7 @@ public final class ConfigManager extends Manager {
         // FIXME: Solve generics type issue
         Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
         if (Managers.Upfixer.runUpfixers(configObject, workaround)) {
-            Managers.Json.savePreciousJson(userConfig, configObject);
+            Managers.Json.savePreciousJson(userConfigFile, configObject);
         }
 
         // Finish off the config init process
@@ -95,7 +95,7 @@ public final class ConfigManager extends Manager {
     }
 
     public void reloadConfiguration() {
-        configObject = Managers.Json.loadPreciousJson(userConfig);
+        configObject = Managers.Json.loadPreciousJson(userConfigFile);
         loadConfigOptions(true, true);
     }
 
@@ -204,7 +204,11 @@ public final class ConfigManager extends Manager {
 
         configJson.add(OVERLAY_GROUPS_JSON_KEY, overlayGroups);
 
-        Managers.Json.savePreciousJson(userConfig, configJson);
+        Managers.Json.savePreciousJson(userConfigFile, configJson);
+    }
+
+    public File getUserConfigFile() {
+        return userConfigFile;
     }
 
     private void saveDefaultConfig() {
