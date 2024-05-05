@@ -32,6 +32,7 @@ public class SpellModel extends Model {
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
+    private static final int SPELL_COST_RESET_TICKS = 60;
 
     private final SpellSegment spellSegment = new SpellSegment();
 
@@ -126,7 +127,7 @@ public class SpellModel extends Model {
     public void onTick(TickEvent e) {
         if (lastSpellName.isEmpty()) return;
         ticksSinceCast++;
-        if (ticksSinceCast >= 60) {
+        if (ticksSinceCast >= SPELL_COST_RESET_TICKS) {
             lastSpellName = "";
             repeatedSpellCount = 0;
             ticksSinceCast = 0;
