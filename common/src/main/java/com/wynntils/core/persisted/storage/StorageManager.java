@@ -72,6 +72,10 @@ public final class StorageManager extends Manager {
         Managers.Persisted.getPersisted(owner, Storage.class).forEach(p -> processStorage(owner, p.a(), p.b()));
     }
 
+    public File getUserStorageFile() {
+        return userStorageFile;
+    }
+
     private void processStorage(Storageable owner, Field field, Persisted annotation) {
         try {
             String baseName = owner.getStorageJsonName();

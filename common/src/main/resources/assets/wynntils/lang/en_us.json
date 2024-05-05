@@ -1291,6 +1291,8 @@
   "feature.wynntils.warHorn.soundPitch.name": "Sound Pitch",
   "feature.wynntils.warHorn.soundVolume.description": "How loud should the sound effects be played?",
   "feature.wynntils.warHorn.soundVolume.name": "Sound Volume",
+  "feature.wynntils.weeklyConfigBackup.description": "Automatically backs up Wynntils config files every week (locally).",
+  "feature.wynntils.weeklyConfigBackup.name": "Weekly Config Backup",
   "feature.wynntils.worldWaypointDistance.backgroundOpacity.description": "What level of opacity should text background have?",
   "feature.wynntils.worldWaypointDistance.backgroundOpacity.name": "Background Opacity",
   "feature.wynntils.worldWaypointDistance.bottomBoundingDistance.description": "How far should off-screen indicator be from bottom of the screen?",

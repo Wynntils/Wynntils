@@ -147,6 +147,7 @@ import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
+import com.wynntils.features.utilities.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
@@ -359,6 +360,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new WeeklyConfigBackupFeature());
         // endregion
 
         // region wynntils
