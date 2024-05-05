@@ -12,8 +12,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.players.type.WynnPlayerInfo;
-import com.wynntils.utils.SimpleDateFormatter;
+import com.wynntils.utils.LongDateFormatter;
 import com.wynntils.utils.mc.McUtils;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +29,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class PlayerCommand extends Command {
-    private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
+    private static final DateFormat DATE_FORMATTER = new LongDateFormatter();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
     private static final SuggestionProvider<CommandSourceStack> PLAYER_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(Models.Player.getAllPlayerNames(), builder);

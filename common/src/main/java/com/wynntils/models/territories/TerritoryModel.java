@@ -172,7 +172,7 @@ public final class TerritoryModel extends Model {
         }
     }
 
-    public Map<TerritoryItem, TerritoryConnectionType> getUnconnectedTerritories(List<TerritoryItem> territoryItems) {
+    public Map<TerritoryItem, TerritoryConnectionType> getTerritoryConnections(List<TerritoryItem> territoryItems) {
         TerritoryItem hqTerritory = territoryItems.stream()
                 .filter(TerritoryItem::isHeadquarters)
                 .findFirst()
@@ -185,6 +185,7 @@ public final class TerritoryModel extends Model {
         }
 
         // Start a BFS from the headquarters
+        Set<TerritoryItem> hqConnectedTerritories = new HashSet<>();
         Set<TerritoryItem> connectedTerritories = new HashSet<>();
         connectedTerritories.add(hqTerritory);
 
@@ -197,23 +198,29 @@ public final class TerritoryModel extends Model {
             for (TerritoryItem territoryItem : territoryItems) {
                 if (connectedTerritories.contains(territoryItem)) continue;
 
+                TerritoryInfo currentTerritoryInfo =
+                        getTerritoryPoiFromAdvancement(current.getName()).getTerritoryInfo();
                 TerritoryInfo territoryInfo =
                         getTerritoryPoiFromAdvancement(territoryItem.getName()).getTerritoryInfo();
-                if (territoryInfo != null && territoryInfo.getTradingRoutes().contains(current.getName())) {
+
+                // Note: Wynn is bugged, and sometimes forgets to add the bi-directional trading routes to both
+                // territories
+                if ((territoryInfo != null && territoryInfo.getTradingRoutes().contains(current.getName()))
+                        || (currentTerritoryInfo != null
+                                && currentTerritoryInfo.getTradingRoutes().contains(territoryItem.getName()))) {
                     connectedTerritories.add(territoryItem);
                     queue.add(territoryItem);
+
+                    if (territoryItem.isHeadquarters() || current.isHeadquarters()) {
+                        hqConnectedTerritories.add(territoryItem);
+                    }
                 }
             }
         }
 
         return territoryItems.stream().collect(Collectors.toMap(item -> item, item -> {
             if (item.isHeadquarters()) return TerritoryConnectionType.HEADQUARTERS;
-
-            TerritoryInfo hqTerritoryInfo =
-                    getTerritoryPoiFromAdvancement(hqTerritory.getName()).getTerritoryInfo();
-            if (hqTerritoryInfo != null && hqTerritoryInfo.getTradingRoutes().contains(item.getName())) {
-                return TerritoryConnectionType.HEADQUARTERS_CONNECTION;
-            }
+            if (hqConnectedTerritories.contains(item)) return TerritoryConnectionType.HEADQUARTERS_CONNECTION;
 
             return connectedTerritories.contains(item)
                     ? TerritoryConnectionType.CONNECTED

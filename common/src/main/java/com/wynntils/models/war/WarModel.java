@@ -31,6 +31,7 @@ public class WarModel extends Model {
     public final Storage<List<HistoricWarInfo>> historicWars = new Storage<>(new ArrayList<>());
 
     private List<HadesUser> hadesUsers = new ArrayList<>();
+    private boolean warActive = false;
 
     public WarModel() {
         super(List.of());
@@ -55,11 +56,11 @@ public class WarModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) {
-            removeWarPlayers();
+            onWarEnd();
         }
     }
 
-    public void findWarPlayers() {
+    public void onWarStart() {
         hadesUsers = Services.Hades.getHadesUsers()
                 .filter(hadesUser -> hadesUser
                         .getMapLocation()
@@ -67,13 +68,19 @@ public class WarModel extends Model {
                         .toVec3()
                         .closerThan(McUtils.player().position(), WAR_RADIUS))
                 .toList();
+        warActive = true;
     }
 
-    public void removeWarPlayers() {
+    public void onWarEnd() {
         hadesUsers = new ArrayList<>();
+        warActive = false;
     }
 
     public List<HadesUser> getHadesUsers() {
         return hadesUsers;
+    }
+
+    public boolean isWarActive() {
+        return warActive;
     }
 }
