@@ -5,11 +5,11 @@
 package com.wynntils.services.itemfilter.statproviders.territory;
 
 import com.wynntils.models.items.items.gui.TerritoryItem;
-import java.util.List;
+import java.util.Optional;
 
-public class TerritoryAlertsStatProvider extends TerritoryStatProvider<String> {
+public class TerritoryAlertStatProvider extends TerritoryStatProvider<Boolean> {
     @Override
-    public List<String> getValue(TerritoryItem territoryItem) {
-        return List.copyOf(territoryItem.getAlerts());
+    public Optional<Boolean> getValue(TerritoryItem territoryItem) {
+        return Optional.of(!territoryItem.getAlerts().isEmpty());
     }
 }

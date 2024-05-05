@@ -12,6 +12,7 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -19,11 +20,12 @@ import com.wynntils.screens.trademarket.widgets.PresetButton;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,7 +38,6 @@ import net.minecraft.world.item.ItemStack;
 public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
     // Constants
     private static final int FAKE_CONTAINER_ID = 454545;
-    private static final CustomColor LABEL_COLOR = CustomColor.fromInt(0x404040);
     private static final ResourceLocation CONTAINER_BACKGROUND =
             new ResourceLocation("textures/gui/container/generic_54.png");
     private static final int SCROLL_AREA_HEIGHT = 110;
@@ -87,7 +88,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         itemSearchWidget = new ItemSearchWidget(
                 renderX,
                 renderY,
-                175,
+                155,
                 20,
                 ItemProviderType.normalTypes(),
                 true,
@@ -101,6 +102,14 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Set the last search filter, if we opened a new screen
         // On reloads, this should not change anything
         itemSearchWidget.setTextBoxInput(Models.TradeMarket.getLastSearchFilter());
+
+        this.addRenderableWidget(new ItemFilterUIButton(
+                renderX + 157,
+                renderY,
+                itemSearchWidget,
+                this,
+                true,
+                Arrays.stream(ItemProviderType.values()).toList()));
 
         WynntilsButton backButton = new BasicTexturedButton(
                 renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
@@ -178,7 +187,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 this.currentState,
                 this.titleLabelX,
                 this.titleLabelY,
-                LABEL_COLOR.asInt(),
+                CommonColors.TITLE_GRAY.asInt(),
                 false);
     }
 

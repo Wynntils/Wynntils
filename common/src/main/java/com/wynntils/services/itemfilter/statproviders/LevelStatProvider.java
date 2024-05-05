@@ -9,13 +9,14 @@ import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class LevelStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof LeveledItemProperty levelItemProperty)) return List.of();
+    public Optional<Integer> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof LeveledItemProperty levelItemProperty)) return Optional.empty();
 
-        return List.of(levelItemProperty.getLevel());
+        return Optional.of(levelItemProperty.getLevel());
     }
 
     @Override

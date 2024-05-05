@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -9,24 +9,31 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
+import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.type.TerritoryConnectionType;
+import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -43,7 +50,6 @@ public final class TerritoryModel extends Model {
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
-    private static final int MAX_ERRORS = 5;
 
     // This is territory POIs as returned by the advancement from Wynncraft
     private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
@@ -55,17 +61,33 @@ public final class TerritoryModel extends Model {
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
-    private final ScheduledFuture<?> timerFuture;
 
     public TerritoryModel() {
         super(List.of());
 
-        timerFuture = timerExecutor.scheduleWithFixedDelay(
+        Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
+
+        timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public TerritoryProfile getTerritoryProfile(String name) {
         return territoryProfileMap.get(name);
+    }
+
+    /**
+     * Get the territory profile from a short name. This is used when the territory name is cut off, like scoreboards.
+     *
+     * @param shortName           The short name of the territory
+     * @param excludedTerritories Territories to exclude from the search
+     * @return The territory profile, or null if not found
+     */
+    public TerritoryProfile getTerritoryProfileFromShortName(String shortName, Collection<String> excludedTerritories) {
+        return territoryProfileMap.values().stream()
+                .filter(profile -> excludedTerritories.stream().noneMatch(ex -> ex.equals(profile.getName())))
+                .filter(profile -> profile.getName().startsWith(shortName))
+                .min(Comparator.comparing(TerritoryProfile::getName))
+                .orElse(null);
     }
 
     public Stream<String> getTerritoryNames() {
@@ -148,6 +170,55 @@ public final class TerritoryModel extends Model {
             territoryPoiMap.put(
                     entry.getKey(), new TerritoryPoi(() -> getTerritoryProfile(entry.getKey()), entry.getValue()));
         }
+    }
+
+    public Map<TerritoryItem, TerritoryConnectionType> getUnconnectedTerritories(List<TerritoryItem> territoryItems) {
+        TerritoryItem hqTerritory = territoryItems.stream()
+                .filter(TerritoryItem::isHeadquarters)
+                .findFirst()
+                .orElse(null);
+
+        // If there is no headquarters, there is no connected territories
+        if (hqTerritory == null) {
+            return territoryItems.stream()
+                    .collect(Collectors.toMap(item -> item, item -> TerritoryConnectionType.UNCONNECTED));
+        }
+
+        // Start a BFS from the headquarters
+        Set<TerritoryItem> connectedTerritories = new HashSet<>();
+        connectedTerritories.add(hqTerritory);
+
+        Deque<TerritoryItem> queue = new LinkedList<>();
+        queue.add(hqTerritory);
+
+        while (!queue.isEmpty()) {
+            TerritoryItem current = queue.poll();
+
+            for (TerritoryItem territoryItem : territoryItems) {
+                if (connectedTerritories.contains(territoryItem)) continue;
+
+                TerritoryInfo territoryInfo =
+                        getTerritoryPoiFromAdvancement(territoryItem.getName()).getTerritoryInfo();
+                if (territoryInfo != null && territoryInfo.getTradingRoutes().contains(current.getName())) {
+                    connectedTerritories.add(territoryItem);
+                    queue.add(territoryItem);
+                }
+            }
+        }
+
+        return territoryItems.stream().collect(Collectors.toMap(item -> item, item -> {
+            if (item.isHeadquarters()) return TerritoryConnectionType.HEADQUARTERS;
+
+            TerritoryInfo hqTerritoryInfo =
+                    getTerritoryPoiFromAdvancement(hqTerritory.getName()).getTerritoryInfo();
+            if (hqTerritoryInfo != null && hqTerritoryInfo.getTradingRoutes().contains(item.getName())) {
+                return TerritoryConnectionType.HEADQUARTERS_CONNECTION;
+            }
+
+            return connectedTerritories.contains(item)
+                    ? TerritoryConnectionType.CONNECTED
+                    : TerritoryConnectionType.UNCONNECTED;
+        }));
     }
 
     private void updateTerritoryProfileMap() {

@@ -44,6 +44,7 @@ import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.profession.ProfessionModel;
+import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
 import com.wynntils.models.spells.SpellModel;
@@ -52,9 +53,9 @@ import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
-import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.token.TokenModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.war.GuildWarTowerModel;
 import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
@@ -82,10 +83,9 @@ public final class Models {
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final FriendsModel Friends = new FriendsModel();
     public static final GearModel Gear = new GearModel();
-    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
+    public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
-    public static final IngredientModel Ingredient = new IngredientModel();
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
@@ -99,7 +99,7 @@ public final class Models {
     public static final PlayerModel Player = new PlayerModel();
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();
-    public static final RewardsModel Rewards = new RewardsModel();
+    public static final RaidModel Raid = new RaidModel();
     public static final SeaskipperModel Seaskipper = new SeaskipperModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final SetModel Set = new SetModel();
@@ -112,7 +112,6 @@ public final class Models {
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
-    public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final TradeMarketModel TradeMarket = new TradeMarketModel();
     public static final WarModel War = new WarModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
@@ -121,5 +120,8 @@ public final class Models {
 
     // Models with constructor dependencies, ordered alphabetically as far as possible
     public static final ActivityModel Activity = new ActivityModel(Marker);
+    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
     public static final LootrunModel Lootrun = new LootrunModel(Marker);
+    public static final RewardsModel Rewards = new RewardsModel(WynnItem);
+    public static final IngredientModel Ingredient = new IngredientModel(WynnItem);
 }

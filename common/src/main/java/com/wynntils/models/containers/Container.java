@@ -18,6 +18,10 @@ public abstract class Container {
                 screen -> titlePattern.matcher(screen.getTitle().getString()).matches();
     }
 
+    protected Container(Predicate<Screen> screenPredicate) {
+        this.screenPredicate = screenPredicate;
+    }
+
     public void setContainerId(int containerId) {
         this.containerId = containerId;
     }
@@ -28,5 +32,9 @@ public abstract class Container {
 
     public boolean isScreen(Screen screen) {
         return screenPredicate.test(screen);
+    }
+
+    public String getContainerName() {
+        return this.getClass().getSimpleName().replace("Container", "");
     }
 }

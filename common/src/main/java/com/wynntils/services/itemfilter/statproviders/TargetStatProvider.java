@@ -9,13 +9,14 @@ import com.wynntils.models.items.properties.TargetedItemProperty;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
-public class TargetStatProperty extends ItemStatProvider<String> {
+public class TargetStatProvider extends ItemStatProvider<String> {
     @Override
-    public List<String> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof TargetedItemProperty targetedItemProperty)) return List.of();
+    public Optional<String> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof TargetedItemProperty targetedItemProperty)) return Optional.empty();
 
-        return List.of(targetedItemProperty.getTarget());
+        return Optional.of(targetedItemProperty.getTarget());
     }
 
     @Override

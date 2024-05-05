@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -17,6 +17,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class FilterButton extends WynntilsButton implements TooltipProvider {
+    private static final Component DEFAULT_ENABLED_TOOLTIP =
+            Component.translatable("screens.wynntils.content.clickToHide").withStyle(ChatFormatting.GRAY);
+
+    private static final Component DEFAULT_DISABLED_TOOLTIP =
+            Component.translatable("screens.wynntils.content.clickToShow").withStyle(ChatFormatting.GRAY);
+
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor BUTTON_COLOR_ENABLED = new CustomColor(164, 212, 142);
@@ -24,6 +30,8 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
     private final Texture texture;
     private final boolean dynamicTexture;
     private final List<Component> tooltipList;
+    private final List<Component> enabledActionTooltip;
+    private final List<Component> disabledActionTooltip;
     private final Runnable onPress;
     private final Supplier<Boolean> isEnabled;
 
@@ -42,6 +50,30 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
         this.texture = texture;
         this.dynamicTexture = dynamicTexture;
         this.tooltipList = tooltipList;
+        this.enabledActionTooltip = List.of(DEFAULT_ENABLED_TOOLTIP);
+        this.disabledActionTooltip = List.of(DEFAULT_DISABLED_TOOLTIP);
+        this.onPress = onPress;
+        this.isEnabled = isEnabled;
+    }
+
+    public FilterButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Texture texture,
+            boolean dynamicTexture,
+            List<Component> tooltipList,
+            List<Component> enabledActionTooltip,
+            List<Component> disabledActionTooltip,
+            Runnable onPress,
+            Supplier<Boolean> isEnabled) {
+        super(x, y, width, height, Component.literal("Filter Button"));
+        this.texture = texture;
+        this.dynamicTexture = dynamicTexture;
+        this.tooltipList = tooltipList;
+        this.enabledActionTooltip = enabledActionTooltip;
+        this.disabledActionTooltip = disabledActionTooltip;
         this.onPress = onPress;
         this.isEnabled = isEnabled;
     }
@@ -113,11 +145,9 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
         List<Component> renderedTooltip = new ArrayList<>(tooltipList);
 
         if (isEnabled.get()) {
-            renderedTooltip.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.clickToHide")
-                    .withStyle(ChatFormatting.GRAY));
+            renderedTooltip.addAll(enabledActionTooltip);
         } else {
-            renderedTooltip.add(Component.translatable("screens.wynntils.wynntilsDiscoveries.clickToShow")
-                    .withStyle(ChatFormatting.GRAY));
+            renderedTooltip.addAll(disabledActionTooltip);
         }
 
         return renderedTooltip;

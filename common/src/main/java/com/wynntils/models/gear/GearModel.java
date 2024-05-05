@@ -20,6 +20,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -73,10 +74,10 @@ public final class GearModel extends Model {
 
     public boolean canBeGearBox(GearInfo gear) {
         // If an item is pre-identified, it cannot be in a gear box
-        // If all the ways we can obtain this is by merchants, it cannot be in a gear box
+        // Also check that the item has a source that can drop boxed items
         return !gear.metaInfo().preIdentified()
                 && gear.metaInfo().obtainInfo().stream()
-                        .anyMatch(o -> !o.sourceType().isMerchant());
+                        .anyMatch(x -> ItemObtainType.BOXED_ITEMS.contains(x.sourceType()));
     }
 
     @Override

@@ -7,8 +7,8 @@ package com.wynntils.models.territories;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +27,7 @@ public class TerritoryInfo {
     private String guildName;
     private String guildPrefix;
 
-    private final HashMap<GuildResource, TerritoryStorage> storage = new HashMap<>();
+    private final HashMap<GuildResource, CappedValue> storage = new HashMap<>();
     private final HashMap<GuildResource, Integer> generators = new HashMap<>();
     private final List<String> tradingRoutes = new ArrayList<>();
 
@@ -121,7 +121,7 @@ public class TerritoryInfo {
             Matcher m = STORAGE_PATTERN.matcher(unformatted);
             if (!m.matches()) continue;
 
-            storage.put(resource, new TerritoryStorage(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))));
+            storage.put(resource, new CappedValue(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))));
         }
 
         for (Map.Entry<GuildResource, Integer> generator : generators.entrySet()) {
@@ -146,7 +146,7 @@ public class TerritoryInfo {
         return generators;
     }
 
-    public Map<GuildResource, TerritoryStorage> getStorage() {
+    public Map<GuildResource, CappedValue> getStorage() {
         return storage;
     }
 
@@ -158,7 +158,7 @@ public class TerritoryInfo {
         return generators.getOrDefault(resource, 0);
     }
 
-    public TerritoryStorage getStorage(GuildResource resource) {
+    public CappedValue getStorage(GuildResource resource) {
         return storage.get(resource);
     }
 

@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
 
-import java.net.URLEncoder;
+import com.google.common.net.UrlEscapers;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 public final class StringUtils {
     private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
@@ -59,16 +60,30 @@ public final class StringUtils {
     /**
      * Format an integer to have SI suffixes, if it is sufficiently large
      */
-    public static String integerToShortString(int count) {
-        if (count < 1000) return Integer.toString(count);
+    public static String integerToShortString(long count) {
+        if (count < 1000) return Long.toString(count);
         int exp = (int) (Math.log(count) / Math.log(1000));
         DecimalFormat format = new DecimalFormat("0.#");
         String value = format.format(count / Math.pow(1000, exp));
         return String.format("%s%c", value, "kMBTPE".charAt(exp - 1));
     }
 
+    public static String formatDuration(long seconds) {
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long remainingSeconds = seconds % 60;
+
+        if (hours > 0) {
+            return String.format("%dh %02dm %02ds", hours, minutes, remainingSeconds);
+        } else if (minutes > 0) {
+            return String.format("%dm %02ds", minutes, remainingSeconds);
+        } else {
+            return String.format("%ds", remainingSeconds);
+        }
+    }
+
     public static String encodeUrl(String url) {
-        return URLEncoder.encode(url, StandardCharsets.UTF_8);
+        return UrlEscapers.urlPathSegmentEscaper().escape(url);
     }
 
     public static String createSlug(String input) {
@@ -154,5 +169,23 @@ public final class StringUtils {
 
         return Base64.getDecoder()
                 .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
+    }
+
+    /**
+     * Converts a float to a string, but if the float is an integer, it will return the integer as a string
+     * @param value the float to convert
+     * @return the float as a string
+     */
+    public static String floatToSimpleString(float value) {
+        if (value == (int) value) {
+            return Integer.toString((int) value);
+        } else {
+            return String.format("%.2f", value);
+        }
+    }
+
+    public static String formatDateTime(long timeMillis) {
+        // Format: 2023-01-01 12:00
+        return DateFormatUtils.format(timeMillis, "yyyy-MM-dd HH:mm");
     }
 }

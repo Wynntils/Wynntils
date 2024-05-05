@@ -44,14 +44,15 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Note: All callers of this constructor should ensure that the event lists are collected from the parts.
+     *       Additionally, they should ensure that the events are distinct.
      */
     private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
                 .filter(styledTextPart -> !styledTextPart.isEmpty())
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
-        this.clickEvents = clickEvents.stream().distinct().collect(Collectors.toList());
-        this.hoverEvents = hoverEvents.stream().distinct().collect(Collectors.toList());
+        this.clickEvents = Collections.unmodifiableList(clickEvents);
+        this.hoverEvents = Collections.unmodifiableList(hoverEvents);
     }
 
     public static StyledText fromComponent(Component component) {
@@ -124,13 +125,13 @@ public final class StyledText implements Iterable<StyledTextPart> {
         List<HoverEvent> hoverEvents = new ArrayList<>();
 
         for (StyledTextPart part : parts) {
-            ClickEvent clickEvent = part.getPartStyle().getStyle().getClickEvent();
-            if (clickEvent != null) {
+            ClickEvent clickEvent = part.getPartStyle().getClickEvent();
+            if (clickEvent != null && !clickEvents.contains(clickEvent)) {
                 clickEvents.add(clickEvent);
             }
 
-            HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
-            if (hoverEvent != null) {
+            HoverEvent hoverEvent = part.getPartStyle().getHoverEvent();
+            if (hoverEvent != null && !hoverEvents.contains(hoverEvent)) {
                 hoverEvents.add(hoverEvent);
             }
         }
@@ -173,10 +174,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
             return Component.empty();
         }
 
-        MutableComponent component = parts.get(0).getComponent();
+        MutableComponent component = Component.empty();
 
-        for (int i = 1; i < parts.size(); i++) {
-            component.append(parts.get(i).getComponent());
+        for (StyledTextPart part : parts) {
+            component.append(part.getComponent());
         }
 
         return component;

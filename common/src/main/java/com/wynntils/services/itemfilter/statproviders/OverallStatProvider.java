@@ -14,18 +14,18 @@ import java.util.Optional;
 
 public class OverallStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
+    public Optional<Integer> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             Optional<GearInstance> gearInstanceOpt = gearItem.getItemInstance();
 
             if (gearInstanceOpt.isEmpty()) {
-                return List.of();
+                return Optional.empty();
             }
 
-            return List.of((int) gearInstanceOpt.get().getOverallPercentage());
+            return Optional.of((int) gearInstanceOpt.get().getOverallPercentage());
         }
 
-        return List.of();
+        return Optional.empty();
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.ChatFormatting;
 public record ItemSearchQuery(
         String queryString,
         StatProviderFilterMap filters,
-        List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders,
+        List<SortInfo> sorts,
         List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges,
         List<String> errors,
         List<String> plainTextTokens) {

@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 
@@ -195,4 +196,21 @@ public class TerritoryProfile {
     }
 
     public record TerritoryLocation(int startX, int startZ, int endX, int endZ) {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TerritoryProfile that = (TerritoryProfile) o;
+        return Objects.equals(name, that.name)
+                && Objects.equals(friendlyName, that.friendlyName)
+                && Objects.equals(territoryLocation, that.territoryLocation)
+                && Objects.equals(guildInfo, that.guildInfo)
+                && Objects.equals(acquired, that.acquired);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, friendlyName, territoryLocation, guildInfo, acquired);
+    }
 }

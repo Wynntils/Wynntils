@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -8,13 +8,18 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
+import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
@@ -26,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,6 +43,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class GuildModel extends Model {
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(GuildProfile.class, new GuildProfile.GuildProfileDeserializer())
+            .registerTypeHierarchyAdapter(GuildInfo.class, new GuildInfo.GuildDeserializer())
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
@@ -62,6 +70,9 @@ public class GuildModel extends Model {
 
     public GuildModel() {
         super(List.of());
+
+        Handlers.Label.registerParser(new GuildSeasonLeaderboardHeaderLabelParser());
+        Handlers.Label.registerParser(new GuildSeasonLeaderboardLabelParser());
 
         loadGuildList();
     }
@@ -125,6 +136,57 @@ public class GuildModel extends Model {
 
     public Optional<GuildProfile> getGuildProfile(String name) {
         return Optional.ofNullable(guildProfileMap.get(name));
+    }
+
+    public Set<String> getAllGuilds() {
+        return guildProfileMap.keySet();
+    }
+
+    public String getGuildNameFromString(String input) {
+        // Check for exact guild name
+        if (guildProfileMap.containsKey(input)) {
+            return input;
+        }
+
+        // Check for case insensitive name
+        for (String key : guildProfileMap.keySet()) {
+            if (key.equalsIgnoreCase(input)) {
+                return key;
+            }
+        }
+
+        // Check for prefix
+        for (GuildProfile profile : guildProfileMap.values()) {
+            if (profile.prefix().equals(input)) {
+                return profile.name();
+            }
+        }
+
+        // Check for case insensitive prefix
+        for (GuildProfile profile : guildProfileMap.values()) {
+            if (profile.prefix().equalsIgnoreCase(input)) {
+                return profile.name();
+            }
+        }
+
+        return input;
+    }
+
+    public CompletableFuture<GuildInfo> getGuild(String inputName) {
+        CompletableFuture<GuildInfo> future = new CompletableFuture<>();
+
+        String guildToSearch = getGuildNameFromString(inputName);
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_GUILD, Map.of("name", guildToSearch));
+        apiResponse.handleJsonObject(
+                json -> {
+                    Type type = new TypeToken<GuildInfo>() {}.getType();
+
+                    future.complete(GUILD_PROFILE_GSON.fromJson(json, type));
+                },
+                onError -> future.complete(null));
+
+        return future;
     }
 
     public CustomColor getColor(String guildName) {

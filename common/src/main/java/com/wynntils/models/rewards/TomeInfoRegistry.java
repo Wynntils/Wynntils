@@ -15,7 +15,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
@@ -43,8 +42,6 @@ public class TomeInfoRegistry {
     private Map<String, TomeInfo> tomeInfoLookup = Map.of();
 
     public TomeInfoRegistry() {
-        WynntilsMod.registerEventListener(this);
-
         reloadData();
     }
 
@@ -61,6 +58,9 @@ public class TomeInfoRegistry {
     }
 
     private void loadTomeInfoRegistry() {
+        if (!Models.WynnItem.hasObtainInfo()) return;
+        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_TOMES);
         dl.handleJsonObject(json -> {
             Gson gson = new GsonBuilder()
@@ -117,7 +117,7 @@ public class TomeInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tome variant");
             }
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName);
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
             TomeRequirements requirements = parseTomeRequirements(json);
 
             JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
@@ -171,22 +171,14 @@ public class TomeInfoRegistry {
             return list;
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName) {
-            GearDropRestrictions dropRestrictions = parseDropRestrictions(json);
+        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
             GearRestrictions restrictions = parseRestrictions(json);
             ItemMaterial material = parseOtherMaterial(json);
 
-            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
+            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
             return new GearMetaInfo(
-                    dropRestrictions,
-                    restrictions,
-                    material,
-                    obtainInfo,
-                    Optional.empty(),
-                    Optional.empty(),
-                    true,
-                    false);
+                    restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);
         }
 
         private ItemMaterial parseOtherMaterial(JsonObject json) {
