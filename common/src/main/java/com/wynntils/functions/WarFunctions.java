@@ -11,6 +11,7 @@ import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class WarFunctions {
     public static class AuraTimerFunction extends Function<Double> {
@@ -203,6 +204,24 @@ public class WarFunctions {
             if (warBattleInfoOpt.isEmpty()) return -1L;
 
             return warBattleInfoOpt.get().getEstimatedTimeRemaining();
+        }
+    }
+
+    public static class WarsSinceFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
+
+            return Models.War.historicWars.get().stream()
+                    .filter(historicWarInfo -> historicWarInfo.endedTimestamp()
+                            >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
+                    .count();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("sinceDays", Integer.class, 7)));
         }
     }
 }

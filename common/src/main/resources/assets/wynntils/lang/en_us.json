@@ -1901,6 +1901,9 @@
   "function.wynntils.transcribeWynnic.name": "Transcribe Wynnic",
   "function.wynntils.volleyTimer.description": "The time left before volley strikes",
   "function.wynntils.volleyTimer.name": "Volley Timer",
+  "function.wynntils.warsSince.argument.sinceDays": "The number of days to include",
+  "function.wynntils.warsSince.description": "The number of wars in the specified time period",
+  "function.wynntils.warsSince.name": "Wars Since",
   "function.wynntils.worldState.description": "The current world state. One of NOT_CONNECTED, CONNECTING, INTERIM, HUB, CHARACTER_SELECTION, WORLD",
   "function.wynntils.worldState.name": "World State",
   "function.wynntils.worldUptime.argument.worldName": "The name of the world you want the uptime of. This is by default the world you are in.",
@@ -2457,5 +2460,6 @@
   "statistics.wynntils.lootrunsTimeElapsed.name": "Lootrun time elapsed",
   "statistics.wynntils.mythicsFound.name": "Mythics found",
   "statistics.wynntils.spellsCast.name": "Spells cast",
+  "statistics.wynntils.warsJoined.name": "Wars Joined",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }
