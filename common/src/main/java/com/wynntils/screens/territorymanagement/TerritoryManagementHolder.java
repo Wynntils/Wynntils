@@ -408,7 +408,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     }
 
     private void updateRenderedItems() {
-        territoryConnections = Models.Territory.getUnconnectedTerritories(
+        territoryConnections = Models.Territory.getTerritoryConnections(
                 territories.values().stream().map(Pair::b).collect(Collectors.toList()));
 
         // Update the rendered territory items
