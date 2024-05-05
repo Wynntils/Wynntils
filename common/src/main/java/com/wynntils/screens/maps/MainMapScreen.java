@@ -442,20 +442,11 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY);
+                return true;
             }
         }
 
         return super.doMouseClicked(mouseX, mouseY, button);
-    }
-
-    private void setCompassToMouseCoords(double mouseX, double mouseY) {
-        double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
-        double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
-        Location compassLocation = Location.containing(gameX, 0, gameZ);
-        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
-
-        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {
