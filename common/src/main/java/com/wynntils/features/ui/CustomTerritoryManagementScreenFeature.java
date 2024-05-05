@@ -24,6 +24,7 @@ import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +36,8 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final Pattern TERRITORY_MANAGE_ITEM_PATTERN = Pattern.compile("§e§lTerritories \\[.+\\]");
     private static final Pattern MANAGE_TITLE_PATTERN = Pattern.compile(".+: Manage");
     private static final Pattern BACK_BUTTON_PATTERN = Pattern.compile("§7§lBack");
+    private static final int COMPASS_INVENTORY_SLOT = 42;
+    private static final int GUILD_MANAGEMENT_SLOT = 26;
     private static final int TERRITORY_MANAGEMENT_SLOT = 14;
 
     @RegisterKeyBind
@@ -115,18 +118,32 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
         openTerritoryManagement = false;
 
         // We cannot use ContainerModel here, as it is too early in the event chain.
-        if (!StyledText.fromComponent(event.getTitle()).matches(MANAGE_TITLE_PATTERN)) return;
+        StyledText title = StyledText.fromComponent(event.getTitle());
+        if (title.matches(MANAGE_TITLE_PATTERN)) {
+            event.setCanceled(true);
 
-        event.setCanceled(true);
+            AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
+            ContainerUtils.clickOnSlot(TERRITORY_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
+        } else if (title.equalsString(Models.Container.CHARACTER_INFO_NAME)) {
+            event.setCanceled(true);
 
-        AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
-        ContainerUtils.clickOnSlot(TERRITORY_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
+            // We still need to do a second click to open the territory management screen
+            openTerritoryManagement = true;
+
+            AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
+            ContainerUtils.clickOnSlot(GUILD_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
+        }
     }
 
     private void updateTerritoryMenu() {
         openTerritoryManagement = true;
 
-        Handlers.Command.sendCommandImmediately("guild manage");
+        if (Models.War.isWarActive()) {
+            InventoryUtils.sendInventorySlotMouseClick(
+                    COMPASS_INVENTORY_SLOT, InventoryUtils.MouseClickType.LEFT_CLICK);
+        } else {
+            Handlers.Command.sendCommandImmediately("guild manage");
+        }
     }
 
     private enum ShiftBehavior {
