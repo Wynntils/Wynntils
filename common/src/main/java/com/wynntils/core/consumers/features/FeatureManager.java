@@ -147,7 +147,6 @@ import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
-import com.wynntils.features.utilities.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
@@ -155,6 +154,7 @@ import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
+import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -360,7 +360,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
-        registerFeature(new WeeklyConfigBackupFeature());
         // endregion
 
         // region wynntils
@@ -371,6 +370,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
+        registerFeature(new WeeklyConfigBackupFeature());
         // endregion
 
         // region uncategorized

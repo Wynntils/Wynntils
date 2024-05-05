@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.utilities;
+package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.UTILITIES)
+@ConfigCategory(Category.WYNNTILS)
 public class WeeklyConfigBackupFeature extends Feature {
     private static final File BACKUPS_DIR = WynntilsMod.getModStorageDir("backups");
     private static final int BACKUP_INTERVAL_DAYS = 7;
