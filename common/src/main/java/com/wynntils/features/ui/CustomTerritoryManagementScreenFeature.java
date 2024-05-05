@@ -4,8 +4,11 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -25,6 +28,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class CustomTerritoryManagementScreenFeature extends Feature {
@@ -32,6 +36,10 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final Pattern MANAGE_TITLE_PATTERN = Pattern.compile(".+: Manage");
     private static final Pattern BACK_BUTTON_PATTERN = Pattern.compile("§7§lBack");
     private static final int TERRITORY_MANAGEMENT_SLOT = 14;
+
+    @RegisterKeyBind
+    private final KeyBind openTerritoryMenu =
+            new KeyBind("Open Territory Menu", GLFW.GLFW_KEY_U, true, this::updateTerritoryMenu);
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
@@ -112,6 +120,12 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
 
         AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
         ContainerUtils.clickOnSlot(TERRITORY_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
+    }
+
+    private void updateTerritoryMenu() {
+        openTerritoryManagement = true;
+
+        Handlers.Command.sendCommandImmediately("guild manage");
     }
 
     private enum ShiftBehavior {
