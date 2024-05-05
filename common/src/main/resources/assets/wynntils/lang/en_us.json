@@ -2480,13 +2480,17 @@
   "statistics.wynntils.lootrunsTimeElapsed.name": "Lootrun time elapsed",
   "statistics.wynntils.mythicsFound.name": "Mythics found",
   "statistics.wynntils.nestOfTheGrootslangsFailed.name": "Nest of the Grootslang's failed",
+  "statistics.wynntils.nestOfTheGrootslangsSucceeded.name": "Nest of the Grootslang's succeeded",
   "statistics.wynntils.nestOfTheGrootslangsTimeElapsed.name": "Time spent in Nest of the Grootslang",
   "statistics.wynntils.orphionsNexusOfLightFailed.name": "Orphion's Nexus of Light's failed",
+  "statistics.wynntils.orphionsNexusOfLightSucceeded.name": "Orphion's Nexus of Light's succeeded",
   "statistics.wynntils.orphionsNexusOfLightTimeElapsed.name": "Time spent in Orphion's Nexus of Light",
   "statistics.wynntils.spellsCast.name": "Spells cast",
   "statistics.wynntils.theCanyonColossusFailed.name": "The Canyon Colossus' failed",
+  "statistics.wynntils.theCanyonColossusSucceeded.name": "The Canyon Colossus' succeeded",
   "statistics.wynntils.theCanyonColossusTimeElapsed.name": "Time spent in The Canyon Colossus",
   "statistics.wynntils.theNamelessAnomalyFailed.name": "The Nameless Anomaly's failed",
+  "statistics.wynntils.theNamelessAnomalySucceeded.name": "The Nameless Anomaly's succeeded",
   "statistics.wynntils.theNamelessAnomalyTimeElapsed.name": "Time spent in The Nameless Anomaly",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }
