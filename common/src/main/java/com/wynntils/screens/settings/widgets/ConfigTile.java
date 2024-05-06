@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -68,19 +68,20 @@ public class ConfigTile extends WynntilsButton {
         StyledText displayName = settingsScreen.configOptionContains(config)
                 ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                 : StyledText.fromString(config.getDisplayName());
-        poseStack.pushPose();
-        poseStack.scale(0.8f, 0.8f, 0);
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
                         displayName,
-                        getRenderX() / 0.8f,
-                        (this.getY() + 3) / 0.8f,
+                        getRenderX(),
+                        this.getY() + 3,
+                        this.width,
+                        settingsScreen.getTranslationX(),
+                        settingsScreen.getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
-        poseStack.popPose();
+                        TextShadow.NONE,
+                        0.8f);
     }
 
     @Override
