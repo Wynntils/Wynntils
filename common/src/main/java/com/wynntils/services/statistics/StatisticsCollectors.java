@@ -65,14 +65,26 @@ public final class StatisticsCollectors {
     @SubscribeEvent
     public void onRaidCompleted(RaidEndedEvent.Completed event) {
         switch (event.getRaid()) {
-            case NEST_OF_THE_GROOTSLANGS -> Services.Statistics.addToStatistics(
-                    StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED, (int) event.getRaidTime());
-            case ORPHIONS_NEXUS_OF_LIGHT -> Services.Statistics.addToStatistics(
-                    StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED, (int) event.getRaidTime());
-            case THE_CANYON_COLOSSUS -> Services.Statistics.addToStatistics(
-                    StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED, (int) event.getRaidTime());
-            case THE_NAMELESS_ANOMALY -> Services.Statistics.addToStatistics(
-                    StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED, (int) event.getRaidTime());
+            case NEST_OF_THE_GROOTSLANGS -> {
+                Services.Statistics.increaseStatistics(StatisticKind.NEST_OF_THE_GROOTSLANGS_SUCCEEDED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.NEST_OF_THE_GROOTSLANGS_TIME_ELAPSED, (int) event.getRaidTime());
+            }
+            case ORPHIONS_NEXUS_OF_LIGHT -> {
+                Services.Statistics.increaseStatistics(StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_SUCCEEDED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.ORPHIONS_NEXUS_OF_LIGHT_TIME_ELAPSED, (int) event.getRaidTime());
+            }
+            case THE_CANYON_COLOSSUS -> {
+                Services.Statistics.increaseStatistics(StatisticKind.THE_CANYON_COLOSSUS_SUCCEEDED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.THE_CANYON_COLOSSUS_TIME_ELAPSED, (int) event.getRaidTime());
+            }
+            case THE_NAMELESS_ANOMALY -> {
+                Services.Statistics.increaseStatistics(StatisticKind.THE_NAMELESS_ANOMALY_SUCCEEDED);
+                Services.Statistics.addToStatistics(
+                        StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED, (int) event.getRaidTime());
+            }
         }
     }
 
