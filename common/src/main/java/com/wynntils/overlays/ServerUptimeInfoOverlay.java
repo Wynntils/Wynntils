@@ -7,7 +7,6 @@ package com.wynntils.overlays;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
-import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -38,6 +37,6 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
 
     @Override
     public boolean isRenderedDefault() {
-        return KeyboardUtils.isKeyDown(McUtils.mc().options.keyPlayerList.key.getValue());
+        return McUtils.mc().gui.getTabList().visible;
     }
 }
