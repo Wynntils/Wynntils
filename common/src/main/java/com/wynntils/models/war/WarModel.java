@@ -49,6 +49,7 @@ public class WarModel extends Model {
                         warBattleInfo.getTerritory(),
                         warBattleInfo.getOwnerGuild(),
                         warBattleInfo.getInitialState(),
+                        warBattleInfo.getCurrentState(),
                         System.currentTimeMillis()));
         historicWars.touched();
     }
