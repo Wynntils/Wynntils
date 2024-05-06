@@ -6,14 +6,17 @@ package com.wynntils.screens.base.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.network.chat.Component;
@@ -21,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class WynntilsCheckbox extends Checkbox {
     private final int maxTextWidth;
-    private final int color;
+    private final CustomColor color;
 
     private BiConsumer<WynntilsCheckbox, Integer> onClick;
     private List<Component> tooltip;
@@ -30,7 +33,7 @@ public class WynntilsCheckbox extends Checkbox {
             int x, int y, int width, int height, Component message, boolean selected, int maxTextWidth) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE.asInt();
+        this.color = CommonColors.WHITE;
     }
 
     public WynntilsCheckbox(
@@ -44,7 +47,7 @@ public class WynntilsCheckbox extends Checkbox {
             Consumer<Integer> onClick) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE.asInt();
+        this.color = CommonColors.WHITE;
         this.onClick = (checkbox, button) -> onClick.accept(button);
     }
 
@@ -60,7 +63,7 @@ public class WynntilsCheckbox extends Checkbox {
             List<Component> tooltip) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE.asInt();
+        this.color = CommonColors.WHITE;
         this.onClick = (checkbox, button) -> onClick.accept(button);
         this.tooltip = tooltip;
     }
@@ -77,7 +80,7 @@ public class WynntilsCheckbox extends Checkbox {
             List<Component> tooltip) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE.asInt();
+        this.color = CommonColors.WHITE;
         this.onClick = onClick;
         this.tooltip = tooltip;
     }
@@ -93,13 +96,12 @@ public class WynntilsCheckbox extends Checkbox {
             CustomColor color) {
         super(x, y, width, height, message, selected);
         this.maxTextWidth = maxTextWidth;
-        this.color = color.asInt();
+        this.color = color;
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.enableDepthTest();
-        Font font = FontRenderer.getInstance().getFont();
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         ResourceLocation resourceLocation;
@@ -112,19 +114,18 @@ public class WynntilsCheckbox extends Checkbox {
         guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), this.width, this.height);
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.showLabel) {
-            int start = this.getX() + this.width + 2;
-            int end = start + this.maxTextWidth;
-
-            renderScrollingString(
-                    guiGraphics,
-                    font,
-                    this.getMessage(),
-                    start,
-                    start,
-                    this.getY(),
-                    end,
-                    this.getY() + this.getHeight(),
-                    this.color);
+            FontRenderer.getInstance()
+                    .renderScrollingText(
+                            guiGraphics.pose(),
+                            StyledText.fromComponent(this.getMessage()),
+                            this.getX() + this.width + 2,
+                            this.getY() + (this.height / 2f),
+                            maxTextWidth,
+                            color,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            1f);
         }
 
         if (isHovered && tooltip != null) {

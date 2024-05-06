@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -26,12 +26,15 @@ import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
+    private final WynntilsBookSettingsScreen settingsScreen;
 
     private final List<Component> descriptionTooltip;
 
-    public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
+    public ConfigurableButton(
+            int x, int y, int width, int height, Configurable configurable, WynntilsBookSettingsScreen screen) {
         super(x, y, width, height, Component.literal(configurable.getTranslatedName()));
         this.configurable = configurable;
+        this.settingsScreen = screen;
 
         if (configurable instanceof Feature feature) {
             descriptionTooltip =
@@ -56,15 +59,19 @@ public class ConfigurableButton extends WynntilsButton {
         boolean isOverlay = configurable instanceof Overlay;
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString((isOverlay ? "   " : "") + configurable.getTranslatedName()),
-                        this.getX(),
+                        StyledText.fromString(configurable.getTranslatedName()),
+                        (isOverlay ? this.getX() + 12 : this.getX()),
                         this.getY(),
+                        (isOverlay ? this.width - 12 : this.width),
+                        settingsScreen.getTranslationX(),
+                        settingsScreen.getTranslationY(),
                         color,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
+                        TextShadow.NORMAL,
+                        1f);
 
         if (isHovered && configurable instanceof Feature) {
             McUtils.mc()
