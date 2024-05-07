@@ -1220,6 +1220,7 @@
   "screens.wynntils.guildMap.cycleDefenseFilter.description1": "点击此处可以循环切换领地防御过滤器",
   "screens.wynntils.guildMap.cycleDefenseFilter.description3": "中键点击以关闭。",
   "screens.wynntils.guildMap.cycleDefenseFilter.description4": "当前值： ",
+  "screens.wynntils.guildMap.help.description2": "按住 Shift 并中键点击地图即可创建路径点",
   "screens.wynntils.iconFilter.done": "完成",
   "screens.wynntils.lootruns.chests": "战利品箱",
   "screens.wynntils.lootruns.description1": "此处你可以查看到所有你保存的猎宝路线。你可以在上方的搜索框中输入名字，找寻特定的路线。点击书页的左右按钮或是滑动滚轮即可翻页。",
