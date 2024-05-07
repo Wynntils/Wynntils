@@ -1,3 +1,28 @@
+## [1.2.2](https://github.com/Wynntils/Artemis/compare/v1.2.1...v1.2.2) (2024-05-07)
+
+
+### New Features
+
+* Add open guild bank keybind [skip ci] ([#2470](https://github.com/Wynntils/Artemis/issues/2470)) ([9267c1e](https://github.com/Wynntils/Artemis/commit/9267c1e8d611ce9039ee75861e76b6ccacc03a67))
+* Make TowerStatsFeature messages copy-able [skip ci] ([#2465](https://github.com/Wynntils/Artemis/issues/2465)) ([2ca6298](https://github.com/Wynntils/Artemis/commit/2ca62982eb791069ea4fcf87b8f5db296fff4d1a))
+* Shift middle click to place multiple markers on guild map [skip ci] ([#2469](https://github.com/Wynntils/Artemis/issues/2469)) ([1d83ba3](https://github.com/Wynntils/Artemis/commit/1d83ba327d58b4c41840f28dec3b91933e3a9ca6))
+* Use scrolling text in various screens [skip ci] ([#2461](https://github.com/Wynntils/Artemis/issues/2461)) ([0ec6e1d](https://github.com/Wynntils/Artemis/commit/0ec6e1dae24419edea9425f8063b7cdc7e5390d2))
+
+
+### Bug Fixes
+
+* Actually track raid succeeded stats [skip ci] ([#2462](https://github.com/Wynntils/Artemis/issues/2462)) ([7b3a203](https://github.com/Wynntils/Artemis/commit/7b3a203009952c4893b3918e73ecadfdd2aec3f1))
+* fix gammabright resetting brightness setting, even when the feature is off [skip ci] ([#2468](https://github.com/Wynntils/Artemis/issues/2468)) ([b57566a](https://github.com/Wynntils/Artemis/commit/b57566a5c349c2ebe5440493c5d166fb502bc729))
+* Fix war info (dps, estimated time) not being accurate ([#2471](https://github.com/Wynntils/Artemis/issues/2471)) ([79805be](https://github.com/Wynntils/Artemis/commit/79805be8bd4d3c0e02807266ee3567ccba69e7ed))
+* Only render server list overlay if the actual player tab is rendering [skip ci] ([#2464](https://github.com/Wynntils/Artemis/issues/2464)) ([537e884](https://github.com/Wynntils/Artemis/commit/537e8844402eaedcc1312bd6dc73ddd83ec4a1d2))
+* Parse shaman mask correctly when only one mask available [skip ci] ([#2467](https://github.com/Wynntils/Artemis/issues/2467)) ([5141419](https://github.com/Wynntils/Artemis/commit/5141419706a7005fe97e5270e6752c35b41717d6))
+* Some lootrun drops not included in box possibilities [skip ci] ([#2466](https://github.com/Wynntils/Artemis/issues/2466)) ([4a98fc9](https://github.com/Wynntils/Artemis/commit/4a98fc9fb9c98e66e422dc6079ea6e1fdc1c609f))
+
+
+### Miscellaneous Chores
+
+* Collect end of war stats in war history [skip ci] ([#2463](https://github.com/Wynntils/Artemis/issues/2463)) ([c1b831e](https://github.com/Wynntils/Artemis/commit/c1b831e1a7a33e54d768a2b9fa21a068e37a009f))
+
 ## [1.2.1](https://github.com/Wynntils/Artemis/compare/v1.2.0...v1.2.1) (2024-05-05)
 
 
@@ -13,6 +38,11 @@
 * Fix PlayerCommand not using the correct date format [skip ci] ([#2456](https://github.com/Wynntils/Artemis/issues/2456)) ([b748bb2](https://github.com/Wynntils/Artemis/commit/b748bb2fff8312353a4265ffd230d484373d5933))
 * Fix territory connections not working due to some connections not being displayed as bidirectional [skip ci] ([#2453](https://github.com/Wynntils/Artemis/issues/2453)) ([ea97818](https://github.com/Wynntils/Artemis/commit/ea978187f9b229d5071c9ab653c999f3812ced68)), closes [#1](https://github.com/Wynntils/Artemis/issues/1)
 * Fix Territory Management Screen not working in wars [skip ci] ([#2457](https://github.com/Wynntils/Artemis/issues/2457)) ([89a108c](https://github.com/Wynntils/Artemis/commit/89a108ce0ac43779e19787747311376429f6d127))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.1 [skip ci] ([4aa3dd9](https://github.com/Wynntils/Artemis/commit/4aa3dd90bfac9feedab431022e238d81848a178f))
 
 ## [1.2.0](https://github.com/Wynntils/Artemis/compare/v1.1.14...v1.2.0) (2024-05-05)
 
@@ -102,34 +132,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.1.13 [skip ci] ([75c0a0d](https://github.com/Wynntils/Artemis/commit/75c0a0d0b0bb57608c677d7ef74e2ca4f1d09c4b))
-
-## [1.1.12](https://github.com/Wynntils/Artemis/compare/v1.1.11...v1.1.12) (2024-04-23)
-
-
-### New Features
-
-* Add Enabled Template to TextOverlay [skip ci] ([#2407](https://github.com/Wynntils/Artemis/issues/2407)) ([b8b289c](https://github.com/Wynntils/Artemis/commit/b8b289c94b9e2aa9bdd270a422394548fb72550f))
-* Add exponential interpolation map zooming [skip ci] ([#2373](https://github.com/Wynntils/Artemis/issues/2373)) ([54bc3af](https://github.com/Wynntils/Artemis/commit/54bc3af66cd500466dfd91fb1b51756b29e5af4e))
-* Introduce provider types for ItemStatProviders and SearchableContainers [skip ci] ([#2418](https://github.com/Wynntils/Artemis/issues/2418)) ([983d50f](https://github.com/Wynntils/Artemis/commit/983d50f03ab13d00e5edbb51c41827979420c15e))
-* Parse territory items, add territory item properties, advanced search for territory list [skip ci] ([#2421](https://github.com/Wynntils/Artemis/issues/2421)) ([7d337ed](https://github.com/Wynntils/Artemis/commit/7d337ed80692d329085cb136537ed0df60f53786))
-
-
-### Bug Fixes
-
-* Make Wynntils much smarter about user info requests to greatly reduce Athena load ([#2422](https://github.com/Wynntils/Artemis/issues/2422)) ([4681f99](https://github.com/Wynntils/Artemis/commit/4681f998bf38b1b8c17dd0bbe66ae8a473e40baf))
-* Parse awakened bar & mask correctly [skip ci] ([#2402](https://github.com/Wynntils/Artemis/issues/2402)) ([80c0aa9](https://github.com/Wynntils/Artemis/commit/80c0aa94525b968195d6432f37ec1ed4f5cdc7c9))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2403](https://github.com/Wynntils/Artemis/issues/2403)) ([fab7e3f](https://github.com/Wynntils/Artemis/commit/fab7e3f80f976289ee66e9137962e6e96bfa13e3))
-* [auto-generated] Update urls.json [ci skip] ([#2413](https://github.com/Wynntils/Artemis/issues/2413)) ([3b2f44d](https://github.com/Wynntils/Artemis/commit/3b2f44d5f28769e6de3613896269b90ce40d36ae))
-* **release:** v1.1.12 [skip ci] ([230bc0b](https://github.com/Wynntils/Artemis/commit/230bc0bc0dfe24246973a4bdcf37ef1800b25d6a))
-
-
-### Code Refactoring
-
-* Container design rehaul [skip ci] ([#2419](https://github.com/Wynntils/Artemis/issues/2419)) ([0297eeb](https://github.com/Wynntils/Artemis/commit/0297eebb4f3ee32f748412ecc8cf1138a4c6b72a))
-* Remove InteractiveContainerType and replace with WynncraftContainers [skip ci] ([#2416](https://github.com/Wynntils/Artemis/issues/2416)) ([0e1027e](https://github.com/Wynntils/Artemis/commit/0e1027e5e76523435e14ea2a82b733f56bf33d31))
-* Sort ItemAnnotators into Game and Gui annotators [skip ci] ([#2420](https://github.com/Wynntils/Artemis/issues/2420)) ([efe98de](https://github.com/Wynntils/Artemis/commit/efe98de5414c7d020a012bdc19c5f0b30a5cc920))
 
