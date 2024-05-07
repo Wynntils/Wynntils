@@ -180,7 +180,7 @@ public final class StringUtils {
         }
     }
 
-  /**
+    /**
      * Converts a float to a string, but if the float is an integer, it will return the integer as a string
      * @param value the float to convert
      * @return the float as a string

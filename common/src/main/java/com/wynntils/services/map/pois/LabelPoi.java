@@ -63,13 +63,15 @@ public class LabelPoi implements Poi {
             alpha = switch (label.getLayer()) {
                 case PROVINCE -> 0; // Never visible at high zoom
                 case CITY -> MathUtils.map(zoom, 1.0f, 1.3f, 1f, 0f);
-                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);};
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);
+            };
         } else {
             // Fade out/in when zoomed out
             alpha = switch (label.getLayer()) {
                 case PROVINCE -> MathUtils.map(zoom, 0.2f, 0.25f, 1f, 0f);
                 case CITY -> 1; // always visible at low zoom
-                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);};
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);
+            };
         }
 
         return MathUtils.clamp(alpha, 0f, 1f) * 0.9f;
