@@ -592,7 +592,7 @@
   "screens.wynntils.guildMap.cycleDefenseFilter.description3": "中鍵點擊為了關閉器。",
   "screens.wynntils.guildMap.cycleDefenseFilter.description4": "現在的禦過級：",
   "screens.wynntils.guildMap.cycleDefenseFilter.name": "循環領土防禦的過濾器",
-  "screens.wynntils.guildMap.help.description1": "同時按切換鍵和控制鍵在一直領土上為了打開管理選單。",
+  "screens.wynntils.guildMap.help.description2": "同時按控制键和中鍵為了做一位紀錄點。",
   "screens.wynntils.guildMap.toggleResourceColor.description": "點擊此處可資源生成顏色和工會顏色切換用哪個。",
   "screens.wynntils.guildMap.toggleResourceColor.name": "用資源生成重的顏色",
   "screens.wynntils.iconFilter.done": "做完了",
