@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -25,7 +25,7 @@ public class GammabrightFeature extends Feature {
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
     @Persisted
-    private final Storage<Double> lastGamma = new Storage<>(1.0);
+    private final Storage<Double> lastGamma = new Storage<>(-1.0);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =
@@ -83,6 +83,9 @@ public class GammabrightFeature extends Feature {
     }
 
     private void resetGamma() {
+        // If the gamma was never changed, don't reset it
+        if (lastGamma.get() == -1.0) return;
+
         McUtils.options().gamma().value = lastGamma.get();
     }
 
