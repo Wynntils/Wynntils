@@ -532,6 +532,8 @@
   "feature.wynntils.gammabright.name": "Gammabright Keybind",
   "feature.wynntils.gearViewer.description": "Adds the ability to view other players' gear in a GUI.",
   "feature.wynntils.gearViewer.name": "Gear Viewer",
+  "feature.wynntils.guildBankHotkey.description": "Adds a hotkey to open the guild bank.",
+  "feature.wynntils.guildBankHotkey.name": "Guild Bank Hotkey",
   "feature.wynntils.guildMap.description": "Adds a guild map to view territories.",
   "feature.wynntils.guildMap.name": "Guild Map",
   "feature.wynntils.guildMap.pointerColor.description": "What color should the main map pointer be?",
