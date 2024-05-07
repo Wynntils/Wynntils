@@ -34,6 +34,8 @@ import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
+
+import com.wynntils.utils.wynn.LocationUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
@@ -355,6 +357,27 @@ public class TestRegex {
         p.shouldMatch("§7Sylphid Tears§6 [§e✫§8✫✫§6]");
         p.shouldMatch("§7Bob's Tear§5 [§d✫✫§8✫§5]");
         p.shouldMatch("§7Contorted Stone§3 [§b✫✫✫§3]");
+    }
+
+    @Test
+    public void LocationUtils_STRICT_COORDINATE_PATTERN() {
+        PatternTester p = new PatternTester(LocationUtils.class, "STRICT_COORDINATE_PATTERN");
+        System.out.println(p.pattern.pattern());
+        p.shouldMatch("10, 14, -1945");
+        p.shouldMatch("10591, 106, 20489");
+        p.shouldMatch("[200, 0, 0]");
+        p.shouldMatch("102, 100, 102");
+        p.shouldMatch("1002, 100, 1002");
+        p.shouldMatch("10002, 100, 10002");
+        p.shouldMatch("0, 0, 0");
+        p.shouldMatch("0, 0");
+        p.shouldNotMatch("100");
+        p.shouldNotMatch("0");
+        p.shouldNotMatch("200,000");
+        p.shouldNotMatch("195,000,000");
+        p.shouldNotMatch("20,000");
+        p.shouldNotMatch("2,000");
+        p.shouldNotMatch("");
     }
 
     @Test
