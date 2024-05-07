@@ -65,8 +65,8 @@ public class TowerStatsFeature extends Feature {
                 .append(Component.literal("⚔ DPS: ")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal("%s"
-                                        .formatted(StringUtils.integerToShortString(
-                                                warBattleInfo.getDps(warBattleInfo.getTotalLengthSeconds()))))
+                                        .formatted(
+                                                StringUtils.integerToShortString(warBattleInfo.getDps(Long.MAX_VALUE))))
                                 .withStyle(ChatFormatting.WHITE)))
                 .append(Component.literal("\n"));
 
