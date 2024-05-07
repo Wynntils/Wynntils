@@ -227,11 +227,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return filteredPois;
     }
 
-    protected void setCompassToMouseCoords(double mouseX, double mouseY) {
+    protected void setCompassToMouseCoords(double mouseX, double mouseY, boolean removeAll) {
+        if (removeAll) {
+            Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+        }
+
         double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
         double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
         Location compassLocation = Location.containing(gameX, 0, gameZ);
-        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
 
         McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
