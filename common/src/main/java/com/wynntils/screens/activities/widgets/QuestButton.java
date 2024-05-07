@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
@@ -14,7 +14,6 @@ import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -52,21 +51,20 @@ public class QuestButton extends WynntilsButton {
         CustomColor backgroundColor = getBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
-        int maxTextWidth = this.width - 10 - 11;
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                questInfo.getName(),
-                                maxTextWidth,
-                                FontRenderer.getInstance().getFont())),
+                        StyledText.fromString(questInfo.getName()),
                         this.getX() + 14,
                         this.getY() + 1,
-                        0,
+                        this.width - 15,
+                        questBookScreen.getTranslationX(),
+                        questBookScreen.getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        1f);
 
         Texture stateTexture =
                 switch (questInfo.getStatus()) {

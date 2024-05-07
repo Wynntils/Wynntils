@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -942,6 +943,58 @@ public final class RenderUtils {
 
             poseStack.popPose();
         }
+    }
+
+    public static void drawMulticoloredRect(
+            PoseStack poseStack, List<CustomColor> colors, float x, float y, float z, float width, float height) {
+        if (colors.size() == 1) {
+            drawRect(poseStack, colors.get(0), x, y, z, width, height);
+            return;
+        }
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+        float splitX = width / (colors.size() - 1);
+
+        for (int i = 0; i < colors.size(); i++) {
+            CustomColor color = colors.get(i);
+            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Mth.clamp(x + splitX * i, x, x + width);
+            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+
+            // bottom left
+            bufferBuilder
+                    .vertex(matrix, leftX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // bottom right
+            bufferBuilder
+                    .vertex(matrix, centerX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top right
+            bufferBuilder
+                    .vertex(matrix, rightX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top left
+            bufferBuilder
+                    .vertex(matrix, centerX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+
+        BufferUploader.drawWithShader(bufferBuilder.end());
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {

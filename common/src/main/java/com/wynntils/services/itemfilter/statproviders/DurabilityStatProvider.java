@@ -10,13 +10,14 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Optional;
 
 public class DurabilityStatProvider extends ItemStatProvider<CappedValue> {
     @Override
-    public List<CappedValue> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof DurableItemProperty durableItemProperty)) return List.of();
+    public Optional<CappedValue> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof DurableItemProperty durableItemProperty)) return Optional.empty();
 
-        return List.of(durableItemProperty.getDurability());
+        return Optional.of(durableItemProperty.getDurability());
     }
 
     @Override

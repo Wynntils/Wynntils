@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings;
@@ -126,22 +126,23 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             name = selectedFeature.getTranslatedName();
         }
 
-        poseStack.pushPose();
-        poseStack.scale(0.8f, 0.8f, 0);
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
                         StyledText.fromString(name + ": "
                                 + (enabled
                                         ? ChatFormatting.DARK_GREEN + "Enabled"
                                         : ChatFormatting.DARK_RED + "Disabled")),
-                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2f / 0.8f + 10,
-                        12,
+                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10,
+                        10,
+                        Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 20,
+                        getTranslationX(),
+                        getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
-        poseStack.popPose();
+                        TextShadow.NONE,
+                        0.8f);
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -382,7 +383,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
             }
 
-            configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, configurable));
+            configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, configurable, this));
 
             if (configurable instanceof Feature feature) {
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
@@ -390,7 +391,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                         .toList()) {
                     offset++;
                     renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
-                    configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));
+                    configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay, this));
                 }
             }
         }
@@ -475,11 +476,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 CommonColors.GRAY);
     }
 
-    private float getTranslationY() {
+    public float getTranslationY() {
         return (this.height - Texture.CONFIG_BOOK_BACKGROUND.height()) / 2f;
     }
 
-    private float getTranslationX() {
+    public float getTranslationX() {
         return (this.width - Texture.CONFIG_BOOK_BACKGROUND.width()) / 2f;
     }
 

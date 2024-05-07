@@ -5,11 +5,11 @@
 package com.wynntils.services.itemfilter.statproviders.territory;
 
 import com.wynntils.models.items.items.gui.TerritoryItem;
-import java.util.List;
+import java.util.Optional;
 
 public class TerritoryNameStatProvider extends TerritoryStatProvider<String> {
     @Override
-    public List<String> getValue(TerritoryItem territoryItem) {
-        return List.of(territoryItem.getName());
+    public Optional<String> getValue(TerritoryItem territoryItem) {
+        return Optional.of(territoryItem.getName());
     }
 }

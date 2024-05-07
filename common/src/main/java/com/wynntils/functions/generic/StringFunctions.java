@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -40,6 +41,46 @@ public class StringFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("value", CappedValue.class, null)));
+        }
+    }
+
+    public static class FormatRangedFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            RangedValue value = arguments.getArgument("value").getRangedValue();
+            return StringUtils.integerToShortString(value.low()) + "-" + StringUtils.integerToShortString(value.high());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("value", RangedValue.class, null)));
+        }
+    }
+
+    public static class FormatDurationFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return StringUtils.formatDuration(arguments.getArgument("seconds").getLongValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("seconds", Number.class, null)));
+        }
+    }
+
+    public static class FormatDateFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return StringUtils.formatDateTime(arguments.getArgument("timestamp").getLongValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("timestamp", Number.class, null)));
         }
     }
 
@@ -140,6 +181,23 @@ public class StringFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("parse_int");
+        }
+    }
+
+    public static class ParseLongFunction extends GenericFunction<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            try {
+                return Long.parseLong(arguments.getArgument("value").getStringValue());
+            } catch (NumberFormatException ignored) {
+                return 0L;
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("value", String.class, null)));
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.bossbar;
@@ -52,7 +52,7 @@ public class TrackedBar {
         return event;
     }
 
-    void reset() {
+    protected void reset() {
         value = CappedValue.EMPTY;
         event = null;
         rendered = true;

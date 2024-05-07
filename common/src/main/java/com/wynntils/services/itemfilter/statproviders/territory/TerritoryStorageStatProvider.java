@@ -6,10 +6,10 @@ package com.wynntils.services.itemfilter.statproviders.territory;
 
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.type.GuildResource;
-import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class TerritoryStorageStatProvider extends TerritoryStatProvider<CappedValue> {
     private final GuildResource guildResource;
@@ -19,16 +19,18 @@ public class TerritoryStorageStatProvider extends TerritoryStatProvider<CappedVa
     }
 
     @Override
-    public List<CappedValue> getValue(TerritoryItem territoryItem) {
-        TerritoryStorage territoryStorage = territoryItem.getStorage().get(guildResource);
-        return territoryStorage == null
-                ? List.of()
-                : List.of(new CappedValue(territoryStorage.current(), territoryStorage.max()));
+    public Optional<CappedValue> getValue(TerritoryItem territoryItem) {
+        return Optional.ofNullable(territoryItem.getStorage().get(guildResource));
     }
 
     @Override
     public String getName() {
         return guildResource.getName().toLowerCase(Locale.ROOT) + "Storage";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return guildResource.getName() + " Storage";
     }
 
     @Override

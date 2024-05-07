@@ -15,7 +15,6 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
@@ -33,6 +32,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -282,18 +282,23 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
             Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
-            Location location = new Location(gameX, 0, gameZ);
-
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
-                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(location);
+                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+                        hovered.getLocation().asLocation());
                 return true;
-            }
+            } else if (hovered instanceof TerritoryPoi) {
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-            McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location);
+                // If shift is not held down, clear all waypoints to only have the new one
+                if (!KeyboardUtils.isShiftDown()) {
+                    Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
+                }
+
+                Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(hovered.getLocation()));
+            }
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            setCompassToMouseCoords(mouseX, mouseY);
             return true;
         }
 
@@ -400,7 +405,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         for (GuildResource value : GuildResource.values()) {
             int generation = territoryInfo.getGeneration(value);
-            TerritoryStorage storage = territoryInfo.getStorage(value);
+            CappedValue storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
                 StyledText formattedGenerated = StyledText.fromString(
