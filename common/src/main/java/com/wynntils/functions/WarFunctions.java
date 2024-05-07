@@ -191,8 +191,8 @@ public class WarFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("seconds", Long.class, null)));
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("seconds", Long.class, Long.MAX_VALUE)));
         }
     }
 
