@@ -375,7 +375,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             List<MarkerInfo> markers =
                     Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-            if (McUtils.player().isShiftKeyDown() && !markers.isEmpty()) {
+            if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
                 // -1 is fine as the index since we always increment it by 1
                 int index = markers.indexOf(focusedMarker);
                 MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
@@ -441,7 +441,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     customPois.touched();
                 }
             } else {
-                setCompassToMouseCoords(mouseX, mouseY);
+                setCompassToMouseCoords(mouseX, mouseY, true);
                 return true;
             }
         }

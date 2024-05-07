@@ -18,7 +18,7 @@ public class TowerStatsOverlay extends TextOverlay {
                     §f❖ Tower DPS: §b{range_low(tower_dps):F0}§8 - §b{range_high(tower_dps):F0}
                     §f❖ Team DPS/1s: §c{team_dps(long(1)):F0}
                     §f❖ Team DPS/5s: §c{team_dps(long(5)):F0}
-                    §f❖ Total Team DPS: §e{team_dps(time_in_war):F0}
+                    §f❖ Total Team DPS: §e{team_dps:F0}
                     §f❖ Estimated Time: §a{if_str(eq(estimated_time_to_finish_war;-1);"-";concat(str(int(estimated_time_to_finish_war));"s"))}
                     """;
 

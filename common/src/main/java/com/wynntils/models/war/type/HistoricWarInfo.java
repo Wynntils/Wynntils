@@ -4,4 +4,5 @@
  */
 package com.wynntils.models.war.type;
 
-public record HistoricWarInfo(String territory, String ownerGuild, WarTowerState initialTower, long endedTimestamp) {}
+public record HistoricWarInfo(
+        String territory, String ownerGuild, WarTowerState initialTower, WarTowerState endTower, long endedTimestamp) {}

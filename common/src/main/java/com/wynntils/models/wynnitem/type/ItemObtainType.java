@@ -39,6 +39,7 @@ public enum ItemObtainType {
             NORMAL_MOB_DROP,
             BOSS_ALTAR,
             MINIBOSS,
+            LOOTRUN, // some items are boxed, some are not
             DUNGEON_RAIN,
             FORGERY_CHEST,
             RAID,

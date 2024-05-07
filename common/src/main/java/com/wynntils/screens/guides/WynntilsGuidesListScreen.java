@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
@@ -152,7 +152,9 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                 offset * 13 + 25,
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
-                elements.get(i));
+                elements.get(i),
+                getTranslationX(),
+                getTranslationY());
     }
 
     @Override

@@ -17,11 +17,13 @@ import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ShamanMaskModel extends Model {
     private static final Pattern AWAKENED_PATTERN = Pattern.compile("^§[0-9a-f]§lAwakened$");
+    private static final Pattern MASK_PATTERN = Pattern.compile("§cMask of the (Coward|Lunatic|Fanatic)");
     private static final StyledText AWAKENED_STATUS_EFFECT = StyledText.fromString("§7Awakened");
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
@@ -51,7 +53,7 @@ public final class ShamanMaskModel extends Model {
     public void onSubtitle(SubtitleSetTextEvent event) {
         StyledText title = StyledText.fromComponent(event.getComponent());
 
-        if (title.contains("➤")) {
+        if (title.contains("Mask of the ") || title.contains("➤")) {
             parseMask(title);
             ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
             WynntilsMod.postEvent(maskEvent);
@@ -81,14 +83,20 @@ public final class ShamanMaskModel extends Model {
     }
 
     private void parseMask(StyledText title) {
+        Matcher matcher = title.getMatcher(MASK_PATTERN);
+
         ShamanMaskType parsedMask = ShamanMaskType.NONE;
 
-        for (ShamanMaskType type : ShamanMaskType.values()) {
-            if (type.getParseString() == null) continue;
+        if (matcher.matches()) {
+            parsedMask = ShamanMaskType.find(matcher.group(1));
+        } else {
+            for (ShamanMaskType type : ShamanMaskType.values()) {
+                if (type.getParseString() == null) continue;
 
-            if (title.contains(type.getParseString())) {
-                parsedMask = type;
-                break;
+                if (title.contains(type.getParseString())) {
+                    parsedMask = type;
+                    break;
+                }
             }
         }
 

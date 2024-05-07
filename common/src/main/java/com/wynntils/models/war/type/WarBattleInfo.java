@@ -7,6 +7,7 @@ package com.wynntils.models.war.type;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WarBattleInfo {
     private final String territory;
@@ -37,22 +38,40 @@ public class WarBattleInfo {
     }
 
     public long getTotalLengthSeconds() {
-        return (states.get(states.size() - 1).timestamp() - states.get(0).timestamp()) / 1000L;
+        return (long) Math.ceil(
+                (states.get(states.size() - 1).timestamp() - states.get(0).timestamp()) / 1000d);
     }
 
     public long getDps(long seconds) {
+        // Get the dps over the entire war
+        if (seconds == Long.MAX_VALUE) {
+            WarTowerState initialState = getInitialState();
+            WarTowerState currentState = getCurrentState();
+
+            return (long) Math.floor((initialState.health() - currentState.health())
+                    / ((currentState.timestamp() - initialState.timestamp()) / 1000d));
+        }
+
         // Get the dps over the last x seconds
-        long now = states.get(states.size() - 1).timestamp();
-        long start = now - seconds * 1000L;
+        long now = System.currentTimeMillis();
+        long start = now - TimeUnit.SECONDS.toMillis(seconds);
 
-        List<WarTowerState> relevantStates =
-                states.stream().filter(state -> state.timestamp() >= start).toList();
+        WarTowerState firstRelevantState = null;
+        WarTowerState lastRelevantState = null;
 
-        return relevantStates.size() < 2 || seconds == 0
+        for (WarTowerState state : states) {
+            if (state.timestamp() >= start) {
+                if (firstRelevantState == null) {
+                    firstRelevantState = state;
+                }
+
+                lastRelevantState = state;
+            }
+        }
+
+        return firstRelevantState == null || lastRelevantState == null
                 ? 0
-                : (relevantStates.get(0).health()
-                                - relevantStates.get(relevantStates.size() - 1).health())
-                        / seconds;
+                : (long) Math.floor((firstRelevantState.health() - lastRelevantState.health()) / seconds);
     }
 
     public long getTowerEffectiveHp() {
@@ -70,7 +89,7 @@ public class WarBattleInfo {
     public long getEstimatedTimeRemaining() {
         WarTowerState currentState = getCurrentState();
         long effectiveHp = getTowerEffectiveHp();
-        long dps = getDps(getTotalLengthSeconds());
+        long dps = getDps(Long.MAX_VALUE);
         return dps == 0 ? -1L : effectiveHp / dps;
     }
 

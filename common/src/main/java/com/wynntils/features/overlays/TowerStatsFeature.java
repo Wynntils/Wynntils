@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.models.war.type.WarBattleInfo;
@@ -19,7 +20,9 @@ import com.wynntils.overlays.TowerStatsOverlay;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -62,14 +65,19 @@ public class TowerStatsFeature extends Feature {
                 .append(Component.literal("⚔ DPS: ")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal("%s"
-                                        .formatted(StringUtils.integerToShortString(
-                                                warBattleInfo.getDps(warBattleInfo.getTotalLengthSeconds()))))
+                                        .formatted(
+                                                StringUtils.integerToShortString(warBattleInfo.getDps(Long.MAX_VALUE))))
                                 .withStyle(ChatFormatting.WHITE)))
                 .append(Component.literal("\n"));
 
         message = message.append(Component.literal("%s".formatted("=".repeat(SEPARATOR_LENGTH)))
                 .withStyle(ChatFormatting.BLUE)
                 .withStyle(ChatFormatting.STRIKETHROUGH));
+
+        String messageString = StyledText.fromComponent(message).getStringWithoutFormatting();
+        message = message.withStyle(style -> style.withHoverEvent(
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to copy to clipboard.")))
+                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, messageString)));
 
         McUtils.sendMessageToClient(message);
     }
