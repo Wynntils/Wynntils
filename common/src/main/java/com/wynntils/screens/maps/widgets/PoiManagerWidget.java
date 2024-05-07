@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -15,7 +15,6 @@ import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -117,19 +116,18 @@ public class PoiManagerWidget extends AbstractWidget {
 
         renderIcon(poseStack);
 
-        String poiName =
-                RenderedStringUtils.getMaxFittingText(poi.getName(), (int) (dividedWidth * 15), McUtils.mc().font);
-
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(poiName),
+                        StyledText.fromString(poi.getName()),
                         getX() + (int) (dividedWidth * 3),
                         getY() + 10,
+                        (int) (dividedWidth * 15),
                         color,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+                        TextShadow.NORMAL,
+                        1f);
 
         FontRenderer.getInstance()
                 .renderText(

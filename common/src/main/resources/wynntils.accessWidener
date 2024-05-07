@@ -18,6 +18,7 @@ accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_SELECTED_
 accessible field net/minecraft/client/gui/components/Checkbox CHECKBOX_SPRITE Lnet/minecraft/resources/ResourceLocation;
 accessible field net/minecraft/client/gui/components/Checkbox selected Z
 accessible field net/minecraft/client/gui/components/Checkbox showLabel Z
+accessible field net/minecraft/client/gui/components/PlayerTabOverlay visible Z
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
 accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
