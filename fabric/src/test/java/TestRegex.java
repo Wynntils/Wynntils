@@ -32,10 +32,9 @@ import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.wynn.LocationUtils;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.wynn.LocationUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
