@@ -112,6 +112,13 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        resetButton.setY(getRenderY());
+    }
+
+    @Override
     public void onPress() {
         // noop
     }
