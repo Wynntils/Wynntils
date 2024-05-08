@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -11,20 +11,31 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
     protected final Config<T> config;
 
-    protected TextInputBoxSettingsWidget(Config<T> config, TextboxScreen textboxScreen, int width) {
-        super(0, 6, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
+    protected TextInputBoxSettingsWidget(int x, int y, Config<T> config, TextboxScreen textboxScreen, int width) {
+        super(x, y, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
         this.config = config;
         setTextBoxInput(config.get().toString());
         tooltip = ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150);
     }
 
-    public TextInputBoxSettingsWidget(Config<T> config, TextboxScreen textboxScreen) {
-        this(config, textboxScreen, 100);
+    public TextInputBoxSettingsWidget(int x, int y, Config<T> config, TextboxScreen textboxScreen) {
+        this(x, y, config, textboxScreen, 100);
+    }
+
+    @Override
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Don't want to display tooltip when the tile is outside the mask from the screen
+        if (isHovered && (mouseY <= 21 || mouseY >= 205)) {
+            isHovered = false;
+        }
+
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

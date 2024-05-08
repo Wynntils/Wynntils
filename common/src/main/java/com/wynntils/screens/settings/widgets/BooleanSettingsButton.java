@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -16,10 +16,10 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final Config<Boolean> config;
 
-    public BooleanSettingsButton(Config<Boolean> config) {
+    public BooleanSettingsButton(int x, int y, Config<Boolean> config) {
         super(
-                0,
-                7,
+                x,
+                y,
                 50,
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 getTitle(config),

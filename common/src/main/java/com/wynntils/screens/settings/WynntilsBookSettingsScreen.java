@@ -548,8 +548,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         for (int i = 0; i < configsOptions.size(); i++) {
             Config<?> config = configsOptions.get(i);
 
-            configs.add(
-                    new ConfigTile(Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10, renderY, 160, 45, this, config));
+            ConfigTile configTile =
+                    new ConfigTile(Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10, renderY, 160, 45, this, config);
+            configTile.visible = renderY >= (21 - 46) && renderY <= (21 + CONFIGS_PER_PAGE * 45);
+
+            configs.add(configTile);
 
             renderY += 46;
         }

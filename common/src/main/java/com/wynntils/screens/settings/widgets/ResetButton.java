@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -7,6 +7,7 @@ package com.wynntils.screens.settings.widgets;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -20,7 +21,7 @@ public class ResetButton extends GeneralSettingsButton {
                 x,
                 y,
                 35,
-                12,
+                FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.translatable("screens.wynntils.settingsScreen.reset.name"),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
         this.config = config;

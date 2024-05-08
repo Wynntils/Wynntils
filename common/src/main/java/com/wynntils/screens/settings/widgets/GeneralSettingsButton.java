@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -59,6 +59,11 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
+
+        // Don't want to display tooltip when the tile is outside the mask from the screen
+        if (isHovered && (mouseY <= 21 || mouseY >= 205)) {
+            isHovered = false;
+        }
 
         if (isHovered) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));

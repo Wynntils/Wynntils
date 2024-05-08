@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -20,10 +20,10 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     private final Config<E> config;
     private final List<E> enumConstants;
 
-    public EnumSettingsButton(Config<E> config) {
+    public EnumSettingsButton(int x, int y, Config<E> config) {
         super(
-                0,
-                7,
+                x,
+                y,
                 getWidth(config.getType()),
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.literal(config.getValueString()),
