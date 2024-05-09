@@ -20,14 +20,16 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     private final Config<E> config;
     private final List<E> enumConstants;
 
-    public EnumSettingsButton(int x, int y, Config<E> config) {
+    public EnumSettingsButton(int x, int y, Config<E> config, int maskTopY, int maskBottomY) {
         super(
                 x,
                 y,
                 getWidth(config.getType()),
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.literal(config.getValueString()),
-                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150));
+                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
+                maskTopY,
+                maskBottomY);
         this.config = config;
         enumConstants = EnumSet.allOf((Class<E>) config.getType()).stream().toList();
     }

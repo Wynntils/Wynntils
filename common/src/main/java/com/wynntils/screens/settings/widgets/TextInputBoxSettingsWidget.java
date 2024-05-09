@@ -16,22 +16,28 @@ import net.minecraft.network.chat.Component;
 
 public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
     protected final Config<T> config;
+    private final int maskTopY;
+    private final int maskBottomY;
 
-    protected TextInputBoxSettingsWidget(int x, int y, Config<T> config, TextboxScreen textboxScreen, int width) {
+    protected TextInputBoxSettingsWidget(
+            int x, int y, Config<T> config, TextboxScreen textboxScreen, int width, int maskTopY, int maskBottomY) {
         super(x, y, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
         this.config = config;
+        this.maskTopY = maskTopY;
+        this.maskBottomY = maskBottomY;
         setTextBoxInput(config.get().toString());
         tooltip = ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150);
     }
 
-    public TextInputBoxSettingsWidget(int x, int y, Config<T> config, TextboxScreen textboxScreen) {
-        this(x, y, config, textboxScreen, 100);
+    public TextInputBoxSettingsWidget(
+            int x, int y, Config<T> config, TextboxScreen textboxScreen, int maskTopY, int maskBottomY) {
+        this(x, y, config, textboxScreen, 100, maskTopY, maskBottomY);
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't want to display tooltip when the tile is outside the mask from the screen
-        if (isHovered && (mouseY <= 21 || mouseY >= 205)) {
+        if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
             isHovered = false;
         }
 

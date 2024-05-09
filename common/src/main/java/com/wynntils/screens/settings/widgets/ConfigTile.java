@@ -24,7 +24,8 @@ import net.minecraft.network.chat.Component;
 public class ConfigTile extends WynntilsButton {
     private final WynntilsBookSettingsScreen settingsScreen;
     private final Config<?> config;
-
+    private final int maskTopY;
+    private final int maskBottomY;
     private final GeneralSettingsButton resetButton;
     private AbstractWidget configOptionElement;
 
@@ -32,10 +33,17 @@ public class ConfigTile extends WynntilsButton {
             int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, Config<?> config) {
         super(x, y, width, height, Component.literal(config.getJsonName()));
         this.settingsScreen = settingsScreen;
+        this.maskTopY = settingsScreen.getConfigMaskTopY();
+        this.maskBottomY = settingsScreen.getConfigMaskBottomY();
         this.config = config;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
-                config, () -> configOptionElement = getWidgetFromConfig(config), x + width - 40, getRenderY());
+                config,
+                () -> configOptionElement = getWidgetFromConfig(config),
+                x + width - 40,
+                getRenderY(),
+                maskTopY,
+                maskBottomY);
     }
 
     @Override
@@ -82,7 +90,7 @@ public class ConfigTile extends WynntilsButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
-        if ((mouseY <= 21 || mouseY >= 205)) return false;
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
         return resetButton.mouseClicked(mouseX, mouseY, button)
                 || configOptionElement.mouseClicked(mouseX, mouseY, button);
@@ -90,7 +98,7 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if ((mouseY <= 21 || mouseY >= 205)) return false;
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
         return configOptionElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
                 || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -98,7 +106,7 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if ((mouseY <= 21 || mouseY >= 205)) return false;
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
         return configOptionElement.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
     }
@@ -126,14 +134,22 @@ public class ConfigTile extends WynntilsButton {
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton(getRenderX(), getRenderY(), (Config<Boolean>) configOption);
+            return new BooleanSettingsButton(
+                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>(getRenderX(), getRenderY(), (Config<E>) configOption);
+            return new EnumSettingsButton<>(
+                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton(
-                    getRenderX(), getRenderY(), (Config<CustomColor>) configOption, settingsScreen);
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<CustomColor>) configOption,
+                    settingsScreen,
+                    maskTopY,
+                    maskBottomY);
         } else {
-            return new TextInputBoxSettingsWidget<>(getRenderX(), getRenderY(), configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget<>(
+                    getRenderX(), getRenderY(), configOption, settingsScreen, maskTopY, maskBottomY);
         }
     }
 }

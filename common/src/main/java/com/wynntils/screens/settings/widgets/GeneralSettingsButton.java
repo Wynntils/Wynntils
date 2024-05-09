@@ -23,11 +23,23 @@ import net.minecraft.network.chat.Component;
 public abstract class GeneralSettingsButton extends WynntilsButton {
     public static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
     public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
+    private final int maskTopY;
+    private final int maskBottomY;
     private final List<Component> tooltip;
 
-    protected GeneralSettingsButton(int x, int y, int width, int height, Component title, List<Component> tooltip) {
+    protected GeneralSettingsButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component title,
+            List<Component> tooltip,
+            int maskTopY,
+            int maskBottomY) {
         super(x, y, width, height, title);
         this.tooltip = tooltip;
+        this.maskTopY = maskTopY;
+        this.maskBottomY = maskBottomY;
     }
 
     @Override
@@ -61,7 +73,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                         TextShadow.OUTLINE);
 
         // Don't want to display tooltip when the tile is outside the mask from the screen
-        if (isHovered && (mouseY <= 21 || mouseY >= 205)) {
+        if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
             isHovered = false;
         }
 

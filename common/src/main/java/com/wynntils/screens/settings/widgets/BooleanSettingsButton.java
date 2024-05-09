@@ -16,14 +16,16 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final Config<Boolean> config;
 
-    public BooleanSettingsButton(int x, int y, Config<Boolean> config) {
+    public BooleanSettingsButton(int x, int y, Config<Boolean> config, int maskTopY, int maskBottomY) {
         super(
                 x,
                 y,
                 50,
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 getTitle(config),
-                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150));
+                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
+                maskTopY,
+                maskBottomY);
         this.config = config;
     }
 

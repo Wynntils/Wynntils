@@ -49,6 +49,8 @@ import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private static final float SCROLL_FACTOR = 10f;
+    private static final int CONFIG_MASK_TOP_Y = 21;
+    private static final int CONFIG_MASK_BOTTOM_Y = 205;
     private static final int CONFIGURABLES_PER_PAGE = 13;
     private static final int CONFIGS_PER_PAGE = 4;
     private static final int CONFIGURABLE_SCROLL_X = 23;
@@ -300,6 +302,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     public float getTranslationX() {
         return (this.width - Texture.CONFIG_BOOK_BACKGROUND.width()) / 2f;
+    }
+
+    public int getConfigMaskTopY() {
+        return CONFIG_MASK_TOP_Y;
+    }
+
+    public int getConfigMaskBottomY() {
+        return CONFIG_MASK_BOTTOM_Y;
     }
 
     private void renderConfigTitle(PoseStack poseStack) {

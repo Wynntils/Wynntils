@@ -12,8 +12,9 @@ import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<CustomColor> {
-    public CustomColorSettingsButton(int x, int y, Config<CustomColor> config, TextboxScreen textboxScreen) {
-        super(x, y, config, textboxScreen, 80);
+    public CustomColorSettingsButton(
+            int x, int y, Config<CustomColor> config, TextboxScreen textboxScreen, int maskTopY, int maskBottomY) {
+        super(x, y, config, textboxScreen, 80, maskTopY, maskBottomY);
     }
 
     @Override

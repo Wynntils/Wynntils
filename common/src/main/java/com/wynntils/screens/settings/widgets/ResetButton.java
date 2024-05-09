@@ -16,14 +16,16 @@ public class ResetButton extends GeneralSettingsButton {
     private final Config<?> config;
     private final Runnable onClick;
 
-    ResetButton(Config<?> config, Runnable onClick, int x, int y) {
+    ResetButton(Config<?> config, Runnable onClick, int x, int y, int maskTopY, int maskBottomY) {
         super(
                 x,
                 y,
                 35,
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.translatable("screens.wynntils.settingsScreen.reset.name"),
-                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
+                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")),
+                maskTopY,
+                maskBottomY);
         this.config = config;
         this.onClick = onClick;
     }
