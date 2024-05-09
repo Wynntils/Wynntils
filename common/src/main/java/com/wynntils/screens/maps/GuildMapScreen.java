@@ -23,7 +23,6 @@ import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -42,7 +41,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
@@ -84,7 +82,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.name")),
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")))));
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description2")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
 
         this.addRenderableWidget(
                 hybridModeButton = new BasicTexturedButton(
@@ -287,18 +291,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                         hovered.getLocation().asLocation());
                 return true;
-            } else if (hovered instanceof TerritoryPoi) {
-                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-
-                // If shift is not held down, clear all waypoints to only have the new one
-                if (!KeyboardUtils.isShiftDown()) {
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-                }
-
-                Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(hovered.getLocation()));
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            setCompassToMouseCoords(mouseX, mouseY);
+            setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
             return true;
         }
 
