@@ -208,5 +208,10 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return false;
+    }
+
+    @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

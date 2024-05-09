@@ -295,6 +295,17 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                 .orElse(new CappedValue(0, 0));
     }
 
+    public long getOverallUsageForResource(GuildResource resource) {
+        return territories.values().stream()
+                .map(Pair::b)
+                .map(TerritoryItem::getUpgrades)
+                .flatMap(upgrades -> upgrades.entrySet().stream())
+                .filter(entry -> entry.getKey().getCostResource() == resource)
+                .map(entry -> entry.getKey().getLevels()[entry.getValue()])
+                .mapToLong(TerritoryUpgrade.Level::cost)
+                .sum();
+    }
+
     public void territoryItemClicked(TerritoryItem territoryItem) {
         if (selectionMode) {
             if (selectedTerritories.contains(territoryItem.getName())) {

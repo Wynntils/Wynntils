@@ -414,6 +414,7 @@
   "feature.wynntils.customTerritoryManagementScreen.applySelection.description": "Confirm and apply the current loadout to the selected territories",
   "feature.wynntils.customTerritoryManagementScreen.description": "Adds the ability to manage territories with a custom territory management screen.",
   "feature.wynntils.customTerritoryManagementScreen.disableHighlightLegend": "Toggle Highlight Legend",
+  "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip": "Toggle Guild Output",
   "feature.wynntils.customTerritoryManagementScreen.filters": "Quick Filters",
   "feature.wynntils.customTerritoryManagementScreen.loadouts": "Territory Loadouts",
   "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen": "Click to Open",

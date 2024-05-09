@@ -50,6 +50,9 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     @Persisted
     public final Storage<Boolean> screenHighlightLegend = new Storage<>(true);
 
+    @Persisted
+    public final Storage<Boolean> screenTerritoryProductionTooltip = new Storage<>(true);
+
     private boolean shiftClickedTerritoryItem = false;
 
     private boolean customScreenOpened = false;
