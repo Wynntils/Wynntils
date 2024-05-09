@@ -4,35 +4,27 @@
  */
 package com.wynntils.services.map;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.RangedValue;
+import java.lang.reflect.Type;
 
 public class Label {
     private final String name;
     private final int x;
     private final int z;
     private final int layer;
+    private final int level;
 
-    // level is provided as a string for some data sources
-    private final String levelString;
-    private final transient RangedValue level;
-
-    public Label(String name, int x, int z, int layer, String levelString) {
+    public Label(String name, int x, int z, int layer, int level) {
         this.name = name;
         this.x = x;
         this.z = z;
         this.layer = layer;
-        this.levelString = levelString;
-        this.level = RangedValue.fromStringSafe(levelString);
-    }
-
-    public Label(String name, int x, int z, int layer, RangedValue level) {
-        this.name = name;
-        this.x = x;
-        this.z = z;
-        this.layer = layer;
-        this.levelString = level.asString();
         this.level = level;
     }
 
@@ -55,23 +47,42 @@ public class Label {
         return LabelLayer.values()[layer - 1];
     }
 
-    /**
-     * The recommended minimum combat level for visiting this place
-     */
-    public String getLevelString() {
-        if (levelString == null) return "";
-
-        return levelString;
-    }
-
-    public RangedValue getCombatLevel() {
-        if (level == null) return RangedValue.NONE;
-
+    public int getLevel() {
         return level;
     }
 
     public Location getLocation() {
         return new Location(x, 0, z);
+    }
+
+    public static final class LabelDeserializer implements JsonDeserializer<Label> {
+        @Override
+        public Label deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            JsonElement levelObject = jsonObject.get("level");
+
+            int level = -1;
+
+            if (levelObject != null) {
+                String levelString = levelObject.getAsString();
+
+                // Level is either a single number or a range
+                String minLevel = levelString.split("-")[0];
+
+                // Or it can be a range with no upper bound (e.g. "100+")
+                minLevel = minLevel.replaceAll("[^0-9]", "");
+
+                level = Integer.parseInt(minLevel);
+            }
+
+            return new Label(
+                    jsonObject.get("name").getAsString(),
+                    jsonObject.get("x").getAsInt(),
+                    jsonObject.get("z").getAsInt(),
+                    jsonObject.get("layer").getAsInt(),
+                    level);
+        }
     }
 
     public enum LabelLayer {

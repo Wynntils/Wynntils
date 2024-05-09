@@ -9,7 +9,6 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.type.RangedValue;
 
 public abstract class AbstractMapAttributes implements MapAttributes {
     @Override
@@ -28,8 +27,8 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
-    public RangedValue getLevelRange() {
-        return RangedValue.NONE;
+    public int getLevel() {
+        return 0;
     }
 
     @Override

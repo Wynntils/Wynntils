@@ -11,7 +11,6 @@ import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +35,7 @@ public class PlaceListProvider extends BuiltInProvider {
     private static final class ServiceLocation implements MapLocation {
         private final Label label;
 
-        public ServiceLocation(Label label) {
+        private ServiceLocation(Label label) {
             this.label = label;
         }
 
@@ -59,8 +58,8 @@ public class PlaceListProvider extends BuiltInProvider {
                 }
 
                 @Override
-                public RangedValue getLevelRange() {
-                    return label.getCombatLevel();
+                public int getLevel() {
+                    return label.getLevel();
                 }
             };
         }

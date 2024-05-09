@@ -6,9 +6,9 @@ package com.wynntils.services.mapdata.attributes.impl;
 
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 
-public class NeverMapVisibility implements MapVisibility {
+public final class NeverMapVisibility implements MapVisibility {
     @Override
-    public float getVisibility(int zoomStep) {
+    public float getVisibility(float zoomLevel) {
         return 0f;
     }
 }

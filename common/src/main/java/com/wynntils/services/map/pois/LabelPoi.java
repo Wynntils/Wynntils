@@ -129,13 +129,13 @@ public class LabelPoi implements Poi {
                         getTextShadow(),
                         1f);
         if (hovered) {
-            String level = label.getLevelString();
-            if (!level.isEmpty()) {
+            int level = label.getLevel();
+            if (level >= 1) {
                 BufferedFontRenderer.getInstance()
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                StyledText.fromString("[Lv " + level + "]"),
+                                StyledText.fromString("[Lv. " + level + "]"),
                                 0,
                                 10,
                                 color,
