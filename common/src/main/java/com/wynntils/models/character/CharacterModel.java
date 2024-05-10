@@ -167,7 +167,12 @@ public final class CharacterModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!e.getStyledText().matches(WYNN_DEATH_MESSAGE)) return;
         lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
-        WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
+        CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
+        WynntilsMod.postEvent(deathEvent);
+
+        if (deathEvent.isCanceled()) {
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
