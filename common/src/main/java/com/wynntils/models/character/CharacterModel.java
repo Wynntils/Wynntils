@@ -60,7 +60,7 @@ public final class CharacterModel extends Model {
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
-    private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".* §4§lYou have died\\.\\.\\.");
+    private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§4§lYou have died\\.\\.\\.");
     private Position lastPositionBeforeTeleport;
     private Location lastDeathLocation;
 
