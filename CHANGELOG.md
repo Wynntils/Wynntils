@@ -1,3 +1,15 @@
+## [1.2.3](https://github.com/Wynntils/Artemis/compare/v1.2.2...v1.2.3) (2024-05-10)
+
+
+### New Features
+
+* Settings smooth scrolling [skip ci] ([#2472](https://github.com/Wynntils/Artemis/issues/2472)) ([b9843a0](https://github.com/Wynntils/Artemis/commit/b9843a0879c7c776b2295492fe3897b658aeb73c))
+
+
+### Bug Fixes
+
+* Make war DPS use effective health for calculations (instead of raw health) ([#2474](https://github.com/Wynntils/Artemis/issues/2474)) ([371da1f](https://github.com/Wynntils/Artemis/commit/371da1f93639531fa177233afaf28aaa6d9cdff8))
+
 ## [1.2.2](https://github.com/Wynntils/Artemis/compare/v1.2.1...v1.2.2) (2024-05-07)
 
 
@@ -22,6 +34,7 @@
 ### Miscellaneous Chores
 
 * Collect end of war stats in war history [skip ci] ([#2463](https://github.com/Wynntils/Artemis/issues/2463)) ([c1b831e](https://github.com/Wynntils/Artemis/commit/c1b831e1a7a33e54d768a2b9fa21a068e37a009f))
+* **release:** v1.2.2 [skip ci] ([7ad97ed](https://github.com/Wynntils/Artemis/commit/7ad97ed235c4112fed58f8e7cfe0777026019bfc))
 
 ## [1.2.1](https://github.com/Wynntils/Artemis/compare/v1.2.0...v1.2.1) (2024-05-05)
 
@@ -120,16 +133,4 @@
 
 * **release:** v1.1.14 [skip ci] ([a301276](https://github.com/Wynntils/Artemis/commit/a301276d41aeaf260c02097c3bdc2cce2f45c161))
 * Update mod dependency and ci versions [skip ci] ([#2426](https://github.com/Wynntils/Artemis/issues/2426)) ([12438f3](https://github.com/Wynntils/Artemis/commit/12438f3f1d8ecf52f2ab0faf4b18e2edbeccebdc))
-
-## [1.1.13](https://github.com/Wynntils/Artemis/compare/v1.1.12...v1.1.13) (2024-04-23)
-
-
-### Bug Fixes
-
-* Fix minimap disabling/crashing when changing the minimap's configs ([#2423](https://github.com/Wynntils/Artemis/issues/2423)) ([9d85b5a](https://github.com/Wynntils/Artemis/commit/9d85b5a092c8a30f5bc0f136083f0cae9bcb8da5))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.13 [skip ci] ([75c0a0d](https://github.com/Wynntils/Artemis/commit/75c0a0d0b0bb57608c677d7ef74e2ca4f1d09c4b))
 
