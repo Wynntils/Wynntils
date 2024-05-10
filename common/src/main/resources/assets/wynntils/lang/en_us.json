@@ -1275,7 +1275,7 @@
   "feature.wynntils.transcribeMessages.showTooltip.name": "Show Transcription Tooltip",
   "feature.wynntils.transcribeMessages.transcribeChat.description": "Transcribe chat messages containing Gavellian and Wynnic?",
   "feature.wynntils.transcribeMessages.transcribeChat.name": "Transcribe chat messages",
-  "feature.wynntils.transcribeMessages.transcribeCondition.description": "When should Gavellian and Wynnic be transcribed? Discovery - Once you have completed the discovery for the transcriber. Transcriber - If you have the transcriber in your inventory.",
+  "feature.wynntils.transcribeMessages.transcribeCondition.description": "When should Gavellian and Wynnic be transcribed? Transcriber - If you have the transcriber in your inventory.",
   "feature.wynntils.transcribeMessages.transcribeCondition.name": "Transcribe Condition",
   "feature.wynntils.transcribeMessages.transcribeNpcs.description": "Transcribe NPC dialogue containing Gavellian and Wynnic?",
   "feature.wynntils.transcribeMessages.transcribeNpcs.name": "Transcribe NPC dialogue",
