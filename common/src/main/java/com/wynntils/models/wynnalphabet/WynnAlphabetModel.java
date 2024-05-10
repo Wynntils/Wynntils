@@ -90,7 +90,7 @@ public class WynnAlphabetModel extends Model {
 
         PartStyle partStyle = originalPart.getPartStyle();
 
-        if (useColors) {
+        if (useColors && !originalTextAsTooltip) {
             partStyle = partStyle.withColor(colorToUse);
         }
 
@@ -105,7 +105,8 @@ public class WynnAlphabetModel extends Model {
                         originalString);
         partStyle = partStyle.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
 
-        return new StyledTextPart(transcriptedString, partStyle.getStyle(), null, Style.EMPTY);
+        return new StyledTextPart(
+                originalTextAsTooltip ? originalString : transcriptedString, partStyle.getStyle(), null, Style.EMPTY);
     }
 
     public String transcribeBracketedText(String message) {
