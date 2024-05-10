@@ -48,7 +48,7 @@ public class WarBattleInfo {
             WarTowerState initialState = getInitialState();
             WarTowerState currentState = getCurrentState();
 
-            return (long) Math.floor((initialState.health() - currentState.health())
+            return (long) Math.floor((initialState.effectiveHealth() - currentState.effectiveHealth())
                     / ((currentState.timestamp() - initialState.timestamp()) / 1000d));
         }
 
@@ -71,12 +71,13 @@ public class WarBattleInfo {
 
         return firstRelevantState == null || lastRelevantState == null
                 ? 0
-                : (long) Math.floor((firstRelevantState.health() - lastRelevantState.health()) / seconds);
+                : (long) Math.floor(
+                        (firstRelevantState.effectiveHealth() - lastRelevantState.effectiveHealth()) / seconds);
     }
 
     public long getTowerEffectiveHp() {
         WarTowerState currentState = getCurrentState();
-        return (long) Math.floor(currentState.health() / (1 - currentState.defense() / 100));
+        return currentState.effectiveHealth();
     }
 
     public RangedValue getTowerDps() {
