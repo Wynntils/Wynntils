@@ -289,6 +289,8 @@
   "feature.wynntils.containerSearch.filterInScrapMenu.name": "Search Bar in Scrap Menu",
   "feature.wynntils.containerSearch.highlightColor.description": "What color should the highlight circles be?",
   "feature.wynntils.containerSearch.highlightColor.name": "Highlight color",
+  "feature.wynntils.containerSearch.loopInPersonalStorage.description": "Should your search loop around to the starting page for containers that support it? (Banks, misc bucket etc)",
+  "feature.wynntils.containerSearch.loopInPersonalStorage.name": "Loop in Personal Storage",
   "feature.wynntils.containerSearch.name": "Container Search Highlight",
   "feature.wynntils.contentBookDump.description": "Adds the ability to dump the contents of your content book to a file.",
   "feature.wynntils.contentBookDump.name": "Content Book Dump",

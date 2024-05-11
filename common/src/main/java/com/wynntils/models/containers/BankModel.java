@@ -60,6 +60,7 @@ public class BankModel extends Model {
             new Storage<>(new TreeMap<>());
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
+    public static final int QUICK_JUMP_FIRST_PAGE_SLOT = 7;
 
     // Test in BankModel_PERSONAL_STORAGE_PATTERN
     private static final Pattern PERSONAL_STORAGE_PATTERN =

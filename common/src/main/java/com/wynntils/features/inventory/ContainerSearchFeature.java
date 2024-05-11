@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -34,6 +35,7 @@ import com.wynntils.models.containers.containers.personal.BlockBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
 import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -63,6 +65,9 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
+    @Persisted
+    public final Config<Boolean> loopInPersonalStorage = new Config<>(true);
+
     @Persisted
     public final Config<Boolean> filterInBank = new Config<>(true);
 
@@ -134,6 +139,7 @@ public class ContainerSearchFeature extends Feature {
     private boolean autoSearching = false;
     private boolean matchedItems = false;
     private int direction = 0;
+    private int startingPage = 1;
     private ItemSearchQuery lastSearchQuery;
 
     @SubscribeEvent
@@ -149,6 +155,13 @@ public class ContainerSearchFeature extends Feature {
         if (currentContainer == null) return;
 
         matchedItems = false;
+
+        if (currentContainer instanceof PersonalStorageContainer && loopInPersonalStorage.get()) {
+            if (startingPage == Models.Bank.getCurrentPage()) {
+                autoSearching = false;
+                startingPage = 1;
+            }
+        }
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
@@ -181,6 +194,11 @@ public class ContainerSearchFeature extends Feature {
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
         if (currentContainer == null) return;
         forceUpdateSearch();
+    }
+
+    @SubscribeEvent
+    public void onSlotClicked(ContainerClickEvent e) {
+        autoSearching = false;
     }
 
     @SubscribeEvent
@@ -224,6 +242,10 @@ public class ContainerSearchFeature extends Feature {
                 }
             }
 
+            if (currentContainer instanceof PersonalStorageContainer) {
+                startingPage = Models.Bank.getCurrentPage();
+            }
+
             autoSearching = true;
             tryAutoSearch(abstractContainerScreen);
         }
@@ -239,6 +261,18 @@ public class ContainerSearchFeature extends Feature {
                 return;
             }
             guildBankLastSearch = System.currentTimeMillis();
+        }
+
+        if (loopInPersonalStorage.get()) {
+            if (Models.Bank.isItemIndicatingLastBankPage(
+                    abstractContainerScreen.getMenu().getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))) {
+                ContainerUtils.clickOnSlot(
+                        Models.Bank.QUICK_JUMP_FIRST_PAGE_SLOT,
+                        abstractContainerScreen.getMenu().containerId,
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        abstractContainerScreen.getMenu().getItems());
+                return;
+            }
         }
 
         int slot = direction == 1 ? currentContainer.getNextItemSlot() : currentContainer.getPreviousItemSlot();
