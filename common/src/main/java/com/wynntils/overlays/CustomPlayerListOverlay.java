@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -113,7 +113,10 @@ public class CustomPlayerListOverlay extends Overlay {
         float categoryStart = getRenderY() + 18;
         renderCategoryTitle(poseStack, "Friends", currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
-        renderCategoryTitle(poseStack, Models.WorldState.getCurrentWorldName(), currentDist, categoryStart);
+        String worldCategory = Models.WorldState.onHousing()
+                ? Models.WorldState.getCurrentHousingName()
+                : Models.WorldState.getCurrentWorldName();
+        renderCategoryTitle(poseStack, worldCategory, currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
         renderCategoryTitle(poseStack, "Party", currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
