@@ -7,7 +7,9 @@ package com.wynntils.models.characterstats;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.HealthSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
@@ -27,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
@@ -195,5 +198,24 @@ public final class CharacterStatsModel extends Model {
     public void onHeldItemChanged(ChangeCarriedItemEvent event) {
         // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
         powderSpecialSegment.replaced();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTitle(SubtitleSetTextEvent event) {
+        StyledText text = StyledText.fromComponent(event.getComponent());
+
+        for (Powder powder : Powder.values()) {
+            // If we see the name of a powder special, that special has been used
+            if (text.getStringWithoutFormatting().equals(powder.getSpecialName())) {
+                powderSpecialSegment.replaced();
+                break;
+            }
+
+            // If we see just the symbol of a powder, that powder just hit 100% charge
+            if (text.equals(powder.getColoredSymbol())) {
+                powderSpecialSegment.fullyCharged(powder);
+                break;
+            }
+        }
     }
 }
