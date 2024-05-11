@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -58,10 +59,18 @@ public class ConfigurableButton extends WynntilsButton {
 
         boolean isOverlay = configurable instanceof Overlay;
 
+        String textToRender = configurable.getTranslatedName();
+
+        if (configurable instanceof CustomNameProperty customNameProperty) {
+            if (!customNameProperty.getCustomName().get().isEmpty()) {
+                textToRender = customNameProperty.getCustomName().get();
+            }
+        }
+
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(configurable.getTranslatedName()),
+                        StyledText.fromString(textToRender),
                         (isOverlay ? this.getX() + 12 : this.getX()),
                         this.getY(),
                         (isOverlay ? this.width - 12 : this.width),

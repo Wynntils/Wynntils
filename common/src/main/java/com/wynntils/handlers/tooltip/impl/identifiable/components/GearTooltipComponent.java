@@ -181,7 +181,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                 if (!gearInstance.powders().isEmpty()) {
                     MutableComponent powderList = Component.literal("[");
                     for (Powder p : gearInstance.powders()) {
-                        String symbol = p.getColoredSymbol();
+                        String symbol = p.getColoredSymbol().getString();
                         if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                         powderList.append(Component.literal(symbol));
                     }

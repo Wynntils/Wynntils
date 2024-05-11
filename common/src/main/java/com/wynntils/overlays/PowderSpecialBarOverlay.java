@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -89,7 +89,8 @@ public class PowderSpecialBarOverlay extends Overlay {
             text = StyledText.fromString("Unknown");
         } else {
             color = powderSpecialType.getColor();
-            text = StyledText.fromString(powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%");
+            text = StyledText.fromString(
+                    powderSpecialType.getColoredSymbol().getString() + " " + (int) powderSpecialCharge + "%");
         }
 
         BufferedFontRenderer.getInstance()
