@@ -204,11 +204,17 @@ public class ContainerSearchFeature extends Feature {
                     || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                     || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
-            // Default to forwards unless on last page
-            direction = Models.Bank.isItemIndicatingLastBankPage(
-                            chestMenu.getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))
-                    ? -1
-                    : 1;
+            // Default to forwards
+            direction = 1;
+
+            StyledText nextItemName = StyledText.fromComponent(
+                    chestMenu.getItems().get(currentContainer.getNextItemSlot()).getHoverName());
+
+            // If next page item isn't found, go backwards
+            if (!nextItemName.matches(currentContainer.getNextItemPattern())) {
+                direction = -1;
+            }
+
             // Set direction based on hovered slot
             if (abstractContainerScreen.hoveredSlot != null) {
                 if (abstractContainerScreen.hoveredSlot.index == currentContainer.getNextItemSlot()) {
