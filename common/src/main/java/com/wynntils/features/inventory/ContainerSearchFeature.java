@@ -50,6 +50,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
@@ -131,6 +132,7 @@ public class ContainerSearchFeature extends Feature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerProperty currentContainer;
     private boolean autoSearching = false;
+    private int direction = 0;
     private ItemSearchQuery lastSearchQuery;
 
     @SubscribeEvent
@@ -182,29 +184,43 @@ public class ContainerSearchFeature extends Feature {
         lastSearchQuery = null;
         currentContainer = null;
         autoSearching = false;
+        direction = 0;
         guildBankLastSearch = 0;
     }
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
-        if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
-        if (lastSearchWidget == null
-                || currentContainer == null
-                || currentContainer.getNextItemSlot() == -1
-                || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
+        // Don't want to be able to search whilst the edit widget is open
+        if (event.getKeyCode() == GLFW.GLFW_KEY_ENTER && !Models.Bank.isEditingName()) {
+            if (lastSearchWidget == null
+                    || lastSearchWidget.getTextBoxInput().isEmpty()
+                    || currentContainer == null
+                    || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                    || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
-        ScreenExtension screen = (ScreenExtension) abstractContainerScreen;
-        if (screen.getFocusedTextInput() != lastSearchWidget) return;
+            // Default to forwards unless on last page
+            direction = Models.Bank.isItemIndicatingLastBankPage(
+                            chestMenu.getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))
+                    ? -1
+                    : 1;
+            // Set direction based on hovered slot
+            if (abstractContainerScreen.hoveredSlot != null) {
+                if (abstractContainerScreen.hoveredSlot.index == currentContainer.getNextItemSlot()) {
+                    direction = 1;
+                } else if (abstractContainerScreen.hoveredSlot.index == currentContainer.getPreviousItemSlot()) {
+                    direction = -1;
+                }
+            }
 
-        autoSearching = true;
-        if (currentContainer.supportsAdvancedSearch()) {
-            matchItemsAdvanced(lastSearchQuery, chestMenu);
-        } else {
-            matchItemsBasic(lastSearchWidget.getTextBoxInput(), chestMenu);
+            autoSearching = true;
+            if (currentContainer.supportsAdvancedSearch()) {
+                matchItemsAdvanced(lastSearchQuery, chestMenu);
+            } else {
+                matchItemsBasic(lastSearchWidget.getTextBoxInput(), chestMenu);
+            }
+
+            tryAutoSearch(abstractContainerScreen);
         }
-
-        tryAutoSearch(abstractContainerScreen);
     }
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
@@ -219,19 +235,21 @@ public class ContainerSearchFeature extends Feature {
             guildBankLastSearch = System.currentTimeMillis();
         }
 
-        StyledText name = StyledText.fromComponent(abstractContainerScreen
-                .getMenu()
-                .getItems()
-                .get(currentContainer.getNextItemSlot())
-                .getHoverName());
+        int slot = direction == 1 ? currentContainer.getNextItemSlot() : currentContainer.getPreviousItemSlot();
 
-        if (!name.matches(currentContainer.getNextItemPattern())) {
+        StyledText name = StyledText.fromComponent(
+                abstractContainerScreen.getMenu().getItems().get(slot).getHoverName());
+
+        Pattern itemPattern =
+                direction == 1 ? currentContainer.getNextItemPattern() : currentContainer.getPreviousItemPattern();
+
+        if (!name.matches(itemPattern)) {
             autoSearching = false;
             return;
         }
 
         ContainerUtils.clickOnSlot(
-                currentContainer.getNextItemSlot(),
+                slot,
                 abstractContainerScreen.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
