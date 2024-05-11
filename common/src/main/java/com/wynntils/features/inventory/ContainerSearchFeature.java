@@ -132,6 +132,7 @@ public class ContainerSearchFeature extends Feature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerProperty currentContainer;
     private boolean autoSearching = false;
+    private boolean matchedItems = false;
     private int direction = 0;
     private ItemSearchQuery lastSearchQuery;
 
@@ -146,6 +147,8 @@ public class ContainerSearchFeature extends Feature {
 
         currentContainer = getCurrentSearchableContainer();
         if (currentContainer == null) return;
+
+        matchedItems = false;
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
@@ -167,7 +170,9 @@ public class ContainerSearchFeature extends Feature {
         if (currentContainer == null) return;
         forceUpdateSearch();
 
-        if (autoSearching && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
+        if (!matchedItems
+                && autoSearching
+                && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             tryAutoSearch(abstractContainerScreen);
         }
     }
@@ -184,6 +189,7 @@ public class ContainerSearchFeature extends Feature {
         lastSearchQuery = null;
         currentContainer = null;
         autoSearching = false;
+        matchedItems = false;
         direction = 0;
         guildBankLastSearch = 0;
     }
@@ -213,12 +219,6 @@ public class ContainerSearchFeature extends Feature {
             }
 
             autoSearching = true;
-            if (currentContainer.supportsAdvancedSearch()) {
-                matchItemsAdvanced(lastSearchQuery, chestMenu);
-            } else {
-                matchItemsBasic(lastSearchWidget.getTextBoxInput(), chestMenu);
-            }
-
             tryAutoSearch(abstractContainerScreen);
         }
     }
@@ -334,7 +334,7 @@ public class ContainerSearchFeature extends Feature {
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {
-                autoSearching = false;
+                matchedItems = true;
             }
         }
     }
@@ -358,7 +358,7 @@ public class ContainerSearchFeature extends Feature {
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {
-                autoSearching = false;
+                matchedItems = true;
             }
         }
     }
