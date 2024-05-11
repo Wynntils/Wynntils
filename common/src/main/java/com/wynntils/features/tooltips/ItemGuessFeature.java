@@ -77,6 +77,7 @@ public class ItemGuessFeature extends Feature {
             if (itemsForLevel.isEmpty()) {
                 WynntilsMod.warn("No items for level " + level + " in gear box " + gearBoxItem.getGearTier() + " "
                         + gearBoxItem.getLevelRange() + "!");
+                continue;
             }
 
             MutableComponent guesses = Component.literal("    ");
