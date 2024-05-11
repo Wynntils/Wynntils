@@ -1,3 +1,21 @@
+## [1.2.4](https://github.com/Wynntils/Artemis/compare/v1.2.3...v1.2.4) (2024-05-11)
+
+
+### New Features
+
+* Add custom names for info boxes and custom bars [skip ci] ([#2480](https://github.com/Wynntils/Artemis/issues/2480)) ([d6836c6](https://github.com/Wynntils/Artemis/commit/d6836c63ab91a897f953e8628150d5174fdf9d21))
+* Colour territory attack time if player is inside territory [skip ci] ([#2475](https://github.com/Wynntils/Artemis/issues/2475)) ([8908ae2](https://github.com/Wynntils/Artemis/commit/8908ae21b66221697a511be777a5b10faf2a65f7))
+
+
+### Bug Fixes
+
+* Don't overwrite current world name when entering housing [skip ci] ([#2477](https://github.com/Wynntils/Artemis/issues/2477)) ([3f1179a](https://github.com/Wynntils/Artemis/commit/3f1179a77edb9a29ad61e3f4fd1742d084521813))
+* Don't return null in profession last harvest functions [skip ci] ([#2479](https://github.com/Wynntils/Artemis/issues/2479)) ([4a46ba9](https://github.com/Wynntils/Artemis/commit/4a46ba98c94f198bed9cbfc3d33e6f582fb1e174))
+* Fix DeathCoordinatesFeature sending both the Wynn and the custom message [skip ci] ([#2478](https://github.com/Wynntils/Artemis/issues/2478)) ([87fd4f5](https://github.com/Wynntils/Artemis/commit/87fd4f56793d2061523d59b7f495ea805e0bfca8))
+* Fix ItemGuessFeature tooltip line being fully underlined incorrectly [skip ci] ([#2482](https://github.com/Wynntils/Artemis/issues/2482)) ([f9400cf](https://github.com/Wynntils/Artemis/commit/f9400cf5b2ff34196f4eb6b0d99292fa871216f8))
+* Fix transcription tooltip option not working correctly [skip ci] ([#2476](https://github.com/Wynntils/Artemis/issues/2476)) ([419aebe](https://github.com/Wynntils/Artemis/commit/419aebe49ae0cecc0b535ec337fbf24b69a4f95b))
+* Powder special charges do not reset on use [skip ci] ([#2481](https://github.com/Wynntils/Artemis/issues/2481)) ([cc4d773](https://github.com/Wynntils/Artemis/commit/cc4d7731759940cb06207594d3b3a7baf569cb84))
+
 ## [1.2.3](https://github.com/Wynntils/Artemis/compare/v1.2.2...v1.2.3) (2024-05-10)
 
 
@@ -9,6 +27,11 @@
 ### Bug Fixes
 
 * Make war DPS use effective health for calculations (instead of raw health) ([#2474](https://github.com/Wynntils/Artemis/issues/2474)) ([371da1f](https://github.com/Wynntils/Artemis/commit/371da1f93639531fa177233afaf28aaa6d9cdff8))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.3 [skip ci] ([9005b90](https://github.com/Wynntils/Artemis/commit/9005b90a97a3b9298291419036689b43c95705de))
 
 ## [1.2.2](https://github.com/Wynntils/Artemis/compare/v1.2.1...v1.2.2) (2024-05-07)
 
@@ -119,18 +142,4 @@
 ### Code Refactoring
 
 * Move onlinemembers and player command json handling to models ([#2438](https://github.com/Wynntils/Artemis/issues/2438)) ([b0437cb](https://github.com/Wynntils/Artemis/commit/b0437cb3b364ac64f7d600a234d009dbc7c092e0))
-
-## [1.1.14](https://github.com/Wynntils/Artemis/compare/v1.1.13...v1.1.14) (2024-04-25)
-
-
-### Bug Fixes
-
-* Detect flying chests correctly ([#2428](https://github.com/Wynntils/Artemis/issues/2428)) ([6dd95b8](https://github.com/Wynntils/Artemis/commit/6dd95b872fd0627663b380c612b7335c255ff60c))
-* Fix crops resource name causing TerritoryAnnotator to crash [skip ci] ([#2425](https://github.com/Wynntils/Artemis/issues/2425)) ([dd6174f](https://github.com/Wynntils/Artemis/commit/dd6174fb7ce135a663e91615abbdefdc4e20361d))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.1.14 [skip ci] ([a301276](https://github.com/Wynntils/Artemis/commit/a301276d41aeaf260c02097c3bdc2cce2f45c161))
-* Update mod dependency and ci versions [skip ci] ([#2426](https://github.com/Wynntils/Artemis/issues/2426)) ([12438f3](https://github.com/Wynntils/Artemis/commit/12438f3f1d8ecf52f2ab0faf4b18e2edbeccebdc))
 
