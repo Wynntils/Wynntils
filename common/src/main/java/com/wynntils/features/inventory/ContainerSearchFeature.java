@@ -359,6 +359,8 @@ public class ContainerSearchFeature extends Feature {
     }
 
     private void matchItemsAdvanced(ItemSearchQuery searchQuery, ChestMenu chestMenu) {
+        matchedItems = false;
+
         if (searchQuery == null) return;
 
         Container container = chestMenu.getContainer();
@@ -381,6 +383,8 @@ public class ContainerSearchFeature extends Feature {
 
     private void matchItemsBasic(String searchStr, ChestMenu chestMenu) {
         String search = searchStr.toLowerCase(Locale.ROOT);
+
+        matchedItems = false;
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
