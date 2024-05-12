@@ -134,7 +134,6 @@
   "feature.wynntils.containerScroll.invertScroll.description": "是否反转你的鼠标滚轮滚动方向？",
   "feature.wynntils.containerScroll.invertScroll.name": "反转滚轮滚动",
   "feature.wynntils.containerScroll.name": "容器滚轮翻页",
-  "feature.wynntils.containerSearch.description": "令你得以在容器中搜索物品。",
   "feature.wynntils.containerSearch.filterInBank.description": "是否在银行中显示搜索工具？",
   "feature.wynntils.containerSearch.filterInBank.name": "银行搜索条",
   "feature.wynntils.containerSearch.filterInBlockBank.description": "是否为在家园版图的方块银行显示搜索工具？",
