@@ -26,6 +26,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -151,7 +152,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
     }
 
     @Override
-    public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance) {
+    public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean showItemType) {
         List<Component> footer = new ArrayList<>();
 
         // major ids
@@ -194,7 +195,14 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
 
         // tier & rerolls
         GearTier gearTier = gearInfo.tier();
-        MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
+        MutableComponent itemTypeName = showItemType
+                ? Component.literal(
+                        StringUtils.capitalizeFirst(gearInfo.type().name().toLowerCase(Locale.ROOT)))
+                : Component.literal("Item");
+        MutableComponent tier = Component.literal(gearTier.getName())
+                .withStyle(gearTier.getChatFormatting())
+                .append(" ")
+                .append(itemTypeName);
         if (gearInstance != null && gearInstance.rerolls() > 1) {
             tier.append(" [" + gearInstance.rerolls() + "]");
         }
