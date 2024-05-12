@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.charm;
@@ -63,7 +63,8 @@ public class GuideCharmItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new CharmItem(charmInfo, null), true);
+        IdentifiableTooltipBuilder tooltipBuilder =
+                Handlers.Tooltip.buildNew(new CharmItem(charmInfo, null), true, false);
         this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache
