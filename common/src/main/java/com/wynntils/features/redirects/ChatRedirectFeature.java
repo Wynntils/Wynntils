@@ -1047,8 +1047,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private final class MerchantRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§5(?<merchant>.*): §dThank you for your business\\. Come again!$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§5(?<merchant>.*): §dThank you for your business\\. Come again!$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -1058,8 +1058,7 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected StyledText getNotification(Matcher matcher) {
             return StyledText.fromComponent(Component.translatable(
-                            "feature.wynntils.chatRedirect.merchant.notification",
-                            matcher.group("merchant"))
+                            "feature.wynntils.chatRedirect.merchant.notification", matcher.group("merchant"))
                     .withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
