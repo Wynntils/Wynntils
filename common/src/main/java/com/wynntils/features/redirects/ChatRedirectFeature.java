@@ -86,6 +86,9 @@ public class ChatRedirectFeature extends Feature {
     @Persisted
     public final Config<RedirectAction> guildRewards = new Config<>(RedirectAction.REDIRECT);
 
+    @Persisted
+    public final Config<RedirectAction> merchant = new Config<>(RedirectAction.REDIRECT);
+
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
@@ -108,6 +111,7 @@ public class ChatRedirectFeature extends Feature {
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
+        register(new MerchantRedirector());
         register(new NoTotemRedirector());
         register(new PotionAlreadyActiveRedirector());
         register(new PotionsMaxRedirector());
@@ -1039,6 +1043,29 @@ public class ChatRedirectFeature extends Feature {
 
             return StyledText.fromString(ChatFormatting.AQUA + sender + ChatFormatting.DARK_AQUA + " " + REWARD_SYMBOL
                     + " " + ChatFormatting.AQUA + recipient + ChatFormatting.DARK_AQUA + ": " + reward);
+        }
+    }
+
+    private final class MerchantRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§5(?<merchant>.*): §dThank you for your business\\. Come again!$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.chatRedirect.merchant.notification",
+                            matcher.group("merchant"))
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return merchant.get();
         }
     }
 }
