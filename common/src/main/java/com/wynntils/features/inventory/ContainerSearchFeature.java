@@ -45,6 +45,7 @@ import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -65,9 +66,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
-    @Persisted
-    public final Config<Boolean> loopInPersonalStorage = new Config<>(true);
-
     @Persisted
     public final Config<Boolean> filterInBank = new Config<>(true);
 
@@ -139,7 +137,6 @@ public class ContainerSearchFeature extends Feature {
     private boolean autoSearching = false;
     private boolean matchedItems = false;
     private int direction = 0;
-    private int startingPage = 1;
     private ItemSearchQuery lastSearchQuery;
 
     @SubscribeEvent
@@ -155,13 +152,6 @@ public class ContainerSearchFeature extends Feature {
         if (currentContainer == null) return;
 
         matchedItems = false;
-
-        if (currentContainer instanceof PersonalStorageContainer && loopInPersonalStorage.get()) {
-            if (startingPage == Models.Bank.getCurrentPage()) {
-                autoSearching = false;
-                startingPage = 1;
-            }
-        }
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
@@ -242,11 +232,17 @@ public class ContainerSearchFeature extends Feature {
                 }
             }
 
-            if (currentContainer instanceof PersonalStorageContainer) {
-                startingPage = Models.Bank.getCurrentPage();
+            autoSearching = true;
+
+            if (KeyboardUtils.isShiftDown() && currentContainer instanceof PersonalStorageContainer) {
+                ContainerUtils.clickOnSlot(
+                        Models.Bank.QUICK_JUMP_FIRST_PAGE_SLOT,
+                        abstractContainerScreen.getMenu().containerId,
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        abstractContainerScreen.getMenu().getItems());
+                return;
             }
 
-            autoSearching = true;
             tryAutoSearch(abstractContainerScreen);
         }
     }
@@ -261,18 +257,6 @@ public class ContainerSearchFeature extends Feature {
                 return;
             }
             guildBankLastSearch = System.currentTimeMillis();
-        }
-
-        if (loopInPersonalStorage.get()) {
-            if (Models.Bank.isItemIndicatingLastBankPage(
-                    abstractContainerScreen.getMenu().getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))) {
-                ContainerUtils.clickOnSlot(
-                        Models.Bank.QUICK_JUMP_FIRST_PAGE_SLOT,
-                        abstractContainerScreen.getMenu().containerId,
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        abstractContainerScreen.getMenu().getItems());
-                return;
-            }
         }
 
         int slot = direction == 1 ? currentContainer.getNextItemSlot() : currentContainer.getPreviousItemSlot();
