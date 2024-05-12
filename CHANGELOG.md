@@ -1,9 +1,21 @@
+## [1.2.6](https://github.com/Wynntils/Artemis/compare/v1.2.5...v1.2.6) (2024-05-12)
+
+
+### New Features
+
+* Show item type for chat items, show perfect/defective ([#2485](https://github.com/Wynntils/Artemis/issues/2485)) ([b8e4a6d](https://github.com/Wynntils/Artemis/commit/b8e4a6d368329d41095543bd4678c5f6f052c728))
+
 ## [1.2.5](https://github.com/Wynntils/Artemis/compare/v1.2.4...v1.2.5) (2024-05-12)
 
 
 ### New Features
 
 * Backwards container searching and resume search after match ([#2483](https://github.com/Wynntils/Artemis/issues/2483)) ([fbe04ae](https://github.com/Wynntils/Artemis/commit/fbe04ae5e5fc2e773ebc9f815e1c6fcd0c7e12e3))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.5 [skip ci] ([f70aadd](https://github.com/Wynntils/Artemis/commit/f70aadd3d8687ec4c71e8a6dea785f52bc07739f))
 
 ## [1.2.4](https://github.com/Wynntils/Artemis/compare/v1.2.3...v1.2.4) (2024-05-11)
 
@@ -70,25 +82,4 @@
 
 * Collect end of war stats in war history [skip ci] ([#2463](https://github.com/Wynntils/Artemis/issues/2463)) ([c1b831e](https://github.com/Wynntils/Artemis/commit/c1b831e1a7a33e54d768a2b9fa21a068e37a009f))
 * **release:** v1.2.2 [skip ci] ([7ad97ed](https://github.com/Wynntils/Artemis/commit/7ad97ed235c4112fed58f8e7cfe0777026019bfc))
-
-## [1.2.1](https://github.com/Wynntils/Artemis/compare/v1.2.0...v1.2.1) (2024-05-05)
-
-
-### New Features
-
-* Add keybind to open territory management [skip ci] ([#2454](https://github.com/Wynntils/Artemis/issues/2454)) ([78f302d](https://github.com/Wynntils/Artemis/commit/78f302daf4bb314c23bf2ca7a73647f2821c673a))
-* Click territory pois to set marker on guild map [skip ci] ([#2455](https://github.com/Wynntils/Artemis/issues/2455)) ([83712b8](https://github.com/Wynntils/Artemis/commit/83712b82d161cdace71c10ac9f1f08adb783a890))
-* Make territory attack timer bold if the player is standing in it ([#2458](https://github.com/Wynntils/Artemis/issues/2458)) ([8f1aadf](https://github.com/Wynntils/Artemis/commit/8f1aadf0f05ce37607c458953a323ea90bff3766))
-
-
-### Bug Fixes
-
-* Fix PlayerCommand not using the correct date format [skip ci] ([#2456](https://github.com/Wynntils/Artemis/issues/2456)) ([b748bb2](https://github.com/Wynntils/Artemis/commit/b748bb2fff8312353a4265ffd230d484373d5933))
-* Fix territory connections not working due to some connections not being displayed as bidirectional [skip ci] ([#2453](https://github.com/Wynntils/Artemis/issues/2453)) ([ea97818](https://github.com/Wynntils/Artemis/commit/ea978187f9b229d5071c9ab653c999f3812ced68)), closes [#1](https://github.com/Wynntils/Artemis/issues/1)
-* Fix Territory Management Screen not working in wars [skip ci] ([#2457](https://github.com/Wynntils/Artemis/issues/2457)) ([89a108c](https://github.com/Wynntils/Artemis/commit/89a108ce0ac43779e19787747311376429f6d127))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.1 [skip ci] ([4aa3dd9](https://github.com/Wynntils/Artemis/commit/4aa3dd90bfac9feedab431022e238d81848a178f))
 
