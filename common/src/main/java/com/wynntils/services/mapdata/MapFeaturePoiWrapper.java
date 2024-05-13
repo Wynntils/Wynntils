@@ -64,7 +64,7 @@ public class MapFeaturePoiWrapper implements Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
+            float zoomRenderScale, float zoomLevel) {
         float renderScale = hovered ? scale * 1.05f : scale;
         // this is the default alpha for labels
         float alpha = hovered ? 1f : 0.9f;
@@ -98,7 +98,7 @@ public class MapFeaturePoiWrapper implements Poi {
                     bufferSource,
                     icon.getResourceLocation(),
                     color,
-                    this.getIconAlpha(mapZoom),
+                    this.getIconAlpha(zoomRenderScale),
                     0 - iconWidth / 2,
                     yOffset - iconHeight / 2,
                     0,
