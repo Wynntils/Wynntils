@@ -6,10 +6,7 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
-import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
@@ -64,20 +61,6 @@ public class CombatListProvider extends BuiltInProvider {
                 @Override
                 public String getLabel() {
                     return name;
-                }
-
-                @Override
-                public MapVisibility getIconVisibility() {
-                    if (kind == CombatKind.CAVES) {
-                        return new FadingMapVisiblity(31, 100, 6);
-                    } else {
-                        return new FadingMapVisiblity(19, 100, 6);
-                    }
-                }
-
-                @Override
-                public MapVisibility getLabelVisibility() {
-                    return new NeverMapVisibility();
                 }
             };
         }

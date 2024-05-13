@@ -6,17 +6,13 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.map.Label;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class PlaceListProvider extends BuiltInProvider {
@@ -37,10 +33,6 @@ public class PlaceListProvider extends BuiltInProvider {
     }
 
     private static final class PlaceLocation implements MapLocation {
-        private static EnumMap<Label.LabelLayer, MapVisibility> VISIBILITIES = new EnumMap<>(Map.of(
-                Label.LabelLayer.PROVINCE, new FadingMapVisiblity(0, 32, 3),
-                Label.LabelLayer.CITY, new FadingMapVisiblity(0, 74, 3),
-                Label.LabelLayer.TOWN_OR_PLACE, new FadingMapVisiblity(32, 86, 3)));
         private final Label label;
 
         private PlaceLocation(Label label) {
@@ -68,11 +60,6 @@ public class PlaceListProvider extends BuiltInProvider {
                 @Override
                 public int getLevel() {
                     return label.getLevel();
-                }
-
-                @Override
-                public MapVisibility getLabelVisibility() {
-                    return VISIBILITIES.get(label.getLayer());
                 }
             };
         }
