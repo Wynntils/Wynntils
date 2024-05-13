@@ -111,7 +111,8 @@ public class PoiService extends Service {
             cavePois.addAll(profiles.stream()
                     .map(profile -> {
                         CombatListProvider.registerFeature(profile.location, CombatKind.CAVES, profile.name);
-                        return new CombatPoi(PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES);
+                        return new CombatPoi(
+                                PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES);
                     })
                     .collect(Collectors.toUnmodifiableSet()));
         });
