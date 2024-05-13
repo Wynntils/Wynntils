@@ -43,7 +43,7 @@ public class CharacterProvider extends BuiltInProvider {
 
         @Override
         public String getName() {
-            return "Your position";
+            return "Player positions";
         }
 
         @Override
