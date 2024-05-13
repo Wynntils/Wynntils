@@ -84,7 +84,8 @@ public class PlaceListProvider extends BuiltInProvider {
 
         @Override
         public Location getLocation() {
-            return label.getLocation();
+            // FIXME: debug
+            return label.getLocation().offset(15, 0, 15);
         }
     }
 }
