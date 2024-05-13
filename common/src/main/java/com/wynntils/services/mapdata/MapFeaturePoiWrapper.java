@@ -184,6 +184,7 @@ public class MapFeaturePoiWrapper implements Poi {
     private float getIconAlpha(float zoomLevel) {
         MapVisibility iconVisibility = attributes.getIconVisibility();
         if (iconVisibility == null) {
+            // If no visibility is specified, always show
             return 1f;
         }
         return iconVisibility.getVisibility(zoomLevel);
