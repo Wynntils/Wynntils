@@ -171,15 +171,6 @@ public final class StringUtils {
                 .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
     }
 
-    public static int tryParseInt(String value, int defaultValue) {
-        if (value == null) return defaultValue;
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
-        }
-    }
-
     /**
      * Converts a float to a string, but if the float is an integer, it will return the integer as a string
      * @param value the float to convert
