@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -74,6 +75,10 @@ public class MapDataProviders {
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {
+        if (provider == null) {
+            WynntilsMod.warn("Provider missing for '" + providerId + "'");
+            return;
+        }
         if (!allProviders.containsKey(providerId)) {
             // It is not previously known, so add it last
             providerOrder.add(providerId);
