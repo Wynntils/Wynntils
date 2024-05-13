@@ -19,10 +19,20 @@ public class FadingMapVisiblity implements MapVisibility {
 
     @Override
     public float getVisibility(float zoomLevel) {
-        float startFadeIn = min - fade / 2;
-        float stopFadeIn = min + fade / 2;
-        float startFadeOut = max - fade / 2;
-        float stopFadeOut = max + fade / 2;
+        float startFadeIn = min - fade;
+        float stopFadeIn = min + fade;
+        float startFadeOut = max - fade;
+        float stopFadeOut = max + fade;
+
+        // If min or max is at the extremes, do not apply fading
+        if (min <= 1) {
+            startFadeIn = 1;
+            stopFadeIn = 1;
+        }
+        if (max >= 100) {
+            startFadeOut = 100;
+            stopFadeOut = 100;
+        }
 
         if (zoomLevel < startFadeIn) {
             return 0;
@@ -30,7 +40,7 @@ public class FadingMapVisiblity implements MapVisibility {
         if (zoomLevel < stopFadeIn) {
             // The visibility should be linearly interpolated between 0 and 1 for values
             // between startFadeIn and stopFadeIn.
-            return (zoomLevel - startFadeIn) / fade;
+            return (zoomLevel - startFadeIn) / (fade * 2);
         }
 
         if (zoomLevel < startFadeOut) {
@@ -40,7 +50,7 @@ public class FadingMapVisiblity implements MapVisibility {
         if (zoomLevel < stopFadeOut) {
             // The visibility should be linearly interpolated between 1 and 0 for values
             // between startFadeIn and stopFadeIn.
-            return 1 - (zoomLevel - startFadeOut) / fade;
+            return 1 - (zoomLevel - startFadeOut) / (fade * 2);
         }
 
         return 0;
