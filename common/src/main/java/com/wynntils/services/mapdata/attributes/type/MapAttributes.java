@@ -20,7 +20,10 @@ public interface MapAttributes {
     // 0 means no value specified; inherit
     int getPriority();
 
-    // 0 means no information is available, or suitable for all combat levels
+    // the minimum combat level for which this feature is suitable for
+    // 1 means suitable for all levels (players start at level 1)
+    // 0 means inherit
+    // -1 means no information is available, or the feature is suitable for all levels
     int getLevel();
 
     MapVisibility getLabelVisibility();
