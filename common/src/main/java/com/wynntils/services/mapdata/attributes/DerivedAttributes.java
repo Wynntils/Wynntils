@@ -32,8 +32,7 @@ public abstract class DerivedAttributes implements MapAttributes {
 
     @Override
     public int getLevel() {
-        Integer integer = getAttribute(MapAttributes::getLevel);
-        return integer == null ? 0 : integer;
+        return getAttribute(MapAttributes::getLevel);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class PlaceListProvider extends BuiltInProvider {
     private static final class ServiceLocation implements MapLocation {
         private final Label label;
 
-        public ServiceLocation(Label label) {
+        private ServiceLocation(Label label) {
             this.label = label;
         }
 
@@ -59,7 +59,7 @@ public class PlaceListProvider extends BuiltInProvider {
 
                 @Override
                 public int getLevel() {
-                    return label.getCombatLevel();
+                    return label.getLevel();
                 }
             };
         }

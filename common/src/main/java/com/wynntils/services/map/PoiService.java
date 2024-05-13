@@ -1,11 +1,13 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -38,6 +40,11 @@ import java.util.stream.Stream;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PoiService extends Service {
+    public static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Label.class, new Label.LabelDeserializer())
+            .enableComplexMapKeySerialization()
+            .create();
+
     public static final List<Texture> POI_ICONS = List.of(
             Texture.FLAG,
             Texture.DIAMOND,
@@ -96,7 +103,7 @@ public class PoiService extends Service {
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<CaveProfile>>() {}.getType();
 
-            List<CaveProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
+            List<CaveProfile> profiles = GSON.fromJson(reader, type);
 
             cavePois.addAll(profiles.stream()
                     .map(profile ->
@@ -111,7 +118,7 @@ public class PoiService extends Service {
                 List<CustomPoi> pois = new ArrayList<>();
 
                 for (JsonElement jsonElement : elements) {
-                    CustomPoi poi = Managers.Json.GSON.fromJson(jsonElement, CustomPoi.class);
+                    CustomPoi poi = GSON.fromJson(jsonElement, CustomPoi.class);
                     pois.add(poi);
                 }
 
@@ -180,7 +187,7 @@ public class PoiService extends Service {
     private void loadPlaces() {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_PLACES);
         dl.handleReader(reader -> {
-            PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
+            PlacesProfile places = GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
                 labelPois.add(new LabelPoi(label));
             }
@@ -192,7 +199,7 @@ public class PoiService extends Service {
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
-            List<ServiceProfile> serviceList = WynntilsMod.GSON.fromJson(reader, type);
+            List<ServiceProfile> serviceList = GSON.fromJson(reader, type);
             for (ServiceProfile service : serviceList) {
                 ServiceKind kind = ServiceKind.fromString(service.type);
                 if (kind != null) {
@@ -211,7 +218,7 @@ public class PoiService extends Service {
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
-            List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(reader, type);
+            List<CombatProfileList> combatProfileLists = GSON.fromJson(reader, type);
             for (CombatProfileList combatList : combatProfileLists) {
                 CombatKind kind = CombatKind.fromString(combatList.type);
                 // We load caves separately... until the refactor

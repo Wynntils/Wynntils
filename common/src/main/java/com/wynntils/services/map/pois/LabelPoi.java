@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -63,13 +63,15 @@ public class LabelPoi implements Poi {
             alpha = switch (label.getLayer()) {
                 case PROVINCE -> 0; // Never visible at high zoom
                 case CITY -> MathUtils.map(zoom, 1.0f, 1.3f, 1f, 0f);
-                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);};
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);
+            };
         } else {
             // Fade out/in when zoomed out
             alpha = switch (label.getLayer()) {
                 case PROVINCE -> MathUtils.map(zoom, 0.2f, 0.25f, 1f, 0f);
                 case CITY -> 1; // always visible at low zoom
-                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);};
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);
+            };
         }
 
         return MathUtils.clamp(alpha, 0f, 1f) * 0.9f;
@@ -127,13 +129,13 @@ public class LabelPoi implements Poi {
                         getTextShadow(),
                         1f);
         if (hovered) {
-            String level = label.getLevel();
-            if (!level.isEmpty()) {
+            int level = label.getLevel();
+            if (level >= 1) {
                 BufferedFontRenderer.getInstance()
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                StyledText.fromString("[Lv " + level + "]"),
+                                StyledText.fromString("[Lv. " + level + "]"),
                                 0,
                                 10,
                                 color,
