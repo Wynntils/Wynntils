@@ -11,6 +11,7 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.colors.CommonColors;
@@ -98,7 +99,7 @@ public class MapFeaturePoiWrapper implements Poi {
                     bufferSource,
                     icon.getResourceLocation(),
                     color,
-                    this.getIconAlpha(zoomRenderScale),
+                    this.getIconAlpha(zoomLevel),
                     0 - iconWidth / 2,
                     yOffset - iconHeight / 2,
                     0,
@@ -180,9 +181,12 @@ public class MapFeaturePoiWrapper implements Poi {
         return label != null && !label.isEmpty();
     }
 
-    private float getIconAlpha(float mapZoom) {
-        // FIXME: Depend on icon visibility
-        return 1f;
+    private float getIconAlpha(float zoomLevel) {
+        MapVisibility iconVisibility = attributes.getIconVisibility();
+        if (iconVisibility == null) {
+            return 1f;
+        }
+        return iconVisibility.getVisibility(zoomLevel);
     }
 
     @Override
