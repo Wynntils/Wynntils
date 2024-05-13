@@ -298,13 +298,12 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Services.Poi.getServicePois();
+        // Get all MapData features as Pois
+        Stream<? extends Poi> pois =Services.MapData.getFeaturesAsPois();
 
-        pois = Stream.concat(pois, Services.Poi.getCombatPois());
-        pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
-        pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
+        // Append the pois that are still not converted to MapData
         pois = Stream.concat(pois, Models.Marker.getAllPois());
+        pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(
                 pois,
                 Services.Hades.getHadesUsers()
@@ -316,10 +315,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                                         || (hadesUser.isMutualFriend()
                                                 && Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                                         .renderRemoteFriendPlayers
-                                                        .get())
-                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
+                                                        .get()))
                         .map(PlayerMainMapPoi::new));
-
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
