@@ -84,8 +84,8 @@ public class MapFeaturePoiWrapper implements Poi {
         if (hasIcon(iconId)) {
             MapIcon icon = getIcon(iconId);
 
-            float iconWidth = icon.width();
-            float iconHeight = icon.height();
+            float iconWidth = icon.getWidth();
+            float iconHeight = icon.getHeight();
 
             CustomColor iconColor = attributes.getIconColor();
             if (iconColor == null) {
@@ -198,7 +198,7 @@ public class MapFeaturePoiWrapper implements Poi {
         MapIcon icon = getIcon(iconId);
         if (icon == null) return 32;
 
-        return (int) (icon.width() * scale);
+        return (int) (icon.getWidth() * scale);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class MapFeaturePoiWrapper implements Poi {
         MapIcon icon = getIcon(iconId);
         if (icon == null) return 32;
 
-        return (int) (icon.height() * scale);
+        return (int) (icon.getHeight() * scale);
     }
 
     private int getLabelHeight(float scale) {
