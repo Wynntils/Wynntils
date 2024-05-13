@@ -266,7 +266,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-            poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hovered == poi, poiScale, zoomRenderScale, zoomLevel);
+            poi.renderAt(
+                    poseStack,
+                    bufferSource,
+                    poiRenderX,
+                    poiRenderZ,
+                    hovered == poi,
+                    poiScale,
+                    zoomRenderScale,
+                    zoomLevel);
         }
 
         bufferSource.endBatch();

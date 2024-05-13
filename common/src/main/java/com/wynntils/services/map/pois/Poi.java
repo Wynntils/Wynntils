@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -27,7 +27,8 @@ public interface Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float zoomRenderScale, float zoomLevel);
+            float zoomRenderScale,
+            float zoomLevel);
 
     int getWidth(float mapZoom, float scale);
 
