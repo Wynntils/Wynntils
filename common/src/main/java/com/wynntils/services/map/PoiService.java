@@ -109,8 +109,10 @@ public class PoiService extends Service {
             List<CaveProfile> profiles = GSON.fromJson(reader, type);
 
             cavePois.addAll(profiles.stream()
-                    .map(profile ->
-                            new CombatPoi(PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES))
+                    .map(profile -> {
+                        CombatListProvider.registerFeature(profile.location, CombatKind.CAVES, profile.name);
+                        return new CombatPoi(PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES);
+                    })
                     .collect(Collectors.toUnmodifiableSet()));
         });
     }
