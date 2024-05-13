@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
@@ -65,7 +65,8 @@ public class MapFeaturePoiWrapper implements Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float zoomRenderScale, float zoomLevel) {
+            float zoomRenderScale,
+            float zoomLevel) {
         float renderScale = hovered ? scale * 1.05f : scale;
         // this is the default alpha for labels
         float alpha = hovered ? 1f : 0.9f;
