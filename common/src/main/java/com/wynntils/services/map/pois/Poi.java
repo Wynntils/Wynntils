@@ -27,7 +27,7 @@ public interface Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom);
+            float zoomRenderScale, float zoomLevel);
 
     int getWidth(float mapZoom, float scale);
 

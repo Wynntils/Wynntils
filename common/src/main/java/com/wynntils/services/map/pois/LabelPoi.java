@@ -100,8 +100,8 @@ public class LabelPoi implements Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
-        float alpha = getAlphaFromScale(mapZoom);
+            float zoomRenderScale, float zoomLevel) {
+        float alpha = getAlphaFromScale(zoomRenderScale);
         if (alpha < 0.01) {
             return; // small enough alphas are turned into 255
         }

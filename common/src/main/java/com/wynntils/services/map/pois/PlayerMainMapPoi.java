@@ -34,7 +34,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
+            float zoomRenderScale, float zoomLevel) {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 

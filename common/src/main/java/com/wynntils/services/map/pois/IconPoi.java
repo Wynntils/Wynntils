@@ -67,7 +67,7 @@ public abstract class IconPoi implements Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
+            float zoomRenderScale, float zoomLevel) {
         float modifier = scale;
 
         if (hovered) {
@@ -84,7 +84,7 @@ public abstract class IconPoi implements Poi {
                 bufferSource,
                 icon.resource(),
                 this.getIconColor(),
-                this.getIconAlpha(mapZoom),
+                this.getIconAlpha(zoomRenderScale),
                 renderX - width / 2,
                 renderY - height / 2,
                 getDisplayPriority().ordinal(), // z-index for rendering

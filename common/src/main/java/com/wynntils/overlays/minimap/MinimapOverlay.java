@@ -193,7 +193,7 @@ public class MinimapOverlay extends Overlay {
         }
 
         renderPois(
-                poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, textureBoundingCircle);
+                poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, zoomLevel.get(), textureBoundingCircle);
 
         // cursor
         MapRenderer.renderCursor(
@@ -227,7 +227,7 @@ public class MinimapOverlay extends Overlay {
             double playerX,
             double playerZ,
             float zoomRenderScale,
-            BoundingCircle textureBoundingCircle) {
+            float zoomLevel, BoundingCircle textureBoundingCircle) {
         float sinRotationRadians;
         float cosRotationRadians;
 
@@ -282,7 +282,7 @@ public class MinimapOverlay extends Overlay {
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
             if (BoundingShape.intersects(box, textureBoundingCircle)) {
-                poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom);
+                poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom, zoomLevel);
             }
         }
 
@@ -353,11 +353,11 @@ public class MinimapOverlay extends Overlay {
                                 compassRenderZ,
                                 false,
                                 poiScale.get(),
-                                1f / zoomRenderScale);
+                                1f / zoomRenderScale, zoomLevel);
                 poseStack.popPose();
             } else {
                 waypointPoi.renderAt(
-                        poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale.get(), currentZoom);
+                        poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale.get(), currentZoom, zoomLevel);
             }
 
             bufferSource.endBatch();
