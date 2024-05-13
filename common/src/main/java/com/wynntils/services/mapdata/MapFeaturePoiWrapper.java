@@ -82,7 +82,7 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
         poseStack.scale(renderScale, renderScale, renderScale);
 
-        // Draw icon, if any
+        // Draw icon, if applicable
         boolean drawIcon = hasIcon(iconId) && this.getIconAlpha(zoomLevel) > 0.01;
         if (drawIcon) {
             MapIcon icon = getIcon(iconId);
@@ -110,8 +110,8 @@ public class MapFeaturePoiWrapper implements Poi {
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
 
-        // Draw label, if any
-        boolean drawLabel = hasLabel(label) && this.getLabelAlpha(zoomLevel) > 0.01;
+        // Draw label, if applicable
+        boolean drawLabel = hasLabel(label) && this.getLabelAlpha(zoomLevel) > 0.01 || (drawIcon && hovered);
         if (drawLabel) {
             CustomColor labelColor = attributes.getLabelColor();
             if (labelColor == null) {
@@ -122,8 +122,13 @@ public class MapFeaturePoiWrapper implements Poi {
                 labelShadow = TextShadow.OUTLINE;
             }
             float labelAlpha = alpha * getLabelAlpha(zoomLevel);
-            // small enough alphas are turned into 255
 
+            if (drawIcon && hovered) {
+                // If this is hovered, show with full alpha
+                labelAlpha = 1f;
+            }
+
+            // Small enough alphas are turned into 255, so just don't even try to render them
             if (labelAlpha >= 0.01) {
                 CustomColor color = labelColor.withAlpha(labelAlpha);
 
@@ -143,7 +148,7 @@ public class MapFeaturePoiWrapper implements Poi {
             }
         }
 
-        // Draw level, if suitable
+        // Draw level, if applicable
         if (hovered && level != 0 && (drawIcon || drawLabel)) {
             CustomColor labelColor = attributes.getLabelColor();
             if (labelColor == null) {
