@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
@@ -7,6 +7,7 @@ package com.wynntils.screens.overlays.selection;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -72,12 +73,20 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         RenderUtils.drawRectBorders(poseStack, rectColor, 0, y, width - PADDING, height - PADDING, 1, 2);
 
         poseStack.translate(0, 0, 1);
-        String translatedName = this.overlay.getTranslatedName();
-        float renderHeightForOverlayName = FontRenderer.getInstance().calculateRenderHeight(translatedName, width);
+        String name = this.overlay.getTranslatedName();
+
+        // Show the custom name for info boxes/custom bars if given
+        if (this.overlay instanceof CustomNameProperty customNameProperty) {
+            if (!customNameProperty.getCustomName().get().isEmpty()) {
+                name = customNameProperty.getCustomName().get();
+            }
+        }
+
+        float renderHeightForOverlayName = FontRenderer.getInstance().calculateRenderHeight(name, width);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(translatedName),
+                        StyledText.fromString(name),
                         3,
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,

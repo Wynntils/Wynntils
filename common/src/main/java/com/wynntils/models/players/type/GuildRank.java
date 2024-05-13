@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.type;
@@ -30,5 +30,15 @@ public enum GuildRank {
         } else {
             return name + " (" + stars + ")";
         }
+    }
+
+    public static GuildRank fromName(String string) {
+        for (GuildRank rank : values()) {
+            if (rank.getName().equalsIgnoreCase(string)) {
+                return rank;
+            }
+        }
+
+        return null;
     }
 }

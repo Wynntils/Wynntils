@@ -5,70 +5,122 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.GuildBankContainer;
+import com.wynntils.models.containers.containers.GuildManagementContainer;
+import com.wynntils.models.containers.containers.GuildMemberListContainer;
+import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
+import com.wynntils.models.containers.containers.HousingJukeboxContainer;
+import com.wynntils.models.containers.containers.HousingListContainer;
+import com.wynntils.models.containers.containers.IngredientPouchContainer;
+import com.wynntils.models.containers.containers.InventoryContainer;
+import com.wynntils.models.containers.containers.JukeboxContainer;
+import com.wynntils.models.containers.containers.LobbyContainer;
+import com.wynntils.models.containers.containers.PetMenuContainer;
+import com.wynntils.models.containers.containers.ProfessionCraftingContainer;
+import com.wynntils.models.containers.containers.ScrapMenuContainer;
+import com.wynntils.models.containers.containers.SeaskipperContainer;
+import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
+import com.wynntils.models.containers.containers.TradeMarketPrimaryContainer;
+import com.wynntils.models.containers.containers.TradeMarketSecondaryContainer;
+import com.wynntils.models.containers.containers.personal.AccountBankContainer;
+import com.wynntils.models.containers.containers.personal.BlockBankContainer;
+import com.wynntils.models.containers.containers.personal.BookshelfContainer;
+import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
+import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
+import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer;
+import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
+import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
+import com.wynntils.models.containers.containers.reward.LootChestContainer;
+import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     // Test in ContainerModel_ABILITY_TREE_PATTERN
     public static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
-    // Test in ContainerModel_LOOT_CHEST_PATTERN
-    private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
-
     public static final String CHARACTER_INFO_NAME = "Character Info";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
     public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
-    private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
+    private static final List<Container> containerTypes = new ArrayList<>();
+    private Container currentContainer = null;
 
     public ContainerModel() {
         super(List.of());
+
+        registerWynncraftContainers();
     }
 
-    public boolean isCharacterInfoScreen(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle())
-                .getStringWithoutFormatting()
-                .equals(CHARACTER_INFO_NAME);
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScreenInit(ScreenInitEvent e) {
+        currentContainer = null;
+
+        if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+
+        for (Container container : containerTypes) {
+            if (container.isScreen(screen)) {
+                currentContainer = container;
+                currentContainer.setContainerId(screen.getMenu().containerId);
+                break;
+            }
+        }
     }
 
-    public boolean isLootChest(Screen screen) {
-        return screen instanceof ContainerScreen && lootChestMatcher(screen).matches();
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScreenClose(ScreenClosedEvent e) {
+        currentContainer = null;
     }
 
-    public boolean isLootChest(String title) {
-        return title.startsWith("Loot Chest");
+    public Container getCurrentContainer() {
+        return currentContainer;
     }
 
-    public boolean isRewardChest(String title) {
-        return title.startsWith("Daily Rewards")
-                || title.contains("Objective Rewards")
-                || title.contains("Challenge Rewards")
-                || title.contains("Flying Chest");
+    private void registerWynncraftContainers() {
+        // Order does not matter here so just keep it alphabetical
+        registerWynncraftContainer(new AbilityTreeContainer());
+        registerWynncraftContainer(new AccountBankContainer());
+        registerWynncraftContainer(new BlockBankContainer());
+        registerWynncraftContainer(new BookshelfContainer());
+        registerWynncraftContainer(new ChallengeRewardContainer());
+        registerWynncraftContainer(new CharacterBankContainer());
+        registerWynncraftContainer(new CharacterInfoContainer());
+        registerWynncraftContainer(new ContentBookContainer());
+        registerWynncraftContainer(new DailyRewardContainer());
+        registerWynncraftContainer(new FlyingChestContainer());
+        registerWynncraftContainer(new GuildBankContainer());
+        registerWynncraftContainer(new GuildManagementContainer());
+        registerWynncraftContainer(new GuildMemberListContainer());
+        registerWynncraftContainer(new GuildTerritoriesContainer());
+        registerWynncraftContainer(new HousingJukeboxContainer());
+        registerWynncraftContainer(new HousingListContainer());
+        registerWynncraftContainer(new IngredientPouchContainer());
+        registerWynncraftContainer(new InventoryContainer());
+        registerWynncraftContainer(new JukeboxContainer());
+        registerWynncraftContainer(new LobbyContainer());
+        registerWynncraftContainer(new LootChestContainer());
+        registerWynncraftContainer(new MiscBucketContainer());
+        registerWynncraftContainer(new ObjectiveRewardContainer());
+        registerWynncraftContainer(new PetMenuContainer());
+        registerWynncraftContainer(new ProfessionCraftingContainer());
+        registerWynncraftContainer(new ScrapMenuContainer());
+        registerWynncraftContainer(new SeaskipperContainer());
+        registerWynncraftContainer(new TradeMarketFiltersContainer());
+        registerWynncraftContainer(new TradeMarketPrimaryContainer());
+        registerWynncraftContainer(new TradeMarketSecondaryContainer());
     }
 
-    public boolean isLootOrRewardChest(Screen screen) {
-        if (!(screen instanceof AbstractContainerScreen<?>)) return false;
-
-        String title = screen.getTitle().getString();
-        return isLootOrRewardChest(title);
-    }
-
-    public boolean isLootOrRewardChest(String title) {
-        return isLootChest(title) || isRewardChest(title);
-    }
-
-    public boolean isSeaskipper(Component component) {
-        return StyledText.fromComponent(component).equals(SEASKIPPER_TITLE);
-    }
-
-    public Matcher lootChestMatcher(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle()).getNormalized().getMatcher(LOOT_CHEST_PATTERN);
+    private void registerWynncraftContainer(Container container) {
+        containerTypes.add(container);
     }
 }

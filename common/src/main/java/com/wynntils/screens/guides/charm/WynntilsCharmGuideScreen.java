@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.charm;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -30,7 +31,9 @@ public final class WynntilsCharmGuideScreen
     private List<GuideCharmItemStack> allCharmItems = List.of();
 
     private WynntilsCharmGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.charmGuide.name"));
+        super(
+                Component.translatable("screens.wynntils.wynntilsGuides.charmGuide.name"),
+                List.of(ItemProviderType.GENERIC, ItemProviderType.GEAR, ItemProviderType.GEAR_INSTANCE));
     }
 
     public static Screen create() {
@@ -50,6 +53,11 @@ public final class WynntilsCharmGuideScreen
         poseStack.translate(translationX, translationY, 1f);
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.charmGuide.name"));
+
+        renderDescription(
+                poseStack,
+                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
+                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
 
         renderVersion(poseStack);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.war.scoreboard;
@@ -19,17 +19,17 @@ public class WarScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
-        Models.War.findWarPlayers();
+        Models.War.onWarStart();
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.War.removeWarPlayers();
+        Models.War.onWarEnd();
     }
 
     @Override
     public void reset() {
-        Models.War.removeWarPlayers();
+        Models.War.onWarEnd();
     }
 
     @Override

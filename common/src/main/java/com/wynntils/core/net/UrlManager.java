@@ -206,7 +206,7 @@ public final class UrlManager extends Manager {
         dl.handleInputStream(inputStream -> {
             try {
                 Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
-                tryUpdateUrlMap(tryMap);
+                tryUpdateUrlMap(tryMap, true);
             } catch (IOException e) {
                 WynntilsMod.warn("Problem updating URL list from online source", e);
             }
@@ -216,15 +216,17 @@ public final class UrlManager extends Manager {
     private void readInputStreamForUrl(InputStream tryStream) throws JsonSyntaxException, IOException {
         try (InputStream inputStream = tryStream) {
             Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
-            tryUpdateUrlMap(tryMap);
+            tryUpdateUrlMap(tryMap, false);
         } catch (MalformedJsonException e) {
             // This is handled by the caller, so just rethrow
             throw new MalformedJsonException(e);
         }
     }
 
-    private void tryUpdateUrlMap(Pair<Integer, Map<UrlId, UrlInfo>> tryMap) {
-        if (tryMap.a() > version) {
+    private void tryUpdateUrlMap(Pair<Integer, Map<UrlId, UrlInfo>> tryMap, boolean forceUpdateOnSameVersion) {
+        // Even if the version is the same, we might want to update the URLs if the urls are downloaded from the
+        // internet since the URLs might have changed. (local cache and bundled URLs are not always updated)
+        if (tryMap.a() > version || (forceUpdateOnSameVersion && tryMap.a() == version)) {
             urlMap = tryMap.b();
             version = tryMap.a();
         }

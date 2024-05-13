@@ -11,6 +11,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -69,6 +70,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
         onClick.accept(button);
 
         return true;
@@ -79,7 +81,6 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
 
     public void setTooltip(List<Component> newTooltip) {
         tooltip = ComponentUtils.wrapTooltips(newTooltip, TOOLTIP_WIDTH);
-        ;
     }
 
     @Override

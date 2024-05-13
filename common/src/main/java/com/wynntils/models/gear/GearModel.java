@@ -20,10 +20,12 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -72,17 +74,18 @@ public final class GearModel extends Model {
 
     public boolean canBeGearBox(GearInfo gear) {
         // If an item is pre-identified, it cannot be in a gear box
-        // If all the ways we can obtain this is by merchants, it cannot be in a gear box
+        // Also check that the item has a source that can drop boxed items
         return !gear.metaInfo().preIdentified()
                 && gear.metaInfo().obtainInfo().stream()
-                        .anyMatch(o -> !o.sourceType().isMerchant());
+                        .anyMatch(x -> ItemObtainType.BOXED_ITEMS.contains(x.sourceType()));
     }
 
     @Override
     public void reloadData() {
-        gearInfoRegistry.reloadData();
+        gearInfoRegistry.loadData();
     }
 
+    // For "real" gear items eg. from the inventory
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
         if (result.tier() != gearInfo.tier()) {
@@ -90,14 +93,27 @@ public final class GearModel extends Model {
         }
 
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                result.allRequirementsMet(),
+                result.setInstance());
     }
 
+    // For parsing gear from the gear viewer
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                false,
+                Optional.empty());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
@@ -141,6 +157,7 @@ public final class GearModel extends Model {
                 result.identifications(),
                 result.powders(),
                 result.powderSlots(),
+                result.allRequirementsMet(),
                 durability);
     }
 

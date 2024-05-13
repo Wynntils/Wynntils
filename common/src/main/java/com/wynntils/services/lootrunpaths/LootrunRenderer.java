@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
@@ -34,6 +34,8 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -138,6 +140,10 @@ public final class LootrunRenderer {
         float blue = ((float) FastColor.ARGB32.blue(color)) / 255;
 
         for (BlockPos chest : chests) {
+            // Wynncraft requested that chest highlights are not rendered on these blocks
+            BlockState block = McUtils.mc().level.getBlockState(chest);
+            if (block.is(Blocks.BARRIER) || block.is(Blocks.AIR)) continue;
+
             LevelRenderer.renderLineBox(poseStack, consumer, new AABB(chest), red, green, blue, 1f);
         }
 

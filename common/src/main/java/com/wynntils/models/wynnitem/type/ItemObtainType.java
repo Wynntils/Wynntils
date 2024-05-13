@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
@@ -10,6 +10,7 @@ public enum ItemObtainType {
     // From Wynncraft API
     LOOT_CHEST("lootchest", "Tier III/IV Loot Chest"), // lootchests (implies t3 or t4, afaict)
     NORMAL_MOB_DROP("normal", "Unspecified Mob Drop"), // mob drops (and any loot chest, afaict)
+    MINIBOSS("miniboss", "Miniboss"), // miniboss
     CHALLENGE("challenge", "Challenge"), // at the moment, only Legendary Island
     EVENT("event", "Event"), // like Bonfire, Heroes, etc.
     LOOTRUN("lootrun", "Lootrun"), // lootrun
@@ -28,9 +29,23 @@ public enum ItemObtainType {
     QIRA_HIVE_MERCHANT("hive", "Qira Hive Merchant", true),
     QUEST("quest", "Quest"),
     RAID("raid", "Raid"),
-    SECRET_DISCOVER("discovery", "Secret Discovery"),
+    SECRET_DISCOVERY("discovery", "Secret Discovery"),
     SPECIAL_MOB_DROP("specialdrop", "Specific Mob Drop"),
     UNOBTAINABLE("unobtainable", "Unobtainable");
+
+    // All sources that possibly drop boxed items
+    public static final List<ItemObtainType> BOXED_ITEMS = List.of(
+            LOOT_CHEST,
+            NORMAL_MOB_DROP,
+            BOSS_ALTAR,
+            MINIBOSS,
+            LOOTRUN, // some items are boxed, some are not
+            DUNGEON_RAIN,
+            FORGERY_CHEST,
+            RAID,
+            SECRET_DISCOVERY,
+            SPECIAL_MOB_DROP,
+            UNKNOWN); // API does not specify drops for many old boxed items yet
 
     private final List<String> apiNames;
     private final String displayName;

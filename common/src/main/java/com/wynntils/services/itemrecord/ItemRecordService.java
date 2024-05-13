@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.itemrecord;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
@@ -13,6 +14,7 @@ import com.wynntils.services.itemrecord.type.SavedItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -25,6 +27,11 @@ public class ItemRecordService extends Service {
 
     @Persisted
     public final Storage<Set<SavedItem>> savedItems = new Storage<>(new TreeSet<>());
+
+    // This is basically a trash can for items that can't be decoded
+    // This is useful for a backup in case the item can be decoded in the future (with a new version of the mod)
+    @Persisted
+    public final Storage<Set<SavedItem>> faultyItems = new Storage<>(new TreeSet<>());
 
     @Persisted
     public final Storage<Set<String>> categories = new Storage<>(new TreeSet<>(List.of(DEFAULT_CATEGORY)));
@@ -152,7 +159,53 @@ public class ItemRecordService extends Service {
         return DEFAULT_CATEGORY;
     }
 
-    public SavedItem getItem(String base64) {
+    public void cleanupItemRecord() {
+        // Try to remove all invalid items
+        List<SavedItem> itemsToRemove = new ArrayList<>();
+        for (SavedItem savedItem : savedItems.get()) {
+            try {
+                savedItem.wynnItem();
+            } catch (Exception e) {
+                WynntilsMod.warn("Removing invalid item from item record: " + savedItem.base64(), e);
+                itemsToRemove.add(savedItem);
+                faultyItems.get().add(savedItem);
+            }
+        }
+
+        // Check if the mod can decode faulty items
+        List<SavedItem> itemsToReadd = new ArrayList<>();
+        for (SavedItem faultyItem : faultyItems.get()) {
+            try {
+                faultyItem.wynnItem();
+                itemsToReadd.add(faultyItem);
+            } catch (Exception e) {
+                // continue, we still can't decode this item
+            }
+        }
+
+        // If there is nothing to do, return
+        if (itemsToRemove.isEmpty() && itemsToReadd.isEmpty()) return;
+
+        // Remove invalid items
+        savedItems.get().removeAll(itemsToRemove);
+        faultyItems.get().addAll(itemsToRemove);
+
+        // Readd items that can now be decoded
+        faultyItems.get().removeAll(itemsToReadd);
+        savedItems.get().addAll(itemsToReadd);
+
+        // Save changes
+        faultyItems.touched();
+        savedItems.touched();
+
+        WynntilsMod.warn("Item record cleanup complete. Removed " + itemsToRemove.size() + " invalid items. Readded "
+                + itemsToReadd.size() + " items that can now be decoded.");
+        McUtils.sendMessageToClient(Component.translatable(
+                        "service.wynntils.itemRecord.cleanupComplete", itemsToRemove.size(), itemsToReadd.size())
+                .withStyle(ChatFormatting.YELLOW));
+    }
+
+    private SavedItem getItem(String base64) {
         for (SavedItem savedItem : savedItems.get()) {
             if (savedItem.base64().equals(base64)) {
                 return savedItem;

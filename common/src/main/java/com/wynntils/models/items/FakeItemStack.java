@@ -49,7 +49,7 @@ public class FakeItemStack extends ItemStack {
     public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
         TooltipBuilder tooltipBuilder = null;
         if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-            tooltipBuilder = Handlers.Tooltip.buildNew(identifiableItem, false);
+            tooltipBuilder = Handlers.Tooltip.buildNew(identifiableItem, false, true);
         } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
             tooltipBuilder = Handlers.Tooltip.buildNew(craftedItemProperty);
         }

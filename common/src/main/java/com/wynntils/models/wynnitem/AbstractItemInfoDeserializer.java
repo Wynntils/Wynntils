@@ -14,7 +14,6 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -71,12 +70,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return GearType.fromString(typeString);
     }
 
-    protected GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName, GearType type) {
-        GearDropRestrictions dropRestrictions = parseDropRestrictions(json);
+    protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
         ItemMaterial material = parseMaterial(json, type);
 
-        List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
+        List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
         Optional<StyledText> loreOpt = parseLore(json);
         Optional<String> apiNameOpt = Optional.ofNullable(apiName);
@@ -85,22 +83,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         boolean preIdentifiedItem = JsonUtils.getNullableJsonBoolean(json, "identified");
 
         return new GearMetaInfo(
-                dropRestrictions,
-                restrictions,
-                material,
-                obtainInfo,
-                loreOpt,
-                apiNameOpt,
-                allowCraftsman,
-                preIdentifiedItem);
+                restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman, preIdentifiedItem);
     }
 
-    protected List<ItemObtainInfo> parseObtainInfo(JsonObject json, String name) {
+    protected List<ItemObtainInfo> parseObtainInfo(JsonObject json) {
         List<ItemObtainInfo> obtainInfo = new ArrayList<>();
-
-        // Add crowd-sourced information
-        List<ItemObtainInfo> obtainCrowdSourced = Models.WynnItem.getObtainInfo(name);
-        obtainInfo.addAll(obtainCrowdSourced);
 
         // Add API-obtained information
         String apiObtainName =
@@ -146,13 +133,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return Optional.of(StyledText.fromString(lore));
     }
 
-    protected GearDropRestrictions parseDropRestrictions(JsonObject json) {
-        String restrictions = JsonUtils.getNullableJsonString(json, "dropRestriction");
-        if (restrictions == null) return GearDropRestrictions.NORMAL;
-
-        return GearDropRestrictions.fromString(restrictions);
-    }
-
     protected GearRestrictions parseRestrictions(JsonObject json) {
         String restrictions = JsonUtils.getNullableJsonString(json, "restrictions");
         if (restrictions == null) return GearRestrictions.NONE;
@@ -171,13 +151,20 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         if (dropMeta.has("type")) {
             JsonElement type = dropMeta.get("type");
 
-            // The type can be either a string or an array of strings
-            if (type.isJsonArray()) {
-                for (JsonElement typeElement : type.getAsJsonArray()) {
-                    types.add(ItemObtainType.fromApiName(typeElement.getAsString()));
+            // The type can be either a string or an array of string
+            try {
+                if (type.isJsonArray()) {
+                    for (JsonElement typeElement : type.getAsJsonArray()) {
+                        types.add(ItemObtainType.fromApiName(typeElement.getAsString()));
+                    }
+                } else {
+                    types.add(ItemObtainType.fromApiName(type.getAsString()));
                 }
-            } else {
-                types.add(ItemObtainType.fromApiName(type.getAsString()));
+            } catch (Exception e) {
+                WynntilsMod.warn(
+                        "Failed to parse obtain types for " + json.get("name").getAsString());
+                WynntilsMod.warn("Obtain types: " + type.toString());
+                return List.of();
             }
         }
 

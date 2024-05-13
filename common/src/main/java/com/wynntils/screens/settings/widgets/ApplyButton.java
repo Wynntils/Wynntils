@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -22,7 +23,9 @@ public class ApplyButton extends GeneralSettingsButton {
                 14,
                 Component.translatable("screens.wynntils.settingsScreen.apply"),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.apply.description")
-                        .withStyle(ChatFormatting.GREEN)));
+                        .withStyle(ChatFormatting.GREEN)),
+                0,
+                McUtils.mc().screen.height);
         this.screen = screen;
     }
 

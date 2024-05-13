@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -7,7 +7,9 @@ package com.wynntils.models.characterstats;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.HealthSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
@@ -23,9 +25,11 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
@@ -75,6 +79,32 @@ public final class CharacterStatsModel extends Model {
 
     public void hideCoordinates(boolean shouldHide) {
         coordinatesSegment.setHidden(shouldHide);
+    }
+
+    public double getBlocksAboveGround() {
+        // iteratively find the first non-air block below the player
+        double endY = (int) Math.ceil(McUtils.player().position().y) - 1;
+        while (McUtils.mc()
+                .level
+                .getBlockState(new BlockPos(
+                        McUtils.player().blockPosition().getX(),
+                        (int) endY,
+                        McUtils.player().blockPosition().getZ()))
+                .isAir()) {
+            endY--;
+
+            // stop checking beyond the minimum build height as there will never be any blocks below it
+            if (endY < McUtils.mc().level.getMinBuildHeight()) return -1;
+        }
+
+        // add the floor height to the result to account for half-blocks
+        endY += McUtils.mc()
+                .level
+                .getBlockFloorHeight(new BlockPos(
+                        McUtils.player().blockPosition().getX(),
+                        (int) endY,
+                        McUtils.player().blockPosition().getZ()));
+        return McUtils.player().position().y - endY;
     }
 
     /**
@@ -168,5 +198,24 @@ public final class CharacterStatsModel extends Model {
     public void onHeldItemChanged(ChangeCarriedItemEvent event) {
         // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
         powderSpecialSegment.replaced();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTitle(SubtitleSetTextEvent event) {
+        StyledText text = StyledText.fromComponent(event.getComponent());
+
+        for (Powder powder : Powder.values()) {
+            // If we see the name of a powder special, that special has been used
+            if (text.getStringWithoutFormatting().equals(powder.getSpecialName())) {
+                powderSpecialSegment.replaced();
+                break;
+            }
+
+            // If we see just the symbol of a powder, that powder just hit 100% charge
+            if (text.equals(powder.getColoredSymbol())) {
+                powderSpecialSegment.fullyCharged(powder);
+                break;
+            }
+        }
     }
 }

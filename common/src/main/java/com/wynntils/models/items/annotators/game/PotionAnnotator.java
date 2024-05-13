@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.PotionType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.items.game.PotionItem;
@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class PotionAnnotator implements ItemAnnotator {
+public final class PotionAnnotator implements GameItemAnnotator {
     private static final Pattern POTION_PATTERN = Pattern.compile("^§.Potion of (.*)$");
     private static final Pattern HEALING_PATTERN = Pattern.compile("^Healing§4 \\[(\\d+)/(\\d+)\\]$");
     private static final Pattern MANA_PATTERN = Pattern.compile("^Mana§3 \\[(\\d+)/(\\d+)\\]$");

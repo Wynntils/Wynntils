@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -944,6 +945,58 @@ public final class RenderUtils {
         }
     }
 
+    public static void drawMulticoloredRect(
+            PoseStack poseStack, List<CustomColor> colors, float x, float y, float z, float width, float height) {
+        if (colors.size() == 1) {
+            drawRect(poseStack, colors.get(0), x, y, z, width, height);
+            return;
+        }
+        Matrix4f matrix = poseStack.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+
+        float splitX = width / (colors.size() - 1);
+
+        for (int i = 0; i < colors.size(); i++) {
+            CustomColor color = colors.get(i);
+            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Mth.clamp(x + splitX * i, x, x + width);
+            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+
+            // bottom left
+            bufferBuilder
+                    .vertex(matrix, leftX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // bottom right
+            bufferBuilder
+                    .vertex(matrix, centerX, y + height, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top right
+            bufferBuilder
+                    .vertex(matrix, rightX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+            // top left
+            bufferBuilder
+                    .vertex(matrix, centerX, y, z)
+                    .color(color.r, color.g, color.b, color.a)
+                    .endVertex();
+        }
+
+        BufferUploader.drawWithShader(bufferBuilder.end());
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
+    }
+
     public static void createMask(PoseStack poseStack, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
@@ -1003,6 +1056,31 @@ public final class RenderUtils {
                 ty2 - ty1,
                 width,
                 height);
+
+        // Reenable color and depth
+        RenderSystem.colorMask(true, true, true, true);
+        RenderSystem.depthMask(true);
+
+        // Only write to stencil area
+        RenderSystem.stencilMask(0x00);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+        RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xff);
+    }
+
+    public static void createRectMask(PoseStack poseStack, float x, float y, float width, float height) {
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+
+        // Enable writing to stencil
+        RenderSystem.stencilMask(0xff);
+        RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, true);
+        RenderSystem.stencilFunc(GL11.GL_ALWAYS, 1, 0xFF);
+        RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+        // Disable writing to color or depth
+        RenderSystem.colorMask(false, false, false, false);
+        RenderSystem.depthMask(false);
+
+        drawRect(poseStack, CommonColors.WHITE, x, y, 0, width, height);
 
         // Reenable color and depth
         RenderSystem.colorMask(true, true, true, true);

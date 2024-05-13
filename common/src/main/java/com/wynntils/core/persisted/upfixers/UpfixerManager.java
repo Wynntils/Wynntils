@@ -23,6 +23,8 @@ import com.wynntils.core.persisted.upfixers.config.NpcDialoguesRenamedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
+import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +51,8 @@ public class UpfixerManager extends Manager {
         registerUpfixer(new CustomBankQuickJumpsBankNameUpfixer());
         registerUpfixer(new NpcDialoguesRenamedUpfixer());
         registerUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
+        registerUpfixer(new TowerAuraVignetteNameUpfixer());
+        registerUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
     }
 
     private void registerUpfixer(Upfixer upfixer) {

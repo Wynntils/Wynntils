@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -22,20 +23,18 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -45,11 +44,9 @@ public class SkillPointModel extends Model {
     @Persisted
     private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new TreeMap<>());
 
-    private static final int[] ACCESSORY_SLOTS = {9, 10, 11, 12};
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
-    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
 
@@ -57,8 +54,9 @@ public class SkillPointModel extends Model {
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> craftedSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> tomeSkillPoints = new EnumMap<>(Skill.class);
-    private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> statusEffectSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> setBonusSkillPoints = new EnumMap<>(Skill.class);
+    private Map<Skill, Integer> assignedSkillPoints = new EnumMap<>(Skill.class);
 
     public SkillPointModel() {
         super(List.of());
@@ -91,22 +89,30 @@ public class SkillPointModel extends Model {
      * Saves the current equipped gear and provided skill points.
      */
     public void saveBuild(String name, int[] skillPoints) {
+        String weapon = null;
         List<String> armourNames = new ArrayList<>();
-        McUtils.inventory().armor.stream()
-                .filter(x -> !x.isEmpty())
-                .map(x -> x.getHoverName().getString())
-                .forEach(armourNames::add);
-        Collections.reverse(armourNames); // helmet to boots order
-
         List<String> accessoryNames = new ArrayList<>();
-        for (int i : ACCESSORY_SLOTS) {
-            ItemStack itemStack = McUtils.inventory().getItem(i);
-            if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
-                accessoryNames.add(itemStack.getHoverName().getString());
+
+        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
+            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
+            if (wynnItemOptional.isEmpty()) continue;
+            WynnItem wynnItem = wynnItemOptional.get();
+
+            if (wynnItem instanceof GearTypeItemProperty gear) {
+                if (gear.getGearType().isArmor()) {
+                    armourNames.add(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                } else if (gear.getGearType().isAccessory()) {
+                    accessoryNames.add(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                } else if (gear.getGearType().isWeapon()) {
+                    weapon = StyledText.fromComponent(itemStack.getHoverName()).getString();
+                }
             }
         }
 
-        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints, armourNames, accessoryNames);
+        SavableSkillPointSet assignedSkillPointSet =
+                new SavableSkillPointSet(skillPoints, weapon, armourNames, accessoryNames);
         skillPointLoadouts.get().put(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
@@ -192,6 +198,14 @@ public class SkillPointModel extends Model {
 
     public int getStatusEffectsSum() {
         return statusEffectSkillPoints.values().stream().reduce(0, Integer::sum);
+    }
+
+    public int getSetBonusSkillPoints(Skill skill) {
+        return setBonusSkillPoints.getOrDefault(skill, 0);
+    }
+
+    public int getSetBonusSum() {
+        return setBonusSkillPoints.values().stream().reduce(0, Integer::sum);
     }
 
     public int getAssignedSkillPoints(Skill skill) {
@@ -292,16 +306,20 @@ public class SkillPointModel extends Model {
     private void calculateGearSkillPoints() {
         gearSkillPoints = new EnumMap<>(Skill.class);
         craftedSkillPoints = new EnumMap<>(Skill.class);
+        setBonusSkillPoints = new EnumMap<>(Skill.class);
 
-        // Cannot combine these loops because of the way the inventory is numbered when a container is open
-        McUtils.inventory().armor.forEach(this::calculateSingleGearSkillPoints);
-
-        for (int i : ACCESSORY_SLOTS) {
-            calculateSingleGearSkillPoints(McUtils.inventory().getItem(i));
+        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
+            calculateSingleGearSkillPoints(itemStack);
         }
 
-        // held item
-        calculateSingleGearSkillPoints(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        Models.Set.getUniqueSetNames().forEach(name -> {
+            int trueCount = Models.Set.getTrueCount(name);
+            Models.Set.getSetInfo(name).getBonusForItems(trueCount).forEach((bonus, value) -> {
+                if (bonus instanceof SkillStatType skillStat) {
+                    setBonusSkillPoints.merge(skillStat.getSkill(), value, Integer::sum);
+                }
+            });
+        });
     }
 
     private void calculateSingleGearSkillPoints(ItemStack itemStack) {
@@ -314,13 +332,14 @@ public class SkillPointModel extends Model {
                     gearSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
+
         } else if (wynnItemOptional.get() instanceof CraftedGearItem craftedGear) {
             craftedGear.getIdentifications().forEach(x -> {
                 if (x.statType() instanceof SkillStatType skillStat) {
                     craftedSkillPoints.merge(skillStat.getSkill(), x.value(), Integer::sum);
                 }
             });
-        } else if (!itemStack.isEmpty() && !itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) {
+        } else {
             WynntilsMod.warn("Skill Point Model failed to parse gear: " + LoreUtils.getStringLore(itemStack));
         }
     }
@@ -358,7 +377,7 @@ public class SkillPointModel extends Model {
 
     private boolean verifyChange(
             ContainerContent content,
-            Int2ObjectMap<ItemStack> changes,
+            Int2ObjectFunction<ItemStack> changes,
             ContainerContentChangeType changeType,
             int soulPointItemSlot) {
         // soul points resent last for both containers
@@ -420,6 +439,7 @@ public class SkillPointModel extends Model {
                     skill,
                     getTotalSkillPoints(skill)
                             - getGearSkillPoints(skill)
+                            - getSetBonusSkillPoints(skill)
                             - getTomeSkillPoints(skill)
                             - getCraftedSkillPoints(skill)
                             - getStatusEffectSkillPoints(skill));

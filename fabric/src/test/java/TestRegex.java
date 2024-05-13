@@ -25,10 +25,12 @@ import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
+import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
@@ -235,19 +237,6 @@ public class TestRegex {
         p.shouldMatch("Assassin Abilities");
         // Archer
         p.shouldMatch("Archer Abilities");
-    }
-
-    @Test
-    public void ContainerModel_LOOT_CHEST_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "LOOT_CHEST_PATTERN");
-        // Tier 1
-        p.shouldMatch("Loot Chest §7[§f✫§8✫✫✫§7]");
-        // Tier 2
-        p.shouldMatch("Loot Chest §e[§6✫✫§8✫✫§e]");
-        // Tier 3
-        p.shouldMatch("Loot Chest §5[§d✫✫✫§8✫§5]");
-        // Tier 4
-        p.shouldMatch("Loot Chest §3[§b✫✫✫✫§3]");
     }
 
     @Test
@@ -711,6 +700,13 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_MISC_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "MISC_REQ_PATTERN");
+        p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
+        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light");
+    }
+
+    @Test
     public void WynnItemParser_SHINY_STAT_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "SHINY_STAT_PATTERN");
         p.shouldMatch("§f⬡ §7Raids Won: §f0");
@@ -728,5 +724,18 @@ public class TestRegex {
         PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
         p.shouldMatch("§3§otest item§b§o [24%]À");
         p.shouldMatch("§3§oAbsorbant Skirt of the Skyraider§b§o [100%]À");
+    }
+
+    @Test
+    public void WarTowerBar_TOWER_BAR_PATTERN() {
+        PatternTester p = new PatternTester(WarTowerBar.class, "TOWER_BAR_PATTERN");
+        p.shouldMatch("§3[SEPC] §bEfilim South Plains Tower§7 - §4❤ 390000§7 (§610.0%§7) - §c☠ 1300-1949§7 (§b0.5x§7)");
+    }
+
+    @Test
+    public void GuildSeasonLeaderboardLabelParser_GUILD_SEASON_LEADERBOARD_PATTERN() {
+        PatternTester p = new PatternTester(GuildSeasonLeaderboardLabelParser.class, "GUILD_SEASON_LEADERBOARD_LABEL");
+        p.shouldMatch("§6§l1§7 - §bIdiot Co§d (11 396 656 SR)");
+        p.shouldMatch("§62§7 - §bSequoia§d (11 057 047 SR)");
     }
 }

@@ -37,9 +37,11 @@ public final class WorldStateModel extends Model {
 
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
+    private String currentHousingName = "";
     private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
+    private boolean onHousing = false;
 
     public WorldStateModel() {
         super(List.of());
@@ -49,6 +51,10 @@ public final class WorldStateModel extends Model {
 
     public boolean onWorld() {
         return currentState == WorldState.WORLD;
+    }
+
+    public boolean onHousing() {
+        return onHousing;
     }
 
     public boolean isInStream() {
@@ -147,18 +153,20 @@ public final class WorldStateModel extends Model {
         Component displayName = e.getDisplayName();
         StyledText name = StyledText.fromComponent(displayName);
         Matcher m = name.getMatcher(WORLD_NAME);
-        if (setWorldIfMatched(m)) return;
+        if (setWorldIfMatched(m, false)) return;
         // must check in this order as housing name regex matches anything that WORLD_NAME would match, housing names
         // need to exclude world names.
         Matcher housingNameMatcher = name.getMatcher(HOUSING_NAME);
-        setWorldIfMatched(housingNameMatcher);
+        setWorldIfMatched(housingNameMatcher, true);
     }
 
-    private boolean setWorldIfMatched(Matcher m) {
+    private boolean setWorldIfMatched(Matcher m, boolean housing) {
         if (m.find()) {
-            String worldName = m.group(1);
+            String worldName = housing ? currentWorldName : m.group(1);
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);
             hasJoinedAnyWorld = true;
+            onHousing = housing;
+            currentHousingName = onHousing ? m.group(1) : "";
             return true;
         }
         return false;
@@ -169,6 +177,10 @@ public final class WorldStateModel extends Model {
      */
     public String getCurrentWorldName() {
         return currentWorldName;
+    }
+
+    public String getCurrentHousingName() {
+        return currentHousingName;
     }
 
     public long getServerJoinTimestamp() {

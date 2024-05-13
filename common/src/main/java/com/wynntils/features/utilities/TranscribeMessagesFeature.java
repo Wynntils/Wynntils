@@ -68,7 +68,7 @@ public class TranscribeMessagesFeature extends Feature {
 
         StyledText modified = getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, false);
 
-        if (styledText.getString().equalsIgnoreCase(modified.getString())) return;
+        if (styledText.equals(modified)) return;
 
         event.setMessage(modified.getComponent());
     }

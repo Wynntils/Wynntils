@@ -23,8 +23,10 @@ import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.ProfessionFunctions;
+import com.wynntils.functions.RaidFunctions;
 import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.StatisticFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
@@ -34,6 +36,7 @@ import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.NamedFunctions;
+import com.wynntils.functions.generic.RangedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.type.ErrorOr;
@@ -372,6 +375,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.AddFunction());
         registerFunction(new MathFunctions.DivideFunction());
         registerFunction(new MathFunctions.IntegerFunction());
+        registerFunction(new MathFunctions.LongFunction());
         registerFunction(new MathFunctions.MaxFunction());
         registerFunction(new MathFunctions.MinFunction());
         registerFunction(new MathFunctions.ModuloFunction());
@@ -389,7 +393,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
+        registerFunction(new StringFunctions.FormatDurationFunction());
+        registerFunction(new StringFunctions.FormatDateFunction());
         registerFunction(new StringFunctions.FormatFunction());
+        registerFunction(new StringFunctions.FormatRangedFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
@@ -405,19 +412,20 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
-        registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
         registerFunction(new WorldFunctions.InMappedAreaFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
+        registerFunction(new WorldFunctions.NewestWorldFunction());
         registerFunction(new WorldFunctions.PingFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
         registerFunction(new WorldFunctions.WorldStateFunction());
+        registerFunction(new WorldFunctions.WorldUptimeFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
@@ -443,6 +451,10 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
+        registerFunction(new CombatFunctions.BlocksAboveGroundFunction());
+        registerFunction(new CombatFunctions.LastSpellNameFunction());
+        registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
+        registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());
@@ -500,6 +512,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.DryBoxesFunction());
+        registerFunction(new LootrunFunctions.DryPullsFunction());
         registerFunction(new LootrunFunctions.DryStreakFunction());
         registerFunction(new LootrunFunctions.HighestDryStreakFunction());
         registerFunction(new LootrunFunctions.LastDryStreakFunction());
@@ -515,6 +528,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
+        registerFunction(new MinecraftFunctions.KeyPressedFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
 
@@ -529,6 +543,18 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
 
+        registerFunction(new RaidFunctions.CurrentRaidFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
+        registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
+        registerFunction(new RaidFunctions.RaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
+
+        registerFunction(new RangedFunctions.RangeHighFunction());
+        registerFunction(new RangedFunctions.RangeLowFunction());
+        registerFunction(new RangedFunctions.RangedFunction());
+
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
@@ -540,7 +566,33 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyMembersFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
 
+        registerFunction(new StatisticFunctions.StatisticsTotalFunction());
+        registerFunction(new StatisticFunctions.StatisticsCountFunction());
+        registerFunction(new StatisticFunctions.StatisticsMinFunction());
+        registerFunction(new StatisticFunctions.StatisticsMaxFunction());
+        registerFunction(new StatisticFunctions.StatisticsAverageFunction());
+        registerFunction(new StatisticFunctions.StatisticsFirstModifiedFunction());
+        registerFunction(new StatisticFunctions.StatisticsLastModifiedFunction());
+        registerFunction(new StatisticFunctions.StatisticsFormattedFunction());
+
         registerFunction(new WarFunctions.AuraTimerFunction());
+        registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());
+        registerFunction(new WarFunctions.CurrentTowerDamageFunction());
+        registerFunction(new WarFunctions.CurrentTowerDefenseFunction());
+        registerFunction(new WarFunctions.CurrentTowerHealthFunction());
+        registerFunction(new WarFunctions.EstimatedTimeToFinishWarFunction());
+        registerFunction(new WarFunctions.InitialTowerAttackSpeedFunction());
+        registerFunction(new WarFunctions.InitialTowerDamageFunction());
+        registerFunction(new WarFunctions.InitialTowerDefenseFunction());
+        registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.TeamDpsFunction());
+        registerFunction(new WarFunctions.TimeInWarFunction());
+        registerFunction(new WarFunctions.TowerDpsFunction());
+        registerFunction(new WarFunctions.TowerEffectiveHpFunction());
+        registerFunction(new WarFunctions.TowerOwnerFunction());
+        registerFunction(new WarFunctions.TowerTerritoryFunction());
+        registerFunction(new WarFunctions.VolleyTimerFunction());
+        registerFunction(new WarFunctions.WarsSinceFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
