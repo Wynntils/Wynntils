@@ -47,6 +47,9 @@ public class CustomPlayerListOverlay extends Overlay {
     @Persisted
     public final Config<Integer> openingDuration = new Config<>(125);
 
+    @Persisted
+    public final Config<Boolean> showWorldInStream = new Config<>(false);
+
     private final AnimationPercentage animationPercentage = new AnimationPercentage(
             McUtils.options().keyPlayerList::isDown, Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
     private final ThrottledSupplier<List<StyledText>> availablePlayers =
@@ -116,6 +119,11 @@ public class CustomPlayerListOverlay extends Overlay {
         String worldCategory = Models.WorldState.onHousing()
                 ? Models.WorldState.getCurrentHousingName()
                 : Models.WorldState.getCurrentWorldName();
+
+        if (!showWorldInStream.get() && Models.WorldState.isInStream()) {
+            worldCategory = "-";
+        }
+
         renderCategoryTitle(poseStack, worldCategory, currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
         renderCategoryTitle(poseStack, "Party", currentDist, categoryStart);
