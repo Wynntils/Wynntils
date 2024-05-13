@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -43,6 +43,7 @@ public abstract class ClientCommonPacketListenerImplMixin {
         // ConnectionEvents are sent on the main thread, so let's do so with this one too.
         if (Managers.TickScheduler == null) return;
 
-        Managers.TickScheduler.scheduleNextTick(() -> MixinHelper.postAlways(new ConnectionEvent.UnexpectedDisconnectedEvent()));
+        Managers.TickScheduler.scheduleNextTick(
+                () -> MixinHelper.postAlways(new ConnectionEvent.UnexpectedDisconnectedEvent()));
     }
 }
