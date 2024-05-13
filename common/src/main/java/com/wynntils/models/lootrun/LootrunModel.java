@@ -308,27 +308,28 @@ public class LootrunModel extends Model {
             if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
+                boolean foundLootrunMythic = false;
                 Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
                 if (gearItemOpt.isPresent()) {
                     GearItem gearItem = gearItemOpt.get();
 
                     if (gearItem.getGearTier() == GearTier.MYTHIC) {
-                        WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
-                        dryPulls.store(0);
+                        foundLootrunMythic = true;
                     }
-                    return;
                 }
 
                 // No need to check tier for these as they are only mythic
                 Optional<InsulatorItem> insulatorItemOpt = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
                 if (insulatorItemOpt.isPresent()) {
-                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
-                    dryPulls.store(0);
-                    return;
+                    foundLootrunMythic = true;
                 }
 
                 Optional<SimulatorItem> simulatorItemOpt = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
                 if (simulatorItemOpt.isPresent()) {
+                    foundLootrunMythic = true;
+                }
+
+                if (foundLootrunMythic) {
                     WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
                     dryPulls.store(0);
                 }

@@ -55,22 +55,23 @@ public class MythicFoundFeature extends Feature {
         }
 
         // Lootrun rewards
+        boolean validLootrunMythic = false;
         Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItem.isPresent()) {
-            sendLootrunDryStreakMessage(
-                    StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
-            return;
+            validLootrunMythic = true;
         }
 
         Optional<InsulatorItem> insulatorItem = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
         if (insulatorItem.isPresent()) {
-            sendLootrunDryStreakMessage(
-                    StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
-            return;
+            validLootrunMythic = true;
         }
 
         Optional<SimulatorItem> simulatorItem = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
         if (simulatorItem.isPresent()) {
+            validLootrunMythic = true;
+        }
+
+        if (validLootrunMythic) {
             sendLootrunDryStreakMessage(
                     StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
         }
