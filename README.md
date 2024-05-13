@@ -1,6 +1,8 @@
 MapData rewrite
 ========
 
+Notes: The default icon fading should be 6. The default label fading should be 3.
+
 ## TODO
 
 * Old POIs that are not (properly) converted
