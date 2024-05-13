@@ -4,10 +4,12 @@
  */
 package com.wynntils.mc.event;
 
+import com.wynntils.core.events.EventThread;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on connection to a server */
 public abstract class ConnectionEvent extends Event {
+    @EventThread(EventThread.Type.RENDER)
     public static class ConnectedEvent extends ConnectionEvent {
         private final String host;
         private final int port;
@@ -31,5 +33,9 @@ public abstract class ConnectionEvent extends Event {
         }
     }
 
+    @EventThread(EventThread.Type.RENDER)
     public static class DisconnectedEvent extends ConnectionEvent {}
+
+    @EventThread(EventThread.Type.RENDER)
+    public static class UnexpectedDisconnectedEvent extends DisconnectedEvent {}
 }
