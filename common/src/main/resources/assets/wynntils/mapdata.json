@@ -1,22 +1,21 @@
 {
-  "version": 1,
   "categories": [
     {
       "attributes": {
         "icon": "magicus:icons:demo",
         "iconColor": "#ffffff",
         "iconVisibility": {
+          "fade": 3,
           "max": 80,
-          "min": 5,
-          "fade": 3
+          "min": 5
         },
         "label": "Local Demo",
         "labelColor": "#ffffff",
         "labelShadow": "outline",
         "labelVisibility": {
+          "fade": 10,
           "max": 60,
-          "min": 30,
-          "fade": 10
+          "min": 30
         },
         "priority": 500
       },
@@ -28,17 +27,17 @@
         "icon": "magicus:icons:farming",
         "iconColor": "#000000",
         "iconVisibility": {
+          "fade": 3,
           "max": 80,
-          "min": 5,
-          "fade": 3
+          "min": 5
         },
         "label": "Local Demo",
         "labelColor": "#000000",
         "labelShadow": "outline",
         "labelVisibility": {
+          "fade": 10,
           "max": 60,
-          "min": 30,
-          "fade": 10
+          "min": 30
         },
         "priority": 250
       },
@@ -123,5 +122,6 @@
       "id": "magicus:icons:farming",
       "texture": "iVBORw0KGgoAAAANSUhEUgAAAA8AAAATCAYAAABPwleqAAABg2lDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AYht+miqItDnYo4pChOtlFRRxrFYpQIdQKrTqYXPoHTRqSFBdHwbXg4M9i1cHFWVcHV0EQ/AFxdHJSdJESv0sKLWK847iH97735e47QGhWmWb1JABNt81MKinm8qti3ysGEUWYT5lZxpwkpeE7vu4R4PtdnGf51/05wmrBYkBAJE4ww7SJN4hnNm2D8z5xhJVllficeMKkCxI/cl3x+I1zyWWBZ0bMbGaeOEIslrpY6WJWNjXiaeKYqumUL+Q8Vjlvcdaqdda+J39hqKCvLHOd1ihSWMQSJIhQUEcFVdiI066TYiFD50kf/4jrl8ilkKsCRo4F1KBBdv3gf/C7t1ZxatJLCiWB3hfH+RgD+naBVsNxvo8dp3UCBJ+BK73jrzWB2U/SGx0tdgQMbQMX1x1N2QMud4DokyGbsisFaQnFIvB+Rt+UB4ZvgYE1r2/tc5w+AFnqVfoGODgExkuUve7z7v7uvv1b0+7fD1H1cpn+jeEHAAAABmJLR0QA4gDZAL2c3+5OAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5gsYDR4DqyThaAAAAcxJREFUOMulk71PU1EYxn/v9VLTtHppylJDKlUJNCIfOjTeyMfgYJxqYuzkJANRBqJxZ3Bx9V/gy4GFgcHEmLQhhhgN30RDG4lBS2oh0BugEOSwcG+4rWDVNzk5Jyfn9zwn7zmP8IdSSil7LSJCpXUEOuO40KlONtjRHFAjL5tU65VzZQJ6KSgiztx+rZoXz+5yKezDW6URfzrrMtJKwZ2DAUSEjuYAI68S7O1+ZnJqkrmlrbJb6qUbxdU03fdCbFsCFMn+LGLlIOjx2k2zjUR3uw6yv7ZDJBwlfvssoHGxtp75XJrRVJbniQiRkM8RcDln0xl0VaQhsIHh72JgaJybVwNMLKxzvzMEwGgy65wX2/V9qpfrTS28GRrD+LVGfmMXRKgxPAAsLltMzK8z/PYHSilERJyGtd2KIVLA2M/z+t13goaHmvNVLC5bvwXdDVOQm/pEfnMPv/cMXzcLtCceEGu4zMqXDI+j/S7QBa8sfMSLMJ0p0NdjEuy8w4dkkvpov/2UZd/TgZdS08zMrNLzKM433aJWe+hAJ/1rB97OW5hmCK0ugln35FSoDG68YaLCfi4cgRUlyA5ArM1XWXJOit1fgccF/gn8nzoEry7vy/5yuZwAAAAASUVORK5CYII="
     }
-  ]
+  ],
+  "version": 1
 }
