@@ -594,5 +594,6 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
         }
 
         customPoiConfig.touched();
+        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
     }
 }

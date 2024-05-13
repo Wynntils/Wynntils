@@ -8,12 +8,14 @@ import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
+import com.wynntils.services.mapdata.attributes.impl.AlwaysMapVisibility;
 import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
 import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
@@ -33,6 +35,10 @@ public class CategoriesProvider extends BuiltInProvider {
         for (Label.LabelLayer layer : Label.LabelLayer.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
+        for (int tier = 1; tier <= 4; tier++) {
+            PROVIDED_CATEGORIES.add(new FoundChestCategory(tier));
+        }
+        PROVIDED_CATEGORIES.add(new WaypointCategory());
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
     }
 
@@ -80,6 +86,103 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public MapVisibility getLabelVisibility() {
                     return DEFAULT_VISIBILITY;
+                }
+            };
+        }
+    }
+
+    private static final class WaypointCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:personal:waypoint";
+        }
+
+        @Override
+        public String getName() {
+            return "Personal Waypoints";
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public int getPriority() {
+                    return 500;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return CommonColors.GREEN;
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return new NeverMapVisibility();
+                }
+            };
+        }
+    }
+
+    private static final class FoundChestCategory implements MapCategory {
+        private static final FadingMapVisiblity TIER_1_VISIBILITY = new FadingMapVisiblity(57, 100, 6);
+        private static final FadingMapVisiblity TIER_2_VISIBILITY = new FadingMapVisiblity(57, 100, 6);
+        private static final FadingMapVisiblity TIER_3_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
+        private static final FadingMapVisiblity TIER_4_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
+
+        private final int tier;
+
+        private FoundChestCategory(int tier) {
+            this.tier = tier;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return "wynntils:personal:found-chest:tier-" + tier;
+        }
+
+        @Override
+        public String getName() {
+            return "Found Loot Chests";
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public String getIconId() {
+                    return "wynntils:icon:lootchest:tier-" + tier;
+                }
+
+                @Override
+                public String getLabel() {
+                    return "Loot Chest Tier " + MathUtils.toRoman(tier);
+                }
+
+                @Override
+                public int getPriority() {
+                    return 500;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return CommonColors.GREEN;
+                }
+
+                @Override
+                public MapVisibility getIconVisibility() {
+                    return switch (tier) {
+                        case 1 -> TIER_1_VISIBILITY;
+                        case 2 -> TIER_2_VISIBILITY;
+                        case 3 -> TIER_3_VISIBILITY;
+                        case 4 -> TIER_4_VISIBILITY;
+                            // This should never happen
+                        default -> new AlwaysMapVisibility();
+                    };
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return new NeverMapVisibility();
                 }
             };
         }
