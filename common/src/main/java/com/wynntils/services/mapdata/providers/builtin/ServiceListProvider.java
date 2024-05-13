@@ -85,8 +85,7 @@ public class ServiceListProvider extends BuiltInProvider {
 
         @Override
         public Location getLocation() {
-            // FIXME: debug
-            return location.offset(15, 0, 15);
+            return location;
         }
     }
 }
