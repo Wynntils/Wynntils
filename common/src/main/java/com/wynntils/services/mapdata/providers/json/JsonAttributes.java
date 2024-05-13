@@ -7,7 +7,6 @@ package com.wynntils.services.mapdata.providers.json;
 import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
