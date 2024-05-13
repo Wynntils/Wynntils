@@ -59,7 +59,7 @@ public class PlaceListProvider extends BuiltInProvider {
 
                 @Override
                 public int getLevel() {
-                    return label.getCombatLevel();
+                    return label.getLevel();
                 }
             };
         }
