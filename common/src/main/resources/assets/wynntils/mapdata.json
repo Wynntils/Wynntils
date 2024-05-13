@@ -5,11 +5,19 @@
       "attributes": {
         "icon": "magicus:icons:demo",
         "iconColor": "#ffffff",
-        "iconVisibility": "always",
+        "iconVisibility": {
+          "max": 80,
+          "min": 5,
+          "fade": 3
+        },
         "label": "Local Demo",
         "labelColor": "#ffffff",
         "labelShadow": "outline",
-        "labelVisibility": "always",
+        "labelVisibility": {
+          "max": 60,
+          "min": 30,
+          "fade": 10
+        },
         "priority": 500
       },
       "id": "magicus:demo:local",
@@ -19,11 +27,19 @@
       "attributes": {
         "icon": "magicus:icons:farming",
         "iconColor": "#000000",
-        "iconVisibility": "never",
+        "iconVisibility": {
+          "max": 80,
+          "min": 5,
+          "fade": 3
+        },
         "label": "Local Demo",
         "labelColor": "#000000",
         "labelShadow": "outline",
-        "labelVisibility": "never",
+        "labelVisibility": {
+          "max": 60,
+          "min": 30,
+          "fade": 10
+        },
         "priority": 250
       },
       "id": "magicus",
