@@ -5,11 +5,7 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.map.type.ServiceKind;
-import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
-import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
@@ -36,9 +32,6 @@ public class ServiceListProvider extends BuiltInProvider {
     }
 
     private static final class ServiceLocation implements MapLocation {
-        private static final FadingMapVisiblity FAST_TRAVEL_VISIBLITY = new FadingMapVisiblity(18, 100, 6);
-        private static final FadingMapVisiblity OTHER_VISIBLITY = new FadingMapVisiblity(57, 100, 6);
-
         private final Location location;
         private final ServiceKind kind;
         private final int number;
@@ -61,21 +54,7 @@ public class ServiceListProvider extends BuiltInProvider {
 
         @Override
         public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
-                @Override
-                public MapVisibility getIconVisibility() {
-                    if (kind == ServiceKind.FAST_TRAVEL) {
-                        return FAST_TRAVEL_VISIBLITY;
-                    } else {
-                        return OTHER_VISIBLITY;
-                    }
-                }
-
-                @Override
-                public MapVisibility getLabelVisibility() {
-                    return new NeverMapVisibility();
-                }
-            };
+            return null;
         }
 
         @Override

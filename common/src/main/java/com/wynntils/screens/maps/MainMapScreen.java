@@ -298,12 +298,17 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Services.Poi.getServicePois();
+        Stream<? extends Poi> pois = Services.Poi.getLabelPois();
+                //Services.Poi.getServicePois();
 
-        pois = Stream.concat(pois, Services.Poi.getCombatPois());
-        pois = Stream.concat(pois, Services.Poi.getLabelPois());
+        pois = Stream.concat(pois, Models.Marker.getAllPois());
+        //pois = Stream.concat(pois, Services.Poi.getCombatPois());
+        //pois = Stream.concat(pois, Services.Poi.getLabelPois());
+
+        /*
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
+
         pois = Stream.concat(pois, Models.Marker.getAllPois());
         pois = Stream.concat(
                 pois,
@@ -316,17 +321,18 @@ public final class MainMapScreen extends AbstractMapScreen {
                                         || (hadesUser.isMutualFriend()
                                                 && Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                                         .renderRemoteFriendPlayers
-                                                        .get())
-                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
+                                                        .get()))
                         .map(PlayerMainMapPoi::new));
 
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
+
+         */
         // FIXME
 
         // Uncomment to append all mapdata features
-        // pois = Stream.concat(pois, Services.MapData.getFeaturesAsPois());
+        pois = Stream.concat(pois, Services.MapData.getFeaturesAsPois());
 
         // Uncomment to remove POIs and only use mapdata features
         pois = Services.MapData.getFeaturesAsPois();
