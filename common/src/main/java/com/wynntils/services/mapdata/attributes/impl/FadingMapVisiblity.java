@@ -26,12 +26,12 @@ public class FadingMapVisiblity implements MapVisibility {
 
         // If min or max is at the extremes, do not apply fading
         if (min <= 1) {
-            startFadeIn = 1;
-            stopFadeIn = 1;
+            startFadeIn = 0;
+            stopFadeIn = 0;
         }
         if (max >= 100) {
-            startFadeOut = 100;
-            stopFadeOut = 100;
+            startFadeOut = 101;
+            stopFadeOut = 101;
         }
 
         if (zoomLevel < startFadeIn) {
