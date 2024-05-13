@@ -8,9 +8,14 @@ import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
+import com.wynntils.services.mapdata.attributes.impl.AlwaysMapVisibility;
+import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
+import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
@@ -30,6 +35,10 @@ public class CategoriesProvider extends BuiltInProvider {
         for (Label.LabelLayer layer : Label.LabelLayer.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
+        for (int tier = 1; tier <= 4; tier++) {
+            PROVIDED_CATEGORIES.add(new FoundChestCategory(tier));
+        }
+        PROVIDED_CATEGORIES.add(new WaypointCategory());
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
     }
 
@@ -44,6 +53,8 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class WynntilsCategory implements MapCategory {
+        private static final FadingMapVisiblity DEFAULT_VISIBILITY = new FadingMapVisiblity(0, 100, 6);
+
         @Override
         public String getCategoryId() {
             return "wynntils";
@@ -66,11 +77,121 @@ public class CategoriesProvider extends BuiltInProvider {
                 public int getPriority() {
                     return 500;
                 }
+
+                @Override
+                public MapVisibility getIconVisibility() {
+                    return DEFAULT_VISIBILITY;
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return DEFAULT_VISIBILITY;
+                }
+            };
+        }
+    }
+
+    private static final class WaypointCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:personal:waypoint";
+        }
+
+        @Override
+        public String getName() {
+            return "Personal Waypoints";
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public int getPriority() {
+                    return 500;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return CommonColors.GREEN;
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return new NeverMapVisibility();
+                }
+            };
+        }
+    }
+
+    private static final class FoundChestCategory implements MapCategory {
+        private static final FadingMapVisiblity TIER_1_VISIBILITY = new FadingMapVisiblity(57, 100, 6);
+        private static final FadingMapVisiblity TIER_2_VISIBILITY = new FadingMapVisiblity(57, 100, 6);
+        private static final FadingMapVisiblity TIER_3_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
+        private static final FadingMapVisiblity TIER_4_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
+
+        private final int tier;
+
+        private FoundChestCategory(int tier) {
+            this.tier = tier;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return "wynntils:personal:found-chest:tier-" + tier;
+        }
+
+        @Override
+        public String getName() {
+            return "Found Loot Chests";
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public String getIconId() {
+                    return "wynntils:icon:lootchest:tier-" + tier;
+                }
+
+                @Override
+                public String getLabel() {
+                    return "Loot Chest Tier " + MathUtils.toRoman(tier);
+                }
+
+                @Override
+                public int getPriority() {
+                    return 500;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return CommonColors.GREEN;
+                }
+
+                @Override
+                public MapVisibility getIconVisibility() {
+                    return switch (tier) {
+                        case 1 -> TIER_1_VISIBILITY;
+                        case 2 -> TIER_2_VISIBILITY;
+                        case 3 -> TIER_3_VISIBILITY;
+                        case 4 -> TIER_4_VISIBILITY;
+                            // This should never happen
+                        default -> new AlwaysMapVisibility();
+                    };
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return new NeverMapVisibility();
+                }
             };
         }
     }
 
     private static final class ServiceCategory implements MapCategory {
+        private static final FadingMapVisiblity FAST_TRAVEL_VISIBLITY = new FadingMapVisiblity(18, 100, 6);
+        private static final FadingMapVisiblity OTHER_VISIBLITY = new FadingMapVisiblity(57, 100, 6);
+
         private final ServiceKind kind;
 
         private ServiceCategory(ServiceKind kind) {
@@ -109,11 +230,28 @@ public class CategoriesProvider extends BuiltInProvider {
                 public CustomColor getLabelColor() {
                     return CommonColors.GREEN;
                 }
+
+                @Override
+                public MapVisibility getIconVisibility() {
+                    if (kind == ServiceKind.FAST_TRAVEL) {
+                        return FAST_TRAVEL_VISIBLITY;
+                    } else {
+                        return OTHER_VISIBLITY;
+                    }
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return new NeverMapVisibility();
+                }
             };
         }
     }
 
     private static final class CombatCategory implements MapCategory {
+        private static final FadingMapVisiblity CAVES_VISIBILITY = new FadingMapVisiblity(31, 100, 6);
+        private static final FadingMapVisiblity OTHER_VISIBILITY = new FadingMapVisiblity(19, 100, 6);
+
         private final CombatKind kind;
 
         private CombatCategory(CombatKind kind) {
@@ -152,11 +290,29 @@ public class CategoriesProvider extends BuiltInProvider {
                 public CustomColor getLabelColor() {
                     return CommonColors.GREEN;
                 }
+
+                @Override
+                public MapVisibility getIconVisibility() {
+                    if (kind == CombatKind.CAVES) {
+                        return CAVES_VISIBILITY;
+                    } else {
+                        return OTHER_VISIBILITY;
+                    }
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return new NeverMapVisibility();
+                }
             };
         }
     }
 
     private static final class PlaceCategory implements MapCategory {
+        private static final FadingMapVisiblity PROVINCE_VISIBILITY = new FadingMapVisiblity(0, 32, 3);
+        private static final FadingMapVisiblity CITY_VISIBILITY = new FadingMapVisiblity(0, 74, 3);
+        private static final FadingMapVisiblity PLACE_VISIBILITY = new FadingMapVisiblity(32, 86, 3);
+
         private final Label.LabelLayer layer;
 
         private PlaceCategory(Label.LabelLayer layer) {
@@ -193,6 +349,15 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public int getPriority() {
                     return 700;
+                }
+
+                @Override
+                public MapVisibility getLabelVisibility() {
+                    return switch (layer) {
+                        case PROVINCE -> PROVINCE_VISIBILITY;
+                        case CITY -> CITY_VISIBILITY;
+                        case TOWN_OR_PLACE -> PLACE_VISIBILITY;
+                    };
                 }
             };
         }
