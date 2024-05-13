@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.impl.AlwaysMapVisibility;
+import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -50,16 +51,6 @@ public class CharacterProvider extends BuiltInProvider {
         public MapAttributes getAttributes() {
             return new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return "Player position";
-                }
-
-                @Override
-                public String getIconId() {
-                    return "wynntils:icon:symbols:waypoint";
-                }
-
-                @Override
                 public int getPriority() {
                     return 900;
                 }
@@ -75,7 +66,7 @@ public class CharacterProvider extends BuiltInProvider {
     private static final class CharacterLocation implements MapLocation {
         @Override
         public String getFeatureId() {
-            return "built-in:character:marker";
+            return "built-in:character:location";
         }
 
         @Override
@@ -85,9 +76,13 @@ public class CharacterProvider extends BuiltInProvider {
 
         @Override
         public MapAttributes getAttributes() {
-            return null;
+            return new AbstractMapAttributes() {
+                @Override
+                public MapVisibility getIconVisibility() {
+                    return new NeverMapVisibility();
+                }
+            };
         }
-
         @Override
         public List<String> getTags() {
             return List.of();
