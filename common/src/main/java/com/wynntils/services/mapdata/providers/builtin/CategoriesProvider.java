@@ -8,9 +8,6 @@ import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.impl.AlwaysMapVisibility;
-import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
-import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -53,7 +50,7 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class WynntilsCategory implements MapCategory {
-        private static final FadingMapVisiblity DEFAULT_VISIBILITY = new FadingMapVisiblity(0, 100, 6);
+        private static final MapVisibility DEFAULT_VISIBILITY = new MapVisibility(0, 100, 6);
 
         @Override
         public String getCategoryId() {
@@ -117,17 +114,17 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public MapVisibility getLabelVisibility() {
-                    return new NeverMapVisibility();
+                    return MapVisibility.NEVER;
                 }
             };
         }
     }
 
     private static final class FoundChestCategory implements MapCategory {
-        private static final FadingMapVisiblity TIER_1_VISIBILITY = new FadingMapVisiblity(57, 100, 6);
-        private static final FadingMapVisiblity TIER_2_VISIBILITY = new FadingMapVisiblity(57, 100, 6);
-        private static final FadingMapVisiblity TIER_3_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
-        private static final FadingMapVisiblity TIER_4_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
+        private static final MapVisibility TIER_1_VISIBILITY = new MapVisibility(57, 100, 6);
+        private static final MapVisibility TIER_2_VISIBILITY = new MapVisibility(57, 100, 6);
+        private static final MapVisibility TIER_3_VISIBILITY = new MapVisibility(30, 100, 6);
+        private static final MapVisibility TIER_4_VISIBILITY = new MapVisibility(30, 100, 6);
 
         private final int tier;
 
@@ -176,21 +173,21 @@ public class CategoriesProvider extends BuiltInProvider {
                         case 3 -> TIER_3_VISIBILITY;
                         case 4 -> TIER_4_VISIBILITY;
                             // This should never happen
-                        default -> new AlwaysMapVisibility();
+                        default -> MapVisibility.ALWAYS;
                     };
                 }
 
                 @Override
                 public MapVisibility getLabelVisibility() {
-                    return new NeverMapVisibility();
+                    return MapVisibility.NEVER;
                 }
             };
         }
     }
 
     private static final class ServiceCategory implements MapCategory {
-        private static final FadingMapVisiblity FAST_TRAVEL_VISIBLITY = new FadingMapVisiblity(18, 100, 6);
-        private static final FadingMapVisiblity OTHER_VISIBLITY = new FadingMapVisiblity(57, 100, 6);
+        private static final MapVisibility FAST_TRAVEL_VISIBLITY = new MapVisibility(18, 100, 6);
+        private static final MapVisibility OTHER_VISIBLITY = new MapVisibility(57, 100, 6);
 
         private final ServiceKind kind;
 
@@ -242,15 +239,15 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public MapVisibility getLabelVisibility() {
-                    return new NeverMapVisibility();
+                    return MapVisibility.NEVER;
                 }
             };
         }
     }
 
     private static final class CombatCategory implements MapCategory {
-        private static final FadingMapVisiblity CAVES_VISIBILITY = new FadingMapVisiblity(31, 100, 6);
-        private static final FadingMapVisiblity OTHER_VISIBILITY = new FadingMapVisiblity(19, 100, 6);
+        private static final MapVisibility CAVES_VISIBILITY = new MapVisibility(31, 100, 6);
+        private static final MapVisibility OTHER_VISIBILITY = new MapVisibility(19, 100, 6);
 
         private final CombatKind kind;
 
@@ -302,16 +299,16 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public MapVisibility getLabelVisibility() {
-                    return new NeverMapVisibility();
+                    return MapVisibility.NEVER;
                 }
             };
         }
     }
 
     private static final class PlaceCategory implements MapCategory {
-        private static final FadingMapVisiblity PROVINCE_VISIBILITY = new FadingMapVisiblity(0, 32, 3);
-        private static final FadingMapVisiblity CITY_VISIBILITY = new FadingMapVisiblity(0, 74, 3);
-        private static final FadingMapVisiblity PLACE_VISIBILITY = new FadingMapVisiblity(32, 86, 3);
+        private static final MapVisibility PROVINCE_VISIBILITY = new MapVisibility(0, 32, 3);
+        private static final MapVisibility CITY_VISIBILITY = new MapVisibility(0, 74, 3);
+        private static final MapVisibility PLACE_VISIBILITY = new MapVisibility(32, 86, 3);
 
         private final Label.LabelLayer layer;
 

@@ -6,9 +6,6 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.impl.AlwaysMapVisibility;
-import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
-import com.wynntils.services.mapdata.attributes.impl.NeverMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -55,7 +52,7 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     private static final class WaypointLocation implements MapLocation {
-        public static final FadingMapVisiblity WAYPOINT_VISIBILITY = new FadingMapVisiblity(30, 100, 6);
+        public static final MapVisibility WAYPOINT_VISIBILITY = new MapVisibility(30, 100, 6);
         private final Location location;
         private final String name;
         private final String iconId;
@@ -97,8 +94,8 @@ public class WaypointsProvider extends BuiltInProvider {
                 public MapVisibility getIconVisibility() {
                     return switch (visibility) {
                         case DEFAULT -> WAYPOINT_VISIBILITY;
-                        case ALWAYS -> new AlwaysMapVisibility();
-                        case HIDDEN -> new NeverMapVisibility();
+                        case ALWAYS -> MapVisibility.ALWAYS;
+                        case HIDDEN -> MapVisibility.NEVER;
                     };
                 }
             };
