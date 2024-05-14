@@ -14,9 +14,9 @@ import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 
 public final class StatisticFunctions {
-    public static class StatisticsTotalFunction extends StatisticFunction<Integer> {
+    public static class StatisticsTotalFunction extends StatisticFunction<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Long getValue(FunctionArguments arguments) {
             StatisticEntry statistic = getStatisticEntry(arguments);
             if (statistic == null) return DEFAULT_VALUE;
 
@@ -24,9 +24,9 @@ public final class StatisticFunctions {
         }
     }
 
-    public static class StatisticsCountFunction extends StatisticFunction<Integer> {
+    public static class StatisticsCountFunction extends StatisticFunction<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Long getValue(FunctionArguments arguments) {
             StatisticEntry statistic = getStatisticEntry(arguments);
             if (statistic == null) return DEFAULT_VALUE;
 
@@ -34,9 +34,9 @@ public final class StatisticFunctions {
         }
     }
 
-    public static class StatisticsMinFunction extends StatisticFunction<Integer> {
+    public static class StatisticsMinFunction extends StatisticFunction<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Long getValue(FunctionArguments arguments) {
             StatisticEntry statistic = getStatisticEntry(arguments);
             if (statistic == null) return DEFAULT_VALUE;
 
@@ -44,9 +44,9 @@ public final class StatisticFunctions {
         }
     }
 
-    public static class StatisticsMaxFunction extends StatisticFunction<Integer> {
+    public static class StatisticsMaxFunction extends StatisticFunction<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Long getValue(FunctionArguments arguments) {
             StatisticEntry statistic = getStatisticEntry(arguments);
             if (statistic == null) return DEFAULT_VALUE;
 
@@ -54,9 +54,9 @@ public final class StatisticFunctions {
         }
     }
 
-    public static class StatisticsAverageFunction extends StatisticFunction<Integer> {
+    public static class StatisticsAverageFunction extends StatisticFunction<Long> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public Long getValue(FunctionArguments arguments) {
             StatisticEntry statistic = getStatisticEntry(arguments);
             if (statistic == null) return DEFAULT_VALUE;
 
@@ -105,7 +105,7 @@ public final class StatisticFunctions {
     }
 
     private abstract static class StatisticFunction<T> extends Function<T> {
-        protected static final int DEFAULT_VALUE = -1;
+        protected static final long DEFAULT_VALUE = -1;
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
