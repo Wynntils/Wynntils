@@ -74,7 +74,7 @@ public class StatisticsCommand extends Command {
         for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
                 .sorted(Comparator.comparing(StatisticKind::getName))
                 .toList()) {
-            int value = Services.Statistics.getStatistic(statistic).total();
+            long value = Services.Statistics.getStatistic(statistic).total();
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
@@ -93,7 +93,7 @@ public class StatisticsCommand extends Command {
         for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
                 .sorted(Comparator.comparing(StatisticKind::getName))
                 .toList()) {
-            int value = Services.Statistics.getOverallStatistic(statistic).total();
+            long value = Services.Statistics.getOverallStatistic(statistic).total();
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
