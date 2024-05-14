@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.mapdata.providers.json;
 
-import com.wynntils.services.mapdata.attributes.impl.FadingMapVisiblity;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -18,9 +17,9 @@ public class JsonAttributes implements MapAttributes {
     private final int level;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
-    private final FadingMapVisiblity labelVisibility;
+    private final MapVisibility labelVisibility;
     private final CustomColor iconColor;
-    private final FadingMapVisiblity iconVisibility;
+    private final MapVisibility iconVisibility;
 
     public JsonAttributes(
             String label,
@@ -29,9 +28,9 @@ public class JsonAttributes implements MapAttributes {
             int level,
             CustomColor labelColor,
             TextShadow labelShadow,
-            FadingMapVisiblity labelVisibility,
+            MapVisibility labelVisibility,
             CustomColor iconColor,
-            FadingMapVisiblity iconVisibility) {
+            MapVisibility iconVisibility) {
         this.label = label;
         this.icon = icon;
         this.priority = priority;
