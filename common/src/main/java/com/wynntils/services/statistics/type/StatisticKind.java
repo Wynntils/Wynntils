@@ -8,7 +8,6 @@ import com.google.common.base.CaseFormat;
 import com.wynntils.services.statistics.CustomStatFormatters;
 import java.util.Locale;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.stats.StatFormatter;
 
 public enum StatisticKind {
     // region Gameplay
@@ -83,7 +82,7 @@ public enum StatisticKind {
         return I18n.get("statistics.wynntils." + id + ".name");
     }
 
-    public String getFormattedValue(int value) {
+    public String getFormattedValue(long value) {
         return formatter.format(value);
     }
 
