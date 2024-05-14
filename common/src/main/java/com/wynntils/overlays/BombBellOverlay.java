@@ -92,7 +92,8 @@ public class BombBellOverlay extends Overlay {
                         this.getWidth(),
                         this.getHeight(),
                         this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment());
+                        this.getRenderVerticalAlignment(),
+                        fontScale.get());
     }
 
     @Override

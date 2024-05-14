@@ -9,6 +9,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidBossStartedEvent;
@@ -131,6 +132,23 @@ public class RaidModel extends Model {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onChatReceived(ChatMessageReceivedEvent event) {
+        if (currentRaid == null) return;
+
+        Component component = event.getMessage();
+        StyledText styledText = StyledText.fromComponent(component);
+
+        if (styledText.equals(RAID_FAILED)) {
+            // Raid failed, post event with timers
+            WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
+
+            currentRaid = null;
+            currentRoom = null;
+            roomTimers.clear();
         }
     }
 
