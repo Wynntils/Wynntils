@@ -1,9 +1,30 @@
+## [1.2.7](https://github.com/Wynntils/Artemis/compare/v1.2.6...v1.2.7) (2024-05-14)
+
+
+### New Features
+
+* Redirect Merchant Messages [skip ci] ([#2484](https://github.com/Wynntils/Artemis/issues/2484)) ([4c84325](https://github.com/Wynntils/Artemis/commit/4c843251158a23aa1e45fad2990c9ea732e104ac))
+
+
+### Bug Fixes
+
+* Detect insulators and simulators in mythic found feature [skip ci] ([#2487](https://github.com/Wynntils/Artemis/issues/2487)) ([61f03c8](https://github.com/Wynntils/Artemis/commit/61f03c8651445fa69f24d2397f216770a3ce72eb))
+* Detect raid failure from chat message [skip ci] ([#2496](https://github.com/Wynntils/Artemis/issues/2496)) ([4873261](https://github.com/Wynntils/Artemis/commit/48732612a167f52940a0743342f8575031981c40))
+* fix damage stat collecting neutral damage only ([#2497](https://github.com/Wynntils/Artemis/issues/2497)) ([759459a](https://github.com/Wynntils/Artemis/commit/759459a7d3ef4e40e733f6a17fe506b64d250802))
+* Handle streamer mode correctly in WorldStateModel [skip ci] ([#2491](https://github.com/Wynntils/Artemis/issues/2491)) ([964b17d](https://github.com/Wynntils/Artemis/commit/964b17dbf5a9f6e74a2fdbab425b21e1328ccc04))
+* Use scale in bomb bell overlay [skip ci] ([#2486](https://github.com/Wynntils/Artemis/issues/2486)) ([b3ac5eb](https://github.com/Wynntils/Artemis/commit/b3ac5eb2efede32e76851248764d7957de76720a))
+
 ## [1.2.6](https://github.com/Wynntils/Artemis/compare/v1.2.5...v1.2.6) (2024-05-12)
 
 
 ### New Features
 
 * Show item type for chat items, show perfect/defective ([#2485](https://github.com/Wynntils/Artemis/issues/2485)) ([b8e4a6d](https://github.com/Wynntils/Artemis/commit/b8e4a6d368329d41095543bd4678c5f6f052c728))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.6 [skip ci] ([e9d8dc7](https://github.com/Wynntils/Artemis/commit/e9d8dc74a964bf12c6573ecbafa5b76c4c9e528e))
 
 ## [1.2.5](https://github.com/Wynntils/Artemis/compare/v1.2.4...v1.2.5) (2024-05-12)
 
@@ -56,30 +77,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.3 [skip ci] ([9005b90](https://github.com/Wynntils/Artemis/commit/9005b90a97a3b9298291419036689b43c95705de))
-
-## [1.2.2](https://github.com/Wynntils/Artemis/compare/v1.2.1...v1.2.2) (2024-05-07)
-
-
-### New Features
-
-* Add open guild bank keybind [skip ci] ([#2470](https://github.com/Wynntils/Artemis/issues/2470)) ([9267c1e](https://github.com/Wynntils/Artemis/commit/9267c1e8d611ce9039ee75861e76b6ccacc03a67))
-* Make TowerStatsFeature messages copy-able [skip ci] ([#2465](https://github.com/Wynntils/Artemis/issues/2465)) ([2ca6298](https://github.com/Wynntils/Artemis/commit/2ca62982eb791069ea4fcf87b8f5db296fff4d1a))
-* Shift middle click to place multiple markers on guild map [skip ci] ([#2469](https://github.com/Wynntils/Artemis/issues/2469)) ([1d83ba3](https://github.com/Wynntils/Artemis/commit/1d83ba327d58b4c41840f28dec3b91933e3a9ca6))
-* Use scrolling text in various screens [skip ci] ([#2461](https://github.com/Wynntils/Artemis/issues/2461)) ([0ec6e1d](https://github.com/Wynntils/Artemis/commit/0ec6e1dae24419edea9425f8063b7cdc7e5390d2))
-
-
-### Bug Fixes
-
-* Actually track raid succeeded stats [skip ci] ([#2462](https://github.com/Wynntils/Artemis/issues/2462)) ([7b3a203](https://github.com/Wynntils/Artemis/commit/7b3a203009952c4893b3918e73ecadfdd2aec3f1))
-* fix gammabright resetting brightness setting, even when the feature is off [skip ci] ([#2468](https://github.com/Wynntils/Artemis/issues/2468)) ([b57566a](https://github.com/Wynntils/Artemis/commit/b57566a5c349c2ebe5440493c5d166fb502bc729))
-* Fix war info (dps, estimated time) not being accurate ([#2471](https://github.com/Wynntils/Artemis/issues/2471)) ([79805be](https://github.com/Wynntils/Artemis/commit/79805be8bd4d3c0e02807266ee3567ccba69e7ed))
-* Only render server list overlay if the actual player tab is rendering [skip ci] ([#2464](https://github.com/Wynntils/Artemis/issues/2464)) ([537e884](https://github.com/Wynntils/Artemis/commit/537e8844402eaedcc1312bd6dc73ddd83ec4a1d2))
-* Parse shaman mask correctly when only one mask available [skip ci] ([#2467](https://github.com/Wynntils/Artemis/issues/2467)) ([5141419](https://github.com/Wynntils/Artemis/commit/5141419706a7005fe97e5270e6752c35b41717d6))
-* Some lootrun drops not included in box possibilities [skip ci] ([#2466](https://github.com/Wynntils/Artemis/issues/2466)) ([4a98fc9](https://github.com/Wynntils/Artemis/commit/4a98fc9fb9c98e66e422dc6079ea6e1fdc1c609f))
-
-
-### Miscellaneous Chores
-
-* Collect end of war stats in war history [skip ci] ([#2463](https://github.com/Wynntils/Artemis/issues/2463)) ([c1b831e](https://github.com/Wynntils/Artemis/commit/c1b831e1a7a33e54d768a2b9fa21a068e37a009f))
-* **release:** v1.2.2 [skip ci] ([7ad97ed](https://github.com/Wynntils/Artemis/commit/7ad97ed235c4112fed58f8e7cfe0777026019bfc))
 
