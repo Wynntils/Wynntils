@@ -1,3 +1,15 @@
+## [1.2.8](https://github.com/Wynntils/Artemis/compare/v1.2.7...v1.2.8) (2024-05-14)
+
+
+### New Features
+
+* Add rainbow donator tag, fix developer tags [skip ci] ([#2498](https://github.com/Wynntils/Artemis/issues/2498)) ([4d57fc0](https://github.com/Wynntils/Artemis/commit/4d57fc0d9217231d29d49cfdc832e1656dacdd9e))
+
+
+### Bug Fixes
+
+* Fix statistics overflowing ([#2499](https://github.com/Wynntils/Artemis/issues/2499)) ([c88d147](https://github.com/Wynntils/Artemis/commit/c88d1472c1ac59ce68d9323c973645acc2000fb8))
+
 ## [1.2.7](https://github.com/Wynntils/Artemis/compare/v1.2.6...v1.2.7) (2024-05-14)
 
 
@@ -13,6 +25,11 @@
 * fix damage stat collecting neutral damage only ([#2497](https://github.com/Wynntils/Artemis/issues/2497)) ([759459a](https://github.com/Wynntils/Artemis/commit/759459a7d3ef4e40e733f6a17fe506b64d250802))
 * Handle streamer mode correctly in WorldStateModel [skip ci] ([#2491](https://github.com/Wynntils/Artemis/issues/2491)) ([964b17d](https://github.com/Wynntils/Artemis/commit/964b17dbf5a9f6e74a2fdbab425b21e1328ccc04))
 * Use scale in bomb bell overlay [skip ci] ([#2486](https://github.com/Wynntils/Artemis/issues/2486)) ([b3ac5eb](https://github.com/Wynntils/Artemis/commit/b3ac5eb2efede32e76851248764d7957de76720a))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.7 [skip ci] ([1c5c255](https://github.com/Wynntils/Artemis/commit/1c5c255116c49a03a4569df4377d84bb45b06f56))
 
 ## [1.2.6](https://github.com/Wynntils/Artemis/compare/v1.2.5...v1.2.6) (2024-05-12)
 
@@ -60,21 +77,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.4 [skip ci] ([b6e2b9d](https://github.com/Wynntils/Artemis/commit/b6e2b9dbf791eaef99a1cf8466097f2f3584f1ca))
-
-## [1.2.3](https://github.com/Wynntils/Artemis/compare/v1.2.2...v1.2.3) (2024-05-10)
-
-
-### New Features
-
-* Settings smooth scrolling [skip ci] ([#2472](https://github.com/Wynntils/Artemis/issues/2472)) ([b9843a0](https://github.com/Wynntils/Artemis/commit/b9843a0879c7c776b2295492fe3897b658aeb73c))
-
-
-### Bug Fixes
-
-* Make war DPS use effective health for calculations (instead of raw health) ([#2474](https://github.com/Wynntils/Artemis/issues/2474)) ([371da1f](https://github.com/Wynntils/Artemis/commit/371da1f93639531fa177233afaf28aaa6d9cdff8))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.3 [skip ci] ([9005b90](https://github.com/Wynntils/Artemis/commit/9005b90a97a3b9298291419036689b43c95705de))
 
