@@ -4,29 +4,14 @@
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-public final class MapVisibility {
-    public static final MapVisibility NEVER = new MapVisibility(100, 0, 6);
-    public static final MapVisibility ALWAYS = new MapVisibility(0, 100, 6);
+public abstract class MapVisibility {
+    public static final FullMapVisibility NEVER = new FullMapVisibility(100, 0, 6);
+    public static final FullMapVisibility ALWAYS = new FullMapVisibility(0, 100, 6);
+    public static final FullMapVisibility DEFAULT_VISIBILITY = new FullMapVisibility(0, 100, 6);
 
-    private final float min;
-    private final float max;
-    private final float fade;
+    public abstract float getMin();
 
-    public MapVisibility(float min, float max, float fade) {
-        this.min = min;
-        this.max = max;
-        this.fade = fade;
-    }
+    public abstract float getMax();
 
-    public float getMin() {
-        return min;
-    }
-
-    public float getMax() {
-        return max;
-    }
-
-    public float getFade() {
-        return fade;
-    }
+    public abstract float getFade();
 }
