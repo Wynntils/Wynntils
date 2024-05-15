@@ -64,8 +64,9 @@ public class FullCategoryAttributes extends DerivedAttributes {
                 if (visibility.get() instanceof FullMapVisibility fullVisibility) {
                     // Apply the visibility stack to the full visibility
                     FullMapVisibility result = fullVisibility;
-                    for (DerivedMapVisibility derivedVisibility : visibilityStack) {
-                        result = result.applyDerived(derivedVisibility);
+                    while (!visibilityStack.isEmpty()) {
+                        // We want to apply the highest category's visibility first
+                        result = result.applyDerived(visibilityStack.pollLast());
                     }
                     return result;
                 } else if (visibility.get() instanceof DerivedMapVisibility derivedVisibility) {
