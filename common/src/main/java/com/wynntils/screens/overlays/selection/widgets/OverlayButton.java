@@ -6,15 +6,10 @@ package com.wynntils.screens.overlays.selection.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.overlays.CustomBarsOverlayFeature;
-import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.overlays.custombars.CustomBarOverlayBase;
 import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -23,7 +18,6 @@ import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -42,6 +36,9 @@ public class OverlayButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR_BORDER = new CustomColor(0, 220, 0, 255);
     private static final CustomColor DISABLED_COLOR_BORDER = new CustomColor(0, 0, 0, 255);
     private static final CustomColor DISABLED_FEATURE_COLOR_BORDER = new CustomColor(255, 0, 0, 255);
+    private static final List<Component> EDIT_NAME_TOOLTIP =
+            List.of(Component.translatable("screens.wynntils.overlaySelection.editName"));
+
     private static final List<Component> SAVE_NAME_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.overlaySelection.stopEdit"));
 
@@ -73,19 +70,11 @@ public class OverlayButton extends WynntilsButton {
         // Display a tooltip with delete instructions for info boxes and custom bars.
         // Also get the ID to be used when deleting
         if (overlay instanceof InfoBoxOverlay infoBoxOverlay) {
-            descriptionTooltip = ComponentUtils.wrapTooltips(
-                    List.of(
-                            Component.translatable("screens.wynntils.overlaySelection.editName"),
-                            Component.translatable("screens.wynntils.overlaySelection.delete", textToRender)),
-                    150);
+            descriptionTooltip = ComponentUtils.wrapTooltips(EDIT_NAME_TOOLTIP, 150);
 
             overlayId = infoBoxOverlay.getId();
         } else if (overlay instanceof CustomBarOverlayBase customBarOverlayBase) {
-            descriptionTooltip = ComponentUtils.wrapTooltips(
-                    List.of(
-                            Component.translatable("screens.wynntils.overlaySelection.editName"),
-                            Component.translatable("screens.wynntils.overlaySelection.delete", textToRender)),
-                    150);
+            descriptionTooltip = ComponentUtils.wrapTooltips(EDIT_NAME_TOOLTIP, 150);
 
             overlayId = customBarOverlayBase.getId();
         } else {
@@ -165,11 +154,6 @@ public class OverlayButton extends WynntilsButton {
             return false;
         }
 
-        // Delete overlay when shift right clicked, if ID is not -1 then it should be an info box/custom bar
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && KeyboardUtils.isShiftDown() && overlayId != -1) {
-            deleteOverlay();
-        }
-
         if (editInput != null && editInput.visible && editInput.mouseClicked(mouseX, mouseY, button)) {
             return true;
         }
@@ -241,43 +225,6 @@ public class OverlayButton extends WynntilsButton {
         if (editInput != null) {
             editInput.visible = false;
         }
-    }
-
-    private void deleteOverlay() {
-        // Get the group holder
-        OverlayGroupHolder overlayGroupHolder = getGroupHolder();
-
-        if (overlayGroupHolder == null) {
-            WynntilsMod.error("Failed to delete, overlay group not found for overlay " + overlay.getJsonName());
-            return;
-        }
-
-        // Delete the overlay
-        Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, overlayId);
-
-        // Reload config
-        Managers.Config.loadConfigOptions(true, false);
-        Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration();
-
-        // Remove the overlay from the list
-        selectionScreen.deleteOverlay(overlay);
-    }
-
-    private OverlayGroupHolder getGroupHolder() {
-        // Get the parent feature of the overlay
-        Feature feature = overlay instanceof InfoBoxOverlay
-                ? Managers.Feature.getFeatureInstance(InfoBoxFeature.class)
-                : Managers.Feature.getFeatureInstance(CustomBarsOverlayFeature.class);
-
-        // Loop through holders, if holder contains this overlay then that is the one
-        for (OverlayGroupHolder group : Managers.Overlay.getFeatureOverlayGroups(feature)) {
-            if (group.getOverlays().contains(overlay)) {
-                return group;
-            }
-        }
-
-        return null;
     }
 
     private CustomColor getBorderColor(boolean enabled) {

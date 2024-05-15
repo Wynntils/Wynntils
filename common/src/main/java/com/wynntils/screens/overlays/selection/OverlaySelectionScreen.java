@@ -5,6 +5,7 @@
 package com.wynntils.screens.overlays.selection;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
@@ -14,6 +15,7 @@ import com.wynntils.core.persisted.Translatable;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.overlays.custombars.CustomBarOverlayBase;
 import com.wynntils.overlays.infobox.InfoBoxOverlay;
@@ -501,20 +503,55 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         addOptionButtons();
     }
 
-    public void deleteOverlay(Overlay overlay) {
-        // If the current selected overlay was deleted, then deselect it
-        if (selectedOverlay == overlay) {
-            selectedOverlay = null;
-            populateConfigs();
+    private void deleteOverlay() {
+        int overlayId = -1;
+
+        if (selectedOverlay instanceof InfoBoxOverlay infoBoxOverlay) {
+            overlayId = infoBoxOverlay.getId();
+        } else if (selectedOverlay instanceof CustomBarOverlayBase customBarOverlay) {
+            overlayId = customBarOverlay.getId();
         }
 
-        // Scroll up if at the bottom of the overlay list
-        if (overlayScrollOffset == Math.max(0, overlayList.size() - MAX_OVERLAYS_PER_PAGE)) {
-            overlayScrollOffset = Math.max(0, overlayScrollOffset - 1);
+        if (overlayId == -1) return;
+
+        // Get the group holder
+        OverlayGroupHolder overlayGroupHolder = getGroupHolder();
+
+        if (overlayGroupHolder == null) {
+            WynntilsMod.error("Failed to delete, overlay group not found for overlay " + selectedOverlay.getJsonName());
+            return;
         }
 
+        // Delete the overlay
+        Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, overlayId);
+
+        // Reload config
+        Managers.Config.loadConfigOptions(true, false);
+        Managers.Config.saveConfig();
+        Managers.Config.reloadConfiguration();
+
+        selectedOverlay = null;
+        populateConfigs();
+
+        overlayScrollOffset = 0;
         populateOverlays();
         addOptionButtons();
+    }
+
+    private OverlayGroupHolder getGroupHolder() {
+        // Get the parent feature of the overlay
+        Feature feature = selectedOverlay instanceof InfoBoxOverlay
+                ? Managers.Feature.getFeatureInstance(InfoBoxFeature.class)
+                : Managers.Feature.getFeatureInstance(CustomBarsOverlayFeature.class);
+
+        // Loop through holders, if holder contains this overlay then that is the one
+        for (OverlayGroupHolder group : Managers.Overlay.getFeatureOverlayGroups(feature)) {
+            if (group.getOverlays().contains(selectedOverlay)) {
+                return group;
+            }
+        }
+
+        return null;
     }
 
     public Overlay getSelectedOverlay() {
@@ -766,6 +803,23 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             case CUSTOM -> selectedFilterButton = customButton;
             default -> selectedFilterButton = allButton;
         }
+        // endregion
+
+        // region Delete overlay button
+        OverlayOptionsButton deleteButton = new OverlayOptionsButton(
+                -(Texture.PAPER_BUTTON_LEFT.width()) + 4,
+                28 + (Texture.PAPER_BUTTON_LEFT.height() / 2) * 5,
+                Texture.PAPER_BUTTON_LEFT.width(),
+                Texture.PAPER_BUTTON_LEFT.height() / 2,
+                StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.delete")),
+                (button) -> deleteOverlay(),
+                List.of(Component.translatable("screens.wynntils.overlaySelection.deleteTooltip")),
+                Texture.PAPER_BUTTON_LEFT,
+                false);
+
+        optionButtons.add(deleteButton);
+        deleteButton.visible = selectedOverlay != null
+                && (selectedOverlay instanceof InfoBoxOverlay || selectedOverlay instanceof CustomBarOverlayBase);
         // endregion
 
         // region Edit buttons
