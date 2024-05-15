@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearAnnotator implements GameItemAnnotator {
-    private static final Pattern GEAR_PATTERN =
-            Pattern.compile("^(?:§f⬡ )?(?<rarity>§[5abcdef])(?<unidentified>Unidentified )?(?:Shiny )?(?<name>.+)$");
+    private static final Pattern GEAR_PATTERN = Pattern.compile(
+            "^(?<rarity>§[5abcdef])(?<unidentified>Unidentified )?(?:§f⬡ )?(?:§[5abcdef])?(?:Shiny )?(?<name>.+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
