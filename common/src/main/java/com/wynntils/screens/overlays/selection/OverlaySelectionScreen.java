@@ -458,6 +458,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     .toList();
         }
 
+        if (!overlayList.contains(selectedOverlay)) {
+            setSelectedOverlay(null);
+        }
+
         int yPos = 31;
         for (Overlay value : overlayList) {
             overlays.add(new OverlayButton(7, yPos, 120, 18, value, this));
