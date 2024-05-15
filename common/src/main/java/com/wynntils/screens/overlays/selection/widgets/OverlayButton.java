@@ -258,6 +258,7 @@ public class OverlayButton extends WynntilsButton {
         // Reload config
         Managers.Config.loadConfigOptions(true, false);
         Managers.Config.saveConfig();
+        Managers.Config.reloadConfiguration();
 
         // Remove the overlay from the list
         selectionScreen.deleteOverlay(overlay);
