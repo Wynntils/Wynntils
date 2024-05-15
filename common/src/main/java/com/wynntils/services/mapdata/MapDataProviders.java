@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -13,9 +14,11 @@ import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
+import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +41,15 @@ public class MapDataProviders {
 
     // per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
+    public void createBundledProvider(String id, String filename) {
+        String completeId = "bundled:" + id;
+        JsonProvider provider = JsonProvider.loadBundledResource(completeId, filename);
+        registerProvider(completeId, provider);
+    }
+
     public void createLocalProvider(String id, String filename) {
         String completeId = "local:" + id;
-        JsonProvider provider = JsonProvider.loadLocalResource(completeId, filename);
+        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(filename));
         registerProvider(completeId, provider);
     }
 
@@ -61,6 +70,7 @@ public class MapDataProviders {
         registerBuiltInProvider(new CombatListProvider());
         registerBuiltInProvider(new PlaceListProvider());
         registerBuiltInProvider(new CharacterProvider());
+        registerBuiltInProvider(new WaypointsProvider());
     }
 
     private void registerBuiltInProvider(BuiltInProvider provider) {
@@ -68,6 +78,10 @@ public class MapDataProviders {
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {
+        if (provider == null) {
+            WynntilsMod.warn("Provider missing for '" + providerId + "'");
+            return;
+        }
         if (!allProviders.containsKey(providerId)) {
             // It is not previously known, so add it last
             providerOrder.add(providerId);

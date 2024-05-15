@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -27,6 +28,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.PlayerStatus;
+import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -57,6 +59,19 @@ public final class HadesService extends Service {
 
     public HadesService() {
         super(List.of());
+    }
+
+    public Stream<PlayerMainMapPoi> getPlayerPois() {
+        return getHadesUsers()
+                .filter(hadesUser -> (hadesUser.isPartyMember()
+                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                        .renderRemotePartyPlayers
+                                        .get())
+                        || (hadesUser.isMutualFriend()
+                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                        .renderRemoteFriendPlayers
+                                        .get()))
+                .map(PlayerMainMapPoi::new);
     }
 
     public Stream<HadesUser> getHadesUsers() {

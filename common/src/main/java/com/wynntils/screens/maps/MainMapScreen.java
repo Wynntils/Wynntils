@@ -17,7 +17,6 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
-import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
@@ -305,20 +304,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
-        pois = Stream.concat(
-                pois,
-                Services.Hades.getHadesUsers()
-                        .filter(
-                                hadesUser -> (hadesUser.isPartyMember()
-                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                                        .renderRemotePartyPlayers
-                                                        .get())
-                                        || (hadesUser.isMutualFriend()
-                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                                        .renderRemoteFriendPlayers
-                                                        .get())
-                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
-                        .map(PlayerMainMapPoi::new));
+        pois = Stream.concat(pois, Services.Hades.getPlayerPois());
 
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
