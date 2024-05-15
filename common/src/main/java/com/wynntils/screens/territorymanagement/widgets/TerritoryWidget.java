@@ -31,8 +31,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
-    private static final int ITEM_SIZE = 22;
-
     private final TerritoryManagementHolder holder;
     private final TerritoryColor territoryColor;
     private final ItemStack itemStack;
@@ -93,8 +91,10 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
         }
 
         // Center the item
-        int itemRenderX = this.getX() + (this.getWidth() - ITEM_SIZE) / 2;
-        int itemRenderY = this.getY() + (this.getHeight() - ITEM_SIZE) / 2;
+        int itemWidth = (int) (this.getWidth() * 0.9f);
+        int itemHeight = (int) (this.getHeight() * 0.9f);
+        int itemRenderX = this.getX() + (this.getWidth() - itemWidth) / 2;
+        int itemRenderY = this.getY() + (this.getHeight() - itemHeight) / 2;
 
         // Render at the center of the widget
         RenderUtils.drawScalingTexturedRect(
@@ -103,8 +103,8 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
                 itemRenderX,
                 itemRenderY,
                 0,
-                ITEM_SIZE,
-                ITEM_SIZE,
+                itemWidth,
+                itemHeight,
                 texture.width(),
                 texture.height());
 
@@ -135,8 +135,8 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
                                 this.getY() + this.getHeight(),
                                 0,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.CENTER,
-                                VerticalAlignment.MIDDLE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.TOP,
                                 TextShadow.NORMAL);
             } else {
                 // Render the production types in two lines, 2 icons per line
@@ -161,6 +161,12 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
             String shortTerritoryName = Arrays.stream(territoryItem.getName().split(" "))
                     .map(s -> s.substring(0, 1))
                     .collect(Collectors.joining());
+
+            int maxTextWidth = (int) (this.getWidth() * 0.85f);
+            int textWidth = FontRenderer.getInstance().getFont().width(shortTerritoryName);
+
+            float textScale = Math.min(0.95f, maxTextWidth / (float) textWidth);
+
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics.pose(),
@@ -174,7 +180,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
                             HorizontalAlignment.RIGHT,
                             VerticalAlignment.BOTTOM,
                             TextShadow.OUTLINE,
-                            0.95f);
+                            textScale);
         }
     }
 
