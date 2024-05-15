@@ -291,11 +291,6 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(-wrappedScreenInfo.screen().leftPos, -wrappedScreenInfo.screen().topPos, 0);
-        wrappedScreenInfo.screen().render(guiGraphics, mouseX, mouseY, partialTick);
-        guiGraphics.pose().popPose();
-
         // Screen background
         RenderUtils.drawTexturedRect(
                 guiGraphics.pose(), Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());

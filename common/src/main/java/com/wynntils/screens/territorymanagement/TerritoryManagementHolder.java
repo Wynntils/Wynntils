@@ -344,10 +344,8 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     public void territoryItemClicked(TerritoryItem territoryItem) {
         if (selectionMode) {
             if (selectedTerritories.contains(territoryItem.getName())) {
-                System.out.println("Removing territory: " + territoryItem.getName());
                 selectedTerritories.remove(territoryItem.getName());
             } else {
-                System.out.println("Adding territory: " + territoryItem.getName());
                 selectedTerritories.add(territoryItem.getName());
             }
         } else {
