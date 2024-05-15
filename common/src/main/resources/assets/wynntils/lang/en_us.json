@@ -423,6 +423,7 @@
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.description": "What should happen when you press the territory management button while holding shift?",
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.name": "Shift Behavior on Territory Management button",
   "feature.wynntils.customTerritoryManagementScreen.sorts": "Quick Sorts",
+  "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper": "Hold shift to see total surplus/deficit",
   "feature.wynntils.customTradeMarketResultScreen.description": "Adds a custom trade market result screen where you can use Wynntils filters to filter the results.",
   "feature.wynntils.customTradeMarketResultScreen.name": "Custom Trade Market Result Screen",
   "feature.wynntils.customTradeMarketResultScreen.shiftBehaviorConfig.description": "What should happen when you press the search button while holding shift?",

@@ -143,9 +143,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                             button,
                             wrappedScreenInfo.containerMenu().getItems());
                 },
-                List.of(Component.translatable("gui.back")
-                        .withStyle(ChatFormatting.GRAY)
-                        .withStyle(ChatFormatting.BOLD)),
+                List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
                 false));
 
         // Territory production tooltip disable button
@@ -161,10 +159,13 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                             .screenTerritoryProductionTooltip;
                     screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
                 },
-                List.of(Component.translatable(
-                                "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
-                        .withStyle(ChatFormatting.GRAY)
-                        .withStyle(ChatFormatting.BOLD)),
+                List.of(
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
+                                .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper")
+                                .withStyle(ChatFormatting.GRAY)),
                 false));
 
         // Highlight legend disable button
@@ -182,8 +183,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 },
                 List.of(Component.translatable(
                                 "feature.wynntils.customTerritoryManagementScreen.disableHighlightLegend")
-                        .withStyle(ChatFormatting.GRAY)
-                        .withStyle(ChatFormatting.BOLD)),
+                        .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
                 false));
 
         if (!holder.isSelectionMode()) {
