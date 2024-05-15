@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.type;
 
+import com.wynntils.utils.mc.ComponentUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -11,7 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 public enum AccountType {
     NORMAL(null),
     BANNED(null),
-    DONATOR(Component.literal("Wynntils Donator").withStyle(ChatFormatting.LIGHT_PURPLE)),
+    DONATOR(Component.literal("Wynntils Donator")),
     CONTENT_TEAM(Component.literal("Wynntils CT").withStyle(ChatFormatting.DARK_AQUA)),
     TRANSLATOR(Component.literal("Wynntils Translator").withStyle(ChatFormatting.DARK_AQUA)),
     HELPER(Component.literal("Wynntils Helper").withStyle(ChatFormatting.GREEN)),
@@ -29,6 +30,15 @@ public enum AccountType {
     }
 
     public MutableComponent getComponent() {
+        if (this == DONATOR) {
+            return ComponentUtils.makeRainbowStyle(component.getString());
+        }
+
+        // FIXME: Remove when Athena account types are properly implemented
+        if (this == MODERATOR) {
+            return DEVELOPER.getComponent();
+        }
+
         return component;
     }
 }

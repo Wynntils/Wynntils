@@ -13,6 +13,8 @@ import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.InsulatorItem;
+import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -52,9 +54,24 @@ public class MythicFoundFeature extends Feature {
             return;
         }
 
-        // Lootrun reward
+        // Lootrun rewards
+        boolean validLootrunMythic = false;
         Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItem.isPresent()) {
+            validLootrunMythic = true;
+        }
+
+        Optional<InsulatorItem> insulatorItem = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
+        if (insulatorItem.isPresent()) {
+            validLootrunMythic = true;
+        }
+
+        Optional<SimulatorItem> simulatorItem = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
+        if (simulatorItem.isPresent()) {
+            validLootrunMythic = true;
+        }
+
+        if (validLootrunMythic) {
             sendLootrunDryStreakMessage(
                     StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
         }
