@@ -7,7 +7,6 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -39,26 +38,17 @@ public class PerCharacterGuildContributionFeature extends Feature {
     public final Config<Boolean> hideContributionMessage = new Config<>(true);
 
     private boolean waitingForCommandResponse = false;
-    private String currentCharacterId = "";
 
     @SubscribeEvent
     public void onCharacterChange(CharacterUpdateEvent e) {
         if (Models.Guild.getGuildName().isEmpty()) return;
-        if (currentCharacterId.equals(Models.Character.getId())) return;
 
-        currentCharacterId = Models.Character.getId();
-
-        int amountToContribute = characterContributions.get().getOrDefault(currentCharacterId, -1);
+        int amountToContribute = characterContributions.get().getOrDefault(Models.Character.getId(), -1);
 
         if (amountToContribute != -1) {
             waitingForCommandResponse = true;
             Handlers.Command.queueCommand("guild xp " + amountToContribute);
         }
-    }
-
-    @SubscribeEvent
-    public void disconnected(WynncraftConnectionEvent.Disconnected e) {
-        currentCharacterId = "";
     }
 
     @SubscribeEvent

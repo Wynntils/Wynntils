@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -46,6 +46,9 @@ public class CustomPlayerListOverlay extends Overlay {
 
     @Persisted
     public final Config<Integer> openingDuration = new Config<>(125);
+
+    @Persisted
+    public final Config<Boolean> showWorldInStream = new Config<>(false);
 
     private final AnimationPercentage animationPercentage = new AnimationPercentage(
             McUtils.options().keyPlayerList::isDown, Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
@@ -113,7 +116,15 @@ public class CustomPlayerListOverlay extends Overlay {
         float categoryStart = getRenderY() + 18;
         renderCategoryTitle(poseStack, "Friends", currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
-        renderCategoryTitle(poseStack, Models.WorldState.getCurrentWorldName(), currentDist, categoryStart);
+        String worldCategory = Models.WorldState.onHousing()
+                ? Models.WorldState.getCurrentHousingName()
+                : Models.WorldState.getCurrentWorldName();
+
+        if (!showWorldInStream.get() && Models.WorldState.isInStream()) {
+            worldCategory = "-";
+        }
+
+        renderCategoryTitle(poseStack, worldCategory, currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
         renderCategoryTitle(poseStack, "Party", currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;

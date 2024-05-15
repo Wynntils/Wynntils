@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.placement;
@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Edge;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -208,10 +209,20 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
                 float renderX = overlay.getRenderX() + xOffset;
                 float renderY = overlay.getRenderY() + yOffset;
+
+                String textToRender = overlay.getTranslatedName();
+
+                // Show the custom name for info boxes/custom bars if given
+                if (overlay instanceof CustomNameProperty customNameProperty) {
+                    if (!customNameProperty.getCustomName().get().isEmpty()) {
+                        textToRender = customNameProperty.getCustomName().get();
+                    }
+                }
+
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                StyledText.fromString(overlay.getTranslatedName()),
+                                StyledText.fromString(textToRender),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,

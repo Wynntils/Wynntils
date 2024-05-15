@@ -30,6 +30,8 @@ import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.InsulatorItem;
+import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
@@ -306,12 +308,28 @@ public class LootrunModel extends Model {
             if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
+                boolean foundLootrunMythic = false;
                 Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-                if (gearItemOpt.isEmpty()) return;
+                if (gearItemOpt.isPresent()) {
+                    GearItem gearItem = gearItemOpt.get();
 
-                GearItem gearItem = gearItemOpt.get();
+                    if (gearItem.getGearTier() == GearTier.MYTHIC) {
+                        foundLootrunMythic = true;
+                    }
+                }
 
-                if (gearItem.getGearTier() == GearTier.MYTHIC) {
+                // No need to check tier for these as they are only mythic
+                Optional<InsulatorItem> insulatorItemOpt = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
+                if (insulatorItemOpt.isPresent()) {
+                    foundLootrunMythic = true;
+                }
+
+                Optional<SimulatorItem> simulatorItemOpt = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
+                if (simulatorItemOpt.isPresent()) {
+                    foundLootrunMythic = true;
+                }
+
+                if (foundLootrunMythic) {
                     WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
                     dryPulls.store(0);
                 }

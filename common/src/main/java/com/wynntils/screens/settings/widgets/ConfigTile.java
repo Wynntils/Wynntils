@@ -24,7 +24,8 @@ import net.minecraft.network.chat.Component;
 public class ConfigTile extends WynntilsButton {
     private final WynntilsBookSettingsScreen settingsScreen;
     private final Config<?> config;
-
+    private final int maskTopY;
+    private final int maskBottomY;
     private final GeneralSettingsButton resetButton;
     private AbstractWidget configOptionElement;
 
@@ -32,10 +33,17 @@ public class ConfigTile extends WynntilsButton {
             int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, Config<?> config) {
         super(x, y, width, height, Component.literal(config.getJsonName()));
         this.settingsScreen = settingsScreen;
+        this.maskTopY = settingsScreen.getConfigMaskTopY();
+        this.maskBottomY = settingsScreen.getConfigMaskBottomY();
         this.config = config;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
-                config, () -> configOptionElement = getWidgetFromConfig(config), x + width - 40, getRenderY());
+                config,
+                () -> configOptionElement = getWidgetFromConfig(config),
+                x + width - 40,
+                getRenderY(),
+                maskTopY,
+                maskBottomY);
     }
 
     @Override
@@ -56,12 +64,7 @@ public class ConfigTile extends WynntilsButton {
                 0,
                 1);
 
-        poseStack.pushPose();
-        final int renderX = getRenderX();
-        final int renderY = getRenderY();
-        poseStack.translate(renderX, renderY, 0);
-        configOptionElement.render(guiGraphics, mouseX - renderX, mouseY - renderY, partialTick);
-        poseStack.popPose();
+        configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     private void renderDisplayName(PoseStack poseStack) {
@@ -86,29 +89,34 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
+        // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
         return resetButton.mouseClicked(mouseX, mouseY, button)
-                || configOptionElement.mouseClicked(actualMouseX, actualMouseY, button);
+                || configOptionElement.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
-        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY)
-                || super.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY);
+        return configOptionElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+                || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
-        return configOptionElement.mouseReleased(actualMouseX, actualMouseY, button)
-                || super.mouseReleased(actualMouseX, actualMouseY, button);
+        return configOptionElement.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        configOptionElement.setY(getRenderY());
+        resetButton.setY(getRenderY());
     }
 
     @Override
@@ -117,7 +125,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private int getRenderY() {
-        return this.getY() + 12;
+        return this.getY() + 19;
     }
 
     private int getRenderX() {
@@ -126,13 +134,22 @@ public class ConfigTile extends WynntilsButton {
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton((Config<Boolean>) configOption);
+            return new BooleanSettingsButton(
+                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>((Config<E>) configOption);
+            return new EnumSettingsButton<>(
+                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY);
         } else if (configOption.getType().equals(CustomColor.class)) {
-            return new CustomColorSettingsButton((Config<CustomColor>) configOption, settingsScreen);
+            return new CustomColorSettingsButton(
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<CustomColor>) configOption,
+                    settingsScreen,
+                    maskTopY,
+                    maskBottomY);
         } else {
-            return new TextInputBoxSettingsWidget<>(configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget<>(
+                    getRenderX(), getRenderY(), configOption, settingsScreen, maskTopY, maskBottomY);
         }
     }
 }

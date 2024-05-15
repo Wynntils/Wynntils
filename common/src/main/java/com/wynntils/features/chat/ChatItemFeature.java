@@ -26,15 +26,18 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.itemsharing.ItemSharingScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +73,9 @@ public class ChatItemFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> showSharingScreen = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showPerfectOrDefective = new Config<>(true);
 
     private final Map<String, String> chatItems = new HashMap<>();
 
@@ -274,11 +280,24 @@ public class ChatItemFeature extends Feature {
     private List<StyledTextPart> createItemPart(WynnItem wynnItem) {
         List<StyledTextPart> parts = new ArrayList<>();
 
-        String name = wynnItem.getClass().getSimpleName();
+        StyledText nameText = StyledText.fromString(wynnItem.getClass().getSimpleName());
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
-            name = namedItemProperty.getName();
+            nameText = StyledText.fromString(namedItemProperty.getName());
+
+            if (showPerfectOrDefective.get()) {
+                if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty) {
+                    if (identifiableItemProperty.isPerfect()) {
+                        nameText = StyledText.fromComponent(
+                                ComponentUtils.makeRainbowStyle("Perfect " + nameText.getString()));
+                    } else if (identifiableItemProperty.isDefective()) {
+                        nameText = StyledText.fromComponent(
+                                ComponentUtils.makeObfuscated("Defective " + nameText.getString(), 0, 0));
+                    }
+                }
+            }
         }
+
         if (wynnItem instanceof ShinyItemProperty shinyItemProperty
                 && shinyItemProperty.getShinyStat().isPresent()) {
             parts.add(new StyledTextPart("⬡ ", Style.EMPTY.withColor(ChatFormatting.WHITE), null, Style.EMPTY));
@@ -296,7 +315,12 @@ public class ChatItemFeature extends Feature {
         style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemHoverEvent));
 
         // Add the item name
-        parts.add(new StyledTextPart(name, style, null, Style.EMPTY));
+        StyledText appenedNameText =
+                StyledText.fromComponent(Component.empty().withStyle(style).append(nameText.getComponent()));
+        parts.addAll(Arrays.stream(appenedNameText.getPartsAsTextArray())
+                .map(StyledText::getFirstPart)
+                .map(part -> part.withStyle(part.getPartStyle().withUnderlined(true)))
+                .toList());
 
         return parts;
     }

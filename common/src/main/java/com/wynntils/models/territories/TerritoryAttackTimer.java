@@ -23,8 +23,9 @@ public record TerritoryAttackTimer(String territoryName, long timerEnd) {
         boolean isCurrentTerritory =
                 currentTerritory != null && currentTerritory.getName().equals(territoryName);
 
-        return ChatFormatting.GRAY.toString() + (isCurrentTerritory ? ChatFormatting.BOLD : "") + territoryName
-                + defenseColor + " (" + defenseString + ")" + ChatFormatting.AQUA + " " + timerString();
+        return ChatFormatting.GRAY
+                + (isCurrentTerritory ? ChatFormatting.DARK_PURPLE.toString() + ChatFormatting.BOLD : "")
+                + territoryName + defenseColor + " (" + defenseString + ")" + ChatFormatting.AQUA + " " + timerString();
     }
 
     public int getMinutesRemaining() {

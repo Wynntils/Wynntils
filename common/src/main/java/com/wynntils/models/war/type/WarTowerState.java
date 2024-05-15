@@ -15,4 +15,8 @@ import com.wynntils.utils.type.RangedValue;
  * @param attackSpeed the attack speed of the tower
  * @param timestamp   the timestamp of the state
  */
-public record WarTowerState(long health, double defense, RangedValue damage, double attackSpeed, long timestamp) {}
+public record WarTowerState(long health, double defense, RangedValue damage, double attackSpeed, long timestamp) {
+    public long effectiveHealth() {
+        return (long) Math.floor(health / (1d - defense / 100d));
+    }
+}

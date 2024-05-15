@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -34,6 +35,7 @@ import com.wynntils.models.containers.containers.personal.BlockBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
 import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.type.SearchableContainerProperty;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -43,6 +45,7 @@ import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -50,6 +53,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
@@ -131,6 +135,8 @@ public class ContainerSearchFeature extends Feature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerProperty currentContainer;
     private boolean autoSearching = false;
+    private boolean matchedItems = false;
+    private int direction = 0;
     private ItemSearchQuery lastSearchQuery;
 
     @SubscribeEvent
@@ -144,6 +150,8 @@ public class ContainerSearchFeature extends Feature {
 
         currentContainer = getCurrentSearchableContainer();
         if (currentContainer == null) return;
+
+        matchedItems = false;
 
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
@@ -165,7 +173,9 @@ public class ContainerSearchFeature extends Feature {
         if (currentContainer == null) return;
         forceUpdateSearch();
 
-        if (autoSearching && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
+        if (!matchedItems
+                && autoSearching
+                && McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             tryAutoSearch(abstractContainerScreen);
         }
     }
@@ -177,34 +187,64 @@ public class ContainerSearchFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onSlotClicked(ContainerClickEvent e) {
+        autoSearching = false;
+    }
+
+    @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
         lastSearchQuery = null;
         currentContainer = null;
         autoSearching = false;
+        matchedItems = false;
+        direction = 0;
         guildBankLastSearch = 0;
     }
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
-        if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
-        if (lastSearchWidget == null
-                || currentContainer == null
-                || currentContainer.getNextItemSlot() == -1
-                || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
+        // Don't want to be able to search whilst the edit widget is open
+        if (event.getKeyCode() == GLFW.GLFW_KEY_ENTER && !Models.Bank.isEditingName()) {
+            if (lastSearchWidget == null
+                    || lastSearchWidget.getTextBoxInput().isEmpty()
+                    || currentContainer == null
+                    || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                    || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
-        ScreenExtension screen = (ScreenExtension) abstractContainerScreen;
-        if (screen.getFocusedTextInput() != lastSearchWidget) return;
+            // Default to forwards
+            direction = 1;
 
-        autoSearching = true;
-        if (currentContainer.supportsAdvancedSearch()) {
-            matchItemsAdvanced(lastSearchQuery, chestMenu);
-        } else {
-            matchItemsBasic(lastSearchWidget.getTextBoxInput(), chestMenu);
+            StyledText nextItemName = StyledText.fromComponent(
+                    chestMenu.getItems().get(currentContainer.getNextItemSlot()).getHoverName());
+
+            // If next page item isn't found, go backwards
+            if (!nextItemName.matches(currentContainer.getNextItemPattern())) {
+                direction = -1;
+            }
+
+            // Set direction based on hovered slot
+            if (abstractContainerScreen.hoveredSlot != null) {
+                if (abstractContainerScreen.hoveredSlot.index == currentContainer.getNextItemSlot()) {
+                    direction = 1;
+                } else if (abstractContainerScreen.hoveredSlot.index == currentContainer.getPreviousItemSlot()) {
+                    direction = -1;
+                }
+            }
+
+            autoSearching = true;
+
+            if (KeyboardUtils.isShiftDown() && currentContainer instanceof PersonalStorageContainer) {
+                ContainerUtils.clickOnSlot(
+                        Models.Bank.QUICK_JUMP_FIRST_PAGE_SLOT,
+                        abstractContainerScreen.getMenu().containerId,
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        abstractContainerScreen.getMenu().getItems());
+                return;
+            }
+
+            tryAutoSearch(abstractContainerScreen);
         }
-
-        tryAutoSearch(abstractContainerScreen);
     }
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
@@ -219,19 +259,21 @@ public class ContainerSearchFeature extends Feature {
             guildBankLastSearch = System.currentTimeMillis();
         }
 
-        StyledText name = StyledText.fromComponent(abstractContainerScreen
-                .getMenu()
-                .getItems()
-                .get(currentContainer.getNextItemSlot())
-                .getHoverName());
+        int slot = direction == 1 ? currentContainer.getNextItemSlot() : currentContainer.getPreviousItemSlot();
 
-        if (!name.matches(currentContainer.getNextItemPattern())) {
+        StyledText name = StyledText.fromComponent(
+                abstractContainerScreen.getMenu().getItems().get(slot).getHoverName());
+
+        Pattern itemPattern =
+                direction == 1 ? currentContainer.getNextItemPattern() : currentContainer.getPreviousItemPattern();
+
+        if (!name.matches(itemPattern)) {
             autoSearching = false;
             return;
         }
 
         ContainerUtils.clickOnSlot(
-                currentContainer.getNextItemSlot(),
+                slot,
                 abstractContainerScreen.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
@@ -301,6 +343,8 @@ public class ContainerSearchFeature extends Feature {
     }
 
     private void matchItemsAdvanced(ItemSearchQuery searchQuery, ChestMenu chestMenu) {
+        matchedItems = false;
+
         if (searchQuery == null) return;
 
         Container container = chestMenu.getContainer();
@@ -316,13 +360,15 @@ public class ContainerSearchFeature extends Feature {
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {
-                autoSearching = false;
+                matchedItems = true;
             }
         }
     }
 
     private void matchItemsBasic(String searchStr, ChestMenu chestMenu) {
         String search = searchStr.toLowerCase(Locale.ROOT);
+
+        matchedItems = false;
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
@@ -340,7 +386,7 @@ public class ContainerSearchFeature extends Feature {
 
             wynnItemOpt.get().getData().store(WynnItemData.SEARCHED_KEY, filtered);
             if (filtered) {
-                autoSearching = false;
+                matchedItems = true;
             }
         }
     }

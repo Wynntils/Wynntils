@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
@@ -59,15 +59,18 @@ public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo,
     }
 
     @Override
-    public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+    public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean showItemType) {
         List<Component> footer = new ArrayList<>();
 
         footer.add(Component.empty());
 
         // tier & rerolls
         GearTier gearTier = tomeInfo.tier();
-        MutableComponent tier =
-                Component.literal(gearTier.getName() + " Raid Reward").withStyle(gearTier.getChatFormatting());
+        MutableComponent itemTypeName = showItemType ? Component.literal("Tome") : Component.literal("Raid Reward");
+        MutableComponent tier = Component.literal(gearTier.getName())
+                .withStyle(gearTier.getChatFormatting())
+                .append(" ")
+                .append(itemTypeName);
         if (tomeInstance != null && tomeInstance.rerolls() > 1) {
             tier.append(" [" + tomeInstance.rerolls() + "]");
         }

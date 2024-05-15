@@ -13,7 +13,6 @@ import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.spells.event.SpellEvent;
-import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.services.statistics.type.StatisticKind;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,8 +20,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class StatisticsCollectors {
     @SubscribeEvent
     public void onDamageDealtEvent(DamageDealtEvent event) {
-        int neutralDamage = event.getDamages().getOrDefault(DamageType.ALL, 0);
-        Services.Statistics.addToStatistics(StatisticKind.DAMAGE_DEALT, neutralDamage);
+        int damageSum = event.getDamages().values().stream().mapToInt(d -> d).sum();
+        Services.Statistics.addToStatistics(StatisticKind.DAMAGE_DEALT, damageSum);
     }
 
     @SubscribeEvent

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -112,7 +112,7 @@ public class ProfessionFunctions {
         public String getValue(FunctionArguments arguments) {
             Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-            if (lastHarvest.isEmpty()) return null;
+            if (lastHarvest.isEmpty()) return "";
 
             return lastHarvest.get().materialProfile().getResourceType().name();
         }
@@ -123,7 +123,7 @@ public class ProfessionFunctions {
         public String getValue(FunctionArguments arguments) {
             Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-            if (lastHarvest.isEmpty()) return null;
+            if (lastHarvest.isEmpty()) return "";
 
             return lastHarvest
                     .get()
@@ -139,7 +139,7 @@ public class ProfessionFunctions {
         public String getValue(FunctionArguments arguments) {
             Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-            if (lastHarvest.isEmpty()) return null;
+            if (lastHarvest.isEmpty()) return "";
 
             return lastHarvest.get().materialProfile().getSourceMaterial().name();
         }
@@ -150,7 +150,7 @@ public class ProfessionFunctions {
         public Integer getValue(FunctionArguments arguments) {
             Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-            if (lastHarvest.isEmpty()) return null;
+            if (lastHarvest.isEmpty()) return -1;
 
             return lastHarvest.get().materialProfile().getSourceMaterial().level();
         }
@@ -161,7 +161,7 @@ public class ProfessionFunctions {
         public Integer getValue(FunctionArguments arguments) {
             Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-            if (lastHarvest.isEmpty()) return null;
+            if (lastHarvest.isEmpty()) return -1;
 
             return lastHarvest.get().materialProfile().getTier();
         }
