@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/Wynntils/Artemis/compare/v1.2.8...v1.2.9) (2024-05-15)
+
+
+### New Features
+
+* UI updates to Territory Management Screen + significantly faster selection when there are multiple pages ([#2473](https://github.com/Wynntils/Artemis/issues/2473)) ([c5a0778](https://github.com/Wynntils/Artemis/commit/c5a077858b008f59f904df819db973435450b9c9))
+
 ## [1.2.8](https://github.com/Wynntils/Artemis/compare/v1.2.7...v1.2.8) (2024-05-14)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * Fix statistics overflowing ([#2499](https://github.com/Wynntils/Artemis/issues/2499)) ([c88d147](https://github.com/Wynntils/Artemis/commit/c88d1472c1ac59ce68d9323c973645acc2000fb8))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.8 [skip ci] ([2309e56](https://github.com/Wynntils/Artemis/commit/2309e5608e33f6385e6672473d5008ba5009544a))
 
 ## [1.2.7](https://github.com/Wynntils/Artemis/compare/v1.2.6...v1.2.7) (2024-05-14)
 
@@ -54,27 +66,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.5 [skip ci] ([f70aadd](https://github.com/Wynntils/Artemis/commit/f70aadd3d8687ec4c71e8a6dea785f52bc07739f))
-
-## [1.2.4](https://github.com/Wynntils/Artemis/compare/v1.2.3...v1.2.4) (2024-05-11)
-
-
-### New Features
-
-* Add custom names for info boxes and custom bars [skip ci] ([#2480](https://github.com/Wynntils/Artemis/issues/2480)) ([d6836c6](https://github.com/Wynntils/Artemis/commit/d6836c63ab91a897f953e8628150d5174fdf9d21))
-* Colour territory attack time if player is inside territory [skip ci] ([#2475](https://github.com/Wynntils/Artemis/issues/2475)) ([8908ae2](https://github.com/Wynntils/Artemis/commit/8908ae21b66221697a511be777a5b10faf2a65f7))
-
-
-### Bug Fixes
-
-* Don't overwrite current world name when entering housing [skip ci] ([#2477](https://github.com/Wynntils/Artemis/issues/2477)) ([3f1179a](https://github.com/Wynntils/Artemis/commit/3f1179a77edb9a29ad61e3f4fd1742d084521813))
-* Don't return null in profession last harvest functions [skip ci] ([#2479](https://github.com/Wynntils/Artemis/issues/2479)) ([4a46ba9](https://github.com/Wynntils/Artemis/commit/4a46ba98c94f198bed9cbfc3d33e6f582fb1e174))
-* Fix DeathCoordinatesFeature sending both the Wynn and the custom message [skip ci] ([#2478](https://github.com/Wynntils/Artemis/issues/2478)) ([87fd4f5](https://github.com/Wynntils/Artemis/commit/87fd4f56793d2061523d59b7f495ea805e0bfca8))
-* Fix ItemGuessFeature tooltip line being fully underlined incorrectly [skip ci] ([#2482](https://github.com/Wynntils/Artemis/issues/2482)) ([f9400cf](https://github.com/Wynntils/Artemis/commit/f9400cf5b2ff34196f4eb6b0d99292fa871216f8))
-* Fix transcription tooltip option not working correctly [skip ci] ([#2476](https://github.com/Wynntils/Artemis/issues/2476)) ([419aebe](https://github.com/Wynntils/Artemis/commit/419aebe49ae0cecc0b535ec337fbf24b69a4f95b))
-* Powder special charges do not reset on use [skip ci] ([#2481](https://github.com/Wynntils/Artemis/issues/2481)) ([cc4d773](https://github.com/Wynntils/Artemis/commit/cc4d7731759940cb06207594d3b3a7baf569cb84))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.4 [skip ci] ([b6e2b9d](https://github.com/Wynntils/Artemis/commit/b6e2b9dbf791eaef99a1cf8466097f2f3584f1ca))
 
