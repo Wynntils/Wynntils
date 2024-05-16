@@ -20,6 +20,7 @@ import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
+    // If adding a new bar, make sure to update CustomBarSelectionScreen
     @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<UniversalTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 
