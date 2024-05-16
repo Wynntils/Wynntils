@@ -50,7 +50,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
     }
 
     private <T extends MapVisibility> FullMapVisibility getVisibilityAttribute(Function<MapAttributes, T> getter) {
-        DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.DEFAULT_VISIBILITY);
+        DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.DEFAULT_ICON_VISIBILITY);
 
         // Check if the feature has overridden this attribute
         if (attributes != null) {
@@ -63,7 +63,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
                 derivedFeatureVisibility = derivedVisibility;
             } else {
                 WynntilsMod.warn("Unhandled visibility type #2: " + attribute.getClass());
-                return MapVisibility.DEFAULT_VISIBILITY;
+                return MapVisibility.DEFAULT_ICON_VISIBILITY;
             }
         }
 
@@ -71,7 +71,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         MapAttributes categoryAttributes = Services.MapData.getFullCategoryAttributes(feature.getCategoryId());
         if (categoryAttributes == null) {
             // No category attributes; return the default visibility with the derived feature visibility applied
-            return MapVisibility.DEFAULT_VISIBILITY.applyDerived(derivedFeatureVisibility);
+            return MapVisibility.DEFAULT_ICON_VISIBILITY.applyDerived(derivedFeatureVisibility);
         }
 
         MapVisibility categoryVisibility = getter.apply(categoryAttributes);
@@ -79,12 +79,12 @@ public class FullFeatureAttributes extends DerivedAttributes {
         if (categoryVisibility instanceof FullMapVisibility fullCategoryVisibility) {
             return fullCategoryVisibility.applyDerived(derivedFeatureVisibility);
         } else if (categoryVisibility instanceof DerivedMapVisibility derivedCategoryVisibility) {
-            return MapVisibility.DEFAULT_VISIBILITY
+            return MapVisibility.DEFAULT_ICON_VISIBILITY
                     .applyDerived(derivedCategoryVisibility)
                     .applyDerived(derivedFeatureVisibility);
         } else {
             WynntilsMod.warn("Unhandled visibility type #3: " + categoryVisibility.getClass());
-            return MapVisibility.DEFAULT_VISIBILITY;
+            return MapVisibility.DEFAULT_ICON_VISIBILITY;
         }
     }
 }

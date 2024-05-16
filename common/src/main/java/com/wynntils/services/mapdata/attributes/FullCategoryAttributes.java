@@ -74,12 +74,12 @@ public class FullCategoryAttributes extends DerivedAttributes {
                 } else {
                     WynntilsMod.warn(
                             "Unhandled visibility type #1: " + visibility.get().getClass());
-                    return MapVisibility.DEFAULT_VISIBILITY;
+                    return MapVisibility.DEFAULT_ICON_VISIBILITY;
                 }
             }
         }
 
-        FullMapVisibility result = MapVisibility.DEFAULT_VISIBILITY;
+        FullMapVisibility result = MapVisibility.DEFAULT_ICON_VISIBILITY;
 
         if (!visibilityStack.isEmpty()) {
             for (DerivedMapVisibility derivedVisibility : visibilityStack) {
