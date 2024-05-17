@@ -2216,7 +2216,7 @@
   "screens.wynntils.overlaySelection.deleteTooltip": "Delete currently selected overlay",
   "screens.wynntils.overlaySelection.edit": "Edit",
   "screens.wynntils.overlaySelection.editName": "Left click while selected to edit name",
-  "screens.wynntils.overlaySelection.editTooltip": "Edit the position of size of selected overlay",
+  "screens.wynntils.overlaySelection.editTooltip": "Edit the position and size of selected overlay",
   "screens.wynntils.overlaySelection.exitPreview": "Exit Preview",
   "screens.wynntils.overlaySelection.exitPreviewTooltip": "Return to overlay selection",
   "screens.wynntils.overlaySelection.freeMove": "Free Move",

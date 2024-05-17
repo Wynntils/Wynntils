@@ -829,7 +829,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 Texture.PAPER_BUTTON_BOTTOM.width(),
                 Texture.PAPER_BUTTON_BOTTOM.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.freeMove")),
-                (button) -> McUtils.mc().setScreen(OverlayManagementScreen.create(this)),
+                (button) -> {
+                    Managers.Config.saveConfig();
+                    McUtils.mc().setScreen(OverlayManagementScreen.create(this));
+                },
                 List.of(Component.translatable("screens.wynntils.overlaySelection.freeMoveTooltip")),
                 Texture.PAPER_BUTTON_BOTTOM,
                 false));
@@ -880,6 +883,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.edit")),
                     (button) -> {
                         if (selectedOverlay != null) {
+                            Managers.Config.saveConfig();
                             McUtils.mc().setScreen(OverlayManagementScreen.create(this, selectedOverlay));
                         }
                     },
