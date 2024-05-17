@@ -8,10 +8,11 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import java.util.List;
 
 public interface MapFeature {
-    // Required. The id should be unique, and track the provenance of the feature
+    // Required
+    // The id should be unique, and track the provenance of the feature
     String getFeatureId();
 
-    // Required.
+    // Required
     String getCategoryId();
 
     // Optional

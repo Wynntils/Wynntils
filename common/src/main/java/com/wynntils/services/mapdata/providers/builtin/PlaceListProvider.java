@@ -29,13 +29,13 @@ public class PlaceListProvider extends BuiltInProvider {
     }
 
     public static void registerFeature(Label label) {
-        PROVIDED_FEATURES.add(new ServiceLocation(label));
+        PROVIDED_FEATURES.add(new PlaceLocation(label));
     }
 
-    private static final class ServiceLocation implements MapLocation {
+    private static final class PlaceLocation implements MapLocation {
         private final Label label;
 
-        public ServiceLocation(Label label) {
+        private PlaceLocation(Label label) {
             this.label = label;
         }
 

@@ -18,6 +18,7 @@ import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
+import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
@@ -737,5 +738,24 @@ public class TestRegex {
         PatternTester p = new PatternTester(GuildSeasonLeaderboardLabelParser.class, "GUILD_SEASON_LEADERBOARD_LABEL");
         p.shouldMatch("§6§l1§7 - §bIdiot Co§d (11 396 656 SR)");
         p.shouldMatch("§62§7 - §bSequoia§d (11 057 047 SR)");
+    }
+
+    @Test
+    public void GearAnnotator_GEAR_PATTERN() {
+        PatternTester p = new PatternTester(GearAnnotator.class, "GEAR_PATTERN");
+
+        // Unidentified
+        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Crusade Sabatons");
+        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Gaia");
+        p.shouldMatch("§5Unidentified Idol");
+        p.shouldMatch("§5Unidentified Nirvana");
+        p.shouldMatch("§bUnidentified Follow the Wind");
+
+        // Identified
+        p.shouldMatch("§5Apocalypse");
+        p.shouldMatch("§cRhythm of the Seasons");
+        p.shouldMatch("§f⬡ §5Shiny Stratiformis");
+        p.shouldMatch("§f⬡ §5Shiny Aftershock");
+        p.shouldMatch("§f⬡ §5Shiny Crusade Sabatons");
     }
 }

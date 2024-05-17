@@ -21,6 +21,7 @@ import com.wynntils.models.containers.type.LootChestType;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -186,6 +187,21 @@ public class MainMapFeature extends Feature {
                             .withStyle(ChatFormatting.AQUA));
 
             customPois.touched();
+            updateWaypoints();
         }
+    }
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        if (config == customPois) {
+            updateWaypoints();
+        }
+    }
+
+    public void updateWaypoints() {
+        WaypointsProvider.resetFeatures();
+        customPois.get().forEach(customPoi -> {
+            WaypointsProvider.registerFeature(customPoi);
+        });
     }
 }
