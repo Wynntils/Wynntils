@@ -461,7 +461,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         }
 
         if (!overlayList.contains(selectedOverlay)) {
-            setSelectedOverlay(null);
+            // Don't deselect custom overlays as they will always fail the above check
+            if (filterType == FilterType.BUILT_IN
+                    || !(selectedOverlay instanceof CustomBarOverlayBase
+                            || selectedOverlay instanceof InfoBoxOverlay)) {
+                setSelectedOverlay(null);
+            }
         }
 
         int yPos = 31;
