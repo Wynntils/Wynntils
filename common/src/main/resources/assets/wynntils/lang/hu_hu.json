@@ -260,7 +260,6 @@
   "screens.wynntils.lootruns.lootrunButton.viewInFolder": "Középső kattintás a lootrun megnyitásához a mappában",
   "screens.wynntils.lootruns.name": "Lootrunok",
   "screens.wynntils.lootruns.noLootruns": "Nem találtunk lootrunokat! Próbáld megváltoztatni a keresett kifejezést vagy töltsd újra a lootrunokat a jobb felső sarokban lévő gomb megnyomásával..",
-  "screens.wynntils.overlaySelection.overlays": "Képernyőrátétek",
   "screens.wynntils.wynntilsQuestBook.lootruns.description": "Kattints ide hogy megnézd a lootrunjaid.",
   "screens.wynntils.wynntilsQuestBook.lootruns.name": "Lootrunok"
 }
