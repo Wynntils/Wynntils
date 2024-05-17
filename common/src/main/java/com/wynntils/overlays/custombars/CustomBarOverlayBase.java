@@ -11,11 +11,12 @@ import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNameProperty {
-    @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.customName")
-    public final Config<String> customName = new Config<>("");
+    @Persisted
+    public final HiddenConfig<String> customName = new HiddenConfig<>("");
 
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
     public final Config<String> textTemplate = new Config<>("");
@@ -62,6 +63,11 @@ public abstract class CustomBarOverlayBase extends BarOverlay implements CustomN
     @Override
     public Config<String> getCustomName() {
         return customName;
+    }
+
+    @Override
+    public void setCustomName(String newName) {
+        customName.setValue(newName);
     }
 
     protected abstract BarOverlayTemplatePair getActualPreviewTemplate();
