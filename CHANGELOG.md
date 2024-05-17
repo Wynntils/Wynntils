@@ -1,9 +1,28 @@
+## [1.2.10](https://github.com/Wynntils/Artemis/compare/v1.2.9...v1.2.10) (2024-05-17)
+
+
+### New Features
+
+* Add visibility handling to MapData [skip ci] ([#2493](https://github.com/Wynntils/Artemis/issues/2493)) ([7d606a8](https://github.com/Wynntils/Artemis/commit/7d606a842589b8c958b50d2e0e485ba0673ae09a))
+* Overlay selection & management screen redesign ([#2502](https://github.com/Wynntils/Artemis/issues/2502)) ([010f5a6](https://github.com/Wynntils/Artemis/commit/010f5a61f68a244af34b04dbef19376afb0c3160))
+
+
+### Bug Fixes
+
+* Detect TCC failure correctly [skip ci] ([#2505](https://github.com/Wynntils/Artemis/issues/2505)) ([6acb4a9](https://github.com/Wynntils/Artemis/commit/6acb4a9fed2d1fdf5394c52cdd3089f50b209cd2))
+* Parse unidentified shiny items correctly [skip ci] ([#2503](https://github.com/Wynntils/Artemis/issues/2503)) ([1bec7fe](https://github.com/Wynntils/Artemis/commit/1bec7fe6389b77110619786a0b40557c6c42503f))
+
 ## [1.2.9](https://github.com/Wynntils/Artemis/compare/v1.2.8...v1.2.9) (2024-05-15)
 
 
 ### New Features
 
 * UI updates to Territory Management Screen + significantly faster selection when there are multiple pages ([#2473](https://github.com/Wynntils/Artemis/issues/2473)) ([c5a0778](https://github.com/Wynntils/Artemis/commit/c5a077858b008f59f904df819db973435450b9c9))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.9 [skip ci] ([b0544b2](https://github.com/Wynntils/Artemis/commit/b0544b25d4cc6687203734f8fcd406bb34e51ddb))
 
 ## [1.2.8](https://github.com/Wynntils/Artemis/compare/v1.2.7...v1.2.8) (2024-05-14)
 
@@ -54,16 +73,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.6 [skip ci] ([e9d8dc7](https://github.com/Wynntils/Artemis/commit/e9d8dc74a964bf12c6573ecbafa5b76c4c9e528e))
-
-## [1.2.5](https://github.com/Wynntils/Artemis/compare/v1.2.4...v1.2.5) (2024-05-12)
-
-
-### New Features
-
-* Backwards container searching and resume search after match ([#2483](https://github.com/Wynntils/Artemis/issues/2483)) ([fbe04ae](https://github.com/Wynntils/Artemis/commit/fbe04ae5e5fc2e773ebc9f815e1c6fcd0c7e12e3))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.5 [skip ci] ([f70aadd](https://github.com/Wynntils/Artemis/commit/f70aadd3d8687ec4c71e8a6dea785f52bc07739f))
 
