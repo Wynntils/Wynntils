@@ -10,7 +10,6 @@ import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
-import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -310,9 +309,9 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class PlaceCategory implements MapCategory {
-        private static final MapVisibility PROVINCE_VISIBILITY = new FullMapVisibility(0, 32, 3);
-        private static final MapVisibility CITY_VISIBILITY = new FullMapVisibility(0, 74, 3);
-        private static final MapVisibility PLACE_VISIBILITY = new FullMapVisibility(32, 86, 3);
+        private static final MapVisibility PROVINCE_VISIBILITY = DerivedMapVisibility.withMax(32f);
+        private static final MapVisibility CITY_VISIBILITY = DerivedMapVisibility.withMax(74f);
+        private static final MapVisibility PLACE_VISIBILITY = DerivedMapVisibility.withMinMax(32f, 86f);
 
         private final Label.LabelLayer layer;
 
