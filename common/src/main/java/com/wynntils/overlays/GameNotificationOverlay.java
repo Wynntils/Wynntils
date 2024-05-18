@@ -160,7 +160,9 @@ public class GameNotificationOverlay extends Overlay {
                                                 .getRenderTask()
                                                 .getSetting()
                                                 .customColor()
-                                                .withAlpha(messageContainer.getRemainingTime() / 1000f))))
+                                                // A minimum alpha is required, otherwise too small values render with
+                                                // max alpha
+                                                .withAlpha(messageContainer.getRemainingTime() / 1000f + 0.01f))))
                                 .toList(),
                         this.getWidth(),
                         this.getHeight(),
