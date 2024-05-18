@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
@@ -46,14 +47,6 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         implements SortableActivityScreen {
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
-    // Filters
-    private boolean showFoundSecrets = true;
-    private boolean showUndiscoveredSecrets = false;
-    private boolean showFoundWorld = true;
-    private boolean showUndiscoveredWorld = false;
-    private boolean showFoundTerritory = true;
-    private boolean showUndiscoveredTerritory = false;
-
     private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
 
     private WynntilsDiscoveriesScreen() {
@@ -74,8 +67,23 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         }
     }
 
+    // Called when the screen is closed
     @Override
     public void onClose() {
+        cleanupOnClose();
+
+        super.onClose();
+    }
+
+    // Called when the screen is "overwritten" by another screen
+    @Override
+    public void removed() {
+        cleanupOnClose();
+
+        super.removed();
+    }
+
+    private void cleanupOnClose() {
         WynntilsMod.unregisterEventListener(this);
 
         if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
@@ -83,12 +91,11 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 .get()) {
             Handlers.ContainerQuery.endAllQueries();
         }
-
-        super.onClose();
     }
 
     @Override
     protected void doInit() {
+        // FIXME: Only query the types of discoveries that are currently being shown
         Models.Discovery.reloadDiscoveries();
 
         super.doInit();
@@ -108,10 +115,12 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showFoundTerritory = !showFoundTerritory;
+                    Storage<Boolean> territorySelected =
+                            Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).territorySelected;
+                    territorySelected.store(!territorySelected.get());
                     reloadElements();
                 },
-                () -> showFoundTerritory));
+                this::isShowingTerritory));
         filterButtons.add(new FilterButton(
                 70,
                 125,
@@ -125,10 +134,12 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showFoundWorld = !showFoundWorld;
+                    Storage<Boolean> worldSelected =
+                            Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).worldSelected;
+                    worldSelected.store(!worldSelected.get());
                     reloadElements();
                 },
-                () -> showFoundWorld));
+                this::isShowingWorld));
         filterButtons.add(new FilterButton(
                 105,
                 125,
@@ -142,10 +153,12 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showFoundSecrets = !showFoundSecrets;
+                    Storage<Boolean> secretsSelected =
+                            Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).secretsSelected;
+                    secretsSelected.store(!secretsSelected.get());
                     reloadElements();
                 },
-                () -> showFoundSecrets));
+                this::isShowingSecrets));
         filterButtons.add(new FilterButton(
                 35,
                 160,
@@ -159,10 +172,13 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showUndiscoveredTerritory = !showUndiscoveredTerritory;
+                    Storage<Boolean> undiscoveredTerritorySelected = Managers.Feature.getFeatureInstance(
+                                    WynntilsContentBookFeature.class)
+                            .undiscoveredTerritorySelected;
+                    undiscoveredTerritorySelected.store(!undiscoveredTerritorySelected.get());
                     reloadElements();
                 },
-                () -> showUndiscoveredTerritory));
+                this::isShowingUndiscoveredTerritory));
         filterButtons.add(new FilterButton(
                 70,
                 160,
@@ -176,10 +192,13 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showUndiscoveredWorld = !showUndiscoveredWorld;
+                    Storage<Boolean> undiscoveredWorldSelected = Managers.Feature.getFeatureInstance(
+                                    WynntilsContentBookFeature.class)
+                            .undiscoveredWorldSelected;
+                    undiscoveredWorldSelected.store(!undiscoveredWorldSelected.get());
                     reloadElements();
                 },
-                () -> showUndiscoveredWorld));
+                this::isShowingUndiscoveredWorld));
         filterButtons.add(new FilterButton(
                 105,
                 160,
@@ -193,10 +212,13 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showUndiscoveredSecrets = !showUndiscoveredSecrets;
+                    Storage<Boolean> undiscoveredSecretsSelected = Managers.Feature.getFeatureInstance(
+                                    WynntilsContentBookFeature.class)
+                            .undiscoveredSecretsSelected;
+                    undiscoveredSecretsSelected.store(!undiscoveredSecretsSelected.get());
                     reloadElements();
                 },
-                () -> showUndiscoveredSecrets));
+                this::isShowingUndiscoveredSecrets));
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -312,15 +334,15 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                         Models.Discovery.getAllDiscoveries(activitySortOrder)
                                 .filter(discoveryInfo -> !discoveryInfo.isDiscovered())
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
-                                    case TERRITORY -> showUndiscoveredTerritory;
-                                    case WORLD -> showUndiscoveredWorld;
-                                    case SECRET -> showUndiscoveredSecrets;
+                                    case TERRITORY -> isShowingUndiscoveredTerritory();
+                                    case WORLD -> isShowingUndiscoveredWorld();
+                                    case SECRET -> isShowingUndiscoveredSecrets();
                                 }),
                         Models.Discovery.getAllCompletedDiscoveries(activitySortOrder)
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
-                                    case TERRITORY -> showFoundTerritory;
-                                    case WORLD -> showFoundWorld;
-                                    case SECRET -> showFoundSecrets;
+                                    case TERRITORY -> isShowingTerritory();
+                                    case WORLD -> isShowingWorld();
+                                    case SECRET -> isShowingSecrets();
                                 }))
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
                 .toList());
@@ -344,5 +366,41 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
         this.activitySortOrder = newSortOrder;
         this.setCurrentPage(0);
+    }
+
+    private boolean isShowingSecrets() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .secretsSelected
+                .get();
+    }
+
+    private boolean isShowingUndiscoveredSecrets() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .undiscoveredSecretsSelected
+                .get();
+    }
+
+    private boolean isShowingWorld() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .worldSelected
+                .get();
+    }
+
+    private boolean isShowingUndiscoveredWorld() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .undiscoveredWorldSelected
+                .get();
+    }
+
+    private boolean isShowingTerritory() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .territorySelected
+                .get();
+    }
+
+    private boolean isShowingUndiscoveredTerritory() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .undiscoveredTerritorySelected
+                .get();
     }
 }
