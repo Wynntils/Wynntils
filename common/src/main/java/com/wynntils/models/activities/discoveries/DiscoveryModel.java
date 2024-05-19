@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
@@ -85,14 +85,22 @@ public final class DiscoveryModel extends Model {
         Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
-    private void queryDiscoveries() {
+    private void queryDiscoveries(
+            boolean querySecretDiscoveries, boolean queryWorldDiscoveries, boolean queryTerritoryDiscoveries) {
         WynntilsMod.info("Requesting rescan of discoveries in Content Book");
 
         // This order is a bit arbitrary, but it's the order they appear in the Content Book,
         // so we can use this as a workaround to parse them faster.
-        Models.Activity.scanContentBook(ActivityType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
-        Models.Activity.scanContentBook(ActivityType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
-        Models.Activity.scanContentBook(ActivityType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
+        if (querySecretDiscoveries) {
+            Models.Activity.scanContentBook(ActivityType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
+        }
+        if (queryWorldDiscoveries) {
+            Models.Activity.scanContentBook(ActivityType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+        }
+        if (queryTerritoryDiscoveries) {
+            Models.Activity.scanContentBook(
+                    ActivityType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
+        }
     }
 
     private void updateTerritoryDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
@@ -231,8 +239,9 @@ public final class DiscoveryModel extends Model {
         });
     }
 
-    public void reloadDiscoveries() {
-        queryDiscoveries();
+    public void reloadDiscoveries(
+            boolean querySecretDiscoveries, boolean queryWorldDiscoveries, boolean queryTerritoryDiscoveries) {
+        queryDiscoveries(querySecretDiscoveries, queryWorldDiscoveries, queryTerritoryDiscoveries);
     }
 
     public enum DiscoveryOpenAction {

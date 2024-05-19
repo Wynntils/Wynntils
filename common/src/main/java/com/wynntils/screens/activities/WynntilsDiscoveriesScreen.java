@@ -95,8 +95,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
     @Override
     protected void doInit() {
-        // FIXME: Only query the types of discoveries that are currently being shown
-        Models.Discovery.reloadDiscoveries();
+        Models.Discovery.reloadDiscoveries(isShowingSecrets(), isShowingWorld(), isShowingTerritory());
 
         super.doInit();
 
@@ -119,6 +118,11 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                             Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).territorySelected;
                     territorySelected.store(!territorySelected.get());
                     reloadElements();
+
+                    // Scan territories, if it's the first time we're showing them
+                    if (territorySelected.get()) {
+                        Models.Discovery.reloadDiscoveries(false, false, true);
+                    }
                 },
                 this::isShowingTerritory));
         filterButtons.add(new FilterButton(
@@ -138,6 +142,11 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                             Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).worldSelected;
                     worldSelected.store(!worldSelected.get());
                     reloadElements();
+
+                    // Scan world discoveries, if it's the first time we're showing them
+                    if (worldSelected.get()) {
+                        Models.Discovery.reloadDiscoveries(false, true, false);
+                    }
                 },
                 this::isShowingWorld));
         filterButtons.add(new FilterButton(
@@ -157,6 +166,11 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                             Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).secretsSelected;
                     secretsSelected.store(!secretsSelected.get());
                     reloadElements();
+
+                    // Scan secret discoveries, if it's the first time we're showing them
+                    if (secretsSelected.get()) {
+                        Models.Discovery.reloadDiscoveries(true, false, false);
+                    }
                 },
                 this::isShowingSecrets));
         filterButtons.add(new FilterButton(
@@ -233,7 +247,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "discovery",
-                Models.Discovery::reloadDiscoveries));
+                () -> Models.Discovery.reloadDiscoveries(isShowingSecrets(), isShowingWorld(), isShowingTerritory())));
 
         this.addRenderableWidget(new SortOrderWidget(
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1,
