@@ -135,7 +135,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                     reloadElements();
 
                     // Scan quests, if it's the first time we're showing them
-                    // FIXME: Only scan if we're showing quests for the first time
                     if (questsSelected.get()) {
                         Models.Quest.rescanQuestBook(true, false);
                     }
@@ -160,7 +159,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                     reloadElements();
 
                     // Scan mini quests, if it's the first time we're showing them
-                    // FIXME: Only scan if we're showing mini quests for the first time
                     if (miniQuestsSelected.get()) {
                         Models.Quest.rescanQuestBook(false, true);
                     }
