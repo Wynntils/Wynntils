@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
@@ -17,38 +17,26 @@ import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DiscoveryModel extends Model {
     // From container query updates
-    private List<DiscoveryInfo> territoryDiscoveries = List.of();
-    private List<DiscoveryInfo> worldDiscoveries = List.of();
-    private List<DiscoveryInfo> secretDiscoveries = List.of();
-    private List<StyledText> territoryDiscoveriesTooltip = List.of();
-    private List<StyledText> worldDiscoveriesTooltip = List.of();
-    private List<StyledText> secretDiscoveriesTooltip = List.of();
+    private final Map<String, DiscoveryStorage> discoveryStorage = new HashMap<>();
 
     public DiscoveryModel() {
         super(List.of());
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onWorldStateChanged(WorldStateEvent e) {
-        territoryDiscoveries = List.of();
-        worldDiscoveries = List.of();
-        secretDiscoveries = List.of();
     }
 
     public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
@@ -85,14 +73,22 @@ public final class DiscoveryModel extends Model {
         Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
     }
 
-    private void queryDiscoveries() {
+    private void queryDiscoveries(
+            boolean querySecretDiscoveries, boolean queryWorldDiscoveries, boolean queryTerritoryDiscoveries) {
         WynntilsMod.info("Requesting rescan of discoveries in Content Book");
 
         // This order is a bit arbitrary, but it's the order they appear in the Content Book,
         // so we can use this as a workaround to parse them faster.
-        Models.Activity.scanContentBook(ActivityType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
-        Models.Activity.scanContentBook(ActivityType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
-        Models.Activity.scanContentBook(ActivityType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
+        if (querySecretDiscoveries) {
+            Models.Activity.scanContentBook(ActivityType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
+        }
+        if (queryWorldDiscoveries) {
+            Models.Activity.scanContentBook(ActivityType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+        }
+        if (queryTerritoryDiscoveries) {
+            Models.Activity.scanContentBook(
+                    ActivityType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
+        }
     }
 
     private void updateTerritoryDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
@@ -106,8 +102,11 @@ public final class DiscoveryModel extends Model {
             newDiscoveries.add(discoveryInfo);
         }
 
-        territoryDiscoveries = newDiscoveries;
-        territoryDiscoveriesTooltip = progress;
+        discoveryStorage.put(
+                Models.Character.getId(),
+                discoveryStorage
+                        .getOrDefault(Models.Character.getId(), DiscoveryStorage.EMPTY)
+                        .with(DiscoveryType.TERRITORY, newDiscoveries, progress));
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.TERRITORIAL_DISCOVERY));
     }
 
@@ -122,8 +121,11 @@ public final class DiscoveryModel extends Model {
             newDiscoveries.add(discoveryInfo);
         }
 
-        worldDiscoveries = newDiscoveries;
-        worldDiscoveriesTooltip = progress;
+        discoveryStorage.put(
+                Models.Character.getId(),
+                discoveryStorage
+                        .getOrDefault(Models.Character.getId(), DiscoveryStorage.EMPTY)
+                        .with(DiscoveryType.WORLD, newDiscoveries, progress));
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.WORLD_DISCOVERY));
     }
 
@@ -138,8 +140,11 @@ public final class DiscoveryModel extends Model {
             newDiscoveries.add(discoveryInfo);
         }
 
-        secretDiscoveries = newDiscoveries;
-        secretDiscoveriesTooltip = progress;
+        discoveryStorage.put(
+                Models.Character.getId(),
+                discoveryStorage
+                        .getOrDefault(Models.Character.getId(), DiscoveryStorage.EMPTY)
+                        .with(DiscoveryType.SECRET, newDiscoveries, progress));
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.SECRET_DISCOVERY));
     }
 
@@ -149,13 +154,15 @@ public final class DiscoveryModel extends Model {
 
     public List<Component> getDiscoveriesTooltip() {
         return Stream.concat(
-                        territoryDiscoveriesTooltip.stream().map(StyledText::getComponent),
-                        worldDiscoveriesTooltip.stream().map(StyledText::getComponent))
+                        getTooltipForType(DiscoveryType.TERRITORY).stream().map(StyledText::getComponent),
+                        getTooltipForType(DiscoveryType.WORLD).stream().map(StyledText::getComponent))
                 .collect(Collectors.toList());
     }
 
     public List<Component> getSecretDiscoveriesTooltip() {
-        return secretDiscoveriesTooltip.stream().map(StyledText::getComponent).collect(Collectors.toList());
+        return getTooltipForType(DiscoveryType.SECRET).stream()
+                .map(StyledText::getComponent)
+                .collect(Collectors.toList());
     }
 
     public Stream<DiscoveryInfo> getAllDiscoveries(ActivitySortOrder sortOrder) {
@@ -165,8 +172,15 @@ public final class DiscoveryModel extends Model {
 
         // All discoveries are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
-        Stream<DiscoveryInfo> baseStream = Stream.concat(
-                Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()), secretDiscoveries.stream());
+        Stream<DiscoveryInfo> baseStream = Stream.of();
+        for (DiscoveryType type : DiscoveryType.values()) {
+            baseStream = Stream.concat(
+                    baseStream,
+                    discoveryStorage
+                            .getOrDefault(Models.Character.getId(), DiscoveryStorage.EMPTY)
+                            .getDiscoveries(type)
+                            .stream());
+        }
 
         return switch (sortOrder) {
             case LEVEL -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
@@ -181,6 +195,16 @@ public final class DiscoveryModel extends Model {
 
     public Stream<DiscoveryInfo> getAllCompletedDiscoveries(ActivitySortOrder sortOrder) {
         return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::isDiscovered);
+    }
+
+    public Stream<DiscoveryInfo> getAllDiscoveriesForType(DiscoveryType type) {
+        DiscoveryStorage storage = discoveryStorage.getOrDefault(Models.Character.getId(), DiscoveryStorage.EMPTY);
+        return storage.getDiscoveries(type).stream();
+    }
+
+    public List<StyledText> getTooltipForType(DiscoveryType type) {
+        DiscoveryStorage storage = discoveryStorage.getOrDefault(Models.Character.getId(), DiscoveryStorage.EMPTY);
+        return storage.getTooltip(type);
     }
 
     private void locateSecretDiscovery(String name, DiscoveryOpenAction action) {
@@ -231,8 +255,33 @@ public final class DiscoveryModel extends Model {
         });
     }
 
-    public void reloadDiscoveries() {
-        queryDiscoveries();
+    public void reloadDiscoveries(
+            boolean querySecretDiscoveries, boolean queryWorldDiscoveries, boolean queryTerritoryDiscoveries) {
+        queryDiscoveries(querySecretDiscoveries, queryWorldDiscoveries, queryTerritoryDiscoveries);
+    }
+
+    private record DiscoveryStorage(Map<DiscoveryType, Pair<List<DiscoveryInfo>, List<StyledText>>> storedInfoPerType) {
+        private static final DiscoveryStorage EMPTY = new DiscoveryStorage(Map.of());
+
+        private DiscoveryStorage with(DiscoveryType type, List<DiscoveryInfo> discoveries, List<StyledText> tooltip) {
+            Map<DiscoveryType, Pair<List<DiscoveryInfo>, List<StyledText>>> newStoredInfo =
+                    new HashMap<>(storedInfoPerType);
+            newStoredInfo.put(
+                    type, Pair.of(Collections.unmodifiableList(discoveries), Collections.unmodifiableList(tooltip)));
+            return new DiscoveryStorage(newStoredInfo);
+        }
+
+        private List<DiscoveryInfo> getDiscoveries(DiscoveryType type) {
+            return storedInfoPerType
+                    .getOrDefault(type, Pair.of(List.of(), List.of()))
+                    .key();
+        }
+
+        private List<StyledText> getTooltip(DiscoveryType type) {
+            return storedInfoPerType
+                    .getOrDefault(type, Pair.of(List.of(), List.of()))
+                    .value();
+        }
     }
 
     public enum DiscoveryOpenAction {
