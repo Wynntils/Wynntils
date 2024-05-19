@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
@@ -245,7 +245,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     public void reloadElements() {
         reloadElements(searchWidget.getTextBoxInput());
-        setCurrentPage(0);
+        // Set the current page to the same page, but with the new elements
+        // This will clamp the current page to the new max page
+        // But if the contents are the same, it will not change the page
+        setCurrentPage(getCurrentPage());
     }
 
     @Override

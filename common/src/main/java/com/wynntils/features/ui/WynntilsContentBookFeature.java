@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -100,6 +101,35 @@ public class WynntilsContentBookFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> cancelAllQueriesOnScreenClose = new Config<>(true);
+
+    // WynntilsQuestBookScreen storages
+    @Persisted
+    public final Storage<Boolean> questsSelected = new Storage<>(true);
+
+    @Persisted
+    public final Storage<Boolean> miniQuestsSelected = new Storage<>(false);
+
+    // WynntilsDiscoveriesScreen storages
+    // Note: These are intentionally not more advanced types, like Map<DiscoveryType, Boolean>,
+    // to allow easier changes in the future (when more discovery types are added).
+    // TODO: Change this when storage upfixers are implemented
+    @Persisted
+    public final Storage<Boolean> secretsSelected = new Storage<>(true);
+
+    @Persisted
+    public final Storage<Boolean> undiscoveredSecretsSelected = new Storage<>(false);
+
+    @Persisted
+    public final Storage<Boolean> worldSelected = new Storage<>(true);
+
+    @Persisted
+    public final Storage<Boolean> undiscoveredWorldSelected = new Storage<>(false);
+
+    @Persisted
+    public final Storage<Boolean> territorySelected = new Storage<>(true);
+
+    @Persisted
+    public final Storage<Boolean> undiscoveredTerritorySelected = new Storage<>(false);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
