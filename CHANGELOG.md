@@ -1,3 +1,16 @@
+## [1.2.11](https://github.com/Wynntils/Artemis/compare/v1.2.10...v1.2.11) (2024-05-19)
+
+
+### New Features
+
+* Content book QoL changes, speed fixes, (better) partial caching  ([#2507](https://github.com/Wynntils/Artemis/issues/2507)) ([1ebbbe3](https://github.com/Wynntils/Artemis/commit/1ebbbe3453ff67b127c3326d9ddc37c0dd122dde))
+
+
+### Bug Fixes
+
+* Fix GameNotificationOverlay flashing text before message is removed [skip ci] ([#2506](https://github.com/Wynntils/Artemis/issues/2506)) ([119ff15](https://github.com/Wynntils/Artemis/commit/119ff15cb7e432bd6b74e7921a2674e983129380))
+* Fix items being counted as defective, if they had no identifications [skip ci] ([#2509](https://github.com/Wynntils/Artemis/issues/2509)) ([cb8e4f2](https://github.com/Wynntils/Artemis/commit/cb8e4f23f16646aae603712825390bf15d02c567))
+
 ## [1.2.10](https://github.com/Wynntils/Artemis/compare/v1.2.9...v1.2.10) (2024-05-17)
 
 
@@ -11,6 +24,11 @@
 
 * Detect TCC failure correctly [skip ci] ([#2505](https://github.com/Wynntils/Artemis/issues/2505)) ([6acb4a9](https://github.com/Wynntils/Artemis/commit/6acb4a9fed2d1fdf5394c52cdd3089f50b209cd2))
 * Parse unidentified shiny items correctly [skip ci] ([#2503](https://github.com/Wynntils/Artemis/issues/2503)) ([1bec7fe](https://github.com/Wynntils/Artemis/commit/1bec7fe6389b77110619786a0b40557c6c42503f))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.10 [skip ci] ([d7b58c8](https://github.com/Wynntils/Artemis/commit/d7b58c89df80a9c94ee2821c2f7abe0da3047deb))
 
 ## [1.2.9](https://github.com/Wynntils/Artemis/compare/v1.2.8...v1.2.9) (2024-05-15)
 
@@ -61,16 +79,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.7 [skip ci] ([1c5c255](https://github.com/Wynntils/Artemis/commit/1c5c255116c49a03a4569df4377d84bb45b06f56))
-
-## [1.2.6](https://github.com/Wynntils/Artemis/compare/v1.2.5...v1.2.6) (2024-05-12)
-
-
-### New Features
-
-* Show item type for chat items, show perfect/defective ([#2485](https://github.com/Wynntils/Artemis/issues/2485)) ([b8e4a6d](https://github.com/Wynntils/Artemis/commit/b8e4a6d368329d41095543bd4678c5f6f052c728))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.6 [skip ci] ([e9d8dc7](https://github.com/Wynntils/Artemis/commit/e9d8dc74a964bf12c6573ecbafa5b76c4c9e528e))
 
