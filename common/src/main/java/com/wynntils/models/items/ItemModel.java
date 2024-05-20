@@ -39,7 +39,6 @@ import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
-import com.wynntils.models.items.annotators.gui.GuildTerritoryUpgradeAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
 import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
@@ -47,6 +46,7 @@ import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -88,7 +88,6 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
-        Handlers.Item.registerAnnotator(new GuildTerritoryUpgradeAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
         Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
@@ -96,6 +95,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryAnnotator());
+        Handlers.Item.registerAnnotator(new TerritoryUpgradeAnnotator());
 
         // ItemAnnotators
         // This must be done last
