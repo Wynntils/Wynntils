@@ -1,3 +1,15 @@
+## [1.2.12](https://github.com/Wynntils/Artemis/compare/v1.2.11...v1.2.12) (2024-05-20)
+
+
+### New Features
+
+* Annotate Guild Territory Upgrades ([#2512](https://github.com/Wynntils/Artemis/issues/2512)) ([1ca4c36](https://github.com/Wynntils/Artemis/commit/1ca4c36f4cd1f6eff53d6e12061b7ae83f1e33f2))
+
+
+### Bug Fixes
+
+* NPC dialogues not getting transcribed [skip ci] ([#2510](https://github.com/Wynntils/Artemis/issues/2510)) ([29cea14](https://github.com/Wynntils/Artemis/commit/29cea149e6246eec4a668b4e8b5f1fa48d2b0ce3))
+
 ## [1.2.11](https://github.com/Wynntils/Artemis/compare/v1.2.10...v1.2.11) (2024-05-19)
 
 
@@ -10,6 +22,11 @@
 
 * Fix GameNotificationOverlay flashing text before message is removed [skip ci] ([#2506](https://github.com/Wynntils/Artemis/issues/2506)) ([119ff15](https://github.com/Wynntils/Artemis/commit/119ff15cb7e432bd6b74e7921a2674e983129380))
 * Fix items being counted as defective, if they had no identifications [skip ci] ([#2509](https://github.com/Wynntils/Artemis/issues/2509)) ([cb8e4f2](https://github.com/Wynntils/Artemis/commit/cb8e4f23f16646aae603712825390bf15d02c567))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.11 [skip ci] ([cea310f](https://github.com/Wynntils/Artemis/commit/cea310f70a8c4fe4b39082d002e27be1f7ecb025))
 
 ## [1.2.10](https://github.com/Wynntils/Artemis/compare/v1.2.9...v1.2.10) (2024-05-17)
 
@@ -58,25 +75,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.8 [skip ci] ([2309e56](https://github.com/Wynntils/Artemis/commit/2309e5608e33f6385e6672473d5008ba5009544a))
-
-## [1.2.7](https://github.com/Wynntils/Artemis/compare/v1.2.6...v1.2.7) (2024-05-14)
-
-
-### New Features
-
-* Redirect Merchant Messages [skip ci] ([#2484](https://github.com/Wynntils/Artemis/issues/2484)) ([4c84325](https://github.com/Wynntils/Artemis/commit/4c843251158a23aa1e45fad2990c9ea732e104ac))
-
-
-### Bug Fixes
-
-* Detect insulators and simulators in mythic found feature [skip ci] ([#2487](https://github.com/Wynntils/Artemis/issues/2487)) ([61f03c8](https://github.com/Wynntils/Artemis/commit/61f03c8651445fa69f24d2397f216770a3ce72eb))
-* Detect raid failure from chat message [skip ci] ([#2496](https://github.com/Wynntils/Artemis/issues/2496)) ([4873261](https://github.com/Wynntils/Artemis/commit/48732612a167f52940a0743342f8575031981c40))
-* fix damage stat collecting neutral damage only ([#2497](https://github.com/Wynntils/Artemis/issues/2497)) ([759459a](https://github.com/Wynntils/Artemis/commit/759459a7d3ef4e40e733f6a17fe506b64d250802))
-* Handle streamer mode correctly in WorldStateModel [skip ci] ([#2491](https://github.com/Wynntils/Artemis/issues/2491)) ([964b17d](https://github.com/Wynntils/Artemis/commit/964b17dbf5a9f6e74a2fdbab425b21e1328ccc04))
-* Use scale in bomb bell overlay [skip ci] ([#2486](https://github.com/Wynntils/Artemis/issues/2486)) ([b3ac5eb](https://github.com/Wynntils/Artemis/commit/b3ac5eb2efede32e76851248764d7957de76720a))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.7 [skip ci] ([1c5c255](https://github.com/Wynntils/Artemis/commit/1c5c255116c49a03a4569df4377d84bb45b06f56))
 
