@@ -24,6 +24,7 @@ import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
@@ -585,6 +586,15 @@ public class TestRegex {
         p.shouldMatch("§8⬤ §7Vanish §a(00:04)");
         p.shouldMatch("§fⒺ§7 +250/3s Life Steal §8(00:41)");
         p.shouldMatch("§8⬤ §7Boiling Blood §a(00:02)");
+    }
+
+    @Test
+    public void TerritoryUpgradeAnnotator_TERRITORY_UPGRADE_PATTERN() {
+        PatternTester p = new PatternTester(TerritoryUpgradeAnnotator.class, "TERRITORY_UPGRADE_PATTERN");
+        p.shouldMatch("§6§lDamage §7[Lv. 10]");
+        p.shouldMatch("§d§lEmerald Rate §7[Lv. 2]");
+        p.shouldMatch("§d§lTower Aura §7[Lv. 3]§8 (Max)");
+        p.shouldMatch("§d§lEmerald Seeking §7[Lv. 5]§8 (Max)");
     }
 
     @Test
