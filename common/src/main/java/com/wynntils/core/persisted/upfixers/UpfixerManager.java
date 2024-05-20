@@ -27,87 +27,115 @@ import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMo
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class UpfixerManager extends Manager {
     public static final String UPFIXER_JSON_MEMBER_NAME = "wynntils.upfixers";
 
-    private final List<Upfixer> upfixers = new ArrayList<>();
+    private final List<Upfixer> configUpfixers = new ArrayList<>();
+    private final List<Upfixer> storageUpfixers = new ArrayList<>();
 
     public UpfixerManager() {
         super(List.of());
 
-        // Register upfixers here, in order of run priority
-        registerUpfixer(new CustomPoiVisbilityUpfixer());
-        registerUpfixer(new CustomCommandKeybindSlashStartUpfixer());
-        registerUpfixer(new GameBarOverlayMoveUpfixer());
-        registerUpfixer(new EnumNamingUpfixer());
-        registerUpfixer(new CustomPoiIconEnumBugUpfixer());
-        registerUpfixer(new QuestBookToContentRenamedConfigsUpfixer());
-        registerUpfixer(new MapToMainMapRenamedConfigsUpfixer());
-        registerUpfixer(new OverlayRestructuringUpfixer());
-        registerUpfixer(new OverlayConfigsIntegrationUpfixer());
-        registerUpfixer(new CustomBankQuickJumpsUpfixer());
-        registerUpfixer(new CustomBankQuickJumpsBankNameUpfixer());
-        registerUpfixer(new NpcDialoguesRenamedUpfixer());
-        registerUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
-        registerUpfixer(new TowerAuraVignetteNameUpfixer());
-        registerUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
+        // Register config upfixers here, in order of run priority
+        registerConfigUpfixer(new CustomPoiVisbilityUpfixer());
+        registerConfigUpfixer(new CustomCommandKeybindSlashStartUpfixer());
+        registerConfigUpfixer(new GameBarOverlayMoveUpfixer());
+        registerConfigUpfixer(new EnumNamingUpfixer());
+        registerConfigUpfixer(new CustomPoiIconEnumBugUpfixer());
+        registerConfigUpfixer(new QuestBookToContentRenamedConfigsUpfixer());
+        registerConfigUpfixer(new MapToMainMapRenamedConfigsUpfixer());
+        registerConfigUpfixer(new OverlayRestructuringUpfixer());
+        registerConfigUpfixer(new OverlayConfigsIntegrationUpfixer());
+        registerConfigUpfixer(new CustomBankQuickJumpsUpfixer());
+        registerConfigUpfixer(new CustomBankQuickJumpsBankNameUpfixer());
+        registerConfigUpfixer(new NpcDialoguesRenamedUpfixer());
+        registerConfigUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
+        registerConfigUpfixer(new TowerAuraVignetteNameUpfixer());
+        registerConfigUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
+
+        // Register storage upfixers here, in order of run priority
     }
 
-    private void registerUpfixer(Upfixer upfixer) {
-        upfixers.add(upfixer);
+    private void registerConfigUpfixer(Upfixer upfixer) {
+        configUpfixers.add(upfixer);
+    }
+
+    private void registerStorageUpfixer(Upfixer upfixer) {
+        storageUpfixers.add(upfixer);
     }
 
     /**
-     * Runs all registered upfixers on the given config object.
+     * Runs all registered upfixers on the given persisted object.
      *
-     * @param configObject  The config object to run upfixers on.
-     * @param configs All registered configs
+     * @param persistedObject  The persisted object to run upfixers on.
+     * @param persistedValues All registered persisted values.
      */
-    public boolean runUpfixers(JsonObject configObject, Set<PersistedValue<?>> configs) {
-        List<Upfixer> missingUpfixers = getMissingUpfixers(configObject);
+    public boolean runUpfixers(
+            JsonObject persistedObject, Set<PersistedValue<?>> persistedValues, UpfixerType upfixerType) {
+        List<Upfixer> missingUpfixers = getMissingUpfixers(persistedObject, upfixerType);
 
         boolean anyChange = false;
 
         for (Upfixer upfixer : missingUpfixers) {
             try {
-                if (upfixer.apply(configObject, configs)) {
+                if (upfixer.apply(persistedObject, persistedValues)) {
                     anyChange = true;
-                    addUpfixerToConfig(configObject, upfixer);
-                    WynntilsMod.info("Applied upfixer \"" + upfixer.getUpfixerName() + "\" to config.");
+                    addUpfixerToPersistedFile(persistedObject, upfixer);
+                    WynntilsMod.info("Applied upfixer \"" + upfixer.getUpfixerName() + "\" to "
+                            + upfixerType.name().toLowerCase(Locale.ROOT) + " file.");
                 }
             } catch (Throwable t) {
-                WynntilsMod.warn("Failed to apply upfixer \"" + upfixer.getUpfixerName() + "\" to config file!", t);
+                WynntilsMod.warn(
+                        "Failed to apply upfixer \"" + upfixer.getUpfixerName() + "\" to "
+                                + upfixerType.name().toLowerCase(Locale.ROOT) + " file!",
+                        t);
             }
         }
 
         return anyChange;
     }
 
-    private void addUpfixerToConfig(JsonObject configObject, Upfixer upfixer) {
-        JsonArray upfixers = configObject.getAsJsonArray(UPFIXER_JSON_MEMBER_NAME);
+    private void addUpfixerToPersistedFile(JsonObject configObject, Upfixer upfixer) {
+        JsonElement upfixers = configObject.get(UPFIXER_JSON_MEMBER_NAME);
 
-        if (upfixers == null) {
+        if (upfixers == null || upfixers.isJsonNull()) {
+            upfixers = new JsonArray();
+            configObject.add(UPFIXER_JSON_MEMBER_NAME, upfixers);
+        } else if (!upfixers.isJsonArray()) {
+            WynntilsMod.warn("Invalid upfixer JSON member in config file! Expected array, got "
+                    + upfixers.getClass().getSimpleName());
+
+            // Try to proceed with a new array
             upfixers = new JsonArray();
             configObject.add(UPFIXER_JSON_MEMBER_NAME, upfixers);
         }
 
-        upfixers.add(upfixer.getUpfixerName());
+        upfixers.getAsJsonArray().add(upfixer.getUpfixerName());
     }
 
-    private List<Upfixer> getMissingUpfixers(JsonObject configObject) {
-        if (!configObject.has(UPFIXER_JSON_MEMBER_NAME)) return upfixers;
+    private List<Upfixer> getMissingUpfixers(JsonObject persistedObject, UpfixerType type) {
+        final List<Upfixer> typeUpfixers = type == UpfixerType.CONFIG ? configUpfixers : storageUpfixers;
 
-        JsonArray upfixers = configObject.getAsJsonArray(UPFIXER_JSON_MEMBER_NAME);
-        if (upfixers == null) return this.upfixers;
+        if (!persistedObject.has(UPFIXER_JSON_MEMBER_NAME)) return typeUpfixers;
+
+        JsonElement upfixersJson = persistedObject.get(UPFIXER_JSON_MEMBER_NAME);
+        if (upfixersJson == null || upfixersJson.isJsonNull()) return typeUpfixers;
+
+        if (!upfixersJson.isJsonArray()) {
+            WynntilsMod.warn("Invalid upfixer JSON member in " + type.name().toLowerCase(Locale.ROOT)
+                    + " file! Expected array, got " + upfixersJson.getClass().getSimpleName());
+            return typeUpfixers;
+        }
 
         List<String> appliedUpfixers = new ArrayList<>();
-        for (JsonElement upfixer : upfixers) {
+        for (JsonElement upfixer : upfixersJson.getAsJsonArray()) {
             appliedUpfixers.add(upfixer.getAsString());
         }
 
-        return this.upfixers.stream()
+        return typeUpfixers.stream()
                 .filter(upfixer -> !appliedUpfixers.contains(upfixer.getUpfixerName()))
                 .toList();
     }
