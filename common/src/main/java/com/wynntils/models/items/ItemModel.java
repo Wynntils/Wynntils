@@ -39,6 +39,7 @@ import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
+import com.wynntils.models.items.annotators.gui.GuildTerritoryUpgradeAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
 import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
@@ -87,6 +88,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
+        Handlers.Item.registerAnnotator(new GuildTerritoryUpgradeAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
         Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
