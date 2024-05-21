@@ -1022,13 +1022,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             }
         }
 
-        // Repopulate the configurables and configs after importing
+        // Repopulate the configurables after importing
         populateConfigurables();
-
-        // Don't need to populate configs if something is selected as populateConfigurables will call this
-        if (selectedConfigurable == null) {
-            populateConfigs();
-        }
     }
 
     private void exportSettings(int clicked) {
