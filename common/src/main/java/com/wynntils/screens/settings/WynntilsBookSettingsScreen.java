@@ -622,13 +622,19 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     public void setSelectedConfigurable(Configurable selectedConfigurable) {
+        boolean skipScroll = true;
+
         // Only reset offset when a new configurable is selected
         if (this.selectedConfigurable != selectedConfigurable) {
             configScrollOffset = 0;
+            skipScroll = false;
         }
 
         this.selectedConfigurable = selectedConfigurable;
         populateConfigs();
+
+        // If we are already on this configurable, then we don't want to scroll to any matching configs
+        if (skipScroll) return;
 
         // If there is a search query, scroll the configs list so that the matching config
         // is found unless the configurable itself matches the search query
