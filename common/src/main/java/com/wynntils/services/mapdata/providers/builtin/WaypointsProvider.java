@@ -53,7 +53,7 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     private static final class WaypointLocation implements MapLocation {
-        public static final MapVisibility WAYPOINT_VISIBILITY = new FullMapVisibility(30, 100, 6);
+        public static final MapVisibility WAYPOINT_VISIBILITY = DerivedMapVisibility.withMin(30f);
         private final Location location;
         private final String name;
         private final String iconId;

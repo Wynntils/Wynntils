@@ -63,7 +63,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
                 derivedFeatureVisibility = derivedVisibility;
             } else {
                 WynntilsMod.warn("Unhandled visibility type #2: " + attribute.getClass());
-                return MapVisibility.DEFAULT_ICON_VISIBILITY;
+                return MapVisibility.ALWAYS;
             }
         }
 
@@ -71,7 +71,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         MapAttributes categoryAttributes = Services.MapData.getFullCategoryAttributes(feature.getCategoryId());
         if (categoryAttributes == null) {
             // No category attributes; return the default visibility with the derived feature visibility applied
-            return MapVisibility.DEFAULT_ICON_VISIBILITY.applyDerived(derivedFeatureVisibility);
+            return MapVisibility.ALWAYS.applyDerived(derivedFeatureVisibility);
         }
 
         MapVisibility categoryVisibility = getter.apply(categoryAttributes);
@@ -79,12 +79,12 @@ public class FullFeatureAttributes extends DerivedAttributes {
         if (categoryVisibility instanceof FullMapVisibility fullCategoryVisibility) {
             return fullCategoryVisibility.applyDerived(derivedFeatureVisibility);
         } else if (categoryVisibility instanceof DerivedMapVisibility derivedCategoryVisibility) {
-            return MapVisibility.DEFAULT_ICON_VISIBILITY
+            return MapVisibility.ALWAYS
                     .applyDerived(derivedCategoryVisibility)
                     .applyDerived(derivedFeatureVisibility);
         } else {
             WynntilsMod.warn("Unhandled visibility type #3: " + categoryVisibility.getClass());
-            return MapVisibility.DEFAULT_ICON_VISIBILITY;
+            return MapVisibility.ALWAYS;
         }
     }
 }

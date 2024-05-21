@@ -80,7 +80,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public MapVisibility getIconVisibility() {
-                    return DEFAULT_ICON_VISIBILITY;
+                    return MapVisibility.DEFAULT_ICON_VISIBILITY;
                 }
 
                 @Override
