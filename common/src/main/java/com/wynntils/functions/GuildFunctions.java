@@ -14,7 +14,9 @@ public class GuildFunctions {
     public static class CappedGuildLevelPercentageFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return new CappedValue(Models.Guild.getGuildLevelPercentage(), 100);
+            int guildLevelPercentage = Models.Guild.getGuildLevelPercentage();
+            if (guildLevelPercentage < 0) return CappedValue.EMPTY;
+            return new CappedValue(guildLevelPercentage, 100);
         }
     }
 
