@@ -79,9 +79,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         if (categoryVisibility instanceof FullMapVisibility fullCategoryVisibility) {
             return fullCategoryVisibility.applyDerived(derivedFeatureVisibility);
         } else if (categoryVisibility instanceof DerivedMapVisibility derivedCategoryVisibility) {
-            return MapVisibility.ALWAYS
-                    .applyDerived(derivedCategoryVisibility)
-                    .applyDerived(derivedFeatureVisibility);
+            return MapVisibility.ALWAYS.applyDerived(derivedCategoryVisibility).applyDerived(derivedFeatureVisibility);
         } else {
             WynntilsMod.warn("Unhandled visibility type #3: " + categoryVisibility.getClass());
             return MapVisibility.ALWAYS;

@@ -52,9 +52,6 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class WynntilsCategory implements MapCategory {
-        private static final MapVisibility DEFAULT_ICON_VISIBILITY = MapVisibility.DEFAULT_ICON_VISIBILITY;
-        private static final MapVisibility DEFAULT_LABEL_VISIBILITY = MapVisibility.DEFAULT_LABEL_VISIBILITY;
-
         @Override
         public String getCategoryId() {
             return "wynntils";
@@ -85,7 +82,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public MapVisibility getLabelVisibility() {
-                    return DEFAULT_LABEL_VISIBILITY;
+                    return MapVisibility.DEFAULT_LABEL_VISIBILITY;
                 }
             };
         }

@@ -6,7 +6,7 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
+import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
