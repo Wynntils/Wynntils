@@ -352,6 +352,18 @@ public class TestRegex {
     }
 
     @Test
+    public void InfoBar_BOMB_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "BOMB_INFO_PATTERN");
+        p.shouldMatch("§3Double Profession Speed from §bCorkian§7 [§f2§7 min]");
+    }
+
+    @Test
+    public void InfoBar_GUILD_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "GUILD_INFO_PATTERN");
+        p.shouldMatch("§7Lv. 92§f - §bKingdom Foxes§f - §762% XP");
+    }
+
+    @Test
     public void InfoBar_TERRITORY_INFO_PATTERN() {
         PatternTester p = new PatternTester(InfoBar.class, "TERRITORY_INFO_PATTERN");
         p.shouldMatch("§aLutho§2 [PROF]");

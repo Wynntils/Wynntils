@@ -15,13 +15,13 @@ import java.util.regex.Pattern;
 public class InfoBar extends TrackedBar {
     // Test in InfoBar_TERRITORY_INFO_PATTERN
     private static final Pattern TERRITORY_INFO_PATTERN =
-            Pattern.compile("§[abc](?<territory>.+)§[234] \\[(?<tag>[A-Za-z]{3,4})\\]");
+            Pattern.compile("§[abc](?<territory>[a-zA-Z\\s]+)§[234] \\[(?<tag>[A-Za-z]{3,4})\\]");
 
-    // §7Lv. 92§f - §bKingdom Foxes§f - §762% XP
+    // Test in InfoBar_GUILD_INFO_PATTERN
     private static final Pattern GUILD_INFO_PATTERN =
-            Pattern.compile("§7Lv\\. (?<level>\\d+)§f - §b(?<guild>[a-zA-Z ]+)§f - §7(?<xp>\\d+)% XP");
+            Pattern.compile("§7Lv\\. (?<level>\\d+)§f - §b(?<guild>[a-zA-Z\\s]+)§f - §7(?<xp>\\d+)% XP");
 
-    // §3Double Profession Speed from §bCorkian§7 [§f2§7 min]
+    // Test in InfoBar_BOMB_INFO_PATTERN
     private static final Pattern BOMB_INFO_PATTERN =
             Pattern.compile("§3(?:Double )?(?<bomb>.+) from §b(?<user>.+)§7 \\[§f(?<length>\\d+)§7 min\\]");
 
