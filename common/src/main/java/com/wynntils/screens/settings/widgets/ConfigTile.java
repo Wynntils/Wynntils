@@ -102,7 +102,7 @@ public class ConfigTile extends WynntilsButton {
                         displayName,
                         getRenderX(),
                         this.getY() + 3,
-                        this.width,
+                        this.width - 3,
                         translationX,
                         translationY,
                         CommonColors.BLACK,
