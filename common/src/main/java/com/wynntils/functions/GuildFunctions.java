@@ -11,12 +11,10 @@ import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.type.CappedValue;
 
 public class GuildFunctions {
-    public static class CappedGuildLevelPercentageFunction extends Function<CappedValue> {
+    public static class CappedGuildLevelProgressFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            int guildLevelPercentage = Models.Guild.getGuildLevelPercentage();
-            if (guildLevelPercentage < 0) return CappedValue.EMPTY;
-            return new CappedValue(guildLevelPercentage, 100);
+            return Models.Guild.getGuildLevelProgress();
         }
     }
 

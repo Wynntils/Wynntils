@@ -503,7 +503,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
-        registerFunction(new GuildFunctions.CappedGuildLevelPercentageFunction());
+        registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
         registerFunction(new GuildFunctions.GuildLevelFunction());
         registerFunction(new GuildFunctions.GuildMemberFunction());
         registerFunction(new GuildFunctions.GuildNameFunction());

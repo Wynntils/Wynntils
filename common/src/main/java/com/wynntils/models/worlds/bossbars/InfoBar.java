@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +51,7 @@ public class InfoBar extends TrackedBar {
                             length));
         } else if (matcher.pattern().equals(GUILD_INFO_PATTERN)) {
             Models.Guild.setGuildLevel(Integer.parseInt(matcher.group("level")));
-            Models.Guild.setGuildLevelPercentage(Integer.parseInt(matcher.group("xp")));
+            Models.Guild.setGuildLevelProgress(new CappedValue(Integer.parseInt(matcher.group("xp")), 100));
         }
     }
 }
