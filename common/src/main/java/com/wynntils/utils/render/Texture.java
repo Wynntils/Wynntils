@@ -254,8 +254,6 @@ public enum Texture {
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
-    CROWD_SOURCE_BACKGROUND("ui_components/crowd_source_background.png", 180, 260),
-    CROWD_SOURCE_STICKER("ui_components/crowd_source_sticker.png", 36, 36),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
