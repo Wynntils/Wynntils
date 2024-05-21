@@ -50,7 +50,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
     }
 
     private <T extends MapVisibility> FullMapVisibility getVisibilityAttribute(Function<MapAttributes, T> getter) {
-        DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.DEFAULT_ICON_VISIBILITY);
+        DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.ALWAYS);
 
         // Check if the feature has overridden this attribute
         if (attributes != null) {
