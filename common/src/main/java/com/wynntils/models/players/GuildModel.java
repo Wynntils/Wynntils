@@ -67,6 +67,8 @@ public class GuildModel extends Model {
 
     private String guildName = "";
     private GuildRank guildRank;
+    private int guildLevel = -1;
+    private int guildLevelPercentage = -1;
 
     public GuildModel() {
         super(List.of());
@@ -86,6 +88,8 @@ public class GuildModel extends Model {
         if (message.matches(MSG_LEFT_GUILD)) {
             guildName = "";
             guildRank = null;
+            guildLevel = -1;
+            guildLevelPercentage = -1;
             WynntilsMod.info("User left guild");
             return;
         }
@@ -132,6 +136,22 @@ public class GuildModel extends Model {
 
     public GuildRank getGuildRank() {
         return guildRank;
+    }
+
+    public int getGuildLevel() {
+        return guildLevel;
+    }
+
+    public void setGuildLevel(int guildLevel) {
+        this.guildLevel = guildLevel;
+    }
+
+    public int getGuildLevelPercentage() {
+        return guildLevelPercentage;
+    }
+
+    public void setGuildLevelPercentage(int guildLevelPercentage) {
+        this.guildLevelPercentage = guildLevelPercentage;
     }
 
     public Optional<GuildProfile> getGuildProfile(String name) {
