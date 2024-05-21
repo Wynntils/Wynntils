@@ -167,8 +167,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                     BUTTON_HEIGHT,
                     Component.literal(type.getName()),
                     ticked,
-                    (int) (dividedWidth * 7) - 24,
-                    true);
+                    (int) (dividedWidth * 7) - 24);
 
             this.addRenderableWidget(newBox);
             recipientTypeBoxes.add(newBox);
