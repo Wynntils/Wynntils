@@ -594,7 +594,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     public void populateConfigs() {
         configs.clear();
-        configScrollOffset = 0;
 
         if (selectedConfigurable == null) return;
 
@@ -623,6 +622,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     public void setSelectedConfigurable(Configurable selectedConfigurable) {
+        // Only reset offset when a new configurable is selected
+        if (this.selectedConfigurable != selectedConfigurable) {
+            configScrollOffset = 0;
+        }
+
         this.selectedConfigurable = selectedConfigurable;
         populateConfigs();
 
@@ -1020,7 +1024,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         // Repopulate the configurables and configs after importing
         populateConfigurables();
-        populateConfigs();
+
+        // Don't need to populate configs if something is selected as populateConfigurables will call this
+        if (selectedConfigurable == null) {
+            populateConfigs();
+        }
     }
 
     private void exportSettings(int clicked) {
