@@ -10,6 +10,7 @@ import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
+import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -52,6 +53,9 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class WynntilsCategory implements MapCategory {
+        private static final MapVisibility DEFAULT_ICON_VISIBILITY = new FullMapVisibility(0, 100, 6);
+        private static final MapVisibility DEFAULT_LABEL_VISIBILITY = new FullMapVisibility(0, 100, 3);
+
         @Override
         public String getCategoryId() {
             return "wynntils";
@@ -77,12 +81,12 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public MapVisibility getIconVisibility() {
-                    return MapVisibility.ALWAYS;
+                    return DEFAULT_ICON_VISIBILITY;
                 }
 
                 @Override
                 public MapVisibility getLabelVisibility() {
-                    return MapVisibility.ALWAYS;
+                    return DEFAULT_LABEL_VISIBILITY;
                 }
             };
         }
