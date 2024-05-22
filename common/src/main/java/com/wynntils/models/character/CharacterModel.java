@@ -212,9 +212,11 @@ public final class CharacterModel extends Model {
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
         }
 
-        // Open Guild Menu
+        // Scan guild container, if the player is in a guild
         queryBuilder.conditionalThen(
+                // The guild name has already been parsed at this point
                 (container) -> !Models.Guild.getGuildName().isEmpty(),
+                // Open Guild Menu
                 QueryStep.clickOnSlot(GUILD_MENU_SLOT)
                         .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                         .processIncomingContainer(Models.Guild::parseGuildContainer));
