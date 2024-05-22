@@ -33,6 +33,7 @@ import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
+import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
@@ -348,6 +349,26 @@ public class TestRegex {
     public void GuildRankReplacementFeature_RECRUIT_USERNAME_PATTERN() {
         PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "RECRUIT_USERNAME_PATTERN");
         p.shouldMatch("§3[_user0name_");
+    }
+
+    @Test
+    public void InfoBar_BOMB_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "BOMB_INFO_PATTERN");
+        p.shouldMatch("§3Double Profession Speed from §bCorkian§7 [§f2§7 min]");
+    }
+
+    @Test
+    public void InfoBar_GUILD_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "GUILD_INFO_PATTERN");
+        p.shouldMatch("§7Lv. 92§f - §bKingdom Foxes§f - §762% XP");
+    }
+
+    @Test
+    public void InfoBar_TERRITORY_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "TERRITORY_INFO_PATTERN");
+        p.shouldMatch("§aLutho§2 [PROF]");
+        p.shouldMatch("§bCorkus City§3 [HOC]");
+        p.shouldMatch("§cDetlas§4 [AVO]");
     }
 
     @Test
