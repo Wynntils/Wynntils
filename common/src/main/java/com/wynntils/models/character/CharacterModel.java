@@ -213,9 +213,11 @@ public final class CharacterModel extends Model {
         }
 
         // Open Guild Menu
-        queryBuilder.then(QueryStep.clickOnSlot(GUILD_MENU_SLOT)
-                .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
-                .processIncomingContainer(Models.Guild::parseGuildContainer));
+        queryBuilder.conditionalThen(
+                (container) -> !Models.Guild.getGuildName().isEmpty(),
+                QueryStep.clickOnSlot(GUILD_MENU_SLOT)
+                        .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
+                        .processIncomingContainer(Models.Guild::parseGuildContainer));
 
         queryBuilder.build().executeQuery();
     }
