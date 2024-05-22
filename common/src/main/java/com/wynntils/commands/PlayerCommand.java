@@ -101,7 +101,8 @@ public class PlayerCommand extends Command {
                     if (player.guildJoinTimestamp() != null) {
                         try {
                             Date joinedDate = DATE_FORMAT.parse(player.guildJoinTimestamp());
-                            long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
+                            long differenceInMillis =
+                                    System.currentTimeMillis() - joinedDate.getTime() + getTimezoneOffset();
 
                             response.append(Component.literal("\nThey have been in the guild for ")
                                     .withStyle(ChatFormatting.GRAY)
@@ -155,7 +156,8 @@ public class PlayerCommand extends Command {
                 } else {
                     try {
                         Date joinedDate = DATE_FORMAT.parse(player.lastJoinTimestamp());
-                        long differenceInMillis = System.currentTimeMillis() - joinedDate.getTime();
+                        long differenceInMillis =
+                                System.currentTimeMillis() - joinedDate.getTime() + getTimezoneOffset();
 
                         response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
                                 .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
@@ -182,5 +184,9 @@ public class PlayerCommand extends Command {
     private int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
+    }
+
+    private long getTimezoneOffset() {
+        return ((long) new Date().getTimezoneOffset() * 60 * 1000);
     }
 }
