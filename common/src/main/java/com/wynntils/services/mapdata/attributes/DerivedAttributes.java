@@ -6,7 +6,6 @@ package com.wynntils.services.mapdata.attributes;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.function.Function;
@@ -37,11 +36,6 @@ public abstract class DerivedAttributes implements MapAttributes {
     }
 
     @Override
-    public MapVisibility getLabelVisibility() {
-        return getAttribute(MapAttributes::getLabelVisibility);
-    }
-
-    @Override
     public CustomColor getLabelColor() {
         return getAttribute(MapAttributes::getLabelColor);
     }
@@ -49,11 +43,6 @@ public abstract class DerivedAttributes implements MapAttributes {
     @Override
     public TextShadow getLabelShadow() {
         return getAttribute(MapAttributes::getLabelShadow);
-    }
-
-    @Override
-    public MapVisibility getIconVisibility() {
-        return getAttribute(MapAttributes::getIconVisibility);
     }
 
     @Override

@@ -267,13 +267,15 @@ public class MapFeaturePoiWrapper implements Poi {
 
         return 0;
     }
+
     private float getIconAlpha(float zoomLevel) {
         MapVisibility iconVisibility = attributes.getIconVisibility();
         if (iconVisibility == null) {
             // If no visibility is specified, always show
             return 1f;
         }
-        return calculateVisibility(iconVisibility.getMin(), iconVisibility.getMax(), iconVisibility.getFade(), zoomLevel);
+        return calculateVisibility(
+                iconVisibility.getMin(), iconVisibility.getMax(), iconVisibility.getFade(), zoomLevel);
     }
 
     private float getLabelAlpha(float zoomLevel) {
@@ -282,7 +284,8 @@ public class MapFeaturePoiWrapper implements Poi {
             // If no visibility is specified, always show
             return 1f;
         }
-        return calculateVisibility(labelVisibility.getMin(), labelVisibility.getMax(), labelVisibility.getFade(), zoomLevel);
+        return calculateVisibility(
+                labelVisibility.getMin(), labelVisibility.getMax(), labelVisibility.getFade(), zoomLevel);
     }
 
     private int getLabelHeight(float scale) {
