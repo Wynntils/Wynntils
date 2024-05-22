@@ -1,3 +1,26 @@
+## [1.2.13](https://github.com/Wynntils/Artemis/compare/v1.2.12...v1.2.13) (2024-05-22)
+
+
+### New Features
+
+* Add Guild Functions ([#2515](https://github.com/Wynntils/Artemis/issues/2515)) ([c837bfc](https://github.com/Wynntils/Artemis/commit/c837bfca678b7f83f4e36234ae9128d54b6cb8a3))
+
+
+### Bug Fixes
+
+* Scroll text fully in config tiles [skip ci] ([#2513](https://github.com/Wynntils/Artemis/issues/2513)) ([f9d963a](https://github.com/Wynntils/Artemis/commit/f9d963abec0d127a674d70c1acdede0b55430c4f))
+
+
+### Miscellaneous Chores
+
+* Add Storage upfixers [skip ci] ([#2511](https://github.com/Wynntils/Artemis/issues/2511)) ([e4d1133](https://github.com/Wynntils/Artemis/commit/e4d1133c937d79713a6fe067703f2654f6410697))
+* make the territory infobar pattern more strict, add tests [skip ci] ([#2514](https://github.com/Wynntils/Artemis/issues/2514)) ([d9d610a](https://github.com/Wynntils/Artemis/commit/d9d610aaa63261901d4532f4d12232164cb9d135))
+
+
+### Code Refactoring
+
+* MapData visibility inheritance refactoring [skip ci] ([#2500](https://github.com/Wynntils/Artemis/issues/2500)) ([cfa5ee4](https://github.com/Wynntils/Artemis/commit/cfa5ee4e77491f3ec95008cbfea7f0e4bfdbdc57))
+
 ## [1.2.12](https://github.com/Wynntils/Artemis/compare/v1.2.11...v1.2.12) (2024-05-20)
 
 
@@ -9,6 +32,11 @@
 ### Bug Fixes
 
 * NPC dialogues not getting transcribed [skip ci] ([#2510](https://github.com/Wynntils/Artemis/issues/2510)) ([29cea14](https://github.com/Wynntils/Artemis/commit/29cea149e6246eec4a668b4e8b5f1fa48d2b0ce3))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.12 [skip ci] ([c4e2a59](https://github.com/Wynntils/Artemis/commit/c4e2a590be52e22068a9907312b8b5f6083a4e93))
 
 ## [1.2.11](https://github.com/Wynntils/Artemis/compare/v1.2.10...v1.2.11) (2024-05-19)
 
@@ -58,21 +86,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.9 [skip ci] ([b0544b2](https://github.com/Wynntils/Artemis/commit/b0544b25d4cc6687203734f8fcd406bb34e51ddb))
-
-## [1.2.8](https://github.com/Wynntils/Artemis/compare/v1.2.7...v1.2.8) (2024-05-14)
-
-
-### New Features
-
-* Add rainbow donator tag, fix developer tags [skip ci] ([#2498](https://github.com/Wynntils/Artemis/issues/2498)) ([4d57fc0](https://github.com/Wynntils/Artemis/commit/4d57fc0d9217231d29d49cfdc832e1656dacdd9e))
-
-
-### Bug Fixes
-
-* Fix statistics overflowing ([#2499](https://github.com/Wynntils/Artemis/issues/2499)) ([c88d147](https://github.com/Wynntils/Artemis/commit/c88d1472c1ac59ce68d9323c973645acc2000fb8))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.8 [skip ci] ([2309e56](https://github.com/Wynntils/Artemis/commit/2309e5608e33f6385e6672473d5008ba5009544a))
 
