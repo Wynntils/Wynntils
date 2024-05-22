@@ -505,7 +505,6 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
         registerFunction(new GuildFunctions.GuildLevelFunction());
-        registerFunction(new GuildFunctions.GuildMemberFunction());
         registerFunction(new GuildFunctions.GuildNameFunction());
         registerFunction(new GuildFunctions.GuildRankFunction());
 

@@ -1703,8 +1703,6 @@
   "function.wynntils.generic.z.name": "Z Coordinate",
   "function.wynntils.guildLevel.description": "The Level of the Guild you are in",
   "function.wynntils.guildLevel.name": "Guild Level",
-  "function.wynntils.guildMember.description": "Whether or not you are in a Guild",
-  "function.wynntils.guildMember.name": "Guild Member",
   "function.wynntils.guildName.description": "The name of the Guild you are currently in",
   "function.wynntils.guildName.name": "Guild Name",
   "function.wynntils.guildRank.description": "Your Rank in the Guild you are currently in",

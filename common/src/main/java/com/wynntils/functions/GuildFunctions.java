@@ -25,13 +25,6 @@ public class GuildFunctions {
         }
     }
 
-    public static class GuildMemberFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return !Models.Guild.getGuildName().isEmpty();
-        }
-    }
-
     public static class GuildNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {

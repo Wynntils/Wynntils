@@ -193,10 +193,12 @@ public final class CharacterModel extends Model {
     private void scanCharacterInfo() {
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
+
         // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                 .processIncomingContainer(this::parseCharacterContainer));
+
         if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
             // Open Cosmetics Menu
             queryBuilder
@@ -209,6 +211,7 @@ public final class CharacterModel extends Model {
             WynntilsMod.info("Skipping silverbull subscription query ("
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
         }
+
         // Open Guild Menu
         queryBuilder.then(QueryStep.clickOnSlot(GUILD_MENU_SLOT)
                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
