@@ -319,6 +319,18 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_LEVEL_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "LEVEL_MATCHER");
+        p.shouldMatch("§b§lChiefs Of Corkus§3§l [Lv. 87]");
+    }
+
+    @Test
+    public void GuildModel_LEVEL_PROGRESS_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "LEVEL_PROGRESS_MATCHER");
+        p.shouldMatch("§f20,588,573,849§7/25,447,702,087 XP");
+    }
+
+    @Test
     public void GuildModel_MSG_LEFT_GUILD() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_LEFT_GUILD");
         p.shouldMatch("§3You have left §bExample Guild§3!");

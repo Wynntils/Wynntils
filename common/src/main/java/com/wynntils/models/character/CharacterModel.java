@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -56,7 +57,9 @@ public final class CharacterModel extends Model {
     public static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
-    private static final int GUILD_INFO_SLOT = 26;
+    private static final int COSMETICS_SLOT = 25;
+    private static final int COSMETICS_BACK_SLOT = 9;
+    private static final int GUILD_MENU_SLOT = 26;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -71,7 +74,8 @@ public final class CharacterModel extends Model {
     private boolean reskinned;
     private int level;
 
-    private boolean isVeteran = false;
+    @Persisted
+    private final Storage<Boolean> isVeteran = new Storage<>(false);
 
     @Persisted
     public final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
@@ -122,7 +126,7 @@ public final class CharacterModel extends Model {
     }
 
     public boolean isVeteran() {
-        return isVeteran;
+        return isVeteran.get();
     }
 
     public boolean isHuntedMode() {
@@ -153,13 +157,7 @@ public final class CharacterModel extends Model {
 
             WynntilsMod.info("Scheduling character info query");
             // We need to scan character info and profession info as well.
-            scanCharacterInfoPage();
-            if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
-                scanSilverbullSubscriptionItem();
-            } else {
-                WynntilsMod.info("Skipping silverbull subscription query ("
-                        + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
-            }
+            scanCharacterInfo();
         }
     }
 
@@ -192,36 +190,44 @@ public final class CharacterModel extends Model {
         }
     }
 
-    private void scanCharacterInfoPage() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
-                .onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg))
+    private void scanCharacterInfo() {
+        QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
+        queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
 
-                // Open compass/character menu
-                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
-                        .processIncomingContainer(this::parseCharacterContainer))
-                .build();
+        // Open compass/character menu
+        queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                .processIncomingContainer(this::parseCharacterContainer));
 
-        query.executeQuery();
-    }
+        if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
+            // Open Cosmetics Menu
+            queryBuilder
+                    .then(QueryStep.clickOnSlot(COSMETICS_SLOT)
+                            .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
+                            .processIncomingContainer(this::parseCratesBombsCosmeticsContainer))
+                    .then(QueryStep.clickOnSlot(COSMETICS_BACK_SLOT)
+                            .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME));
+        } else {
+            WynntilsMod.info("Skipping silverbull subscription query ("
+                    + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
+        }
 
-    private void scanSilverbullSubscriptionItem() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Silverbull Subscription Query")
-                .onError(msg -> WynntilsMod.warn("Error querying Silverbull subscription: " + msg))
+        // Scan guild container, if the player is in a guild
+        queryBuilder.conditionalThen(
+                // The guild name has already been parsed at this point
+                (container) -> !Models.Guild.getGuildName().isEmpty(),
+                // Open Guild Menu
+                QueryStep.clickOnSlot(GUILD_MENU_SLOT)
+                        .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
+                        .processIncomingContainer(Models.Guild::parseGuildContainer));
 
-                // Open /use menu
-                .then(QueryStep.sendCommand("use")
-                        .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
-                        .processIncomingContainer(this::parseCratesBombsCosmeticsContainer))
-                .build();
-
-        query.executeQuery();
+        queryBuilder.build().executeQuery();
     }
 
     private void parseCharacterContainer(ContainerContent container) {
         ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
         ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
-        ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
+        ItemStack guildInfoItem = container.items().get(GUILD_MENU_SLOT);
 
         Models.Profession.resetValueFromItem(professionInfoItem);
         Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
@@ -237,7 +243,7 @@ public final class CharacterModel extends Model {
 
         Matcher veteran = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, VETERAN_PATTERN);
 
-        isVeteran = veteran.matches();
+        isVeteran.store(veteran.matches());
 
         Matcher status = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
         if (!status.matches()) {
