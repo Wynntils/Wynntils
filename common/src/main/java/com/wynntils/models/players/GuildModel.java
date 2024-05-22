@@ -47,17 +47,17 @@ public class GuildModel extends Model {
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
-    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("§3([a-zA-Z ]*?)§b \\[[a-zA-Z]{3,4}]");
+    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("^§3([a-zA-Z\\s]+?)§b \\[[a-zA-Z]{3,4}]$");
 
     // Test in GuildModel_GUILD_RANK_MATCHER
     private static final Pattern GUILD_RANK_MATCHER =
             Pattern.compile("^§7Rank: §f(Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
     // Test in GuildModel_MSG_LEFT_GUILD
-    private static final Pattern MSG_LEFT_GUILD = Pattern.compile("§3You have left §b[a-zA-Z ]*§3!");
+    private static final Pattern MSG_LEFT_GUILD = Pattern.compile("^§3You have left §b[a-zA-Z\\s]+§3!$");
 
     // Test in GuildModel_MSG_JOINED_GUILD
-    private static final Pattern MSG_JOINED_GUILD = Pattern.compile("§3You have joined §b([a-zA-Z ]*)§3!");
+    private static final Pattern MSG_JOINED_GUILD = Pattern.compile("^§3You have joined §b([a-zA-Z\\s]+)§3!$");
 
     // Test in GuildModel_MSG_RANK_CHANGED
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(

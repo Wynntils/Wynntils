@@ -18,11 +18,13 @@ import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
+import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
@@ -31,6 +33,7 @@ import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
+import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
@@ -349,6 +352,26 @@ public class TestRegex {
     }
 
     @Test
+    public void InfoBar_BOMB_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "BOMB_INFO_PATTERN");
+        p.shouldMatch("§3Double Profession Speed from §bCorkian§7 [§f2§7 min]");
+    }
+
+    @Test
+    public void InfoBar_GUILD_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "GUILD_INFO_PATTERN");
+        p.shouldMatch("§7Lv. 92§f - §bKingdom Foxes§f - §762% XP");
+    }
+
+    @Test
+    public void InfoBar_TERRITORY_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "TERRITORY_INFO_PATTERN");
+        p.shouldMatch("§aLutho§2 [PROF]");
+        p.shouldMatch("§bCorkus City§3 [HOC]");
+        p.shouldMatch("§cDetlas§4 [AVO]");
+    }
+
+    @Test
     public void IngredientAnnotator_INGREDIENT_PATTERN() {
         PatternTester p = new PatternTester(IngredientAnnotator.class, "INGREDIENT_PATTERN");
         p.shouldMatch("§7Perkish Potato [§8✫✫✫§7]");
@@ -587,6 +610,15 @@ public class TestRegex {
     }
 
     @Test
+    public void TerritoryUpgradeAnnotator_TERRITORY_UPGRADE_PATTERN() {
+        PatternTester p = new PatternTester(TerritoryUpgradeAnnotator.class, "TERRITORY_UPGRADE_PATTERN");
+        p.shouldMatch("§6§lDamage §7[Lv. 10]");
+        p.shouldMatch("§d§lEmerald Rate §7[Lv. 2]");
+        p.shouldMatch("§d§lTower Aura §7[Lv. 3]§8 (Max)");
+        p.shouldMatch("§d§lEmerald Seeking §7[Lv. 5]§8 (Max)");
+    }
+
+    @Test
     public void TradeMarketModel_PRICE_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_PATTERN");
         p.shouldMatch("§7 - §f525§7² §8(8²½ 13²)");
@@ -737,5 +769,24 @@ public class TestRegex {
         PatternTester p = new PatternTester(GuildSeasonLeaderboardLabelParser.class, "GUILD_SEASON_LEADERBOARD_LABEL");
         p.shouldMatch("§6§l1§7 - §bIdiot Co§d (11 396 656 SR)");
         p.shouldMatch("§62§7 - §bSequoia§d (11 057 047 SR)");
+    }
+
+    @Test
+    public void GearAnnotator_GEAR_PATTERN() {
+        PatternTester p = new PatternTester(GearAnnotator.class, "GEAR_PATTERN");
+
+        // Unidentified
+        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Crusade Sabatons");
+        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Gaia");
+        p.shouldMatch("§5Unidentified Idol");
+        p.shouldMatch("§5Unidentified Nirvana");
+        p.shouldMatch("§bUnidentified Follow the Wind");
+
+        // Identified
+        p.shouldMatch("§5Apocalypse");
+        p.shouldMatch("§cRhythm of the Seasons");
+        p.shouldMatch("§f⬡ §5Shiny Stratiformis");
+        p.shouldMatch("§f⬡ §5Shiny Aftershock");
+        p.shouldMatch("§f⬡ §5Shiny Crusade Sabatons");
     }
 }

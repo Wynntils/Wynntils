@@ -118,7 +118,7 @@ public class TranscribeMessagesFeature extends Feature {
                             WynnAlphabet.WYNNIC,
                             coloredTranscriptions.get(),
                             wynnicColor.get().getChatFormatting(),
-                            npcDialogue || showTooltip.get()));
+                            !npcDialogue && showTooltip.get()));
 
             // Wynnic characters are transcribed second
             transcribedStyledText = transcribeStyledText(
@@ -129,7 +129,7 @@ public class TranscribeMessagesFeature extends Feature {
                             WynnAlphabet.WYNNIC,
                             coloredTranscriptions.get(),
                             wynnicColor.get().getChatFormatting(),
-                            npcDialogue || showTooltip.get()));
+                            !npcDialogue && showTooltip.get()));
         }
 
         if (transcribeGavellian) {
@@ -142,7 +142,7 @@ public class TranscribeMessagesFeature extends Feature {
                             WynnAlphabet.GAVELLIAN,
                             coloredTranscriptions.get(),
                             gavellianColor.get().getChatFormatting(),
-                            npcDialogue || showTooltip.get()));
+                            !npcDialogue && showTooltip.get()));
         }
 
         return transcribedStyledText;

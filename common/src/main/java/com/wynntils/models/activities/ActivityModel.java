@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -12,6 +12,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
@@ -82,6 +83,7 @@ public final class ActivityModel extends Model {
     private TrackedActivity trackedActivity;
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
+    private boolean overallProgressOutdated = true;
 
     public ActivityModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -98,7 +100,7 @@ public final class ActivityModel extends Model {
             return;
         }
 
-        var player = Location.containing(McUtils.player().position());
+        Location player = Location.containing(McUtils.player().position());
         if (spawn.equals(player)) {
             // Wynncraft "resets" tracking by setting the compass to your current
             // location. In theory, this can fail if you happen to be standing on
@@ -108,6 +110,19 @@ public final class ActivityModel extends Model {
         }
 
         ACTIVITY_MARKER_PROVIDER.setSpawnLocation(spawn);
+    }
+
+    @SubscribeEvent
+    public void onScreenClosed(ScreenClosedEvent event) {
+        // The progress cannot be outdated if we are in the content book
+        // This speeds up navigation in the content book
+        overallProgressOutdated = true;
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        // We need to rescan the overall progress when the world state changes
+        overallProgressOutdated = true;
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -326,6 +341,9 @@ public final class ActivityModel extends Model {
     }
 
     public void scanOverallProgress() {
+        if (!overallProgressOutdated) return;
+
+        overallProgressOutdated = false;
         CONTAINER_QUERIES.queryContentBook(
                 ActivityType.RECOMMENDED,
                 (ignored, progress) -> {

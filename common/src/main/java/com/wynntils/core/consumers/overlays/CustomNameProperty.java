@@ -8,4 +8,6 @@ import com.wynntils.core.persisted.config.Config;
 
 public interface CustomNameProperty {
     Config<String> getCustomName();
+
+    void setCustomName(String newName);
 }

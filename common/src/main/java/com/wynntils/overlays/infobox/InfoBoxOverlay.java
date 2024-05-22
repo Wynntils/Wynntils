@@ -8,10 +8,11 @@ import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 
 public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     @Persisted
-    public final Config<String> customName = new Config<>("");
+    public final HiddenConfig<String> customName = new HiddenConfig<>("");
 
     @Persisted
     public final Config<String> content = new Config<>("");
@@ -37,5 +38,10 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     @Override
     public Config<String> getCustomName() {
         return customName;
+    }
+
+    @Override
+    public void setCustomName(String newName) {
+        customName.setValue(newName);
     }
 }

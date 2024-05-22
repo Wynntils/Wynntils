@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidBossStartedEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
@@ -21,6 +22,7 @@ import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -28,8 +30,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class RaidModel extends Model {
@@ -38,9 +42,12 @@ public class RaidModel extends Model {
     // For end of a challenge look for BLACKSMITH_LABEL label.
     // For boss intermission look for BOSS_FIGHT_LABEL label.
     // For boss fight look for the boss' label.
-    // For raid completion/failure use RAID_COMPLETE or RAID_FAILED title.
+    // For raid completion use RAID_COMPLETE title.
+    // For failure use check for RAID_FAILED title or chat message.
+    // TCC Requires a position check after teleport due to a lack of fail title/message.
     public static final int MAX_CHALLENGES = 3;
     public static final int ROOM_TIMERS_COUNT = 5;
+    private static final Position TCC_FAIL_POS = new Vec3(674.5, 49.0, -4447.5);
     private static final StyledText BLACKSMITH_LABEL = StyledText.fromString("§dBlacksmith");
     private static final StyledText BOSS_FIGHT_LABEL = StyledText.fromString("§4§l[§cBoss Fight§4§l]");
     // Title gradually builds up to full "§a§lRAID COMPLETED!"
@@ -143,6 +150,22 @@ public class RaidModel extends Model {
         StyledText styledText = StyledText.fromComponent(component);
 
         if (styledText.equals(RAID_FAILED)) {
+            // Raid failed, post event with timers
+            WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
+
+            currentRaid = null;
+            currentRoom = null;
+            roomTimers.clear();
+        }
+    }
+
+    // TCC is the only raid to not display a RAID_FAILED title or chat message so we have to
+    // check for failure by being teleported back to the raid starting area
+    @SubscribeEvent
+    public void onTeleport(PlayerTeleportEvent e) {
+        if (currentRaid != RaidKind.THE_CANYON_COLOSSUS) return;
+
+        if (PosUtils.closerThanIgnoringY(e.getNewPosition(), TCC_FAIL_POS, 5)) {
             // Raid failed, post event with timers
             WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
 
