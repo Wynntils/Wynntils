@@ -1,15 +1,16 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-@FunctionalInterface
-public interface MapVisibility {
-    /**
-     * This method is used to determine the visibility of a feature at a given zoom level.
-     * @param zoomLevel The current zoom level of the map. You can read more about zoom level in the {@link com.wynntils.utils.render.MapRenderer} class.
-     * @return A float between 0 and 1, where 0 means the feature is not visible and 1 means the feature is fully visible. Values in between are used to determine the transparency of the feature.
-     */
-    float getVisibility(float zoomLevel);
+public abstract class MapVisibility {
+    public static final FullMapVisibility NEVER = new FullMapVisibility(100, 0, 6);
+    public static final FullMapVisibility ALWAYS = new FullMapVisibility(0, 100, 6);
+
+    public abstract float getMin();
+
+    public abstract float getMax();
+
+    public abstract float getFade();
 }

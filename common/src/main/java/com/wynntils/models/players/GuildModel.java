@@ -16,6 +16,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
@@ -24,6 +25,7 @@ import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -47,26 +49,37 @@ public class GuildModel extends Model {
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
-    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("§3([a-zA-Z ]*?)§b \\[[a-zA-Z]{3,4}]");
+    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("^§3([a-zA-Z\\s]+?)§b \\[[a-zA-Z]{3,4}]$");
 
     // Test in GuildModel_GUILD_RANK_MATCHER
     private static final Pattern GUILD_RANK_MATCHER =
             Pattern.compile("^§7Rank: §f(Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
     // Test in GuildModel_MSG_LEFT_GUILD
-    private static final Pattern MSG_LEFT_GUILD = Pattern.compile("§3You have left §b[a-zA-Z ]*§3!");
+    private static final Pattern MSG_LEFT_GUILD = Pattern.compile("^§3You have left §b[a-zA-Z\\s]+§3!$");
 
     // Test in GuildModel_MSG_JOINED_GUILD
-    private static final Pattern MSG_JOINED_GUILD = Pattern.compile("§3You have joined §b([a-zA-Z ]*)§3!");
+    private static final Pattern MSG_JOINED_GUILD = Pattern.compile("^§3You have joined §b([a-zA-Z\\s]+)§3!$");
 
     // Test in GuildModel_MSG_RANK_CHANGED
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(
             "^§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
+    // Test in GuildModel_LEVEL_MATCHER
+    private static final Pattern LEVEL_MATCHER = Pattern.compile("^§b§l[a-zA-Z\\s]+§3§l \\[Lv\\. (?<level>\\d+)\\]$");
+
+    // Test in GuildModel_LEVEL_PROGRESS_MATCHER
+    private static final Pattern LEVEL_PROGRESS_MATCHER =
+            Pattern.compile("^§f(?<current>[\\d\\,]+)§7/(?<required>[\\d\\,]+) XP$");
+
+    private static final int MEMBERS_SLOT = 0;
+
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
 
     private String guildName = "";
     private GuildRank guildRank;
+    private int guildLevel = -1;
+    private CappedValue guildLevelProgress = CappedValue.EMPTY;
 
     public GuildModel() {
         super(List.of());
@@ -86,6 +99,8 @@ public class GuildModel extends Model {
         if (message.matches(MSG_LEFT_GUILD)) {
             guildName = "";
             guildRank = null;
+            guildLevel = -1;
+            guildLevelProgress = CappedValue.EMPTY;
             WynntilsMod.info("User left guild");
             return;
         }
@@ -117,13 +132,36 @@ public class GuildModel extends Model {
             }
 
             Matcher rankMatcher = line.getMatcher(GUILD_RANK_MATCHER);
-
             if (rankMatcher.matches()) {
                 guildRank = GuildRank.valueOf(rankMatcher.group(1).toUpperCase(Locale.ROOT));
             }
         }
 
-        WynntilsMod.info("Successfully parsed guild info, " + guildRank + " of " + guildName);
+        WynntilsMod.info("Successfully parsed guild name and rank, " + guildRank + " of " + guildName);
+    }
+
+    public void parseGuildContainer(ContainerContent container) {
+        ItemStack membersItem = container.items().get(MEMBERS_SLOT);
+
+        Matcher levelMatcher = StyledText.fromComponent(membersItem.getHoverName())
+                .getNormalized()
+                .getMatcher(LEVEL_MATCHER);
+        if (!levelMatcher.matches()) {
+            WynntilsMod.warn("Could not parse guild level from item: " + LoreUtils.getLore(membersItem));
+            return;
+        }
+        guildLevel = Integer.parseInt(levelMatcher.group("level"));
+
+        Matcher levelProgressMatcher = LoreUtils.matchLoreLine(membersItem, 0, LEVEL_PROGRESS_MATCHER);
+        if (!levelMatcher.matches()) {
+            WynntilsMod.warn("Could not parse guild level progress from item: " + LoreUtils.getLore(membersItem));
+            return;
+        }
+        long current = Long.parseLong(levelProgressMatcher.group("current").replace(",", ""));
+        long required = Long.parseLong(levelProgressMatcher.group("required").replace(",", ""));
+        guildLevelProgress = new CappedValue((int) (((double) current / required) * 100d), 100);
+
+        WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
     }
 
     public String getGuildName() {
@@ -132,6 +170,22 @@ public class GuildModel extends Model {
 
     public GuildRank getGuildRank() {
         return guildRank;
+    }
+
+    public int getGuildLevel() {
+        return guildLevel;
+    }
+
+    public void setGuildLevel(int guildLevel) {
+        this.guildLevel = guildLevel;
+    }
+
+    public CappedValue getGuildLevelProgress() {
+        return guildLevelProgress;
+    }
+
+    public void setGuildLevelProgress(CappedValue guildLevelProgress) {
+        this.guildLevelProgress = guildLevelProgress;
     }
 
     public Optional<GuildProfile> getGuildProfile(String name) {
