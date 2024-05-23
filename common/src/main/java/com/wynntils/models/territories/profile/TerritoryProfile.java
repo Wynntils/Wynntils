@@ -10,7 +10,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.utils.SimpleDateFormatter;
+import com.wynntils.utils.DateFormatter;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
 import java.time.Instant;
@@ -19,7 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 
 public class TerritoryProfile {
-    private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
+    private static final DateFormatter DATE_FORMATTER = new DateFormatter(false);
 
     private final String name;
     private final String friendlyName;
