@@ -517,6 +517,7 @@
   "feature.wynntils.gameBarsOverlay.overlay.healthBar.name": "Health Bar",
   "feature.wynntils.gameBarsOverlay.overlay.manaBankBar.name": "Mana Bank Bar",
   "feature.wynntils.gameBarsOverlay.overlay.manaBar.name": "Mana Bar",
+  "feature.wynntils.gameBarsOverlay.overlay.ophanimBar.name": "Ophanim Bar",
   "feature.wynntils.gameNotificationOverlay.description": "Adds the ability to add custom notifications to the screen as overlays.",
   "feature.wynntils.gameNotificationOverlay.name": "Game Updates",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.description": "Display gameplay related update messages on the screen.",
