@@ -13,16 +13,13 @@ import com.google.gson.JsonParseException;
 import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Locale;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 
 public class TerritoryProfile {
     private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
 
     private final String name;
     private final String friendlyName;
