@@ -9,6 +9,7 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
@@ -319,6 +320,18 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_LEVEL_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "LEVEL_MATCHER");
+        p.shouldMatch("§b§lChiefs Of Corkus§3§l [Lv. 87]");
+    }
+
+    @Test
+    public void GuildModel_LEVEL_PROGRESS_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "LEVEL_PROGRESS_MATCHER");
+        p.shouldMatch("§f20,588,573,849§7/25,447,702,087 XP");
+    }
+
+    @Test
     public void GuildModel_MSG_LEFT_GUILD() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_LEFT_GUILD");
         p.shouldMatch("§3You have left §bExample Guild§3!");
@@ -386,6 +399,20 @@ public class TestRegex {
         p.shouldMatch("§b✺ 175/175");
         p.shouldMatch("§b✺ 56/175");
         p.shouldMatch("✺ 175/175");
+    }
+
+    @Test
+    public void OphanimBar_OPHANIM_PATTERN() {
+        PatternTester p = new PatternTester(OphanimBar.class, "OPHANIM_PATTERN");
+        p.shouldMatch("§710s Healed: §f66% §3[§b⏺⏺⏺⏺⏺⏺§3]");
+        p.shouldMatch("§710s Healed: §f0% §3[§b⏺§b⏺§b⏺§b⏺§b⏺§b⏺§3]");
+        p.shouldMatch("§710s Healed: §f0% §4[§c⏺§c⏺§c⏺§c⏺§c⏺§7⏺§4]");
+        p.shouldMatch("§710s Healed: §f0% §4[§e⏺§e⏺§e⏺§c⏺§c⏺§e⏺§4]");
+        p.shouldMatch("§710s Healed: §f0% §6[§e⏺§e⏺§e⏺§e⏺§e⏺§e⏺§6]");
+        p.shouldMatch("§710s Healed: §f22% §3[§b⏺§b⏺§b⏺§b⏺§b⏺§b⏺§3]");
+        p.shouldMatch("§710s Healed: §f12% §3[§e⏺§b⏺§e⏺§b⏺⏺⏺§3]");
+        p.shouldMatch("§710s Healed: §f0% §4[§c⏺⏺⏺§e⏺⏺⏺§4]");
+        p.shouldMatch("§710s Healed: §f0% §8[]");
     }
 
     @Test

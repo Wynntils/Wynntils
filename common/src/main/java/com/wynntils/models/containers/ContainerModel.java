@@ -51,6 +51,7 @@ public final class ContainerModel extends Model {
 
     public static final String CHARACTER_INFO_NAME = "Character Info";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
+    public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
     public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
     private static final List<Container> containerTypes = new ArrayList<>();
