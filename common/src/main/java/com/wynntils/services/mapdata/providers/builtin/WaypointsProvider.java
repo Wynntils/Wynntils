@@ -14,6 +14,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class WaypointsProvider extends BuiltInProvider {
@@ -82,22 +83,23 @@ public class WaypointsProvider extends BuiltInProvider {
         public MapAttributes getAttributes() {
             return new AbstractMapAttributes() {
                 @Override
-                public String getIconId() {
-                    return iconId;
+                public Optional<String> getIconId() {
+                    return Optional.ofNullable(iconId);
                 }
 
                 @Override
-                public String getLabel() {
-                    return name;
+                public Optional<String> getLabel() {
+                    return Optional.ofNullable(name);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return switch (visibility) {
-                        case DEFAULT -> WAYPOINT_VISIBILITY;
-                        case ALWAYS -> MapVisibility.ALWAYS;
-                        case HIDDEN -> MapVisibility.NEVER;
-                    };
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(
+                            switch (visibility) {
+                                case DEFAULT -> WAYPOINT_VISIBILITY;
+                                case ALWAYS -> MapVisibility.ALWAYS;
+                                case HIDDEN -> MapVisibility.NEVER;
+                            });
                 }
             };
         }

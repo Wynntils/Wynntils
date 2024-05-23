@@ -13,6 +13,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CharacterProvider extends BuiltInProvider {
@@ -49,13 +50,13 @@ public class CharacterProvider extends BuiltInProvider {
         public MapAttributes getAttributes() {
             return new AbstractMapAttributes() {
                 @Override
-                public int getPriority() {
-                    return 900;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(900);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return MapVisibility.ALWAYS;
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(MapVisibility.ALWAYS);
                 }
             };
         }
@@ -76,8 +77,8 @@ public class CharacterProvider extends BuiltInProvider {
         public MapAttributes getAttributes() {
             return new AbstractMapAttributes() {
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return MapVisibility.NEVER;
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(MapVisibility.NEVER);
                 }
             };
         }

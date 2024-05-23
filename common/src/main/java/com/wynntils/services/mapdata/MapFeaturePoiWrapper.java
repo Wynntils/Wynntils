@@ -24,6 +24,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MapFeaturePoiWrapper implements Poi {
@@ -63,17 +64,22 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getWidth(float mapZoom, float scale) {
-        String iconId = attributes.getIconId();
-        String label = attributes.getLabel();
+        Optional<String> iconId = attributes.getIconId();
+        Optional<String> label = attributes.getLabel();
 
-        if (hasIcon(iconId)) {
-            MapIcon icon = Services.MapData.getIcon(iconId).get();
-            return (int) (icon.getWidth() * scale);
+        if (hasIcon(iconId.orElse(null))) {
+            Optional<MapIcon> icon = Services.MapData.getIcon(iconId.get());
+            if (icon.isPresent()) {
+                return (int) (icon.get().getWidth() * scale);
+            }
         }
 
-        if (hasLabel(label)) {
+        if (hasLabel(label.orElse(null))) {
             // Use label for measurements
-            return (int) (FontRenderer.getInstance().getFont().width(attributes.getLabel()) * scale);
+            return (int) (FontRenderer.getInstance()
+                            .getFont()
+                            .width(attributes.getLabel().orElse(""))
+                    * scale);
         }
 
         // No icon or label, return 32 as fallback
@@ -83,15 +89,17 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getHeight(float mapZoom, float scale) {
-        String iconId = attributes.getIconId();
-        String label = attributes.getLabel();
+        Optional<String> iconId = attributes.getIconId();
+        Optional<String> label = attributes.getLabel();
 
-        if (hasIcon(iconId)) {
-            MapIcon icon = Services.MapData.getIcon(iconId).get();
-            return (int) (icon.getHeight() * scale);
+        if (hasIcon(iconId.orElse(null))) {
+            Optional<MapIcon> icon = Services.MapData.getIcon(iconId.get());
+            if (icon.isPresent()) {
+                return (int) (icon.get().getHeight() * scale);
+            }
         }
 
-        if (hasLabel(label)) {
+        if (hasLabel(label.orElse(null))) {
             // Use label for measurements
             return getLabelHeight(scale);
         }
@@ -116,9 +124,9 @@ public class MapFeaturePoiWrapper implements Poi {
         float alpha = hovered ? 1f : 0.9f;
         int labelHeight = getLabelHeight(renderScale);
 
-        String iconId = attributes.getIconId();
-        String label = attributes.getLabel();
-        int level = attributes.getLevel();
+        Optional<String> iconId = attributes.getIconId();
+        Optional<String> label = attributes.getLabel();
+        Optional<Integer> level = attributes.getLevel();
 
         int yOffset = 0;
 
@@ -128,27 +136,23 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
-        boolean drawIcon = hasIcon(iconId) && this.getIconAlpha(zoomLevel) > 0.01;
-        if (drawIcon) {
-            MapIcon icon = Services.MapData.getIcon(iconId).get();
+        boolean drawIcon = hasIcon(iconId.orElse(null)) && this.getIconAlpha(zoomLevel) > 0.01;
+        Optional<MapIcon> icon = Services.MapData.getIcon(iconId.orElse(MapIcon.NO_ICON_ID));
+        if (drawIcon && icon.isPresent()) {
+            int iconWidth = icon.get().getWidth();
+            int iconHeight = icon.get().getHeight();
 
-            float iconWidth = icon.getWidth();
-            float iconHeight = icon.getHeight();
-
-            CustomColor iconColor = attributes.getIconColor();
-            if (iconColor == null) {
-                iconColor = CommonColors.WHITE;
-            }
+            CustomColor iconColor = attributes.getIconColor().orElse(CommonColors.WHITE);
             CustomColor color = iconColor.withAlpha(alpha);
 
             BufferedRenderUtils.drawColoredTexturedRect(
                     poseStack,
                     bufferSource,
-                    icon.getResourceLocation(),
+                    icon.get().getResourceLocation(),
                     color,
                     this.getIconAlpha(zoomLevel),
-                    0 - iconWidth / 2,
-                    yOffset - iconHeight / 2,
+                    0 - iconWidth / 2f,
+                    yOffset - iconHeight / 2f,
                     0,
                     iconWidth,
                     iconHeight);
@@ -156,16 +160,11 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw label, if applicable
-        boolean drawLabel = hasLabel(label) && this.getLabelAlpha(zoomLevel) > 0.01 || (drawIcon && hovered);
+        boolean drawLabel =
+                hasLabel(label.orElse(null)) && this.getLabelAlpha(zoomLevel) > 0.01 || (drawIcon && hovered);
         if (drawLabel) {
-            CustomColor labelColor = attributes.getLabelColor();
-            if (labelColor == null) {
-                labelColor = CommonColors.WHITE;
-            }
-            TextShadow labelShadow = attributes.getLabelShadow();
-            if (labelShadow == null) {
-                labelShadow = TextShadow.OUTLINE;
-            }
+            CustomColor labelColor = attributes.getLabelColor().orElse(CommonColors.WHITE);
+            TextShadow labelShadow = attributes.getLabelShadow().orElse(TextShadow.OUTLINE);
             float labelAlpha = alpha * getLabelAlpha(zoomLevel);
 
             if (drawIcon && hovered) {
@@ -181,7 +180,7 @@ public class MapFeaturePoiWrapper implements Poi {
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                StyledText.fromString(label),
+                                StyledText.fromString(label.orElse("")),
                                 0,
                                 yOffset,
                                 color,
@@ -194,22 +193,16 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw level, if applicable
-        if (hovered && level != 0 && (drawIcon || drawLabel)) {
-            CustomColor labelColor = attributes.getLabelColor();
-            if (labelColor == null) {
-                labelColor = CommonColors.WHITE;
-            }
-            TextShadow labelShadow = attributes.getLabelShadow();
-            if (labelShadow == null) {
-                labelShadow = TextShadow.OUTLINE;
-            }
+        if (hovered && level.isPresent() && (drawIcon || drawLabel)) {
+            CustomColor labelColor = attributes.getLabelColor().orElse(CommonColors.WHITE);
+            TextShadow labelShadow = attributes.getLabelShadow().orElse(TextShadow.OUTLINE);
             CustomColor color = labelColor.withAlpha(alpha);
 
             BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             bufferSource,
-                            StyledText.fromString("[Lv " + level + "]"),
+                            StyledText.fromString("[Lv. " + level.get() + "]"),
                             0,
                             yOffset,
                             color,
@@ -269,23 +262,21 @@ public class MapFeaturePoiWrapper implements Poi {
     }
 
     private float getIconAlpha(float zoomLevel) {
-        MapVisibility iconVisibility = attributes.getIconVisibility();
-        if (iconVisibility == null) {
-            // If no visibility is specified, always show
-            return 1f;
-        }
-        return calculateVisibility(
-                iconVisibility.getMin(), iconVisibility.getMax(), iconVisibility.getFade(), zoomLevel);
+        Optional<MapVisibility> iconVisibility = attributes.getIconVisibility();
+        // If no visibility is specified, always show
+        return iconVisibility
+                .map(mapVisibility -> calculateVisibility(
+                        mapVisibility.getMin(), mapVisibility.getMax(), mapVisibility.getFade(), zoomLevel))
+                .orElse(1f);
     }
 
     private float getLabelAlpha(float zoomLevel) {
-        MapVisibility labelVisibility = attributes.getLabelVisibility();
-        if (labelVisibility == null) {
-            // If no visibility is specified, always show
-            return 1f;
-        }
-        return calculateVisibility(
-                labelVisibility.getMin(), labelVisibility.getMax(), labelVisibility.getFade(), zoomLevel);
+        Optional<MapVisibility> labelVisibility = attributes.getLabelVisibility();
+        // If no visibility is specified, always show
+        return labelVisibility
+                .map(mapVisibility -> calculateVisibility(
+                        mapVisibility.getMin(), mapVisibility.getMax(), mapVisibility.getFade(), zoomLevel))
+                .orElse(1f);
     }
 
     private int getLabelHeight(float scale) {

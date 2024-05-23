@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.Optional;
 
 public class JsonAttributes implements MapAttributes {
     private final String label;
@@ -44,53 +45,53 @@ public class JsonAttributes implements MapAttributes {
     }
 
     @Override
-    public String getLabel() {
-        return label;
+    public Optional<String> getLabel() {
+        return Optional.ofNullable(label);
     }
 
     @Override
-    public String getIconId() {
-        return icon;
+    public Optional<String> getIconId() {
+        return Optional.ofNullable(icon);
     }
 
     @Override
-    public int getPriority() {
-        return priority;
+    public Optional<Integer> getPriority() {
+        return Optional.of(priority);
     }
 
     @Override
-    public int getLevel() {
-        return level;
+    public Optional<Integer> getLevel() {
+        return Optional.of(level);
     }
 
     @Override
-    public MapVisibility getLabelVisibility() {
-        return labelVisibility;
+    public Optional<MapVisibility> getLabelVisibility() {
+        return Optional.ofNullable(labelVisibility);
     }
 
     @Override
-    public CustomColor getLabelColor() {
-        return labelColor;
+    public Optional<CustomColor> getLabelColor() {
+        return Optional.ofNullable(labelColor);
     }
 
     @Override
-    public TextShadow getLabelShadow() {
-        return labelShadow;
+    public Optional<TextShadow> getLabelShadow() {
+        return Optional.ofNullable(labelShadow);
     }
 
     @Override
-    public MapVisibility getIconVisibility() {
-        return iconVisibility;
+    public Optional<MapVisibility> getIconVisibility() {
+        return Optional.ofNullable(iconVisibility);
     }
 
     @Override
-    public CustomColor getIconColor() {
-        return iconColor;
+    public Optional<CustomColor> getIconColor() {
+        return Optional.ofNullable(iconColor);
     }
 
     @Override
-    public MapDecoration getIconDecoration() {
+    public Optional<MapDecoration> getIconDecoration() {
         // json files can never provide icon decorations; those are only for dynamic features
-        return null;
+        return Optional.empty();
     }
 }

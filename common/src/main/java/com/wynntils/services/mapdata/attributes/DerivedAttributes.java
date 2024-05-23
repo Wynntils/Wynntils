@@ -8,50 +8,51 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.Optional;
 import java.util.function.Function;
 
 public abstract class DerivedAttributes implements MapAttributes {
     protected abstract <T> T getAttribute(Function<MapAttributes, T> getter);
 
     @Override
-    public String getLabel() {
+    public Optional<String> getLabel() {
         return getAttribute(MapAttributes::getLabel);
     }
 
     @Override
-    public String getIconId() {
+    public Optional<String> getIconId() {
         return getAttribute(MapAttributes::getIconId);
     }
 
     @Override
-    public int getPriority() {
-        Integer integer = getAttribute(MapAttributes::getPriority);
-        return integer == null ? 0 : integer;
+    public Optional<Integer> getPriority() {
+        Optional<Integer> integer = getAttribute(MapAttributes::getPriority);
+        return integer.isEmpty() ? Optional.of(0) : integer;
     }
 
     @Override
-    public int getLevel() {
-        Integer integer = getAttribute(MapAttributes::getLevel);
-        return integer == null ? 0 : integer;
+    public Optional<Integer> getLevel() {
+        Optional<Integer> integer = getAttribute(MapAttributes::getLevel);
+        return integer.isEmpty() ? Optional.of(0) : integer;
     }
 
     @Override
-    public CustomColor getLabelColor() {
+    public Optional<CustomColor> getLabelColor() {
         return getAttribute(MapAttributes::getLabelColor);
     }
 
     @Override
-    public TextShadow getLabelShadow() {
+    public Optional<TextShadow> getLabelShadow() {
         return getAttribute(MapAttributes::getLabelShadow);
     }
 
     @Override
-    public CustomColor getIconColor() {
+    public Optional<CustomColor> getIconColor() {
         return getAttribute(MapAttributes::getIconColor);
     }
 
     @Override
-    public MapDecoration getIconDecoration() {
+    public Optional<MapDecoration> getIconDecoration() {
         return getAttribute(MapAttributes::getIconDecoration);
     }
 }

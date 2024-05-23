@@ -42,24 +42,28 @@ public class FullCategoryAttributes extends DerivedAttributes {
     }
 
     @Override
-    public MapVisibility getLabelVisibility() {
-        return getVisibilityAttribute(MapAttributes::getLabelVisibility);
+    public Optional<MapVisibility> getLabelVisibility() {
+        return Optional.of(getVisibilityAttribute(MapAttributes::getLabelVisibility));
     }
 
     @Override
-    public MapVisibility getIconVisibility() {
-        return getVisibilityAttribute(MapAttributes::getIconVisibility);
+    public Optional<MapVisibility> getIconVisibility() {
+        return Optional.of(getVisibilityAttribute(MapAttributes::getIconVisibility));
     }
 
-    private <T extends MapVisibility> FullMapVisibility getVisibilityAttribute(Function<MapAttributes, T> getter) {
+    private <T extends MapVisibility> FullMapVisibility getVisibilityAttribute(
+            Function<MapAttributes, Optional<T>> getter) {
         Deque<DerivedMapVisibility> visibilityStack = new LinkedList<>();
 
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
             Stream<MapAttributes> allAttributes = Services.MapData.getCategoryDefinitions(id)
                     .map(MapCategory::getAttributes)
                     .filter(Objects::nonNull);
-            Optional<T> visibility =
-                    allAttributes.map(getter).filter(Objects::nonNull).findFirst();
+            Optional<T> visibility = allAttributes
+                    .map(getter)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst();
             if (visibility.isPresent()) {
                 if (visibility.get() instanceof FullMapVisibility fullVisibility) {
                     // Apply the visibility stack to the full visibility

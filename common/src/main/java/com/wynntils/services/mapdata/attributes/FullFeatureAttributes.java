@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class FullFeatureAttributes extends DerivedAttributes {
@@ -40,25 +41,34 @@ public class FullFeatureAttributes extends DerivedAttributes {
     }
 
     @Override
-    public MapVisibility getLabelVisibility() {
-        return getVisibilityAttribute(MapAttributes::getLabelVisibility);
+    public Optional<MapVisibility> getLabelVisibility() {
+        return Optional.of(getVisibilityAttribute(MapAttributes::getLabelVisibility));
     }
 
     @Override
-    public MapVisibility getIconVisibility() {
-        return getVisibilityAttribute(MapAttributes::getIconVisibility);
+    public Optional<MapVisibility> getIconVisibility() {
+        return Optional.of(getVisibilityAttribute(MapAttributes::getIconVisibility));
     }
 
-    private <T extends MapVisibility> FullMapVisibility getVisibilityAttribute(Function<MapAttributes, T> getter) {
+    private <T extends MapVisibility> FullMapVisibility getVisibilityAttribute(
+            Function<MapAttributes, Optional<T>> getter) {
         DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.ALWAYS);
 
         // Check if the feature has overridden this attribute
         if (attributes != null) {
-            T attribute = getter.apply(attributes);
-            if (attribute instanceof FullMapVisibility visibility) {
+            Optional<T> attribute = getter.apply(attributes);
+
+            if (attribute.isEmpty()) {
+                // No attribute defined; this should not happen
+                WynntilsMod.warn("No attribute defined for visibility when getting feature visibility: "
+                        + feature.getFeatureId() + " (" + feature.getCategoryId() + ")");
+                return MapVisibility.ALWAYS;
+            }
+
+            if (attribute.get() instanceof FullMapVisibility visibility) {
                 // Feature defines its own visibility; return it
                 return visibility;
-            } else if (attribute instanceof DerivedMapVisibility derivedVisibility) {
+            } else if (attribute.get() instanceof DerivedMapVisibility derivedVisibility) {
                 // Feature defines a derived visibility; we'll need to apply it to the category visibility
                 derivedFeatureVisibility = derivedVisibility;
             } else {
@@ -74,11 +84,18 @@ public class FullFeatureAttributes extends DerivedAttributes {
             return MapVisibility.ALWAYS.applyDerived(derivedFeatureVisibility);
         }
 
-        MapVisibility categoryVisibility = getter.apply(categoryAttributes);
+        Optional<T> categoryVisibility = getter.apply(categoryAttributes);
 
-        if (categoryVisibility instanceof FullMapVisibility fullCategoryVisibility) {
+        if (categoryVisibility.isEmpty()) {
+            // No attribute defined; this should not happen
+            WynntilsMod.warn(
+                    "No attribute defined for visibility when getting category visibility: " + feature.getCategoryId());
+            return MapVisibility.ALWAYS;
+        }
+
+        if (categoryVisibility.get() instanceof FullMapVisibility fullCategoryVisibility) {
             return fullCategoryVisibility.applyDerived(derivedFeatureVisibility);
-        } else if (categoryVisibility instanceof DerivedMapVisibility derivedCategoryVisibility) {
+        } else if (categoryVisibility.get() instanceof DerivedMapVisibility derivedCategoryVisibility) {
             return MapVisibility.ALWAYS.applyDerived(derivedCategoryVisibility).applyDerived(derivedFeatureVisibility);
         } else {
             WynntilsMod.warn("Unhandled visibility type #3: " + categoryVisibility.getClass());
