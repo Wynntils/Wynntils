@@ -15,10 +15,7 @@ import com.wynntils.models.players.type.WynnPlayerInfo;
 import com.wynntils.utils.LongDateFormatter;
 import com.wynntils.utils.mc.McUtils;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -29,7 +26,6 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class PlayerCommand extends Command {
     private static final DateFormat DATE_FORMATTER = new LongDateFormatter();
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
     private static final SuggestionProvider<CommandSourceStack> PLAYER_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(Models.Player.getAllPlayerNames(), builder);
 
@@ -99,8 +95,7 @@ public class PlayerCommand extends Command {
                     // Should only be null if the player lookup succeeded but the guild lookup did not
                     if (player.guildJoinTimestamp() != null) {
                         long differenceInMillis = System.currentTimeMillis()
-                                - player.guildJoinTimestamp().getTime()
-                                + getTimezoneOffset();
+                                - player.guildJoinTimestamp().toEpochMilli();
 
                         response.append(Component.literal("\nThey have been in the guild for ")
                                 .withStyle(ChatFormatting.GRAY)
@@ -150,8 +145,7 @@ public class PlayerCommand extends Command {
                             .append(Component.literal(player.server()).withStyle(ChatFormatting.GOLD)));
                 } else {
                     long differenceInMillis = System.currentTimeMillis()
-                            - player.lastJoinTimestamp().getTime()
-                            + getTimezoneOffset();
+                            - player.lastJoinTimestamp().toEpochMilli();
 
                     response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
                             .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
@@ -175,9 +169,5 @@ public class PlayerCommand extends Command {
     private int syntaxError(CommandContext<CommandSourceStack> context) {
         context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
         return 0;
-    }
-
-    private long getTimezoneOffset() {
-        return ((long) new Date().getTimezoneOffset() * 60 * 1000);
     }
 }
