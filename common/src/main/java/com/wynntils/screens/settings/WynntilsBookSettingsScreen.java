@@ -24,6 +24,7 @@ import com.wynntils.screens.settings.widgets.ConfigTile;
 import com.wynntils.screens.settings.widgets.ConfigurableButton;
 import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
 import com.wynntils.screens.settings.widgets.SettingsPageTabButton;
+import com.wynntils.screens.settings.widgets.SettingsSearchWidget;
 import com.wynntils.screens.settings.widgets.SettingsSideTabButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -99,10 +100,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private WynntilsBookSettingsScreen() {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
-        searchWidget = new SearchWidget(
-                60,
+        searchWidget = new SettingsSearchWidget(
+                55,
                 Texture.CONFIG_BOOK_BACKGROUND.height() + 6,
-                100,
+                120,
                 20,
                 (s) -> {
                     configurablesScrollOffset = 0;
@@ -261,8 +262,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         int adjustedMouseX = mouseX - (int) translationX;
         int adjustedMouseY = mouseY - (int) translationY;
-
-        renderSearchBar(poseStack);
 
         renderTags(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
 
@@ -887,10 +886,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private void renderBg(PoseStack poseStack) {
         RenderUtils.drawTexturedRect(poseStack, Texture.CONFIG_BOOK_BACKGROUND, 0, 0);
-    }
-
-    private void renderSearchBar(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 5);
     }
 
     private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
