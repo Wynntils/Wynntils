@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
@@ -7,12 +7,18 @@ package com.wynntils.overlays.minimap;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class TerritoryOverlay extends TextOverlay {
     private static final String TEMPLATE = "{territory}";
+    private static final String TEMPLATE_WITH_OWNER = "{territory} [{territory_owner(true)}]";
+
+    @Persisted
+    public final Config<Boolean> showOwner = new Config<>(false);
 
     public TerritoryOverlay() {
         super(
@@ -29,11 +35,11 @@ public class TerritoryOverlay extends TextOverlay {
 
     @Override
     public String getTemplate() {
-        return TEMPLATE;
+        return showOwner.get() ? TEMPLATE_WITH_OWNER : TEMPLATE;
     }
 
     @Override
     public String getPreviewTemplate() {
-        return TEMPLATE;
+        return getTemplate();
     }
 }
