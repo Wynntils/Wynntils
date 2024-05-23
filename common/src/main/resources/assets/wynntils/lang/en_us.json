@@ -569,6 +569,8 @@
   "feature.wynntils.healthPotionBlocker.threshold.description": "The percentage of your max health that you need to have for the feature to activate",
   "feature.wynntils.healthPotionBlocker.threshold.name": "Threshold (%%)",
   "feature.wynntils.healthPotionBlocker.thresholdReached": "Already at %s%% of your max health!",
+  "feature.wynntils.hideInfoBar.description": "Whether or not the info bar should be hidden",
+  "feature.wynntils.hideInfoBar.name": "Hide Info Bar",
   "feature.wynntils.hightlightDuplicateCosmetics.description": "Highlight cosmetics in the scrap menu that you have selected.",
   "feature.wynntils.hightlightDuplicateCosmetics.highlightCondition.description": "When should duplicate cosmetics be highlighted?",
   "feature.wynntils.hightlightDuplicateCosmetics.highlightCondition.name": "Highlight Condition",
