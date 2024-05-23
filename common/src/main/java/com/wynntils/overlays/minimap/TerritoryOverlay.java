@@ -40,7 +40,7 @@ public class TerritoryOverlay extends TextOverlay {
         return getTemplate();
     }
 
-    public enum TerritoryOwnerDisplay {
+    private enum TerritoryOwnerDisplay {
         NAME("{territory}\n{territory_owner}"),
         TAG("{if_str(eq_str(territory;\"\");\"\";concat(territory;\" [\";territory_owner(true);\"]\"))}"),
         HIDE("{territory}");
@@ -51,7 +51,7 @@ public class TerritoryOverlay extends TextOverlay {
             this.template = template;
         }
 
-        public String getTemplate() {
+        private String getTemplate() {
             return template;
         }
     }
