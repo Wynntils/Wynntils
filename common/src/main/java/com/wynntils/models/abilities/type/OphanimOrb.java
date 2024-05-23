@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.abilities.type;
 
+import net.minecraft.ChatFormatting;
+
 public class OphanimOrb {
     private final HealthState healthState;
 
@@ -12,24 +14,24 @@ public class OphanimOrb {
     }
 
     public String getString() {
-        return healthState.getColorCode() + "⏺";
+        return healthState.getColor().toString() + "⏺";
     }
 
     public enum HealthState {
-        HEALTHY("§b"),
-        DAMAGED("§c"),
-        DYING("§e"),
-        DEAD("§7");
+        HEALTHY(ChatFormatting.AQUA),
+        DAMAGED(ChatFormatting.YELLOW),
+        DYING(ChatFormatting.RED),
+        DEAD(ChatFormatting.GRAY);
 
-        private final String colorCode;
+        private final ChatFormatting color;
 
-        HealthState(String colorCode) {
-            this.colorCode = colorCode;
+        HealthState(ChatFormatting color) {
+            this.color = color;
         }
 
-        public static HealthState fromColorCode(String colorCode) {
+        public static HealthState fromColor(ChatFormatting color) {
             for (HealthState value : HealthState.values()) {
-                if (value.getColorCode().equals(colorCode)) {
+                if (value.getColor() == color) {
                     return value;
                 }
             }
@@ -37,8 +39,8 @@ public class OphanimOrb {
             return null;
         }
 
-        public String getColorCode() {
-            return colorCode;
+        public ChatFormatting getColor() {
+            return color;
         }
     }
 }
