@@ -10,13 +10,11 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.SimpleDateFormatter;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
@@ -33,10 +31,14 @@ public class TerritoryProfile {
 
     private final GuildInfo guildInfo;
 
-    private final Date acquired;
+    private final Instant acquired;
 
     public TerritoryProfile(
-            String name, String friendlyName, TerritoryLocation territoryLocation, GuildInfo guildInfo, Date acquired) {
+            String name,
+            String friendlyName,
+            TerritoryLocation territoryLocation,
+            GuildInfo guildInfo,
+            Instant acquired) {
         this.name = name;
         this.friendlyName = friendlyName;
         this.territoryLocation = territoryLocation;
@@ -80,7 +82,7 @@ public class TerritoryProfile {
         return guildInfo.prefix();
     }
 
-    public Date getAcquired() {
+    public Instant getAcquired() {
         return acquired;
     }
 
@@ -98,11 +100,7 @@ public class TerritoryProfile {
     }
 
     private long getTimeHeldInMillis() {
-        return new Date().getTime() - this.getAcquired().getTime() + getTimezoneOffset();
-    }
-
-    private long getTimezoneOffset() {
-        return ((long) new Date().getTimezoneOffset() * 60 * 1000);
+        return System.currentTimeMillis() - acquired.toEpochMilli();
     }
 
     public boolean isOnCooldown() {
@@ -180,12 +178,7 @@ public class TerritoryProfile {
                 guild = context.deserialize(guildJson, GuildInfo.class);
             }
 
-            Date acquired = null;
-            try {
-                acquired = DATE_FORMAT.parse(territory.get("acquired").getAsString());
-            } catch (ParseException e) {
-                WynntilsMod.error("Error when trying to parse territory profile data.", e);
-            }
+            Instant acquired = Instant.parse(territory.get("acquired").getAsString());
 
             return new TerritoryProfile(territoryName, friendlyName, territoryLocation, guild, acquired);
         }
