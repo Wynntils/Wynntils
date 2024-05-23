@@ -29,7 +29,7 @@ public enum Texture {
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
-    TAG_SEARCH("content_book/tag_search.png", 140, 34),
+    TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
     // region Icons

@@ -19,6 +19,6 @@ public class SettingsSearchWidget extends SearchWidget {
 
     @Override
     protected void renderBackground(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 5);
+        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 3);
     }
 }
