@@ -15,7 +15,6 @@ import com.wynntils.models.players.type.WynnPlayerInfo;
 import com.wynntils.utils.LongDateFormatter;
 import com.wynntils.utils.mc.McUtils;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -99,18 +98,14 @@ public class PlayerCommand extends Command {
 
                     // Should only be null if the player lookup succeeded but the guild lookup did not
                     if (player.guildJoinTimestamp() != null) {
-                        try {
-                            Date joinedDate = DATE_FORMAT.parse(player.guildJoinTimestamp());
-                            long differenceInMillis =
-                                    System.currentTimeMillis() - joinedDate.getTime() + getTimezoneOffset();
+                        long differenceInMillis = System.currentTimeMillis()
+                                - player.guildJoinTimestamp().getTime()
+                                + getTimezoneOffset();
 
-                            response.append(Component.literal("\nThey have been in the guild for ")
-                                    .withStyle(ChatFormatting.GRAY)
-                                    .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                            .withStyle(ChatFormatting.AQUA)));
-                        } catch (ParseException e) {
-                            WynntilsMod.error("Error when trying to parse player joined guild date.", e);
-                        }
+                        response.append(Component.literal("\nThey have been in the guild for ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
+                                        .withStyle(ChatFormatting.AQUA)));
                     }
                 } else {
                     response.append(Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
@@ -154,18 +149,14 @@ public class PlayerCommand extends Command {
                             .withStyle(ChatFormatting.GRAY)
                             .append(Component.literal(player.server()).withStyle(ChatFormatting.GOLD)));
                 } else {
-                    try {
-                        Date joinedDate = DATE_FORMAT.parse(player.lastJoinTimestamp());
-                        long differenceInMillis =
-                                System.currentTimeMillis() - joinedDate.getTime() + getTimezoneOffset();
+                    long differenceInMillis = System.currentTimeMillis()
+                            - player.lastJoinTimestamp().getTime()
+                            + getTimezoneOffset();
 
-                        response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
-                                .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.literal("ago").withStyle(ChatFormatting.GRAY)));
-                    } catch (ParseException e) {
-                        WynntilsMod.error("Error when trying to parse player last join", e);
-                    }
+                    response.append(Component.literal(" was last seen ").withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal(DATE_FORMATTER.format(differenceInMillis))
+                                    .withStyle(ChatFormatting.GOLD)
+                                    .append(Component.literal("ago").withStyle(ChatFormatting.GRAY)));
                 }
 
                 McUtils.sendMessageToClient(response);

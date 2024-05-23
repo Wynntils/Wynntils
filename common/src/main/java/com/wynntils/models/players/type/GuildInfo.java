@@ -9,9 +9,14 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public record GuildInfo(
@@ -21,11 +26,13 @@ public record GuildInfo(
         int xpPercent,
         int territories,
         long wars,
-        String createdTimestamp,
+        Date createdTimestamp,
         int totalMembers,
         int onlineMembers,
         List<GuildMemberInfo> guildMembers) {
     public static class GuildDeserializer implements JsonDeserializer<GuildInfo> {
+        private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
+
         @Override
         public GuildInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -43,7 +50,13 @@ public record GuildInfo(
             long wars = jsonObject.get("wars").isJsonNull()
                     ? 0L
                     : jsonObject.get("wars").getAsLong();
-            String createdTimestamp = jsonObject.get("created").getAsString();
+            Date createdTimestamp = null;
+
+            try {
+                createdTimestamp = DATE_FORMAT.parse(jsonObject.get("created").getAsString());
+            } catch (ParseException e) {
+                WynntilsMod.error("Error when trying to parse guild creation date.", e);
+            }
 
             JsonObject guildMembersJson = jsonObject.getAsJsonObject("members");
 

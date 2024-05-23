@@ -9,9 +9,14 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -22,12 +27,14 @@ public record WynnPlayerInfo(
         String username,
         boolean online,
         String server,
-        String lastJoinTimestamp,
+        Date lastJoinTimestamp,
         String guildName,
         String guildPrefix,
         GuildRank guildRank,
-        String guildJoinTimestamp) {
+        Date guildJoinTimestamp) {
     public static class WynnPlayerInfoDeserializer implements JsonDeserializer<WynnPlayerInfo> {
+        private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
+
         @Override
         public WynnPlayerInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -41,7 +48,13 @@ public record WynnPlayerInfo(
                 String onlineServer = jsonObject.get("server").isJsonNull()
                         ? null
                         : jsonObject.get("server").getAsString();
-                String lastJoinTimestamp = jsonObject.get("lastJoin").getAsString();
+                Date lastJoinDate = null;
+
+                try {
+                    lastJoinDate = DATE_FORMAT.parse(jsonObject.get("lastJoin").getAsString());
+                } catch (ParseException e) {
+                    WynntilsMod.error("Error when trying to player last join date.", e);
+                }
 
                 if (!jsonObject.get("guild").isJsonNull()) {
                     JsonObject guildInfo = jsonObject.getAsJsonObject("guild");
@@ -63,31 +76,37 @@ public record WynnPlayerInfo(
                         return null;
                     }
 
-                    String guildJoinedTimestamp;
+                    Date guildJoinedDate = null;
 
-                    if (guild == null) {
-                        guildJoinedTimestamp = null;
-                    } else {
+                    if (guild != null) {
                         Optional<String> guildJoinedTimestampOpt = guild.guildMembers().stream()
                                 .filter(guildMember -> guildMember.username().equals(playerUsername))
                                 .map(GuildMemberInfo::joinTimestamp)
                                 .findFirst();
 
-                        guildJoinedTimestamp = guildJoinedTimestampOpt.orElse(null);
+                        String guildJoinTimestamp = guildJoinedTimestampOpt.orElse(null);
+
+                        if (guildJoinTimestamp != null) {
+                            try {
+                                guildJoinedDate = DATE_FORMAT.parse(guildJoinTimestamp);
+                            } catch (ParseException e) {
+                                WynntilsMod.error("Error when trying to parse player guild join date.", e);
+                            }
+                        }
                     }
 
                     return new WynnPlayerInfo(
                             playerUsername,
                             online,
                             onlineServer,
-                            lastJoinTimestamp,
+                            lastJoinDate,
                             guildName,
                             guildPrefix,
                             guildRank,
-                            guildJoinedTimestamp);
+                            guildJoinedDate);
                 } else {
                     return new WynnPlayerInfo(
-                            playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);
+                            playerUsername, online, onlineServer, lastJoinDate, null, null, null, null);
                 }
             }
         }
