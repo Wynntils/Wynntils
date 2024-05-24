@@ -351,6 +351,31 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MSG_OBJECTIVE_COMPLETED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_OBJECTIVE_COMPLETED");
+        p.shouldMatch("§3[INFO]§b Flyxdre has finished their weekly objective.");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 has finished their weekly objective.");
+    }
+
+    @Test
+    public void GuildModel_MSG_NEW_OBJECTIVES() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_NEW_OBJECTIVES");
+        p.shouldMatch("§3[INFO]§b New Weekly Guild Objectives are being assigned.");
+    }
+
+    @Test
+    public void GuildModel_OBJECTIVES_COMPLETED_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVES_COMPLETED_PATTERN");
+        p.shouldMatch("§6Current Guild Goal: §f23§7/30");
+    }
+
+    @Test
+    public void GuildModel_OBJECTIVE_STREAK_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVE_STREAK_PATTERN");
+        p.shouldMatch("§a- §7Streak: §f14");
+    }
+
+    @Test
     public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
         p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]§b");

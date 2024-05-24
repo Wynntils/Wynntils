@@ -65,6 +65,14 @@ public class GuildModel extends Model {
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(
             "^§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
+    // Test in GuildModel_MSG_OBJECTIVE_COMPLETED
+    private static final Pattern MSG_OBJECTIVE_COMPLETED =
+            Pattern.compile("^§3\\[INFO\\]§b (?<player>[\\w]{1,16}) has finished their weekly objective\\.$");
+
+    // Test in GuildModel_MSG_NEW_OBJECTIVES
+    private static final Pattern MSG_NEW_OBJECTIVES =
+            Pattern.compile("^§3\\[INFO\\]§b New Weekly Guild Objectives are being assigned\\.$");
+
     // Test in GuildModel_LEVEL_MATCHER
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§b§l[a-zA-Z\\s]+§3§l \\[Lv\\. (?<level>\\d+)\\]$");
 
@@ -72,7 +80,17 @@ public class GuildModel extends Model {
     private static final Pattern LEVEL_PROGRESS_MATCHER =
             Pattern.compile("^§f(?<current>[\\d\\,]+)§7/(?<required>[\\d\\,]+) XP$");
 
+    // Test in GuildModel_OBJECTIVES_COMPLETED_PATTERN
+    private static final Pattern OBJECTIVES_COMPLETED_PATTERN =
+            Pattern.compile("^§6Current Guild Goal: §f(?<completed>\\d+)§7/\\d+$");
+
+    // Test in GuildModel_OBJECTIVE_STREAK_PATTERN
+    private static final Pattern OBJECTIVE_STREAK_PATTERN = Pattern.compile("^§a- §7Streak: §f(?<streak>\\d+)$");
+
     private static final int MEMBERS_SLOT = 0;
+    private static final int OBJECTIVES_SLOT = 13;
+
+    private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
 
@@ -80,6 +98,8 @@ public class GuildModel extends Model {
     private GuildRank guildRank;
     private int guildLevel = -1;
     private CappedValue guildLevelProgress = CappedValue.EMPTY;
+    private CappedValue objectivesCompletedProgress = CappedValue.EMPTY;
+    private int objectiveStreak = 0;
 
     public GuildModel() {
         super(List.of());
@@ -101,6 +121,8 @@ public class GuildModel extends Model {
             guildRank = null;
             guildLevel = -1;
             guildLevelProgress = CappedValue.EMPTY;
+            objectivesCompletedProgress = CappedValue.EMPTY;
+            objectiveStreak = 0;
             WynntilsMod.info("User left guild");
             return;
         }
@@ -118,6 +140,19 @@ public class GuildModel extends Model {
             if (!rankChangedMatcher.group(1).equals(McUtils.playerName())) return;
             guildRank = GuildRank.valueOf(rankChangedMatcher.group(2).toUpperCase(Locale.ROOT));
             WynntilsMod.info("User's guild rank changed to " + guildRank);
+        }
+
+        Matcher objectiveCompletedMatcher = message.getMatcher(MSG_OBJECTIVE_COMPLETED);
+        if (objectiveCompletedMatcher.matches()) {
+            updateObjectivesCompletedProgress(objectivesCompletedProgress.current() + 1);
+            if (objectiveCompletedMatcher.group("player").equals(McUtils.playerName())) {
+                objectiveStreak++;
+            }
+        }
+
+        Matcher newObjectivesMatcher = message.getMatcher(MSG_NEW_OBJECTIVES);
+        if (newObjectivesMatcher.matches()) {
+            objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
         }
     }
 
@@ -142,6 +177,7 @@ public class GuildModel extends Model {
 
     public void parseGuildContainer(ContainerContent container) {
         ItemStack membersItem = container.items().get(MEMBERS_SLOT);
+        ItemStack objectivesItem = container.items().get(OBJECTIVES_SLOT);
 
         Matcher levelMatcher = StyledText.fromComponent(membersItem.getHoverName())
                 .getNormalized()
@@ -161,7 +197,27 @@ public class GuildModel extends Model {
         long required = Long.parseLong(levelProgressMatcher.group("required").replace(",", ""));
         guildLevelProgress = new CappedValue((int) (((double) current / required) * 100d), 100);
 
+        for (StyledText line : LoreUtils.getLore(objectivesItem)) {
+            Matcher objectivesCompletedMatcher = line.getMatcher(OBJECTIVES_COMPLETED_PATTERN);
+            if (objectivesCompletedMatcher.matches()) {
+                updateObjectivesCompletedProgress(Integer.parseInt(objectivesCompletedMatcher.group("completed")));
+            }
+
+            Matcher objectiveStreakMatcher = line.getMatcher(OBJECTIVE_STREAK_PATTERN);
+            if (objectiveStreakMatcher.matches()) {
+                objectiveStreak = Integer.parseInt(objectiveStreakMatcher.group("streak"));
+            }
+        }
+
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
+    }
+
+    private void updateObjectivesCompletedProgress(int completed) {
+        int currentGoal = 0;
+        for (int goal : OBJECTIVE_GOALS) {
+            if (completed > currentGoal) currentGoal = goal;
+        }
+        objectivesCompletedProgress = new CappedValue(completed, currentGoal);
     }
 
     public String getGuildName() {
@@ -186,6 +242,14 @@ public class GuildModel extends Model {
 
     public void setGuildLevelProgress(CappedValue guildLevelProgress) {
         this.guildLevelProgress = guildLevelProgress;
+    }
+
+    public CappedValue getObjectivesCompletedProgress() {
+        return objectivesCompletedProgress;
+    }
+
+    public int getObjectiveStreak() {
+        return objectiveStreak;
     }
 
     public Optional<GuildProfile> getGuildProfile(String name) {
