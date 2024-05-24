@@ -61,6 +61,14 @@ public class ProfessionHighlightFeature extends Feature {
             return;
         }
 
+        // When in global mode, if any prof was selected and a crafting station is opened, then set the selected type to
+        // that crafting station type
+        if (selectedProfession.get() != null
+                && selectionMode.get() == HighlightSelectionMode.GLOBAL
+                && Models.Container.getCurrentContainer() instanceof CraftingStationContainer craftingStation) {
+            setSelectedProfession(craftingStation.getProfessionType());
+        }
+
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - containerScreen.imageWidth) / 2;
         int renderY = (screen.height - containerScreen.imageHeight) / 2;
