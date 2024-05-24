@@ -124,6 +124,9 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
                     nextLabelInfo == null ? 0 : guildSeasonLeaderboardLabelInfo.getScore() - nextLabelInfo.getScore());
         }
 
+        ChatFormatting guildStyle = guildSeasonLeaderboardLabelInfo.getGuild().equals(Models.Guild.getGuildName())
+                ? ChatFormatting.GREEN
+                : ChatFormatting.AQUA;
         // §<color><place>§7 - §b<guild name> [<guild tag>]§d (<formatted score> SR) §a(+<score diff to next>)
         MutableComponent newLabel = Component.empty()
                 .append(Component.literal(String.valueOf(guildSeasonLeaderboardLabelInfo.getPlace()))
@@ -134,10 +137,10 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
                         .withStyle(placeColor))
                 .append(Component.literal(" - ").withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(guildSeasonLeaderboardLabelInfo.getGuild())
-                        .withStyle(ChatFormatting.AQUA))
+                        .withStyle(guildStyle))
                 .append(Component.literal(
                                 " [" + guildProfile.map(GuildProfile::prefix).orElse("???") + "]")
-                        .withStyle(ChatFormatting.AQUA))
+                        .withStyle(guildStyle))
                 .append(Component.literal(" (" + scoreString + " SR)").withStyle(ChatFormatting.LIGHT_PURPLE))
                 .append(Component.literal(" (+" + (nextLabelInfo == null ? "???" : scoreDiffString) + ")")
                         .withStyle(ChatFormatting.GREEN));

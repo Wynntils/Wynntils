@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.worlds.type;
 
+import com.wynntils.core.components.Models;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 
@@ -23,8 +24,15 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
     }
 
     public String asString() {
-        return ChatFormatting.GOLD + bomb.getName() + ChatFormatting.GRAY + " on " + ChatFormatting.WHITE + server
-                + ChatFormatting.GOLD + " (" + getRemainingString() + ")";
+        return ChatFormatting.GOLD + bomb.getName()
+                + ChatFormatting.GRAY
+                + " on "
+                + (server.equals(Models.WorldState.getCurrentWorldName()) ? ChatFormatting.GREEN : ChatFormatting.WHITE)
+                + server
+                + ChatFormatting.GOLD
+                + " ("
+                + getRemainingString()
+                + ")";
     }
 
     @Override
