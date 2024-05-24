@@ -82,7 +82,7 @@ public class GuildModel extends Model {
 
     // Test in GuildModel_OBJECTIVES_COMPLETED_PATTERN
     private static final Pattern OBJECTIVES_COMPLETED_PATTERN =
-            Pattern.compile("^§6Current Guild Goal: §f(?<completed>\\d+)§7/\\d+$");
+            Pattern.compile("^§6Current Guild Goal: §f(?<completed>\\d+)§7/(?<goal>\\d+)$");
 
     // Test in GuildModel_OBJECTIVE_STREAK_PATTERN
     private static final Pattern OBJECTIVE_STREAK_PATTERN = Pattern.compile("^§a- §7Streak: §f(?<streak>\\d+)$");
@@ -143,9 +143,22 @@ public class GuildModel extends Model {
             return;
         }
 
+        // Handle completed objective
         Matcher objectiveCompletedMatcher = message.getMatcher(MSG_OBJECTIVE_COMPLETED);
         if (objectiveCompletedMatcher.matches()) {
-            updateObjectivesCompletedProgress(objectivesCompletedProgress.current() + 1);
+            int currentGoal = objectivesCompletedProgress.max();
+            int completed = objectivesCompletedProgress.current() + 1;
+            // Get next goal
+            for (int goal : OBJECTIVE_GOALS) {
+                if (completed >= currentGoal) {
+                    currentGoal = goal;
+                } else {
+                    break;
+                }
+            }
+            objectivesCompletedProgress = new CappedValue(completed, currentGoal);
+
+            // Update streak
             if (objectiveCompletedMatcher.group("player").equals(McUtils.playerName())) {
                 objectiveStreak++;
             }
@@ -204,7 +217,9 @@ public class GuildModel extends Model {
         for (StyledText line : LoreUtils.getLore(objectivesItem)) {
             Matcher objectivesCompletedMatcher = line.getMatcher(OBJECTIVES_COMPLETED_PATTERN);
             if (objectivesCompletedMatcher.matches()) {
-                updateObjectivesCompletedProgress(Integer.parseInt(objectivesCompletedMatcher.group("completed")));
+                objectivesCompletedProgress = new CappedValue(
+                        Integer.parseInt(objectivesCompletedMatcher.group("completed")),
+                        Integer.parseInt(objectivesCompletedMatcher.group("goal")));
                 continue;
             }
 
@@ -216,16 +231,6 @@ public class GuildModel extends Model {
         }
 
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
-    }
-
-    private void updateObjectivesCompletedProgress(int completed) {
-        int currentGoal = 0;
-        for (int goal : OBJECTIVE_GOALS) {
-            if (completed > currentGoal) {
-                currentGoal = goal;
-            }
-        }
-        objectivesCompletedProgress = new CappedValue(completed, currentGoal);
     }
 
     public String getGuildName() {
