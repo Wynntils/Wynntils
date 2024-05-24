@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.containers.containers.crafting;
+package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.type.ContainerBounds;
@@ -10,10 +10,10 @@ import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.profession.type.ProfessionType;
 import java.util.regex.Pattern;
 
-public abstract class CraftingStationContainer extends Container implements HighlightableProfessionProperty {
+public class CraftingStationContainer extends Container implements HighlightableProfessionProperty {
     private final ProfessionType professionType;
 
-    protected CraftingStationContainer(Pattern titlePattern, ProfessionType professionType) {
+    public CraftingStationContainer(Pattern titlePattern, ProfessionType professionType) {
         super(titlePattern);
 
         this.professionType = professionType;
@@ -27,5 +27,10 @@ public abstract class CraftingStationContainer extends Container implements High
 
     public ProfessionType getProfessionType() {
         return professionType;
+    }
+
+    @Override
+    public String getContainerName() {
+        return professionType.getDisplayName() + "Station";
     }
 }

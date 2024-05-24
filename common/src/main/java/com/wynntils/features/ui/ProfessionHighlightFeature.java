@@ -16,7 +16,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.containers.Container;
-import com.wynntils.models.containers.containers.crafting.CraftingStationContainer;
+import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.ProfessionType;

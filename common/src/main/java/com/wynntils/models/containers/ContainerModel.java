@@ -10,6 +10,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
@@ -26,14 +27,6 @@ import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.TradeMarketPrimaryContainer;
 import com.wynntils.models.containers.containers.TradeMarketSecondaryContainer;
-import com.wynntils.models.containers.containers.crafting.AlchemismStationContainer;
-import com.wynntils.models.containers.containers.crafting.ArmouringStationContainer;
-import com.wynntils.models.containers.containers.crafting.CookingStationContainer;
-import com.wynntils.models.containers.containers.crafting.JewelingStationContainer;
-import com.wynntils.models.containers.containers.crafting.ScribingStationContainer;
-import com.wynntils.models.containers.containers.crafting.TailoringStationContainer;
-import com.wynntils.models.containers.containers.crafting.WeaponsmithingStationContainer;
-import com.wynntils.models.containers.containers.crafting.WoodworkingStationContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BlockBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
@@ -44,6 +37,7 @@ import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -98,15 +92,12 @@ public final class ContainerModel extends Model {
         // Order does not matter here so just keep it alphabetical
         registerWynncraftContainer(new AbilityTreeContainer());
         registerWynncraftContainer(new AccountBankContainer());
-        registerWynncraftContainer(new AlchemismStationContainer());
-        registerWynncraftContainer(new ArmouringStationContainer());
         registerWynncraftContainer(new BlockBankContainer());
         registerWynncraftContainer(new BookshelfContainer());
         registerWynncraftContainer(new ChallengeRewardContainer());
         registerWynncraftContainer(new CharacterBankContainer());
         registerWynncraftContainer(new CharacterInfoContainer());
         registerWynncraftContainer(new ContentBookContainer());
-        registerWynncraftContainer(new CookingStationContainer());
         registerWynncraftContainer(new DailyRewardContainer());
         registerWynncraftContainer(new FlyingChestContainer());
         registerWynncraftContainer(new GuildBankContainer());
@@ -117,7 +108,6 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new HousingListContainer());
         registerWynncraftContainer(new IngredientPouchContainer());
         registerWynncraftContainer(new InventoryContainer());
-        registerWynncraftContainer(new JewelingStationContainer());
         registerWynncraftContainer(new JukeboxContainer());
         registerWynncraftContainer(new LobbyContainer());
         registerWynncraftContainer(new LootChestContainer());
@@ -125,14 +115,14 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new ObjectiveRewardContainer());
         registerWynncraftContainer(new PetMenuContainer());
         registerWynncraftContainer(new ScrapMenuContainer());
-        registerWynncraftContainer(new ScribingStationContainer());
         registerWynncraftContainer(new SeaskipperContainer());
-        registerWynncraftContainer(new TailoringStationContainer());
         registerWynncraftContainer(new TradeMarketFiltersContainer());
         registerWynncraftContainer(new TradeMarketPrimaryContainer());
         registerWynncraftContainer(new TradeMarketSecondaryContainer());
-        registerWynncraftContainer(new WeaponsmithingStationContainer());
-        registerWynncraftContainer(new WoodworkingStationContainer());
+
+        for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
+            registerWynncraftContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+        }
     }
 
     private void registerWynncraftContainer(Container container) {
