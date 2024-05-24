@@ -1746,6 +1746,8 @@
   "function.wynntils.inMappedArea.argument.width": "Width of the area to check",
   "function.wynntils.inMappedArea.description": "Are you currently inside a mapped area?",
   "function.wynntils.inMappedArea.name": "In Mapped Area",
+  "function.wynntils.inStream.description": "Are you currently in streamer mode?",
+  "function.wynntils.inStream.name": "In Stream Mode",
   "function.wynntils.ingredientPouchOpenSlots.description": "How many slots are currently open in your ingredient pouch.",
   "function.wynntils.ingredientPouchOpenSlots.name": "Ingredient Pouch Open Slots",
   "function.wynntils.ingredientPouchUsedSlots.description": "How many slots are currently used in your ingredient pouch.",
