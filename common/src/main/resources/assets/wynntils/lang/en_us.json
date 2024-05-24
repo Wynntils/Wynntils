@@ -385,6 +385,8 @@
   "feature.wynntils.customLootrunBeacons.name": "Custom Lootrun Beacons",
   "feature.wynntils.customLootrunBeacons.removeOriginalBeacons.description": "Should the original Wynncraft lootrun beacons be removed?",
   "feature.wynntils.customLootrunBeacons.removeOriginalBeacons.name": "Remove Original Beacons",
+  "feature.wynntils.customNametagRenderer.badgeCount.description": "If badges are enabled, how many should be displayed at a time?",
+  "feature.wynntils.customNametagRenderer.badgeCount.name": "Badges to Display",
   "feature.wynntils.customNametagRenderer.customNametagScale.description": "How large should the extra nametag lines be?",
   "feature.wynntils.customNametagRenderer.customNametagScale.name": "Custom Nametag Scale",
   "feature.wynntils.customNametagRenderer.description": "Adds the ability to render custom nametags.",
