@@ -140,6 +140,7 @@ public class GuildModel extends Model {
             if (!rankChangedMatcher.group(1).equals(McUtils.playerName())) return;
             guildRank = GuildRank.valueOf(rankChangedMatcher.group(2).toUpperCase(Locale.ROOT));
             WynntilsMod.info("User's guild rank changed to " + guildRank);
+            return;
         }
 
         Matcher objectiveCompletedMatcher = message.getMatcher(MSG_OBJECTIVE_COMPLETED);
@@ -148,11 +149,13 @@ public class GuildModel extends Model {
             if (objectiveCompletedMatcher.group("player").equals(McUtils.playerName())) {
                 objectiveStreak++;
             }
+            return;
         }
 
         Matcher newObjectivesMatcher = message.getMatcher(MSG_NEW_OBJECTIVES);
         if (newObjectivesMatcher.matches()) {
             objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
+            return;
         }
     }
 
@@ -169,6 +172,7 @@ public class GuildModel extends Model {
             Matcher rankMatcher = line.getMatcher(GUILD_RANK_MATCHER);
             if (rankMatcher.matches()) {
                 guildRank = GuildRank.valueOf(rankMatcher.group(1).toUpperCase(Locale.ROOT));
+                break;
             }
         }
 
@@ -201,11 +205,13 @@ public class GuildModel extends Model {
             Matcher objectivesCompletedMatcher = line.getMatcher(OBJECTIVES_COMPLETED_PATTERN);
             if (objectivesCompletedMatcher.matches()) {
                 updateObjectivesCompletedProgress(Integer.parseInt(objectivesCompletedMatcher.group("completed")));
+                continue;
             }
 
             Matcher objectiveStreakMatcher = line.getMatcher(OBJECTIVE_STREAK_PATTERN);
             if (objectiveStreakMatcher.matches()) {
                 objectiveStreak = Integer.parseInt(objectiveStreakMatcher.group("streak"));
+                break;
             }
         }
 
@@ -215,7 +221,9 @@ public class GuildModel extends Model {
     private void updateObjectivesCompletedProgress(int completed) {
         int currentGoal = 0;
         for (int goal : OBJECTIVE_GOALS) {
-            if (completed > currentGoal) currentGoal = goal;
+            if (completed > currentGoal) {
+                currentGoal = goal;
+            }
         }
         objectivesCompletedProgress = new CappedValue(completed, currentGoal);
     }
