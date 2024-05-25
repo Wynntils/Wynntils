@@ -24,6 +24,7 @@ import com.wynntils.screens.settings.widgets.ConfigTile;
 import com.wynntils.screens.settings.widgets.ConfigurableButton;
 import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
 import com.wynntils.screens.settings.widgets.SettingsPageTabButton;
+import com.wynntils.screens.settings.widgets.SettingsSearchWidget;
 import com.wynntils.screens.settings.widgets.SettingsSideTabButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -64,7 +65,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private static final int CONFIGS_PER_PAGE = 4;
     private static final int CONFIGURABLE_SCROLL_X = (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 12);
     private static final int CONFIG_SCROLL_X = Texture.CONFIG_BOOK_BACKGROUND.width() - 23;
-    private static final int MAX_DISPLAYED_CATEGORIES = 7;
+    private static final int MAX_DISPLAYED_CATEGORIES = 10;
     private static final int SCROLL_AREA_HEIGHT = 186;
     private static final int SCROLL_START_Y = 21;
 
@@ -99,10 +100,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private WynntilsBookSettingsScreen() {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
-        searchWidget = new SearchWidget(
-                60,
-                Texture.CONFIG_BOOK_BACKGROUND.height() + 5,
-                100,
+        searchWidget = new SettingsSearchWidget(
+                55,
+                Texture.CONFIG_BOOK_BACKGROUND.height() + 6,
+                120,
                 20,
                 (s) -> {
                     configurablesScrollOffset = 0;
@@ -149,7 +150,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.ADD_ICON));
+                Texture.IMPORT_SETTINGS_ICON));
 
         yPos += 15 + Texture.TAG_BLUE.height() / 2;
 
@@ -169,7 +170,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.SHARE_ICON));
+                Texture.EXPORT_SETTINGS_ICON));
 
         yPos += 15 + Texture.TAG_BLUE.height() / 2;
 
@@ -190,7 +191,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.SAVE));
+                Texture.APPLY_SETTINGS_ICON));
 
         yPos += 15 + Texture.TAG_BLUE.height() / 2;
 
@@ -208,14 +209,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                                         .withStyle(ChatFormatting.GRAY)),
                         150),
                 Texture.TAG_BLUE,
-                Texture.CLOSE));
+                Texture.DISCARD_SETTINGS_ICON));
         // endregion
 
         // region Category tags
-        int xPos = 18;
+        int xPos = (int) (Texture.TAG_RED.width() * 0.85);
 
         allCategoriesButton = this.addRenderableWidget(new SettingsCategoryTabButton(
-                18,
+                xPos,
                 (int) -(Texture.TAG_RED.height() * 0.75f),
                 Texture.TAG_RED.width(),
                 Texture.TAG_RED.height(),
@@ -227,7 +228,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             selectedCategoryButton = allCategoriesButton;
         }
 
-        xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75;
+        xPos += Texture.TAG_RED.width() * 2 + 1;
 
         this.addRenderableWidget(new SettingsPageTabButton(
                 xPos,
@@ -238,7 +239,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
                 false));
 
-        xPos += (Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75) * (MAX_DISPLAYED_CATEGORIES + 1);
+        xPos += (Texture.TAG_RED.width() * 1.25) * (MAX_DISPLAYED_CATEGORIES + 1) - Texture.TAG_RED.width() * 0.25;
 
         this.addRenderableWidget(new SettingsPageTabButton(
                 xPos,
@@ -261,8 +262,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         int adjustedMouseX = mouseX - (int) translationX;
         int adjustedMouseY = mouseY - (int) translationY;
-
-        renderSearchBar(poseStack);
 
         renderTags(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
 
@@ -674,12 +673,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             this.removeWidget(widget);
         }
 
-        int xPos = (int) (18 + Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75);
+        int xPos = (int) (Texture.TAG_RED.width() * 2.85 + 1);
 
         categoryButtons = new ArrayList<>();
 
         for (int i = 0; i < MAX_DISPLAYED_CATEGORIES; i++) {
-            xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.75;
+            xPos += Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.25;
 
             int categoryIndex;
 
@@ -887,10 +886,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private void renderBg(PoseStack poseStack) {
         RenderUtils.drawTexturedRect(poseStack, Texture.CONFIG_BOOK_BACKGROUND, 0, 0);
-    }
-
-    private void renderSearchBar(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.TAG_SEARCH, 30, Texture.CONFIG_BOOK_BACKGROUND.height() - 2);
     }
 
     private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {

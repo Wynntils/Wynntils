@@ -29,7 +29,7 @@ public enum Texture {
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
-    TAG_SEARCH("content_book/tag_search.png", 140, 34),
+    TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
     // region Icons
@@ -60,6 +60,10 @@ public enum Texture {
     UNCATEGORIZED_CONFIG_ICON("icons/config_categories/uncategorized_config_icon.png", 16, 16),
     UTILITIES_CONFIG_ICON("icons/config_categories/utilities_config_icon.png", 16, 16),
     WYNNTILS_CONFIG_ICON("icons/config_categories/wynntils_config_icon.png", 16, 16),
+    APPLY_SETTINGS_ICON("icons/config_categories/apply_settings_icon.png", 16, 16),
+    DISCARD_SETTINGS_ICON("icons/config_categories/discard_settings_icon.png", 16, 16),
+    EXPORT_SETTINGS_ICON("icons/config_categories/export_settings_icon.png", 16, 16),
+    IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
 
     // Content Book
     DIALOGUE_ICON("icons/content_book/dialogue_icon.png", 14, 11),
