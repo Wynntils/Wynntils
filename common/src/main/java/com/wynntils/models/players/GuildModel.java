@@ -27,6 +27,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -102,7 +104,9 @@ public class GuildModel extends Model {
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
-    private final Map<String, Map<GuildResource, Integer>> guildDiplomacyMap = new HashMap<>();
+    // sent, recieved
+    private final Map<String, Pair<Map<GuildResource, Integer>, Map<GuildResource, Integer>>> guildDiplomacyMap =
+            new HashMap<>();
 
     private String guildName = "";
     private GuildRank guildRank;
@@ -246,6 +250,9 @@ public class GuildModel extends Model {
     public void parseDiplomacyContainer(ContainerContent content) {
         for (int slot : DIPLOMAC_SLOTS) {
             ItemStack diplomacyItem = content.items().get(slot);
+            if (diplomacyItem.getItem() == Items.AIR) {
+                continue;
+            }
 
             Matcher alliedGuildNameMatcher = StyledText.fromComponent(diplomacyItem.getHoverName())
                     .getNormalized()
@@ -255,18 +262,23 @@ public class GuildModel extends Model {
                 continue;
             }
 
-            Map<GuildResource, Integer> tributesMap = new EnumMap<>(GuildResource.class);
+            Map<GuildResource, Integer> sentTributes = new EnumMap<>(GuildResource.class);
+            Map<GuildResource, Integer> recievedTributes = new EnumMap<>(GuildResource.class);
 
             for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
                 Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
                 if (tributeMatcher.matches()) {
-                    tributesMap.put(
-                            GuildResource.fromSymbol(tributeMatcher.group("symbol")),
-                            Integer.parseInt(tributeMatcher.group("amount")));
+                    GuildResource resource = GuildResource.fromSymbol(tributeMatcher.group("symbol"));
+                    int amount = Integer.parseInt(tributeMatcher.group("amount"));
+                    if (amount > 0) {
+                        recievedTributes.put(resource, amount);
+                    } else {
+                        sentTributes.put(resource, Math.abs(amount));
+                    }
                 }
             }
 
-            guildDiplomacyMap.put(alliedGuildNameMatcher.group("name"), tributesMap);
+            guildDiplomacyMap.put(alliedGuildNameMatcher.group("name"), Pair.of(sentTributes, recievedTributes));
         }
 
         WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
@@ -314,16 +326,15 @@ public class GuildModel extends Model {
 
     public int getRecievedTributesForResource(GuildResource resource) {
         return guildDiplomacyMap.values().stream()
+                .map(Pair::b)
                 .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
-                .filter(value -> value > 0)
                 .sum();
     }
 
     public int getSentTributesForResource(GuildResource resource) {
         return guildDiplomacyMap.values().stream()
+                .map(Pair::a)
                 .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
-                .filter(value -> value < 0)
-                .map(Math::abs)
                 .sum();
     }
 
