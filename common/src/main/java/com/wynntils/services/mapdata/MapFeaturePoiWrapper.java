@@ -67,7 +67,7 @@ public class MapFeaturePoiWrapper implements Poi {
         Optional<String> iconId = attributes.getIconId();
         Optional<String> label = attributes.getLabel();
 
-        if (hasIcon(iconId.orElse(null))) {
+        if (hasIcon()) {
             Optional<MapIcon> icon = Services.MapData.getIcon(iconId.get());
             if (icon.isPresent()) {
                 return (int) (icon.get().getWidth() * scale);
@@ -92,7 +92,7 @@ public class MapFeaturePoiWrapper implements Poi {
         Optional<String> iconId = attributes.getIconId();
         Optional<String> label = attributes.getLabel();
 
-        if (hasIcon(iconId.orElse(null))) {
+        if (hasIcon()) {
             Optional<MapIcon> icon = Services.MapData.getIcon(iconId.get());
             if (icon.isPresent()) {
                 return (int) (icon.get().getHeight() * scale);
@@ -136,7 +136,7 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
-        boolean drawIcon = hasIcon(iconId.orElse(null)) && this.getIconAlpha(zoomLevel) > 0.01;
+        boolean drawIcon = hasIcon() && this.getIconAlpha(zoomLevel) > 0.01;
         Optional<MapIcon> icon = Services.MapData.getIcon(iconId.orElse(MapIcon.NO_ICON_ID));
         if (drawIcon && icon.isPresent()) {
             int iconWidth = icon.get().getWidth();
@@ -215,8 +215,9 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.popPose();
     }
 
-    private boolean hasIcon(String iconId) {
-        return !(iconId == null || iconId.equals(MapIcon.NO_ICON_ID));
+    private boolean hasIcon() {
+        return attributes.getIconId().isPresent()
+                && !attributes.getIconId().get().equals(MapIcon.NO_ICON_ID);
     }
 
     private boolean hasLabel(String label) {
@@ -264,19 +265,29 @@ public class MapFeaturePoiWrapper implements Poi {
     private float getIconAlpha(float zoomLevel) {
         Optional<MapVisibility> iconVisibility = attributes.getIconVisibility();
         // If no visibility is specified, always show
-        return iconVisibility
-                .map(mapVisibility -> calculateVisibility(
-                        mapVisibility.getMin(), mapVisibility.getMax(), mapVisibility.getFade(), zoomLevel))
-                .orElse(1f);
+        if (iconVisibility.isEmpty()) {
+            return 1f;
+        }
+
+        return calculateVisibility(
+                iconVisibility.get().getMin(),
+                iconVisibility.get().getMax(),
+                iconVisibility.get().getFade(),
+                zoomLevel);
     }
 
     private float getLabelAlpha(float zoomLevel) {
         Optional<MapVisibility> labelVisibility = attributes.getLabelVisibility();
         // If no visibility is specified, always show
-        return labelVisibility
-                .map(mapVisibility -> calculateVisibility(
-                        mapVisibility.getMin(), mapVisibility.getMax(), mapVisibility.getFade(), zoomLevel))
-                .orElse(1f);
+        if (labelVisibility.isEmpty()) {
+            return 1f;
+        }
+
+        return calculateVisibility(
+                labelVisibility.get().getMin(),
+                labelVisibility.get().getMax(),
+                labelVisibility.get().getFade(),
+                zoomLevel);
     }
 
     private int getLabelHeight(float scale) {
