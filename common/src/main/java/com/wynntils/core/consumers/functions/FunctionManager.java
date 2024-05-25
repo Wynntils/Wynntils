@@ -509,7 +509,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new GuildFunctions.GuildLevelFunction());
         registerFunction(new GuildFunctions.GuildNameFunction());
         registerFunction(new GuildFunctions.GuildRankFunction());
-        registerFunction(new GuildFunctions.IsAlliedFunction());
+        registerFunction(new GuildFunctions.IsAlliedGuildFunction());
         registerFunction(new GuildFunctions.ObjectiveStreakFunction());
 
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());

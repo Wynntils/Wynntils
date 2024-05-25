@@ -49,7 +49,7 @@ public class GuildFunctions {
         }
     }
 
-    public static class IsAlliedFunction extends Function<Boolean> {
+    public static class IsAlliedGuildFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return Models.Guild.isAllied(arguments.getArgument("guild").getStringValue());
@@ -59,6 +59,11 @@ public class GuildFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("guild", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("is_allied", "is_ally");
         }
     }
 
