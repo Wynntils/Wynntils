@@ -16,6 +16,7 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
@@ -23,6 +24,7 @@ import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -213,13 +215,20 @@ public final class CharacterModel extends Model {
         }
 
         // Scan guild container, if the player is in a guild
-        queryBuilder.conditionalThen(
-                // The guild name has already been parsed at this point
-                (container) -> !Models.Guild.getGuildName().isEmpty(),
-                // Open Guild Menu
-                QueryStep.clickOnSlot(GUILD_MENU_SLOT)
-                        .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
-                        .processIncomingContainer(Models.Guild::parseGuildContainer));
+        // Upon execution the guild name has already been parsed
+        ContainerPredicate guildMember =
+                (container) -> !Models.Guild.getGuildName().isEmpty();
+        queryBuilder
+                .conditionalThen(
+                        guildMember,
+                        QueryStep.clickOnSlot(GUILD_MENU_SLOT)
+                                .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
+                                .processIncomingContainer(Models.Guild::parseGuildContainer))
+                .conditionalThen(
+                        guildMember,
+                        QueryStep.clickOnSlot(GuildModel.DIPLOMACY_MENU_SLOT)
+                                .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
+                                .processIncomingContainer(Models.Guild::parseDiplomacyContainer));
 
         queryBuilder.build().executeQuery();
     }

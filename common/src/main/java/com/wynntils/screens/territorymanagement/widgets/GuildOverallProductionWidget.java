@@ -5,6 +5,7 @@
 package com.wynntils.screens.territorymanagement.widgets;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
@@ -35,11 +36,16 @@ public class GuildOverallProductionWidget extends AbstractWidget {
             return;
         }
 
-        int emeraldProduction = holder.getOverallProductionForResource(GuildResource.EMERALDS);
-        int oreProduction = holder.getOverallProductionForResource(GuildResource.ORE);
-        int woodProduction = holder.getOverallProductionForResource(GuildResource.WOOD);
-        int fishProduction = holder.getOverallProductionForResource(GuildResource.FISH);
-        int cropsProduction = holder.getOverallProductionForResource(GuildResource.CROPS);
+        int emeraldProduction = holder.getOverallProductionForResource(GuildResource.EMERALDS)
+                + Models.Guild.getRecievedTributesForResource(GuildResource.EMERALDS);
+        int oreProduction = holder.getOverallProductionForResource(GuildResource.ORE)
+                + Models.Guild.getRecievedTributesForResource(GuildResource.ORE);
+        int woodProduction = holder.getOverallProductionForResource(GuildResource.WOOD)
+                + Models.Guild.getRecievedTributesForResource(GuildResource.WOOD);
+        int fishProduction = holder.getOverallProductionForResource(GuildResource.FISH)
+                + Models.Guild.getRecievedTributesForResource(GuildResource.FISH);
+        int cropsProduction = holder.getOverallProductionForResource(GuildResource.CROPS)
+                + Models.Guild.getRecievedTributesForResource(GuildResource.CROPS);
 
         CappedValue emeraldStorage = holder.getOverallStorageForResource(GuildResource.EMERALDS);
         CappedValue oreStorage = holder.getOverallStorageForResource(GuildResource.ORE);
@@ -47,11 +53,16 @@ public class GuildOverallProductionWidget extends AbstractWidget {
         CappedValue fishStorage = holder.getOverallStorageForResource(GuildResource.FISH);
         CappedValue cropsStorage = holder.getOverallStorageForResource(GuildResource.CROPS);
 
-        long emeraldUsage = holder.getOverallUsageForResource(GuildResource.EMERALDS);
-        long oreUsage = holder.getOverallUsageForResource(GuildResource.ORE);
-        long woodUsage = holder.getOverallUsageForResource(GuildResource.WOOD);
-        long fishUsage = holder.getOverallUsageForResource(GuildResource.FISH);
-        long cropsUsage = holder.getOverallUsageForResource(GuildResource.CROPS);
+        long emeraldUsage = holder.getOverallUsageForResource(GuildResource.EMERALDS)
+                + Models.Guild.getSentTributesForResource(GuildResource.EMERALDS);
+        long oreUsage = holder.getOverallUsageForResource(GuildResource.ORE)
+                + Models.Guild.getSentTributesForResource(GuildResource.ORE);
+        long woodUsage = holder.getOverallUsageForResource(GuildResource.WOOD)
+                + Models.Guild.getSentTributesForResource(GuildResource.WOOD);
+        long fishUsage = holder.getOverallUsageForResource(GuildResource.FISH)
+                + Models.Guild.getSentTributesForResource(GuildResource.FISH);
+        long cropsUsage = holder.getOverallUsageForResource(GuildResource.CROPS)
+                + Models.Guild.getSentTributesForResource(GuildResource.CROPS);
 
         List<Component> lines = new ArrayList<>();
         lines.add(Component.literal("Guild Output").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD));

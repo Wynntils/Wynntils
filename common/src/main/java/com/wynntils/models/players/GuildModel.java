@@ -22,11 +22,13 @@ import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
 import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildRank;
+import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.lang.reflect.Type;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +51,8 @@ public class GuildModel extends Model {
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
-    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("^§3([a-zA-Z\\s]+?)§b \\[[a-zA-Z]{3,4}]$");
+    private static final Pattern GUILD_NAME_MATCHER =
+            Pattern.compile("^§[3a](§l)?(?<name>[a-zA-Z\\s]+?)(§b)? \\[[a-zA-Z]{3,4}]$");
 
     // Test in GuildModel_GUILD_RANK_MATCHER
     private static final Pattern GUILD_RANK_MATCHER =
@@ -87,12 +90,19 @@ public class GuildModel extends Model {
     // Test in GuildModel_OBJECTIVE_STREAK_PATTERN
     private static final Pattern OBJECTIVE_STREAK_PATTERN = Pattern.compile("^§a- §7Streak: §f(?<streak>\\d+)$");
 
+    // Test in GuildModel_TRIBUTE_PATTERN
+    private static final Pattern TRIBUTE_PATTERN = Pattern.compile(
+            "^§[abef6](?<symbol>[ⒷⒸⓀⒿ]?) ?(?<amount>[+-]\\d+) (Ore|Wood|Fish|Crops?|Emeralds?) per Hour$");
+
     private static final int MEMBERS_SLOT = 0;
     private static final int OBJECTIVES_SLOT = 13;
+    public static final int DIPLOMACY_MENU_SLOT = 26;
+    private static final List<Integer> DIPLOMAC_SLOTS = List.of(2, 3, 4, 5, 6, 7, 8);
 
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
+    private final Map<String, Map<GuildResource, Integer>> guildDiplomacyMap = new HashMap<>();
 
     private String guildName = "";
     private GuildRank guildRank;
@@ -178,7 +188,7 @@ public class GuildModel extends Model {
         for (StyledText line : lore) {
             Matcher guildNameMatcher = line.getMatcher(GUILD_NAME_MATCHER);
             if (guildNameMatcher.matches()) {
-                guildName = guildNameMatcher.group(1);
+                guildName = guildNameMatcher.group("name");
                 continue;
             }
 
@@ -233,6 +243,35 @@ public class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
     }
 
+    public void parseDiplomacyContainer(ContainerContent content) {
+        for (int slot : DIPLOMAC_SLOTS) {
+            ItemStack diplomacyItem = content.items().get(slot);
+
+            Matcher alliedGuildNameMatcher = StyledText.fromComponent(diplomacyItem.getHoverName())
+                    .getNormalized()
+                    .getMatcher(GUILD_NAME_MATCHER);
+            if (!alliedGuildNameMatcher.matches()) {
+                WynntilsMod.warn("Could not parse allied guild from item: " + LoreUtils.getLore(diplomacyItem));
+                continue;
+            }
+
+            Map<GuildResource, Integer> tributesMap = new EnumMap<>(GuildResource.class);
+
+            for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
+                Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
+                if (tributeMatcher.matches()) {
+                    tributesMap.put(
+                            GuildResource.fromSymbol(tributeMatcher.group("symbol")),
+                            Integer.parseInt(tributeMatcher.group("amount")));
+                }
+            }
+
+            guildDiplomacyMap.put(alliedGuildNameMatcher.group("name"), tributesMap);
+        }
+
+        WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
+    }
+
     public String getGuildName() {
         return guildName;
     }
@@ -271,6 +310,25 @@ public class GuildModel extends Model {
 
     public Set<String> getAllGuilds() {
         return guildProfileMap.keySet();
+    }
+
+    public int getRecievedTributesForResource(GuildResource resource) {
+        return guildDiplomacyMap.values().stream()
+                .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
+                .filter(value -> value > 0)
+                .sum();
+    }
+
+    public int getSentTributesForResource(GuildResource resource) {
+        return guildDiplomacyMap.values().stream()
+                .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
+                .filter(value -> value < 0)
+                .map(Math::abs)
+                .sum();
+    }
+
+    public List<String> getAlliedGuilds() {
+        return guildDiplomacyMap.keySet().stream().toList();
     }
 
     public String getGuildNameFromString(String input) {

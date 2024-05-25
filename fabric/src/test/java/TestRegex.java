@@ -303,9 +303,12 @@ public class TestRegex {
     @Test
     public void GuildModel_GUILD_NAME_MATCHER() {
         PatternTester p = new PatternTester(GuildModel.class, "GUILD_NAME_MATCHER");
+        // Guild menu item
         p.shouldMatch("§3guildName§b [aAaA]");
         p.shouldMatch("§3guild Name§b [aaaa]");
         p.shouldMatch("§3GUILD NAME§b [wynn]");
+        // Allied guild item
+        p.shouldMatch("§a§lGUILD NAME [wynn]");
     }
 
     @Test
@@ -373,6 +376,22 @@ public class TestRegex {
     public void GuildModel_OBJECTIVE_STREAK_PATTERN() {
         PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVE_STREAK_PATTERN");
         p.shouldMatch("§a- §7Streak: §f14");
+    }
+
+    @Test
+    public void GuildModel_TRIBUTE_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "TRIBUTE_PATTERN");
+        p.shouldMatch("§fⒷ -1000 Ore per Hour");
+        p.shouldMatch("§6Ⓒ -1000 Wood per Hour");
+        p.shouldMatch("§bⓀ -11000 Fish per Hour");
+        p.shouldMatch("§eⒿ -1000 Crops per Hour");
+        p.shouldMatch("§fⒷ -1 Ore per Hour");
+        p.shouldMatch("§6Ⓒ -1 Wood per Hour");
+        p.shouldMatch("§bⓀ -1 Fish per Hour");
+        p.shouldMatch("§eⒿ -1 Crop per Hour");
+        p.shouldMatch("§a-1 Emerald per Hour");
+        p.shouldMatch("§a-2 Emeralds per Hour");
+        p.shouldMatch("§a+9000 Emeralds per Hour");
     }
 
     @Test
