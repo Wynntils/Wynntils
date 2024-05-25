@@ -367,6 +367,42 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MSG_TRIBUTE_SCEDULED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_SCEDULED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 2 Emeralds per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 1 Crop per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 1 Fish per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 1 Wood per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 1 Ore per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild scheduled 9000 Emeralds per hour to Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_TRIBUTE_STOPPED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_STOPPED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Emeralds to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Fish to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Ore to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Wood to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Crops to Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild stopped scheduling Emeralds to Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_ALLIANCE_FORMED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_ALLIANCE_FORMED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 formed an alliance with Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild formed an alliance with Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_ALLIANCE_REVOKED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_ALLIANCE_REVOKED");
+        p.shouldMatch("§3[INFO]§b Example Guild revoked the alliance with Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 revoked the alliance with Example Guild");
+    }
+
+    @Test
     public void GuildModel_OBJECTIVES_COMPLETED_PATTERN() {
         PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVES_COMPLETED_PATTERN");
         p.shouldMatch("§6Current Guild Goal: §f23§7/30");

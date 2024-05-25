@@ -78,6 +78,22 @@ public class GuildModel extends Model {
     private static final Pattern MSG_NEW_OBJECTIVES =
             Pattern.compile("^§3\\[INFO\\]§b New Weekly Guild Objectives are being assigned\\.$");
 
+    // Test in GuildModel_MSG_TRIBUTE_SCEDULED
+    private static final Pattern MSG_TRIBUTE_SCEDULED = Pattern.compile(
+            "^§3\\[INFO\\]§b (?<sender>[\\w\\s]+) scheduled (?<resource>[ⒿⓀⒸⒷ]?) ?(?<amount>\\d+) (Ore|Wood|Fish|Crops?|Emeralds?) per hour to (?<recipient>[a-zA-Z\\s]+)$");
+
+    // Test in GuildModel_MSG_TRIBUTE_STOPPED
+    private static final Pattern MSG_TRIBUTE_STOPPED = Pattern.compile(
+            "^§3\\[INFO\\]§b (?<sender>[\\w\\s]+) stopped scheduling (?<resource>Emeralds|Fish|Ore|Wood|Crops) to (?<recipient>[a-zA-Z\\s]+)$");
+
+    // Test in GuildModel_MSG_ALLIANCE_FORMED
+    private static final Pattern MSG_ALLIANCE_FORMED =
+            Pattern.compile("^§3\\[INFO\\]§b (?<actor>[\\w\\s]+) formed an alliance with (?<guild>[a-zA-Z\\s]+)$");
+
+    // Test in GuildModel_MSG_ALLIANCE_REVOKED
+    private static final Pattern MSG_ALLIANCE_REVOKED =
+            Pattern.compile("^§3\\[INFO\\]§b (?<actor>[\\w\\s]+) revoked the alliance with (?<guild>[a-zA-Z\\s]+)$");
+
     // Test in GuildModel_LEVEL_MATCHER
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§b§l[a-zA-Z\\s]+§3§l \\[Lv\\. (?<level>\\d+)\\]$");
 
@@ -99,7 +115,7 @@ public class GuildModel extends Model {
     private static final int MEMBERS_SLOT = 0;
     private static final int OBJECTIVES_SLOT = 13;
     public static final int DIPLOMACY_MENU_SLOT = 26;
-    private static final List<Integer> DIPLOMAC_SLOTS = List.of(2, 3, 4, 5, 6, 7, 8);
+    private static final List<Integer> DIPLOMACY_SLOTS = List.of(2, 3, 4, 5, 6, 7, 8);
 
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
@@ -184,6 +200,55 @@ public class GuildModel extends Model {
             objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
             return;
         }
+
+        Matcher tributeScheduledMatcher = message.getMatcher(MSG_TRIBUTE_SCEDULED);
+        if (tributeScheduledMatcher.matches()) {
+            String recipient = tributeScheduledMatcher.group("recipient");
+            GuildResource resource = GuildResource.fromSymbol(tributeScheduledMatcher.group("resource"));
+            int amount = Integer.parseInt(tributeScheduledMatcher.group("amount"));
+            if (recipient.equals(guildName)) {
+                guildDiplomacyMap
+                        .get(tributeScheduledMatcher.group("sender"))
+                        .b()
+                        .put(resource, amount);
+            } else {
+                guildDiplomacyMap.get(recipient).a().put(resource, amount);
+            }
+            return;
+        }
+
+        Matcher tributeStoppedMatcher = message.getMatcher(MSG_TRIBUTE_STOPPED);
+        if (tributeStoppedMatcher.matches()) {
+            String recipient = tributeStoppedMatcher.group("recipient");
+            GuildResource resource = GuildResource.fromName(tributeStoppedMatcher.group("resource"));
+            if (recipient.equals(guildName)) {
+                guildDiplomacyMap.get(tributeStoppedMatcher.group("sender")).b().remove(resource);
+            } else {
+                guildDiplomacyMap.get(recipient).a().remove(resource);
+            }
+            return;
+        }
+
+        Matcher allienceFormedMatcher = message.getMatcher(MSG_ALLIANCE_FORMED);
+        if (allienceFormedMatcher.matches()) {
+            String guild = allienceFormedMatcher.group("guild");
+            if (guild.equals(guildName)) {
+                guild = allienceFormedMatcher.group("actor");
+            }
+            guildDiplomacyMap.put(
+                    guild, Pair.of(new EnumMap<>(GuildResource.class), new EnumMap<>(GuildResource.class)));
+            return;
+        }
+
+        Matcher allianceRevokedMatcher = message.getMatcher(MSG_ALLIANCE_REVOKED);
+        if (allianceRevokedMatcher.matches()) {
+            String guild = allianceRevokedMatcher.group("guild");
+            if (guild.equals(guildName)) {
+                guild = allianceRevokedMatcher.group("actor");
+            }
+            guildDiplomacyMap.remove(guild);
+            return;
+        }
     }
 
     public void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
@@ -248,7 +313,7 @@ public class GuildModel extends Model {
     }
 
     public void parseDiplomacyContainer(ContainerContent content) {
-        for (int slot : DIPLOMAC_SLOTS) {
+        for (int slot : DIPLOMACY_SLOTS) {
             ItemStack diplomacyItem = content.items().get(slot);
             if (diplomacyItem.getItem() == Items.AIR) {
                 continue;
