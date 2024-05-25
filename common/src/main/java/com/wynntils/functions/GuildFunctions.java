@@ -18,6 +18,13 @@ public class GuildFunctions {
         }
     }
 
+    public static class CappedGuildObjectivesProgressFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Guild.getObjectivesCompletedProgress();
+        }
+    }
+
     public static class GuildLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
@@ -38,6 +45,13 @@ public class GuildFunctions {
             GuildRank guildRank = Models.Guild.getGuildRank();
             if (guildRank == null) return "";
             return guildRank.getName();
+        }
+    }
+
+    public static class ObjectiveStreakFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Guild.getObjectiveStreak();
         }
     }
 }
