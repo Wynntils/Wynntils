@@ -346,7 +346,7 @@ public class GuildModel extends Model {
             guildDiplomacyMap.put(alliedGuildNameMatcher.group("name"), Pair.of(sentTributes, recievedTributes));
         }
 
-        WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
+        WynntilsMod.info("Successfully parsed diplomacy for guild " + guildName);
     }
 
     public String getGuildName() {
@@ -403,8 +403,8 @@ public class GuildModel extends Model {
                 .sum();
     }
 
-    public List<String> getAlliedGuilds() {
-        return guildDiplomacyMap.keySet().stream().toList();
+    public boolean isAllied(String guild) {
+        return guildDiplomacyMap.containsKey(guild);
     }
 
     public String getGuildNameFromString(String input) {
