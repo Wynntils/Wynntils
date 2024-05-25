@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
@@ -7,12 +7,15 @@ package com.wynntils.overlays.minimap;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class TerritoryOverlay extends TextOverlay {
-    private static final String TEMPLATE = "{territory}";
+    @Persisted
+    public final Config<TerritoryOwnerDisplay> showOwner = new Config<>(TerritoryOwnerDisplay.HIDE);
 
     public TerritoryOverlay() {
         super(
@@ -22,18 +25,34 @@ public class TerritoryOverlay extends TextOverlay {
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
                         OverlayPosition.AnchorSection.TOP_LEFT),
-                new OverlaySize(130, 20),
+                new OverlaySize(130, 40),
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
     }
 
     @Override
     public String getTemplate() {
-        return TEMPLATE;
+        return showOwner.get().getTemplate();
     }
 
     @Override
     public String getPreviewTemplate() {
-        return TEMPLATE;
+        return getTemplate();
+    }
+
+    private enum TerritoryOwnerDisplay {
+        NAME("{territory}\n{territory_owner}"),
+        TAG("{if_str(eq_str(territory;\"\");\"\";concat(territory;\" [\";territory_owner(true);\"]\"))}"),
+        HIDE("{territory}");
+
+        private final String template;
+
+        TerritoryOwnerDisplay(String template) {
+            this.template = template;
+        }
+
+        private String getTemplate() {
+            return template;
+        }
     }
 }
