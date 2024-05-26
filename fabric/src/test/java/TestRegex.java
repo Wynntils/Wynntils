@@ -369,12 +369,16 @@ public class TestRegex {
     @Test
     public void GuildModel_MSG_TRIBUTE_SCEDULED() {
         PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_SCEDULED");
-        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 2 Emeralds per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 1 Emerald per hour to Example Guild");
         p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 1 Crop per hour to Example Guild");
         p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 1 Fish per hour to Example Guild");
         p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 1 Wood per hour to Example Guild");
         p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 1 Ore per hour to Example Guild");
-        p.shouldMatch("§3[INFO]§b Example Guild scheduled 9000 Emeralds per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 2 Emeralds per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 2 Crops per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 2 Fish per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 2 Wood per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 2 Ore per hour to Example Guild");
     }
 
     @Test
