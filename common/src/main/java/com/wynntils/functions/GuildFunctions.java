@@ -52,7 +52,8 @@ public class GuildFunctions {
     public static class IsAlliedGuildFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Guild.isAllied(arguments.getArgument("guild").getStringValue());
+            return Models.Guild.getAlliedGuilds()
+                    .contains(arguments.getArgument("guild").getStringValue());
         }
 
         @Override

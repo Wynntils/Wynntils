@@ -435,6 +435,12 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_ALLIED_GUILD_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "ALLIED_GUILD_PATTERN");
+        p.shouldMatch("§a- §7GUILD NAME [wynn]");
+    }
+
+    @Test
     public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
         p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]§b");

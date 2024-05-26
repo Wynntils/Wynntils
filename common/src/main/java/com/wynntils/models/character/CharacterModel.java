@@ -16,7 +16,6 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
@@ -215,17 +214,16 @@ public final class CharacterModel extends Model {
         }
 
         // Scan guild container, if the player is in a guild
-        // Upon execution the guild name has already been parsed
-        ContainerPredicate guildMember =
-                (container) -> !Models.Guild.getGuildName().isEmpty();
         queryBuilder
                 .conditionalThen(
-                        guildMember,
+                        // Upon execution the guild name has already been parsed
+                        (container) -> !Models.Guild.getGuildName().isEmpty(),
                         QueryStep.clickOnSlot(GUILD_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(Models.Guild::parseGuildContainer))
                 .conditionalThen(
-                        guildMember,
+                        // Upon execution allied guilds have already been parsed
+                        (container -> !Models.Guild.getAlliedGuilds().isEmpty()),
                         QueryStep.clickOnSlot(GuildModel.DIPLOMACY_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
                                 .processIncomingContainer(Models.Guild::parseDiplomacyContainer));

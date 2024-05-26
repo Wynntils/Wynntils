@@ -54,7 +54,7 @@ public class GuildModel extends Model {
 
     // Test in GuildModel_GUILD_NAME_MATCHER
     private static final Pattern GUILD_NAME_MATCHER =
-            Pattern.compile("^§[3a](§l)?(?<name>[a-zA-Z\\s]+?)(§b)? \\[[a-zA-Z]{3,4}]$");
+            Pattern.compile("^§[3a](§l)?(?<name>[a-zA-Z\\s]+?)(§b)? \\[[a-zA-Z]{3,4}\\]$");
 
     // Test in GuildModel_GUILD_RANK_MATCHER
     private static final Pattern GUILD_RANK_MATCHER =
@@ -111,6 +111,10 @@ public class GuildModel extends Model {
     // Test in GuildModel_TRIBUTE_PATTERN
     private static final Pattern TRIBUTE_PATTERN = Pattern.compile(
             "^§[abef6](?<symbol>[ⒷⒸⓀⒿ]?) ?(?<amount>[+-]\\d+) (Ore|Wood|Fish|Crops?|Emeralds?) per Hour$");
+
+    // Test in GuildModel_ALLIED_GUILD_PATTERN
+    private static final Pattern ALLIED_GUILD_PATTERN =
+            Pattern.compile("§a- §7(?<name>[a-zA-Z\\s]+) \\[[a-zA-Z]{3,4}\\]");
 
     private static final int MEMBERS_SLOT = 0;
     private static final int OBJECTIVES_SLOT = 13;
@@ -235,8 +239,7 @@ public class GuildModel extends Model {
             if (guild.equals(guildName)) {
                 guild = allienceFormedMatcher.group("actor");
             }
-            guildDiplomacyMap.put(
-                    guild, Pair.of(new EnumMap<>(GuildResource.class), new EnumMap<>(GuildResource.class)));
+            addAlliedGuild(guild);
             return;
         }
 
@@ -274,6 +277,7 @@ public class GuildModel extends Model {
     public void parseGuildContainer(ContainerContent container) {
         ItemStack membersItem = container.items().get(MEMBERS_SLOT);
         ItemStack objectivesItem = container.items().get(OBJECTIVES_SLOT);
+        ItemStack diplomacyItem = container.items().get(DIPLOMACY_MENU_SLOT);
 
         Matcher levelMatcher = StyledText.fromComponent(membersItem.getHoverName())
                 .getNormalized()
@@ -309,6 +313,13 @@ public class GuildModel extends Model {
             }
         }
 
+        for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
+            Matcher alliedGuildMatcher = line.getMatcher(ALLIED_GUILD_PATTERN);
+            if (alliedGuildMatcher.matches()) {
+                addAlliedGuild(alliedGuildMatcher.group("name"));
+            }
+        }
+
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
     }
 
@@ -327,8 +338,14 @@ public class GuildModel extends Model {
                 continue;
             }
 
-            Map<GuildResource, Integer> sentTributes = new EnumMap<>(GuildResource.class);
-            Map<GuildResource, Integer> recievedTributes = new EnumMap<>(GuildResource.class);
+            String alliedGuildName = alliedGuildNameMatcher.group("name");
+            if (!guildDiplomacyMap.containsKey(alliedGuildName)) {
+                WynntilsMod.warn("Trying to parse tributes for unallied guild " + alliedGuildName);
+                continue;
+            }
+
+            Pair<Map<GuildResource, Integer>, Map<GuildResource, Integer>> tributes =
+                    guildDiplomacyMap.get(alliedGuildName);
 
             for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
                 Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
@@ -336,17 +353,20 @@ public class GuildModel extends Model {
                     GuildResource resource = GuildResource.fromSymbol(tributeMatcher.group("symbol"));
                     int amount = Integer.parseInt(tributeMatcher.group("amount"));
                     if (amount > 0) {
-                        recievedTributes.put(resource, amount);
+                        tributes.b().put(resource, amount);
                     } else {
-                        sentTributes.put(resource, Math.abs(amount));
+                        tributes.a().put(resource, Math.abs(amount));
                     }
                 }
             }
-
-            guildDiplomacyMap.put(alliedGuildNameMatcher.group("name"), Pair.of(sentTributes, recievedTributes));
         }
 
-        WynntilsMod.info("Successfully parsed diplomacy for guild " + guildName);
+        WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
+    }
+
+    private void addAlliedGuild(String alliedGuildName) {
+        guildDiplomacyMap.put(
+                alliedGuildName, Pair.of(new EnumMap<>(GuildResource.class), new EnumMap<>(GuildResource.class)));
     }
 
     public String getGuildName() {
@@ -403,8 +423,8 @@ public class GuildModel extends Model {
                 .sum();
     }
 
-    public boolean isAllied(String guild) {
-        return guildDiplomacyMap.containsKey(guild);
+    public List<String> getAlliedGuilds() {
+        return guildDiplomacyMap.keySet().stream().toList();
     }
 
     public String getGuildNameFromString(String input) {
