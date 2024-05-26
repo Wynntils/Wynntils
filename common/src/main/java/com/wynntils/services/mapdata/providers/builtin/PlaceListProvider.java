@@ -60,7 +60,7 @@ public class PlaceListProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<Integer> getLevel() {
-                    return Optional.of(label.getLevel());
+                    return label.getLevel();
                 }
             };
         }
