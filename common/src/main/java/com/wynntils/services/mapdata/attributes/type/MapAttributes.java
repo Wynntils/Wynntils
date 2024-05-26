@@ -23,7 +23,7 @@ public interface MapAttributes {
 
     // the minimum combat level for which this feature is suitable for
     // 0 means suitable for all levels
-    // -1 means no information is available
+    // -1 means no information is available, or level is not applicable
     // empty means inherit
     Optional<Integer> getLevel();
 

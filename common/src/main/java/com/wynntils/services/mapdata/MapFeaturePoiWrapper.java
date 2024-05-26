@@ -64,17 +64,15 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getWidth(float mapZoom, float scale) {
-        Optional<String> iconId = attributes.getIconId();
-        Optional<String> label = attributes.getLabel();
-
         if (hasIcon()) {
-            Optional<MapIcon> icon = Services.MapData.getIcon(iconId.get());
+            Optional<MapIcon> icon =
+                    Services.MapData.getIcon(attributes.getIconId().get());
             if (icon.isPresent()) {
                 return (int) (icon.get().getWidth() * scale);
             }
         }
 
-        if (hasLabel(label.orElse(null))) {
+        if (hasLabel()) {
             // Use label for measurements
             return (int) (FontRenderer.getInstance()
                             .getFont()
@@ -89,17 +87,15 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getHeight(float mapZoom, float scale) {
-        Optional<String> iconId = attributes.getIconId();
-        Optional<String> label = attributes.getLabel();
-
         if (hasIcon()) {
-            Optional<MapIcon> icon = Services.MapData.getIcon(iconId.get());
+            Optional<MapIcon> icon =
+                    Services.MapData.getIcon(attributes.getIconId().get());
             if (icon.isPresent()) {
                 return (int) (icon.get().getHeight() * scale);
             }
         }
 
-        if (hasLabel(label.orElse(null))) {
+        if (hasLabel()) {
             // Use label for measurements
             return getLabelHeight(scale);
         }
@@ -160,8 +156,7 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw label, if applicable
-        boolean drawLabel =
-                hasLabel(label.orElse(null)) && this.getLabelAlpha(zoomLevel) > 0.01 || (drawIcon && hovered);
+        boolean drawLabel = hasLabel() && this.getLabelAlpha(zoomLevel) > 0.01 || (drawIcon && hovered);
         if (drawLabel) {
             CustomColor labelColor = attributes.getLabelColor().orElse(CommonColors.WHITE);
             TextShadow labelShadow = attributes.getLabelShadow().orElse(TextShadow.OUTLINE);
@@ -220,8 +215,8 @@ public class MapFeaturePoiWrapper implements Poi {
                 && !attributes.getIconId().get().equals(MapIcon.NO_ICON_ID);
     }
 
-    private boolean hasLabel(String label) {
-        return label != null && !label.isEmpty();
+    private boolean hasLabel() {
+        return attributes.getLabel().isPresent() && !attributes.getLabel().get().isEmpty();
     }
 
     private float calculateVisibility(float min, float max, float fade, float zoomLevel) {

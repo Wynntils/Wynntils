@@ -12,15 +12,16 @@ import com.google.gson.JsonParseException;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 public class Label {
     private final String name;
     private final int x;
     private final int z;
     private final int layer;
-    private final int level;
+    private final Integer level;
 
-    public Label(String name, int x, int z, int layer, int level) {
+    public Label(String name, int x, int z, int layer, Integer level) {
         this.name = name;
         this.x = x;
         this.z = z;
@@ -47,8 +48,8 @@ public class Label {
         return LabelLayer.values()[layer - 1];
     }
 
-    public int getLevel() {
-        return level;
+    public Optional<Integer> getLevel() {
+        return Optional.ofNullable(level);
     }
 
     public Location getLocation() {
@@ -62,7 +63,7 @@ public class Label {
             JsonObject jsonObject = json.getAsJsonObject();
             JsonElement levelObject = jsonObject.get("level");
 
-            int level = -1;
+            Integer level = null;
 
             if (levelObject != null) {
                 String levelString = levelObject.getAsString();

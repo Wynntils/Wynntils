@@ -16,6 +16,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
@@ -108,7 +109,7 @@ public class LabelPoi implements Poi {
         }
         float modifier = scale;
         if (hovered) {
-            modifier *= 1.05;
+            modifier *= 1.05f;
             alpha = 1f;
         }
         CustomColor color = getRenderedColor(alpha);
@@ -130,8 +131,8 @@ public class LabelPoi implements Poi {
                         getTextShadow(),
                         1f);
         if (hovered) {
-            int level = label.getLevel();
-            if (level >= 1) {
+            Optional<Integer> level = label.getLevel();
+            if (level.isPresent()) {
                 BufferedFontRenderer.getInstance()
                         .renderText(
                                 poseStack,
