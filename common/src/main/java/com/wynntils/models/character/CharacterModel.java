@@ -217,13 +217,13 @@ public final class CharacterModel extends Model {
         queryBuilder
                 .conditionalThen(
                         // Upon execution the guild name has already been parsed
-                        (container) -> !Models.Guild.getGuildName().isEmpty(),
+                        container -> !Models.Guild.getGuildName().isEmpty(),
                         QueryStep.clickOnSlot(GUILD_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(Models.Guild::parseGuildContainer))
                 .conditionalThen(
                         // Upon execution allied guilds have already been parsed
-                        (container -> !Models.Guild.getAlliedGuilds().isEmpty()),
+                        container -> !Models.Guild.getAlliedGuilds().isEmpty(),
                         QueryStep.clickOnSlot(GuildModel.DIPLOMACY_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
                                 .processIncomingContainer(Models.Guild::parseDiplomacyContainer));
