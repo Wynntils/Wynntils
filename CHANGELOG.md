@@ -1,3 +1,23 @@
+## [1.2.15](https://github.com/Wynntils/Artemis/compare/v1.2.14...v1.2.15) (2024-05-27)
+
+
+### New Features
+
+* Add guild objective functions [skip ci] ([#2526](https://github.com/Wynntils/Artemis/issues/2526)) ([333933a](https://github.com/Wynntils/Artemis/commit/333933a5135b96035b7afffc46fa215b6f2fafbd))
+* Overlay Management visual enhancements [skip ci] ([#2531](https://github.com/Wynntils/Artemis/issues/2531)) ([02f61ef](https://github.com/Wynntils/Artemis/commit/02f61ef82d15a2b2733885a8626916a4e6620448))
+
+
+### Bug Fixes
+
+* Fix charms being counted as defective, if they had no identifications [skip ci] ([#2530](https://github.com/Wynntils/Artemis/issues/2530)) ([153ff14](https://github.com/Wynntils/Artemis/commit/153ff1438cd63f5a7eb064e7cd278cbcd6e8a170))
+* Fix CustomPlayerListOverlay below the boss bars [skip ci] ([#2527](https://github.com/Wynntils/Artemis/issues/2527)) ([268f48e](https://github.com/Wynntils/Artemis/commit/268f48e3565acdc0df0b34ec8db2dec32a060a8b))
+* Fix tomes being counted as defective, if they had no identifications [skip ci] ([#2529](https://github.com/Wynntils/Artemis/issues/2529)) ([473a5da](https://github.com/Wynntils/Artemis/commit/473a5daf601e7011eddfbc6d00c3e005148cb385))
+
+
+### Code Refactoring
+
+* Make label levels Optional<Integer> in preparation for MapData ([#2532](https://github.com/Wynntils/Artemis/issues/2532)) ([1ff8e1b](https://github.com/Wynntils/Artemis/commit/1ff8e1bb2335ea42d7c1b343a3b55df8f2daf1fe))
+
 ## [1.2.14](https://github.com/Wynntils/Artemis/compare/v1.2.13...v1.2.14) (2024-05-24)
 
 
@@ -16,6 +36,11 @@
 
 * Account for timezone in player commands [skip ci] ([#2517](https://github.com/Wynntils/Artemis/issues/2517)) ([845bfc7](https://github.com/Wynntils/Artemis/commit/845bfc7754527973234c282f120fad76d9562b59))
 * Fix accidentally opening the territory management UI after backing from other guild related screens [skip ci] ([#2522](https://github.com/Wynntils/Artemis/issues/2522)) ([3f5936d](https://github.com/Wynntils/Artemis/commit/3f5936d19a243a4a3c34cc1f943d981185395fb0))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.14 [skip ci] ([2664566](https://github.com/Wynntils/Artemis/commit/2664566af53f963386b4cd5c693a13c76465e626))
 
 ## [1.2.13](https://github.com/Wynntils/Artemis/compare/v1.2.12...v1.2.13) (2024-05-22)
 
@@ -75,23 +100,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.11 [skip ci] ([cea310f](https://github.com/Wynntils/Artemis/commit/cea310f70a8c4fe4b39082d002e27be1f7ecb025))
-
-## [1.2.10](https://github.com/Wynntils/Artemis/compare/v1.2.9...v1.2.10) (2024-05-17)
-
-
-### New Features
-
-* Add visibility handling to MapData [skip ci] ([#2493](https://github.com/Wynntils/Artemis/issues/2493)) ([7d606a8](https://github.com/Wynntils/Artemis/commit/7d606a842589b8c958b50d2e0e485ba0673ae09a))
-* Overlay selection & management screen redesign ([#2502](https://github.com/Wynntils/Artemis/issues/2502)) ([010f5a6](https://github.com/Wynntils/Artemis/commit/010f5a61f68a244af34b04dbef19376afb0c3160))
-
-
-### Bug Fixes
-
-* Detect TCC failure correctly [skip ci] ([#2505](https://github.com/Wynntils/Artemis/issues/2505)) ([6acb4a9](https://github.com/Wynntils/Artemis/commit/6acb4a9fed2d1fdf5394c52cdd3089f50b209cd2))
-* Parse unidentified shiny items correctly [skip ci] ([#2503](https://github.com/Wynntils/Artemis/issues/2503)) ([1bec7fe](https://github.com/Wynntils/Artemis/commit/1bec7fe6389b77110619786a0b40557c6c42503f))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.10 [skip ci] ([d7b58c8](https://github.com/Wynntils/Artemis/commit/d7b58c89df80a9c94ee2821c2f7abe0da3047deb))
 
