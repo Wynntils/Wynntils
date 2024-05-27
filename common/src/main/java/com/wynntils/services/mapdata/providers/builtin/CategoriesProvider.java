@@ -195,7 +195,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public Optional<String> getName() {
-            return Optional.ofNullable(kind.getName());
+            return Optional.of(kind.getName());
         }
 
         @Override
@@ -203,7 +203,7 @@ public class CategoriesProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
-                    return Optional.ofNullable(kind.getName());
+                    return Optional.of(kind.getName());
                 }
 
                 @Override
@@ -257,7 +257,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public Optional<String> getName() {
-            return Optional.ofNullable(kind.getName());
+            return Optional.of(kind.getName());
         }
 
         @Override
@@ -265,7 +265,7 @@ public class CategoriesProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
-                    return Optional.ofNullable(kind.getName());
+                    return Optional.of(kind.getName());
                 }
 
                 @Override
