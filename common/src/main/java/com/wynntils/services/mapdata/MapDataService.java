@@ -6,7 +6,7 @@ package com.wynntils.services.mapdata;
 
 import com.wynntils.core.components.Service;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.mapdata.attributes.FullFeatureAttributes;
+import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -37,8 +37,11 @@ public class MapDataService extends Service {
 
     // region Lookup and extend data from providers
 
-    public MapAttributes getFullFeatureAttributes(MapFeature feature) {
-        return new FullFeatureAttributes(feature);
+    /** Return a MapAttributes where all methods are guaranteed to return
+     * non-empty, by using inheritance rules.
+     */
+    public MapAttributes getResolvedMapAttributes(MapFeature feature) {
+        return new ResolvedMapAttributes(feature);
     }
 
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.mapdata.attributes;
+package com.wynntils.services.mapdata.attributes.resolving;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
@@ -11,7 +11,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class DerivedAttributes implements MapAttributes {
+public abstract class DerivedMapAttributes implements MapAttributes {
     protected abstract <T> Optional<T> getAttribute(Function<MapAttributes, Optional<T>> getter);
 
     @Override

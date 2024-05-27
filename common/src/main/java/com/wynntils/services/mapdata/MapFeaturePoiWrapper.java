@@ -33,7 +33,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     public MapFeaturePoiWrapper(MapFeature feature) {
         this.feature = feature;
-        attributes = Services.MapData.getFullFeatureAttributes(this.feature);
+        attributes = Services.MapData.getResolvedMapAttributes(this.feature);
     }
 
     @Override
