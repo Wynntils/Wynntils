@@ -36,6 +36,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -180,7 +181,12 @@ public final class JsonProvider implements MapDataProvider {
             JsonElement locationJson = json.get("location");
             Location location = GSON.fromJson(locationJson, Location.class);
             JsonElement attributesJson = json.get("attributes");
-            MapAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+            Optional<MapAttributes> attributes;
+            if (attributesJson != null && attributesJson.isJsonObject()) {
+                attributes = Optional.ofNullable(GSON.fromJson(attributesJson, JsonAttributes.class));
+            } else {
+                attributes = Optional.empty();
+            }
 
             return new JsonMapLocation(id, category, attributes, location);
         }

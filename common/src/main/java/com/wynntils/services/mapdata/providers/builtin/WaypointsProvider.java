@@ -80,8 +80,8 @@ public class WaypointsProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getIconId() {
                     return Optional.ofNullable(iconId);
@@ -101,7 +101,7 @@ public class WaypointsProvider extends BuiltInProvider {
                                 case HIDDEN -> MapVisibility.NEVER;
                             });
                 }
-            };
+            });
         }
 
         @Override
@@ -137,8 +137,8 @@ public class WaypointsProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return null;
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.empty();
         }
 
         @Override

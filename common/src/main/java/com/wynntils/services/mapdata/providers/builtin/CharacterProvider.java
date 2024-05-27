@@ -74,13 +74,13 @@ public class CharacterProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<MapVisibility> getIconVisibility() {
                     return Optional.of(MapVisibility.NEVER);
                 }
-            };
+            });
         }
 
         @Override

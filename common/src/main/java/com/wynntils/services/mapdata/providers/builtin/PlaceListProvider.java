@@ -51,8 +51,8 @@ public class PlaceListProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
                     return label.getName().describeConstable();
@@ -62,7 +62,7 @@ public class PlaceListProvider extends BuiltInProvider {
                 public Optional<Integer> getLevel() {
                     return label.getLevel();
                 }
-            };
+            });
         }
 
         @Override

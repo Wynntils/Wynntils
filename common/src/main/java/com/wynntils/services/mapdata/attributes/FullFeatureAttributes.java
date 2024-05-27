@@ -22,7 +22,7 @@ import java.util.function.Function;
  */
 public class FullFeatureAttributes extends DerivedAttributes {
     private final MapFeature feature;
-    private final MapAttributes attributes;
+    private final Optional<MapAttributes> attributes;
 
     public FullFeatureAttributes(MapFeature feature) {
         this.feature = feature;
@@ -32,17 +32,18 @@ public class FullFeatureAttributes extends DerivedAttributes {
     @Override
     protected <T> Optional<T> getAttribute(Function<MapAttributes, Optional<T>> getter) {
         // Check if the feature has overridden this attribute
-        if (attributes != null) {
-            Optional<T> attribute = getter.apply(attributes);
-            if (attribute != null) {
+        if (attributes.isPresent()) {
+            Optional<T> attribute = getter.apply(attributes.get());
+            if (attribute.isPresent()) {
                 return attribute;
             }
         }
 
         // Otherwise try to get it from the category
         MapAttributes categoryAttributes = Services.MapData.getFullCategoryAttributes(feature.getCategoryId());
-        if (categoryAttributes != null) {
-            return getter.apply(categoryAttributes);
+        Optional<T> attribute = getter.apply(categoryAttributes);
+        if (attribute.isPresent()) {
+            return attribute;
         }
 
         // Otherwise return the default fallback value
@@ -64,8 +65,8 @@ public class FullFeatureAttributes extends DerivedAttributes {
         DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.ALWAYS);
 
         // Check if the feature has overridden this attribute
-        if (attributes != null) {
-            Optional<T> attribute = getter.apply(attributes);
+        if (attributes.isPresent()) {
+            Optional<T> attribute = getter.apply(attributes.get());
 
             if (attribute.isEmpty()) {
                 // No attribute defined; this should not happen
