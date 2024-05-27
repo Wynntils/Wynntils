@@ -6,7 +6,6 @@ package com.wynntils.services.mapdata;
 
 import com.wynntils.core.components.Service;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.mapdata.attributes.CategoryAttributes;
 import com.wynntils.services.mapdata.attributes.FullFeatureAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
@@ -36,8 +35,15 @@ public class MapDataService extends Service {
         return getFeatures().map(MapFeaturePoiWrapper::new);
     }
 
+    // region Lookup and extend data from providers
+
     public MapAttributes getFullFeatureAttributes(MapFeature feature) {
         return new FullFeatureAttributes(feature);
+    }
+
+    public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
+        return providers.getProviders().flatMap(MapDataProvider::getCategories).filter(p -> p.getCategoryId()
+                .equals(categoryId));
     }
 
     public String getCategoryName(String categoryId) {
@@ -54,17 +60,6 @@ public class MapDataService extends Service {
 
         Stream<MapIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
         return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
-    }
-
-    // region Support for FullFeatureAttributes and FullCategoryAttributes
-
-    public MapAttributes getFullCategoryAttributes(String categoryId) {
-        return new CategoryAttributes(categoryId);
-    }
-
-    public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
-        return providers.getProviders().flatMap(MapDataProvider::getCategories).filter(p -> p.getCategoryId()
-                .equals(categoryId));
     }
 
     // endregion

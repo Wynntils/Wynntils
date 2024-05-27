@@ -5,7 +5,6 @@
 package com.wynntils.services.mapdata.attributes;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -40,7 +39,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         }
 
         // Otherwise try to get it from the category
-        MapAttributes categoryAttributes = Services.MapData.getFullCategoryAttributes(feature.getCategoryId());
+        MapAttributes categoryAttributes = new CategoryAttributes(feature.getCategoryId());
         Optional<T> attribute = getter.apply(categoryAttributes);
         if (attribute.isPresent()) {
             return attribute;
@@ -88,7 +87,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         }
 
         // Otherwise get it from the category
-        MapAttributes categoryAttributes = Services.MapData.getFullCategoryAttributes(feature.getCategoryId());
+        MapAttributes categoryAttributes = new CategoryAttributes(feature.getCategoryId());
         if (categoryAttributes == null) {
             // No category attributes; return the default visibility with the derived feature visibility applied
             return MapVisibility.ALWAYS.applyDerived(derivedFeatureVisibility);
