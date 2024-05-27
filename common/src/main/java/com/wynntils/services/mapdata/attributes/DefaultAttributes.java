@@ -20,8 +20,7 @@ import java.util.Optional;
 public final class DefaultAttributes implements MapAttributes {
     public static DefaultAttributes INSTANCE = new DefaultAttributes();
 
-    private DefaultAttributes() {
-    }
+    private DefaultAttributes() {}
 
     @Override
     public Optional<String> getLabel() {
@@ -45,7 +44,7 @@ public final class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<MapVisibility> getLabelVisibility() {
-        return Optional.of(MapVisibility.ALWAYS);
+        return Optional.of(FixedMapVisibility.LABEL_ALWAYS);
     }
 
     @Override
@@ -60,7 +59,7 @@ public final class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<MapVisibility> getIconVisibility() {
-        return Optional.of(MapVisibility.ALWAYS);
+        return Optional.of(FixedMapVisibility.ICON_ALWAYS);
     }
 
     @Override

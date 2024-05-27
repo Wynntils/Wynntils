@@ -64,10 +64,11 @@ public class MapDataService extends Service {
 
     // endregion
 
+    /** This method requires a MapVisibility with all values non-empty to work correctly. */
     public float calculateVisibility(MapVisibility mapVisibility, float zoomLevel) {
-        float min = mapVisibility.getMin();
-        float max = mapVisibility.getMax();
-        float fade = mapVisibility.getFade();
+        float min = mapVisibility.getMin().get();
+        float max = mapVisibility.getMax().get();
+        float fade = mapVisibility.getFade().get();
 
         float startFadeIn = min - fade;
         float stopFadeIn = min + fade;

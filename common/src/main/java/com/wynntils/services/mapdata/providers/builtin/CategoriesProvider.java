@@ -9,8 +9,7 @@ import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
-import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -54,9 +53,6 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class WynntilsCategory implements MapCategory {
-        private static final MapVisibility DEFAULT_ICON_VISIBILITY = new FullMapVisibility(0, 100, 6);
-        private static final MapVisibility DEFAULT_LABEL_VISIBILITY = new FullMapVisibility(0, 100, 3);
-
         @Override
         public String getCategoryId() {
             return "wynntils";
@@ -73,21 +69,6 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<String> getIconId() {
                     return Optional.of("wynntils:icon:symbols:waypoint");
-                }
-
-                @Override
-                public Optional<Integer> getPriority() {
-                    return Optional.of(500);
-                }
-
-                @Override
-                public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(DEFAULT_ICON_VISIBILITY);
-                }
-
-                @Override
-                public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(DEFAULT_LABEL_VISIBILITY);
                 }
             });
         }
@@ -119,17 +100,21 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(MapVisibility.NEVER);
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
             });
         }
     }
 
     private static final class FoundChestCategory implements MapCategory {
-        private static final MapVisibility TIER_1_VISIBILITY = DerivedMapVisibility.withMin(57f);
-        private static final MapVisibility TIER_2_VISIBILITY = DerivedMapVisibility.withMin(57f);
-        private static final MapVisibility TIER_3_VISIBILITY = DerivedMapVisibility.withMin(30f);
-        private static final MapVisibility TIER_4_VISIBILITY = DerivedMapVisibility.withMin(30f);
+        private static final MapVisibility TIER_1_VISIBILITY =
+                MapVisibility.builder().withMin(57f);
+        private static final MapVisibility TIER_2_VISIBILITY =
+                MapVisibility.builder().withMin(57f);
+        private static final MapVisibility TIER_3_VISIBILITY =
+                MapVisibility.builder().withMin(30f);
+        private static final MapVisibility TIER_4_VISIBILITY =
+                MapVisibility.builder().withMin(30f);
 
         private final int tier;
 
@@ -179,21 +164,23 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case 3 -> TIER_3_VISIBILITY;
                                 case 4 -> TIER_4_VISIBILITY;
                                     // This should never happen
-                                default -> MapVisibility.ALWAYS;
+                                default -> FixedMapVisibility.ICON_ALWAYS;
                             });
                 }
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(MapVisibility.NEVER);
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
             });
         }
     }
 
     private static final class ServiceCategory implements MapCategory {
-        private static final MapVisibility FAST_TRAVEL_VISIBILITY = DerivedMapVisibility.withMin(18f);
-        private static final MapVisibility OTHER_VISIBILITY = DerivedMapVisibility.withMin(57f);
+        private static final MapVisibility FAST_TRAVEL_VISIBILITY =
+                MapVisibility.builder().withMin(18f);
+        private static final MapVisibility OTHER_VISIBILITY =
+                MapVisibility.builder().withMin(57f);
 
         private final ServiceKind kind;
 
@@ -245,15 +232,17 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(MapVisibility.NEVER);
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
             });
         }
     }
 
     private static final class CombatCategory implements MapCategory {
-        private static final MapVisibility CAVES_VISIBILITY = DerivedMapVisibility.withMin(31f);
-        private static final MapVisibility OTHER_VISIBILITY = DerivedMapVisibility.withMin(19f);
+        private static final MapVisibility CAVES_VISIBILITY =
+                MapVisibility.builder().withMin(31f);
+        private static final MapVisibility OTHER_VISIBILITY =
+                MapVisibility.builder().withMin(19f);
 
         private final CombatKind kind;
 
@@ -305,16 +294,19 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
-                    return Optional.of(MapVisibility.NEVER);
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
             });
         }
     }
 
     private static final class PlaceCategory implements MapCategory {
-        private static final MapVisibility PROVINCE_VISIBILITY = DerivedMapVisibility.withMax(32f);
-        private static final MapVisibility CITY_VISIBILITY = DerivedMapVisibility.withMax(74f);
-        private static final MapVisibility PLACE_VISIBILITY = DerivedMapVisibility.withMinMax(32f, 86f);
+        private static final MapVisibility PROVINCE_VISIBILITY =
+                MapVisibility.builder().withMax(32f);
+        private static final MapVisibility CITY_VISIBILITY =
+                MapVisibility.builder().withMax(74f);
+        private static final MapVisibility PLACE_VISIBILITY =
+                MapVisibility.builder().withMin(32f).withMax(86f);
 
         private final Label.LabelLayer layer;
 

@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -56,7 +57,7 @@ public class CharacterProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(MapVisibility.ALWAYS);
+                    return Optional.of(FixedMapVisibility.ICON_ALWAYS);
                 }
             });
         }
@@ -78,7 +79,7 @@ public class CharacterProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(MapVisibility.NEVER);
+                    return Optional.of(FixedMapVisibility.ICON_NEVER);
                 }
             });
         }

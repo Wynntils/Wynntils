@@ -62,8 +62,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getWidth(float mapZoom, float scale) {
-        Optional<MapIcon> icon =
-                Services.MapData.getIcon(attributes.getIconId().get());
+        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId().get());
         if (icon.isPresent()) {
             return (int) (icon.get().getWidth() * scale);
         }
@@ -83,8 +82,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getHeight(float mapZoom, float scale) {
-        Optional<MapIcon> icon =
-                Services.MapData.getIcon(attributes.getIconId().get());
+        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId().get());
         if (icon.isPresent()) {
             return (int) (icon.get().getHeight() * scale);
         }
@@ -122,7 +120,9 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
-        float iconAlpha = hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.getIconVisibility().get(), zoomLevel);
+        float iconAlpha = hoverAlphaFactor
+                * Services.MapData.calculateVisibility(
+                        attributes.getIconVisibility().get(), zoomLevel);
         Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId().get());
         boolean drawIcon = iconAlpha > 0.01;
         if (icon.isPresent() && drawIcon) {
@@ -149,7 +149,9 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw label, if applicable
-        float labelAlpha = hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.getLabelVisibility().get(), zoomLevel);
+        float labelAlpha = hoverAlphaFactor
+                * Services.MapData.calculateVisibility(
+                        attributes.getLabelVisibility().get(), zoomLevel);
         // Small enough alphas are turned into 255, so trying to render them results in
         // visual glitches
         // Always draw labels for hovered icons, regardless of label visibility rules

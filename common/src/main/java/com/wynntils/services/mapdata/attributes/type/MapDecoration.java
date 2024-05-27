@@ -16,10 +16,10 @@ public interface MapDecoration {
         }
 
         @Override
-        public void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel) {
-        }
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel) {}
     };
 
     boolean isVisible();
+
     void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel);
 }
