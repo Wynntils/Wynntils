@@ -68,7 +68,7 @@ public class CategoriesProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getIconId() {
-                    return Optional.of("wynntils:icon:symbols:waypoint");
+                    return Optional.of(MapIconsProvider.FALLBACK_ICON_ID);
                 }
             });
         }
