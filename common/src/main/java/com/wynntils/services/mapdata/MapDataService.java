@@ -68,15 +68,11 @@ public class MapDataService extends Service {
 
     // endregion
 
-    public float getVisibilityForZoomLevel(Optional<MapVisibility> mapVisibility, float zoomLevel) {
-        return calculateVisibility(
-                mapVisibility.get().getMin(),
-                mapVisibility.get().getMax(),
-                mapVisibility.get().getFade(),
-                zoomLevel);
-    }
+    public float calculateVisibility(MapVisibility mapVisibility, float zoomLevel) {
+        float min = mapVisibility.getMin();
+        float max = mapVisibility.getMax();
+        float fade = mapVisibility.getFade();
 
-    private float calculateVisibility(float min, float max, float fade, float zoomLevel) {
         float startFadeIn = min - fade;
         float stopFadeIn = min + fade;
         float startFadeOut = max - fade;

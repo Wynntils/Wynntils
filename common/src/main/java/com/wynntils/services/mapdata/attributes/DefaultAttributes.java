@@ -13,6 +13,10 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
+/**
+ * These are the fallback attributes used by FullFeatureAttribute if no other attributes
+ * are defined. These are guaranteed to be non-empty.
+ */
 public class DefaultAttributes implements MapAttributes {
     @Override
     public Optional<String> getLabel() {
@@ -36,7 +40,7 @@ public class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<MapVisibility> getLabelVisibility() {
-        return Optional.empty();
+        return Optional.of(MapVisibility.ALWAYS);
     }
 
     @Override
@@ -51,7 +55,7 @@ public class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<MapVisibility> getIconVisibility() {
-        return Optional.empty();
+        return Optional.of(MapVisibility.ALWAYS);
     }
 
     @Override

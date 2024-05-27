@@ -12,7 +12,6 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.colors.CustomColor;
@@ -122,7 +121,7 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
-        float iconAlpha = hoverAlphaFactor * this.getIconAlpha(zoomLevel);
+        float iconAlpha = hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.getIconVisibility().get(), zoomLevel);
         Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId().get());
         boolean drawIcon = iconAlpha > 0.01;
         if (icon.isPresent() && drawIcon) {
@@ -149,7 +148,7 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw label, if applicable
-        float labelAlpha = hoverAlphaFactor * getLabelAlpha(zoomLevel);
+        float labelAlpha = hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.getLabelVisibility().get(), zoomLevel);
         // Small enough alphas are turned into 255, so trying to render them results in
         // visual glitches
         // Always draw labels for hovered icons, regardless of label visibility rules
@@ -197,26 +196,6 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         poseStack.popPose();
-    }
-
-    private float getIconAlpha(float zoomLevel) {
-        Optional<MapVisibility> iconVisibility = attributes.getIconVisibility();
-        // If no visibility is specified, always show
-        if (iconVisibility.isEmpty()) {
-            return 1f;
-        }
-
-        return Services.MapData.getVisibilityForZoomLevel(iconVisibility, zoomLevel);
-    }
-
-    private float getLabelAlpha(float zoomLevel) {
-        Optional<MapVisibility> labelVisibility = attributes.getLabelVisibility();
-        // If no visibility is specified, always show
-        if (labelVisibility.isEmpty()) {
-            return 1f;
-        }
-
-        return Services.MapData.getVisibilityForZoomLevel(labelVisibility, zoomLevel);
     }
 
     private int getLabelHeight(float scale) {
