@@ -61,7 +61,7 @@ public class CombatListProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
-                    return Optional.ofNullable(name);
+                    return Optional.of(name);
                 }
             });
         }
