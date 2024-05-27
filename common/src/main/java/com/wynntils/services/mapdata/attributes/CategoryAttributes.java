@@ -13,7 +13,6 @@ import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -33,13 +32,22 @@ public class CategoryAttributes extends DerivedAttributes {
     @Override
     protected <T> Optional<T> getAttribute(Function<MapAttributes, Optional<T>> getter) {
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
+            // Find all provided MapAttributes for this category level
             Stream<MapAttributes> allAttributes = Services.MapData.getCategoryDefinitions(id)
                     .map(MapCategory::getAttributes)
-                    .filter(Objects::nonNull);
-            Optional<Optional<T>> possibleAttribute =
-                    allAttributes.map(getter).filter(Optional::isPresent).findFirst();
-            if (possibleAttribute.isPresent()) {
-                return possibleAttribute.get();
+                    .filter(Optional::isPresent)
+                    .map(Optional::get);
+
+            // Mulitple providers might provide MapAttributes to the same category, but not
+            // all of them might provide the attribute we're actually looking for, so
+            // check all (in the arbitrary order that Services.MapData gave them to us).
+            Optional<T> attribute = allAttributes
+                    .map(getter)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst();
+            if (attribute.isPresent()) {
+                return attribute;
             }
         }
 
@@ -63,7 +71,8 @@ public class CategoryAttributes extends DerivedAttributes {
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
             Stream<MapAttributes> allAttributes = Services.MapData.getCategoryDefinitions(id)
                     .map(MapCategory::getAttributes)
-                    .filter(Objects::nonNull);
+                    .filter(Optional::isPresent)
+                    .map(Optional::get);
             Optional<T> visibility = allAttributes
                     .map(getter)
                     .filter(Optional::isPresent)

@@ -14,7 +14,6 @@ import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -42,7 +41,8 @@ public class MapDataService extends Service {
     public String getCategoryName(String categoryId) {
         return getCategoryDefinitions(categoryId)
                 .map(MapCategory::getName)
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .findFirst()
                 .orElse(NAMELESS_CATEGORY);
     }

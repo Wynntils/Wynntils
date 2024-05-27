@@ -6,13 +6,14 @@ package com.wynntils.services.mapdata.providers.json;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.type.MapCategory;
+import java.util.Optional;
 
 public class JsonCategory implements MapCategory {
     private final String id;
-    private final String name;
-    private final MapAttributes attributes;
+    private final Optional<String> name;
+    private final Optional<MapAttributes> attributes;
 
-    public JsonCategory(String id, String name, MapAttributes attributes) {
+    public JsonCategory(String id, Optional<String> name, Optional<MapAttributes> attributes) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
@@ -24,12 +25,12 @@ public class JsonCategory implements MapCategory {
     }
 
     @Override
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
     @Override
-    public MapAttributes getAttributes() {
+    public Optional<MapAttributes> getAttributes() {
         return attributes;
     }
 }

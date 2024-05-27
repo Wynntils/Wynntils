@@ -42,13 +42,13 @@ public class CharacterProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Player positions";
+        public Optional<String> getName() {
+            return Optional.of("Player positions");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<Integer> getPriority() {
                     return Optional.of(900);
@@ -58,7 +58,7 @@ public class CharacterProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getIconVisibility() {
                     return Optional.of(MapVisibility.ALWAYS);
                 }
-            };
+            });
         }
     }
 

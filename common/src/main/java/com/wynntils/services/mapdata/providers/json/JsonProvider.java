@@ -162,9 +162,14 @@ public final class JsonProvider implements MapDataProvider {
             JsonObject json = jsonElement.getAsJsonObject();
 
             String id = json.get("id").getAsString();
-            String name = JsonUtils.getNullableJsonString(json, "name");
+            Optional<String> name = Optional.ofNullable(JsonUtils.getNullableJsonString(json, "name"));
             JsonElement attributesJson = json.get("attributes");
-            MapAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+            Optional<MapAttributes> attributes;
+            if (attributesJson != null && attributesJson.isJsonObject()) {
+                attributes = Optional.ofNullable(GSON.fromJson(attributesJson, JsonAttributes.class));
+            } else {
+                attributes = Optional.empty();
+            }
 
             return new JsonCategory(id, name, attributes);
         }

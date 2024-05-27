@@ -5,14 +5,12 @@
 package com.wynntils.services.mapdata.type;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import java.util.Optional;
 
 public interface MapCategory {
-    // Required
     String getCategoryId();
 
-    // Optional
-    String getName();
+    Optional<String> getName();
 
-    // Optional
-    MapAttributes getAttributes();
+    Optional<MapAttributes> getAttributes();
 }

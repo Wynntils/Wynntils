@@ -63,13 +63,13 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "All Wynntils Map Features";
+        public Optional<String> getName() {
+            return Optional.of("All Wynntils Map Features");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getIconId() {
                     return Optional.of("wynntils:icon:symbols:waypoint");
@@ -89,7 +89,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(DEFAULT_LABEL_VISIBILITY);
                 }
-            };
+            });
         }
     }
 
@@ -100,13 +100,13 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Personal Waypoints";
+        public Optional<String> getName() {
+            return Optional.of("Personal Waypoints");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<Integer> getPriority() {
                     return Optional.of(1000);
@@ -121,7 +121,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(MapVisibility.NEVER);
                 }
-            };
+            });
         }
     }
 
@@ -143,13 +143,13 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Found Loot Chests";
+        public Optional<String> getName() {
+            return Optional.of("Found Loot Chests");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getIconId() {
                     return Optional.of("wynntils:icon:lootchest:tier-" + tier);
@@ -187,7 +187,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(MapVisibility.NEVER);
                 }
-            };
+            });
         }
     }
 
@@ -207,13 +207,13 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return kind.getName();
+        public Optional<String> getName() {
+            return Optional.ofNullable(kind.getName());
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
                     return Optional.ofNullable(kind.getName());
@@ -247,7 +247,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(MapVisibility.NEVER);
                 }
-            };
+            });
         }
     }
 
@@ -267,13 +267,13 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return kind.getName();
+        public Optional<String> getName() {
+            return Optional.ofNullable(kind.getName());
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
                     return Optional.ofNullable(kind.getName());
@@ -307,7 +307,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(MapVisibility.NEVER);
                 }
-            };
+            });
         }
     }
 
@@ -328,13 +328,13 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return layer.getName();
+        public Optional<String> getName() {
+            return Optional.of(layer.getName());
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getIconId() {
                     return Optional.of(MapIcon.NO_ICON_ID);
@@ -364,7 +364,7 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case TOWN_OR_PLACE -> PLACE_VISIBILITY;
                             });
                 }
-            };
+            });
         }
     }
 }
