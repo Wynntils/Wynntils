@@ -6,7 +6,7 @@ package com.wynntils.services.mapdata;
 
 import com.wynntils.core.components.Service;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.mapdata.attributes.FullCategoryAttributes;
+import com.wynntils.services.mapdata.attributes.CategoryAttributes;
 import com.wynntils.services.mapdata.attributes.FullFeatureAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
@@ -57,7 +57,7 @@ public class MapDataService extends Service {
     // region Support for FullFeatureAttributes and FullCategoryAttributes
 
     public MapAttributes getFullCategoryAttributes(String categoryId) {
-        return new FullCategoryAttributes(categoryId);
+        return new CategoryAttributes(categoryId);
     }
 
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {

@@ -18,10 +18,15 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class FullCategoryAttributes extends DerivedAttributes {
+/**
+ * This class looks at a category and tries to return an an attribute
+ * by going up the category hierarchy. If no attribute is found,
+ * Optional.empty() will be returned.
+ */
+public class CategoryAttributes extends DerivedAttributes {
     private final String categoryId;
 
-    public FullCategoryAttributes(String categoryId) {
+    public CategoryAttributes(String categoryId) {
         this.categoryId = categoryId;
     }
 

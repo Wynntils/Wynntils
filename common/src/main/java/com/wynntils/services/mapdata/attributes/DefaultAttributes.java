@@ -15,7 +15,7 @@ import java.util.Optional;
 public class DefaultAttributes implements MapAttributes {
     @Override
     public Optional<String> getLabel() {
-        return Optional.empty();
+        return Optional.of("");
     }
 
     @Override
@@ -60,6 +60,6 @@ public class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<MapDecoration> getIconDecoration() {
-        return Optional.empty();
+        return Optional.of(MapDecoration.NONE);
     }
 }

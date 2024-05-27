@@ -14,6 +14,12 @@ import com.wynntils.services.mapdata.type.MapFeature;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * This is an implementation of MapAttributes that are guarenteed to never return
+ * Optional.empty() for any value. It does this by extending the lookup for the
+ * attribute first to the category hierarchy for the given feature, and
+ * finally by going to the default value for each attribute.
+ */
 public class FullFeatureAttributes extends DerivedAttributes {
     private final MapFeature feature;
     private final MapAttributes attributes;

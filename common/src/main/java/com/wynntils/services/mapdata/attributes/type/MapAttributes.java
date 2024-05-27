@@ -8,23 +8,26 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
+/**
+ * Defines the possible attributes that can be defined. These can be contributed to
+ * either directly in a map feature, or by any level of the category hierarchy.
+ * To contribute a value, implementor should return a non-empty Optional value.
+ * If the value is empty, the search will continue for another implementation,
+ * i.e. the value is inherited.
+ */
 public interface MapAttributes {
     // If this is the empty string (""), then no label will be displayed
-    // empty means inherit
     Optional<String> getLabel();
 
     // If this is MapFeatureIcon.NO_ICON_ID ("none"), then no icon will be displayed
-    // empty means inherit
     Optional<String> getIconId();
 
     // 1-1000, 1000 is the highest priority (drawn on top of everything else)
-    // empty means no value specified; inherit
     Optional<Integer> getPriority();
 
-    // the minimum combat level for which this feature is suitable for
-    // 0 means suitable for all levels
-    // -1 means no information is available, or level is not applicable
-    // empty means inherit
+    // The minimum combat level for which this feature is suitable for
+    // 0 means no information is available, or level is not applicable
+    // 1 means suitable for all levels
     Optional<Integer> getLevel();
 
     Optional<MapVisibility> getLabelVisibility();
