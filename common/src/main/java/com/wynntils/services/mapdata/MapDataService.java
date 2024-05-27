@@ -19,7 +19,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
-    private static final String NAMELESS_CATEGORY = "Nameless Category";
+    // FIXME: i18n
+    private static final String NAMELESS_CATEGORY = "Category '%s'";
 
     private final MapDataProviders providers = new MapDataProviders();
 
@@ -45,7 +46,7 @@ public class MapDataService extends Service {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst()
-                .orElse(NAMELESS_CATEGORY);
+                .orElse(NAMELESS_CATEGORY.formatted(categoryId));
     }
 
     public Optional<MapIcon> getIcon(String iconId) {

@@ -26,14 +26,12 @@ public abstract class DerivedAttributes implements MapAttributes {
 
     @Override
     public Optional<Integer> getPriority() {
-        Optional<Integer> integer = getAttribute(MapAttributes::getPriority);
-        return integer.isEmpty() ? Optional.of(500) : integer;
+        return getAttribute(MapAttributes::getPriority);
     }
 
     @Override
     public Optional<Integer> getLevel() {
-        Optional<Integer> integer = getAttribute(MapAttributes::getLevel);
-        return integer.isEmpty() ? Optional.of(0) : integer;
+        return getAttribute(MapAttributes::getLevel);
     }
 
     @Override

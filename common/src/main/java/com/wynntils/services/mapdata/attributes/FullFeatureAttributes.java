@@ -22,18 +22,18 @@ import java.util.function.Function;
  */
 public class FullFeatureAttributes extends DerivedAttributes {
     private final MapFeature feature;
-    private final Optional<MapAttributes> attributes;
+    private final MapAttributes attributes;
 
     public FullFeatureAttributes(MapFeature feature) {
         this.feature = feature;
-        this.attributes = feature.getAttributes();
+        this.attributes = feature.getAttributes().orElse(null);
     }
 
     @Override
     protected <T> Optional<T> getAttribute(Function<MapAttributes, Optional<T>> getter) {
         // Check if the feature has overridden this attribute
-        if (attributes.isPresent()) {
-            Optional<T> attribute = getter.apply(attributes.get());
+        if (attributes != null) {
+            Optional<T> attribute = getter.apply(attributes);
             if (attribute.isPresent()) {
                 return attribute;
             }
@@ -47,7 +47,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         }
 
         // Otherwise return the default fallback value
-        return getter.apply(new DefaultAttributes());
+        return getter.apply(DefaultAttributes.INSTANCE);
     }
 
     @Override
@@ -65,8 +65,8 @@ public class FullFeatureAttributes extends DerivedAttributes {
         DerivedMapVisibility derivedFeatureVisibility = DerivedMapVisibility.of(MapVisibility.ALWAYS);
 
         // Check if the feature has overridden this attribute
-        if (attributes.isPresent()) {
-            Optional<T> attribute = getter.apply(attributes.get());
+        if (attributes != null) {
+            Optional<T> attribute = getter.apply(attributes);
 
             if (attribute.isEmpty()) {
                 // No attribute defined; this should not happen
