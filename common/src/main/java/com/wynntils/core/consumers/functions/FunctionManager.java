@@ -505,9 +505,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.MoneyFunction());
 
         registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
+        registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
         registerFunction(new GuildFunctions.GuildLevelFunction());
         registerFunction(new GuildFunctions.GuildNameFunction());
         registerFunction(new GuildFunctions.GuildRankFunction());
+        registerFunction(new GuildFunctions.ObjectiveStreakFunction());
 
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
         registerFunction(new HorseFunctions.CappedHorseXpFunction());
