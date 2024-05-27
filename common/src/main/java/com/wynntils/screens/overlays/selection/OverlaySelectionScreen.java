@@ -187,7 +187,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                                 4,
                                 24,
                                 200,
-                                CommonColors.LIGHT_GRAY,
+                                CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.NORMAL);
