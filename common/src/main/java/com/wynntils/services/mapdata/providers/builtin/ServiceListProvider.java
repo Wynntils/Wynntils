@@ -55,7 +55,7 @@ public class ServiceListProvider extends BuiltInProvider {
 
         @Override
         public Optional<MapAttributes> getAttributes() {
-            return null;
+            return Optional.empty();
         }
 
         @Override
