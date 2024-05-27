@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.mapdata.attributes.resolving;
 
-import com.wynntils.services.mapdata.attributes.DefaultAttributes;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import java.util.Optional;
@@ -51,6 +51,6 @@ public class ResolvedMapVisibility extends DerivedMapVisibility {
         }
 
         // Otherwise return the fallback default value
-        return getter.apply(attributeGetter.apply(DefaultAttributes.INSTANCE).get());
+        return getter.apply(attributeGetter.apply(DefaultMapAttributes.INSTANCE).get());
     }
 }

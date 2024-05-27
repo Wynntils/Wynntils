@@ -13,10 +13,10 @@ import java.util.Optional;
 public class JsonMapLocation implements MapLocation {
     private final String featureId;
     private final String categoryId;
-    private final MapAttributes attributes;
+    private final JsonMapAttributes attributes;
     private final Location location;
 
-    public JsonMapLocation(String featureId, String categoryId, MapAttributes attributes, Location location) {
+    public JsonMapLocation(String featureId, String categoryId, JsonMapAttributes attributes, Location location) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;

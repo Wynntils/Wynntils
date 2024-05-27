@@ -11,9 +11,9 @@ import java.util.Optional;
 public class JsonCategory implements MapCategory {
     private final String id;
     private final String name;
-    private final MapAttributes attributes;
+    private final JsonMapAttributes attributes;
 
-    public JsonCategory(String id, String name, MapAttributes attributes) {
+    public JsonCategory(String id, String name, JsonMapAttributes attributes) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;

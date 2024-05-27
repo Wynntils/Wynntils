@@ -17,10 +17,10 @@ import java.util.Optional;
  * These are the fallback attributes used by FullFeatureAttribute if no other attributes
  * are defined. These are guaranteed to be non-empty.
  */
-public final class DefaultAttributes implements MapAttributes {
-    public static DefaultAttributes INSTANCE = new DefaultAttributes();
+public final class DefaultMapAttributes implements MapAttributes {
+    public static DefaultMapAttributes INSTANCE = new DefaultMapAttributes();
 
-    private DefaultAttributes() {}
+    private DefaultMapAttributes() {}
 
     @Override
     public Optional<String> getLabel() {

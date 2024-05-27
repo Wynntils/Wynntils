@@ -5,7 +5,7 @@
 package com.wynntils.services.mapdata.attributes.resolving;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.services.mapdata.attributes.DefaultAttributes;
+import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -58,7 +58,7 @@ public class ResolvedMapAttributes extends DerivedMapAttributes {
         }
 
         // Otherwise return the fallback default value
-        return getter.apply(DefaultAttributes.INSTANCE);
+        return getter.apply(DefaultMapAttributes.INSTANCE);
     }
 
     String getCategoryId() {
