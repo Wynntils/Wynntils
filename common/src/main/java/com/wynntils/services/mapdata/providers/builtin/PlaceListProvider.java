@@ -55,7 +55,7 @@ public class PlaceListProvider extends BuiltInProvider {
             return Optional.of(new AbstractMapAttributes() {
                 @Override
                 public Optional<String> getLabel() {
-                    return label.getName().describeConstable();
+                    return Optional.ofNullable(label.getName());
                 }
 
                 @Override
