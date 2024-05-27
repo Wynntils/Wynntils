@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata.attributes;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
+import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -20,7 +21,7 @@ public class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<String> getIconId() {
-        return Optional.empty();
+        return Optional.of(MapIcon.NO_ICON_ID);
     }
 
     @Override
@@ -40,12 +41,12 @@ public class DefaultAttributes implements MapAttributes {
 
     @Override
     public Optional<CustomColor> getLabelColor() {
-        return Optional.empty();
+        return Optional.of(CommonColors.WHITE);
     }
 
     @Override
     public Optional<TextShadow> getLabelShadow() {
-        return Optional.empty();
+        return Optional.of(TextShadow.OUTLINE);
     }
 
     @Override

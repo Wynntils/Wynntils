@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.CategoryAttributes;
 import com.wynntils.services.mapdata.attributes.FullFeatureAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -66,4 +67,50 @@ public class MapDataService extends Service {
     }
 
     // endregion
+
+    public float getVisibilityForZoomLevel(Optional<MapVisibility> mapVisibility, float zoomLevel) {
+        return calculateVisibility(
+                mapVisibility.get().getMin(),
+                mapVisibility.get().getMax(),
+                mapVisibility.get().getFade(),
+                zoomLevel);
+    }
+
+    private float calculateVisibility(float min, float max, float fade, float zoomLevel) {
+        float startFadeIn = min - fade;
+        float stopFadeIn = min + fade;
+        float startFadeOut = max - fade;
+        float stopFadeOut = max + fade;
+
+        // If min or max is at the extremes, do not apply fading
+        if (min <= 1) {
+            startFadeIn = 0;
+            stopFadeIn = 0;
+        }
+        if (max >= 100) {
+            startFadeOut = 101;
+            stopFadeOut = 101;
+        }
+
+        if (zoomLevel < startFadeIn) {
+            return 0;
+        }
+        if (zoomLevel < stopFadeIn) {
+            // The visibility should be linearly interpolated between 0 and 1 for values
+            // between startFadeIn and stopFadeIn.
+            return (zoomLevel - startFadeIn) / (fade * 2);
+        }
+
+        if (zoomLevel < startFadeOut) {
+            return 1;
+        }
+
+        if (zoomLevel < stopFadeOut) {
+            // The visibility should be linearly interpolated between 1 and 0 for values
+            // between startFadeIn and stopFadeIn.
+            return 1 - (zoomLevel - startFadeOut) / (fade * 2);
+        }
+
+        return 0;
+    }
 }
