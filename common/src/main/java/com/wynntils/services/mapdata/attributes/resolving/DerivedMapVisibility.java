@@ -9,20 +9,20 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public abstract class DerivedMapVisibility implements MapVisibility {
-    protected abstract Optional<Float> getVisibilityFor(Function<MapVisibility, Optional<Float>> getter);
+    protected abstract Optional<Float> getValue(Function<MapVisibility, Optional<Float>> getter);
 
     @Override
     public Optional<Float> getMin() {
-        return getVisibilityFor(MapVisibility::getMin);
+        return getValue(MapVisibility::getMin);
     }
 
     @Override
     public Optional<Float> getMax() {
-        return getVisibilityFor(MapVisibility::getMax);
+        return getValue(MapVisibility::getMax);
     }
 
     @Override
     public Optional<Float> getFade() {
-        return getVisibilityFor(MapVisibility::getFade);
+        return getValue(MapVisibility::getFade);
     }
 }

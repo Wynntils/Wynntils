@@ -23,7 +23,7 @@ public class ResolvedMapVisibility extends DerivedMapVisibility {
     }
 
     @Override
-    protected Optional<Float> getVisibilityFor(Function<MapVisibility, Optional<Float>> getter) {
+    protected Optional<Float> getValue(Function<MapVisibility, Optional<Float>> getter) {
         // Check if the feature has overridden this attribute
         Optional<MapVisibility> featureVisibility = resolvedMapAttributes.getFromFeature(attributeGetter);
         if (featureVisibility.isPresent()) {
