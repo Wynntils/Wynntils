@@ -11,6 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
@@ -180,7 +181,7 @@ public class MapFeaturePoiWrapper implements Poi {
         Optional<Integer> level = attributes.getLevel();
         // Show level only for features that are displayed and hovered
         boolean drawLevel = hovered && (drawIcon || drawLabel);
-        if (level.isPresent() && level.get() >= 1 && drawLevel) {
+        if (level.get() >= 1 && drawLevel) {
             BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
@@ -193,6 +194,12 @@ public class MapFeaturePoiWrapper implements Poi {
                             VerticalAlignment.MIDDLE,
                             attributes.getLabelShadow().get(),
                             TEXT_SCALE);
+        }
+
+        // Draw decoration, if applicable
+        Optional<MapDecoration> decoration = attributes.getIconDecoration();
+        if (decoration.get().isVisible()) {
+            decoration.get().render(poseStack, bufferSource, hovered, zoomLevel);
         }
 
         poseStack.popPose();
