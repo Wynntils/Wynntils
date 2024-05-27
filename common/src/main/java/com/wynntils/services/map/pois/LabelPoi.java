@@ -132,7 +132,7 @@ public class LabelPoi implements Poi {
                         1f);
         if (hovered) {
             Optional<Integer> level = label.getLevel();
-            if (level.isPresent()) {
+            if (level.isPresent() && level.get() >= 1) {
                 BufferedFontRenderer.getInstance()
                         .renderText(
                                 poseStack,
