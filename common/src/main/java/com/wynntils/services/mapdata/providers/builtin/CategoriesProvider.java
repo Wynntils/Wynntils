@@ -280,7 +280,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<CustomColor> getLabelColor() {
-                    return Optional.ofNullable(CommonColors.GREEN);
+                    return Optional.of(CommonColors.GREEN);
                 }
 
                 @Override
