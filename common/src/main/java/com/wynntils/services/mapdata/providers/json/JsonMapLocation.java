@@ -13,10 +13,10 @@ import java.util.Optional;
 public class JsonMapLocation implements MapLocation {
     private final String featureId;
     private final String categoryId;
-    private final Optional<MapAttributes> attributes;
+    private final MapAttributes attributes;
     private final Location location;
 
-    public JsonMapLocation(String featureId, String categoryId, Optional<MapAttributes> attributes, Location location) {
+    public JsonMapLocation(String featureId, String categoryId, MapAttributes attributes, Location location) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;
@@ -35,7 +35,7 @@ public class JsonMapLocation implements MapLocation {
 
     @Override
     public Optional<MapAttributes> getAttributes() {
-        return attributes;
+        return Optional.ofNullable(attributes);
     }
 
     @Override

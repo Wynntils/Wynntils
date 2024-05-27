@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public class JsonCategory implements MapCategory {
     private final String id;
-    private final Optional<String> name;
-    private final Optional<MapAttributes> attributes;
+    private final String name;
+    private final MapAttributes attributes;
 
-    public JsonCategory(String id, Optional<String> name, Optional<MapAttributes> attributes) {
+    public JsonCategory(String id, String name, MapAttributes attributes) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
@@ -26,11 +26,11 @@ public class JsonCategory implements MapCategory {
 
     @Override
     public Optional<String> getName() {
-        return name;
+        return Optional.ofNullable(name);
     }
 
     @Override
     public Optional<MapAttributes> getAttributes() {
-        return attributes;
+        return Optional.ofNullable(attributes);
     }
 }
