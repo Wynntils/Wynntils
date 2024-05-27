@@ -26,19 +26,19 @@ public class FullCategoryAttributes extends DerivedAttributes {
     }
 
     @Override
-    protected <T> T getAttribute(Function<MapAttributes, T> getter) {
+    protected <T> Optional<T> getAttribute(Function<MapAttributes, Optional<T>> getter) {
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
             Stream<MapAttributes> allAttributes = Services.MapData.getCategoryDefinitions(id)
                     .map(MapCategory::getAttributes)
                     .filter(Objects::nonNull);
-            Optional<T> attribute =
-                    allAttributes.map(getter).filter(Objects::nonNull).findFirst();
-            if (attribute.isPresent() && !(attribute.get() instanceof Integer i && i == 0)) {
-                return attribute.get();
+            Optional<Optional<T>> possibleAttribute =
+                    allAttributes.map(getter).filter(Optional::isPresent).findFirst();
+            if (possibleAttribute.isPresent()) {
+                return possibleAttribute.get();
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

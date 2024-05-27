@@ -24,20 +24,23 @@ public class FullFeatureAttributes extends DerivedAttributes {
     }
 
     @Override
-    protected <T> T getAttribute(Function<MapAttributes, T> getter) {
+    protected <T> Optional<T> getAttribute(Function<MapAttributes, Optional<T>> getter) {
         // Check if the feature has overridden this attribute
         if (attributes != null) {
-            T attribute = getter.apply(attributes);
-            if (attribute != null && !(attribute instanceof Integer i && i == 0)) {
+            Optional<T> attribute = getter.apply(attributes);
+            if (attribute != null) {
                 return attribute;
             }
         }
 
-        // Otherwise get it from the category
+        // Otherwise try to get it from the category
         MapAttributes categoryAttributes = Services.MapData.getFullCategoryAttributes(feature.getCategoryId());
-        if (categoryAttributes == null) return null;
+        if (categoryAttributes != null) {
+            return getter.apply(categoryAttributes);
+        }
 
-        return getter.apply(categoryAttributes);
+        // Otherwise return the default fallback value
+        return getter.apply(new DefaultAttributes());
     }
 
     @Override
