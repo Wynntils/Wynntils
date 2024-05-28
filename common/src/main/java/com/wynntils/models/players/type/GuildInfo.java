@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public record GuildInfo(
         int xpPercent,
         int territories,
         long wars,
-        String createdTimestamp,
+        Instant createdTimestamp,
         int totalMembers,
         int onlineMembers,
         List<GuildMemberInfo> guildMembers) {
@@ -43,7 +44,7 @@ public record GuildInfo(
             long wars = jsonObject.get("wars").isJsonNull()
                     ? 0L
                     : jsonObject.get("wars").getAsLong();
-            String createdTimestamp = jsonObject.get("created").getAsString();
+            Instant createdTimestamp = Instant.parse(jsonObject.get("created").getAsString());
 
             JsonObject guildMembersJson = jsonObject.getAsJsonObject("members");
 

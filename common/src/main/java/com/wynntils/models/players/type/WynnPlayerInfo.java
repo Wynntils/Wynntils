@@ -12,6 +12,7 @@ import com.google.gson.JsonParseException;
 import com.wynntils.core.components.Models;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -22,11 +23,11 @@ public record WynnPlayerInfo(
         String username,
         boolean online,
         String server,
-        String lastJoinTimestamp,
+        Instant lastJoinTimestamp,
         String guildName,
         String guildPrefix,
         GuildRank guildRank,
-        String guildJoinTimestamp) {
+        Instant guildJoinTimestamp) {
     public static class WynnPlayerInfoDeserializer implements JsonDeserializer<WynnPlayerInfo> {
         @Override
         public WynnPlayerInfo deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
@@ -41,7 +42,8 @@ public record WynnPlayerInfo(
                 String onlineServer = jsonObject.get("server").isJsonNull()
                         ? null
                         : jsonObject.get("server").getAsString();
-                String lastJoinTimestamp = jsonObject.get("lastJoin").getAsString();
+                Instant lastJoinTimestamp =
+                        Instant.parse(jsonObject.get("lastJoin").getAsString());
 
                 if (!jsonObject.get("guild").isJsonNull()) {
                     JsonObject guildInfo = jsonObject.getAsJsonObject("guild");
@@ -63,17 +65,15 @@ public record WynnPlayerInfo(
                         return null;
                     }
 
-                    String guildJoinedTimestamp;
+                    Instant guildJoinTimestamp = null;
 
-                    if (guild == null) {
-                        guildJoinedTimestamp = null;
-                    } else {
+                    if (guild != null) {
                         Optional<String> guildJoinedTimestampOpt = guild.guildMembers().stream()
                                 .filter(guildMember -> guildMember.username().equals(playerUsername))
                                 .map(GuildMemberInfo::joinTimestamp)
                                 .findFirst();
 
-                        guildJoinedTimestamp = guildJoinedTimestampOpt.orElse(null);
+                        guildJoinTimestamp = Instant.parse(guildJoinedTimestampOpt.orElse(null));
                     }
 
                     return new WynnPlayerInfo(
@@ -84,7 +84,7 @@ public record WynnPlayerInfo(
                             guildName,
                             guildPrefix,
                             guildRank,
-                            guildJoinedTimestamp);
+                            guildJoinTimestamp);
                 } else {
                     return new WynnPlayerInfo(
                             playerUsername, online, onlineServer, lastJoinTimestamp, null, null, null, null);

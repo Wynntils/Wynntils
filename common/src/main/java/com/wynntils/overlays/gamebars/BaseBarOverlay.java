@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
@@ -58,8 +58,6 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected abstract Class<? extends TrackedBar> getTrackedBarClass();
 
-    protected abstract String icon();
-
     protected abstract boolean isActive();
 
     @SubscribeEvent
@@ -91,15 +89,21 @@ public abstract class BaseBarOverlay extends Overlay {
         float barHeight = textureHeight() * (this.getWidth() / 81);
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        BossBarProgress barProgress = progress();
-
-        String text = String.format(
-                "%s %s %s",
-                barProgress.value().current(), icon(), barProgress.value().max());
-        renderText(poseStack, bufferSource, renderY, text);
+        renderText(poseStack, bufferSource, renderY, text());
 
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
         renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
+    }
+
+    protected String text() {
+        BossBarProgress barProgress = progress();
+        return String.format(
+                "%s %s %s",
+                barProgress.value().current(), icon(), barProgress.value().max());
+    }
+
+    protected String icon() {
+        return "";
     }
 
     protected float getModifiedRenderY(float renderedHeight) {

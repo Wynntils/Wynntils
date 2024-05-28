@@ -10,6 +10,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
@@ -21,7 +22,6 @@ import com.wynntils.models.containers.containers.InventoryContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.PetMenuContainer;
-import com.wynntils.models.containers.containers.ProfessionCraftingContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
@@ -37,6 +37,7 @@ import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -51,6 +52,7 @@ public final class ContainerModel extends Model {
 
     public static final String CHARACTER_INFO_NAME = "Character Info";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
+    public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
     public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
 
     private static final List<Container> containerTypes = new ArrayList<>();
@@ -112,12 +114,15 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new MiscBucketContainer());
         registerWynncraftContainer(new ObjectiveRewardContainer());
         registerWynncraftContainer(new PetMenuContainer());
-        registerWynncraftContainer(new ProfessionCraftingContainer());
         registerWynncraftContainer(new ScrapMenuContainer());
         registerWynncraftContainer(new SeaskipperContainer());
         registerWynncraftContainer(new TradeMarketFiltersContainer());
         registerWynncraftContainer(new TradeMarketPrimaryContainer());
         registerWynncraftContainer(new TradeMarketSecondaryContainer());
+
+        for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
+            registerWynncraftContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+        }
     }
 
     private void registerWynncraftContainer(Container container) {

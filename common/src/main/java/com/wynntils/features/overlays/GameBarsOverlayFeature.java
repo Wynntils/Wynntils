@@ -17,6 +17,7 @@ import com.wynntils.overlays.gamebars.FocusBarOverlay;
 import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
+import com.wynntils.overlays.gamebars.OphanimBarOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
@@ -40,4 +41,7 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();
 }

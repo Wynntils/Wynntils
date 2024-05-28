@@ -230,13 +230,52 @@ public class MapFeaturePoiWrapper implements Poi {
         return label != null && !label.isEmpty();
     }
 
+    private float calculateVisibility(float min, float max, float fade, float zoomLevel) {
+        float startFadeIn = min - fade;
+        float stopFadeIn = min + fade;
+        float startFadeOut = max - fade;
+        float stopFadeOut = max + fade;
+
+        // If min or max is at the extremes, do not apply fading
+        if (min <= 1) {
+            startFadeIn = 0;
+            stopFadeIn = 0;
+        }
+        if (max >= 100) {
+            startFadeOut = 101;
+            stopFadeOut = 101;
+        }
+
+        if (zoomLevel < startFadeIn) {
+            return 0;
+        }
+        if (zoomLevel < stopFadeIn) {
+            // The visibility should be linearly interpolated between 0 and 1 for values
+            // between startFadeIn and stopFadeIn.
+            return (zoomLevel - startFadeIn) / (fade * 2);
+        }
+
+        if (zoomLevel < startFadeOut) {
+            return 1;
+        }
+
+        if (zoomLevel < stopFadeOut) {
+            // The visibility should be linearly interpolated between 1 and 0 for values
+            // between startFadeIn and stopFadeIn.
+            return 1 - (zoomLevel - startFadeOut) / (fade * 2);
+        }
+
+        return 0;
+    }
+
     private float getIconAlpha(float zoomLevel) {
         MapVisibility iconVisibility = attributes.getIconVisibility();
         if (iconVisibility == null) {
             // If no visibility is specified, always show
             return 1f;
         }
-        return iconVisibility.getVisibility(zoomLevel);
+        return calculateVisibility(
+                iconVisibility.getMin(), iconVisibility.getMax(), iconVisibility.getFade(), zoomLevel);
     }
 
     private float getLabelAlpha(float zoomLevel) {
@@ -245,7 +284,8 @@ public class MapFeaturePoiWrapper implements Poi {
             // If no visibility is specified, always show
             return 1f;
         }
-        return labelVisibility.getVisibility(zoomLevel);
+        return calculateVisibility(
+                labelVisibility.getMin(), labelVisibility.getMax(), labelVisibility.getFade(), zoomLevel);
     }
 
     private int getLabelHeight(float scale) {
