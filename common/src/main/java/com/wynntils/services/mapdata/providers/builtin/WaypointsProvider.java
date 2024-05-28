@@ -6,7 +6,7 @@ package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -14,6 +14,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class WaypointsProvider extends BuiltInProvider {
@@ -53,7 +54,8 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     private static final class WaypointLocation implements MapLocation {
-        public static final MapVisibility WAYPOINT_VISIBILITY = DerivedMapVisibility.withMin(30f);
+        public static final MapVisibility WAYPOINT_VISIBILITY =
+                MapVisibility.builder().withMin(30f);
         private final Location location;
         private final String name;
         private final String iconId;
@@ -79,27 +81,28 @@ public class WaypointsProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getIconId() {
-                    return iconId;
+                public Optional<String> getIconId() {
+                    return Optional.ofNullable(iconId);
                 }
 
                 @Override
-                public String getLabel() {
-                    return name;
+                public Optional<String> getLabel() {
+                    return Optional.ofNullable(name);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return switch (visibility) {
-                        case DEFAULT -> WAYPOINT_VISIBILITY;
-                        case ALWAYS -> MapVisibility.ALWAYS;
-                        case HIDDEN -> MapVisibility.NEVER;
-                    };
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(
+                            switch (visibility) {
+                                case DEFAULT -> WAYPOINT_VISIBILITY;
+                                case ALWAYS -> FixedMapVisibility.ICON_ALWAYS;
+                                case HIDDEN -> FixedMapVisibility.ICON_NEVER;
+                            });
                 }
-            };
+            });
         }
 
         @Override
@@ -135,8 +138,8 @@ public class WaypointsProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return null;
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.empty();
         }
 
         @Override

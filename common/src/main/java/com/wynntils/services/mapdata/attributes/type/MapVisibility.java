@@ -4,13 +4,17 @@
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-public abstract class MapVisibility {
-    public static final FullMapVisibility NEVER = new FullMapVisibility(100, 0, 6);
-    public static final FullMapVisibility ALWAYS = new FullMapVisibility(0, 100, 6);
+import com.wynntils.services.mapdata.attributes.MapVisibilityBuilder;
+import java.util.Optional;
 
-    public abstract float getMin();
+public interface MapVisibility {
+    Optional<Float> getMin();
 
-    public abstract float getMax();
+    Optional<Float> getMax();
 
-    public abstract float getFade();
+    Optional<Float> getFade();
+
+    static MapVisibilityBuilder builder() {
+        return new MapVisibilityBuilder();
+    }
 }

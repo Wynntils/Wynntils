@@ -75,6 +75,9 @@ public final class WorldStateModel extends Model {
     private void setState(WorldState newState, String newWorldName, boolean isFirstJoinWorld) {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
+        // Streamer mode is always disabled upon changing world state
+        inStream = false;
+
         WorldState oldState = currentState;
         // Switch state before sending event
         currentState = newState;

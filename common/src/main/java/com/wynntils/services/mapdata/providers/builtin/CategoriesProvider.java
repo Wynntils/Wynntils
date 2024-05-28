@@ -9,8 +9,7 @@ import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.DerivedMapVisibility;
-import com.wynntils.services.mapdata.attributes.type.FullMapVisibility;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -20,6 +19,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CategoriesProvider extends BuiltInProvider {
@@ -53,42 +53,24 @@ public class CategoriesProvider extends BuiltInProvider {
     }
 
     private static final class WynntilsCategory implements MapCategory {
-        private static final MapVisibility DEFAULT_ICON_VISIBILITY = new FullMapVisibility(0, 100, 6);
-        private static final MapVisibility DEFAULT_LABEL_VISIBILITY = new FullMapVisibility(0, 100, 3);
-
         @Override
         public String getCategoryId() {
             return "wynntils";
         }
 
         @Override
-        public String getName() {
-            return "All Wynntils Map Features";
+        public Optional<String> getName() {
+            return Optional.of("All Wynntils Map Features");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getIconId() {
-                    return "wynntils:icon:symbols:waypoint";
+                public Optional<String> getIconId() {
+                    return Optional.of(MapIconsProvider.FALLBACK_ICON_ID);
                 }
-
-                @Override
-                public int getPriority() {
-                    return 500;
-                }
-
-                @Override
-                public MapVisibility getIconVisibility() {
-                    return DEFAULT_ICON_VISIBILITY;
-                }
-
-                @Override
-                public MapVisibility getLabelVisibility() {
-                    return DEFAULT_LABEL_VISIBILITY;
-                }
-            };
+            });
         }
     }
 
@@ -99,36 +81,40 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Personal Waypoints";
+        public Optional<String> getName() {
+            return Optional.of("Personal Waypoints");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public int getPriority() {
-                    return 1000;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(1000);
                 }
 
                 @Override
-                public CustomColor getLabelColor() {
-                    return CommonColors.GREEN;
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(CommonColors.GREEN);
                 }
 
                 @Override
-                public MapVisibility getLabelVisibility() {
-                    return MapVisibility.NEVER;
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
-            };
+            });
         }
     }
 
     private static final class FoundChestCategory implements MapCategory {
-        private static final MapVisibility TIER_1_VISIBILITY = DerivedMapVisibility.withMin(57f);
-        private static final MapVisibility TIER_2_VISIBILITY = DerivedMapVisibility.withMin(57f);
-        private static final MapVisibility TIER_3_VISIBILITY = DerivedMapVisibility.withMin(30f);
-        private static final MapVisibility TIER_4_VISIBILITY = DerivedMapVisibility.withMin(30f);
+        private static final MapVisibility TIER_1_VISIBILITY =
+                MapVisibility.builder().withMin(57f);
+        private static final MapVisibility TIER_2_VISIBILITY =
+                MapVisibility.builder().withMin(57f);
+        private static final MapVisibility TIER_3_VISIBILITY =
+                MapVisibility.builder().withMin(30f);
+        private static final MapVisibility TIER_4_VISIBILITY =
+                MapVisibility.builder().withMin(30f);
 
         private final int tier;
 
@@ -142,56 +128,59 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Found Loot Chests";
+        public Optional<String> getName() {
+            return Optional.of("Found Loot Chests");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getIconId() {
-                    return "wynntils:icon:lootchest:tier-" + tier;
+                public Optional<String> getIconId() {
+                    return Optional.of("wynntils:icon:lootchest:tier-" + tier);
                 }
 
                 @Override
-                public String getLabel() {
-                    return "Loot Chest Tier " + MathUtils.toRoman(tier);
+                public Optional<String> getLabel() {
+                    return Optional.of("Loot Chest Tier " + MathUtils.toRoman(tier));
                 }
 
                 @Override
-                public int getPriority() {
-                    return 500;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(500);
                 }
 
                 @Override
-                public CustomColor getLabelColor() {
-                    return CommonColors.GREEN;
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(CommonColors.GREEN);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return switch (tier) {
-                        case 1 -> TIER_1_VISIBILITY;
-                        case 2 -> TIER_2_VISIBILITY;
-                        case 3 -> TIER_3_VISIBILITY;
-                        case 4 -> TIER_4_VISIBILITY;
-                            // This should never happen
-                        default -> MapVisibility.ALWAYS;
-                    };
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(
+                            switch (tier) {
+                                case 1 -> TIER_1_VISIBILITY;
+                                case 2 -> TIER_2_VISIBILITY;
+                                case 3 -> TIER_3_VISIBILITY;
+                                case 4 -> TIER_4_VISIBILITY;
+                                    // This should never happen
+                                default -> FixedMapVisibility.ICON_ALWAYS;
+                            });
                 }
 
                 @Override
-                public MapVisibility getLabelVisibility() {
-                    return MapVisibility.NEVER;
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
-            };
+            });
         }
     }
 
     private static final class ServiceCategory implements MapCategory {
-        private static final MapVisibility FAST_TRAVEL_VISIBLITY = DerivedMapVisibility.withMin(18f);
-        private static final MapVisibility OTHER_VISIBLITY = DerivedMapVisibility.withMin(57f);
+        private static final MapVisibility FAST_TRAVEL_VISIBILITY =
+                MapVisibility.builder().withMin(18f);
+        private static final MapVisibility OTHER_VISIBILITY =
+                MapVisibility.builder().withMin(57f);
 
         private final ServiceKind kind;
 
@@ -205,53 +194,55 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return kind.getName();
+        public Optional<String> getName() {
+            return Optional.of(kind.getName());
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return kind.getName();
+                public Optional<String> getLabel() {
+                    return Optional.of(kind.getName());
                 }
 
                 @Override
-                public String getIconId() {
-                    return "wynntils:icon:service:" + kind.getMapDataId();
+                public Optional<String> getIconId() {
+                    return Optional.of("wynntils:icon:service:" + kind.getMapDataId());
                 }
 
                 @Override
-                public int getPriority() {
-                    return 100;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(100);
                 }
 
                 @Override
-                public CustomColor getLabelColor() {
-                    return CommonColors.GREEN;
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(CommonColors.GREEN);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
+                public Optional<MapVisibility> getIconVisibility() {
                     if (kind == ServiceKind.FAST_TRAVEL) {
-                        return FAST_TRAVEL_VISIBLITY;
+                        return Optional.of(FAST_TRAVEL_VISIBILITY);
                     } else {
-                        return OTHER_VISIBLITY;
+                        return Optional.of(OTHER_VISIBILITY);
                     }
                 }
 
                 @Override
-                public MapVisibility getLabelVisibility() {
-                    return MapVisibility.NEVER;
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
-            };
+            });
         }
     }
 
     private static final class CombatCategory implements MapCategory {
-        private static final MapVisibility CAVES_VISIBILITY = DerivedMapVisibility.withMin(31f);
-        private static final MapVisibility OTHER_VISIBILITY = DerivedMapVisibility.withMin(19f);
+        private static final MapVisibility CAVES_VISIBILITY =
+                MapVisibility.builder().withMin(31f);
+        private static final MapVisibility OTHER_VISIBILITY =
+                MapVisibility.builder().withMin(19f);
 
         private final CombatKind kind;
 
@@ -265,54 +256,57 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return kind.getName();
+        public Optional<String> getName() {
+            return Optional.of(kind.getName());
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return kind.getName();
+                public Optional<String> getLabel() {
+                    return Optional.of(kind.getName());
                 }
 
                 @Override
-                public String getIconId() {
-                    return "wynntils:icon:content:" + kind.getMapDataId();
+                public Optional<String> getIconId() {
+                    return Optional.of("wynntils:icon:content:" + kind.getMapDataId());
                 }
 
                 @Override
-                public int getPriority() {
-                    return 100;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(100);
                 }
 
                 @Override
-                public CustomColor getLabelColor() {
-                    return CommonColors.GREEN;
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(CommonColors.GREEN);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
+                public Optional<MapVisibility> getIconVisibility() {
                     if (kind == CombatKind.CAVES) {
-                        return CAVES_VISIBILITY;
+                        return Optional.of(CAVES_VISIBILITY);
                     } else {
-                        return OTHER_VISIBILITY;
+                        return Optional.of(OTHER_VISIBILITY);
                     }
                 }
 
                 @Override
-                public MapVisibility getLabelVisibility() {
-                    return MapVisibility.NEVER;
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(FixedMapVisibility.LABEL_NEVER);
                 }
-            };
+            });
         }
     }
 
     private static final class PlaceCategory implements MapCategory {
-        private static final MapVisibility PROVINCE_VISIBILITY = DerivedMapVisibility.withMax(32f);
-        private static final MapVisibility CITY_VISIBILITY = DerivedMapVisibility.withMax(74f);
-        private static final MapVisibility PLACE_VISIBILITY = DerivedMapVisibility.withMinMax(32f, 86f);
+        private static final MapVisibility PROVINCE_VISIBILITY =
+                MapVisibility.builder().withMax(32f);
+        private static final MapVisibility CITY_VISIBILITY =
+                MapVisibility.builder().withMax(74f);
+        private static final MapVisibility PLACE_VISIBILITY =
+                MapVisibility.builder().withMin(32f).withMax(86f);
 
         private final Label.LabelLayer layer;
 
@@ -326,41 +320,43 @@ public class CategoriesProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return layer.getName();
+        public Optional<String> getName() {
+            return Optional.of(layer.getName());
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getIconId() {
-                    return MapIcon.NO_ICON_ID;
+                public Optional<String> getIconId() {
+                    return Optional.of(MapIcon.NO_ICON_ID);
                 }
 
                 @Override
-                public CustomColor getLabelColor() {
-                    return switch (layer) {
-                        case PROVINCE -> CommonColors.DARK_AQUA;
-                        case CITY -> CommonColors.YELLOW;
-                        case TOWN_OR_PLACE -> CommonColors.WHITE;
-                    };
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(
+                            switch (layer) {
+                                case PROVINCE -> CommonColors.DARK_AQUA;
+                                case CITY -> CommonColors.YELLOW;
+                                case TOWN_OR_PLACE -> CommonColors.WHITE;
+                            });
                 }
 
                 @Override
-                public int getPriority() {
-                    return 700;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(700);
                 }
 
                 @Override
-                public MapVisibility getLabelVisibility() {
-                    return switch (layer) {
-                        case PROVINCE -> PROVINCE_VISIBILITY;
-                        case CITY -> CITY_VISIBILITY;
-                        case TOWN_OR_PLACE -> PLACE_VISIBILITY;
-                    };
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(
+                            switch (layer) {
+                                case PROVINCE -> PROVINCE_VISIBILITY;
+                                case CITY -> CITY_VISIBILITY;
+                                case TOWN_OR_PLACE -> PLACE_VISIBILITY;
+                            });
                 }
-            };
+            });
         }
     }
 }

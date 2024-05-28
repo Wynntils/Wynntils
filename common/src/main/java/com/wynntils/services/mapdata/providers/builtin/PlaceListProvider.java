@@ -13,6 +13,7 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class PlaceListProvider extends BuiltInProvider {
@@ -50,18 +51,18 @@ public class PlaceListProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return label.getName();
+                public Optional<String> getLabel() {
+                    return Optional.of(label.getName());
                 }
 
                 @Override
-                public int getLevel() {
-                    return label.getLevel().orElse(0);
+                public Optional<Integer> getLevel() {
+                    return label.getLevel();
                 }
-            };
+            });
         }
 
         @Override
