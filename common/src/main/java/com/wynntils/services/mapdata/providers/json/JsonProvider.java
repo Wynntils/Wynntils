@@ -15,7 +15,6 @@ import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -163,7 +162,8 @@ public final class JsonProvider implements MapDataProvider {
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            MapAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+            JsonMapAttributes attributes =
+                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
 
             return new JsonCategory(id, name, attributes);
         }
@@ -180,7 +180,8 @@ public final class JsonProvider implements MapDataProvider {
             JsonElement locationJson = json.get("location");
             Location location = GSON.fromJson(locationJson, Location.class);
             JsonElement attributesJson = json.get("attributes");
-            MapAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+            JsonMapAttributes attributes =
+                    attributesJson == null ? null : GSON.fromJson(attributesJson, JsonMapAttributes.class);
 
             return new JsonMapLocation(id, category, attributes, location);
         }

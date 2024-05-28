@@ -19,16 +19,15 @@ import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class MapDataProviders {
     private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
 
-    private final List<String> providerOrder = new ArrayList<>();
+    private final LinkedList<String> providerOrder = new LinkedList<>();
     private final Map<String, MapDataProvider> allProviders = new HashMap<>();
 
     public MapDataProviders() {
@@ -60,6 +59,15 @@ public class MapDataProviders {
         registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
     }
 
+    public void prioritizeProvider(String providerId) {
+        // This functionality should be replaced with a general reordering of
+        // providers from a GUI
+        if (providerOrder.remove(providerId)) {
+            // If it existed, put it back first
+            providerOrder.addFirst(providerId);
+        }
+    }
+
     private void createBuiltInProviders() {
         // Metadata
         registerBuiltInProvider(new CategoriesProvider());
@@ -83,8 +91,8 @@ public class MapDataProviders {
             return;
         }
         if (!allProviders.containsKey(providerId)) {
-            // It is not previously known, so add it last
-            providerOrder.add(providerId);
+            // It is not previously known, so add it first
+            providerOrder.addFirst(providerId);
         }
         // Add or update the provider
         allProviders.put(providerId, provider);

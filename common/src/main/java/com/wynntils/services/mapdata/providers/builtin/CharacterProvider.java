@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -13,6 +14,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CharacterProvider extends BuiltInProvider {
@@ -41,23 +43,23 @@ public class CharacterProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Player positions";
+        public Optional<String> getName() {
+            return Optional.of("Player positions");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public int getPriority() {
-                    return 900;
+                public Optional<Integer> getPriority() {
+                    return Optional.of(900);
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return MapVisibility.ALWAYS;
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(FixedMapVisibility.ICON_ALWAYS);
                 }
-            };
+            });
         }
     }
 
@@ -73,13 +75,13 @@ public class CharacterProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return MapVisibility.NEVER;
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(FixedMapVisibility.ICON_NEVER);
                 }
-            };
+            });
         }
 
         @Override
