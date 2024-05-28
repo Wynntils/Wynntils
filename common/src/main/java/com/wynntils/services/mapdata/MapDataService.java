@@ -73,12 +73,18 @@ public class MapDataService extends Service {
         float max = mapVisibility.getMax().get();
         float fade = mapVisibility.getFade().get();
 
+        // Having max larger than min is a way to represent "never show"
+        if (max < min) {
+            return 0f;
+        }
+
         float startFadeIn = min - fade;
         float stopFadeIn = min + fade;
         float startFadeOut = max - fade;
         float stopFadeOut = max + fade;
 
-        // If min or max is at the extremes, do not apply fading
+        // If min or max is at the extremes, do not apply fading.
+        // This is a way of representing "always show".
         if (min <= 1) {
             startFadeIn = 0;
             stopFadeIn = 0;

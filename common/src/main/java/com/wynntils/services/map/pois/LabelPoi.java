@@ -137,7 +137,7 @@ public class LabelPoi implements Poi {
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                StyledText.fromString("[Lv. " + level + "]"),
+                                StyledText.fromString("[Lv. " + level.get() + "]"),
                                 0,
                                 10,
                                 color,

@@ -180,15 +180,15 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw level, if applicable
-        Optional<Integer> level = attributes.getLevel();
+        int level = attributes.getLevel().get();
         // Show level only for features that are displayed and hovered
         boolean drawLevel = hovered && (drawIcon || drawLabel);
-        if (level.get() >= 1 && drawLevel) {
+        if (level >= 1 && drawLevel) {
             BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             bufferSource,
-                            StyledText.fromString("[Lv. " + level.get() + "]"),
+                            StyledText.fromString("[Lv. " + level + "]"),
                             0,
                             yOffset,
                             attributes.getLabelColor().get(),
