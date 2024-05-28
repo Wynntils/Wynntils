@@ -1,3 +1,16 @@
+## [1.2.16](https://github.com/Wynntils/Artemis/compare/v1.2.15...v1.2.16) (2024-05-28)
+
+
+### Bug Fixes
+
+* Remove "Optional" from map level hover ([#2535](https://github.com/Wynntils/Artemis/issues/2535)) ([3de3c07](https://github.com/Wynntils/Artemis/commit/3de3c0785ea10d9f8f01f0c0ef18959072638043))
+* Set inStream to false in WorldStateModel when changing world state [skip ci] ([#2534](https://github.com/Wynntils/Artemis/issues/2534)) ([c5e75ae](https://github.com/Wynntils/Artemis/commit/c5e75ae06256201da72a3e6dfe625980e4f877fb))
+
+
+### Code Refactoring
+
+* Better handling of MapData attributes [skip ci] ([#2494](https://github.com/Wynntils/Artemis/issues/2494)) ([9cb5ae9](https://github.com/Wynntils/Artemis/commit/9cb5ae970a00b3eebbaed6cb9c7303ef51506a4d))
+
 ## [1.2.15](https://github.com/Wynntils/Artemis/compare/v1.2.14...v1.2.15) (2024-05-27)
 
 
@@ -12,6 +25,11 @@
 * Fix charms being counted as defective, if they had no identifications [skip ci] ([#2530](https://github.com/Wynntils/Artemis/issues/2530)) ([153ff14](https://github.com/Wynntils/Artemis/commit/153ff1438cd63f5a7eb064e7cd278cbcd6e8a170))
 * Fix CustomPlayerListOverlay below the boss bars [skip ci] ([#2527](https://github.com/Wynntils/Artemis/issues/2527)) ([268f48e](https://github.com/Wynntils/Artemis/commit/268f48e3565acdc0df0b34ec8db2dec32a060a8b))
 * Fix tomes being counted as defective, if they had no identifications [skip ci] ([#2529](https://github.com/Wynntils/Artemis/issues/2529)) ([473a5da](https://github.com/Wynntils/Artemis/commit/473a5daf601e7011eddfbc6d00c3e005148cb385))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.15 [skip ci] ([1b41e33](https://github.com/Wynntils/Artemis/commit/1b41e33c2093f08a100a0c77357df3f8c3378c87))
 
 
 ### Code Refactoring
@@ -82,22 +100,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.12 [skip ci] ([c4e2a59](https://github.com/Wynntils/Artemis/commit/c4e2a590be52e22068a9907312b8b5f6083a4e93))
-
-## [1.2.11](https://github.com/Wynntils/Artemis/compare/v1.2.10...v1.2.11) (2024-05-19)
-
-
-### New Features
-
-* Content book QoL changes, speed fixes, (better) partial caching  ([#2507](https://github.com/Wynntils/Artemis/issues/2507)) ([1ebbbe3](https://github.com/Wynntils/Artemis/commit/1ebbbe3453ff67b127c3326d9ddc37c0dd122dde))
-
-
-### Bug Fixes
-
-* Fix GameNotificationOverlay flashing text before message is removed [skip ci] ([#2506](https://github.com/Wynntils/Artemis/issues/2506)) ([119ff15](https://github.com/Wynntils/Artemis/commit/119ff15cb7e432bd6b74e7921a2674e983129380))
-* Fix items being counted as defective, if they had no identifications [skip ci] ([#2509](https://github.com/Wynntils/Artemis/issues/2509)) ([cb8e4f2](https://github.com/Wynntils/Artemis/commit/cb8e4f23f16646aae603712825390bf15d02c567))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.11 [skip ci] ([cea310f](https://github.com/Wynntils/Artemis/commit/cea310f70a8c4fe4b39082d002e27be1f7ecb025))
 
