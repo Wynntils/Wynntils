@@ -218,8 +218,8 @@ public final class MainMapScreen extends AbstractMapScreen {
 
             // When in an unmapped area, center to the middle of the map if the feature is enabled
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                            .centerWhenUnmapped
-                            .get()
+                    .centerWhenUnmapped
+                    .get()
                     && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
                 centerMapOnWorld();
             }
@@ -234,9 +234,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .openMapKeybind
-                        .getKeyMapping()
-                        .isDown()) {
+                .openMapKeybind
+                .getKeyMapping()
+                .isDown()) {
             this.onClose();
             return;
         }
@@ -297,11 +297,10 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Services.Poi.getServicePois();
+        // Get all MapData features as Pois
+        Stream<? extends Poi> pois = Services.MapData.getFeaturesAsPois();
 
-        pois = Stream.concat(pois, Services.Poi.getCombatPois());
-        pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
+        // Append the pois that are still not converted to MapData
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
         pois = Stream.concat(pois, Services.Hades.getPlayerPois());
