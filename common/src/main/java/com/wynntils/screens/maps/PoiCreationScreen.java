@@ -361,8 +361,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                     hovered == poi,
                     1,
                     zoomRenderScale,
-                    zoomLevel,
-                    true);
+                    zoomLevel);
 
             bufferSource.endBatch();
         }

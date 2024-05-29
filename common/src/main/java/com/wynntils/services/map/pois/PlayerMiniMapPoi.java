@@ -32,8 +32,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel,
-            boolean showLabels) {
+            float zoomLevel) {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 

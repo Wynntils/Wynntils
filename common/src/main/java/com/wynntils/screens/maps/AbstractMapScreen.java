@@ -179,8 +179,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                     hovered == poi,
                     poiScale,
                     zoomRenderScale,
-                    zoomLevel,
-                    true);
+                    zoomLevel);
         }
 
         bufferSource.endBatch();

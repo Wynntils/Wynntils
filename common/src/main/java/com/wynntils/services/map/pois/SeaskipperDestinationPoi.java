@@ -73,8 +73,7 @@ public class SeaskipperDestinationPoi implements Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel,
-            boolean showLabels) {
+            float zoomLevel) {
         renderPoi(poseStack, bufferSource, renderX, renderY, zoomRenderScale, true);
     }
 

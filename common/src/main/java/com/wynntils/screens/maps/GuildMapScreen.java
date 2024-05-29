@@ -274,8 +274,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     hovered == poi,
                     poiScale,
                     zoomRenderScale,
-                    zoomLevel,
-                    true);
+                    zoomLevel);
         }
 
         bufferSource.endBatch();
