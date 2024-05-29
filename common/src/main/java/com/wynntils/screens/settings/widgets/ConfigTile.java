@@ -26,7 +26,6 @@ import net.minecraft.network.chat.Component;
 
 public class ConfigTile extends WynntilsButton {
     private final TextboxScreen screen;
-    private final Config<?> config;
     private final int maskTopY;
     private final int maskBottomY;
     private final float translationX;
@@ -40,7 +39,7 @@ public class ConfigTile extends WynntilsButton {
         this.screen = screen;
 
         if (screen instanceof WynntilsBookSettingsScreen settingsScreen) {
-            maskTopY = settingsScreen.getConfigMaskTopY();
+            maskTopY = settingsScreen.getMaskTopY();
             maskBottomY = settingsScreen.getConfigMaskBottomY();
             displayName = settingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
@@ -63,7 +62,6 @@ public class ConfigTile extends WynntilsButton {
             translationY = 0;
         }
 
-        this.config = config;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config,
@@ -160,10 +158,22 @@ public class ConfigTile extends WynntilsButton {
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanSettingsButton(
-                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<Boolean>) configOption,
+                    maskTopY,
+                    maskBottomY,
+                    translationX,
+                    translationY);
         } else if (configOption.isEnum()) {
             return new EnumSettingsButton<>(
-                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY);
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<E>) configOption,
+                    maskTopY,
+                    maskBottomY,
+                    translationX,
+                    translationY);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton(
                     getRenderX(), getRenderY(), (Config<CustomColor>) configOption, screen, maskTopY, maskBottomY);

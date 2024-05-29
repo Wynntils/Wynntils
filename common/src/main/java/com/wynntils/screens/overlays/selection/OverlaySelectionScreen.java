@@ -488,6 +488,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             setSelectedOverlay(newSelected);
         }
+
+        scrollOverlays(overlayScrollOffset);
     }
 
     public void setSelectedOverlay(Overlay selectedOverlay) {
@@ -604,6 +606,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             renderY += 43;
         }
+
+        scrollConfigs(configScrollOffset);
     }
 
     private void togglePreview(boolean enabled) {

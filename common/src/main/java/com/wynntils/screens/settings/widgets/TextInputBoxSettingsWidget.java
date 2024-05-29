@@ -9,7 +9,6 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -20,18 +19,13 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
     private final int maskBottomY;
 
     protected TextInputBoxSettingsWidget(
-            int x, int y, Config<T> config, TextboxScreen textboxScreen, int width, int maskTopY, int maskBottomY) {
-        super(x, y, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
+            int x, int y, Config<T> config, TextboxScreen textboxScreen, int maskTopY, int maskBottomY) {
+        super(x, y, 90, 20, null, textboxScreen);
         this.config = config;
         this.maskTopY = maskTopY;
         this.maskBottomY = maskBottomY;
         setTextBoxInput(config.get().toString());
         tooltip = ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150);
-    }
-
-    public TextInputBoxSettingsWidget(
-            int x, int y, Config<T> config, TextboxScreen textboxScreen, int maskTopY, int maskBottomY) {
-        this(x, y, config, textboxScreen, 100, maskTopY, maskBottomY);
     }
 
     @Override
