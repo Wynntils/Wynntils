@@ -37,21 +37,9 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     public static void registerFeature(CustomPoi customPoi) {
-        int tier =
-                switch (customPoi.getIcon()) {
-                    case CHEST_T1 -> 1;
-                    case CHEST_T2 -> 2;
-                    case CHEST_T3 -> 3;
-                    case CHEST_T4 -> 4;
-                    default -> 0;
-                };
-        if (tier == 0) {
-            String iconId = MapIconsProvider.getIconIdFromTexture(customPoi.getIcon());
-            PROVIDED_FEATURES.add(new WaypointLocation(
-                    customPoi.getLocation().asLocation(), customPoi.getName(), iconId, customPoi.getColor(), customPoi.getVisibility()));
-        } else {
-            PROVIDED_FEATURES.add(new FoundChestLocation(customPoi.getLocation().asLocation(), tier));
-        }
+        String iconId = MapIconsProvider.getIconIdFromTexture(customPoi.getIcon());
+        PROVIDED_FEATURES.add(new WaypointLocation(
+                customPoi.getLocation().asLocation(), customPoi.getName(), iconId, customPoi.getColor(), customPoi.getVisibility()));
     }
 
     private static final class WaypointLocation implements MapLocation {
@@ -111,43 +99,6 @@ public class WaypointsProvider extends BuiltInProvider {
                             });
                 }
             });
-        }
-
-        @Override
-        public List<String> getTags() {
-            return List.of();
-        }
-
-        @Override
-        public Location getLocation() {
-            return location;
-        }
-    }
-
-    private static final class FoundChestLocation implements MapLocation {
-        private final Location location;
-        private final int tier;
-        private final int number;
-
-        private FoundChestLocation(Location location, int tier) {
-            this.location = location;
-            this.tier = tier;
-            this.number = WaypointsProvider.counter++;
-        }
-
-        @Override
-        public String getFeatureId() {
-            return "found-chest" + "-" + number;
-        }
-
-        @Override
-        public String getCategoryId() {
-            return "wynntils:personal:found-chest:tier-" + tier;
-        }
-
-        @Override
-        public Optional<MapAttributes> getAttributes() {
-            return Optional.empty();
         }
 
         @Override

@@ -14,22 +14,25 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
-import com.wynntils.models.containers.type.LootChestType;
+import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -44,6 +47,9 @@ import org.lwjgl.glfw.GLFW;
 public class MainMapFeature extends Feature {
     @Persisted
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
+
+    @Persisted
+    public final Storage<FoundLootChestHolder> foundChestLocations = new Storage<>(new FoundLootChestHolder());
 
     @Persisted
     public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
@@ -94,7 +100,7 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @Persisted
-    public final Config<LootChestType> minTierForAutoWaypoint = new Config<>(LootChestType.TIER_3);
+    public final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
 
     @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
@@ -162,7 +168,7 @@ public class MainMapFeature extends Feature {
             return;
         }
 
-        LootChestType chestType = Models.LootChest.getChestType(event.getScreen());
+        LootChestTier chestType = Models.LootChest.getChestType(event.getScreen());
         if (chestType == null) return;
 
         if (chestType.ordinal() < minTierForAutoWaypoint.get().ordinal()) {
@@ -170,24 +176,17 @@ public class MainMapFeature extends Feature {
             return;
         }
 
-        PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
-        CustomPoi newPoi = new CustomPoi(
-                location,
-                chestType.getWaypointName(),
-                CommonColors.WHITE,
-                chestType.getWaypointTexture(),
-                CustomPoi.Visibility.DEFAULT);
+        Location location = new Location(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
 
-        if (customPois.get().stream().noneMatch(customPoi -> customPoi.equals(newPoi))) {
-            customPois.get().add(newPoi);
+        if (foundChestLocations.get().get().stream()
+                .noneMatch(foundLocation -> foundLocation.getLocation().equals(location))) {
+            foundChestLocations.get().add(new LootChestsProvider.FoundChestLocation(location, chestType));
+            foundChestLocations.touched();
 
             // TODO: Replace this notification with a popup
             Managers.Notification.queueMessage(
                     Component.literal("Added new waypoint for " + chestType.getWaypointName())
                             .withStyle(ChatFormatting.AQUA));
-
-            customPois.touched();
-            updateWaypoints();
         }
     }
 
@@ -200,8 +199,37 @@ public class MainMapFeature extends Feature {
 
     public void updateWaypoints() {
         WaypointsProvider.resetFeatures();
-        customPois.get().forEach(customPoi -> {
-            WaypointsProvider.registerFeature(customPoi);
-        });
+        customPois.get().forEach(WaypointsProvider::registerFeature);
+    }
+
+    public void updateLootChests() {
+        LootChestsProvider.resetFeatures();
+        foundChestLocations.get().get().forEach(LootChestsProvider::registerFeature);
+    }
+
+    // Note: This class is a wrapper holder for the found loot chests
+    //       This is done, so we can update the loot chests when they are added or removed
+    //       (as storage updates do not trigger the onConfigUpdate method, or any respective event)
+    private class FoundLootChestHolder {
+        private final List<LootChestsProvider.FoundChestLocation> locations = new ArrayList<>();
+
+        public List<LootChestsProvider.FoundChestLocation> get() {
+            return Collections.unmodifiableList(locations);
+        }
+
+        public void add(LootChestsProvider.FoundChestLocation foundChestLocation) {
+            locations.add(foundChestLocation);
+            MainMapFeature.this.updateLootChests();
+        }
+
+        public void remove(LootChestsProvider.FoundChestLocation foundChestLocation) {
+            locations.remove(foundChestLocation);
+            MainMapFeature.this.updateLootChests();
+        }
+
+        public void clear() {
+            locations.clear();
+            MainMapFeature.this.updateLootChests();
+        }
     }
 }
