@@ -45,7 +45,7 @@ public class MapAttributesResolver {
                 resolver.getAttribute(MapAttributes::getIconDecoration));
     }
 
-    protected <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {
+    private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {
         // Check if the feature has overridden this attribute
         Optional<T> featureAttribute = getFromFeature(attributeGetter);
         if (featureAttribute.isPresent()) {
