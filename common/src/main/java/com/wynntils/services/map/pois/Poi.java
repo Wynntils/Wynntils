@@ -28,7 +28,8 @@ public interface Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel);
+            float zoomLevel,
+            boolean showLabels);
 
     int getWidth(float mapZoom, float scale);
 

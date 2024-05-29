@@ -440,7 +440,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         hoveredPoi == poi,
                         poiScale,
                         zoomRenderScale,
-                        zoomLevel);
+                        zoomLevel,
+                        true);
             }
         }
 
