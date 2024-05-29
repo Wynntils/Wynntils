@@ -14,7 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<CustomColor> {
     public CustomColorSettingsButton(
             int x, int y, Config<CustomColor> config, TextboxScreen textboxScreen, int maskTopY, int maskBottomY) {
-        super(x, y, config, textboxScreen, 80, maskTopY, maskBottomY);
+        super(x, y, config, textboxScreen, maskTopY, maskBottomY);
     }
 
     @Override
@@ -24,6 +24,6 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
         PoseStack poseStack = guiGraphics.pose();
 
         CustomColor value = config.get();
-        RenderUtils.drawRect(poseStack, value, width + 5, 6, 0, height, height);
+        RenderUtils.drawRect(poseStack, value, getX() + getWidth() + 4, getY(), 0, height, height);
     }
 }
