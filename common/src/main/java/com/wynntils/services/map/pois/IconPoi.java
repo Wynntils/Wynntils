@@ -112,4 +112,9 @@ public abstract class IconPoi implements Poi {
             poseStack.popPose();
         }
     }
+
+    @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return this.getIconAlpha(zoomRenderScale) >= 0.1f;
+    }
 }

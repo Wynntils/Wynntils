@@ -13,8 +13,6 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.map.pois.IconPoi;
-import com.wynntils.services.map.pois.LabelPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -198,16 +196,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             // once that is fixed this can be removed
             if (location == null) continue;
 
-            if (poi instanceof IconPoi iconPoi) {
-                // Check if the poi is visible
-                if (iconPoi.getIconAlpha(zoomRenderScale) < 0.1f) {
-                    continue;
-                }
-            } else if (poi instanceof LabelPoi labelPoi) {
-                // Check if label is visible
-                if (labelPoi.getAlphaFromScale(zoomRenderScale) < 0.1f) {
-                    continue;
-                }
+            if (!poi.isVisible(zoomRenderScale, zoomLevel)) {
+                continue;
             }
 
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);

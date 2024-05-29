@@ -36,4 +36,8 @@ public interface Poi {
     int getHeight(float mapZoom, float scale);
 
     String getName();
+
+    default boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return true;
+    }
 }

@@ -54,6 +54,22 @@ public class MapFeaturePoiWrapper implements Poi {
     }
 
     @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        float iconAlpha = Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
+        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
+        if (icon.isPresent() && iconAlpha > 0.01) {
+            return true;
+        }
+
+        float labelAlpha = Services.MapData.calculateVisibility(attributes.labelVisibility(), zoomLevel);
+        if (!attributes.label().isEmpty() && labelAlpha > 0.01) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public int getWidth(float mapZoom, float scale) {
         Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
         if (icon.isPresent()) {

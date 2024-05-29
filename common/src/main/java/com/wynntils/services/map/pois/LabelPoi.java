@@ -159,4 +159,9 @@ public class LabelPoi implements Poi {
     public Label getLabel() {
         return label;
     }
+
+    @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return this.getAlphaFromScale(zoomRenderScale) >= 0.1f;
+    }
 }
