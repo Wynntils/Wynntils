@@ -10,9 +10,9 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
-import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.colors.CustomColor;
@@ -62,17 +62,14 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getWidth(float mapZoom, float scale) {
-        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId());
+        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
         if (icon.isPresent()) {
             return (int) (icon.get().getWidth() * scale);
         }
 
-        if (!attributes.getLabel().isEmpty()) {
+        if (!attributes.label().isEmpty()) {
             // Use label for measurements
-            return (int) (FontRenderer.getInstance()
-                            .getFont()
-                            .width(attributes.getLabel())
-                    * scale);
+            return (int) (FontRenderer.getInstance().getFont().width(attributes.label()) * scale);
         }
 
         // No icon or label, return 32 as fallback
@@ -82,12 +79,12 @@ public class MapFeaturePoiWrapper implements Poi {
 
     @Override
     public int getHeight(float mapZoom, float scale) {
-        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId());
+        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
         if (icon.isPresent()) {
             return (int) (icon.get().getHeight() * scale);
         }
 
-        if (!attributes.getLabel().isEmpty()) {
+        if (!attributes.label().isEmpty()) {
             // Use label for measurements
             return getLabelHeight(scale);
         }
@@ -121,10 +118,9 @@ public class MapFeaturePoiWrapper implements Poi {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
-        float iconAlpha = hoverAlphaFactor
-                * Services.MapData.calculateVisibility(
-                        attributes.getIconVisibility(), zoomLevel);
-        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.getIconId());
+        float iconAlpha =
+                hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
+        Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
         boolean drawIcon = iconAlpha > 0.01;
         if (icon.isPresent() && drawIcon) {
             int iconWidth = icon.get().getWidth();
@@ -139,7 +135,7 @@ public class MapFeaturePoiWrapper implements Poi {
                     poseStack,
                     bufferSource,
                     icon.get().getResourceLocation(),
-                    attributes.getIconColor(),
+                    attributes.iconColor(),
                     iconAlpha,
                     0 - iconWidth / 2f,
                     yOffset - iconHeight / 2f,
@@ -150,38 +146,37 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         // Draw label, if applicable
-        float labelAlpha = hoverAlphaFactor
-                * Services.MapData.calculateVisibility(
-                        attributes.getLabelVisibility(), zoomLevel);
+        float labelAlpha =
+                hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.labelVisibility(), zoomLevel);
         // Small enough alphas are turned into 255, so trying to render them results in
         // visual glitches
         // Always draw labels for hovered icons, regardless of label visibility rules
         boolean drawLabel = labelAlpha > 0.01 || (drawIcon && hovered);
-        if (!attributes.getLabel().isEmpty() && drawLabel && showLabels) {
+        if (!attributes.label().isEmpty() && drawLabel && showLabels) {
             if (drawIcon && hovered) {
                 // If this is hovered, show with full alpha
                 labelAlpha = 1f;
             }
 
-            CustomColor color = attributes.getLabelColor().withAlpha(labelAlpha);
+            CustomColor color = attributes.labelColor().withAlpha(labelAlpha);
 
             BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             bufferSource,
-                            StyledText.fromString(attributes.getLabel()),
+                            StyledText.fromString(attributes.label()),
                             0,
                             yOffset,
                             color,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
-                            attributes.getLabelShadow(),
+                            attributes.labelShadow(),
                             TEXT_SCALE);
             yOffset += labelHeight + SPACING;
         }
 
         // Draw level, if applicable
-        int level = attributes.getLevel();
+        int level = attributes.level();
         // Show level only for features that are displayed and hovered
         boolean drawLevel = hovered && (drawIcon || drawLabel);
         if (level >= 1 && drawLevel) {
@@ -192,15 +187,15 @@ public class MapFeaturePoiWrapper implements Poi {
                             StyledText.fromString("[Lv. " + level + "]"),
                             0,
                             yOffset,
-                            attributes.getLabelColor(),
+                            attributes.labelColor(),
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
-                            attributes.getLabelShadow(),
+                            attributes.labelShadow(),
                             TEXT_SCALE);
         }
 
         // Draw decoration, if applicable
-        MapDecoration decoration = attributes.getIconDecoration();
+        MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
             decoration.render(poseStack, bufferSource, hovered, zoomLevel);
         }

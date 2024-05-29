@@ -6,9 +6,9 @@ package com.wynntils.services.mapdata;
 
 import com.wynntils.core.components.Service;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -35,16 +35,13 @@ public class MapDataService extends Service {
     }
 
     public Stream<Poi> getFeaturesAsPois() {
-        return getFeatures().map(feature -> new MapFeaturePoiWrapper(feature, getResolvedMapAttributes(feature)));
+        return getFeatures().map(feature -> new MapFeaturePoiWrapper(feature, resolveMapAttributes(feature)));
     }
 
     // region Lookup and extend data from providers
 
-    /** Return a MapAttributes where all methods are guaranteed to return
-     * non-empty, by using inheritance rules.
-     */
-    public ResolvedMapAttributes getResolvedMapAttributes(MapFeature feature) {
-        return resolvedAttributesCache.computeIfAbsent(feature, f -> new ResolvedMapAttributes(feature));
+    public ResolvedMapAttributes resolveMapAttributes(MapFeature feature) {
+        return resolvedAttributesCache.computeIfAbsent(feature, k -> MapAttributesResolver.resolve(feature));
     }
 
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
@@ -71,10 +68,10 @@ public class MapDataService extends Service {
     // endregion
 
     /** This method requires a MapVisibility with all values non-empty to work correctly. */
-    public float calculateVisibility(MapVisibility mapVisibility, float zoomLevel) {
-        float min = mapVisibility.getMin().get();
-        float max = mapVisibility.getMax().get();
-        float fade = mapVisibility.getFade().get();
+    public float calculateVisibility(ResolvedMapVisibility mapVisibility, float zoomLevel) {
+        float min = mapVisibility.min();
+        float max = mapVisibility.max();
+        float fade = mapVisibility.fade();
 
         float startFadeIn = min - fade;
         float stopFadeIn = min + fade;
