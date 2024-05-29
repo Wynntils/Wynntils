@@ -7,13 +7,14 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.components.Service;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -22,6 +23,8 @@ public class MapDataService extends Service {
     private static final String NAMELESS_CATEGORY = "Category '%s'";
 
     private final MapDataProviders providers = new MapDataProviders();
+
+    private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
 
     public MapDataService() {
         super(List.of());
@@ -32,7 +35,7 @@ public class MapDataService extends Service {
     }
 
     public Stream<Poi> getFeaturesAsPois() {
-        return getFeatures().map(MapFeaturePoiWrapper::new);
+        return getFeatures().map(feature -> new MapFeaturePoiWrapper(feature, getResolvedMapAttributes(feature)));
     }
 
     // region Lookup and extend data from providers
@@ -40,8 +43,8 @@ public class MapDataService extends Service {
     /** Return a MapAttributes where all methods are guaranteed to return
      * non-empty, by using inheritance rules.
      */
-    public MapAttributes getResolvedMapAttributes(MapFeature feature) {
-        return new ResolvedMapAttributes(feature);
+    public ResolvedMapAttributes getResolvedMapAttributes(MapFeature feature) {
+        return resolvedAttributesCache.computeIfAbsent(feature, f -> new ResolvedMapAttributes(feature));
     }
 
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
