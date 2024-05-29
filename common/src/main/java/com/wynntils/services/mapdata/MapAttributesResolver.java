@@ -45,16 +45,16 @@ public class MapAttributesResolver {
                 resolver.getAttribute(MapAttributes::getIconDecoration));
     }
 
-    protected <T> T getAttribute(Function<MapAttributes, Optional<T>> getter) {
+    protected <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {
         // Check if the feature has overridden this attribute
-        Optional<T> featureAttribute = getFromFeature(getter);
+        Optional<T> featureAttribute = getFromFeature(attributeGetter);
         if (featureAttribute.isPresent()) {
             return featureAttribute.get();
         }
 
         // Then try to get it from the category
         for (String id = getCategoryId(); id != null; id = getParentCategoryId(id)) {
-            Stream<T> attributes = getAttributesForCategoryId(getter, id);
+            Stream<T> attributes = getAttributesForCategoryId(attributeGetter, id);
 
             Optional<T> attribute = attributes.findFirst();
             if (attribute.isPresent()) {
@@ -63,7 +63,7 @@ public class MapAttributesResolver {
         }
 
         // Otherwise return the fallback default value
-        return getter.apply(DefaultMapAttributes.INSTANCE).get();
+        return attributeGetter.apply(DefaultMapAttributes.INSTANCE).get();
     }
 
     private ResolvedMapVisibility getResolvedMapVisibility(
@@ -75,13 +75,13 @@ public class MapAttributesResolver {
     }
 
     private float getVisibilityValue(
-            Function<MapVisibility, Optional<Float>> getter,
+            Function<MapVisibility, Optional<Float>> valueGetter,
             Function<MapAttributes, Optional<MapVisibility>> attributeGetter) {
         // Check if the feature has overridden this attribute
         Optional<MapVisibility> featureVisibility = getFromFeature(attributeGetter);
         if (featureVisibility.isPresent()) {
             // We got the attribute, but do we got the value?
-            Optional<Float> featureValue = getter.apply(featureVisibility.get());
+            Optional<Float> featureValue = valueGetter.apply(featureVisibility.get());
             if (featureValue.isPresent()) {
                 return featureValue.get();
             }
@@ -93,7 +93,7 @@ public class MapAttributesResolver {
 
             // Then check each visibility in turn for the value we're looking for
             Optional<Float> attribute = attributes
-                    .map(getter)
+                    .map(valueGetter)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .findFirst();
@@ -103,7 +103,8 @@ public class MapAttributesResolver {
         }
 
         // Otherwise return the fallback default value
-        return getter.apply(attributeGetter.apply(DefaultMapAttributes.INSTANCE).get())
+        return valueGetter
+                .apply(attributeGetter.apply(DefaultMapAttributes.INSTANCE).get())
                 .get();
     }
 
