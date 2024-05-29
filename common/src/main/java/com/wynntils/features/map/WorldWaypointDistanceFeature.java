@@ -220,8 +220,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 false,
                                 scale.get(),
                                 1,
-                                50,
-                                true);
+                                50);
                 bufferSource.endBatch();
                 poseStack.popPose();
             }

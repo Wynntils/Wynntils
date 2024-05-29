@@ -17,6 +17,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.LabelPoi;
 import com.wynntils.services.map.pois.ServicePoi;
@@ -37,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -64,6 +66,8 @@ public class PoiService extends Service {
 
     private final Set<LabelPoi> labelPois = new HashSet<>();
     private final Set<ServicePoi> servicePois = new HashSet<>();
+    private final Set<CombatPoi> combatPois = new HashSet<>();
+    private final Set<CombatPoi> cavePois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     @Persisted
@@ -101,9 +105,16 @@ public class PoiService extends Service {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_CAVE_INFO);
         dl.handleReader(reader -> {
             Type type = new TypeToken<List<CaveProfile>>() {}.getType();
+
             List<CaveProfile> profiles = GSON.fromJson(reader, type);
-            profiles.forEach(
-                    profile -> CombatListProvider.registerFeature(profile.location, CombatKind.CAVES, profile.name));
+
+            cavePois.addAll(profiles.stream()
+                    .map(profile -> {
+                        CombatListProvider.registerFeature(profile.location, CombatKind.CAVES, profile.name);
+                        return new CombatPoi(
+                                PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES);
+                    })
+                    .collect(Collectors.toUnmodifiableSet()));
         });
     }
 
@@ -151,6 +162,10 @@ public class PoiService extends Service {
 
     public Stream<ServicePoi> getServicePois() {
         return servicePois.stream();
+    }
+
+    public Stream<CombatPoi> getCombatPois() {
+        return Stream.concat(combatPois.stream(), cavePois.stream());
     }
 
     public List<CustomPoi> getProvidedCustomPois() {
@@ -217,6 +232,7 @@ public class PoiService extends Service {
                 // We load caves separately... until the refactor
                 if (kind != null && kind != CombatKind.CAVES) {
                     for (CombatProfile profile : combatList.locations) {
+                        combatPois.add(new CombatPoi(profile.coordinates, profile.name, kind));
                         CombatListProvider.registerFeature(new Location(profile.coordinates), kind, profile.name);
                     }
                 } else {

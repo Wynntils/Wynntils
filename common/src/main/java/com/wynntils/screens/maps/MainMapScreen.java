@@ -297,21 +297,14 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        // Get all MapData features as Pois
-        Stream<? extends Poi> pois = Services.MapData.getFeaturesAsPois();
+        Stream<? extends Poi> pois = Services.Poi.getServicePois();
 
-        // Append the pois that are still not converted to MapData
+        pois = Stream.concat(pois, Services.Poi.getCombatPois());
+        pois = Stream.concat(pois, Services.Poi.getLabelPois());
+        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
-        pois = Stream.concat(
-                pois,
-                Services.Hades.getPlayerPois(
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemotePartyPlayers
-                                .get(),
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemoteFriendPlayers
-                                .get()));
+        pois = Stream.concat(pois, Services.Hades.getPlayerPois());
 
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());

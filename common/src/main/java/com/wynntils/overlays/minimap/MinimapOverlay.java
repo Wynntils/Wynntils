@@ -7,6 +7,7 @@ package com.wynntils.overlays.minimap;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -15,7 +16,9 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.MathUtils;
@@ -249,15 +252,20 @@ public class MinimapOverlay extends Overlay {
 
         float currentZoom = 1f / zoomRenderScale;
 
-        // Get all MapData features as Pois
-        Stream<? extends Poi> poisToRender = Services.MapData.getFeaturesAsPois();
+        Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
 
-        // Append the pois that are still not converted to MapData
-        poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
-        poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
         poisToRender = Stream.concat(
                 poisToRender,
-                Services.Hades.getPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
+                Services.Hades.getHadesUsers()
+                        .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers.get())
+                                || (user.isMutualFriend() && renderRemoteFriendPlayers.get()))
+                        .map(PlayerMiniMapPoi::new));
+
+        poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
+        poisToRender = Stream.concat(
+                poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
+        poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
+        poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
@@ -285,15 +293,7 @@ public class MinimapOverlay extends Overlay {
 
             if (BoundingShape.intersects(box, textureBoundingCircle)) {
                 poi.renderAt(
-                        poseStack,
-                        bufferSource,
-                        poiRenderX,
-                        poiRenderZ,
-                        false,
-                        poiScale.get(),
-                        currentZoom,
-                        zoomLevel,
-                        false);
+                        poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom, zoomLevel);
             }
         }
 
@@ -365,8 +365,7 @@ public class MinimapOverlay extends Overlay {
                                 false,
                                 poiScale.get(),
                                 1f / zoomRenderScale,
-                                zoomLevel,
-                                false);
+                                zoomLevel);
                 poseStack.popPose();
             } else {
                 waypointPoi.renderAt(
@@ -377,8 +376,7 @@ public class MinimapOverlay extends Overlay {
                         false,
                         poiScale.get(),
                         currentZoom,
-                        zoomLevel,
-                        false);
+                        zoomLevel);
             }
 
             bufferSource.endBatch();

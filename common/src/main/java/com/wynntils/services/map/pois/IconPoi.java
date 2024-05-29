@@ -68,8 +68,7 @@ public abstract class IconPoi implements Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel,
-            boolean showLabels) {
+            float zoomLevel) {
         float modifier = scale;
 
         if (hovered) {

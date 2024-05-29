@@ -106,8 +106,7 @@ public class MapFeaturePoiWrapper implements Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel,
-            boolean showLabels) {
+            float zoomLevel) {
         float renderScale = hovered ? scale * 1.05f : scale;
         // this is the default alpha for labels
         float hoverAlphaFactor = hovered ? 1f : 0.9f;
@@ -157,7 +156,7 @@ public class MapFeaturePoiWrapper implements Poi {
         // visual glitches
         // Always draw labels for hovered icons, regardless of label visibility rules
         boolean drawLabel = labelAlpha > 0.01 || (drawIcon && hovered);
-        if (!attributes.getLabel().get().isEmpty() && drawLabel && showLabels) {
+        if (!attributes.getLabel().get().isEmpty() && drawLabel) {
             if (drawIcon && hovered) {
                 // If this is hovered, show with full alpha
                 labelAlpha = 1f;
