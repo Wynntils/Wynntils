@@ -1,3 +1,16 @@
+## [1.2.17](https://github.com/Wynntils/Artemis/compare/v1.2.16...v1.2.17) (2024-05-29)
+
+
+### New Features
+
+* Settings Screen Redesign ([#2335](https://github.com/Wynntils/Artemis/issues/2335)) ([f0a73be](https://github.com/Wynntils/Artemis/commit/f0a73be93fe14f576b7242bdb0fd759521645dd9))
+* Start using MapData for some providers [skip ci] ([#2536](https://github.com/Wynntils/Artemis/issues/2536)) ([d5598ed](https://github.com/Wynntils/Artemis/commit/d5598edaac6d0a5d04db4cc5e4c9c7a19a6c5f7b))
+
+
+### Miscellaneous Chores
+
+* Revert "feat: Start using MapData for some providers [skip ci]" [skip ci] ([#2538](https://github.com/Wynntils/Artemis/issues/2538)) ([7940283](https://github.com/Wynntils/Artemis/commit/794028369a209b1b9ca9ff175021bda599c71033)), closes [#2536](https://github.com/Wynntils/Artemis/issues/2536)
+
 ## [1.2.16](https://github.com/Wynntils/Artemis/compare/v1.2.15...v1.2.16) (2024-05-28)
 
 
@@ -5,6 +18,11 @@
 
 * Remove "Optional" from map level hover ([#2535](https://github.com/Wynntils/Artemis/issues/2535)) ([3de3c07](https://github.com/Wynntils/Artemis/commit/3de3c0785ea10d9f8f01f0c0ef18959072638043))
 * Set inStream to false in WorldStateModel when changing world state [skip ci] ([#2534](https://github.com/Wynntils/Artemis/issues/2534)) ([c5e75ae](https://github.com/Wynntils/Artemis/commit/c5e75ae06256201da72a3e6dfe625980e4f877fb))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.16 [skip ci] ([e5f6145](https://github.com/Wynntils/Artemis/commit/e5f61452bf09b45a024dca1f12e297e299fb6cd3))
 
 
 ### Code Refactoring
@@ -83,21 +101,4 @@
 ### Code Refactoring
 
 * MapData visibility inheritance refactoring [skip ci] ([#2500](https://github.com/Wynntils/Artemis/issues/2500)) ([cfa5ee4](https://github.com/Wynntils/Artemis/commit/cfa5ee4e77491f3ec95008cbfea7f0e4bfdbdc57))
-
-## [1.2.12](https://github.com/Wynntils/Artemis/compare/v1.2.11...v1.2.12) (2024-05-20)
-
-
-### New Features
-
-* Annotate Guild Territory Upgrades ([#2512](https://github.com/Wynntils/Artemis/issues/2512)) ([1ca4c36](https://github.com/Wynntils/Artemis/commit/1ca4c36f4cd1f6eff53d6e12061b7ae83f1e33f2))
-
-
-### Bug Fixes
-
-* NPC dialogues not getting transcribed [skip ci] ([#2510](https://github.com/Wynntils/Artemis/issues/2510)) ([29cea14](https://github.com/Wynntils/Artemis/commit/29cea149e6246eec4a668b4e8b5f1fa48d2b0ce3))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.12 [skip ci] ([c4e2a59](https://github.com/Wynntils/Artemis/commit/c4e2a590be52e22068a9907312b8b5f6083a4e93))
 
