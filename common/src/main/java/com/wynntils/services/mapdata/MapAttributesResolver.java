@@ -20,8 +20,8 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * This is an implementation of MapAttributes that are guarenteed to never return
- * Optional.empty() for any value. It does this by extending the lookup for the
+ * This will create a special type of MapAttributes that are a record with fixed values,
+ * which are guarenteed to exist. It does this by extending the lookup for the
  * attribute first to the category hierarchy for the given feature, and
  * finally by going to the default value for each attribute.
  */
