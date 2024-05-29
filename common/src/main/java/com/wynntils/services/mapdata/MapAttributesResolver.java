@@ -7,14 +7,11 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
-import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -34,74 +31,18 @@ public class MapAttributesResolver {
 
     public static ResolvedMapAttributes resolve(MapFeature feature) {
         MapAttributesResolver resolver = new MapAttributesResolver(feature);
+
         return new ResolvedMapAttributes(
-                resolver.getLabel(),
-                resolver.getIconId(),
-                resolver.getPriority(),
-                resolver.getLevel(),
-                resolver.getLabelVisibility(),
-                resolver.getLabelColor(),
-                resolver.getLabelShadow(),
-                resolver.getIconVisibility(),
-                resolver.getIconColor(),
-                resolver.getIconDecoration());
-    }
-
-    private String getLabel() {
-        return getAttribute(MapAttributes::getLabel);
-    }
-
-    private String getIconId() {
-        return getAttribute(MapAttributes::getIconId);
-    }
-
-    private int getPriority() {
-        return getAttribute(MapAttributes::getPriority);
-    }
-
-    private int getLevel() {
-        return getAttribute(MapAttributes::getLevel);
-    }
-
-    private CustomColor getLabelColor() {
-        return getAttribute(MapAttributes::getLabelColor);
-    }
-
-    private TextShadow getLabelShadow() {
-        return getAttribute(MapAttributes::getLabelShadow);
-    }
-
-    private CustomColor getIconColor() {
-        return getAttribute(MapAttributes::getIconColor);
-    }
-
-    private MapDecoration getIconDecoration() {
-        return getAttribute(MapAttributes::getIconDecoration);
-    }
-
-    private ResolvedMapVisibility getLabelVisibility() {
-        return getResolvedMapVisibility(MapAttributes::getLabelVisibility);
-    }
-
-    private ResolvedMapVisibility getIconVisibility() {
-        return getResolvedMapVisibility(MapAttributes::getIconVisibility);
-    }
-
-    private ResolvedMapVisibility getResolvedMapVisibility(
-            Function<MapAttributes, Optional<MapVisibility>> attributeGetter) {
-        return new ResolvedMapVisibility(getMin(attributeGetter), getMax(attributeGetter), getFade(attributeGetter));
-    }
-
-    private float getMin(Function<MapAttributes, Optional<MapVisibility>> attributeGetter) {
-        return getVisibilityValue(MapVisibility::getMin, attributeGetter);
-    }
-
-    private float getMax(Function<MapAttributes, Optional<MapVisibility>> attributeGetter) {
-        return getVisibilityValue(MapVisibility::getMax, attributeGetter);
-    }
-
-    private float getFade(Function<MapAttributes, Optional<MapVisibility>> attributeGetter) {
-        return getVisibilityValue(MapVisibility::getFade, attributeGetter);
+                resolver.getAttribute(MapAttributes::getLabel),
+                resolver.getAttribute(MapAttributes::getIconId),
+                resolver.getAttribute(MapAttributes::getPriority),
+                resolver.getAttribute(MapAttributes::getLevel),
+                resolver.getResolvedMapVisibility(MapAttributes::getLabelVisibility),
+                resolver.getAttribute(MapAttributes::getLabelColor),
+                resolver.getAttribute(MapAttributes::getLabelShadow),
+                resolver.getResolvedMapVisibility(MapAttributes::getIconVisibility),
+                resolver.getAttribute(MapAttributes::getIconColor),
+                resolver.getAttribute(MapAttributes::getIconDecoration));
     }
 
     protected <T> T getAttribute(Function<MapAttributes, Optional<T>> getter) {
@@ -123,6 +64,14 @@ public class MapAttributesResolver {
 
         // Otherwise return the fallback default value
         return getter.apply(DefaultMapAttributes.INSTANCE).get();
+    }
+
+    private ResolvedMapVisibility getResolvedMapVisibility(
+            Function<MapAttributes, Optional<MapVisibility>> attributeGetter) {
+        return new ResolvedMapVisibility(
+                getVisibilityValue(MapVisibility::getMin, attributeGetter),
+                getVisibilityValue(MapVisibility::getMax, attributeGetter),
+                getVisibilityValue(MapVisibility::getFade, attributeGetter));
     }
 
     private float getVisibilityValue(
