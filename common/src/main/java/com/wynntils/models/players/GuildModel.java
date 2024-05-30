@@ -16,7 +16,11 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
@@ -118,7 +122,7 @@ public class GuildModel extends Model {
 
     private static final int MEMBERS_SLOT = 0;
     private static final int OBJECTIVES_SLOT = 13;
-    public static final int DIPLOMACY_MENU_SLOT = 26;
+    private static final int DIPLOMACY_MENU_SLOT = 26;
     private static final List<Integer> DIPLOMACY_SLOTS = List.of(2, 3, 4, 5, 6, 7, 8);
 
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
@@ -274,7 +278,22 @@ public class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed guild name and rank, " + guildRank + " of " + guildName);
     }
 
-    public void parseGuildContainer(ContainerContent container) {
+    public void addGuildContainerQuerySteps(QueryBuilder builder) {
+        builder.conditionalThen(
+                        // Upon execution the guild name has already been parsed
+                        container -> !guildName.isEmpty(),
+                        QueryStep.clickOnSlot(CharacterModel.GUILD_MENU_SLOT)
+                                .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
+                                .processIncomingContainer(this::parseGuildContainer))
+                .conditionalThen(
+                        // Upon execution allied guilds have already been parsed
+                        container -> !guildDiplomacyMap.isEmpty(),
+                        QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
+                                .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
+                                .processIncomingContainer(this::parseDiplomacyContainer));
+    }
+
+    private void parseGuildContainer(ContainerContent container) {
         ItemStack membersItem = container.items().get(MEMBERS_SLOT);
         ItemStack objectivesItem = container.items().get(OBJECTIVES_SLOT);
         ItemStack diplomacyItem = container.items().get(DIPLOMACY_MENU_SLOT);
@@ -323,7 +342,7 @@ public class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
     }
 
-    public void parseDiplomacyContainer(ContainerContent content) {
+    private void parseDiplomacyContainer(ContainerContent content) {
         for (int slot : DIPLOMACY_SLOTS) {
             ItemStack diplomacyItem = content.items().get(slot);
             if (diplomacyItem.getItem() == Items.AIR) {

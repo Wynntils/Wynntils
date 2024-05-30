@@ -23,7 +23,6 @@ import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -60,7 +59,7 @@ public final class CharacterModel extends Model {
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int COSMETICS_SLOT = 25;
     private static final int COSMETICS_BACK_SLOT = 9;
-    private static final int GUILD_MENU_SLOT = 26;
+    public static final int GUILD_MENU_SLOT = 26;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -214,19 +213,7 @@ public final class CharacterModel extends Model {
         }
 
         // Scan guild container, if the player is in a guild
-        queryBuilder
-                .conditionalThen(
-                        // Upon execution the guild name has already been parsed
-                        container -> !Models.Guild.getGuildName().isEmpty(),
-                        QueryStep.clickOnSlot(GUILD_MENU_SLOT)
-                                .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
-                                .processIncomingContainer(Models.Guild::parseGuildContainer))
-                .conditionalThen(
-                        // Upon execution allied guilds have already been parsed
-                        container -> !Models.Guild.getAlliedGuilds().isEmpty(),
-                        QueryStep.clickOnSlot(GuildModel.DIPLOMACY_MENU_SLOT)
-                                .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
-                                .processIncomingContainer(Models.Guild::parseDiplomacyContainer));
+        Models.Guild.addGuildContainerQuerySteps(queryBuilder);
 
         queryBuilder.build().executeQuery();
     }
