@@ -152,7 +152,7 @@ public class GuildModel extends Model {
     // Side note; it is currently impossible to detect when we get kicked as there are no messages sent at all
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = StyledText.fromComponent(e.getMessage());
+        StyledText message = e.getOriginalStyledText();
 
         if (message.matches(MSG_LEFT_GUILD)) {
             guildName = "";
@@ -203,8 +203,7 @@ public class GuildModel extends Model {
             return;
         }
 
-        Matcher newObjectivesMatcher = message.getMatcher(MSG_NEW_OBJECTIVES);
-        if (newObjectivesMatcher.matches()) {
+        if (message.matches(MSG_NEW_OBJECTIVES)) {
             objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
             return;
         }

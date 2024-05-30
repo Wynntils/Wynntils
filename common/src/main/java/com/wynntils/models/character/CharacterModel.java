@@ -52,6 +52,8 @@ public final class CharacterModel extends Model {
             "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
     // Test in CharacterModel_VETERAN_PATTERN
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
+    private static final Pattern SILVERBULL_JOIN_PATTERN =
+            Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
@@ -81,7 +83,7 @@ public final class CharacterModel extends Model {
     public final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
 
     @Persisted
-    public final Storage<Boolean> silverbullSubscriber = new Storage<>(false);
+    public final Storage<Boolean> silverbullSubscriber = new Storage<>(null);
 
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
@@ -92,7 +94,7 @@ public final class CharacterModel extends Model {
     }
 
     public boolean isSilverbullSubscriber() {
-        return silverbullSubscriber.get();
+        return silverbullSubscriber.get() != null && silverbullSubscriber.get();
     }
 
     public ClassType getClassType() {
@@ -163,13 +165,23 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!e.getStyledText().matches(WYNN_DEATH_MESSAGE)) return;
-        lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
-        CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
-        WynntilsMod.postEvent(deathEvent);
+        StyledText message = e.getOriginalStyledText();
 
-        if (deathEvent.isCanceled()) {
-            e.setCanceled(true);
+        if (message.matches(WYNN_DEATH_MESSAGE)) {
+            lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
+            CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
+            WynntilsMod.postEvent(deathEvent);
+
+            if (deathEvent.isCanceled()) {
+                e.setCanceled(true);
+            }
+            return;
+        }
+        ;
+
+        if (message.matches(SILVERBULL_JOIN_PATTERN)) {
+            silverbullSubscriber.store(true);
+            return;
         }
     }
 
@@ -199,7 +211,7 @@ public final class CharacterModel extends Model {
                 .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                 .processIncomingContainer(this::parseCharacterContainer));
 
-        if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
+        if (silverbullSubscriber.get() == null || System.currentTimeMillis() > silverbullExpiresAt.get()) {
             // Open Cosmetics Menu
             queryBuilder
                     .then(QueryStep.clickOnSlot(COSMETICS_SLOT)
