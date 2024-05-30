@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -37,23 +37,9 @@ public class CustomPoi extends StaticIconPoi {
         return switch (getVisibility()) {
             case ALWAYS -> -1;
             case HIDDEN -> Integer.MAX_VALUE;
-            case DEFAULT -> switch (getIcon()) {
-                case CHEST_T1 -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .lootChestTier1PoiMinZoom
-                        .get();
-                case CHEST_T2 -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .lootChestTier2PoiMinZoom
-                        .get();
-                case CHEST_T3 -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .lootChestTier3PoiMinZoom
-                        .get();
-                case CHEST_T4 -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .lootChestTier4PoiMinZoom
-                        .get();
-                default -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .customPoiMinZoom
-                        .get();
-            };
+            case DEFAULT -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                    .customPoiMinZoom
+                    .get();
         };
     }
 

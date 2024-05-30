@@ -142,7 +142,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<String> getLabel() {
-                    return Optional.of("Loot Chest Tier " + MathUtils.toRoman(tier));
+                    return Optional.of("Loot Chest " + MathUtils.toRoman(tier));
                 }
 
                 @Override

@@ -15,6 +15,7 @@ import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.services.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
+import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
@@ -129,6 +130,7 @@ public class MapDataService extends Service {
         registerBuiltInProvider(new PlaceListProvider());
         registerBuiltInProvider(new CharacterProvider());
         registerBuiltInProvider(new WaypointsProvider());
+        registerBuiltInProvider(new LootChestsProvider());
     }
 
     private void registerBuiltInProvider(BuiltInProvider provider) {
