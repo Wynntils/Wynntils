@@ -430,8 +430,8 @@ public class GuildModel extends Model {
                 .sum();
     }
 
-    public List<String> getAlliedGuilds() {
-        return guildDiplomacyMap.keySet().stream().toList();
+    public boolean isAllied(String guildName) {
+        return guildDiplomacyMap.containsKey(guildName);
     }
 
     public String getGuildNameFromString(String input) {
