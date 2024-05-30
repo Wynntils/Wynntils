@@ -115,4 +115,8 @@ public class MapDataService extends Service {
 
         return 0;
     }
+
+    void invalidateResolvedCache() {
+        resolvedAttributesCache.clear();
+    }
 }

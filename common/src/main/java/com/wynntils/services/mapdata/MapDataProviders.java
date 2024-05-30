@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -96,6 +97,7 @@ public class MapDataProviders {
         }
         // Add or update the provider
         allProviders.put(providerId, provider);
+        Services.MapData.invalidateResolvedCache();
     }
 
     private static class PlaceholderProvider implements MapDataProvider {
