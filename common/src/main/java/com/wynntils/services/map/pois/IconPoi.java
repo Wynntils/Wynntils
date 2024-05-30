@@ -68,7 +68,8 @@ public abstract class IconPoi implements Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel) {
+            float zoomLevel,
+            boolean showLabels) {
         float modifier = scale;
 
         if (hovered) {
@@ -110,5 +111,10 @@ public abstract class IconPoi implements Poi {
 
             poseStack.popPose();
         }
+    }
+
+    @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return this.getIconAlpha(zoomRenderScale) >= 0.1f;
     }
 }

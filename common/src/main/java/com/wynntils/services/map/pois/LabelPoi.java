@@ -102,7 +102,8 @@ public class LabelPoi implements Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel) {
+            float zoomLevel,
+            boolean showLabels) {
         float alpha = getAlphaFromScale(zoomRenderScale);
         if (alpha < 0.01) {
             return; // small enough alphas are turned into 255
@@ -157,5 +158,10 @@ public class LabelPoi implements Poi {
 
     public Label getLabel() {
         return label;
+    }
+
+    @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return this.getAlphaFromScale(zoomRenderScale) >= 0.1f;
     }
 }

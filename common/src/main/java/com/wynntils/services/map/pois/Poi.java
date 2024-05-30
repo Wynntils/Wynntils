@@ -28,11 +28,16 @@ public interface Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel);
+            float zoomLevel,
+            boolean showLabels);
 
     int getWidth(float mapZoom, float scale);
 
     int getHeight(float mapZoom, float scale);
 
     String getName();
+
+    default boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return true;
+    }
 }
