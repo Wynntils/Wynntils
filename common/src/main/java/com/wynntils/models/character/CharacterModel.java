@@ -157,9 +157,8 @@ public final class CharacterModel extends Model {
             // We need to parse the current character id from our inventory
             updateCharacterId();
 
-            WynntilsMod.info("Scheduling character info query");
             // We need to scan character info and profession info as well.
-            scanCharacterInfo();
+            scanCharacterInfo(false);
         }
     }
 
@@ -202,7 +201,8 @@ public final class CharacterModel extends Model {
         }
     }
 
-    private void scanCharacterInfo() {
+    public void scanCharacterInfo(boolean forceParseEverything) {
+        WynntilsMod.info("Scheduling character info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
 
@@ -211,7 +211,9 @@ public final class CharacterModel extends Model {
                 .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                 .processIncomingContainer(this::parseCharacterContainer));
 
-        if (silverbullSubscriber.get() == null || System.currentTimeMillis() > silverbullExpiresAt.get()) {
+        if (forceParseEverything
+                || silverbullSubscriber.get() == null
+                || System.currentTimeMillis() > silverbullExpiresAt.get()) {
             // Open Cosmetics Menu
             queryBuilder
                     .then(QueryStep.clickOnSlot(COSMETICS_SLOT)
