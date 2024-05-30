@@ -37,15 +37,15 @@ public class GuildOverallProductionWidget extends AbstractWidget {
         }
 
         int emeraldProduction = holder.getOverallProductionForResource(GuildResource.EMERALDS)
-                + Models.Guild.getRecievedTributesForResource(GuildResource.EMERALDS);
+                + Models.Guild.getReceivedTributesForResource(GuildResource.EMERALDS);
         int oreProduction = holder.getOverallProductionForResource(GuildResource.ORE)
-                + Models.Guild.getRecievedTributesForResource(GuildResource.ORE);
+                + Models.Guild.getReceivedTributesForResource(GuildResource.ORE);
         int woodProduction = holder.getOverallProductionForResource(GuildResource.WOOD)
-                + Models.Guild.getRecievedTributesForResource(GuildResource.WOOD);
+                + Models.Guild.getReceivedTributesForResource(GuildResource.WOOD);
         int fishProduction = holder.getOverallProductionForResource(GuildResource.FISH)
-                + Models.Guild.getRecievedTributesForResource(GuildResource.FISH);
+                + Models.Guild.getReceivedTributesForResource(GuildResource.FISH);
         int cropsProduction = holder.getOverallProductionForResource(GuildResource.CROPS)
-                + Models.Guild.getRecievedTributesForResource(GuildResource.CROPS);
+                + Models.Guild.getReceivedTributesForResource(GuildResource.CROPS);
 
         CappedValue emeraldStorage = holder.getOverallStorageForResource(GuildResource.EMERALDS);
         CappedValue oreStorage = holder.getOverallStorageForResource(GuildResource.ORE);

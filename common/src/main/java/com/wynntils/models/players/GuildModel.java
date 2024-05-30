@@ -124,7 +124,7 @@ public class GuildModel extends Model {
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
-    // sent, recieved
+    // sent, received
     private final Map<String, Pair<Map<GuildResource, Integer>, Map<GuildResource, Integer>>> guildDiplomacyMap =
             new HashMap<>();
 
@@ -409,7 +409,7 @@ public class GuildModel extends Model {
         return guildProfileMap.keySet();
     }
 
-    public int getRecievedTributesForResource(GuildResource resource) {
+    public int getReceivedTributesForResource(GuildResource resource) {
         return guildDiplomacyMap.values().stream()
                 .map(Pair::b)
                 .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
