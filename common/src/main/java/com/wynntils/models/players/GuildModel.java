@@ -24,6 +24,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
+import com.wynntils.models.players.type.DiplomacyInfo;
 import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.models.territories.type.GuildResource;
@@ -31,9 +32,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
-import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -128,9 +127,7 @@ public class GuildModel extends Model {
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
-    // sent, received
-    private final Map<String, Pair<Map<GuildResource, Integer>, Map<GuildResource, Integer>>> guildDiplomacyMap =
-            new HashMap<>();
+    private final Map<String, DiplomacyInfo> guildDiplomacyMap = new HashMap<>();
 
     private String guildName = "";
     private GuildRank guildRank;
@@ -214,12 +211,9 @@ public class GuildModel extends Model {
             GuildResource resource = GuildResource.fromSymbol(tributeScheduledMatcher.group("resource"));
             int amount = Integer.parseInt(tributeScheduledMatcher.group("amount"));
             if (recipient.equals(guildName)) {
-                guildDiplomacyMap
-                        .get(tributeScheduledMatcher.group("sender"))
-                        .b()
-                        .put(resource, amount);
+                guildDiplomacyMap.get(tributeScheduledMatcher.group("sender")).storeReceivedTribute(resource, amount);
             } else {
-                guildDiplomacyMap.get(recipient).a().put(resource, amount);
+                guildDiplomacyMap.get(recipient).storeSentTribute(resource, amount);
             }
             return;
         }
@@ -229,9 +223,9 @@ public class GuildModel extends Model {
             String recipient = tributeStoppedMatcher.group("recipient");
             GuildResource resource = GuildResource.fromName(tributeStoppedMatcher.group("resource"));
             if (recipient.equals(guildName)) {
-                guildDiplomacyMap.get(tributeStoppedMatcher.group("sender")).b().remove(resource);
+                guildDiplomacyMap.get(tributeStoppedMatcher.group("sender")).removeReceivedTribute(resource);
             } else {
-                guildDiplomacyMap.get(recipient).a().remove(resource);
+                guildDiplomacyMap.get(recipient).removeSentTribute(resource);
             }
             return;
         }
@@ -242,7 +236,7 @@ public class GuildModel extends Model {
             if (guild.equals(guildName)) {
                 guild = allienceFormedMatcher.group("actor");
             }
-            addAlliedGuild(guild);
+            guildDiplomacyMap.put(guild, new DiplomacyInfo(guild));
             return;
         }
 
@@ -334,7 +328,8 @@ public class GuildModel extends Model {
         for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
             Matcher alliedGuildMatcher = line.getMatcher(ALLIED_GUILD_PATTERN);
             if (alliedGuildMatcher.matches()) {
-                addAlliedGuild(alliedGuildMatcher.group("name"));
+                String alliedGuildName = alliedGuildMatcher.group("name");
+                guildDiplomacyMap.put(alliedGuildName, new DiplomacyInfo(alliedGuildName));
             }
         }
 
@@ -362,8 +357,7 @@ public class GuildModel extends Model {
                 continue;
             }
 
-            Pair<Map<GuildResource, Integer>, Map<GuildResource, Integer>> tributes =
-                    guildDiplomacyMap.get(alliedGuildName);
+            DiplomacyInfo diplomacyInfo = guildDiplomacyMap.get(alliedGuildName);
 
             for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
                 Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
@@ -371,20 +365,15 @@ public class GuildModel extends Model {
                     GuildResource resource = GuildResource.fromSymbol(tributeMatcher.group("symbol"));
                     int amount = Integer.parseInt(tributeMatcher.group("amount"));
                     if (amount > 0) {
-                        tributes.b().put(resource, amount);
+                        diplomacyInfo.storeReceivedTribute(resource, amount);
                     } else {
-                        tributes.a().put(resource, Math.abs(amount));
+                        diplomacyInfo.storeSentTribute(resource, Math.abs(amount));
                     }
                 }
             }
         }
 
         WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
-    }
-
-    private void addAlliedGuild(String alliedGuildName) {
-        guildDiplomacyMap.put(
-                alliedGuildName, Pair.of(new EnumMap<>(GuildResource.class), new EnumMap<>(GuildResource.class)));
     }
 
     public String getGuildName() {
@@ -429,14 +418,14 @@ public class GuildModel extends Model {
 
     public int getReceivedTributesForResource(GuildResource resource) {
         return guildDiplomacyMap.values().stream()
-                .map(Pair::b)
+                .map(DiplomacyInfo::getReceivedTributes)
                 .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
                 .sum();
     }
 
     public int getSentTributesForResource(GuildResource resource) {
         return guildDiplomacyMap.values().stream()
-                .map(Pair::a)
+                .map(DiplomacyInfo::getSentTributes)
                 .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
                 .sum();
     }

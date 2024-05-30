@@ -28,6 +28,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -80,10 +81,10 @@ public final class CharacterModel extends Model {
     private final Storage<Boolean> isVeteran = new Storage<>(false);
 
     @Persisted
-    public final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
+    private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
 
     @Persisted
-    public final Storage<Boolean> silverbullSubscriber = new Storage<>(null);
+    private final Storage<ConfirmedBoolean> silverbullSubscriber = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
 
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
@@ -94,7 +95,7 @@ public final class CharacterModel extends Model {
     }
 
     public boolean isSilverbullSubscriber() {
-        return silverbullSubscriber.get() != null && silverbullSubscriber.get();
+        return silverbullSubscriber.get() == ConfirmedBoolean.TRUE;
     }
 
     public ClassType getClassType() {
@@ -176,10 +177,9 @@ public final class CharacterModel extends Model {
             }
             return;
         }
-        ;
 
         if (message.matches(SILVERBULL_JOIN_PATTERN)) {
-            silverbullSubscriber.store(true);
+            silverbullSubscriber.store(ConfirmedBoolean.TRUE);
             return;
         }
     }
@@ -212,7 +212,7 @@ public final class CharacterModel extends Model {
                 .processIncomingContainer(this::parseCharacterContainer));
 
         if (forceParseEverything
-                || silverbullSubscriber.get() == null
+                || silverbullSubscriber.get() == ConfirmedBoolean.UNCONFIRMED
                 || System.currentTimeMillis() > silverbullExpiresAt.get()) {
             // Open Cosmetics Menu
             queryBuilder
@@ -257,12 +257,12 @@ public final class CharacterModel extends Model {
         if (!status.matches()) {
             WynntilsMod.warn("Could not parse Silverbull subscription status from item: "
                     + LoreUtils.getLore(rankSubscriptionItem));
-            silverbullSubscriber.store(false);
+            silverbullSubscriber.store(ConfirmedBoolean.FALSE);
             return;
         }
 
-        silverbullSubscriber.store(status.group(1).equals("Active"));
-        if (!silverbullSubscriber.get()) return;
+        silverbullSubscriber.store(status.group(1).equals("Active") ? ConfirmedBoolean.TRUE : ConfirmedBoolean.FALSE);
+        if (silverbullSubscriber.get() != ConfirmedBoolean.TRUE) return;
 
         Matcher expiry = LoreUtils.matchLoreLine(rankSubscriptionItem, 1, SILVERBULL_DURATION_PATTERN);
         if (!expiry.matches()) {
