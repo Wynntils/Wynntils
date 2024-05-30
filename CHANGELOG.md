@@ -1,3 +1,10 @@
+## [1.2.18](https://github.com/Wynntils/Artemis/compare/v1.2.17...v1.2.18) (2024-05-30)
+
+
+### New Features
+
+* Start using mapdata for some providers - remerge ([#2539](https://github.com/Wynntils/Artemis/issues/2539)) ([542aca5](https://github.com/Wynntils/Artemis/commit/542aca5af04d7a95a3d48c916cb2207b99663c21))
+
 ## [1.2.17](https://github.com/Wynntils/Artemis/compare/v1.2.16...v1.2.17) (2024-05-29)
 
 
@@ -9,6 +16,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v1.2.17 [skip ci] ([952d6a2](https://github.com/Wynntils/Artemis/commit/952d6a2e8f79d5801fbf6084ba56fbdd082e413f))
 * Revert "feat: Start using MapData for some providers [skip ci]" [skip ci] ([#2538](https://github.com/Wynntils/Artemis/issues/2538)) ([7940283](https://github.com/Wynntils/Artemis/commit/794028369a209b1b9ca9ff175021bda599c71033)), closes [#2536](https://github.com/Wynntils/Artemis/issues/2536)
 
 ## [1.2.16](https://github.com/Wynntils/Artemis/compare/v1.2.15...v1.2.16) (2024-05-28)
@@ -77,28 +85,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.14 [skip ci] ([2664566](https://github.com/Wynntils/Artemis/commit/2664566af53f963386b4cd5c693a13c76465e626))
-
-## [1.2.13](https://github.com/Wynntils/Artemis/compare/v1.2.12...v1.2.13) (2024-05-22)
-
-
-### New Features
-
-* Add Guild Functions ([#2515](https://github.com/Wynntils/Artemis/issues/2515)) ([c837bfc](https://github.com/Wynntils/Artemis/commit/c837bfca678b7f83f4e36234ae9128d54b6cb8a3))
-
-
-### Bug Fixes
-
-* Scroll text fully in config tiles [skip ci] ([#2513](https://github.com/Wynntils/Artemis/issues/2513)) ([f9d963a](https://github.com/Wynntils/Artemis/commit/f9d963abec0d127a674d70c1acdede0b55430c4f))
-
-
-### Miscellaneous Chores
-
-* Add Storage upfixers [skip ci] ([#2511](https://github.com/Wynntils/Artemis/issues/2511)) ([e4d1133](https://github.com/Wynntils/Artemis/commit/e4d1133c937d79713a6fe067703f2654f6410697))
-* make the territory infobar pattern more strict, add tests [skip ci] ([#2514](https://github.com/Wynntils/Artemis/issues/2514)) ([d9d610a](https://github.com/Wynntils/Artemis/commit/d9d610aaa63261901d4532f4d12232164cb9d135))
-* **release:** v1.2.13 [skip ci] ([75ec09c](https://github.com/Wynntils/Artemis/commit/75ec09c50db62e94e6700b4705fe51226617ceb7))
-
-
-### Code Refactoring
-
-* MapData visibility inheritance refactoring [skip ci] ([#2500](https://github.com/Wynntils/Artemis/issues/2500)) ([cfa5ee4](https://github.com/Wynntils/Artemis/commit/cfa5ee4e77491f3ec95008cbfea7f0e4bfdbdc57))
 
