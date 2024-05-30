@@ -64,17 +64,9 @@ public final class StorageManager extends Manager {
         // Register all storageables
         Managers.Feature.getFeatures().forEach(this::registerStorageable);
 
+        runUpfixers();
+
         readFromJson();
-
-        // Now, we have to apply upfixers, before any storage loading happens
-        // FIXME: Solve generics type issue
-        Set<PersistedValue<?>> workaround = new HashSet<>(storages.values());
-        if (Managers.Upfixer.runUpfixers(storageObject, workaround, UpfixerType.STORAGE)) {
-            Managers.Json.savePreciousJson(userStorageFile, storageObject);
-
-            // Re-read the storage file after upfixing
-            readFromJson();
-        }
 
         storageInitialized = true;
 
@@ -129,6 +121,20 @@ public final class StorageManager extends Manager {
                 delay,
                 TimeUnit.MILLISECONDS);
         scheduledPersist = true;
+    }
+
+    private void runUpfixers() {
+        storageObject = Managers.Json.loadPreciousJson(userStorageFile);
+
+        // Now, we have to apply upfixers, before any storage loading happens
+        // FIXME: Solve generics type issue
+        Set<PersistedValue<?>> workaround = new HashSet<>(storages.values());
+        if (Managers.Upfixer.runUpfixers(storageObject, workaround, UpfixerType.STORAGE)) {
+            Managers.Json.savePreciousJson(userStorageFile, storageObject);
+
+            // Re-read the storage file after upfixing
+            readFromJson();
+        }
     }
 
     private void readFromJson() {
