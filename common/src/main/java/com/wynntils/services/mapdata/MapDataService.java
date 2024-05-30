@@ -39,6 +39,7 @@ public class MapDataService extends Service {
     private final LinkedList<String> providerOrder = new LinkedList<>();
     private final Map<String, MapDataProvider> allProviders = new HashMap<>();
     private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
+    private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
 
     public MapDataService() {
         super(List.of());
@@ -77,8 +78,10 @@ public class MapDataService extends Service {
     public Optional<MapIcon> getIcon(String iconId) {
         if (iconId.equals(MapIcon.NO_ICON_ID)) return Optional.empty();
 
-        Stream<MapIcon> allIcons = getProviders().flatMap(MapDataProvider::getIcons);
-        return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
+        return iconCache.computeIfAbsent(iconId, k -> {
+            Stream<MapIcon> allIcons = getProviders().flatMap(MapDataProvider::getIcons);
+            return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
+        });
     }
 
     // endregion
@@ -143,7 +146,10 @@ public class MapDataService extends Service {
         }
         // Add or update the provider
         allProviders.put(providerId, provider);
+
+        // Invalidate caches
         resolvedAttributesCache.clear();
+        iconCache.clear();
     }
 
     private Stream<MapDataProvider> getProviders() {
