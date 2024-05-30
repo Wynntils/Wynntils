@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class WaypointsProvider extends BuiltInProvider {
         if (tier == 0) {
             String iconId = MapIconsProvider.getIconIdFromTexture(customPoi.getIcon());
             PROVIDED_FEATURES.add(new WaypointLocation(
-                    customPoi.getLocation().asLocation(), customPoi.getName(), iconId, customPoi.getVisibility()));
+                    customPoi.getLocation().asLocation(), customPoi.getName(), iconId, customPoi.getColor(), customPoi.getVisibility()));
         } else {
             PROVIDED_FEATURES.add(new FoundChestLocation(customPoi.getLocation().asLocation(), tier));
         }
@@ -59,13 +60,15 @@ public class WaypointsProvider extends BuiltInProvider {
         private final Location location;
         private final String name;
         private final String iconId;
+        private final CustomColor color;
         private final CustomPoi.Visibility visibility;
         private final int number;
 
-        private WaypointLocation(Location location, String name, String iconId, CustomPoi.Visibility visibility) {
+        private WaypointLocation(Location location, String name, String iconId, CustomColor color, CustomPoi.Visibility visibility) {
             this.location = location;
             this.name = name;
             this.iconId = iconId;
+            this.color = color;
             this.visibility = visibility;
             this.number = WaypointsProvider.counter++;
         }
@@ -91,6 +94,11 @@ public class WaypointsProvider extends BuiltInProvider {
                 @Override
                 public Optional<String> getLabel() {
                     return Optional.ofNullable(name);
+                }
+
+                @Override
+                public Optional<CustomColor> getIconColor() {
+                    return Optional.of(color);
                 }
 
                 @Override

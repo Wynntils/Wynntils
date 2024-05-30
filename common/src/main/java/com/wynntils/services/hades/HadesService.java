@@ -9,7 +9,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
-import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -61,16 +60,10 @@ public final class HadesService extends Service {
         super(List.of());
     }
 
-    public Stream<PlayerMainMapPoi> getPlayerPois() {
+    public Stream<PlayerMainMapPoi> getPlayerPois(boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
         return getHadesUsers()
-                .filter(hadesUser -> (hadesUser.isPartyMember()
-                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                        .renderRemotePartyPlayers
-                                        .get())
-                        || (hadesUser.isMutualFriend()
-                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                        .renderRemoteFriendPlayers
-                                        .get()))
+                .filter(hadesUser -> (hadesUser.isPartyMember() && renderRemotePartyPlayers)
+                        || (hadesUser.isMutualFriend() && renderRemoteFriendPlayers))
                 .map(PlayerMainMapPoi::new);
     }
 

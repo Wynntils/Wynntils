@@ -77,7 +77,8 @@ public class TerritoryPoi implements Poi {
             boolean hovered,
             float scale,
             float zoomRenderScale,
-            float zoomLevel) {
+            float zoomLevel,
+            boolean showLabels) {
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
