@@ -14,7 +14,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.MapIconTextureWrapper;
 import com.wynntils.services.mapdata.type.MapLocation;
@@ -23,7 +22,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.wynn.LocationUtils;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -210,9 +208,12 @@ public class CompassCommand extends Command {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Services.Poi.getLabelPois()
-                .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
-                .toList());
+        List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
+                .getFeatures()
+                .map(f -> (MapLocation) f)
+                .filter(loc -> StringUtils.partialMatch(
+                        Services.MapData.resolveMapAttributes(loc).label(), searchedName))
+                .toList();
 
         if (places.isEmpty()) {
             MutableComponent response = Component.literal("Found no places matching '" + searchedName + "'")
@@ -221,19 +222,24 @@ public class CompassCommand extends Command {
             return 0;
         }
 
-        Poi place;
+        MapLocation place;
 
         if (places.size() > 1) {
             // Try to find one with an exact match, to differentiate e.g. "Detlas" from "Detlas Suburbs"
-            Optional<Poi> exactMatch = places.stream()
-                    .filter(poi -> poi.getName().equals(searchedName))
+            Optional<MapLocation> exactMatch = places.stream()
+                    .filter(loc ->
+                            Services.MapData.resolveMapAttributes(loc).label().equals(searchedName))
                     .findFirst();
             if (exactMatch.isEmpty()) {
                 MutableComponent response = Component.literal("Found multiple places matching '" + searchedName
                                 + "', but none matched exactly. Matching: ")
                         .withStyle(ChatFormatting.RED);
-                response.append(Component.literal(
-                        String.join(", ", places.stream().map(Poi::getName).toList())));
+                response.append(Component.literal(String.join(
+                        ", ",
+                        places.stream()
+                                .map(loc -> Services.MapData.resolveMapAttributes(loc)
+                                        .label())
+                                .toList())));
                 context.getSource().sendFailure(response);
                 return 0;
             }
@@ -243,10 +249,11 @@ public class CompassCommand extends Command {
         }
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(place.getLocation().asLocation());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(place.getLocation());
 
-        MutableComponent response =
-                Component.literal("Compass set to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal("Compass set to "
+                        + Services.MapData.resolveMapAttributes(place).label() + " at ")
+                .withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(place.getLocation().toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(() -> response, false);
         return 1;

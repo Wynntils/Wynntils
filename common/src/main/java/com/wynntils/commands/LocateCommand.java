@@ -10,12 +10,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -33,8 +31,11 @@ public class LocateCommand extends Command {
     public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
-    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Services.Poi.getLabelPois().map(Poi::getName), builder);
+    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Services.MapData.PLACE_LIST_PROVIDER.getFeatures().map(f -> Services.MapData.resolveMapAttributes(f)
+                            .label()),
+                    builder);
 
     @Override
     public String getCommandName() {
@@ -141,9 +142,17 @@ public class LocateCommand extends Command {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Services.Poi.getLabelPois()
-                .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
-                .toList());
+        // Sort in order of closeness to the player
+        Vec3 currentPosition = McUtils.player().position();
+
+        List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
+                .getFeatures()
+                .map(f -> (MapLocation) f)
+                .filter(loc -> StringUtils.partialMatch(
+                        Services.MapData.resolveMapAttributes(loc).label(), searchedName))
+                .sorted(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
+                        loc.getLocation().x(), loc.getLocation().y(), loc.getLocation().z())))
+                .toList();
 
         if (places.isEmpty()) {
             MutableComponent response = Component.literal("Found no places matching '" + searchedName + "'")
@@ -152,26 +161,20 @@ public class LocateCommand extends Command {
             return 0;
         }
 
-        // Sort in order of closeness to the player
-        Vec3 currentLocation = McUtils.player().position();
-        places.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                poi.getLocation().getX(),
-                poi.getLocation().getY().orElse((int) currentLocation.y),
-                poi.getLocation().getZ())));
-
         MutableComponent response = Component.literal("Found places matching '" + searchedName + "':")
                 .withStyle(ChatFormatting.AQUA);
 
-        for (Poi place : places) {
+        for (MapLocation place : places) {
+            String placeName = Services.MapData.resolveMapAttributes(place).label();
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(place.getName() + " ")
+                    .append(Component.literal(placeName + " ")
                             .withStyle(ChatFormatting.YELLOW)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))))
+                            .withStyle((style) -> style.withClickEvent(
+                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass place " + placeName))))
                     .append(Component.literal(place.getLocation().toString())
                             .withStyle(ChatFormatting.WHITE)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))));
+                            .withStyle((style) -> style.withClickEvent(
+                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass place " + placeName))));
         }
 
         context.getSource().sendSuccess(() -> response, false);
