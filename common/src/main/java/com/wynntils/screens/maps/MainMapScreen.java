@@ -297,11 +297,10 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Services.Poi.getServicePois();
+        // Get all MapData features as Pois
+        Stream<? extends Poi> pois = Services.MapData.getFeaturesAsPois();
 
-        pois = Stream.concat(pois, Services.Poi.getCombatPois());
-        pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
+        // Append the pois that are still not converted to MapData
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
         pois = Stream.concat(
