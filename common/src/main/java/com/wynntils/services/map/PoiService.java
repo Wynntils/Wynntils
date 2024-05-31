@@ -19,7 +19,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.LabelPoi;
-import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.CustomPoiProvider;
 import com.wynntils.services.map.type.ServiceKind;
