@@ -151,7 +151,9 @@ public class LocateCommand extends Command {
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))
                 .sorted(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
-                        loc.getLocation().x(), loc.getLocation().y(), loc.getLocation().z())))
+                        loc.getLocation().x(),
+                        loc.getLocation().y(),
+                        loc.getLocation().z())))
                 .toList();
 
         if (places.isEmpty()) {
