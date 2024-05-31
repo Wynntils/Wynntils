@@ -15,8 +15,8 @@ import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -173,13 +173,15 @@ public class CompassCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        Vec3 currentLocation = McUtils.player().position();
-        Optional<ServicePoi> closestServiceOptional = Services.Poi.getServicePois()
-                .filter(poi -> poi.getKind() == selectedKind)
-                .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                        poi.getLocation().getX(),
-                        poi.getLocation().getY().orElse((int) currentLocation.y),
-                        poi.getLocation().getZ())));
+        Vec3 currentPosition = McUtils.player().position();
+        Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER.getFeatures()
+                .filter(f1 -> f1.getCategoryId().equals("wynntils:service:" + selectedKind.getMapDataId()))
+                .map(f -> (MapLocation) f)
+                .min(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
+                        loc.getLocation().x(),
+                        loc.getLocation().y(),
+                        loc.getLocation().z())));
+
         if (closestServiceOptional.isEmpty()) {
             // This really should not happen...
             MutableComponent response = Component.literal("Found no services of kind '" + selectedKind.getName() + "'")
@@ -187,12 +189,12 @@ public class CompassCommand extends Command {
             context.getSource().sendFailure(response);
             return 0;
         }
-        Poi closestService = closestServiceOptional.get();
+        MapLocation closestService = closestServiceOptional.get();
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                closestService.getLocation().asLocation(),
-                closestServiceOptional.get().getIcon());
+                closestService.getLocation(),
+                selectedKind.getIcon());
 
         MutableComponent response = Component.literal("Compass set to " + selectedKind.getName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
