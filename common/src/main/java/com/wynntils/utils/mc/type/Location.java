@@ -78,6 +78,14 @@ public class Location implements Comparable<Location> {
         return this.x() == other.x() && this.z() == other.z();
     }
 
+    public double distanceToSqr(Position position) {
+        double x_diff = position.x() - this.x;
+        double y_diff = position.y() - this.y;
+        double z_diff = position.z() - this.z;
+
+        return x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+    }
+
     public String asChatCoordinates() {
         return x + " " + y + " " + z;
     }

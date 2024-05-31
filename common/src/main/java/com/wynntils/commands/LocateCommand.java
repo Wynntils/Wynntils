@@ -22,10 +22,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.phys.Vec3;
 
 public class LocateCommand extends Command {
     public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
@@ -104,16 +104,13 @@ public class LocateCommand extends Command {
         if (selectedKind == null) return 0;
 
         // Only keep the 4 closest results
-        Vec3 currentPosition = McUtils.player().position();
+        Position currentPosition = McUtils.player().position();
 
         List<MapLocation> services = Services.MapData.SERVICE_LIST_PROVIDER
                 .getFeatures()
                 .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
                 .map(f -> (MapLocation) f)
-                .sorted(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
-                        loc.getLocation().x(),
-                        loc.getLocation().y(),
-                        loc.getLocation().z())))
+                .sorted(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)))
                 .limit(4)
                 .toList();
 
@@ -143,17 +140,14 @@ public class LocateCommand extends Command {
         String searchedName = context.getArgument("name", String.class);
 
         // Sort in order of closeness to the player
-        Vec3 currentPosition = McUtils.player().position();
+        Position currentPosition = McUtils.player().position();
 
         List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
                 .getFeatures()
                 .map(f -> (MapLocation) f)
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))
-                .sorted(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
-                        loc.getLocation().x(),
-                        loc.getLocation().y(),
-                        loc.getLocation().z())))
+                .sorted(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)))
                 .toList();
 
         if (places.isEmpty()) {

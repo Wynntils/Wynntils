@@ -32,10 +32,10 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 
 public class CompassCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> SHARE_TARGET_SUGGESTION_PROVIDER =
@@ -172,15 +172,12 @@ public class CompassCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        Vec3 currentPosition = McUtils.player().position();
+        Position currentPosition = McUtils.player().position();
         Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER
                 .getFeatures()
                 .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
                 .map(f -> (MapLocation) f)
-                .min(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
-                        loc.getLocation().x(),
-                        loc.getLocation().y(),
-                        loc.getLocation().z())));
+                .min(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)));
 
         if (closestServiceOptional.isEmpty()) {
             // This really should not happen...
