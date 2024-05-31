@@ -47,6 +47,7 @@ import org.lwjgl.glfw.GLFW;
 public class MainMapFeature extends Feature {
     // Use userWaypoints or foundChestLocations instead
     // This config is to be kept as an "upfixer" to migrate old data
+    // FIXME: Port PoiManagementScreen to use userWaypoints and foundChestLocations, not customPois
     @Deprecated
     @Persisted
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
@@ -180,15 +181,8 @@ public class MainMapFeature extends Feature {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         if (config == customPois) {
-            updateWaypoints();
+            // TODO: Migrate from customPois into userWaypoints and foundChestLocations
         }
-    }
-
-    @Deprecated
-    // FIXME: This can be removed when all the callers of customPois are removed
-    public void updateWaypoints() {
-        // FIXME: WaypointsProvider.updateWaypoints();
-        customPois.get().forEach(WaypointsProvider::registerFeature);
     }
 
     public List<WaypointsProvider.WaypointLocation> getUserWaypoints() {
