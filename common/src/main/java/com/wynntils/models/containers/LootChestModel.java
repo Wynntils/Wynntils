@@ -5,6 +5,7 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
@@ -14,6 +15,8 @@ import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.containers.type.LootChestTier;
@@ -23,6 +26,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -31,8 +35,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -40,6 +47,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
+
+    @Persisted
+    private final Storage<List<LootChestsProvider.FoundChestLocation>> foundChestLocations =
+            new Storage<>(new ArrayList<>());
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
@@ -133,8 +144,50 @@ public final class LootChestModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onScreenOpened(ScreenOpenedEvent.Post event) {
+        if (lastChestPos == null) return;
+        if (!(event.getScreen() instanceof ContainerScreen)) return;
+
+        if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) {
+            lastChestPos = null;
+            return;
+        }
+
+        LootChestTier chestType = Models.LootChest.getChestType(event.getScreen());
+        if (chestType == null) return;
+
+        Location location = new Location(lastChestPos);
+
+        if (foundChestLocations.get().stream()
+                .noneMatch(foundLocation -> foundLocation.getLocation().equals(location))) {
+            addFoundChestLocation(new LootChestsProvider.FoundChestLocation(location, chestType));
+
+            // TODO: Replace this notification with a popup
+            Managers.Notification.queueMessage(
+                    Component.literal("Added new waypoint for " + chestType.getWaypointName())
+                            .withStyle(ChatFormatting.AQUA));
+        }
+    }
+
     public LootChestTier getChestType(Screen screen) {
         return LootChestTier.fromTitle(screen);
+    }
+
+    public List<LootChestsProvider.FoundChestLocation> getFoundChestLocations() {
+        return Collections.unmodifiableList(foundChestLocations.get());
+    }
+
+    public void addFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
+        foundChestLocations.get().add(location);
+        foundChestLocations.touched();
+        // FIXME: Add foundChestLocations.updateWaypoints();
+    }
+
+    public void removeFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
+        foundChestLocations.get().remove(location);
+        foundChestLocations.touched();
+        // FIXME: Add foundChestLocations.updateWaypoints();
     }
 
     private void processItemFind(ItemStack itemStack) {

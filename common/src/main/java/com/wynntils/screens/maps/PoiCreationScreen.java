@@ -616,9 +616,9 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
 
         if (oldPoi != null) {
             // FIXME: Remove the old waypoint (TODO: Port oldPoi to WaypointLocation)
-            // Managers.Feature.getFeatureInstance(MainMapFeature.class).removeUserWaypoint(oldPoi);
+            // Services.UserWaypoint.removeUserWaypoint(oldPoi);
         }
 
-        Managers.Feature.getFeatureInstance(MainMapFeature.class).addUserWaypoint(waypoint);
+        Services.UserWaypoint.addUserWaypoint(waypoint);
     }
 }

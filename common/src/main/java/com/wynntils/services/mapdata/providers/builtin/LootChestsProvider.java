@@ -4,8 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.services.mapdata.providers.json.JsonMapLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -20,8 +19,7 @@ public class LootChestsProvider extends BuiltInProvider {
 
     @Override
     public Stream<MapFeature> getFeatures() {
-        return Managers.Feature.getFeatureInstance(MainMapFeature.class).getFoundChestLocations().stream()
-                .map(location -> location);
+        return Models.LootChest.getFoundChestLocations().stream().map(location -> location);
     }
 
     public static final class FoundChestLocation extends JsonMapLocation {

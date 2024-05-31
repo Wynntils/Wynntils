@@ -19,6 +19,7 @@ import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
 import com.wynntils.services.mapdata.MapDataService;
+import com.wynntils.services.mapdata.UserWaypointService;
 import com.wynntils.services.ping.PingService;
 import com.wynntils.services.resourcepack.ResourcePackService;
 import com.wynntils.services.splashes.SplashService;
@@ -47,5 +48,6 @@ public final class Services {
     public static final StopwatchService Stopwatch = new StopwatchService();
     public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
+    public static final UserWaypointService UserWaypoint = new UserWaypointService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }

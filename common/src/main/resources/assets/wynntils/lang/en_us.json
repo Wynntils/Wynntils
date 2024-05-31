@@ -848,8 +848,6 @@
   "feature.wynntils.lowHealthVignette.lowHealthPercentage.description": "At what percentage should the overlay appear?",
   "feature.wynntils.lowHealthVignette.lowHealthPercentage.name": "Low Health Percentage",
   "feature.wynntils.lowHealthVignette.name": "Low Health Indicator",
-  "feature.wynntils.mainMap.autoWaypointChests.description": "When finding a new loot chest, should there be a waypoint created?",
-  "feature.wynntils.mainMap.autoWaypointChests.name": "Auto Waypoint Loot Chests",
   "feature.wynntils.mainMap.cavePoiMinZoom.description": "At what zoom level should caves poi show? Set this to -1 to always show without fading.",
   "feature.wynntils.mainMap.cavePoiMinZoom.name": "Cave Poi Min Zoom",
   "feature.wynntils.mainMap.centerWhenUnmapped.description": "Should the map be centered when opened in an unmapped area?",
