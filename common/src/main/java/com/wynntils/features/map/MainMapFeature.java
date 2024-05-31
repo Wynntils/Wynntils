@@ -95,9 +95,6 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @Persisted
-    public final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
-
-    @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
     @Persisted
@@ -166,12 +163,7 @@ public class MainMapFeature extends Feature {
         LootChestTier chestType = Models.LootChest.getChestType(event.getScreen());
         if (chestType == null) return;
 
-        if (chestType.ordinal() < minTierForAutoWaypoint.get().ordinal()) {
-            lastChestPos = null;
-            return;
-        }
-
-        Location location = new Location(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
+        Location location = new Location(lastChestPos);
 
         if (foundChestLocations.get().stream()
                 .noneMatch(foundLocation -> foundLocation.getLocation().equals(location))) {
