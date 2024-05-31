@@ -7,6 +7,7 @@ package com.wynntils.overlays.minimap;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -15,6 +16,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.WaypointPoi;
@@ -249,10 +251,10 @@ public class MinimapOverlay extends Overlay {
 
         float currentZoom = 1f / zoomRenderScale;
 
-        // Get all MapData features as Pois
-        Stream<? extends Poi> poisToRender = Services.MapData.getFeaturesAsPois();
-
-        // Append the pois that are still not converted to MapData
+        Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
+        poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
+        poisToRender = Stream.concat(
+                poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
         poisToRender = Stream.concat(
