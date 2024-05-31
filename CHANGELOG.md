@@ -1,9 +1,26 @@
+## [1.2.19](https://github.com/Wynntils/Artemis/compare/v1.2.18...v1.2.19) (2024-05-31)
+
+
+### Bug Fixes
+
+* Make sure StorageManager upfixers run before populating components storages [skip ci] ([#2544](https://github.com/Wynntils/Artemis/issues/2544)) ([1b712e5](https://github.com/Wynntils/Artemis/commit/1b712e5fb7fc94af1813623bf646b30aa5a2ec7a))
+
+
+### Miscellaneous Chores
+
+* Once again, use old POI system instead of MapData ([#2545](https://github.com/Wynntils/Artemis/issues/2545)) ([d1eb0ad](https://github.com/Wynntils/Artemis/commit/d1eb0ad0dad4446f67edaaf53375a7f759236eac))
+
 ## [1.2.18](https://github.com/Wynntils/Artemis/compare/v1.2.17...v1.2.18) (2024-05-30)
 
 
 ### New Features
 
 * Start using mapdata for some providers - remerge ([#2539](https://github.com/Wynntils/Artemis/issues/2539)) ([542aca5](https://github.com/Wynntils/Artemis/commit/542aca5af04d7a95a3d48c916cb2207b99663c21))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.18 [skip ci] ([c6e982b](https://github.com/Wynntils/Artemis/commit/c6e982b7a5488589f6ad8fa523c35645cda0fdfc))
 
 ## [1.2.17](https://github.com/Wynntils/Artemis/compare/v1.2.16...v1.2.17) (2024-05-29)
 
@@ -61,28 +78,4 @@
 ### Code Refactoring
 
 * Make label levels Optional<Integer> in preparation for MapData ([#2532](https://github.com/Wynntils/Artemis/issues/2532)) ([1ff8e1b](https://github.com/Wynntils/Artemis/commit/1ff8e1bb2335ea42d7c1b343a3b55df8f2daf1fe))
-
-## [1.2.14](https://github.com/Wynntils/Artemis/compare/v1.2.13...v1.2.14) (2024-05-24)
-
-
-### New Features
-
-* Add InStream function [skip ci] ([#2524](https://github.com/Wynntils/Artemis/issues/2524)) ([90e373c](https://github.com/Wynntils/Artemis/commit/90e373cbd32864469613012488bc73103662619e))
-* Add Ophanim Bar Overlay [skip ci] ([#2518](https://github.com/Wynntils/Artemis/issues/2518)) ([379f1e4](https://github.com/Wynntils/Artemis/commit/379f1e42f5f0e0ed9b3242087d2b45665338de3a))
-* Add option to limit number of leaderboard badges shown [skip ci] ([#2525](https://github.com/Wynntils/Artemis/issues/2525)) ([ebc5ded](https://github.com/Wynntils/Artemis/commit/ebc5deda26933beae11c8a2a832a9406257109ac))
-* Allow showing territory owner [skip ci] ([#2520](https://github.com/Wynntils/Artemis/issues/2520)) ([cc907df](https://github.com/Wynntils/Artemis/commit/cc907df63406f71ba302ab509c688076ff5fa3b8))
-* Highlight bombs active in current world [skip ci] ([#2516](https://github.com/Wynntils/Artemis/issues/2516)) ([75c9d9b](https://github.com/Wynntils/Artemis/commit/75c9d9b1cee9c9eff9baa4e35e9d2cb8d9c1f5f0))
-* Highlight the guild you are in on the seasonal leaderboard [skip ci] ([#2519](https://github.com/Wynntils/Artemis/issues/2519)) ([d83c2d9](https://github.com/Wynntils/Artemis/commit/d83c2d94fd3875b86361bd0790e565c4d45bfe85))
-* Improvements to profession highlight feature for crafting stations ([#2523](https://github.com/Wynntils/Artemis/issues/2523)) ([b183934](https://github.com/Wynntils/Artemis/commit/b183934281ea03a224e957562e7fc665857eb009))
-
-
-### Bug Fixes
-
-* Account for timezone in player commands [skip ci] ([#2517](https://github.com/Wynntils/Artemis/issues/2517)) ([845bfc7](https://github.com/Wynntils/Artemis/commit/845bfc7754527973234c282f120fad76d9562b59))
-* Fix accidentally opening the territory management UI after backing from other guild related screens [skip ci] ([#2522](https://github.com/Wynntils/Artemis/issues/2522)) ([3f5936d](https://github.com/Wynntils/Artemis/commit/3f5936d19a243a4a3c34cc1f943d981185395fb0))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.14 [skip ci] ([2664566](https://github.com/Wynntils/Artemis/commit/2664566af53f963386b4cd5c693a13c76465e626))
 
