@@ -26,9 +26,7 @@ public class CharacterProvider extends BuiltInProvider {
 
     @SubscribeEvent
     public void onCharacterMove(CharacterMovedEvent e) {
-        // FIXME: Do not do this until we have more selective updating
-        // in MapDataService.
-        // notifyCallbacks(CHARACTER_LOCATION);
+        notifyCallbacks(CHARACTER_LOCATION);
     }
 
     @Override

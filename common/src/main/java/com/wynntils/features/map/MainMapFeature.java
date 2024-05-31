@@ -6,6 +6,7 @@ package com.wynntils.features.map;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -21,7 +22,6 @@ import com.wynntils.models.containers.type.LootChestType;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -199,9 +199,6 @@ public class MainMapFeature extends Feature {
     }
 
     public void updateWaypoints() {
-        WaypointsProvider.resetFeatures();
-        customPois.get().forEach(customPoi -> {
-            WaypointsProvider.registerFeature(customPoi);
-        });
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(customPois.get());
     }
 }

@@ -4,7 +4,6 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
@@ -33,12 +32,15 @@ public class WaypointsProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public static void resetFeatures() {
+    public void updateWaypoints(List<CustomPoi> customPois) {
+        PROVIDED_FEATURES.forEach(feature -> notifyCallbacks(feature));
         PROVIDED_FEATURES.clear();
-        Services.MapData.invalidateAllCaches();
+        customPois.forEach(customPoi -> {
+            registerFeature(customPoi);
+        });
     }
 
-    public static void registerFeature(CustomPoi customPoi) {
+    private void registerFeature(CustomPoi customPoi) {
         int tier =
                 switch (customPoi.getIcon()) {
                     case CHEST_T1 -> 1;
