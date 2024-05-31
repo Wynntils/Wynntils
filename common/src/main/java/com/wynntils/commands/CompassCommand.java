@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -174,7 +174,8 @@ public class CompassCommand extends Command {
         if (selectedKind == null) return 0;
 
         Vec3 currentPosition = McUtils.player().position();
-        Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER.getFeatures()
+        Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER
+                .getFeatures()
                 .filter(f1 -> f1.getCategoryId().equals("wynntils:service:" + selectedKind.getMapDataId()))
                 .map(f -> (MapLocation) f)
                 .min(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
@@ -192,9 +193,7 @@ public class CompassCommand extends Command {
         MapLocation closestService = closestServiceOptional.get();
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                closestService.getLocation(),
-                selectedKind.getIcon());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(closestService.getLocation(), selectedKind.getIcon());
 
         MutableComponent response = Component.literal("Compass set to " + selectedKind.getName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
