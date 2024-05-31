@@ -32,11 +32,11 @@ public class WaypointsProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public void updateWaypoints(List<CustomPoi> customPois) {
+    public void updateWaypoints(List<CustomPoi> waypoints) {
         PROVIDED_FEATURES.forEach(feature -> notifyCallbacks(feature));
         PROVIDED_FEATURES.clear();
-        customPois.forEach(customPoi -> {
-            registerFeature(customPoi);
+        waypoints.forEach(waypoint -> {
+            registerFeature(waypoint);
         });
     }
 
