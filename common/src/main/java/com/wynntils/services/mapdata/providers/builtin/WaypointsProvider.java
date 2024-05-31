@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
@@ -34,6 +35,7 @@ public class WaypointsProvider extends BuiltInProvider {
 
     public static void resetFeatures() {
         PROVIDED_FEATURES.clear();
+        Services.MapData.invalidateAllCaches();
     }
 
     public static void registerFeature(CustomPoi customPoi) {
@@ -48,7 +50,11 @@ public class WaypointsProvider extends BuiltInProvider {
         if (tier == 0) {
             String iconId = MapIconsProvider.getIconIdFromTexture(customPoi.getIcon());
             PROVIDED_FEATURES.add(new WaypointLocation(
-                    customPoi.getLocation().asLocation(), customPoi.getName(), iconId, customPoi.getColor(), customPoi.getVisibility()));
+                    customPoi.getLocation().asLocation(),
+                    customPoi.getName(),
+                    iconId,
+                    customPoi.getColor(),
+                    customPoi.getVisibility()));
         } else {
             PROVIDED_FEATURES.add(new FoundChestLocation(customPoi.getLocation().asLocation(), tier));
         }
@@ -64,7 +70,8 @@ public class WaypointsProvider extends BuiltInProvider {
         private final CustomPoi.Visibility visibility;
         private final int number;
 
-        private WaypointLocation(Location location, String name, String iconId, CustomColor color, CustomPoi.Visibility visibility) {
+        private WaypointLocation(
+                Location location, String name, String iconId, CustomColor color, CustomPoi.Visibility visibility) {
             this.location = location;
             this.name = name;
             this.iconId = iconId;

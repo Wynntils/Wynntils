@@ -21,6 +21,7 @@ import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.io.File;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
@@ -133,6 +135,7 @@ public class MapDataService extends Service {
 
     private void registerBuiltInProvider(BuiltInProvider provider) {
         registerProvider("built-in:" + provider.getProviderId(), provider);
+        WynntilsMod.registerEventListener(provider);
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {
@@ -146,8 +149,21 @@ public class MapDataService extends Service {
         }
         // Add or update the provider
         allProviders.put(providerId, provider);
+        provider.onChange(this::onProviderChange);
 
         // Invalidate caches
+        invalidateAllCaches();
+    }
+
+    private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
+        // FIXME: This is too heavy-handed. We should only invalidate
+        // the actual type that has changed, if it is present in the caches.
+        invalidateAllCaches();
+    }
+
+    public void invalidateAllCaches() {
+        // FIXME: This should not really be exposed. We need a better way to
+        // communicate the need to cache refresh.
         resolvedAttributesCache.clear();
         iconCache.clear();
     }
@@ -222,5 +238,8 @@ public class MapDataService extends Service {
         public Stream<MapIcon> getIcons() {
             return Stream.empty();
         }
+
+        @Override
+        public void onChange(Consumer<MapDataProvidedType> callback) {}
     }
 }
