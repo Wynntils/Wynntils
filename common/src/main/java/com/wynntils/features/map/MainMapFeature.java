@@ -32,6 +32,7 @@ import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -44,11 +45,17 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class MainMapFeature extends Feature {
+    // Use userWaypoints or foundChestLocations instead
+    // This config is to be kept as an "upfixer" to migrate old data
+    @Deprecated
     @Persisted
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 
     @Persisted
-    public final Storage<List<LootChestsProvider.FoundChestLocation>> foundChestLocations =
+    private final Storage<List<WaypointsProvider.WaypointLocation>> userWaypoints = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<List<LootChestsProvider.FoundChestLocation>> foundChestLocations =
             new Storage<>(new ArrayList<>());
 
     @Persisted
@@ -185,8 +192,42 @@ public class MainMapFeature extends Feature {
         }
     }
 
+    @Deprecated
+    // FIXME: This can be removed when all the callers of customPois are removed
     public void updateWaypoints() {
-        WaypointsProvider.resetFeatures();
+        // FIXME: WaypointsProvider.updateWaypoints();
         customPois.get().forEach(WaypointsProvider::registerFeature);
+    }
+
+    public List<WaypointsProvider.WaypointLocation> getUserWaypoints() {
+        return Collections.unmodifiableList(userWaypoints.get());
+    }
+
+    public void addUserWaypoint(WaypointsProvider.WaypointLocation waypoint) {
+        userWaypoints.get().add(waypoint);
+        userWaypoints.touched();
+        // FIXME: Add userWaypoints.updateWaypoints();
+    }
+
+    public void removeUserWaypoint(WaypointsProvider.WaypointLocation waypoint) {
+        userWaypoints.get().remove(waypoint);
+        userWaypoints.touched();
+        // FIXME: Add userWaypoints.updateWaypoints();
+    }
+
+    public List<LootChestsProvider.FoundChestLocation> getFoundChestLocations() {
+        return Collections.unmodifiableList(foundChestLocations.get());
+    }
+
+    public void addFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
+        foundChestLocations.get().add(location);
+        foundChestLocations.touched();
+        // FIXME: Add foundChestLocations.updateWaypoints();
+    }
+
+    public void removeFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
+        foundChestLocations.get().remove(location);
+        foundChestLocations.touched();
+        // FIXME: Add foundChestLocations.updateWaypoints();
     }
 }

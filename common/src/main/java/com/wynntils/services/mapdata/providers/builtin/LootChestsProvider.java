@@ -20,7 +20,7 @@ public class LootChestsProvider extends BuiltInProvider {
 
     @Override
     public Stream<MapFeature> getFeatures() {
-        return Managers.Feature.getFeatureInstance(MainMapFeature.class).foundChestLocations.get().stream()
+        return Managers.Feature.getFeatureInstance(MainMapFeature.class).getFoundChestLocations().stream()
                 .map(location -> location);
     }
 
