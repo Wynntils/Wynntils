@@ -16,6 +16,7 @@ import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.mapdata.MapIconTextureWrapper;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -176,7 +177,7 @@ public class CompassCommand extends Command {
         Vec3 currentPosition = McUtils.player().position();
         Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER
                 .getFeatures()
-                .filter(f1 -> f1.getCategoryId().equals("wynntils:service:" + selectedKind.getMapDataId()))
+                .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
                 .map(f -> (MapLocation) f)
                 .min(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
                         loc.getLocation().x(),
@@ -193,9 +194,12 @@ public class CompassCommand extends Command {
         MapLocation closestService = closestServiceOptional.get();
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(closestService.getLocation(), selectedKind.getIcon());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                closestService.getLocation(),
+                new MapIconTextureWrapper(Services.MapData.getIconOrFallback(closestService)));
 
-        MutableComponent response = Component.literal("Compass set to " + selectedKind.getName() + " at ")
+        MutableComponent response = Component.literal("Compass set to "
+                        + Services.MapData.resolveMapAttributes(closestService).label() + " at ")
                 .withStyle(ChatFormatting.AQUA);
         response.append(
                 Component.literal(closestService.getLocation().toString()).withStyle(ChatFormatting.WHITE));

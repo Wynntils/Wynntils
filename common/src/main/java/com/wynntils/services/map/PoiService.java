@@ -63,7 +63,6 @@ public class PoiService extends Service {
             Texture.WOODCUTTING);
 
     private final Set<LabelPoi> labelPois = new HashSet<>();
-    private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     @Persisted
@@ -149,10 +148,6 @@ public class PoiService extends Service {
         return labelPois.stream();
     }
 
-    public Stream<ServicePoi> getServicePois() {
-        return servicePois.stream();
-    }
-
     public List<CustomPoi> getProvidedCustomPois() {
         return customPoiProviders.get().stream()
                 .filter(CustomPoiProvider::isEnabled)
@@ -196,7 +191,6 @@ public class PoiService extends Service {
                 ServiceKind kind = ServiceKind.fromString(service.type);
                 if (kind != null) {
                     for (PoiLocation location : service.locations) {
-                        servicePois.add(new ServicePoi(location, kind));
                         ServiceListProvider.registerFeature(new Location(location), kind);
                     }
                 } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -12,6 +12,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -101,27 +102,27 @@ public class LocateCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        List<Poi> services = new ArrayList<>(Services.Poi.getServicePois()
-                .filter(poi -> poi.getKind() == selectedKind)
-                .toList());
-
         // Only keep the 4 closest results
-        Vec3 currentLocation = McUtils.player().position();
-        services.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                poi.getLocation().getX(),
-                poi.getLocation().getY().orElse((int) currentLocation.y),
-                poi.getLocation().getZ())));
-        // Removes from element 4 to the end of the list
-        if (services.size() > 4) {
-            services.subList(4, services.size()).clear();
-        }
+        Vec3 currentPosition = McUtils.player().position();
+
+        List<MapLocation> services = Services.MapData.SERVICE_LIST_PROVIDER
+                .getFeatures()
+                .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
+                .map(f -> (MapLocation) f)
+                .sorted(Comparator.comparingDouble(loc -> currentPosition.distanceToSqr(
+                        loc.getLocation().x(),
+                        loc.getLocation().y(),
+                        loc.getLocation().z())))
+                .limit(4)
+                .toList();
 
         MutableComponent response = Component.literal("Found " + selectedKind.getName() + " services:")
                 .withStyle(ChatFormatting.AQUA);
 
-        for (Poi service : services) {
+        for (MapLocation service : services) {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(service.getName() + " ")
+                    .append(Component.literal(Services.MapData.resolveMapAttributes(service)
+                                            .label() + " ")
                             .withStyle(ChatFormatting.YELLOW)
                             .withStyle((style) -> style.withClickEvent(new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,

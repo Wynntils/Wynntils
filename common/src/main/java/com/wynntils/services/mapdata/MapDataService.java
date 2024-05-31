@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
@@ -92,6 +93,22 @@ public class MapDataService extends Service {
             Stream<MapIcon> allIcons = getProviders().flatMap(MapDataProvider::getIcons);
             return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
         });
+    }
+
+    public Optional<MapIcon> getIcon(MapFeature feature) {
+        return getIcon(resolveMapAttributes(feature).iconId());
+    }
+
+    public MapIcon getIconOrFallback(String iconId) {
+        return getIcon(iconId)
+                .orElse(Services.MapData.getIcon(MapIconsProvider.FALLBACK_ICON_ID)
+                        .get());
+    }
+
+    public MapIcon getIconOrFallback(MapFeature feature) {
+        return getIcon(feature)
+                .orElse(Services.MapData.getIcon(MapIconsProvider.FALLBACK_ICON_ID)
+                        .get());
     }
 
     // endregion
