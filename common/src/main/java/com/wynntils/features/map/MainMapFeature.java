@@ -50,9 +50,6 @@ public class MainMapFeature extends Feature {
     public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
     @Persisted
-    public final Config<Float> customPoiMinZoom = new Config<>(0.28f);
-
-    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
     @Persisted

@@ -854,8 +854,6 @@
   "feature.wynntils.mainMap.centerWhenUnmapped.name": "Center in Unmapped Areas",
   "feature.wynntils.mainMap.combatPoiMinZoom.description": "At what zoom level should combat pois show? Set this to -1 to always show without fading.",
   "feature.wynntils.mainMap.combatPoiMinZoom.name": "Combat Poi Min Zoom",
-  "feature.wynntils.mainMap.customPoiMinZoom.description": "At what zoom level should custom pois show? Set this to -1 to always show without fading.",
-  "feature.wynntils.mainMap.customPoiMinZoom.name": "Custom Poi Min Zoom",
   "feature.wynntils.mainMap.description": "Adds a map to view the world.",
   "feature.wynntils.mainMap.fastTravelPoiMinZoom.description": "At what zoom level should fast travel pois show? Set this to -1 to always show without fading.",
   "feature.wynntils.mainMap.fastTravelPoiMinZoom.name": "Fast Travel Poi Min Zoom",

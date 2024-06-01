@@ -4,8 +4,6 @@
  */
 package com.wynntils.services.map.pois;
 
-import com.wynntils.core.components.Managers;
-import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.PoiLocation;
@@ -37,9 +35,7 @@ public class CustomPoi extends StaticIconPoi {
         return switch (getVisibility()) {
             case ALWAYS -> -1;
             case HIDDEN -> Integer.MAX_VALUE;
-            case DEFAULT -> Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                    .customPoiMinZoom
-                    .get();
+            case DEFAULT -> 0.28f; // This is unused now
         };
     }
 
