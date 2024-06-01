@@ -121,8 +121,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                guiGraphics.pose().pushPose();
+
+                // Render above all map features
+                guiGraphics.pose().translate(0, 0, 2000);
+
                 guiGraphics.renderComponentTooltip(
                         FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+
+                guiGraphics.pose().popPose();
                 return;
             }
         }
