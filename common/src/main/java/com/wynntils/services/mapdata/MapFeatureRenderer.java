@@ -44,7 +44,7 @@ public class MapFeatureRenderer {
         poseStack.pushPose();
         // z-index for rendering
         poseStack.translate(renderX, renderY, attributes.priority());
-        poseStack.scale(renderScale, renderScale, renderScale);
+        poseStack.scale(renderScale, renderScale, 1);
 
         // Draw icon, if applicable
         float iconAlpha =
