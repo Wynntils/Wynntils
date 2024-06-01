@@ -24,6 +24,9 @@ public class MapFeatureRenderer {
     private static final int SPACING = 2;
     private static final float TEXT_SCALE = 1f;
 
+    // Small enough alphas are turned into 255, so trying to render them results in visual glitches
+    private static final float MINIMUM_RENDER_ALPHA = 0.1f;
+
     public static void renderMapFeature(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
@@ -36,7 +39,6 @@ public class MapFeatureRenderer {
             float zoomLevel,
             boolean showLabels) {
         float renderScale = hovered ? scale * 1.05f : scale;
-        float hoverAlphaFactor = hovered ? 1f : 0.9f;
         int labelHeight = (int) (FontRenderer.getInstance().getFont().lineHeight * renderScale * TEXT_SCALE);
 
         int yOffset = 0;
@@ -47,10 +49,9 @@ public class MapFeatureRenderer {
         poseStack.scale(renderScale, renderScale, renderScale);
 
         // Draw icon, if applicable
-        float iconAlpha =
-                hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
+        float iconAlpha = Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
         Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
-        boolean drawIcon = iconAlpha > 0.01;
+        boolean drawIcon = iconAlpha > MINIMUM_RENDER_ALPHA;
         if (icon.isPresent() && drawIcon) {
             int iconWidth = icon.get().getWidth();
             int iconHeight = icon.get().getHeight();
@@ -75,12 +76,9 @@ public class MapFeatureRenderer {
         }
 
         // Draw label, if applicable
-        float labelAlpha =
-                hoverAlphaFactor * Services.MapData.calculateVisibility(attributes.labelVisibility(), zoomLevel);
-        // Small enough alphas are turned into 255, so trying to render them results in
-        // visual glitches
+        float labelAlpha = Services.MapData.calculateVisibility(attributes.labelVisibility(), zoomLevel);
         // Always draw labels for hovered icons, regardless of label visibility rules
-        boolean drawLabel = labelAlpha > 0.01 || (drawIcon && hovered);
+        boolean drawLabel = labelAlpha > MINIMUM_RENDER_ALPHA || (drawIcon && hovered);
         if (!attributes.label().isEmpty() && drawLabel && showLabels) {
             if (drawIcon && hovered) {
                 // If this is hovered, show with full alpha
