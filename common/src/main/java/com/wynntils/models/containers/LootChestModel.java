@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
@@ -77,20 +78,11 @@ public final class LootChestModel extends Model {
         super(List.of());
     }
 
-    public int getDryCount() {
-        return dryCount.get();
-    }
-
-    public int getDryBoxes() {
-        return dryBoxes.get();
-    }
-
-    public int getOpenedChestCount() {
-        return openedChestCount.get();
-    }
-
-    public List<MythicFind> getMythicFinds() {
-        return Collections.unmodifiableList(mythicFinds.get());
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage == foundChestLocations) {
+            Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
+        }
     }
 
     @SubscribeEvent
@@ -170,6 +162,22 @@ public final class LootChestModel extends Model {
         }
     }
 
+    public int getDryCount() {
+        return dryCount.get();
+    }
+
+    public int getDryBoxes() {
+        return dryBoxes.get();
+    }
+
+    public int getOpenedChestCount() {
+        return openedChestCount.get();
+    }
+
+    public List<MythicFind> getMythicFinds() {
+        return Collections.unmodifiableList(mythicFinds.get());
+    }
+
     public LootChestTier getChestType(Screen screen) {
         return LootChestTier.fromTitle(screen);
     }
@@ -181,13 +189,13 @@ public final class LootChestModel extends Model {
     public void addFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
         foundChestLocations.get().add(location);
         foundChestLocations.touched();
-        // FIXME: Add foundChestLocations.updateWaypoints();
+        Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
     }
 
     public void removeFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
         foundChestLocations.get().remove(location);
         foundChestLocations.touched();
-        // FIXME: Add foundChestLocations.updateWaypoints();
+        Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
     }
 
     private void processItemFind(ItemStack itemStack) {

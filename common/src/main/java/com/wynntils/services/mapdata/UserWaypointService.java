@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata;
 
 import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
@@ -20,6 +21,13 @@ public class UserWaypointService extends Service {
         super(List.of());
     }
 
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage == userWaypoints) {
+            Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(userWaypoints.get());
+        }
+    }
+
     public List<WaypointsProvider.WaypointLocation> getUserWaypoints() {
         return Collections.unmodifiableList(userWaypoints.get());
     }
@@ -27,12 +35,12 @@ public class UserWaypointService extends Service {
     public void addUserWaypoint(WaypointsProvider.WaypointLocation waypoint) {
         userWaypoints.get().add(waypoint);
         userWaypoints.touched();
-        // FIXME: Add userWaypoints.updateWaypoints();
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(userWaypoints.get());
     }
 
     public void removeUserWaypoint(WaypointsProvider.WaypointLocation waypoint) {
         userWaypoints.get().remove(waypoint);
         userWaypoints.touched();
-        // FIXME: Add userWaypoints.updateWaypoints();
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(userWaypoints.get());
     }
 }

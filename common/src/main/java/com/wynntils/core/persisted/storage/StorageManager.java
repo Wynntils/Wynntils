@@ -148,7 +148,7 @@ public final class StorageManager extends Manager {
             Managers.Persisted.setRaw(storage, value);
 
             Storageable owner = storageOwner.get(storage);
-            owner.onStorageLoad();
+            owner.onStorageLoad(storage);
         });
     }
 
