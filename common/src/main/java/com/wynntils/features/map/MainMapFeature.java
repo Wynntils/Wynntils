@@ -108,11 +108,4 @@ public class MainMapFeature extends Feature {
 
         McUtils.mc().setScreen(PoiCreationScreen.create(null, location));
     }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {
-        if (config == customPois) {
-            // TODO: Migrate from customPois into userWaypoints and foundChestLocations
-        }
-    }
 }

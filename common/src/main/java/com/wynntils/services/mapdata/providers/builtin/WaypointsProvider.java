@@ -33,22 +33,6 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     public static void registerFeature(WaypointLocation waypoint) {
-        //        private static final MapVisibility WAYPOINT_VISIBILITY =
-        //                MapVisibility.builder().withMin(30f);
-        //        String iconId = MapIconsProvider.getIconIdFromTexture(customPoi.getIcon());
-        //        PROVIDED_FEATURES.add(new WaypointLocation(
-        //                customPoi.getLocation().asLocation(),
-        //                customPoi.getName(),
-        //                "",
-        //                iconId,
-        //                customPoi.getColor(),
-        //                new JsonMapVisibility(
-        //                        switch (customPoi.getVisibility()) {
-        //                            case DEFAULT -> WAYPOINT_VISIBILITY;
-        //                            case ALWAYS -> FixedMapVisibility.ICON_ALWAYS;
-        //                            case HIDDEN -> FixedMapVisibility.ICON_NEVER;
-        //                        })));
-
         PROVIDED_FEATURES.add(waypoint);
     }
 
