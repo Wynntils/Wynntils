@@ -18,8 +18,6 @@ import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.map.pois.LabelPoi;
-import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.CustomPoiProvider;
 import com.wynntils.services.map.type.ServiceKind;
@@ -31,13 +29,10 @@ import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PoiService extends Service {
@@ -62,8 +57,6 @@ public class PoiService extends Service {
             Texture.MINING,
             Texture.WOODCUTTING);
 
-    private final Set<LabelPoi> labelPois = new HashSet<>();
-    private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     @Persisted
@@ -145,14 +138,6 @@ public class PoiService extends Service {
         }
     }
 
-    public Stream<LabelPoi> getLabelPois() {
-        return labelPois.stream();
-    }
-
-    public Stream<ServicePoi> getServicePois() {
-        return servicePois.stream();
-    }
-
     public List<CustomPoi> getProvidedCustomPois() {
         return customPoiProviders.get().stream()
                 .filter(CustomPoiProvider::isEnabled)
@@ -180,7 +165,6 @@ public class PoiService extends Service {
         dl.handleReader(reader -> {
             PlacesProfile places = GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
-                labelPois.add(new LabelPoi(label));
                 PlaceListProvider.registerFeature(label);
             }
         });
@@ -196,7 +180,6 @@ public class PoiService extends Service {
                 ServiceKind kind = ServiceKind.fromString(service.type);
                 if (kind != null) {
                     for (PoiLocation location : service.locations) {
-                        servicePois.add(new ServicePoi(location, kind));
                         ServiceListProvider.registerFeature(new Location(location), kind);
                     }
                 } else {

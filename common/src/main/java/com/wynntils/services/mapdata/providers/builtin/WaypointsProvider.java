@@ -27,7 +27,7 @@ public class WaypointsProvider extends BuiltInProvider {
     }
 
     public void updateWaypoints(List<WaypointLocation> waypoints) {
-        // FIXME: Add PROVIDED_FEATURES.forEach(feature -> notifyCallbacks(feature));
+        PROVIDED_FEATURES.forEach(this::notifyCallbacks);
         PROVIDED_FEATURES.clear();
         waypoints.forEach(WaypointsProvider::registerFeature);
     }

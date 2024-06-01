@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -10,11 +10,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -23,17 +22,20 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.phys.Vec3;
 
 public class LocateCommand extends Command {
     public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
-    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Services.Poi.getLabelPois().map(Poi::getName), builder);
+    public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Services.MapData.PLACE_LIST_PROVIDER.getFeatures().map(f -> Services.MapData.resolveMapAttributes(f)
+                            .label()),
+                    builder);
 
     @Override
     public String getCommandName() {
@@ -101,27 +103,24 @@ public class LocateCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        List<Poi> services = new ArrayList<>(Services.Poi.getServicePois()
-                .filter(poi -> poi.getKind() == selectedKind)
-                .toList());
-
         // Only keep the 4 closest results
-        Vec3 currentLocation = McUtils.player().position();
-        services.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                poi.getLocation().getX(),
-                poi.getLocation().getY().orElse((int) currentLocation.y),
-                poi.getLocation().getZ())));
-        // Removes from element 4 to the end of the list
-        if (services.size() > 4) {
-            services.subList(4, services.size()).clear();
-        }
+        Position currentPosition = McUtils.player().position();
+
+        List<MapLocation> services = Services.MapData.SERVICE_LIST_PROVIDER
+                .getFeatures()
+                .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
+                .map(f -> (MapLocation) f)
+                .sorted(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)))
+                .limit(4)
+                .toList();
 
         MutableComponent response = Component.literal("Found " + selectedKind.getName() + " services:")
                 .withStyle(ChatFormatting.AQUA);
 
-        for (Poi service : services) {
+        for (MapLocation service : services) {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(service.getName() + " ")
+                    .append(Component.literal(Services.MapData.resolveMapAttributes(service)
+                                            .label() + " ")
                             .withStyle(ChatFormatting.YELLOW)
                             .withStyle((style) -> style.withClickEvent(new ClickEvent(
                                     ClickEvent.Action.RUN_COMMAND,
@@ -140,9 +139,16 @@ public class LocateCommand extends Command {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Services.Poi.getLabelPois()
-                .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
-                .toList());
+        // Sort in order of closeness to the player
+        Position currentPosition = McUtils.player().position();
+
+        List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
+                .getFeatures()
+                .map(f -> (MapLocation) f)
+                .filter(loc -> StringUtils.partialMatch(
+                        Services.MapData.resolveMapAttributes(loc).label(), searchedName))
+                .sorted(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)))
+                .toList();
 
         if (places.isEmpty()) {
             MutableComponent response = Component.literal("Found no places matching '" + searchedName + "'")
@@ -151,26 +157,20 @@ public class LocateCommand extends Command {
             return 0;
         }
 
-        // Sort in order of closeness to the player
-        Vec3 currentLocation = McUtils.player().position();
-        places.sort(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
-                poi.getLocation().getX(),
-                poi.getLocation().getY().orElse((int) currentLocation.y),
-                poi.getLocation().getZ())));
-
         MutableComponent response = Component.literal("Found places matching '" + searchedName + "':")
                 .withStyle(ChatFormatting.AQUA);
 
-        for (Poi place : places) {
+        for (MapLocation place : places) {
+            String placeName = Services.MapData.resolveMapAttributes(place).label();
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(place.getName() + " ")
+                    .append(Component.literal(placeName + " ")
                             .withStyle(ChatFormatting.YELLOW)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))))
+                            .withStyle((style) -> style.withClickEvent(
+                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass place " + placeName))))
                     .append(Component.literal(place.getLocation().toString())
                             .withStyle(ChatFormatting.WHITE)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))));
+                            .withStyle((style) -> style.withClickEvent(
+                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass place " + placeName))));
         }
 
         context.getSource().sendSuccess(() -> response, false);

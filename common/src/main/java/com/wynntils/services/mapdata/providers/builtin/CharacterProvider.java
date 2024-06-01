@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
+import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -16,10 +17,17 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CharacterProvider extends BuiltInProvider {
-    private static final List<MapFeature> PROVIDED_FEATURES = List.of(new CharacterLocation());
+    public static final CharacterLocation CHARACTER_LOCATION = new CharacterLocation();
+    private static final List<MapFeature> PROVIDED_FEATURES = List.of(CHARACTER_LOCATION);
     private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
+
+    @SubscribeEvent
+    public void onCharacterMove(CharacterMovedEvent e) {
+        notifyCallbacks(CHARACTER_LOCATION);
+    }
 
     @Override
     public String getProviderId() {
