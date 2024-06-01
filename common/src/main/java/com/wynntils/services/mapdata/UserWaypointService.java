@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.models.containers.type.LootChestTier;
+import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
@@ -21,10 +21,8 @@ import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,17 +59,6 @@ public class UserWaypointService extends Service {
     }
 
     // region Poi Migration
-    public static boolean isCustomPoiLootChest(CustomPoi customPoi) {
-        boolean nameIsLootChest = Arrays.stream(LootChestTier.values())
-                .anyMatch(tier -> tier.getWaypointName().equals(customPoi.getName()));
-        boolean colorIsLootChest = customPoi.getColor().equals(CommonColors.WHITE);
-        boolean iconIsLootChest = Arrays.stream(LootChestTier.values())
-                .anyMatch(tier -> tier.getWaypointTexture().equals(customPoi.getIcon()));
-        boolean visibilityIsLootChest = customPoi.getVisibility() == CustomPoi.Visibility.DEFAULT;
-
-        return nameIsLootChest && colorIsLootChest && iconIsLootChest && visibilityIsLootChest;
-    }
-
     private void startPoiMigration() {
         // The feature instance is not guaranteed to be present, so we have to check
         MainMapFeature featureInstance = Managers.Feature.getFeatureInstance(MainMapFeature.class);
@@ -100,7 +87,7 @@ public class UserWaypointService extends Service {
     // This is a one-time migration, but can't be removed in the foreseeable future,
     // so we can keep upfixing old configs
     private boolean migrateToMapdata(CustomPoi customPoi) {
-        boolean isLootChest = isCustomPoiLootChest(customPoi);
+        boolean isLootChest = LootChestModel.isCustomPoiLootChest(customPoi);
         if (isLootChest) return false;
 
         // This must be a user waypoint, let's migrate it
