@@ -8,7 +8,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import java.util.List;
 import java.util.Optional;
 
-public interface MapFeature {
+public interface MapFeature extends MapDataProvidedType {
     // The id should be unique, and track the provenance of the feature
     String getFeatureId();
 

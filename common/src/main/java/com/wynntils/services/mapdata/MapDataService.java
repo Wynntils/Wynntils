@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
@@ -21,6 +22,7 @@ import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
+import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.io.File;
 import java.util.HashMap;
@@ -28,9 +30,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
+    public static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
+    public static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
+    public static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
+    public static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
+    public static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
+    public static final CharacterProvider CHARACTER_PROVIDER = new CharacterProvider();
+    public static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
+
     private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
     // FIXME: i18n
     private static final String NAMELESS_CATEGORY = "Category '%s'";
@@ -84,6 +95,22 @@ public class MapDataService extends Service {
         });
     }
 
+    public Optional<MapIcon> getIcon(MapFeature feature) {
+        return getIcon(resolveMapAttributes(feature).iconId());
+    }
+
+    public MapIcon getIconOrFallback(String iconId) {
+        return getIcon(iconId)
+                .orElse(Services.MapData.getIcon(MapIconsProvider.FALLBACK_ICON_ID)
+                        .get());
+    }
+
+    public MapIcon getIconOrFallback(MapFeature feature) {
+        return getIcon(feature)
+                .orElse(Services.MapData.getIcon(MapIconsProvider.FALLBACK_ICON_ID)
+                        .get());
+    }
+
     // endregion
 
     // region Providers
@@ -120,19 +147,20 @@ public class MapDataService extends Service {
 
     private void createBuiltInProviders() {
         // Metadata
-        registerBuiltInProvider(new CategoriesProvider());
-        registerBuiltInProvider(new MapIconsProvider());
+        registerBuiltInProvider(CATEGORIES_PROVIDER);
+        registerBuiltInProvider(MAP_ICONS_PROVIDER);
 
         // Locations
-        registerBuiltInProvider(new ServiceListProvider());
-        registerBuiltInProvider(new CombatListProvider());
-        registerBuiltInProvider(new PlaceListProvider());
-        registerBuiltInProvider(new CharacterProvider());
-        registerBuiltInProvider(new WaypointsProvider());
+        registerBuiltInProvider(SERVICE_LIST_PROVIDER);
+        registerBuiltInProvider(COMBAT_LIST_PROVIDER);
+        registerBuiltInProvider(PLACE_LIST_PROVIDER);
+        registerBuiltInProvider(CHARACTER_PROVIDER);
+        registerBuiltInProvider(WAYPOINTS_PROVIDER);
     }
 
     private void registerBuiltInProvider(BuiltInProvider provider) {
         registerProvider("built-in:" + provider.getProviderId(), provider);
+        WynntilsMod.registerEventListener(provider);
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {
@@ -146,8 +174,24 @@ public class MapDataService extends Service {
         }
         // Add or update the provider
         allProviders.put(providerId, provider);
+        provider.onChange(this::onProviderChange);
 
         // Invalidate caches
+        invalidateAllCaches();
+    }
+
+    private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
+        if (mapDataProvidedType instanceof MapFeature mapFeature) {
+            resolvedAttributesCache.remove(mapFeature);
+        } else if (mapDataProvidedType instanceof MapIcon mapIcon) {
+            iconCache.remove(mapIcon.getIconId());
+        } else if (mapDataProvidedType instanceof MapCategory mapCategory) {
+            // If this happens, we need to redo everything
+            invalidateAllCaches();
+        }
+    }
+
+    private void invalidateAllCaches() {
         resolvedAttributesCache.clear();
         iconCache.clear();
     }
@@ -222,5 +266,8 @@ public class MapDataService extends Service {
         public Stream<MapIcon> getIcons() {
             return Stream.empty();
         }
+
+        @Override
+        public void onChange(Consumer<MapDataProvidedType> callback) {}
     }
 }

@@ -32,11 +32,15 @@ public class WaypointsProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public static void resetFeatures() {
+    public void updateWaypoints(List<CustomPoi> waypoints) {
+        PROVIDED_FEATURES.forEach(feature -> notifyCallbacks(feature));
         PROVIDED_FEATURES.clear();
+        waypoints.forEach(waypoint -> {
+            registerFeature(waypoint);
+        });
     }
 
-    public static void registerFeature(CustomPoi customPoi) {
+    private void registerFeature(CustomPoi customPoi) {
         int tier =
                 switch (customPoi.getIcon()) {
                     case CHEST_T1 -> 1;
@@ -48,7 +52,11 @@ public class WaypointsProvider extends BuiltInProvider {
         if (tier == 0) {
             String iconId = MapIconsProvider.getIconIdFromTexture(customPoi.getIcon());
             PROVIDED_FEATURES.add(new WaypointLocation(
-                    customPoi.getLocation().asLocation(), customPoi.getName(), iconId, customPoi.getColor(), customPoi.getVisibility()));
+                    customPoi.getLocation().asLocation(),
+                    customPoi.getName(),
+                    iconId,
+                    customPoi.getColor(),
+                    customPoi.getVisibility()));
         } else {
             PROVIDED_FEATURES.add(new FoundChestLocation(customPoi.getLocation().asLocation(), tier));
         }
@@ -64,7 +72,8 @@ public class WaypointsProvider extends BuiltInProvider {
         private final CustomPoi.Visibility visibility;
         private final int number;
 
-        private WaypointLocation(Location location, String name, String iconId, CustomColor color, CustomPoi.Visibility visibility) {
+        private WaypointLocation(
+                Location location, String name, String iconId, CustomColor color, CustomPoi.Visibility visibility) {
             this.location = location;
             this.name = name;
             this.iconId = iconId;
