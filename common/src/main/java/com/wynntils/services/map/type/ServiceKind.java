@@ -32,9 +32,7 @@ public enum ServiceKind {
     TRADE_MARKET("Trade Market", Texture.TRADE_MARKET, "trade-market"),
     WEAPON_MERCHANT("Weapon Merchant", Texture.WEAPON_MERCHANT, "merchant:weapon"),
     WEAPONSMITHING_STATION("Weaponsmithing Station", Texture.WEAPONSMITHING_STATION, "profession:weaponsmithing"),
-    WOODWORKING_STATION("Woodworking Station", Texture.WOODWORKING_STATION, "profession:woodworking"),
-    MERCHANT("Merchant", null, "merchant"),
-    STATION("Station", null, "profession");
+    WOODWORKING_STATION("Woodworking Station", Texture.WOODWORKING_STATION, "profession:woodworking");
 
     private final String name;
     private final Texture texture;
