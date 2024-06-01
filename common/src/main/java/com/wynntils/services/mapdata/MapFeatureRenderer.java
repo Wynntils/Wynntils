@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -24,7 +25,8 @@ public class MapFeatureRenderer {
     private static final int SPACING = 2;
     private static final float TEXT_SCALE = 1f;
 
-    // Small enough alphas are turned into 255, so trying to render them results in visual glitches
+    // Small/Large enough alphas are turned into 0/255, so trying to render them results in visual glitches
+    // Generally <0.1f -> 0f, >0.9f -> 1f
     private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
     public static void renderMapFeature(
@@ -72,6 +74,18 @@ public class MapFeatureRenderer {
                     0,
                     iconWidth,
                     iconHeight);
+            BufferedFontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            bufferSource,
+                            StyledText.fromString(String.valueOf(iconAlpha)),
+                            0,
+                            yOffset,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            attributes.labelShadow(),
+                            TEXT_SCALE);
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
 
