@@ -11,7 +11,6 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.type.MapFeature;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -74,18 +73,6 @@ public class MapFeatureRenderer {
                     0,
                     iconWidth,
                     iconHeight);
-            BufferedFontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            bufferSource,
-                            StyledText.fromString(String.valueOf(iconAlpha)),
-                            0,
-                            yOffset,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            attributes.labelShadow(),
-                            TEXT_SCALE);
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
 
