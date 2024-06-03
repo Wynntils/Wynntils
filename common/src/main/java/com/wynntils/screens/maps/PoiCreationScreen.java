@@ -619,6 +619,6 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
             // Services.UserWaypoint.removeUserWaypoint(oldPoi);
         }
 
-        Services.UserWaypoint.addUserWaypoint(waypoint);
+        Services.Waypoints.addWaypoint(waypoint);
     }
 }

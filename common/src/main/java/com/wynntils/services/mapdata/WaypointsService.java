@@ -26,36 +26,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UserWaypointService extends Service {
+public class WaypointsService extends Service {
     @Persisted
-    private final Storage<List<WaypointsProvider.WaypointLocation>> userWaypoints = new Storage<>(new ArrayList<>());
+    private final Storage<List<WaypointsProvider.WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
 
-    public UserWaypointService() {
+    public WaypointsService() {
         super(List.of());
     }
 
     @Override
     public void onStorageLoad(Storage<?> storage) {
-        if (storage == userWaypoints) {
+        if (storage == waypoints) {
             startPoiMigration();
-            Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(userWaypoints.get());
+            Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
         }
     }
 
-    public List<WaypointsProvider.WaypointLocation> getUserWaypoints() {
-        return Collections.unmodifiableList(userWaypoints.get());
+    public List<WaypointsProvider.WaypointLocation> getWaypoints() {
+        return Collections.unmodifiableList(waypoints.get());
     }
 
-    public void addUserWaypoint(WaypointsProvider.WaypointLocation waypoint) {
-        userWaypoints.get().add(waypoint);
-        userWaypoints.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(userWaypoints.get());
+    public void addWaypoint(WaypointsProvider.WaypointLocation waypoint) {
+        waypoints.get().add(waypoint);
+        waypoints.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
-    public void removeUserWaypoint(WaypointsProvider.WaypointLocation waypoint) {
-        userWaypoints.get().remove(waypoint);
-        userWaypoints.touched();
-        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(userWaypoints.get());
+    public void removeWaypoint(WaypointsProvider.WaypointLocation waypoint) {
+        waypoints.get().remove(waypoint);
+        waypoints.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
     // region Poi Migration
@@ -109,7 +109,7 @@ public class UserWaypointService extends Service {
 
         WaypointsProvider.WaypointLocation waypointLocation =
                 new WaypointsProvider.WaypointLocation(location, label, subcategory, attributes);
-        Services.UserWaypoint.addUserWaypoint(waypointLocation);
+        Services.Waypoints.addWaypoint(waypointLocation);
 
         return true;
     }
