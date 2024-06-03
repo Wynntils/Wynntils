@@ -185,6 +185,12 @@ public enum Texture {
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
     // endregion
 
+    // region Ability Tree
+    ABILITY_TREE_BACKGROUND("ability_tree/ability_tree_background.png", 317, 161),
+    ABILITY_TREE_DOWN_ARROW("ability_tree/down_button.png", 14, 14),
+    ABILITY_TREE_UP_ARROW("ability_tree/up_button.png", 14, 14),
+    // endregion
+
     // region Item Storage
     ITEM_RECORD("item_storage/record.png", 171, 167),
     ITEM_RECORD_ADD("item_storage/record_add.png", 9, 18),

@@ -1,14 +1,16 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.parser;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeInfo;
 import com.wynntils.models.abilitytree.type.ArchetypeRequirement;
 import com.wynntils.models.abilitytree.type.ItemInformation;
 import com.wynntils.utils.mc.LoreUtils;
@@ -23,7 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class AbilityTreeParser {
-    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?§l(.+)(§r§. ability)?");
+    // Node patterns
+    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?(?:§f)?§l(.+)((?:§.)? ability)?");
     private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
     private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
@@ -35,13 +38,17 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_REQUIREMENT_NOT_MET = Pattern.compile("§cYou do not meet the requirements");
     private static final Pattern NODE_UNLOCKED = Pattern.compile("§eYou already unlocked this ability");
 
+    // Connection patterns
     private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
+
+    // Archetype patterns
+    private static final Pattern ARCHETYPE_NAME_PATTERN = Pattern.compile("§.§l(.+) Archetype");
 
     public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
             ItemStack itemStack, int page, int slot, int id) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
 
-        AbilityTreeNodeState state = AbilityTreeNodeState.LOCKED;
+        AbilityTreeNodeState state = AbilityTreeNodeState.UNREACHABLE;
         StyledText actualName;
         if (nameStyledText.getPartCount() == 1) {
             actualName = nameStyledText;
@@ -112,6 +119,12 @@ public final class AbilityTreeParser {
                 state = AbilityTreeNodeState.UNLOCKED;
                 continue;
             }
+
+            matcher = text.getMatcher(NODE_REQUIREMENT_NOT_MET);
+            if (matcher.matches()) {
+                state = AbilityTreeNodeState.REQUIREMENT_NOT_MET;
+                continue;
+            }
         }
 
         if (state == AbilityTreeNodeState.UNLOCKABLE || state == AbilityTreeNodeState.UNLOCKED) {
@@ -128,20 +141,15 @@ public final class AbilityTreeParser {
 
             // Skip final empty line
             includedLines = tempList.subList(0, tempList.size() - 1);
-        } else if (state == AbilityTreeNodeState.LOCKED) {
+        } else if (state == AbilityTreeNodeState.REQUIREMENT_NOT_MET) {
             // Skip empty line + "requirement not met"
-            if (includedLines
-                    .get(includedLines.size() - 1)
-                    .getMatcher(NODE_REQUIREMENT_NOT_MET)
-                    .matches()) {
-                includedLines = includedLines.subList(0, includedLines.size() - 2);
-            }
+            includedLines = includedLines.subList(0, includedLines.size() - 2);
         }
 
         ItemInformation itemInformation = new ItemInformation(
                 Item.getId(itemStack.getItem()),
                 switch (state) {
-                    case LOCKED -> itemStack.getDamageValue();
+                    case UNREACHABLE, REQUIREMENT_NOT_MET -> itemStack.getDamageValue();
                     case UNLOCKABLE -> itemStack.getDamageValue() - 1;
                     case UNLOCKED -> itemStack.getDamageValue() - 2;
                     case BLOCKED -> itemStack.getDamageValue() - 3;
@@ -174,6 +182,36 @@ public final class AbilityTreeParser {
         return Pair.of(node, state);
     }
 
+    public ArchetypeInfo parseArchetypeFromItem(ItemStack itemStack) {
+        StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
+        Matcher matcher = nameStyledText.getMatcher(ARCHETYPE_NAME_PATTERN);
+
+        if (!matcher.matches()) {
+            // We should not get here, as we should only be calling this method on items that match the pattern
+            WynntilsMod.error("Failed to parse archetype name from item stack: " + itemStack.getHoverName());
+            return null;
+        }
+
+        String name = matcher.group(1);
+
+        List<StyledText> loreStyledText = LoreUtils.getLore(itemStack);
+
+        List<String> description = new ArrayList<>();
+        for (StyledText text : loreStyledText) {
+            description.add(text.getString());
+        }
+
+        // Remove the last two lines of the lore, which are the archetype count and the empty line
+        description.remove(description.size() - 1);
+        description.remove(description.size() - 1);
+
+        return new ArchetypeInfo(
+                name,
+                nameStyledText.getString(),
+                description,
+                new ItemInformation(Item.getId(itemStack.getItem()), itemStack.getDamageValue()));
+    }
+
     public boolean isNodeItem(ItemStack itemStack, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
         return itemStack.getItem() == Items.STONE_AXE
@@ -184,5 +222,12 @@ public final class AbilityTreeParser {
     public boolean isConnectionItem(ItemStack itemStack) {
         return itemStack.getItem() == Items.STONE_AXE
                 && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
+    }
+
+    public boolean isArchetypeItem(ItemStack itemStack) {
+        return itemStack.getItem() == Items.STONE_AXE
+                && StyledText.fromComponent(itemStack.getHoverName())
+                        .getMatcher(ARCHETYPE_NAME_PATTERN)
+                        .matches();
     }
 }

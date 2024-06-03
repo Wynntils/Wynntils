@@ -1,12 +1,17 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.type;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
  * This class contains all relevant info to a specific class' ability tree.
  */
-public record AbilityTreeInfo(List<AbilityTreeSkillNode> nodes) {}
+
+// The archetypeInfoMap is a LinkedHashMap because the order of the archetypes is important
+@SuppressWarnings("CollectionDeclaredAsConcreteClass")
+public record AbilityTreeInfo(
+        List<AbilityTreeSkillNode> nodes, LinkedHashMap<String, ArchetypeInfo> archetypeInfoMap) {}

@@ -132,6 +132,7 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
+import com.wynntils.features.ui.CustomAbilityTreeFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
@@ -345,6 +346,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerScrollFeature());
         registerFeature(new CosmeticsPreviewFeature());
+        registerFeature(new CustomAbilityTreeFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());

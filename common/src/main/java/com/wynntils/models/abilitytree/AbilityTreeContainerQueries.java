@@ -14,9 +14,9 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.AbilityTreeInstance;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
-import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
@@ -40,19 +40,20 @@ public class AbilityTreeContainerQueries {
         queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageDumper(supplier));
     }
 
-    public void updateParsedAbilityTree() {
+    public void parseAbilityTree(AbilityTreeInfo abilityTreeInfo) {
         McUtils.player().closeContainer();
 
         // Wait for the container to close
-        Managers.TickScheduler.scheduleNextTick(() -> queryAbilityTree(
-                new AbilityTreeContainerQueries.AbilityPageSoftProcessor(Models.AbilityTree::setCurrentAbilityTree)));
+        Managers.TickScheduler.scheduleNextTick(
+                () -> queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageSoftProcessor((abilityTreeInstance) ->
+                        Models.AbilityTree.setAbilityTreeInstance(abilityTreeInfo, abilityTreeInstance))));
     }
 
     private void queryAbilityTree(AbilityTreeProcessor processor) {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
-                    McUtils.sendErrorToClient("Dumping Ability Tree failed");
+                    Models.AbilityTree.setAbilityTreeInstance(null, null);
                 })
 
                 // Open character/compass menu
@@ -139,9 +140,9 @@ public class AbilityTreeContainerQueries {
      */
     private static class AbilityPageSoftProcessor extends AbilityTreeProcessor {
         private final Map<AbilityTreeSkillNode, AbilityTreeNodeState> collectedInfo = new LinkedHashMap<>();
-        private final Consumer<ParsedAbilityTree> callback;
+        private final Consumer<AbilityTreeInstance> callback;
 
-        protected AbilityPageSoftProcessor(Consumer<ParsedAbilityTree> callback) {
+        protected AbilityPageSoftProcessor(Consumer<AbilityTreeInstance> callback) {
             this.callback = callback;
         }
 
@@ -163,7 +164,7 @@ public class AbilityTreeContainerQueries {
             boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
 
             if (lastPage) {
-                callback.accept(new ParsedAbilityTree(ImmutableMap.copyOf(collectedInfo)));
+                callback.accept(new AbilityTreeInstance(ImmutableMap.copyOf(collectedInfo)));
             }
         }
     }

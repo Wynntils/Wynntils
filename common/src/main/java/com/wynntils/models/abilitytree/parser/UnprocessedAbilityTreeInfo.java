@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.parser;
@@ -9,10 +9,12 @@ import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeInfo;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class UnprocessedAbilityTreeInfo {
 
     private final Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
     private final Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
+    private final LinkedHashMap<String, ArchetypeInfo> archetypeMap = new LinkedHashMap<>();
     private boolean processed = false;
 
     private void addNodeFromItem(ItemStack itemStack, int page, int slot) {
@@ -41,6 +44,11 @@ public class UnprocessedAbilityTreeInfo {
                 AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()));
     }
 
+    private void addArchetypeFromItem(ItemStack itemStack) {
+        ArchetypeInfo archetype = Models.AbilityTree.ABILITY_TREE_PARSER.parseArchetypeFromItem(itemStack);
+        archetypeMap.put(archetype.name(), archetype);
+    }
+
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
         if (Models.AbilityTree.ABILITY_TREE_PARSER.isNodeItem(itemStack, slot)) {
             addNodeFromItem(itemStack, page, slot);
@@ -49,6 +57,12 @@ public class UnprocessedAbilityTreeInfo {
 
         if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack)) {
             addConnectionFromItem(itemStack, page, slot);
+            return;
+        }
+
+        if (Models.AbilityTree.ABILITY_TREE_PARSER.isArchetypeItem(itemStack)) {
+            addArchetypeFromItem(itemStack);
+            return;
         }
     }
 
@@ -206,6 +220,6 @@ public class UnprocessedAbilityTreeInfo {
             processed = true;
         }
 
-        return new AbilityTreeInfo(nodes);
+        return new AbilityTreeInfo(nodes, archetypeMap);
     }
 }
