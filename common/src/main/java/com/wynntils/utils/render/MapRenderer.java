@@ -161,11 +161,16 @@ public final class MapRenderer {
             CustomColor pointerColor,
             PointerType pointerType,
             boolean followPlayerRotation) {
-        if (!followPlayerRotation) {
-            poseStack.pushPose();
-            RenderUtils.rotatePose(
-                    poseStack, renderX, renderY, 180 + McUtils.player().getYRot());
+        float rotationAngle;
+        if (followPlayerRotation) {
+            rotationAngle = McUtils.player().getYRot()
+                    - McUtils.mc().gameRenderer.getMainCamera().getYRot();
+        } else {
+            rotationAngle = 180 + McUtils.player().getYRot();
         }
+
+        poseStack.pushPose();
+        RenderUtils.rotatePose(poseStack, renderX, renderY, rotationAngle);
 
         float renderedWidth = pointerType.width * pointerScale;
         float renderedHeight = pointerType.height * pointerScale;
@@ -186,9 +191,7 @@ public final class MapRenderer {
                 Texture.MAP_POINTERS.width(),
                 Texture.MAP_POINTERS.height());
 
-        if (!followPlayerRotation) {
-            poseStack.popPose();
-        }
+        poseStack.popPose();
     }
 
     public static void renderLootrunLine(
