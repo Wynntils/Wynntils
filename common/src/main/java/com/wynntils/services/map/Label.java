@@ -9,7 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.utils.mc.type.Location;
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -44,8 +44,8 @@ public class Label {
     /**
      * The relative importance of this place
      */
-    public LabelLayer getLayer() {
-        return LabelLayer.values()[layer - 1];
+    public PlaceListProvider.PlaceLocation.PlaceType getLayer() {
+        return PlaceListProvider.PlaceLocation.PlaceType.values()[layer - 1];
     }
 
     public Optional<Integer> getLevel() {
@@ -83,26 +83,6 @@ public class Label {
                     jsonObject.get("z").getAsInt(),
                     jsonObject.get("layer").getAsInt(),
                     level);
-        }
-    }
-
-    public enum LabelLayer {
-        PROVINCE("province"),
-        CITY("city"),
-        TOWN_OR_PLACE("place");
-
-        private final String mapDataId;
-
-        LabelLayer(String mapDataId) {
-            this.mapDataId = mapDataId;
-        }
-
-        public String getMapDataId() {
-            return mapDataId;
-        }
-
-        public String getName() {
-            return StringUtils.capitalized(mapDataId);
         }
     }
 }

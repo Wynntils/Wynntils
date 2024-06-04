@@ -5,7 +5,6 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.models.containers.type.LootChestTier;
-import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
@@ -32,7 +31,7 @@ public class CategoriesProvider extends BuiltInProvider {
         for (CombatKind kind : CombatKind.values()) {
             PROVIDED_CATEGORIES.add(new CombatCategory(kind));
         }
-        for (Label.LabelLayer layer : Label.LabelLayer.values()) {
+        for (PlaceListProvider.PlaceLocation.PlaceType layer : PlaceListProvider.PlaceLocation.PlaceType.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
         for (int tier = 1; tier <= LootChestTier.values().length; tier++) {
@@ -308,20 +307,20 @@ public class CategoriesProvider extends BuiltInProvider {
         private static final MapVisibility PLACE_VISIBILITY =
                 MapVisibility.builder().withMin(32f).withMax(86f);
 
-        private final Label.LabelLayer layer;
+        private final PlaceListProvider.PlaceLocation.PlaceType placeType;
 
-        private PlaceCategory(Label.LabelLayer layer) {
-            this.layer = layer;
+        private PlaceCategory(PlaceListProvider.PlaceLocation.PlaceType placeType) {
+            this.placeType = placeType;
         }
 
         @Override
         public String getCategoryId() {
-            return "wynntils:place:" + layer.getMapDataId();
+            return "wynntils:place:" + placeType.getMapDataId();
         }
 
         @Override
         public Optional<String> getName() {
-            return Optional.of(layer.getName());
+            return Optional.of(placeType.getName());
         }
 
         @Override
@@ -335,7 +334,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<CustomColor> getLabelColor() {
                     return Optional.of(
-                            switch (layer) {
+                            switch (placeType) {
                                 case PROVINCE -> CommonColors.DARK_AQUA;
                                 case CITY -> CommonColors.YELLOW;
                                 case TOWN_OR_PLACE -> CommonColors.WHITE;
@@ -350,7 +349,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(
-                            switch (layer) {
+                            switch (placeType) {
                                 case PROVINCE -> PROVINCE_VISIBILITY;
                                 case CITY -> CITY_VISIBILITY;
                                 case TOWN_OR_PLACE -> PLACE_VISIBILITY;

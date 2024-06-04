@@ -163,6 +163,7 @@ public enum Texture implements AbstractTexture {
     ITEM_IDENTIFIER("icons/map/item_identifier.png", 18, 17),
     JEWELING_STATION("icons/map/jeweling_station.png", 17, 16),
     LIQUID_MERCHANT("icons/map/liquid_merchant.png", 15, 17),
+    LOOTRUN_CAMP("icons/map/lootrun_camp.png", 18, 16),
     MINING("icons/map/mining.png", 18, 14),
     PARTY_FINDER("icons/map/party_finder.png", 18, 18),
     POINTER("icons/map/pointer.png", 10, 8),

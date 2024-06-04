@@ -11,6 +11,7 @@ public enum CombatKind {
     BOSS_ALTARS("Boss Altars", Texture.BOSS_ALTAR, "boss-altar"),
     CAVES("Caves", Texture.CAVE, "cave"),
     DUNGEONS("Dungeons", Texture.DUNGEON_ENTRANCE, "dungeon"),
+    LOOTRUN_CAMPS("Lootrun Camps", Texture.LOOTRUN_CAMP, "lootrun-camp"),
     GRIND_SPOTS("Grind Spots", Texture.GRIND_SPOT, "grind-spot"),
     RAIDS("Raids", Texture.RAID_ENTRANCE, "raid"),
     RUNE_SHRINES("Rune Shrines", Texture.SHRINE, "shrine");
