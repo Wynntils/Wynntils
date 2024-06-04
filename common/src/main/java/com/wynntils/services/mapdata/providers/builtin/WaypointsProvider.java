@@ -39,7 +39,7 @@ public class WaypointsProvider extends BuiltInProvider {
     public static final class WaypointLocation extends JsonMapLocation {
         public WaypointLocation(Location location, String label, String subcategory, JsonMapAttributes attributes) {
             super(
-                    "waypoint" + "-" + label.toLowerCase(Locale.ROOT).replaceAll("\\s", "_") + "-"
+                    "waypoint" + "-" + label.toLowerCase(Locale.ROOT).replaceAll("\\s", "-") + "-"
                             + location.hashCode(),
                     "wynntils:personal:waypoint" + (subcategory.isEmpty() ? "" : ":" + subcategory),
                     attributes,
