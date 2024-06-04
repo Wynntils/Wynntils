@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.athena.WynntilsAccountManager;
 import com.wynntils.core.consumers.commands.ClientCommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
@@ -45,5 +44,4 @@ public final class Managers {
 
     // Managers with constructor dependencies, ordered alphabetically as far as possible
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
-    public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
 }

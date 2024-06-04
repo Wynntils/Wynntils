@@ -4,7 +4,8 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.athena.UpdateService;
+import com.wynntils.services.athena.UpdateService;
+import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.destination.DestinationService;
@@ -46,4 +47,5 @@ public final class Services {
     public static final StopwatchService Stopwatch = new StopwatchService();
     public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
+    public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -7,7 +7,6 @@ package com.wynntils.commands;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.athena.UpdateService;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -17,6 +16,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
+import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.BufferedReader;
@@ -159,7 +159,7 @@ public class WynntilsCommand extends Command {
                         false);
 
         Services.Hades.tryDisconnect();
-        Managers.WynntilsAccount.reauth();
+        Services.WynntilsAccount.reauth();
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
@@ -309,7 +309,7 @@ public class WynntilsCommand extends Command {
     }
 
     private int token(CommandContext<CommandSourceStack> context) {
-        if (!Managers.WynntilsAccount.isLoggedIn()) {
+        if (!Services.WynntilsAccount.isLoggedIn()) {
             MutableComponent failed = Component.literal(
                             "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                     .withStyle(ChatFormatting.GREEN);
@@ -321,7 +321,7 @@ public class WynntilsCommand extends Command {
             return 1;
         }
 
-        String token = Managers.WynntilsAccount.getToken();
+        String token = Services.WynntilsAccount.getToken();
 
         MutableComponent text = Component.literal("Wynntils Token ").withStyle(ChatFormatting.AQUA);
         MutableComponent response = Component.literal(token)

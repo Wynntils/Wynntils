@@ -5,10 +5,10 @@
 package com.wynntils.services.hades;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.athena.event.AthenaLoginEvent;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
@@ -24,6 +24,7 @@ import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.services.map.pois.PlayerMainMapPoi;
@@ -154,7 +155,7 @@ public final class HadesService extends Service {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.NOT_CONNECTED && !isConnected()) {
-            if (Managers.WynntilsAccount.isLoggedIn()) {
+            if (Services.WynntilsAccount.isLoggedIn()) {
                 tryCreateConnection();
             }
         }
@@ -182,7 +183,7 @@ public final class HadesService extends Service {
     @SubscribeEvent
     public void onAthenaLogin(AthenaLoginEvent event) {
         if (Models.WorldState.getCurrentState() != WorldState.NOT_CONNECTED && !isConnected()) {
-            if (Managers.WynntilsAccount.isLoggedIn()) {
+            if (Services.WynntilsAccount.isLoggedIn()) {
                 login();
             }
         }

@@ -1,18 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.athena;
+package com.wynntils.services.athena;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.athena.event.AthenaLoginEvent;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
@@ -30,7 +29,7 @@ import net.minecraft.util.Crypt;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
 
-public final class WynntilsAccountManager extends Manager {
+public final class WynntilsAccountService extends Service {
     private static final String NO_TOKEN = "<no token>";
 
     private String token = NO_TOKEN;
@@ -39,7 +38,7 @@ public final class WynntilsAccountManager extends Manager {
     private final HashMap<String, String> encodedConfigs = new HashMap<>();
     private final HashMap<String, String> md5Verifications = new HashMap<>();
 
-    public WynntilsAccountManager(NetManager net) {
+    public WynntilsAccountService() {
         super(List.of());
 
         login();

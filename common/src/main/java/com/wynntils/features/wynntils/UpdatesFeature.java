@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.athena.UpdateService;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -14,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;

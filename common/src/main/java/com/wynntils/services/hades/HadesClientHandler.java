@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
@@ -38,7 +39,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void onConnect() {
-        if (!Managers.WynntilsAccount.isLoggedIn()) {
+        if (!Services.WynntilsAccount.isLoggedIn()) {
             hadesConnection.disconnect();
 
             if (Managers.Connection.onServer()) {
@@ -48,7 +49,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
         }
 
-        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Managers.WynntilsAccount.getToken()));
+        hadesConnection.sendPacketAndFlush(new HCPacketAuthenticate(Services.WynntilsAccount.getToken()));
     }
 
     @Override
