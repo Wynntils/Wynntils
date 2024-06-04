@@ -9,16 +9,22 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
+import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
+import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
+import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
+import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
@@ -27,7 +33,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.GuiGraphics;
@@ -575,26 +580,45 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
     }
 
     private void savePoi() {
-        CustomPoi poi = new CustomPoi(
-                new PoiLocation(
-                        Integer.parseInt(xInput.getTextBoxInput()),
-                        yInput.getTextBoxInput().isEmpty() ? null : Integer.parseInt(yInput.getTextBoxInput()),
-                        Integer.parseInt(zInput.getTextBoxInput())),
-                nameInput.getTextBoxInput(),
-                CustomColor.fromHexString(colorInput.getTextBoxInput()),
-                Services.Poi.POI_ICONS.get(selectedIconIndex),
-                selectedVisiblity);
+        Location location = new Location(
+                Integer.parseInt(xInput.getTextBoxInput()),
+                yInput.getTextBoxInput().isEmpty() ? 0 : Integer.parseInt(yInput.getTextBoxInput()),
+                Integer.parseInt(zInput.getTextBoxInput()));
+        String subcategory = ""; // TODO: Add subcategory input
 
-        HiddenConfig<List<CustomPoi>> customPoiConfig =
-                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        List<CustomPoi> customPois = customPoiConfig.get();
+        String label = nameInput.getTextBoxInput();
+        String iconId = MapIconsProvider.getIconIdFromTexture(Services.Poi.POI_ICONS.get(
+                selectedIconIndex)); // TODO: Get icon list from MapIconsProvider, not PoiService
+        int priority = 0; // TODO: Add priority input
+        CustomColor labelColor = CustomColor.fromHexString(
+                colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
+        TextShadow labelShadow = TextShadow.NORMAL; // TODO: Add shadow input
+        JsonMapVisibility labelVisibility =
+                new JsonMapVisibility(FixedMapVisibility.LABEL_ALWAYS); // TODO: Add visibility input
+        CustomColor iconColor = CustomColor.fromHexString(
+                colorInput.getTextBoxInput()); // TODO: Color input should be separated for label and icon
+        JsonMapVisibility iconVisibility =
+                new JsonMapVisibility(FixedMapVisibility.ICON_ALWAYS); // TODO: Add visibility input
+
+        JsonMapAttributes attributes = new JsonMapAttributesBuilder()
+                .setLabel(label)
+                .setIcon(iconId)
+                .setPriority(priority)
+                .setLabelColor(labelColor)
+                .setLabelShadow(labelShadow)
+                .setLabelVisibility(labelVisibility)
+                .setIconColor(iconColor)
+                .setIconVisibility(iconVisibility)
+                .build();
+
+        WaypointsProvider.WaypointLocation waypoint =
+                new WaypointsProvider.WaypointLocation(location, label, subcategory, attributes);
+
         if (oldPoi != null) {
-            customPois.set(customPois.indexOf(oldPoi), poi);
-        } else {
-            customPois.add(poi);
+            // FIXME: Remove the old waypoint (TODO: Port oldPoi to WaypointLocation)
+            // Services.UserWaypoint.removeUserWaypoint(oldPoi);
         }
 
-        customPoiConfig.touched();
-        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
+        Services.Waypoints.addWaypoint(waypoint);
     }
 }

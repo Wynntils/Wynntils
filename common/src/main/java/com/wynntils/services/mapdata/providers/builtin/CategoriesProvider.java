@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.models.containers.type.LootChestType;
+import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
@@ -35,7 +35,7 @@ public class CategoriesProvider extends BuiltInProvider {
         for (Label.LabelLayer layer : Label.LabelLayer.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
-        for (int tier = 1; tier <= LootChestType.values().length; tier++) {
+        for (int tier = 1; tier <= LootChestTier.values().length; tier++) {
             PROVIDED_CATEGORIES.add(new FoundChestCategory(tier));
         }
         PROVIDED_CATEGORIES.add(new WaypointCategory());
@@ -142,7 +142,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<String> getLabel() {
-                    return Optional.of("Loot Chest Tier " + MathUtils.toRoman(tier));
+                    return Optional.of("Loot Chest " + MathUtils.toRoman(tier));
                 }
 
                 @Override
