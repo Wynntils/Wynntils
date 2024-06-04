@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
@@ -40,7 +41,7 @@ public class ChangelogFeature extends Feature {
         if (!event.isFirstJoinWorld()) return;
         if (WynntilsMod.getVersion().equals(lastShownVersion.get())) return;
 
-        ApiResponse response = Managers.Net.callApi(
+        ApiResponse response = Services.WynntilsAccount.callApi(
                 UrlId.API_ATHENA_UPDATE_CHANGELOG,
                 Map.of("old_version", lastShownVersion.get(), "new_version", WynntilsMod.getVersion()));
 
