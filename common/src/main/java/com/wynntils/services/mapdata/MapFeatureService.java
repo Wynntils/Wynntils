@@ -10,7 +10,6 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.services.mapdata.features.CombatLocation;
 import com.wynntils.services.mapdata.features.PlaceLocation;
 import com.wynntils.services.mapdata.features.ServiceLocation;
@@ -29,7 +28,7 @@ public class MapFeatureService extends Service {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPDATA_PLACES);
         dl.handleReader(reader -> {
             TypeToken<List<PlaceLocation>> type = new TypeToken<>() {};
-            List<PlaceLocation> places = PoiService.GSON.fromJson(reader, type.getType());
+            List<PlaceLocation> places = Managers.Json.GSON.fromJson(reader, type.getType());
             Services.MapData.PLACE_LIST_PROVIDER.updatePlaces(places);
         });
     }
@@ -38,7 +37,7 @@ public class MapFeatureService extends Service {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPDATA_SERVICES);
         dl.handleReader(reader -> {
             TypeToken<List<ServiceLocation>> type = new TypeToken<>() {};
-            List<ServiceLocation> services = PoiService.GSON.fromJson(reader, type.getType());
+            List<ServiceLocation> services = Managers.Json.GSON.fromJson(reader, type.getType());
             Services.MapData.SERVICE_LIST_PROVIDER.updateServices(services);
         });
     }
@@ -47,7 +46,7 @@ public class MapFeatureService extends Service {
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPDATA_COMBAT_LOCATIONS);
         dl.handleReader(reader -> {
             TypeToken<List<CombatLocation>> type = new TypeToken<>() {};
-            List<CombatLocation> combatLocations = PoiService.GSON.fromJson(reader, type.getType());
+            List<CombatLocation> combatLocations = Managers.Json.GSON.fromJson(reader, type.getType());
             Services.MapData.COMBAT_LIST_PROVIDER.updateCombats(combatLocations);
         });
     }
