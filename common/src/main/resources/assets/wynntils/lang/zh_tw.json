@@ -357,7 +357,6 @@
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "下地圖邊界顯示樣式",
   "feature.wynntils.minimap.overlay.minimap.description": "顯示您的環境的小地圖",
   "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.description": "要是否小地圖要跟隨您的反向旋轉嗎而不全次向北？",
-  "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.name": "跟隨您的反向",
   "feature.wynntils.minimap.overlay.minimap.maskType.description": "小地圖要是圓形 (Circle) 或長方形 (Rectangle) 的形狀？",
   "feature.wynntils.minimap.overlay.minimap.maskType.name": "小地圖形狀",
   "feature.wynntils.minimap.overlay.minimap.name": "小地圖疊加層",
