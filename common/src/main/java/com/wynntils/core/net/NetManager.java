@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -40,9 +40,13 @@ public final class NetManager extends Manager {
         super(List.of());
     }
 
-    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
+    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments, Map<String, String> headers) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
-        return createApiResponse(urlId, urlInfo, arguments);
+        return createApiResponse(urlId, urlInfo, arguments, headers);
+    }
+
+    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
+        return callApi(urlId, arguments, Map.of());
     }
 
     public ApiResponse callApi(UrlId urlId) {
@@ -73,7 +77,7 @@ public final class NetManager extends Manager {
     }
 
     private Download download(URI uri, File localFile, NetResultProcessedEvent processedEvent) {
-        return new Download(localFile.getName(), localFile, createGetRequest(uri), processedEvent);
+        return new Download(localFile.getName(), localFile, createGetRequest(uri, Map.of()), processedEvent);
     }
 
     private Download download(URI uri, File localFile, String expectedHash, NetResultProcessedEvent processedEvent) {
@@ -106,28 +110,35 @@ public final class NetManager extends Manager {
         openLink(uri);
     }
 
-    private HttpRequest createGetRequest(URI uri) {
-        return HttpRequest.newBuilder()
+    private HttpRequest createGetRequest(URI uri, Map<String, String> headers) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
-                .header("User-Agent", USER_AGENT)
-                .build();
+                .header("User-Agent", USER_AGENT);
+
+        headers.forEach(builder::header);
+
+        return builder.build();
     }
 
-    private HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
-        return HttpRequest.newBuilder()
+    private HttpRequest createPostRequest(URI uri, Map<String, String> headers, JsonObject jsonArgs) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
                 .header("User-Agent", USER_AGENT)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()))
-                .build();
+                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()));
+
+        headers.forEach(builder::header);
+
+        return builder.build();
     }
 
-    private ApiResponse createApiResponse(UrlId urlId, UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
+    private ApiResponse createApiResponse(
+            UrlId urlId, UrlManager.UrlInfo urlInfo, Map<String, String> arguments, Map<String, String> headers) {
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
-            HttpRequest request = createGetRequest(uri);
+            HttpRequest request = createGetRequest(uri, headers);
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
@@ -139,7 +150,7 @@ public final class NetManager extends Manager {
             arguments.forEach(jsonArgs::addProperty);
 
             URI uri = URI.create(urlInfo.url());
-            HttpRequest request = createPostRequest(uri, jsonArgs);
+            HttpRequest request = createPostRequest(uri, headers, jsonArgs);
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         }
     }
