@@ -584,7 +584,6 @@
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "小地图边框应使用何种风格？",
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "小地图边框风格",
   "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.description": "小地图是否应该锁定转向？若不锁定，小地图的方位显示会跟随玩家的朝向而变动。",
-  "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.name": "跟随玩家转向",
   "feature.wynntils.minimap.overlay.minimap.maskType.description": "小地图应该是矩形的还是圆形的（圆形小地图不再提供支持）？",
   "feature.wynntils.minimap.overlay.minimap.maskType.name": "地图外观风格",
   "feature.wynntils.minimap.overlay.minimap.name": "小地图",
