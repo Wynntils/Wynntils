@@ -4,19 +4,16 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.map.type.ServiceKind;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
+import com.wynntils.services.mapdata.providers.json.JsonMapLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
-import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ServiceListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
-    private static int counter;
 
     @Override
     public String getProviderId() {
@@ -28,44 +25,19 @@ public class ServiceListProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public static void registerFeature(Location location, ServiceKind kind) {
-        PROVIDED_FEATURES.add(new ServiceLocation(location, kind));
+    public void updateServices(List<ServiceLocation> services) {
+        PROVIDED_FEATURES.forEach(this::notifyCallbacks);
+        PROVIDED_FEATURES.clear();
+        services.forEach(ServiceListProvider::registerFeature);
     }
 
-    private static final class ServiceLocation implements MapLocation {
-        private final Location location;
-        private final ServiceKind kind;
-        private final int number;
+    private static void registerFeature(ServiceLocation location) {
+        PROVIDED_FEATURES.add(location);
+    }
 
-        private ServiceLocation(Location location, ServiceKind kind) {
-            this.location = location;
-            this.kind = kind;
-            this.number = ServiceListProvider.counter++;
-        }
-
-        @Override
-        public String getFeatureId() {
-            return kind.getMapDataId() + "-" + number;
-        }
-
-        @Override
-        public String getCategoryId() {
-            return "wynntils:service:" + kind.getMapDataId();
-        }
-
-        @Override
-        public Optional<MapAttributes> getAttributes() {
-            return Optional.empty();
-        }
-
-        @Override
-        public List<String> getTags() {
-            return List.of();
-        }
-
-        @Override
-        public Location getLocation() {
-            return location;
+    public static final class ServiceLocation extends JsonMapLocation {
+        public ServiceLocation(String featureId, String categoryId, JsonMapAttributes attributes, Location location) {
+            super(featureId, categoryId, attributes, location);
         }
     }
 }
