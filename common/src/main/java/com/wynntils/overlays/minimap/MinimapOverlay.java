@@ -154,7 +154,10 @@ public class MinimapOverlay extends Overlay {
         if (followPlayerRotation.get()) {
             poseStack.pushPose();
             RenderUtils.rotatePose(
-                    poseStack, centerX, centerZ, 180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
         }
 
         // avoid rotational overpass - This is a rather loose oversizing, if possible later
@@ -241,7 +244,8 @@ public class MinimapOverlay extends Overlay {
         float cosRotationRadians;
 
         if (followPlayerRotation.get()) {
-            double rotationRadians = Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
+            double rotationRadians =
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
             sinRotationRadians = (float) StrictMath.sin(rotationRadians);
             cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
         } else {
@@ -426,7 +430,8 @@ public class MinimapOverlay extends Overlay {
         float northDY;
 
         if (followPlayerRotation.get()) {
-            float yawRadians = (float) Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
+            float yawRadians = (float)
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
             northDX = (float) StrictMath.sin(yawRadians);
             northDY = (float) StrictMath.cos(yawRadians);
 
