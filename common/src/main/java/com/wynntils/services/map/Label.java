@@ -9,7 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
+import com.wynntils.services.mapdata.features.PlaceLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -44,8 +44,8 @@ public class Label {
     /**
      * The relative importance of this place
      */
-    public PlaceListProvider.PlaceLocation.PlaceType getLayer() {
-        return PlaceListProvider.PlaceLocation.PlaceType.values()[layer - 1];
+    public PlaceLocation.PlaceType getLayer() {
+        return PlaceLocation.PlaceType.values()[layer - 1];
     }
 
     public Optional<Integer> getLevel() {

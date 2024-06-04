@@ -4,11 +4,8 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
-import com.wynntils.services.mapdata.providers.json.JsonMapLocation;
+import com.wynntils.services.mapdata.features.PlaceLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -34,31 +31,5 @@ public class PlaceListProvider extends BuiltInProvider {
 
     private static void registerFeatures(PlaceLocation location) {
         PROVIDED_FEATURES.add(location);
-    }
-
-    public static final class PlaceLocation extends JsonMapLocation {
-        private PlaceLocation(String featureId, String categoryId, JsonMapAttributes attributes, Location location) {
-            super(featureId, categoryId, attributes, location);
-        }
-
-        public enum PlaceType {
-            PROVINCE("province"),
-            CITY("city"),
-            TOWN_OR_PLACE("town-or-place");
-
-            private final String mapDataId;
-
-            PlaceType(String mapDataId) {
-                this.mapDataId = mapDataId;
-            }
-
-            public String getMapDataId() {
-                return mapDataId;
-            }
-
-            public String getName() {
-                return StringUtils.capitalized(mapDataId);
-            }
-        }
     }
 }

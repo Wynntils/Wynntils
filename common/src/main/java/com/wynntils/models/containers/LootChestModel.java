@@ -30,7 +30,7 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
+import com.wynntils.services.mapdata.features.FoundChestLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.RangedValue;
@@ -55,8 +55,7 @@ public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
     @Persisted
-    private final Storage<List<LootChestsProvider.FoundChestLocation>> foundChestLocations =
-            new Storage<>(new ArrayList<>());
+    private final Storage<List<FoundChestLocation>> foundChestLocations = new Storage<>(new ArrayList<>());
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
@@ -159,7 +158,7 @@ public final class LootChestModel extends Model {
 
         if (foundChestLocations.get().stream()
                 .noneMatch(foundLocation -> foundLocation.getLocation().equals(location))) {
-            addFoundChestLocation(new LootChestsProvider.FoundChestLocation(location, chestType));
+            addFoundChestLocation(new FoundChestLocation(location, chestType));
 
             // TODO: Replace this notification with a popup
             Managers.Notification.queueMessage(
@@ -188,17 +187,17 @@ public final class LootChestModel extends Model {
         return LootChestTier.fromTitle(screen);
     }
 
-    public List<LootChestsProvider.FoundChestLocation> getFoundChestLocations() {
+    public List<FoundChestLocation> getFoundChestLocations() {
         return Collections.unmodifiableList(foundChestLocations.get());
     }
 
-    public void addFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
+    public void addFoundChestLocation(FoundChestLocation location) {
         foundChestLocations.get().add(location);
         foundChestLocations.touched();
         Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
     }
 
-    public void removeFoundChestLocation(LootChestsProvider.FoundChestLocation location) {
+    public void removeFoundChestLocation(FoundChestLocation location) {
         foundChestLocations.get().remove(location);
         foundChestLocations.touched();
         Services.MapData.LOOT_CHESTS_PROVIDER.updateFoundChests(foundChestLocations.get());
@@ -315,8 +314,7 @@ public final class LootChestModel extends Model {
             return false;
         }
 
-        LootChestsProvider.FoundChestLocation foundChest =
-                new LootChestsProvider.FoundChestLocation(new Location(customPoi.getLocation()), tier);
+        FoundChestLocation foundChest = new FoundChestLocation(new Location(customPoi.getLocation()), tier);
         Models.LootChest.addFoundChestLocation(foundChest);
 
         return true;

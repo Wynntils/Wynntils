@@ -1,21 +1,21 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.DisplayPriority;
+import com.wynntils.services.mapdata.features.CombatLocation;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 
 public class CombatPoi extends StaticIconPoi {
     private final String name;
-    private final CombatKind kind;
+    private final CombatLocation.CombatKind kind;
 
-    public CombatPoi(PoiLocation location, String name, CombatKind kind) {
+    public CombatPoi(PoiLocation location, String name, CombatLocation.CombatKind kind) {
         super(location);
         this.name = name;
         this.kind = kind;
@@ -28,7 +28,7 @@ public class CombatPoi extends StaticIconPoi {
 
     @Override
     public float getMinZoomForRender() {
-        if (kind == CombatKind.CAVES) {
+        if (kind == CombatLocation.CombatKind.CAVES) {
             return Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .cavePoiMinZoom
                     .get();
@@ -43,7 +43,7 @@ public class CombatPoi extends StaticIconPoi {
         return name;
     }
 
-    public CombatKind getKind() {
+    public CombatLocation.CombatKind getKind() {
         return kind;
     }
 

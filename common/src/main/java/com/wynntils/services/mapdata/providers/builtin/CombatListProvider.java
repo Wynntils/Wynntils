@@ -4,10 +4,8 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
-import com.wynntils.services.mapdata.providers.json.JsonMapLocation;
+import com.wynntils.services.mapdata.features.CombatLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
-import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,11 +31,5 @@ public class CombatListProvider extends BuiltInProvider {
 
     private static void registerFeature(CombatLocation location) {
         PROVIDED_FEATURES.add(location);
-    }
-
-    public static final class CombatLocation extends JsonMapLocation {
-        public CombatLocation(String featureId, String categoryId, JsonMapAttributes attributes, Location location) {
-            super(featureId, categoryId, attributes, location);
-        }
     }
 }

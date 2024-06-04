@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -7,14 +7,14 @@ package com.wynntils.services.map.pois;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.type.DisplayPriority;
-import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.mapdata.features.ServiceLocation;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 
 public class ServicePoi extends StaticIconPoi {
-    private final ServiceKind kind;
+    private final ServiceLocation.ServiceKind kind;
 
-    public ServicePoi(PoiLocation location, ServiceKind kind) {
+    public ServicePoi(PoiLocation location, ServiceLocation.ServiceKind kind) {
         super(location);
         this.kind = kind;
     }
@@ -26,7 +26,7 @@ public class ServicePoi extends StaticIconPoi {
 
     @Override
     public float getMinZoomForRender() {
-        if (kind == ServiceKind.FAST_TRAVEL) {
+        if (kind == ServiceLocation.ServiceKind.FAST_TRAVEL) {
             return Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .fastTravelPoiMinZoom
                     .get();
@@ -42,7 +42,7 @@ public class ServicePoi extends StaticIconPoi {
         return kind.getName();
     }
 
-    public ServiceKind getKind() {
+    public ServiceLocation.ServiceKind getKind() {
         return kind;
     }
 

@@ -5,13 +5,14 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.models.containers.type.LootChestTier;
-import com.wynntils.services.map.type.CombatKind;
-import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.features.CombatLocation;
+import com.wynntils.services.mapdata.features.PlaceLocation;
+import com.wynntils.services.mapdata.features.ServiceLocation;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -25,13 +26,13 @@ public class CategoriesProvider extends BuiltInProvider {
     private static final List<MapCategory> PROVIDED_CATEGORIES = new ArrayList<>();
 
     public CategoriesProvider() {
-        for (ServiceKind kind : ServiceKind.values()) {
+        for (ServiceLocation.ServiceKind kind : ServiceLocation.ServiceKind.values()) {
             PROVIDED_CATEGORIES.add(new ServiceCategory(kind));
         }
-        for (CombatKind kind : CombatKind.values()) {
+        for (CombatLocation.CombatKind kind : CombatLocation.CombatKind.values()) {
             PROVIDED_CATEGORIES.add(new CombatCategory(kind));
         }
-        for (PlaceListProvider.PlaceLocation.PlaceType layer : PlaceListProvider.PlaceLocation.PlaceType.values()) {
+        for (PlaceLocation.PlaceType layer : PlaceLocation.PlaceType.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
         for (int tier = 1; tier <= LootChestTier.values().length; tier++) {
@@ -181,9 +182,9 @@ public class CategoriesProvider extends BuiltInProvider {
         private static final MapVisibility OTHER_VISIBILITY =
                 MapVisibility.builder().withMin(57f);
 
-        private final ServiceKind kind;
+        private final ServiceLocation.ServiceKind kind;
 
-        private ServiceCategory(ServiceKind kind) {
+        private ServiceCategory(ServiceLocation.ServiceKind kind) {
             this.kind = kind;
         }
 
@@ -222,7 +223,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getIconVisibility() {
-                    if (kind == ServiceKind.FAST_TRAVEL) {
+                    if (kind == ServiceLocation.ServiceKind.FAST_TRAVEL) {
                         return Optional.of(FAST_TRAVEL_VISIBILITY);
                     } else {
                         return Optional.of(OTHER_VISIBILITY);
@@ -243,9 +244,9 @@ public class CategoriesProvider extends BuiltInProvider {
         private static final MapVisibility OTHER_VISIBILITY =
                 MapVisibility.builder().withMin(19f);
 
-        private final CombatKind kind;
+        private final CombatLocation.CombatKind kind;
 
-        private CombatCategory(CombatKind kind) {
+        private CombatCategory(CombatLocation.CombatKind kind) {
             this.kind = kind;
         }
 
@@ -284,7 +285,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapVisibility> getIconVisibility() {
-                    if (kind == CombatKind.CAVES) {
+                    if (kind == CombatLocation.CombatKind.CAVES) {
                         return Optional.of(CAVES_VISIBILITY);
                     } else {
                         return Optional.of(OTHER_VISIBILITY);
@@ -307,9 +308,9 @@ public class CategoriesProvider extends BuiltInProvider {
         private static final MapVisibility PLACE_VISIBILITY =
                 MapVisibility.builder().withMin(32f).withMax(86f);
 
-        private final PlaceListProvider.PlaceLocation.PlaceType placeType;
+        private final PlaceLocation.PlaceType placeType;
 
-        private PlaceCategory(PlaceListProvider.PlaceLocation.PlaceType placeType) {
+        private PlaceCategory(PlaceLocation.PlaceType placeType) {
             this.placeType = placeType;
         }
 
