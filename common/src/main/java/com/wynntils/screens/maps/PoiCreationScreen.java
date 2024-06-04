@@ -15,19 +15,23 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
+import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonIcon;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
+import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -524,27 +528,21 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
-        if (parsedXInput != null && parsedZInput != null) {
-            // TODO: Reimplement preview
-            //            Poi poi = new CustomPoi(
-            //                    new PoiLocation(parsedXInput, null, parsedZInput),
-            //                    labelInput.getTextBoxInput(),
-            //                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE
-            //                            ? CommonColors.WHITE
-            //                            : CustomColor.fromHexString(colorInput.getTextBoxInput()),
-            //                    Services.Poi.POI_ICONS.get(selectedIconIndex),
-            //                    selectedVisiblity);
+        if (waypoint != null) {
+            ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(waypoint);
 
-            //            poi.renderAt(
-            //                    poseStack,
-            //                    guiGraphics.bufferSource(),
-            //                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
-            //                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-            //                    hovered == poi,
-            //                    1,
-            //                    zoomRenderScale,
-            //                    zoomLevel,
-            //                    true);
+            MapFeatureRenderer.renderMapFeature(
+                    poseStack,
+                    guiGraphics.bufferSource(),
+                    waypoint,
+                    attributes,
+                    MapRenderer.getRenderX(waypoint.getLocation().x, mapCenterX, centerX, zoomRenderScale),
+                    MapRenderer.getRenderZ(waypoint.getLocation().z, mapCenterZ, centerZ, zoomRenderScale),
+                    false,
+                    1,
+                    zoomRenderScale,
+                    true
+            );
         }
 
         renderCursor(
@@ -960,7 +958,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
         String label = labelInput.getTextBoxInput();
         String iconId = MapIconsProvider.getIconIdFromTexture(Services.Poi.POI_ICONS.get(
-                selectedIconIndex)); // TODO: Get icon list from MapIconsProvider, not PoiService and support custom icon
+                selectedIconIndex)); // TODO: Get icon list from MapIconsProvider, not PoiService and support custom
+        // and no icon
         JsonMapVisibility labelVisibility = new JsonMapVisibility(
                 (float) labelMinVisibilitySlider.getVisibility(),
                 (float) labelMaxVisibilitySlider.getVisibility(),
