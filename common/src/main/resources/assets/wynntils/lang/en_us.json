@@ -917,7 +917,7 @@
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "Minimap Border Type",
   "feature.wynntils.minimap.overlay.minimap.description": "Minimap that displays region surrounding player",
   "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.description": "Should the minimap be locked facing north or rotate based on the direction you're facing?",
-  "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.name": "Follow Player Rotation",
+  "feature.wynntils.minimap.overlay.minimap.followPlayerRotation.name": "Follow Camera Rotation",
   "feature.wynntils.minimap.overlay.minimap.hideWhenUnmapped.description": "What should be hidden in unmapped areas, minimap & coordinates or just minimap?",
   "feature.wynntils.minimap.overlay.minimap.hideWhenUnmapped.name": "Hide in Unmapped Areas",
   "feature.wynntils.minimap.overlay.minimap.maskType.description": "Should the minimap be a rectangle or a circle? (Circle is unsupported as of now)?",
