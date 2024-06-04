@@ -70,6 +70,10 @@ public enum UrlId {
         return id;
     }
 
+    public boolean isAthenaUrl() {
+        return this.id.startsWith("apiAthena") || this.id.startsWith("dataAthena");
+    }
+
     public static Optional<UrlId> from(String str) {
         for (UrlId urlId : values()) {
             if (urlId.getId().equals(str)) {

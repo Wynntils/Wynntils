@@ -1,8 +1,8 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.athena;
+package com.wynntils.core.athena;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;

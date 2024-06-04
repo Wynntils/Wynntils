@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -73,7 +73,7 @@ public final class NetManager extends Manager {
     }
 
     private Download download(URI uri, File localFile, NetResultProcessedEvent processedEvent) {
-        return new Download(localFile.getName(), localFile, createGetRequest(uri), processedEvent);
+        return new Download(localFile.getName(), localFile, createGetRequest(uri, false), processedEvent);
     }
 
     private Download download(URI uri, File localFile, String expectedHash, NetResultProcessedEvent processedEvent) {
@@ -106,28 +106,40 @@ public final class NetManager extends Manager {
         openLink(uri);
     }
 
-    private HttpRequest createGetRequest(URI uri) {
-        return HttpRequest.newBuilder()
+    private HttpRequest createGetRequest(URI uri, boolean athenaUrl) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
-                .header("User-Agent", USER_AGENT)
-                .build();
+                .header("User-Agent", USER_AGENT);
+
+        // If we are just bootstrapping, we don't have a token (or WynntilsAccountManager) yet
+        if (Managers.WynntilsAccount != null && athenaUrl) {
+            builder.header("authToken", Managers.WynntilsAccount.getToken());
+        }
+
+        return builder.build();
     }
 
-    private HttpRequest createPostRequest(URI uri, JsonObject jsonArgs) {
-        return HttpRequest.newBuilder()
+    private HttpRequest createPostRequest(URI uri, boolean athenaUrl, JsonObject jsonArgs) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(uri)
                 .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
                 .header("User-Agent", USER_AGENT)
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()))
-                .build();
+                .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()));
+
+        // If we are just bootstrapping, we don't have a token (or WynntilsAccountManager) yet
+        if (Managers.WynntilsAccount != null && athenaUrl) {
+            builder.header("authToken", Managers.WynntilsAccount.getToken());
+        }
+
+        return builder.build();
     }
 
     private ApiResponse createApiResponse(UrlId urlId, UrlManager.UrlInfo urlInfo, Map<String, String> arguments) {
         if (urlInfo.method() == UrlManager.Method.GET) {
             URI uri = URI.create(Managers.Url.buildUrl(urlInfo, arguments));
-            HttpRequest request = createGetRequest(uri);
+            HttpRequest request = createGetRequest(uri, urlId.isAthenaUrl());
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         } else {
             assert (urlInfo.method() == UrlManager.Method.POST);
@@ -139,7 +151,7 @@ public final class NetManager extends Manager {
             arguments.forEach(jsonArgs::addProperty);
 
             URI uri = URI.create(urlInfo.url());
-            HttpRequest request = createPostRequest(uri, jsonArgs);
+            HttpRequest request = createPostRequest(uri, urlId.isAthenaUrl(), jsonArgs);
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         }
     }
