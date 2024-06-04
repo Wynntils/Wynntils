@@ -615,7 +615,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.base64") + ":"),
+                            StyledText.fromString("base64:"),
                             dividedWidth * 12,
                             dividedHeight * 10.5f,
                             CommonColors.WHITE,
