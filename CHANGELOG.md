@@ -1,3 +1,26 @@
+## [1.2.20](https://github.com/Wynntils/Artemis/compare/v1.2.19...v1.2.20) (2024-06-05)
+
+
+### New Features
+
+* Add click-to-message usernames in onlinemembers [skip ci] ([#2551](https://github.com/Wynntils/Artemis/issues/2551)) ([038ba2d](https://github.com/Wynntils/Artemis/commit/038ba2d2842583502a5168da1a965983f574c4c0))
+* Add guild diplomacy tracking ([#2528](https://github.com/Wynntils/Artemis/issues/2528)) ([3bf68eb](https://github.com/Wynntils/Artemis/commit/3bf68ebc40486367d2f42f10c473b36640054a8d))
+* Block accidental pouch clicks when a reward chest is open [skip ci] ([#2563](https://github.com/Wynntils/Artemis/issues/2563)) ([7d095f0](https://github.com/Wynntils/Artemis/commit/7d095f085d694c183980da05fd7d2f4b27a8de7e))
+
+
+### Bug Fixes
+
+* Horse keybind spams during wars [skip ci] ([#2561](https://github.com/Wynntils/Artemis/issues/2561)) ([48e6478](https://github.com/Wynntils/Artemis/commit/48e6478d013e58bd7fb70aac285a2b6ab1b356ed))
+* Include authToken in Athena requests [skip ci] ([#2555](https://github.com/Wynntils/Artemis/issues/2555)) ([a969af7](https://github.com/Wynntils/Artemis/commit/a969af7b1edd402f0cbef17519275b2681b36ac3))
+* Make Minimap pointer follow player rotation [skip ci] ([#2556](https://github.com/Wynntils/Artemis/issues/2556)) ([60d4e10](https://github.com/Wynntils/Artemis/commit/60d4e10a7f92d374ffa9b2b115ebbdd68ca96f4d))
+* Rotate minimap based on camera rotation instead of player rotation [skip ci] ([#2554](https://github.com/Wynntils/Artemis/issues/2554)) ([4c7f51e](https://github.com/Wynntils/Artemis/commit/4c7f51ee8c0b2acbeb57dbe716dd0301295b6256))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2552](https://github.com/Wynntils/Artemis/issues/2552)) ([99906d2](https://github.com/Wynntils/Artemis/commit/99906d2464ab487615a1183c417e4544db750a47))
+* [auto-generated] Update urls.json [ci skip] ([#2557](https://github.com/Wynntils/Artemis/issues/2557)) ([07e9c90](https://github.com/Wynntils/Artemis/commit/07e9c90f014131e227d2190b351090997c3b1952))
+
 ## [1.2.19](https://github.com/Wynntils/Artemis/compare/v1.2.18...v1.2.19) (2024-05-31)
 
 
@@ -9,6 +32,7 @@
 ### Miscellaneous Chores
 
 * Once again, use old POI system instead of MapData ([#2545](https://github.com/Wynntils/Artemis/issues/2545)) ([d1eb0ad](https://github.com/Wynntils/Artemis/commit/d1eb0ad0dad4446f67edaaf53375a7f759236eac))
+* **release:** v1.2.19 [skip ci] ([d4e62c2](https://github.com/Wynntils/Artemis/commit/d4e62c2d88e3690477105f3ef86b7dca68d9f2fb))
 
 ## [1.2.18](https://github.com/Wynntils/Artemis/compare/v1.2.17...v1.2.18) (2024-05-30)
 
@@ -53,29 +77,4 @@
 ### Code Refactoring
 
 * Better handling of MapData attributes [skip ci] ([#2494](https://github.com/Wynntils/Artemis/issues/2494)) ([9cb5ae9](https://github.com/Wynntils/Artemis/commit/9cb5ae970a00b3eebbaed6cb9c7303ef51506a4d))
-
-## [1.2.15](https://github.com/Wynntils/Artemis/compare/v1.2.14...v1.2.15) (2024-05-27)
-
-
-### New Features
-
-* Add guild objective functions [skip ci] ([#2526](https://github.com/Wynntils/Artemis/issues/2526)) ([333933a](https://github.com/Wynntils/Artemis/commit/333933a5135b96035b7afffc46fa215b6f2fafbd))
-* Overlay Management visual enhancements [skip ci] ([#2531](https://github.com/Wynntils/Artemis/issues/2531)) ([02f61ef](https://github.com/Wynntils/Artemis/commit/02f61ef82d15a2b2733885a8626916a4e6620448))
-
-
-### Bug Fixes
-
-* Fix charms being counted as defective, if they had no identifications [skip ci] ([#2530](https://github.com/Wynntils/Artemis/issues/2530)) ([153ff14](https://github.com/Wynntils/Artemis/commit/153ff1438cd63f5a7eb064e7cd278cbcd6e8a170))
-* Fix CustomPlayerListOverlay below the boss bars [skip ci] ([#2527](https://github.com/Wynntils/Artemis/issues/2527)) ([268f48e](https://github.com/Wynntils/Artemis/commit/268f48e3565acdc0df0b34ec8db2dec32a060a8b))
-* Fix tomes being counted as defective, if they had no identifications [skip ci] ([#2529](https://github.com/Wynntils/Artemis/issues/2529)) ([473a5da](https://github.com/Wynntils/Artemis/commit/473a5daf601e7011eddfbc6d00c3e005148cb385))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.15 [skip ci] ([1b41e33](https://github.com/Wynntils/Artemis/commit/1b41e33c2093f08a100a0c77357df3f8c3378c87))
-
-
-### Code Refactoring
-
-* Make label levels Optional<Integer> in preparation for MapData ([#2532](https://github.com/Wynntils/Artemis/issues/2532)) ([1ff8e1b](https://github.com/Wynntils/Artemis/commit/1ff8e1bb2335ea42d7c1b343a3b55df8f2daf1fe))
 
