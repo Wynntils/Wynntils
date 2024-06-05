@@ -50,11 +50,12 @@ public final class CharacterModel extends Model {
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
     // Test in CharacterModel_SILVERBULL_DURATION_PATTERN
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
-            "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
+            "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     // Test in CharacterModel_VETERAN_PATTERN
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
     private static final Pattern SILVERBULL_JOIN_PATTERN =
             Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
+    private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
@@ -178,7 +179,13 @@ public final class CharacterModel extends Model {
             return;
         }
 
-        if (message.matches(SILVERBULL_JOIN_PATTERN)) {
+        StyledText trimmedMessage = message.trim();
+        if (trimmedMessage.matches(SILVERBULL_JOIN_PATTERN)) {
+            silverbullSubscriber.store(ConfirmedBoolean.TRUE);
+            return;
+        }
+
+        if (trimmedMessage.matches(SILVERBULL_UPDATE_PATTERN)) {
             silverbullSubscriber.store(ConfirmedBoolean.TRUE);
             return;
         }
@@ -274,9 +281,14 @@ public final class CharacterModel extends Model {
         int weeks = expiry.group("weeks") == null ? 0 : Integer.parseInt(expiry.group("weeks"));
         int days = expiry.group("days") == null ? 0 : Integer.parseInt(expiry.group("days"));
         int hours = expiry.group("hours") == null ? 0 : Integer.parseInt(expiry.group("hours"));
+        int minutes = expiry.group("minutes") == null ? 0 : Integer.parseInt(expiry.group("minutes"));
+        int seconds = expiry.group("seconds") == null ? 0 : Integer.parseInt(expiry.group("seconds"));
 
-        long expiryTime =
-                System.currentTimeMillis() + TimeUnit.DAYS.toMillis(weeks * 7L + days) + TimeUnit.HOURS.toMillis(hours);
+        long expiryTime = System.currentTimeMillis()
+                + TimeUnit.DAYS.toMillis(weeks * 7L + days)
+                + TimeUnit.HOURS.toMillis(hours)
+                + TimeUnit.MINUTES.toMillis(minutes)
+                + TimeUnit.SECONDS.toMillis(seconds);
         silverbullExpiresAt.store(expiryTime);
 
         WynntilsMod.info(
