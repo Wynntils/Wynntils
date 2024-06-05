@@ -76,12 +76,6 @@ public class MinimapOverlay extends Overlay {
     public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
-
-    @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.8f);
 
     public MinimapOverlay() {
@@ -259,10 +253,6 @@ public class MinimapOverlay extends Overlay {
         // Append the pois that are still not converted to MapData
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
-        //        poisToRender = Stream.concat(
-        //                poisToRender,
-        //                Services.Hades.getPlayerPois(renderRemotePartyPlayers.get(),
-        // renderRemoteFriendPlayers.get()));
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
