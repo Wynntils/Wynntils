@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesEvent;
@@ -178,18 +179,43 @@ public class CharacterProvider extends BuiltInProvider {
             }
 
             @Override
-            public void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel) {
-                float playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE;
+            public void render(
+                    PoseStack poseStack,
+                    MultiBufferSource bufferSource,
+                    boolean hovered,
+                    boolean fullscreenMap,
+                    float zoomLevel) {
+                float playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE
+                        * (fullscreenMap
+                                ? 1
+                                : Managers.Feature.getFeatureInstance(MinimapFeature.class)
+                                        .minimapOverlay
+                                        .remotePlayersHeadScale
+                                        .get());
 
                 poseStack.pushPose();
-                poseStack.translate(
-                        -playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
+                // center the player icon
+                poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0);
 
                 final float renderX = 0;
-                final float renderY = -25;
+                final float renderY = fullscreenMap ? -25 : 0;
 
                 HadesUser user = HadesPlayerLocation.this.hadesUser;
                 ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
+
+                if (!fullscreenMap) {
+                    // outline
+                    BufferedRenderUtils.drawRectBorders(
+                            poseStack,
+                            bufferSource,
+                            user.getRelationColor(),
+                            renderX,
+                            renderY,
+                            renderX + playerHeadRenderSize,
+                            renderY + playerHeadRenderSize,
+                            0,
+                            2);
+                }
 
                 // head
                 BufferedRenderUtils.drawTexturedRect(
@@ -226,22 +252,24 @@ public class CharacterProvider extends BuiltInProvider {
                         64);
 
                 // health
-                HealthTexture healthTexture = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .remotePlayerHealthTexture
-                        .get();
-                BufferedRenderUtils.drawProgressBar(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR,
-                        renderX - 10,
-                        renderY + playerHeadRenderSize + 1,
-                        renderX + playerHeadRenderSize + 10,
-                        renderY + playerHeadRenderSize + 7,
-                        0,
-                        healthTexture.getTextureY1(),
-                        81,
-                        healthTexture.getTextureY2(),
-                        (float) user.getHealth().getProgress());
+                if (fullscreenMap) {
+                    HealthTexture healthTexture = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                            .remotePlayerHealthTexture
+                            .get();
+                    BufferedRenderUtils.drawProgressBar(
+                            poseStack,
+                            bufferSource,
+                            Texture.HEALTH_BAR,
+                            renderX - 10,
+                            renderY + playerHeadRenderSize + 1,
+                            renderX + playerHeadRenderSize + 10,
+                            renderY + playerHeadRenderSize + 7,
+                            0,
+                            healthTexture.getTextureY1(),
+                            81,
+                            healthTexture.getTextureY2(),
+                            (float) user.getHealth().getProgress());
+                }
 
                 poseStack.popPose();
             }
