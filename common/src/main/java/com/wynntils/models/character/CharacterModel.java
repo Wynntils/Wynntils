@@ -160,7 +160,7 @@ public final class CharacterModel extends Model {
             updateCharacterId();
 
             // We need to scan character info and profession info as well.
-            scanCharacterInfo(false);
+            scanCharacterInfo(e.isFirstJoinWorld());
         }
     }
 
@@ -220,7 +220,8 @@ public final class CharacterModel extends Model {
 
         if (forceParseEverything
                 || silverbullSubscriber.get() == ConfirmedBoolean.UNCONFIRMED
-                || System.currentTimeMillis() > silverbullExpiresAt.get()) {
+                || (silverbullSubscriber.get() != ConfirmedBoolean.FALSE
+                        && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
             queryBuilder
                     .then(QueryStep.clickOnSlot(COSMETICS_SLOT)
