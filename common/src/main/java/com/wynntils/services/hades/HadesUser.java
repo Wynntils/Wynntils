@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -113,5 +113,13 @@ public class HadesUser {
         if (isGuildMember) return CommonColors.LIGHT_BLUE;
 
         return CustomColor.NONE;
+    }
+
+    public String getRelation() {
+        if (isPartyMember) return "party";
+        if (isMutualFriend) return "friend";
+        if (isGuildMember) return "guild";
+
+        return "";
     }
 }

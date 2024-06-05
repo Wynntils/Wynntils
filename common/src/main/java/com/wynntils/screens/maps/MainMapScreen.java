@@ -303,15 +303,15 @@ public final class MainMapScreen extends AbstractMapScreen {
         // Append the pois that are still not converted to MapData
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
-        pois = Stream.concat(
-                pois,
-                Services.Hades.getPlayerPois(
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemotePartyPlayers
-                                .get(),
-                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                .renderRemoteFriendPlayers
-                                .get()));
+        //        pois = Stream.concat(
+        //                pois,
+        //                Services.Hades.getPlayerPois(
+        //                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                                .renderRemotePartyPlayers
+        //                                .get(),
+        //                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+        //                                .renderRemoteFriendPlayers
+        //                                .get()));
 
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
