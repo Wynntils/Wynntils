@@ -28,6 +28,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -49,9 +50,12 @@ public final class CharacterModel extends Model {
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
     // Test in CharacterModel_SILVERBULL_DURATION_PATTERN
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
-            "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
+            "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     // Test in CharacterModel_VETERAN_PATTERN
     private static final Pattern VETERAN_PATTERN = Pattern.compile("§7Rank: §[6dba]Vet");
+    private static final Pattern SILVERBULL_JOIN_PATTERN =
+            Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
+    private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
@@ -59,7 +63,7 @@ public final class CharacterModel extends Model {
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int COSMETICS_SLOT = 25;
     private static final int COSMETICS_BACK_SLOT = 9;
-    private static final int GUILD_MENU_SLOT = 26;
+    public static final int GUILD_MENU_SLOT = 26;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -78,10 +82,10 @@ public final class CharacterModel extends Model {
     private final Storage<Boolean> isVeteran = new Storage<>(false);
 
     @Persisted
-    public final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
+    private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
 
     @Persisted
-    public final Storage<Boolean> silverbullSubscriber = new Storage<>(false);
+    private final Storage<ConfirmedBoolean> silverbullSubscriber = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
 
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
@@ -92,7 +96,7 @@ public final class CharacterModel extends Model {
     }
 
     public boolean isSilverbullSubscriber() {
-        return silverbullSubscriber.get();
+        return silverbullSubscriber.get() == ConfirmedBoolean.TRUE;
     }
 
     public ClassType getClassType() {
@@ -155,21 +159,35 @@ public final class CharacterModel extends Model {
             // We need to parse the current character id from our inventory
             updateCharacterId();
 
-            WynntilsMod.info("Scheduling character info query");
             // We need to scan character info and profession info as well.
-            scanCharacterInfo();
+            scanCharacterInfo(e.isFirstJoinWorld());
         }
     }
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!e.getStyledText().matches(WYNN_DEATH_MESSAGE)) return;
-        lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
-        CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
-        WynntilsMod.postEvent(deathEvent);
+        StyledText message = e.getOriginalStyledText();
 
-        if (deathEvent.isCanceled()) {
-            e.setCanceled(true);
+        if (message.matches(WYNN_DEATH_MESSAGE)) {
+            lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
+            CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
+            WynntilsMod.postEvent(deathEvent);
+
+            if (deathEvent.isCanceled()) {
+                e.setCanceled(true);
+            }
+            return;
+        }
+
+        StyledText trimmedMessage = message.trim();
+        if (trimmedMessage.matches(SILVERBULL_JOIN_PATTERN)) {
+            silverbullSubscriber.store(ConfirmedBoolean.TRUE);
+            return;
+        }
+
+        if (trimmedMessage.matches(SILVERBULL_UPDATE_PATTERN)) {
+            silverbullSubscriber.store(ConfirmedBoolean.TRUE);
+            return;
         }
     }
 
@@ -190,7 +208,8 @@ public final class CharacterModel extends Model {
         }
     }
 
-    private void scanCharacterInfo() {
+    public void scanCharacterInfo(boolean forceParseEverything) {
+        WynntilsMod.info("Scheduling character info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
 
@@ -199,7 +218,10 @@ public final class CharacterModel extends Model {
                 .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                 .processIncomingContainer(this::parseCharacterContainer));
 
-        if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
+        if (forceParseEverything
+                || silverbullSubscriber.get() == ConfirmedBoolean.UNCONFIRMED
+                || (silverbullSubscriber.get() != ConfirmedBoolean.FALSE
+                        && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
             queryBuilder
                     .then(QueryStep.clickOnSlot(COSMETICS_SLOT)
@@ -213,13 +235,7 @@ public final class CharacterModel extends Model {
         }
 
         // Scan guild container, if the player is in a guild
-        queryBuilder.conditionalThen(
-                // The guild name has already been parsed at this point
-                (container) -> !Models.Guild.getGuildName().isEmpty(),
-                // Open Guild Menu
-                QueryStep.clickOnSlot(GUILD_MENU_SLOT)
-                        .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
-                        .processIncomingContainer(Models.Guild::parseGuildContainer));
+        Models.Guild.addGuildContainerQuerySteps(queryBuilder);
 
         queryBuilder.build().executeQuery();
     }
@@ -249,12 +265,12 @@ public final class CharacterModel extends Model {
         if (!status.matches()) {
             WynntilsMod.warn("Could not parse Silverbull subscription status from item: "
                     + LoreUtils.getLore(rankSubscriptionItem));
-            silverbullSubscriber.store(false);
+            silverbullSubscriber.store(ConfirmedBoolean.FALSE);
             return;
         }
 
-        silverbullSubscriber.store(status.group(1).equals("Active"));
-        if (!silverbullSubscriber.get()) return;
+        silverbullSubscriber.store(status.group(1).equals("Active") ? ConfirmedBoolean.TRUE : ConfirmedBoolean.FALSE);
+        if (silverbullSubscriber.get() != ConfirmedBoolean.TRUE) return;
 
         Matcher expiry = LoreUtils.matchLoreLine(rankSubscriptionItem, 1, SILVERBULL_DURATION_PATTERN);
         if (!expiry.matches()) {
@@ -266,9 +282,14 @@ public final class CharacterModel extends Model {
         int weeks = expiry.group("weeks") == null ? 0 : Integer.parseInt(expiry.group("weeks"));
         int days = expiry.group("days") == null ? 0 : Integer.parseInt(expiry.group("days"));
         int hours = expiry.group("hours") == null ? 0 : Integer.parseInt(expiry.group("hours"));
+        int minutes = expiry.group("minutes") == null ? 0 : Integer.parseInt(expiry.group("minutes"));
+        int seconds = expiry.group("seconds") == null ? 0 : Integer.parseInt(expiry.group("seconds"));
 
-        long expiryTime =
-                System.currentTimeMillis() + TimeUnit.DAYS.toMillis(weeks * 7L + days) + TimeUnit.HOURS.toMillis(hours);
+        long expiryTime = System.currentTimeMillis()
+                + TimeUnit.DAYS.toMillis(weeks * 7L + days)
+                + TimeUnit.HOURS.toMillis(hours)
+                + TimeUnit.MINUTES.toMillis(minutes)
+                + TimeUnit.SECONDS.toMillis(seconds);
         silverbullExpiresAt.store(expiryTime);
 
         WynntilsMod.info(

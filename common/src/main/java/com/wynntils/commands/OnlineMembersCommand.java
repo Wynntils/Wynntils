@@ -23,7 +23,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
 public class OnlineMembersCommand extends Command {
@@ -88,8 +90,16 @@ public class OnlineMembersCommand extends Command {
                                 .withStyle(ChatFormatting.GOLD));
 
                         for (GuildMemberInfo guildMember : onlineRankMembers) {
-                            response.append(
-                                    Component.literal(guildMember.username()).withStyle(ChatFormatting.AQUA));
+                            response.append(Component.literal(guildMember.username())
+                                    .withStyle(ChatFormatting.AQUA)
+                                    .withStyle(style -> style.withHoverEvent(new HoverEvent(
+                                                    HoverEvent.Action.SHOW_TEXT,
+                                                    Component.literal("Click to private message "
+                                                                    + guildMember.username())
+                                                            .withStyle(ChatFormatting.GRAY)))
+                                            .withClickEvent(new ClickEvent(
+                                                    ClickEvent.Action.SUGGEST_COMMAND,
+                                                    "/msg " + guildMember.username() + " "))));
 
                             if (onlineRankMembers.indexOf(guildMember) != onlineRankMembers.size() - 1) {
                                 response.append(Component.literal(", ").withStyle(ChatFormatting.GRAY));

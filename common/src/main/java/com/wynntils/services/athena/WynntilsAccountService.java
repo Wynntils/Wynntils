@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
@@ -65,6 +65,16 @@ public final class WynntilsAccountService extends Service {
 
             McUtils.sendMessageToClient(failed);
         }
+    }
+
+    // Wrapper for callApi with Wynntils authentication
+    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
+        return Managers.Net.callApi(urlId, arguments, Map.of("authToken", isLoggedIn() ? token : ""));
+    }
+
+    // Wrapper for callApi with Wynntils authentication
+    public ApiResponse callApi(UrlId urlId) {
+        return callApi(urlId, Map.of());
     }
 
     private void login() {
