@@ -303,9 +303,12 @@ public class TestRegex {
     @Test
     public void GuildModel_GUILD_NAME_MATCHER() {
         PatternTester p = new PatternTester(GuildModel.class, "GUILD_NAME_MATCHER");
+        // Guild menu item
         p.shouldMatch("§3guildName§b [aAaA]");
         p.shouldMatch("§3guild Name§b [aaaa]");
         p.shouldMatch("§3GUILD NAME§b [wynn]");
+        // Allied guild item
+        p.shouldMatch("§a§lGUILD NAME [wynn]");
     }
 
     @Test
@@ -364,6 +367,46 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MSG_TRIBUTE_SCEDULED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_SCEDULED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 1 Emerald per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 1 Crop per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 1 Fish per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 1 Wood per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 1 Ore per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 2 Emeralds per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 2 Crops per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 2 Fish per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 2 Wood per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 2 Ore per hour to Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_TRIBUTE_STOPPED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_STOPPED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Emeralds to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Fish to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Ore to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Wood to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Crops to Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild stopped scheduling Emeralds to Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_ALLIANCE_FORMED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_ALLIANCE_FORMED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 formed an alliance with Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild formed an alliance with Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_ALLIANCE_REVOKED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_ALLIANCE_REVOKED");
+        p.shouldMatch("§3[INFO]§b Example Guild revoked the alliance with Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 revoked the alliance with Example Guild");
+    }
+
+    @Test
     public void GuildModel_OBJECTIVES_COMPLETED_PATTERN() {
         PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVES_COMPLETED_PATTERN");
         p.shouldMatch("§6Current Guild Goal: §f23§7/30");
@@ -373,6 +416,28 @@ public class TestRegex {
     public void GuildModel_OBJECTIVE_STREAK_PATTERN() {
         PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVE_STREAK_PATTERN");
         p.shouldMatch("§a- §7Streak: §f14");
+    }
+
+    @Test
+    public void GuildModel_TRIBUTE_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "TRIBUTE_PATTERN");
+        p.shouldMatch("§fⒷ -1000 Ore per Hour");
+        p.shouldMatch("§6Ⓒ -1000 Wood per Hour");
+        p.shouldMatch("§bⓀ -11000 Fish per Hour");
+        p.shouldMatch("§eⒿ -1000 Crops per Hour");
+        p.shouldMatch("§fⒷ -1 Ore per Hour");
+        p.shouldMatch("§6Ⓒ -1 Wood per Hour");
+        p.shouldMatch("§bⓀ -1 Fish per Hour");
+        p.shouldMatch("§eⒿ -1 Crop per Hour");
+        p.shouldMatch("§a-1 Emerald per Hour");
+        p.shouldMatch("§a-2 Emeralds per Hour");
+        p.shouldMatch("§a+9000 Emeralds per Hour");
+    }
+
+    @Test
+    public void GuildModel_ALLIED_GUILD_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "ALLIED_GUILD_PATTERN");
+        p.shouldMatch("§a- §7GUILD NAME [wynn]");
     }
 
     @Test

@@ -16,12 +16,18 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
+import com.wynntils.models.players.type.DiplomacyInfo;
 import com.wynntils.models.players.type.GuildInfo;
 import com.wynntils.models.players.type.GuildRank;
+import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -39,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -49,7 +56,8 @@ public class GuildModel extends Model {
             .create();
 
     // Test in GuildModel_GUILD_NAME_MATCHER
-    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("^§3([a-zA-Z\\s]+?)§b \\[[a-zA-Z]{3,4}]$");
+    private static final Pattern GUILD_NAME_MATCHER =
+            Pattern.compile("^§[3a](§l)?(?<name>[a-zA-Z\\s]+?)(§b)? \\[[a-zA-Z]{3,4}\\]$");
 
     // Test in GuildModel_GUILD_RANK_MATCHER
     private static final Pattern GUILD_RANK_MATCHER =
@@ -73,6 +81,22 @@ public class GuildModel extends Model {
     private static final Pattern MSG_NEW_OBJECTIVES =
             Pattern.compile("^§3\\[INFO\\]§b New Weekly Guild Objectives are being assigned\\.$");
 
+    // Test in GuildModel_MSG_TRIBUTE_SCEDULED
+    private static final Pattern MSG_TRIBUTE_SCEDULED = Pattern.compile(
+            "^§3\\[INFO\\]§b (?<sender>[\\w\\s]+) scheduled (?<resource>[ⒿⓀⒸⒷ]?) ?(?<amount>\\d+) (Ore|Wood|Fish|Crops?|Emeralds?) per hour to (?<recipient>[a-zA-Z\\s]+)$");
+
+    // Test in GuildModel_MSG_TRIBUTE_STOPPED
+    private static final Pattern MSG_TRIBUTE_STOPPED = Pattern.compile(
+            "^§3\\[INFO\\]§b (?<sender>[\\w\\s]+) stopped scheduling (?<resource>Emeralds|Fish|Ore|Wood|Crops) to (?<recipient>[a-zA-Z\\s]+)$");
+
+    // Test in GuildModel_MSG_ALLIANCE_FORMED
+    private static final Pattern MSG_ALLIANCE_FORMED =
+            Pattern.compile("^§3\\[INFO\\]§b (?<actor>[\\w\\s]+) formed an alliance with (?<guild>[a-zA-Z\\s]+)$");
+
+    // Test in GuildModel_MSG_ALLIANCE_REVOKED
+    private static final Pattern MSG_ALLIANCE_REVOKED =
+            Pattern.compile("^§3\\[INFO\\]§b (?<actor>[\\w\\s]+) revoked the alliance with (?<guild>[a-zA-Z\\s]+)$");
+
     // Test in GuildModel_LEVEL_MATCHER
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§b§l[a-zA-Z\\s]+§3§l \\[Lv\\. (?<level>\\d+)\\]$");
 
@@ -87,12 +111,23 @@ public class GuildModel extends Model {
     // Test in GuildModel_OBJECTIVE_STREAK_PATTERN
     private static final Pattern OBJECTIVE_STREAK_PATTERN = Pattern.compile("^§a- §7Streak: §f(?<streak>\\d+)$");
 
+    // Test in GuildModel_TRIBUTE_PATTERN
+    private static final Pattern TRIBUTE_PATTERN = Pattern.compile(
+            "^§[abef6](?<symbol>[ⒷⒸⓀⒿ]?) ?(?<amount>[+-]\\d+) (Ore|Wood|Fish|Crops?|Emeralds?) per Hour$");
+
+    // Test in GuildModel_ALLIED_GUILD_PATTERN
+    private static final Pattern ALLIED_GUILD_PATTERN =
+            Pattern.compile("§a- §7(?<name>[a-zA-Z\\s]+) \\[[a-zA-Z]{3,4}\\]");
+
     private static final int MEMBERS_SLOT = 0;
     private static final int OBJECTIVES_SLOT = 13;
+    private static final int DIPLOMACY_MENU_SLOT = 26;
+    private static final List<Integer> DIPLOMACY_SLOTS = List.of(2, 3, 4, 5, 6, 7, 8);
 
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
+    private final Map<String, DiplomacyInfo> guildDiplomacyMap = new HashMap<>();
 
     private String guildName = "";
     private GuildRank guildRank;
@@ -114,7 +149,7 @@ public class GuildModel extends Model {
     // Side note; it is currently impossible to detect when we get kicked as there are no messages sent at all
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = StyledText.fromComponent(e.getMessage());
+        StyledText message = e.getOriginalStyledText();
 
         if (message.matches(MSG_LEFT_GUILD)) {
             guildName = "";
@@ -165,9 +200,53 @@ public class GuildModel extends Model {
             return;
         }
 
-        Matcher newObjectivesMatcher = message.getMatcher(MSG_NEW_OBJECTIVES);
-        if (newObjectivesMatcher.matches()) {
+        if (message.matches(MSG_NEW_OBJECTIVES)) {
             objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
+            return;
+        }
+
+        Matcher tributeScheduledMatcher = message.getMatcher(MSG_TRIBUTE_SCEDULED);
+        if (tributeScheduledMatcher.matches()) {
+            String recipient = tributeScheduledMatcher.group("recipient");
+            GuildResource resource = GuildResource.fromSymbol(tributeScheduledMatcher.group("resource"));
+            int amount = Integer.parseInt(tributeScheduledMatcher.group("amount"));
+            if (recipient.equals(guildName)) {
+                guildDiplomacyMap.get(tributeScheduledMatcher.group("sender")).storeReceivedTribute(resource, amount);
+            } else {
+                guildDiplomacyMap.get(recipient).storeSentTribute(resource, amount);
+            }
+            return;
+        }
+
+        Matcher tributeStoppedMatcher = message.getMatcher(MSG_TRIBUTE_STOPPED);
+        if (tributeStoppedMatcher.matches()) {
+            String recipient = tributeStoppedMatcher.group("recipient");
+            GuildResource resource = GuildResource.fromName(tributeStoppedMatcher.group("resource"));
+            if (recipient.equals(guildName)) {
+                guildDiplomacyMap.get(tributeStoppedMatcher.group("sender")).removeReceivedTribute(resource);
+            } else {
+                guildDiplomacyMap.get(recipient).removeSentTribute(resource);
+            }
+            return;
+        }
+
+        Matcher allienceFormedMatcher = message.getMatcher(MSG_ALLIANCE_FORMED);
+        if (allienceFormedMatcher.matches()) {
+            String guild = allienceFormedMatcher.group("guild");
+            if (guild.equals(guildName)) {
+                guild = allienceFormedMatcher.group("actor");
+            }
+            guildDiplomacyMap.put(guild, new DiplomacyInfo(guild));
+            return;
+        }
+
+        Matcher allianceRevokedMatcher = message.getMatcher(MSG_ALLIANCE_REVOKED);
+        if (allianceRevokedMatcher.matches()) {
+            String guild = allianceRevokedMatcher.group("guild");
+            if (guild.equals(guildName)) {
+                guild = allianceRevokedMatcher.group("actor");
+            }
+            guildDiplomacyMap.remove(guild);
             return;
         }
     }
@@ -178,7 +257,7 @@ public class GuildModel extends Model {
         for (StyledText line : lore) {
             Matcher guildNameMatcher = line.getMatcher(GUILD_NAME_MATCHER);
             if (guildNameMatcher.matches()) {
-                guildName = guildNameMatcher.group(1);
+                guildName = guildNameMatcher.group("name");
                 continue;
             }
 
@@ -192,9 +271,25 @@ public class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed guild name and rank, " + guildRank + " of " + guildName);
     }
 
-    public void parseGuildContainer(ContainerContent container) {
+    public void addGuildContainerQuerySteps(QueryBuilder builder) {
+        builder.conditionalThen(
+                        // Upon execution the guild name has already been parsed
+                        container -> !guildName.isEmpty(),
+                        QueryStep.clickOnSlot(CharacterModel.GUILD_MENU_SLOT)
+                                .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
+                                .processIncomingContainer(this::parseGuildContainer))
+                .conditionalThen(
+                        // Upon execution allied guilds have already been parsed
+                        container -> !guildDiplomacyMap.isEmpty(),
+                        QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
+                                .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
+                                .processIncomingContainer(this::parseDiplomacyContainer));
+    }
+
+    private void parseGuildContainer(ContainerContent container) {
         ItemStack membersItem = container.items().get(MEMBERS_SLOT);
         ItemStack objectivesItem = container.items().get(OBJECTIVES_SLOT);
+        ItemStack diplomacyItem = container.items().get(DIPLOMACY_MENU_SLOT);
 
         Matcher levelMatcher = StyledText.fromComponent(membersItem.getHoverName())
                 .getNormalized()
@@ -230,7 +325,55 @@ public class GuildModel extends Model {
             }
         }
 
+        for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
+            Matcher alliedGuildMatcher = line.getMatcher(ALLIED_GUILD_PATTERN);
+            if (alliedGuildMatcher.matches()) {
+                String alliedGuildName = alliedGuildMatcher.group("name");
+                guildDiplomacyMap.put(alliedGuildName, new DiplomacyInfo(alliedGuildName));
+            }
+        }
+
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
+    }
+
+    private void parseDiplomacyContainer(ContainerContent content) {
+        for (int slot : DIPLOMACY_SLOTS) {
+            ItemStack diplomacyItem = content.items().get(slot);
+            if (diplomacyItem.getItem() == Items.AIR) {
+                continue;
+            }
+
+            Matcher alliedGuildNameMatcher = StyledText.fromComponent(diplomacyItem.getHoverName())
+                    .getNormalized()
+                    .getMatcher(GUILD_NAME_MATCHER);
+            if (!alliedGuildNameMatcher.matches()) {
+                WynntilsMod.warn("Could not parse allied guild from item: " + LoreUtils.getLore(diplomacyItem));
+                continue;
+            }
+
+            String alliedGuildName = alliedGuildNameMatcher.group("name");
+            if (!guildDiplomacyMap.containsKey(alliedGuildName)) {
+                WynntilsMod.warn("Trying to parse tributes for unallied guild " + alliedGuildName);
+                continue;
+            }
+
+            DiplomacyInfo diplomacyInfo = guildDiplomacyMap.get(alliedGuildName);
+
+            for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
+                Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
+                if (tributeMatcher.matches()) {
+                    GuildResource resource = GuildResource.fromSymbol(tributeMatcher.group("symbol"));
+                    int amount = Integer.parseInt(tributeMatcher.group("amount"));
+                    if (amount > 0) {
+                        diplomacyInfo.storeReceivedTribute(resource, amount);
+                    } else {
+                        diplomacyInfo.storeSentTribute(resource, Math.abs(amount));
+                    }
+                }
+            }
+        }
+
+        WynntilsMod.info("Successfully parsed tributes for guild " + guildName);
     }
 
     public String getGuildName() {
@@ -271,6 +414,24 @@ public class GuildModel extends Model {
 
     public Set<String> getAllGuilds() {
         return guildProfileMap.keySet();
+    }
+
+    public int getReceivedTributesForResource(GuildResource resource) {
+        return guildDiplomacyMap.values().stream()
+                .map(DiplomacyInfo::getReceivedTributes)
+                .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
+                .sum();
+    }
+
+    public int getSentTributesForResource(GuildResource resource) {
+        return guildDiplomacyMap.values().stream()
+                .map(DiplomacyInfo::getSentTributes)
+                .mapToInt(tributes -> tributes.getOrDefault(resource, 0))
+                .sum();
+    }
+
+    public boolean isAllied(String guildName) {
+        return guildDiplomacyMap.containsKey(guildName);
     }
 
     public String getGuildNameFromString(String input) {
