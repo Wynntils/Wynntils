@@ -41,14 +41,12 @@ public class InfoBar extends TrackedBar {
             if (bombType == null) return;
 
             float length = Integer.parseInt(matcher.group("length")) + BOMB_TIMER_OFFSET;
-            Models.Bomb.addBombInfoFromInfoBar(
-                    new BombInfo(
-                            matcher.group("user"),
-                            bombType,
-                            Models.WorldState.getCurrentWorldName(),
-                            System.currentTimeMillis(),
-                            length)
-                    );
+            Models.Bomb.addBombInfoFromInfoBar(new BombInfo(
+                    matcher.group("user"),
+                    bombType,
+                    Models.WorldState.getCurrentWorldName(),
+                    System.currentTimeMillis(),
+                    length));
         } else if (matcher.pattern().equals(GUILD_INFO_PATTERN)) {
             Models.Guild.setGuildLevel(Integer.parseInt(matcher.group("level")));
             Models.Guild.setGuildLevelProgress(new CappedValue(Integer.parseInt(matcher.group("xp")), 100));

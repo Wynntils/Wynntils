@@ -57,13 +57,13 @@ public final class BombModel extends Model {
 
         Matcher bellMatcher = message.getMatcher(BOMB_BELL_PATTERN, PartStyle.StyleType.NONE);
         if (bellMatcher.matches()) {
-            addBombFromChatClue(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
+            addBombFromChat(bellMatcher.group("user"), bellMatcher.group("bomb"), bellMatcher.group("server"));
             return;
         }
 
         Matcher localMatcher = message.getMatcher(BOMB_THROWN_PATTERN);
         if (localMatcher.matches()) {
-            addBombFromChatClue(
+            addBombFromChat(
                     localMatcher.group("user"), localMatcher.group("bomb"), Models.WorldState.getCurrentWorldName());
             return;
         }
@@ -140,8 +140,6 @@ public final class BombModel extends Model {
             BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());
 
             // Ensure no duplicate bombs are added
-            removeOldTimers();
-
             if (bombs.containsKey(key) && !replaceIfExists) {
                 return;
             }
