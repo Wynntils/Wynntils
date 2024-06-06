@@ -25,7 +25,7 @@ public class MapFeatureService extends Service {
     }
 
     private void loadPlaces() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPDATA_PLACES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_PLACE_MAPFEATURES);
         dl.handleReader(reader -> {
             TypeToken<List<PlaceLocation>> type = new TypeToken<>() {};
             List<PlaceLocation> places = Managers.Json.GSON.fromJson(reader, type.getType());
@@ -34,7 +34,7 @@ public class MapFeatureService extends Service {
     }
 
     private void loadServices() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPDATA_SERVICES);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SERVICE_MAPFEATURES);
         dl.handleReader(reader -> {
             TypeToken<List<ServiceLocation>> type = new TypeToken<>() {};
             List<ServiceLocation> services = Managers.Json.GSON.fromJson(reader, type.getType());
@@ -43,7 +43,7 @@ public class MapFeatureService extends Service {
     }
 
     private void loadCombatLocations() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPDATA_COMBAT_LOCATIONS);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_COMBAT_MAPFEATURES);
         dl.handleReader(reader -> {
             TypeToken<List<CombatLocation>> type = new TypeToken<>() {};
             List<CombatLocation> combatLocations = Managers.Json.GSON.fromJson(reader, type.getType());
