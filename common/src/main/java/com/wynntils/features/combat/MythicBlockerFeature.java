@@ -6,11 +6,16 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
+import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -23,6 +28,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MythicBlockerFeature extends Feature {
+    // Note: At the time of adding this, opening the emerald/ingredient pouch while a reward container is open
+    //       will cause the container to exit (without the pouch opening, in the ingredient pouch case).
+    //       This is a bug in the game.
+    @Persisted
+    private final Config<Boolean> preventPouchClick = new Config<>(true);
+
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
@@ -40,5 +51,22 @@ public class MythicBlockerFeature extends Feature {
                 return;
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onIngredientPouchClick(ContainerClickEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+        if (!preventPouchClick.get()) return;
+        if (!(Models.Container.getCurrentContainer() instanceof RewardContainer)) return;
+
+        Optional<IngredientPouchItem> ingredientPouchItem =
+                Models.Item.asWynnItem(event.getItemStack(), IngredientPouchItem.class);
+        Optional<EmeraldPouchItem> emeraldPouchItem =
+                Models.Item.asWynnItem(event.getItemStack(), EmeraldPouchItem.class);
+        if (ingredientPouchItem.isEmpty() && emeraldPouchItem.isEmpty()) return;
+
+        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.pouchBlocked")
+                .withStyle(ChatFormatting.RED));
+        event.setCanceled(true);
     }
 }
