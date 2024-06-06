@@ -40,7 +40,7 @@ public class MythicBlockerFeature extends Feature {
         if (!(Models.Container.getCurrentContainer() instanceof RewardContainer)) return;
 
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
-        for (int i = 0; i < 27; i++) {
+        for (int i = 0; i < Models.LootChest.LOOT_CHEST_ITEM_COUNT; i++) {
             ItemStack itemStack = items.get(i);
             Optional<GearTierItemProperty> tieredItem =
                     Models.Item.asWynnItemProperty(itemStack, GearTierItemProperty.class);
@@ -64,6 +64,11 @@ public class MythicBlockerFeature extends Feature {
         Optional<EmeraldPouchItem> emeraldPouchItem =
                 Models.Item.asWynnItem(event.getItemStack(), EmeraldPouchItem.class);
         if (ingredientPouchItem.isEmpty() && emeraldPouchItem.isEmpty()) return;
+
+        // Don't want to block emerald pouches in reward chests
+        if (emeraldPouchItem.isPresent() && event.getSlotNum() < Models.LootChest.LOOT_CHEST_ITEM_COUNT) {
+            return;
+        }
 
         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.pouchBlocked")
                 .withStyle(ChatFormatting.RED));
