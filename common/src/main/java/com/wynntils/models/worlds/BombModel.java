@@ -86,7 +86,7 @@ public final class BombModel extends Model {
         }
     }
 
-    private void addBombFromChatClue(String user, String bomb, String server) {
+    private void addBombFromChat(String user, String bomb, String server) {
         // Better to do a bit of processing and clean up the set than leaking memory
         removeOldTimers();
 
@@ -132,12 +132,10 @@ public final class BombModel extends Model {
             BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());
 
             // Ensure no duplicate bombs are added
-            if (bombs.containsKey(key)) {
-                if (replaceIfExists) {
-                    bombs.remove(key);
-                } else if (bombs.get(key).isActive()) {
-                    return;
-                }
+            removeOldTimers();
+            
+            if (bombs.containsKey(key) && !replaceIfExists) {
+                return;
             }
 
             bombs.put(key, bombInfo);
