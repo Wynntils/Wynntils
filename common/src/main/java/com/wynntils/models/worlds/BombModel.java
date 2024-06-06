@@ -93,7 +93,7 @@ public final class BombModel extends Model {
         BombType bombType = BombType.fromString(bomb);
         if (bombType == null) return;
 
-        BOMBS.add(new BombInfo(user, bombType, server, System.currentTimeMillis(), bombType.getActiveMinutes()), true);
+        BOMBS.forceAdd(new BombInfo(user, bombType, server, System.currentTimeMillis(), bombType.getActiveMinutes()));
     }
 
     @SubscribeEvent
@@ -101,10 +101,10 @@ public final class BombModel extends Model {
         CURRENT_SERVER_BOMBS.clear();
     }
 
-    public void addBombInfo(BombInfo bombInfo, boolean replaceIfExists) {
+    public void addBombInfoFromInfoBar(BombInfo bombInfo) {
         CURRENT_SERVER_BOMBS.put(bombInfo.bomb(), bombInfo);
 
-        BOMBS.add(bombInfo, replaceIfExists);
+        BOMBS.add(bombInfo);
     }
 
     public boolean isBombActive(BombType bombType) {
@@ -128,7 +128,15 @@ public final class BombModel extends Model {
     private static final class ActiveBombContainer {
         private final Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
 
-        public void add(BombInfo bombInfo, boolean replaceIfExists) {
+        public void add(BombInfo bombInfo) {
+            add(bombInfo, false);
+        }
+
+        public void forceAdd(BombInfo bombInfo) {
+            add(bombInfo, true);
+        }
+
+        private void add(BombInfo bombInfo, boolean replaceIfExists) {
             BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());
 
             // Ensure no duplicate bombs are added
