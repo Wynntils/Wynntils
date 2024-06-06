@@ -34,6 +34,7 @@ import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
+import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
@@ -133,6 +134,15 @@ public class TestRegex {
         p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
         p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
         p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
+    }
+
+    @Test
+    public void BombModel_BOMB_THROWN_PATTERN() {
+        PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
+        p.shouldMatch(
+                "§bExampleUser1§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp §3for §b20 minutes§3!");
+        p.shouldMatch(
+                "§bExampleUser1§3 has thrown a §bProfession Speed Bomb§3! The entire server gets §bdouble Crafting/Gathering Speed, and Resource respawn time/Crafting Resource requirements are halved §3for §b10 minutes§3!");
     }
 
     @Test
