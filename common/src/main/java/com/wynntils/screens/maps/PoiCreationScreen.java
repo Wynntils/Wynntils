@@ -24,7 +24,6 @@ import com.wynntils.services.mapdata.providers.json.JsonIcon;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
-import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -104,7 +103,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private Integer parsedZInput;
     private MapIcon icon;
     private int priority;
-    private String currentCategory = "";
+    private String category = "";
     private TextShadow labelShadow = TextShadow.NORMAL;
     private VisibilityType iconVisibilityType = VisibilityType.CUSTOM;
     private VisibilityType labelVisibilityType = VisibilityType.CUSTOM;
@@ -487,7 +486,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // region Category
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.poiCreation.changeCategory"),
-                        (button) -> openCategorySelection())
+                        (button) -> McUtils.mc().setScreen(WaypointCategoryScreen.create(this, category)))
                 .pos((int) (dividedWidth * 18), (int) (dividedHeight * 50))
                 .size((int) (dividedWidth * 9), 20)
                 .build());
@@ -541,8 +540,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     false,
                     1,
                     zoomRenderScale,
-                    true
-            );
+                    true);
         }
 
         renderCursor(
@@ -779,16 +777,18 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // endregion
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.currentCategory") + ": "
-                                + (currentCategory.isEmpty() ? "NONE" : currentCategory)),
+                                + (category.isEmpty() ? "DEFAULT" : category)),
                         dividedWidth * 2.0f,
                         dividedHeight * 50.0f + 10,
+                        dividedWidth * 15.0f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+                        TextShadow.NORMAL,
+                        1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -894,6 +894,10 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         this.focusedTextInput = focusedTextInput;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     private void renderIcon(PoseStack poseStack) {
         if (iconType == IconType.NONE) return;
 
@@ -954,7 +958,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         }
 
         Location location = new Location(parsedXInput, parsedYInput, parsedZInput);
-        String subcategory = ""; // TODO: Add subcategory input, separate screen
 
         String label = labelInput.getTextBoxInput();
         String iconId = MapIconsProvider.getIconIdFromTexture(Services.Poi.POI_ICONS.get(
@@ -980,7 +983,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .setIconVisibility(iconVisibility)
                 .build();
 
-        waypoint = new WaypointsProvider.WaypointLocation(location, label, subcategory, attributes);
+        waypoint = new WaypointsProvider.WaypointLocation(location, label, category, attributes);
 
         saveButton.active = !labelInput.getTextBoxInput().isBlank()
                 && CustomColor.fromHexString(iconColorInput.getTextBoxInput()) != CustomColor.NONE
@@ -1097,10 +1100,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             labelMaxVisibilitySlider.setVisibility(0);
             labelFadeSlider.setVisibility(5);
         }
-    }
-
-    private void openCategorySelection() {
-        // TODO
     }
 
     private static final class OptionButton extends WynntilsButton {

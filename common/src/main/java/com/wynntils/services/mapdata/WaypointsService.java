@@ -20,11 +20,14 @@ import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
+import com.wynntils.services.mapdata.providers.json.JsonMapLocation;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WaypointsService extends Service {
     @Persisted
@@ -44,6 +47,10 @@ public class WaypointsService extends Service {
 
     public List<WaypointsProvider.WaypointLocation> getWaypoints() {
         return Collections.unmodifiableList(waypoints.get());
+    }
+
+    public Set<String> getCategories() {
+        return getWaypoints().stream().map(JsonMapLocation::getCategoryId).collect(Collectors.toSet());
     }
 
     public void addWaypoint(WaypointsProvider.WaypointLocation waypoint) {
