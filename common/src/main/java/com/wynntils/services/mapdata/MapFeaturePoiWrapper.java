@@ -29,6 +29,12 @@ public class MapFeaturePoiWrapper implements Poi {
         this.attributes = attributes;
     }
 
+    // FIXME: Used for porting purposes, remove when possible
+    @Deprecated
+    public MapFeature getFeature() {
+        return feature;
+    }
+
     @Override
     public PoiLocation getLocation() {
         if (feature instanceof MapLocation mapLocation) {

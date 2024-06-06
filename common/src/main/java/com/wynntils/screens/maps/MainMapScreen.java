@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.marker.type.DynamicLocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
@@ -20,6 +19,8 @@ import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.mapdata.MapFeaturePoiWrapper;
+import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -418,8 +419,9 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
-                if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
+                if (hovered instanceof MapFeaturePoiWrapper wrapper
+                        && wrapper.getFeature() instanceof WaypointsProvider.WaypointLocation location) {
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, location));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
@@ -427,11 +429,9 @@ public final class MainMapScreen extends AbstractMapScreen {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
-                if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
-                    HiddenConfig<List<CustomPoi>> customPois =
-                            Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-                    customPois.get().remove(customPoi);
-                    customPois.touched();
+                if (hovered instanceof MapFeaturePoiWrapper wrapper
+                        && wrapper.getFeature() instanceof WaypointsProvider.WaypointLocation location) {
+                    Services.Waypoints.removeWaypoint(location);
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY, true);

@@ -14,7 +14,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
@@ -90,7 +89,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     // Screen information
     private final Screen returnScreen;
-    private CustomPoi oldPoi;
+    private WaypointsProvider.WaypointLocation oldWaypoint;
     private PoiLocation setupLocation;
     private boolean firstSetup;
 
@@ -123,18 +122,18 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, CustomPoi poi) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
         this(oldMapScreen);
 
-        this.oldPoi = poi;
+        this.oldWaypoint = oldWaypoint;
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
+    private PoiCreationScreen(PoiManagementScreen managementScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
         super();
         this.returnScreen = managementScreen;
 
-        this.oldPoi = poi;
+        this.oldWaypoint = oldWaypoint;
         this.firstSetup = true;
     }
 
@@ -146,12 +145,12 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         return new PoiCreationScreen(oldMapScreen, setupLocation);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
-        return new PoiCreationScreen(oldMapScreen, poi);
+    public static Screen create(MainMapScreen oldMapScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
+        return new PoiCreationScreen(oldMapScreen, oldWaypoint);
     }
 
-    public static Screen create(PoiManagementScreen managementScreen, CustomPoi poi) {
-        return new PoiCreationScreen(managementScreen, poi);
+    public static Screen create(PoiManagementScreen managementScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
+        return new PoiCreationScreen(managementScreen, oldWaypoint);
     }
 
     @Override
@@ -996,9 +995,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     private void saveWaypoint() {
-        if (oldPoi != null) {
-            // FIXME: Remove the old waypoint (TODO: Port oldPoi to WaypointLocation)
-            // Services.UserWaypoint.removeUserWaypoint(oldPoi);
+        if (oldWaypoint != null) {
+            Services.Waypoints.removeWaypoint(oldWaypoint);
         }
 
         Services.Waypoints.addWaypoint(waypoint);
