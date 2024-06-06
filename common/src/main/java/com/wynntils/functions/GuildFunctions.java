@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.type.CappedValue;
+import java.util.List;
 
 public class GuildFunctions {
     public static class CappedGuildLevelProgressFunction extends Function<CappedValue> {
@@ -45,6 +46,24 @@ public class GuildFunctions {
             GuildRank guildRank = Models.Guild.getGuildRank();
             if (guildRank == null) return "";
             return guildRank.getName();
+        }
+    }
+
+    public static class IsAlliedGuildFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Guild.isAllied(arguments.getArgument("guild").getStringValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("guild", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("is_allied", "is_ally");
         }
     }
 

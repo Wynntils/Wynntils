@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -79,6 +79,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("menu").executes(this::menu))
                 .then(Commands.literal("reauth").executes(this::reauth))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
+                .then(Commands.literal("rescan").executes(this::rescan))
                 .then(Commands.literal("status").executes(this::status))
                 .then(Commands.literal("token").executes(this::token))
                 .then(Commands.literal("update").executes(this::update))
@@ -368,6 +369,11 @@ public class WynntilsCommand extends Command {
     private int menu(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the menu screen
         Managers.TickScheduler.scheduleLater(() -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()), 2);
+        return 1;
+    }
+
+    private int rescan(CommandContext<CommandSourceStack> context) {
+        Models.Character.scanCharacterInfo(true);
         return 1;
     }
 
