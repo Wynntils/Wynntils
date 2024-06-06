@@ -168,7 +168,8 @@ public final class PlayerModel extends Model {
         fetching.add(uuid); // temporary, avoid extra loads
         nameMap.put(uuid, userName);
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
+        ApiResponse apiResponse =
+                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(
                 json -> {
                     if (json.has("message") && json.get("message").getAsString().equals(ATHENA_USER_NOT_FOUND)) {

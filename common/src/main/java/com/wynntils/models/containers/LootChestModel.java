@@ -52,7 +52,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
-    private static final int LOOT_CHEST_ITEM_COUNT = 27;
+    public static final int LOOT_CHEST_ITEM_COUNT = 27;
 
     @Persisted
     private final Storage<List<FoundChestLocation>> foundChestLocations = new Storage<>(new ArrayList<>());

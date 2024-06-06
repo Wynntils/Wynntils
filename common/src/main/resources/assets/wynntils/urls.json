@@ -104,6 +104,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/combat_locations.json"
   },
   {
+    "id": "dataStaticCombatMapFeatures",
+    "md5": "6b3655631a5dd58e307eac49d7f0b1ce",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/combat_mapfeatures.json"
+  },
+  {
     "id": "dataStaticDestinations",
     "md5": "6c68932a8cacb3d1a1469bb8b3d35665",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/destinations.json"
@@ -159,21 +164,6 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/major_ids.json"
   },
   {
-    "id": "dataStaticMapdataCombatLocations",
-    "md5": "22e909d5a81accad983af78d547ee695",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/combat_locations_mapdata.json"
-  },
-  {
-    "id": "dataStaticMapdataPlaces",
-    "md5": "c337368fe24bd263ff64a4172b109316",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/places_mapdata.json"
-  },
-  {
-    "id": "dataStaticMapdataServices",
-    "md5": "c84ea9dfea44549d579c376fc904be35",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services_mapdata.json"
-  },
-  {
     "id": "dataStaticMaps",
     "md5": "3d1825eee8011ca34fce25a5a3597fc0",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/maps.json"
@@ -189,6 +179,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/materials.json"
   },
   {
+    "id": "dataStaticPlaceMapFeatures",
+    "md5": "c337368fe24bd263ff64a4172b109316",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/place_mapfeatures.json"
+  },
+  {
     "id": "dataStaticPlaces",
     "md5": "c1907ba6d7c8851be2c6cf3062d17de5",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/places.json"
@@ -202,6 +197,11 @@
     "id": "dataStaticServices",
     "md5": "183e76811f0b598649753c870e158444",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
+  },
+  {
+    "id": "dataStaticServicesMapFeatures",
+    "md5": "c84ea9dfea44549d579c376fc904be35",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/service_mapfeatures.json"
   },
   {
     "id": "dataStaticShinyStats",
