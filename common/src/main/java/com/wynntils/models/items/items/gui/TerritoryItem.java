@@ -4,10 +4,14 @@
  */
 package com.wynntils.models.items.items.gui;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.utils.type.CappedValue;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -126,5 +130,12 @@ public class TerritoryItem extends GuiItem {
                 + treasuryBonus + ", alerts="
                 + alerts + ", upgrades="
                 + upgrades + '}';
+    }
+
+    public static class TerritorySerializer implements JsonSerializer<TerritoryItem> {
+        @Override
+        public JsonElement serialize(TerritoryItem territoryItem, Type type, JsonSerializationContext context) {
+            return null;
+        }
     }
 }
