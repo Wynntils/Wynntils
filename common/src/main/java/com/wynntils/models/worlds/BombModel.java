@@ -133,7 +133,7 @@ public final class BombModel extends Model {
 
             // Ensure no duplicate bombs are added
             removeOldTimers();
-            
+
             if (bombs.containsKey(key) && !replaceIfExists) {
                 return;
             }
