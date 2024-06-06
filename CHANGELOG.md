@@ -1,3 +1,11 @@
+## [1.2.21](https://github.com/Wynntils/Artemis/compare/v1.2.20...v1.2.21) (2024-06-06)
+
+
+### Bug Fixes
+
+* Don't block emerald pouches inside reward containers ([#2565](https://github.com/Wynntils/Artemis/issues/2565)) ([c880520](https://github.com/Wynntils/Artemis/commit/c880520f08fae11945eabb7da20725971527b261))
+* Fix bomb tracking issues [skip ci] ([#2564](https://github.com/Wynntils/Artemis/issues/2564)) ([a631e17](https://github.com/Wynntils/Artemis/commit/a631e17b7d712d09e94f153ffa8131e5abefd9c5))
+
 ## [1.2.20](https://github.com/Wynntils/Artemis/compare/v1.2.19...v1.2.20) (2024-06-05)
 
 
@@ -20,6 +28,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2552](https://github.com/Wynntils/Artemis/issues/2552)) ([99906d2](https://github.com/Wynntils/Artemis/commit/99906d2464ab487615a1183c417e4544db750a47))
 * [auto-generated] Update urls.json [ci skip] ([#2557](https://github.com/Wynntils/Artemis/issues/2557)) ([07e9c90](https://github.com/Wynntils/Artemis/commit/07e9c90f014131e227d2190b351090997c3b1952))
+* **release:** v1.2.20 [skip ci] ([bd10685](https://github.com/Wynntils/Artemis/commit/bd10685234b9f92d925ec25de7041715518df335))
 
 ## [1.2.19](https://github.com/Wynntils/Artemis/compare/v1.2.18...v1.2.19) (2024-05-31)
 
@@ -59,22 +68,4 @@
 
 * **release:** v1.2.17 [skip ci] ([952d6a2](https://github.com/Wynntils/Artemis/commit/952d6a2e8f79d5801fbf6084ba56fbdd082e413f))
 * Revert "feat: Start using MapData for some providers [skip ci]" [skip ci] ([#2538](https://github.com/Wynntils/Artemis/issues/2538)) ([7940283](https://github.com/Wynntils/Artemis/commit/794028369a209b1b9ca9ff175021bda599c71033)), closes [#2536](https://github.com/Wynntils/Artemis/issues/2536)
-
-## [1.2.16](https://github.com/Wynntils/Artemis/compare/v1.2.15...v1.2.16) (2024-05-28)
-
-
-### Bug Fixes
-
-* Remove "Optional" from map level hover ([#2535](https://github.com/Wynntils/Artemis/issues/2535)) ([3de3c07](https://github.com/Wynntils/Artemis/commit/3de3c0785ea10d9f8f01f0c0ef18959072638043))
-* Set inStream to false in WorldStateModel when changing world state [skip ci] ([#2534](https://github.com/Wynntils/Artemis/issues/2534)) ([c5e75ae](https://github.com/Wynntils/Artemis/commit/c5e75ae06256201da72a3e6dfe625980e4f877fb))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.16 [skip ci] ([e5f6145](https://github.com/Wynntils/Artemis/commit/e5f61452bf09b45a024dca1f12e297e299fb6cd3))
-
-
-### Code Refactoring
-
-* Better handling of MapData attributes [skip ci] ([#2494](https://github.com/Wynntils/Artemis/issues/2494)) ([9cb5ae9](https://github.com/Wynntils/Artemis/commit/9cb5ae970a00b3eebbaed6cb9c7303ef51506a4d))
 
