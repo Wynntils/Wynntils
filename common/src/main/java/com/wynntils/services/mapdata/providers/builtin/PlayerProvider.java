@@ -9,7 +9,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
-import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.event.HadesUserEvent;
@@ -23,7 +22,6 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.Texture;
@@ -38,17 +36,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class CharacterProvider extends BuiltInProvider {
-    private static final CharacterLocation CHARACTER_LOCATION = new CharacterLocation();
-    private static final List<HadesPlayerLocation> PLAYERS = new ArrayList<>();
+public class PlayerProvider extends BuiltInProvider {
+    private static final List<RemotePlayerLocation> PLAYERS = new ArrayList<>();
 
     // Provided features and categories
     private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
-
-    @SubscribeEvent
-    public void onCharacterMove(CharacterMovedEvent e) {
-        notifyCallbacks(CHARACTER_LOCATION);
-    }
 
     @SubscribeEvent
     public void onHadesAuthenticatedEvent(HadesEvent.Authenticated event) {
@@ -73,17 +65,17 @@ public class CharacterProvider extends BuiltInProvider {
     private void reloadHadesUsers() {
         PLAYERS.forEach(this::notifyCallbacks);
         PLAYERS.clear();
-        Services.Hades.getHadesUsers().map(HadesPlayerLocation::new).forEach(PLAYERS::add);
+        Services.Hades.getHadesUsers().map(RemotePlayerLocation::new).forEach(PLAYERS::add);
     }
 
     @Override
     public String getProviderId() {
-        return "characters";
+        return "players";
     }
 
     @Override
     public Stream<MapFeature> getFeatures() {
-        return Stream.concat(Stream.of(CHARACTER_LOCATION), PLAYERS.stream());
+        return PLAYERS.stream().map(MapFeature.class::cast);
     }
 
     @Override
@@ -94,7 +86,7 @@ public class CharacterProvider extends BuiltInProvider {
     private static final class PlayersCategory implements MapCategory {
         @Override
         public String getCategoryId() {
-            return "wynntils:players";
+            return "wynntils:player";
         }
 
         @Override
@@ -118,10 +110,10 @@ public class CharacterProvider extends BuiltInProvider {
         }
     }
 
-    public static final class HadesPlayerLocation implements MapLocation {
+    public static final class RemotePlayerLocation implements MapLocation {
         private final HadesUser hadesUser;
 
-        public HadesPlayerLocation(HadesUser hadesUser) {
+        public RemotePlayerLocation(HadesUser hadesUser) {
             this.hadesUser = hadesUser;
         }
 
@@ -132,12 +124,12 @@ public class CharacterProvider extends BuiltInProvider {
 
         @Override
         public String getFeatureId() {
-            return "player-" + hadesUser.getName().toLowerCase(Locale.ROOT);
+            return hadesUser.getName().toLowerCase(Locale.ROOT);
         }
 
         @Override
         public String getCategoryId() {
-            return "wynntils:players:hades" + (hadesUser.getRelation().isEmpty() ? "" : ":" + hadesUser.getRelation());
+            return "wynntils:players:" + (hadesUser.getRelation().isEmpty() ? "other" : hadesUser.getRelation());
         }
 
         @Override
@@ -200,7 +192,7 @@ public class CharacterProvider extends BuiltInProvider {
                 final float renderX = 0;
                 final float renderY = fullscreenMap ? -25 : 0;
 
-                HadesUser user = HadesPlayerLocation.this.hadesUser;
+                HadesUser user = RemotePlayerLocation.this.hadesUser;
                 ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
 
                 if (!fullscreenMap) {
@@ -273,38 +265,6 @@ public class CharacterProvider extends BuiltInProvider {
 
                 poseStack.popPose();
             }
-        }
-    }
-
-    private static final class CharacterLocation implements MapLocation {
-        @Override
-        public String getFeatureId() {
-            return "player-you";
-        }
-
-        @Override
-        public String getCategoryId() {
-            return "wynntils:players:you";
-        }
-
-        @Override
-        public Optional<MapAttributes> getAttributes() {
-            return Optional.of(new AbstractMapAttributes() {
-                @Override
-                public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(FixedMapVisibility.ICON_NEVER);
-                }
-            });
-        }
-
-        @Override
-        public List<String> getTags() {
-            return List.of();
-        }
-
-        @Override
-        public Location getLocation() {
-            return new Location(McUtils.player().blockPosition());
         }
     }
 }
