@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -77,7 +77,7 @@ public class ExperienceGainMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onProfessionXpGain(ProfessionXpGainEvent event) {
-        if (!Models.WorldState.onWorld() || professions.get()) return;
+        if (!Models.WorldState.onWorld() || !professions.get()) return;
         ProfessionType profession = event.getProfession();
         float lastRawXpGain = lastRawProfessionXpGains.getOrDefault(profession, 0F);
         float currentXpPercentage = event.getCurrentXpPercentage();
