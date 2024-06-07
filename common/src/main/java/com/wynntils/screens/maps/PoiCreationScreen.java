@@ -1118,7 +1118,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 && (COORDINATE_PATTERN.matcher(yInput.getTextBoxInput()).matches()
                         || yInput.getTextBoxInput().isEmpty())
                 && COORDINATE_PATTERN.matcher(zInput.getTextBoxInput()).matches()
-                && priority >= 0
+                && priority > 0
                 && priority <= 1000;
     }
 
