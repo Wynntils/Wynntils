@@ -173,9 +173,8 @@ public class CompassCommand extends Command {
         if (selectedKind == null) return 0;
 
         Position currentPosition = McUtils.player().position();
-        Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER
-                .getFeatures()
-                .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
+        Optional<MapLocation> closestServiceOptional = Services.MapData.getFeaturesForCategory(
+                        "wynntils:service:" + selectedKind.getMapDataId())
                 .map(f -> (MapLocation) f)
                 .min(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)));
 
@@ -205,8 +204,7 @@ public class CompassCommand extends Command {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
-                .getFeatures()
+        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:places")
                 .map(f -> (MapLocation) f)
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))

@@ -35,12 +35,12 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
-    public static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
-    public static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
-    public static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
-    public static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
-    public static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
-    public static final CharacterProvider CHARACTER_PROVIDER = new CharacterProvider();
+    private static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
+    private static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
+    private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
+    private static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
+    private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
+    private static final CharacterProvider CHARACTER_PROVIDER = new CharacterProvider();
     public static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
     public static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
 
@@ -252,6 +252,10 @@ public class MapDataService extends Service {
         }
 
         return 0;
+    }
+
+    public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
+        return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
     }
 
     private static final class PlaceholderProvider implements MapDataProvider {
