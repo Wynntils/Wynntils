@@ -541,9 +541,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
-
-        if (!KeyboardUtils.isShiftDown()) return;
-        RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 
     @Override
