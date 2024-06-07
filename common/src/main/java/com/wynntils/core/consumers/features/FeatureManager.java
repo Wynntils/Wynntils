@@ -15,6 +15,7 @@ import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MythicFoundFeature;
+import com.wynntils.features.ProfessionXpGainMessageFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.chat.BombBellRelayFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -385,6 +386,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
         registerFeature(new MythicFoundFeature());
+        registerFeature(new ProfessionXpGainMessageFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         // endregion
 
