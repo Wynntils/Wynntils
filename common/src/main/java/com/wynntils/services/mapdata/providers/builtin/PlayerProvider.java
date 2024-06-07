@@ -188,10 +188,6 @@ public class PlayerProvider extends BuiltInProvider {
                 // center the player icon
                 poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0);
 
-                // FIXME: Remove
-                final float renderX = 0;
-                final float renderY = 0;
-
                 HadesUser user = RemotePlayerLocation.this.hadesUser;
                 ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
 
@@ -201,10 +197,10 @@ public class PlayerProvider extends BuiltInProvider {
                             poseStack,
                             bufferSource,
                             user.getRelationColor(),
-                            renderX,
-                            renderY,
-                            renderX + playerHeadRenderSize,
-                            renderY + playerHeadRenderSize,
+                            0,
+                            0,
+                            playerHeadRenderSize,
+                            playerHeadRenderSize,
                             0,
                             2);
                 }
@@ -214,8 +210,8 @@ public class PlayerProvider extends BuiltInProvider {
                         poseStack,
                         bufferSource,
                         skin,
-                        renderX,
-                        renderY,
+                        0,
+                        0,
                         0,
                         playerHeadRenderSize,
                         playerHeadRenderSize,
@@ -231,8 +227,8 @@ public class PlayerProvider extends BuiltInProvider {
                         poseStack,
                         bufferSource,
                         skin,
-                        renderX,
-                        renderY,
+                        0,
+                        0,
                         1,
                         playerHeadRenderSize,
                         playerHeadRenderSize,
@@ -252,10 +248,10 @@ public class PlayerProvider extends BuiltInProvider {
                             poseStack,
                             bufferSource,
                             Texture.HEALTH_BAR,
-                            renderX - 10,
-                            renderY + playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 7,
-                            renderX + playerHeadRenderSize + 10,
-                            renderY + playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 1,
+                            -10,
+                            playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 7,
+                            playerHeadRenderSize + 10,
+                            playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 1,
                             0,
                             healthTexture.getTextureY1(),
                             81,
