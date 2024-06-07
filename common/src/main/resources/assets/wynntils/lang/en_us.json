@@ -2407,6 +2407,7 @@
   "screens.wynntils.waypointCategory.currentCategory": "Current Category",
   "screens.wynntils.waypointCategory.nameTooltip": "Category names must be alphanumerical. Use \"-\" for spaces and separate with \":\" to create subcategories",
   "screens.wynntils.waypointCategory.newCategory": "Create new category",
+  "screens.wynntils.waypointCategory.noCategories": "No categories",
   "screens.wynntils.waypointCategory.useCurrent": "Use current category",
   "screens.wynntils.waypointCategory.useNew": "Use new category",
   "screens.wynntils.wynntilsActivities.filterHelper": "You can use the filters below.",

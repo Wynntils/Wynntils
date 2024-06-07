@@ -4,11 +4,13 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.CategoryWidget;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -31,6 +33,8 @@ import net.minecraft.network.chat.Component;
 
 public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
     private static final int CATEGORIES_PER_PAGE = 16;
+    private static final int SCROLLBAR_HEIGHT = 40;
+    private static final float SCROLL_FACTOR = 10f;
     private static final String DEFAULT_CATEGORY = "wynntils:personal:waypoint";
     private static final Pattern CATEGORY_PATTERN = Pattern.compile("^[a-zA-Z0-9:-]+$");
 
@@ -38,7 +42,10 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
     private final PoiCreationScreen creationScreen;
     private List<CategoryWidget> categoryWidgets = new ArrayList<>();
 
+    private boolean draggingScroll;
     private Button useNewCategoryButton;
+    private float scrollRenderY;
+    private int scrollOffset = 0;
     private String categoryPath;
     private String currentCategory = "";
     private Set<String> allCategories;
@@ -126,8 +133,10 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                poseStack,
                 CommonColors.BLACK.withAlpha(100),
                 dividedWidth * 33,
                 dividedHeight * 22,
@@ -142,12 +151,25 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
         }
 
         if (categoryWidgets.size() > CATEGORIES_PER_PAGE) {
-            // Render scroll bar
+            renderScrollBar(poseStack);
+        } else if (categoryWidgets.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.waypointCategory.noCategories")),
+                            dividedWidth * 2,
+                            dividedHeight * 32,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            2);
         }
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        poseStack,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.waypointCategory.currentCategory") + ": " + currentCategory),
                         dividedWidth * 34,
@@ -161,7 +183,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        poseStack,
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.waypointCategory.categoryPath") + ": " + categoryPath),
                         dividedWidth * 34,
@@ -175,7 +197,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.newCategory") + ":"),
                         dividedWidth * 34,
                         dividedHeight * 32,
@@ -199,7 +221,55 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
             }
         }
 
+        if (!draggingScroll
+                && (categoryWidgets.size() > CATEGORIES_PER_PAGE)
+                && MathUtils.isInside(
+                        (int) mouseX,
+                        (int) mouseY,
+                        (int) (dividedWidth * 32),
+                        (int) (dividedWidth * 32) + (int) (dividedWidth / 2),
+                        (int) scrollRenderY,
+                        (int) (scrollRenderY + SCROLLBAR_HEIGHT))) {
+            draggingScroll = true;
+            return true;
+        }
+
         return super.doMouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (draggingScroll) {
+            int newOffset = Math.round(
+                    MathUtils.map((float) mouseY, 20, 20 + this.height - SCROLLBAR_HEIGHT, 0, getMaxScrollOffset()));
+
+            newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
+
+            scroll(newOffset);
+
+            return true;
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        draggingScroll = false;
+
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
+
+        if (categoryWidgets.size() > CATEGORIES_PER_PAGE) {
+            int newOffset = Math.max(0, Math.min(scrollOffset + scrollAmount, getMaxScrollOffset()));
+            scroll(newOffset);
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     public void selectCategory(String category) {
@@ -253,6 +323,8 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
 
             renderY += (int) (dividedHeight * 4);
         }
+
+        scroll(scrollOffset);
     }
 
     private void updateCategoryList() {
@@ -269,5 +341,35 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                 })
                 .filter(category -> !category.isEmpty())
                 .collect(Collectors.toSet()));
+    }
+
+    private void renderScrollBar(PoseStack poseStack) {
+        RenderUtils.drawRect(
+                poseStack, CommonColors.LIGHT_GRAY, (dividedWidth * 32), 0, 0, (dividedWidth / 2), this.height);
+
+        scrollRenderY = (int) (MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, this.height - SCROLLBAR_HEIGHT));
+
+        RenderUtils.drawRect(
+                poseStack,
+                draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
+                (dividedWidth * 32),
+                scrollRenderY,
+                0,
+                (dividedWidth / 2),
+                SCROLLBAR_HEIGHT);
+    }
+
+    private void scroll(int newOffset) {
+        scrollOffset = newOffset;
+
+        for (CategoryWidget categoryWidget : categoryWidgets) {
+            int newY = (categoryWidgets.indexOf(categoryWidget) * (int) (dividedHeight * 4)) - scrollOffset;
+
+            categoryWidget.setY(newY);
+        }
+    }
+
+    private int getMaxScrollOffset() {
+        return (categoriesList.size() - CATEGORIES_PER_PAGE) * (int) (dividedHeight * 4);
     }
 }
