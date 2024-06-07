@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.mapdata.features.ServiceLocation;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -28,8 +28,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class LocateCommand extends Command {
-    public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
+    public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Arrays.stream(ServiceLocation.ServiceKind.values()).map(ServiceLocation.ServiceKind::getName),
+                    builder);
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
@@ -63,8 +65,9 @@ public class LocateCommand extends Command {
     }
 
     // This is shared between /locate and /compass
-    public static ServiceKind getServiceKind(CommandContext<CommandSourceStack> context, String searchedName) {
-        List<ServiceKind> matchedKinds = Arrays.stream(ServiceKind.values())
+    public static ServiceLocation.ServiceKind getServiceKind(
+            CommandContext<CommandSourceStack> context, String searchedName) {
+        List<ServiceLocation.ServiceKind> matchedKinds = Arrays.stream(ServiceLocation.ServiceKind.values())
                 .filter(kind -> StringUtils.partialMatch(kind.getName(), searchedName))
                 .toList();
 
@@ -77,7 +80,7 @@ public class LocateCommand extends Command {
 
         if (matchedKinds.size() > 1) {
             // Do we have an exact match for any of these?
-            Optional<ServiceKind> exactMatch = matchedKinds.stream()
+            Optional<ServiceLocation.ServiceKind> exactMatch = matchedKinds.stream()
                     .filter(k -> k.getName().equals(searchedName))
                     .findFirst();
             if (exactMatch.isPresent()) {
@@ -88,7 +91,10 @@ public class LocateCommand extends Command {
                             + "'. Pleace specify with more detail. Matching: ")
                     .withStyle(ChatFormatting.RED);
             response.append(Component.literal(String.join(
-                    ", ", matchedKinds.stream().map(ServiceKind::getName).toList())));
+                    ", ",
+                    matchedKinds.stream()
+                            .map(ServiceLocation.ServiceKind::getName)
+                            .toList())));
             context.getSource().sendFailure(response);
             return null;
         }
@@ -100,7 +106,7 @@ public class LocateCommand extends Command {
     private int locateService(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
+        ServiceLocation.ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
         // Only keep the 4 closest results

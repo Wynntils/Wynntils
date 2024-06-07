@@ -37,18 +37,6 @@ public class MainMapFeature extends Feature {
     public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
     @Persisted
-    public final Config<Float> combatPoiMinZoom = new Config<>(0.166f);
-
-    @Persisted
-    public final Config<Float> cavePoiMinZoom = new Config<>(0.28f);
-
-    @Persisted
-    public final Config<Float> servicePoiMinZoom = new Config<>(0.8f);
-
-    @Persisted
-    public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
-
-    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
     @Persisted

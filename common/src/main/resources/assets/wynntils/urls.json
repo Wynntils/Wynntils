@@ -194,14 +194,14 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/seaskipper_destinations.json"
   },
   {
+    "id": "dataStaticServiceMapFeatures",
+    "md5": "c84ea9dfea44549d579c376fc904be35",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/service_mapfeatures.json"
+  },
+  {
     "id": "dataStaticServices",
     "md5": "183e76811f0b598649753c870e158444",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
-  },
-  {
-    "id": "dataStaticServicesMapFeatures",
-    "md5": "c84ea9dfea44549d579c376fc904be35",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/service_mapfeatures.json"
   },
   {
     "id": "dataStaticShinyStats",
