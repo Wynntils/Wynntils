@@ -18,7 +18,6 @@ import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonIcon;
@@ -27,9 +26,9 @@ import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -41,12 +40,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -55,16 +55,19 @@ import org.lwjgl.glfw.GLFW;
 public final class PoiCreationScreen extends AbstractMapScreen {
     // Constants
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d{1,8}");
+    private static final Pattern ICON_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9-]+$");
     private static final float GRID_DIVISIONS = 64.0f;
 
     // Collections
     private final List<VisibilitySlider> labelSliders = new ArrayList<>();
     private final List<VisibilitySlider> iconSliders = new ArrayList<>();
+    private final List<AbstractWidget> waypointWidgets = new ArrayList<>();
 
     // Widgets
     private Button previousIconButton;
     private Button nextIconButton;
     private Button saveButton;
+    private Button tabButton;
     private OptionButton labelShadowButton;
     private OptionButton iconTypeButton;
     private OptionButton labelVisiblityButton;
@@ -73,6 +76,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private TextInputBoxWidget labelColorInput;
     private TextInputBoxWidget iconBase64Input;
     private TextInputBoxWidget iconColorInput;
+    private TextInputBoxWidget iconNameInput;
     private TextInputBoxWidget xInput;
     private TextInputBoxWidget yInput;
     private TextInputBoxWidget zInput;
@@ -92,8 +96,9 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     // Screen information
     private final Screen returnScreen;
     private WaypointsProvider.WaypointLocation oldWaypoint;
-    private PoiLocation setupLocation;
+    private Location setupLocation;
     private boolean firstSetup;
+    private boolean visibilityTab = false;
 
     // Waypoint details
     private CustomColor iconColorCache = CommonColors.WHITE;
@@ -101,10 +106,13 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private IconType iconType = IconType.WYNNTILS;
     private int selectedIconIndex = 0;
     private Integer parsedXInput;
+    private Integer parsedYInput = 0;
     private Integer parsedZInput;
     private MapIcon icon;
     private int priority;
     private String category = "";
+    private String iconName = "";
+    private String label = "";
     private TextShadow labelShadow = TextShadow.NORMAL;
     private VisibilityType iconVisibilityType = VisibilityType.CUSTOM;
     private VisibilityType labelVisibilityType = VisibilityType.CUSTOM;
@@ -117,7 +125,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, Location setupLocation) {
         this(oldMapScreen);
 
         this.setupLocation = setupLocation;
@@ -143,7 +151,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         return new PoiCreationScreen(oldMapScreen);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, PoiLocation setupLocation) {
+    public static Screen create(MainMapScreen oldMapScreen, Location setupLocation) {
         return new PoiCreationScreen(oldMapScreen, setupLocation);
     }
 
@@ -176,381 +184,22 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
 
-        // region Label
-        labelInput = new TextInputBoxWidget(
-                (int) dividedWidth,
-                (int) (dividedHeight * 4),
-                (int) (dividedWidth * 10),
-                20,
-                (s) -> updateWaypoint(),
-                this,
-                labelInput);
-        this.addRenderableWidget(labelInput);
-
-        if (firstSetup && oldWaypoint != null) {
-            if (oldWaypoint.getAttributes().isPresent()) {
-                oldWaypoint.getAttributes().get().getLabel().ifPresent(label -> labelInput.setTextBoxInput(label));
-            }
-        }
-
+        // Always setup the visibility widgets so the sliders aren't null
         if (firstSetup) {
-            setFocusedTextInput(labelInput);
+            setupAdvancedWidgets();
         }
 
-        if (firstSetup && oldWaypoint != null) {
-            if (oldWaypoint.getAttributes().isPresent()) {
-                oldWaypoint.getAttributes().get().getLabelShadow().ifPresent(shadow -> labelShadow = shadow);
-            }
+        if (!visibilityTab) {
+            setupBasicWidgets();
+        } else {
+            setupAdvancedWidgets();
         }
-
-        labelShadowButton = new OptionButton(
-                (int) (dividedWidth * 12),
-                (int) (dividedHeight * 4),
-                (int) (dividedWidth * 10),
-                Component.literal(labelShadow.name()));
-        this.addRenderableWidget(labelShadowButton);
-
-        labelColorInput = new TextInputBoxWidget(
-                (int) (dividedWidth * 23),
-                (int) (dividedHeight * 4),
-                (int) (dividedWidth * 5.5),
-                20,
-                (s) -> {
-                    CustomColor color = CustomColor.fromHexString(s);
-
-                    if (color == CustomColor.NONE) {
-                        // Default to white
-                        labelColorCache = CommonColors.WHITE;
-                        labelColorInput.setRenderColor(CommonColors.RED);
-                    } else {
-                        labelColorCache = color;
-                        labelColorInput.setRenderColor(CommonColors.GREEN);
-                    }
-
-                    updateWaypoint();
-                },
-                this,
-                labelColorInput);
-        this.addRenderableWidget(labelColorInput);
-
-        if (firstSetup && oldWaypoint != null && oldWaypoint.getAttributes().isPresent()) {
-            oldWaypoint
-                    .getAttributes()
-                    .get()
-                    .getLabelColor()
-                    .ifPresent(labelColor -> labelColorInput.setTextBoxInput(labelColor.toHexString()));
-        }
-
-        if (labelColorInput.getTextBoxInput().isEmpty()) {
-            labelColorInput.setTextBoxInput("#FFFFFF");
-        }
-        // endregion
-
-        // region Icon
-        // TODO: Populate from oldWaypoint
-        iconTypeButton = new OptionButton(
-                (int) dividedWidth,
-                (int) (dividedHeight * 12),
-                (int) (dividedWidth * 10),
-                Component.literal(iconType.name()));
-        this.addRenderableWidget(iconTypeButton);
-
-        iconBase64Input = new TextInputBoxWidget(
-                (int) (dividedWidth * 12),
-                (int) (dividedHeight * 12),
-                (int) (dividedWidth * 8),
-                20,
-                (s) -> {
-                    updateCustomIcon();
-                    updateWaypoint();
-                },
-                this,
-                iconBase64Input);
-        this.addRenderableWidget(iconBase64Input);
-
-        iconBase64Input.visible = iconType == IconType.CUSTOM;
-
-        previousIconButton = new Button.Builder(Component.literal("<"), (button) -> {
-                    if (selectedIconIndex - 1 < 0) {
-                        selectedIconIndex = Services.Poi.POI_ICONS.size() - 1;
-                    } else {
-                        selectedIconIndex--;
-                    }
-
-                    updateWaypoint();
-                })
-                .pos((int) (dividedWidth * 12), (int) (dividedHeight * 12))
-                .size(20, 20)
-                .build();
-        this.addRenderableWidget(previousIconButton);
-
-        nextIconButton = new Button.Builder(Component.literal(">"), (button) -> {
-                    if (selectedIconIndex + 1 >= Services.Poi.POI_ICONS.size()) {
-                        selectedIconIndex = 0;
-                    } else {
-                        selectedIconIndex++;
-                    }
-
-                    updateWaypoint();
-                })
-                .pos((int) (dividedWidth * 20), (int) (dividedHeight * 12))
-                .size(20, 20)
-                .build();
-        this.addRenderableWidget(nextIconButton);
-
-        previousIconButton.visible = iconType == IconType.WYNNTILS;
-        nextIconButton.visible = iconType == IconType.WYNNTILS;
-
-        iconColorInput = new TextInputBoxWidget(
-                (int) (dividedWidth * 23),
-                (int) (dividedHeight * 12),
-                (int) (dividedWidth * 5.5),
-                20,
-                (s) -> {
-                    CustomColor color = CustomColor.fromHexString(s);
-
-                    if (color == CustomColor.NONE) {
-                        // Default to white
-                        iconColorCache = CommonColors.WHITE;
-                        iconColorInput.setRenderColor(CommonColors.RED);
-                    } else {
-                        iconColorCache = color;
-                        iconColorInput.setRenderColor(CommonColors.GREEN);
-                    }
-
-                    updateWaypoint();
-                },
-                this,
-                iconColorInput);
-        this.addRenderableWidget(iconColorInput);
-
-        if (firstSetup && oldWaypoint != null && oldWaypoint.getAttributes().isPresent()) {
-            oldWaypoint
-                    .getAttributes()
-                    .get()
-                    .getIconColor()
-                    .ifPresent(iconColor -> iconColorInput.setTextBoxInput(iconColor.toHexString()));
-        }
-
-        if (iconColorInput.getTextBoxInput().isEmpty()) {
-            iconColorInput.setTextBoxInput("#FFFFFF");
-        }
-        // endregion
-
-        // region Location
-        xInput = new TextInputBoxWidget(
-                (int) dividedWidth,
-                (int) (dividedHeight * 20),
-                (int) (dividedWidth * 7),
-                20,
-                s -> {
-                    if (COORDINATE_PATTERN.matcher(s).matches()) {
-                        parsedXInput = Integer.parseInt(s);
-                        xInput.setRenderColor(CommonColors.GREEN);
-                        if (parsedZInput != null) {
-                            updateMapCenter(parsedXInput, parsedZInput);
-                        }
-                    } else {
-                        parsedXInput = null;
-                        xInput.setRenderColor(CommonColors.RED);
-                    }
-                    updateWaypoint();
-                },
-                this,
-                xInput);
-        this.addRenderableWidget(xInput);
-
-        yInput = new TextInputBoxWidget(
-                (int) (dividedWidth * 9),
-                (int) (dividedHeight * 20),
-                (int) (dividedWidth * 7),
-                20,
-                s -> {
-                    yInput.setRenderColor(
-                            COORDINATE_PATTERN.matcher(s).matches() ? CommonColors.GREEN : CommonColors.RED);
-                    updateWaypoint();
-                },
-                this,
-                yInput);
-        this.addRenderableWidget(yInput);
-
-        zInput = new TextInputBoxWidget(
-                (int) (dividedWidth * 17),
-                (int) (dividedHeight * 20),
-                (int) (dividedWidth * 7),
-                20,
-                s -> {
-                    if (COORDINATE_PATTERN.matcher(s).matches()) {
-                        parsedZInput = Integer.parseInt(s);
-                        zInput.setRenderColor(CommonColors.GREEN);
-                        if (parsedXInput != null) {
-                            updateMapCenter(parsedXInput, parsedZInput);
-                        }
-                    } else {
-                        parsedZInput = null;
-                        zInput.setRenderColor(CommonColors.RED);
-                    }
-                    updateWaypoint();
-                },
-                this,
-                zInput);
-        this.addRenderableWidget(zInput);
-
-        if (firstSetup) {
-            if (oldWaypoint != null) {
-                xInput.setTextBoxInput(String.valueOf(oldWaypoint.getLocation().x));
-                yInput.setTextBoxInput(String.valueOf(oldWaypoint.getLocation().y));
-                zInput.setTextBoxInput(String.valueOf(oldWaypoint.getLocation().z));
-            } else if (setupLocation != null) {
-                xInput.setTextBoxInput(String.valueOf(setupLocation.getX()));
-                Optional<Integer> y = setupLocation.getY();
-                yInput.setTextBoxInput(y.isPresent() ? String.valueOf(y.get()) : "");
-                zInput.setTextBoxInput(String.valueOf(setupLocation.getZ()));
-            }
-        }
-
-        this.addRenderableWidget(new Button.Builder(Component.literal("🧍"), (button) -> {
-                    xInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockX()));
-                    yInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockY()));
-                    zInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockZ()));
-                })
-                .pos((int) (dividedWidth * 26), (int) (dividedHeight * 20))
-                .size(20, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerPlayer")))
-                .build());
-
-        this.addRenderableWidget(new Button.Builder(Component.literal("🌍"), (button) -> {
-                    xInput.setTextBoxInput(String.valueOf(MAP_CENTER_X));
-                    zInput.setTextBoxInput(String.valueOf(MAP_CENTER_Z));
-                })
-                .pos((int) (dividedWidth * 29), (int) (dividedHeight * 20))
-                .size(20, 20)
-                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerWorld")))
-                .build());
-        // endregion
-
-        // region Visibility
-        priorityInput = new TextInputBoxWidget(
-                (int) dividedWidth,
-                (int) (dividedHeight * 28),
-                (int) (dividedWidth * 9),
-                20,
-                s -> {
-                    try {
-                        priority = Integer.parseInt(s);
-                        priorityInput.setRenderColor(CommonColors.WHITE);
-                    } catch (NumberFormatException e) {
-                        priority = -1;
-                        priorityInput.setRenderColor(CommonColors.RED);
-                    }
-
-                    if (priority < 0 || priority > 1000) {
-                        priorityInput.setRenderColor(CommonColors.RED);
-                    }
-
-                    updateWaypoint();
-                },
-                this,
-                priorityInput);
-        this.addRenderableWidget(priorityInput);
-
-        if (firstSetup && oldWaypoint != null) {
-            if (oldWaypoint.getAttributes().isPresent()
-                    && oldWaypoint.getAttributes().get().getPriority().isPresent()) {
-                priorityInput.setTextBoxInput(String.valueOf(
-                        oldWaypoint.getAttributes().get().getPriority().get()));
-            }
-        }
-
-        labelVisiblityButton = new OptionButton(
-                (int) (dividedWidth * 11),
-                (int) (dividedHeight * 28),
-                (int) (dividedWidth * 9),
-                Component.literal(labelVisibilityType.name()));
-        this.addRenderableWidget(labelVisiblityButton);
-
-        iconVisiblityButton = new OptionButton(
-                (int) (dividedWidth * 21),
-                (int) (dividedHeight * 28),
-                (int) (dividedWidth * 9),
-                Component.literal(iconVisibilityType.name()));
-        this.addRenderableWidget(iconVisiblityButton);
-
-        labelMinVisibilitySlider = new VisibilitySlider(
-                (int) dividedWidth, (int) (dividedHeight * 36), (int) (dividedWidth * 9), Component.literal("1"), 0.0);
-        this.addRenderableWidget(labelMinVisibilitySlider);
-
-        labelMaxVisibilitySlider = new VisibilitySlider(
-                (int) (dividedWidth * 11),
-                (int) (dividedHeight * 36),
-                (int) (dividedWidth * 9),
-                Component.literal("100"),
-                1.0);
-        this.addRenderableWidget(labelMaxVisibilitySlider);
-
-        labelFadeSlider = new VisibilitySlider(
-                (int) (dividedWidth * 21),
-                (int) (dividedHeight * 36),
-                (int) (dividedWidth * 9),
-                Component.literal("5"),
-                0.05);
-        this.addRenderableWidget(labelFadeSlider);
-
-        iconMinVisibilitySlider = new VisibilitySlider(
-                (int) dividedWidth, (int) (dividedHeight * 44), (int) (dividedWidth * 9), Component.literal("1"), 0.0);
-        this.addRenderableWidget(iconMinVisibilitySlider);
-
-        iconMaxVisibilitySlider = new VisibilitySlider(
-                (int) (dividedWidth * 11),
-                (int) (dividedHeight * 44),
-                (int) (dividedWidth * 9),
-                Component.literal("100"),
-                1.0);
-        this.addRenderableWidget(iconMaxVisibilitySlider);
-
-        iconFadeSlider = new VisibilitySlider(
-                (int) (dividedWidth * 21),
-                (int) (dividedHeight * 44),
-                (int) (dividedWidth * 9),
-                Component.literal("5"),
-                0.05);
-        this.addRenderableWidget(iconFadeSlider);
-
-        if (firstSetup && oldWaypoint != null) {
-            if (oldWaypoint.getAttributes().isPresent()
-                    && oldWaypoint.getAttributes().get().getLabelVisibility().isPresent()) {
-                MapVisibility labelVisibility =
-                        oldWaypoint.getAttributes().get().getLabelVisibility().get();
-
-                labelVisibility.getMin().ifPresent(min -> labelMinVisibilitySlider.setVisibility(min));
-                labelVisibility.getMax().ifPresent(max -> labelMaxVisibilitySlider.setVisibility(max));
-                labelVisibility.getFade().ifPresent(fade -> labelFadeSlider.setVisibility(fade));
-            }
-
-            if (oldWaypoint.getAttributes().isPresent()
-                    && oldWaypoint.getAttributes().get().getIconVisibility().isPresent()) {
-                MapVisibility iconVisibility =
-                        oldWaypoint.getAttributes().get().getIconVisibility().get();
-
-                iconVisibility.getMin().ifPresent(min -> iconMinVisibilitySlider.setVisibility(min));
-                iconVisibility.getMax().ifPresent(max -> iconMaxVisibilitySlider.setVisibility(max));
-                iconVisibility.getFade().ifPresent(fade -> iconFadeSlider.setVisibility(fade));
-            }
-        }
-
-        labelSliders.add(labelMinVisibilitySlider);
-        labelSliders.add(labelMaxVisibilitySlider);
-        labelSliders.add(labelFadeSlider);
-        iconSliders.add(iconMinVisibilitySlider);
-        iconSliders.add(iconMaxVisibilitySlider);
-        iconSliders.add(iconFadeSlider);
-        // endregion
 
         // region Category
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.poiCreation.changeCategory"),
                         (button) -> McUtils.mc().setScreen(WaypointCategoryScreen.create(this, category)))
-                .pos((int) (dividedWidth * 18), (int) (dividedHeight * 50))
+                .pos((int) (dividedWidth * 18), (int) (dividedHeight * 48))
                 .size((int) (dividedWidth * 9), 20)
                 .build());
 
@@ -560,6 +209,25 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Screen Interactions
+        tabButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.poiCreation.editVisibility"), (button) -> {
+                            visibilityTab = !visibilityTab;
+
+                            if (visibilityTab) {
+                                tabButton.setMessage(
+                                        Component.translatable("screens.wynntils.poiCreation.editWaypoint"));
+                                setupAdvancedWidgets();
+                            } else {
+                                tabButton.setMessage(
+                                        Component.translatable("screens.wynntils.poiCreation.editVisibility"));
+                                setupBasicWidgets();
+                            }
+                        })
+                .pos((int) (dividedWidth * 10), (int) (dividedHeight * 42))
+                .size((int) (dividedWidth * 12), 20)
+                .build();
+        this.addRenderableWidget(tabButton);
+
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
                 .pos((int) (dividedWidth * 4), (int) (dividedHeight * 56))
@@ -595,13 +263,11 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         mapHeight);
 
         if (waypoint != null) {
-            ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(waypoint);
-
             MapFeatureRenderer.renderMapFeature(
                     poseStack,
                     guiGraphics.bufferSource(),
                     waypoint,
-                    attributes,
+                    Services.MapData.resolveMapAttributes(waypoint),
                     MapRenderer.getRenderX(waypoint.getLocation().x, mapCenterX, centerX, zoomRenderScale),
                     MapRenderer.getRenderZ(waypoint.getLocation().z, mapCenterZ, centerZ, zoomRenderScale),
                     false,
@@ -625,195 +291,18 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        // region Label
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.label") + ":"),
-                        dividedWidth,
-                        dividedHeight * 2.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelShadow") + ":"),
-                        dividedWidth * 12,
-                        dividedHeight * 2.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelColor") + ":"),
-                        dividedWidth * 23,
-                        dividedHeight * 2.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        RenderUtils.drawRect(poseStack, labelColorCache, dividedWidth * 29, dividedHeight * 4, 0, 20, 20);
-        // endregion
-
-        // region Icon
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.icon") + ":"),
-                        dividedWidth,
-                        dividedHeight * 10.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        if (iconType == IconType.CUSTOM) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString("base64:"),
-                            dividedWidth * 12,
-                            dividedHeight * 10.5f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
+        for (AbstractWidget widget : waypointWidgets) {
+            widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        if (iconType != IconType.NONE) {
+        if (!visibilityTab) {
+            // region Label
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconColor") + ":"),
-                            dividedWidth * 23.0f,
-                            dividedHeight * 10.5f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            RenderUtils.drawRect(poseStack, iconColorCache, dividedWidth * 29, dividedHeight * 12, 0, 20, 20);
-
-            renderIcon(poseStack);
-        }
-        // endregion
-
-        // region Location
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("X:"),
-                        dividedWidth,
-                        dividedHeight * 18.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("Y:"),
-                        dividedWidth * 9.0f,
-                        dividedHeight * 18.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("Z:"),
-                        dividedWidth * 17.0f,
-                        dividedHeight * 18.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-        // endregion
-
-        // region Visiblity
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.priority") + ":"),
-                        dividedWidth,
-                        dividedHeight * 26.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelVisibility") + ":"),
-                        dividedWidth * 11.0f,
-                        dividedHeight * 26.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        if (iconType != IconType.NONE) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconVisibility") + ":"),
-                            dividedWidth * 21.0f,
-                            dividedHeight * 26.5f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        }
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelMinVisibility") + ":"),
-                        dividedWidth,
-                        dividedHeight * 34.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelMaxVisibility") + ":"),
-                        dividedWidth * 11.0f,
-                        dividedHeight * 34.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelFade") + ":"),
-                        dividedWidth * 21.0f,
-                        dividedHeight * 34.5f,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
-
-        if (iconType != IconType.NONE) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconMinVisibility") + ":"),
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.label") + ":"),
                             dividedWidth,
-                            dividedHeight * 42.5f,
+                            dividedHeight * 12.5f,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
@@ -822,9 +311,157 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconMaxVisibility") + ":"),
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelShadow") + ":"),
+                            dividedWidth * 12,
+                            dividedHeight * 12.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelColor") + ":"),
+                            dividedWidth * 23,
+                            dividedHeight * 12.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            RenderUtils.drawRect(poseStack, labelColorCache, dividedWidth * 29, dividedHeight * 14, 0, 20, 20);
+            // endregion
+
+            // region Icon
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.icon") + ":"),
+                            dividedWidth,
+                            dividedHeight * 23.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            if (iconType == IconType.CUSTOM) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconName") + ":"),
+                                dividedWidth * 8,
+                                dividedHeight * 23.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString("base64:"),
+                                dividedWidth * 15,
+                                dividedHeight * 23.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+            }
+
+            if (iconType != IconType.NONE) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconColor") + ":"),
+                                dividedWidth * 23.0f,
+                                dividedHeight * 23.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+
+                RenderUtils.drawRect(poseStack, iconColorCache, dividedWidth * 29, dividedHeight * 25, 0, 20, 20);
+
+                renderIcon(poseStack);
+            }
+            // endregion
+
+            // region Location
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString("X:"),
+                            dividedWidth,
+                            dividedHeight * 34.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString("Y:"),
+                            dividedWidth * 9.0f,
+                            dividedHeight * 34.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString("Z:"),
+                            dividedWidth * 17.0f,
+                            dividedHeight * 34.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+            // endregion
+        } else {
+            // region Visiblity
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.priority") + ":"),
+                            dividedWidth,
+                            dividedHeight * 12.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelVisibility") + ":"),
                             dividedWidth * 11.0f,
-                            dividedHeight * 42.5f,
+                            dividedHeight * 12.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            if (iconType != IconType.NONE) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconVisibility") + ":"),
+                                dividedWidth * 21.0f,
+                                dividedHeight * 12.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelMinVisibility") + ":"),
+                            dividedWidth,
+                            dividedHeight * 23.5f,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
@@ -833,15 +470,61 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconFade") + ":"),
-                            dividedWidth * 21.0f,
-                            dividedHeight * 42.5f,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelMaxVisibility") + ":"),
+                            dividedWidth * 11.0f,
+                            dividedHeight * 23.5f,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelFade") + ":"),
+                            dividedWidth * 21.0f,
+                            dividedHeight * 23.5f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            if (iconType != IconType.NONE) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconMinVisibility") + ":"),
+                                dividedWidth,
+                                dividedHeight * 34.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconMaxVisibility") + ":"),
+                                dividedWidth * 11.0f,
+                                dividedHeight * 34.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconFade") + ":"),
+                                dividedWidth * 21.0f,
+                                dividedHeight * 34.5f,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+            }
+            // endregion
         }
-        // endregion
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -849,7 +532,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.currentCategory") + ": "
                                 + (category.isEmpty() ? "DEFAULT" : category)),
                         dividedWidth * 2.0f,
-                        dividedHeight * 50.0f + 10,
+                        dividedHeight * 48.0f + 10,
                         dividedWidth * 15.0f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -858,6 +541,9 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
+
+        if (!KeyboardUtils.isShiftDown()) return;
+        RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 
     @Override
@@ -867,22 +553,22 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (labelShadowButton.isMouseOver(mouseX, mouseY)) {
+        if (labelShadowButton != null && labelShadowButton.isMouseOver(mouseX, mouseY)) {
             handleLabelShadowClick(button);
             updateWaypoint();
 
             return true;
-        } else if (iconTypeButton.isMouseOver(mouseX, mouseY)) {
+        } else if (iconTypeButton != null && iconTypeButton.isMouseOver(mouseX, mouseY)) {
             handleIconTypeClick(button);
 
             updateWaypoint();
             return true;
-        } else if (labelVisiblityButton.isMouseOver(mouseX, mouseY)) {
+        } else if (labelVisiblityButton != null && labelVisiblityButton.isMouseOver(mouseX, mouseY)) {
             handleLabelVisibilityClick(button);
 
             updateWaypoint();
             return true;
-        } else if (iconVisiblityButton.isMouseOver(mouseX, mouseY)) {
+        } else if (iconVisiblityButton != null && iconVisiblityButton.isMouseOver(mouseX, mouseY)) {
             handleIconVisibilityClick(button);
 
             updateWaypoint();
@@ -913,7 +599,47 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             xInput.setTextBoxInput(String.valueOf(gameX));
             zInput.setTextBoxInput(String.valueOf(gameZ));
         }
+
+        for (GuiEventListener listener : waypointWidgets) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
         return super.doMouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        for (GuiEventListener listener : waypointWidgets) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            }
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        for (GuiEventListener listener : waypointWidgets) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseReleased(mouseX, mouseY, button);
+            }
+        }
+
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        for (GuiEventListener listener : waypointWidgets) {
+            if (listener.isMouseOver(mouseX, mouseY)) {
+                return listener.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+            }
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     @Override
@@ -976,16 +702,16 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         if (iconType == IconType.WYNNTILS) {
             Texture texture = Services.Poi.POI_ICONS.get(selectedIconIndex);
             // left button x + (center between buttons - half of texture width)
-            float x = (dividedWidth * 12 + 20)
-                    + (((dividedWidth * 20) - (dividedWidth * 12 + 20)) / 2 - texture.width() / 2);
+            float x = (dividedWidth * 8 + 20)
+                    + (((dividedWidth * 20) - (dividedWidth * 8 + 20)) / 2 - texture.width() / 2);
 
-            RenderUtils.drawTexturedRect(poseStack, texture, x, dividedHeight * 12);
+            RenderUtils.drawTexturedRect(poseStack, texture, x, dividedHeight * 25);
         } else if (icon != null) {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     icon.getResourceLocation(),
                     (dividedWidth * 21.5f) - icon.getWidth() / 2f,
-                    dividedHeight * 12,
+                    dividedHeight * 25,
                     icon.getWidth(),
                     icon.getHeight(),
                     icon.getWidth(),
@@ -998,9 +724,19 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     private void updateCustomIcon() {
+        if (ICON_NAME_PATTERN.matcher(iconNameInput.getTextBoxInput()).matches()) {
+            iconName = iconNameInput.getTextBoxInput();
+            iconNameInput.setRenderColor(CommonColors.WHITE);
+        } else {
+            iconName = "";
+            iconNameInput.setRenderColor(CommonColors.RED);
+            icon = null;
+            return;
+        }
+
         try {
             byte[] textureByte = Base64.getDecoder().decode(iconBase64Input.getTextBoxInput());
-            icon = new JsonIcon("", textureByte); // FIXME: Proper ID
+            icon = new JsonIcon("wynntils:icon:personal:" + iconName, textureByte);
             iconBase64Input.setRenderColor(CommonColors.WHITE);
         } catch (IOException | IllegalArgumentException e) {
             icon = null;
@@ -1011,22 +747,13 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     private void updateWaypoint() {
         if (saveButton == null) return;
-        if (parsedXInput == null || parsedZInput == null) {
+        if (parsedXInput == null || parsedYInput == null || parsedZInput == null) {
             saveButton.active = false;
             return;
         }
 
-        int parsedYInput;
-
-        try {
-            parsedYInput = Integer.parseInt(yInput.getTextBoxInput());
-        } catch (NumberFormatException e) {
-            parsedYInput = 0;
-        }
-
         Location location = new Location(parsedXInput, parsedYInput, parsedZInput);
 
-        String label = labelInput.getTextBoxInput();
         String iconId = MapIconsProvider.getIconIdFromTexture(Services.Poi.POI_ICONS.get(
                 selectedIconIndex)); // TODO: Get icon list from MapIconsProvider, not PoiService and support custom
         // and no icon
@@ -1102,14 +829,11 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         previousIconButton.visible = iconType == IconType.WYNNTILS;
         nextIconButton.visible = iconType == IconType.WYNNTILS;
         iconBase64Input.visible = iconType == IconType.CUSTOM;
+        iconNameInput.visible = iconType == IconType.CUSTOM;
         iconColorInput.visible = iconType != IconType.NONE;
 
-        iconVisiblityButton.visible = iconType != IconType.NONE;
-        iconMinVisibilitySlider.visible = iconType != IconType.NONE;
-        iconMaxVisibilitySlider.visible = iconType != IconType.NONE;
-        iconFadeSlider.visible = iconType != IconType.NONE;
-
-        if (iconType != IconType.CUSTOM && getFocusedTextInput() == iconBase64Input) {
+        if (iconType != IconType.CUSTOM
+                && (getFocusedTextInput() == iconBase64Input || getFocusedTextInput() == iconNameInput)) {
             this.setFocusedTextInput(null);
         } else if (iconType == IconType.CUSTOM) {
             this.setFocusedTextInput(iconBase64Input);
@@ -1177,6 +901,410 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             labelFadeSlider.setVisibility(
                     FixedMapVisibility.ICON_NEVER.getFade().get());
         }
+    }
+
+    private void setupBasicWidgets() {
+        waypointWidgets.clear();
+
+        // region Label
+        labelInput = new TextInputBoxWidget(
+                (int) dividedWidth,
+                (int) (dividedHeight * 14),
+                (int) (dividedWidth * 10),
+                20,
+                (s) -> {
+                    label = s;
+                    updateWaypoint();
+                },
+                this,
+                labelInput);
+        waypointWidgets.add(labelInput);
+
+        if (firstSetup && oldWaypoint != null) {
+            if (oldWaypoint.getAttributes().isPresent()) {
+                oldWaypoint
+                        .getAttributes()
+                        .get()
+                        .getLabel()
+                        .ifPresent(oldLabel -> labelInput.setTextBoxInput(oldLabel));
+            }
+        }
+
+        if (firstSetup) {
+            setFocusedTextInput(labelInput);
+        }
+
+        if (firstSetup && oldWaypoint != null) {
+            if (oldWaypoint.getAttributes().isPresent()) {
+                oldWaypoint.getAttributes().get().getLabelShadow().ifPresent(shadow -> labelShadow = shadow);
+            }
+        }
+
+        labelShadowButton = new OptionButton(
+                (int) (dividedWidth * 12),
+                (int) (dividedHeight * 14),
+                (int) (dividedWidth * 10),
+                Component.literal(labelShadow.name()));
+        waypointWidgets.add(labelShadowButton);
+
+        labelColorInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 23),
+                (int) (dividedHeight * 14),
+                (int) (dividedWidth * 5.5),
+                20,
+                (s) -> {
+                    CustomColor color = CustomColor.fromHexString(s);
+
+                    if (color == CustomColor.NONE) {
+                        // Default to white
+                        labelColorCache = CommonColors.WHITE;
+                        labelColorInput.setRenderColor(CommonColors.RED);
+                    } else {
+                        labelColorCache = color;
+                        labelColorInput.setRenderColor(CommonColors.GREEN);
+                    }
+
+                    updateWaypoint();
+                },
+                this,
+                labelColorInput);
+        waypointWidgets.add(labelColorInput);
+
+        if (firstSetup && oldWaypoint != null && oldWaypoint.getAttributes().isPresent()) {
+            oldWaypoint
+                    .getAttributes()
+                    .get()
+                    .getLabelColor()
+                    .ifPresent(labelColor -> labelColorInput.setTextBoxInput(labelColor.toHexString()));
+        }
+
+        if (labelColorInput.getTextBoxInput().isEmpty()) {
+            labelColorInput.setTextBoxInput("#FFFFFF");
+        }
+        // endregion
+
+        // region Icon
+        // TODO: Populate from oldWaypoint
+        iconTypeButton = new OptionButton(
+                (int) dividedWidth,
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 6),
+                Component.literal(iconType.name()));
+        waypointWidgets.add(iconTypeButton);
+
+        iconNameInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 8),
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 6),
+                20,
+                (s) -> {
+                    updateCustomIcon();
+                    updateWaypoint();
+                },
+                this,
+                iconNameInput);
+        waypointWidgets.add(iconNameInput);
+
+        iconNameInput.visible = iconType == IconType.CUSTOM;
+
+        iconBase64Input = new TextInputBoxWidget(
+                (int) (dividedWidth * 15),
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 5),
+                20,
+                (s) -> {
+                    updateCustomIcon();
+                    updateWaypoint();
+                },
+                this,
+                iconBase64Input);
+        waypointWidgets.add(iconBase64Input);
+
+        iconBase64Input.visible = iconType == IconType.CUSTOM;
+
+        previousIconButton = new Button.Builder(Component.literal("<"), (button) -> {
+                    if (selectedIconIndex - 1 < 0) {
+                        selectedIconIndex = Services.Poi.POI_ICONS.size() - 1;
+                    } else {
+                        selectedIconIndex--;
+                    }
+
+                    updateWaypoint();
+                })
+                .pos((int) (dividedWidth * 8), (int) (dividedHeight * 25))
+                .size(20, 20)
+                .build();
+        waypointWidgets.add(previousIconButton);
+
+        nextIconButton = new Button.Builder(Component.literal(">"), (button) -> {
+                    if (selectedIconIndex + 1 >= Services.Poi.POI_ICONS.size()) {
+                        selectedIconIndex = 0;
+                    } else {
+                        selectedIconIndex++;
+                    }
+
+                    updateWaypoint();
+                })
+                .pos((int) (dividedWidth * 20), (int) (dividedHeight * 25))
+                .size(20, 20)
+                .build();
+        waypointWidgets.add(nextIconButton);
+
+        previousIconButton.visible = iconType == IconType.WYNNTILS;
+        nextIconButton.visible = iconType == IconType.WYNNTILS;
+
+        iconColorInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 23),
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 5.5),
+                20,
+                (s) -> {
+                    CustomColor color = CustomColor.fromHexString(s);
+
+                    if (color == CustomColor.NONE) {
+                        // Default to white
+                        iconColorCache = CommonColors.WHITE;
+                        iconColorInput.setRenderColor(CommonColors.RED);
+                    } else {
+                        iconColorCache = color;
+                        iconColorInput.setRenderColor(CommonColors.GREEN);
+                    }
+
+                    updateWaypoint();
+                },
+                this,
+                iconColorInput);
+        waypointWidgets.add(iconColorInput);
+
+        if (firstSetup && oldWaypoint != null && oldWaypoint.getAttributes().isPresent()) {
+            oldWaypoint
+                    .getAttributes()
+                    .get()
+                    .getIconColor()
+                    .ifPresent(iconColor -> iconColorInput.setTextBoxInput(iconColor.toHexString()));
+        }
+
+        if (iconColorInput.getTextBoxInput().isEmpty()) {
+            iconColorInput.setTextBoxInput("#FFFFFF");
+        }
+        // endregion
+
+        // region Location
+        xInput = new TextInputBoxWidget(
+                (int) dividedWidth,
+                (int) (dividedHeight * 36),
+                (int) (dividedWidth * 7),
+                20,
+                s -> {
+                    if (COORDINATE_PATTERN.matcher(s).matches()) {
+                        parsedXInput = Integer.parseInt(s);
+                        xInput.setRenderColor(CommonColors.GREEN);
+                        if (parsedZInput != null) {
+                            updateMapCenter(parsedXInput, parsedZInput);
+                        }
+                    } else {
+                        parsedXInput = null;
+                        xInput.setRenderColor(CommonColors.RED);
+                    }
+                    updateWaypoint();
+                },
+                this,
+                xInput);
+        waypointWidgets.add(xInput);
+
+        yInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 9),
+                (int) (dividedHeight * 36),
+                (int) (dividedWidth * 7),
+                20,
+                s -> {
+                    if (COORDINATE_PATTERN.matcher(s).matches()) {
+                        parsedYInput = Integer.parseInt(s);
+                        yInput.setRenderColor(CommonColors.GREEN);
+                    } else {
+                        parsedYInput = 0;
+                    }
+
+                    updateWaypoint();
+                },
+                this,
+                yInput);
+        waypointWidgets.add(yInput);
+
+        zInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 17),
+                (int) (dividedHeight * 36),
+                (int) (dividedWidth * 7),
+                20,
+                s -> {
+                    if (COORDINATE_PATTERN.matcher(s).matches()) {
+                        parsedZInput = Integer.parseInt(s);
+                        zInput.setRenderColor(CommonColors.GREEN);
+                        if (parsedXInput != null) {
+                            updateMapCenter(parsedXInput, parsedZInput);
+                        }
+                    } else {
+                        parsedZInput = null;
+                        zInput.setRenderColor(CommonColors.RED);
+                    }
+                    updateWaypoint();
+                },
+                this,
+                zInput);
+        waypointWidgets.add(zInput);
+
+        if (firstSetup) {
+            if (oldWaypoint != null) {
+                xInput.setTextBoxInput(String.valueOf(oldWaypoint.getLocation().x));
+                yInput.setTextBoxInput(String.valueOf(oldWaypoint.getLocation().y));
+                zInput.setTextBoxInput(String.valueOf(oldWaypoint.getLocation().z));
+            } else if (setupLocation != null) {
+                xInput.setTextBoxInput(String.valueOf(setupLocation.x()));
+                yInput.setTextBoxInput(String.valueOf(setupLocation.y()));
+                zInput.setTextBoxInput(String.valueOf(setupLocation.z()));
+            }
+        }
+
+        waypointWidgets.add(new Button.Builder(Component.literal("🧍"), (button) -> {
+                    xInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockX()));
+                    yInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockY()));
+                    zInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockZ()));
+                })
+                .pos((int) (dividedWidth * 26), (int) (dividedHeight * 36))
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerPlayer")))
+                .build());
+
+        waypointWidgets.add(new Button.Builder(Component.literal("🌍"), (button) -> {
+                    xInput.setTextBoxInput(String.valueOf(MAP_CENTER_X));
+                    zInput.setTextBoxInput(String.valueOf(MAP_CENTER_Z));
+                })
+                .pos((int) (dividedWidth * 29), (int) (dividedHeight * 36))
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerWorld")))
+                .build());
+        // endregion
+    }
+
+    private void setupAdvancedWidgets() {
+        waypointWidgets.clear();
+
+        // region Visibility
+        priorityInput = new TextInputBoxWidget(
+                (int) dividedWidth,
+                (int) (dividedHeight * 14),
+                (int) (dividedWidth * 9),
+                20,
+                s -> {
+                    try {
+                        priority = Integer.parseInt(s);
+                        priorityInput.setRenderColor(CommonColors.WHITE);
+                    } catch (NumberFormatException e) {
+                        priority = -1;
+                        priorityInput.setRenderColor(CommonColors.RED);
+                    }
+
+                    if (priority < 0 || priority > 1000) {
+                        priorityInput.setRenderColor(CommonColors.RED);
+                    }
+
+                    updateWaypoint();
+                },
+                this,
+                priorityInput);
+        waypointWidgets.add(priorityInput);
+
+        if (firstSetup && oldWaypoint != null) {
+            if (oldWaypoint.getAttributes().isPresent()
+                    && oldWaypoint.getAttributes().get().getPriority().isPresent()) {
+                priorityInput.setTextBoxInput(String.valueOf(
+                        oldWaypoint.getAttributes().get().getPriority().get()));
+            }
+        }
+
+        labelVisiblityButton = new OptionButton(
+                (int) (dividedWidth * 11),
+                (int) (dividedHeight * 14),
+                (int) (dividedWidth * 9),
+                Component.literal(labelVisibilityType.name()));
+        waypointWidgets.add(labelVisiblityButton);
+
+        iconVisiblityButton = new OptionButton(
+                (int) (dividedWidth * 21),
+                (int) (dividedHeight * 14),
+                (int) (dividedWidth * 9),
+                Component.literal(iconVisibilityType.name()));
+        waypointWidgets.add(iconVisiblityButton);
+
+        labelMinVisibilitySlider = new VisibilitySlider(
+                (int) dividedWidth, (int) (dividedHeight * 25), (int) (dividedWidth * 9), Component.literal("1"), 0.0);
+        waypointWidgets.add(labelMinVisibilitySlider);
+
+        labelMaxVisibilitySlider = new VisibilitySlider(
+                (int) (dividedWidth * 11),
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 9),
+                Component.literal("100"),
+                1.0);
+        waypointWidgets.add(labelMaxVisibilitySlider);
+
+        labelFadeSlider = new VisibilitySlider(
+                (int) (dividedWidth * 21),
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 9),
+                Component.literal("5"),
+                0.05);
+        waypointWidgets.add(labelFadeSlider);
+
+        iconMinVisibilitySlider = new VisibilitySlider(
+                (int) dividedWidth, (int) (dividedHeight * 36), (int) (dividedWidth * 9), Component.literal("1"), 0.0);
+        waypointWidgets.add(iconMinVisibilitySlider);
+
+        iconMaxVisibilitySlider = new VisibilitySlider(
+                (int) (dividedWidth * 11),
+                (int) (dividedHeight * 36),
+                (int) (dividedWidth * 9),
+                Component.literal("100"),
+                1.0);
+        waypointWidgets.add(iconMaxVisibilitySlider);
+
+        iconFadeSlider = new VisibilitySlider(
+                (int) (dividedWidth * 21),
+                (int) (dividedHeight * 36),
+                (int) (dividedWidth * 9),
+                Component.literal("5"),
+                0.05);
+        waypointWidgets.add(iconFadeSlider);
+
+        if (firstSetup && oldWaypoint != null) {
+            if (oldWaypoint.getAttributes().isPresent()
+                    && oldWaypoint.getAttributes().get().getLabelVisibility().isPresent()) {
+                MapVisibility labelVisibility =
+                        oldWaypoint.getAttributes().get().getLabelVisibility().get();
+
+                labelVisibility.getMin().ifPresent(min -> labelMinVisibilitySlider.setVisibility(min));
+                labelVisibility.getMax().ifPresent(max -> labelMaxVisibilitySlider.setVisibility(max));
+                labelVisibility.getFade().ifPresent(fade -> labelFadeSlider.setVisibility(fade));
+            }
+
+            if (oldWaypoint.getAttributes().isPresent()
+                    && oldWaypoint.getAttributes().get().getIconVisibility().isPresent()) {
+                MapVisibility iconVisibility =
+                        oldWaypoint.getAttributes().get().getIconVisibility().get();
+
+                iconVisibility.getMin().ifPresent(min -> iconMinVisibilitySlider.setVisibility(min));
+                iconVisibility.getMax().ifPresent(max -> iconMaxVisibilitySlider.setVisibility(max));
+                iconVisibility.getFade().ifPresent(fade -> iconFadeSlider.setVisibility(fade));
+            }
+        }
+
+        labelSliders.add(labelMinVisibilitySlider);
+        labelSliders.add(labelMaxVisibilitySlider);
+        labelSliders.add(labelFadeSlider);
+        iconSliders.add(iconMinVisibilitySlider);
+        iconSliders.add(iconMaxVisibilitySlider);
+        iconSliders.add(iconFadeSlider);
+        // endregion
     }
 
     private static final class OptionButton extends WynntilsButton {
