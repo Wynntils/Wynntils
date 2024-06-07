@@ -12,10 +12,10 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
+import com.wynntils.features.ExperienceGainMessageFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MythicFoundFeature;
-import com.wynntils.features.ProfessionXpGainMessageFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.chat.BombBellRelayFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -30,7 +30,6 @@ import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
-import com.wynntils.features.combat.CombatXpGainMessageFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -221,7 +220,6 @@ public final class FeatureManager extends Manager {
 
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
-        registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
@@ -363,6 +361,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new ExperienceGainMessageFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
@@ -386,7 +385,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
         registerFeature(new MythicFoundFeature());
-        registerFeature(new ProfessionXpGainMessageFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         // endregion
 
