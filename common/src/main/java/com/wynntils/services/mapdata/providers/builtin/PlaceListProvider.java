@@ -4,16 +4,10 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.map.Label;
-import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.features.PlaceLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
-import com.wynntils.services.mapdata.type.MapLocation;
-import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 public class PlaceListProvider extends BuiltInProvider {
@@ -29,50 +23,13 @@ public class PlaceListProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public static void registerFeature(Label label) {
-        PROVIDED_FEATURES.add(new PlaceLocation(label));
+    public void updatePlaces(List<PlaceLocation> places) {
+        PROVIDED_FEATURES.forEach(this::notifyCallbacks);
+        PROVIDED_FEATURES.clear();
+        places.forEach(PlaceListProvider::registerFeatures);
     }
 
-    private static final class PlaceLocation implements MapLocation {
-        private final Label label;
-
-        private PlaceLocation(Label label) {
-            this.label = label;
-        }
-
-        @Override
-        public String getFeatureId() {
-            return StringUtils.createSlug(label.getName());
-        }
-
-        @Override
-        public String getCategoryId() {
-            return "wynntils:place:" + label.getLayer().getMapDataId();
-        }
-
-        @Override
-        public Optional<MapAttributes> getAttributes() {
-            return Optional.of(new AbstractMapAttributes() {
-                @Override
-                public Optional<String> getLabel() {
-                    return Optional.of(label.getName());
-                }
-
-                @Override
-                public Optional<Integer> getLevel() {
-                    return label.getLevel();
-                }
-            });
-        }
-
-        @Override
-        public List<String> getTags() {
-            return List.of();
-        }
-
-        @Override
-        public Location getLocation() {
-            return label.getLocation();
-        }
+    private static void registerFeatures(PlaceLocation location) {
+        PROVIDED_FEATURES.add(location);
     }
 }

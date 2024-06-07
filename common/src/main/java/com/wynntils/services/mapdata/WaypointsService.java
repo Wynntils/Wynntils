@@ -16,8 +16,8 @@ import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class WaypointsService extends Service {
     @Persisted
-    private final Storage<List<WaypointsProvider.WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
+    private final Storage<List<WaypointLocation>> waypoints = new Storage<>(new ArrayList<>());
 
     public WaypointsService() {
         super(List.of());
@@ -42,17 +42,17 @@ public class WaypointsService extends Service {
         }
     }
 
-    public List<WaypointsProvider.WaypointLocation> getWaypoints() {
+    public List<WaypointLocation> getWaypoints() {
         return Collections.unmodifiableList(waypoints.get());
     }
 
-    public void addWaypoint(WaypointsProvider.WaypointLocation waypoint) {
+    public void addWaypoint(WaypointLocation waypoint) {
         waypoints.get().add(waypoint);
         waypoints.touched();
         Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
     }
 
-    public void removeWaypoint(WaypointsProvider.WaypointLocation waypoint) {
+    public void removeWaypoint(WaypointLocation waypoint) {
         waypoints.get().remove(waypoint);
         waypoints.touched();
         Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
@@ -107,8 +107,7 @@ public class WaypointsService extends Service {
                         }))
                 .build();
 
-        WaypointsProvider.WaypointLocation waypointLocation =
-                new WaypointsProvider.WaypointLocation(location, label, subcategory, attributes);
+        WaypointLocation waypointLocation = new WaypointLocation(location, label, subcategory, attributes);
         Services.Waypoints.addWaypoint(waypointLocation);
 
         return true;
