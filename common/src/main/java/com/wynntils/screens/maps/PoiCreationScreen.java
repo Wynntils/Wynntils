@@ -16,8 +16,8 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
@@ -611,8 +611,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                 .setIconVisibility(iconVisibility)
                 .build();
 
-        WaypointsProvider.WaypointLocation waypoint =
-                new WaypointsProvider.WaypointLocation(location, label, subcategory, attributes);
+        WaypointLocation waypoint = new WaypointLocation(location, label, subcategory, attributes);
 
         if (oldPoi != null) {
             // FIXME: Remove the old waypoint (TODO: Port oldPoi to WaypointLocation)
