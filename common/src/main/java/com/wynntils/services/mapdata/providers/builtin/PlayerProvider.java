@@ -16,7 +16,6 @@ import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
@@ -147,7 +146,7 @@ public class PlayerProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<String> getIconId() {
-                    return Optional.of(MapIcon.NO_ICON_ID);
+                    return Optional.of("wynntils:icon:player:head");
                 }
 
                 @Override
@@ -163,7 +162,7 @@ public class PlayerProvider extends BuiltInProvider {
         }
 
         private final class MainMapIconDecoration implements MapDecoration {
-            private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 20;
+            private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 24;
 
             @Override
             public boolean isVisible() {
@@ -189,8 +188,9 @@ public class PlayerProvider extends BuiltInProvider {
                 // center the player icon
                 poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0);
 
+                // FIXME: Remove
                 final float renderX = 0;
-                final float renderY = fullscreenMap ? -25 : 0;
+                final float renderY = 0;
 
                 HadesUser user = RemotePlayerLocation.this.hadesUser;
                 ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
@@ -253,9 +253,9 @@ public class PlayerProvider extends BuiltInProvider {
                             bufferSource,
                             Texture.HEALTH_BAR,
                             renderX - 10,
-                            renderY + playerHeadRenderSize + 1,
+                            renderY + playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 7,
                             renderX + playerHeadRenderSize + 10,
-                            renderY + playerHeadRenderSize + 7,
+                            renderY + playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 1,
                             0,
                             healthTexture.getTextureY1(),
                             81,
