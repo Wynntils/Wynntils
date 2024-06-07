@@ -64,6 +64,10 @@ public class MapDataService extends Service {
         return getProviders().flatMap(MapDataProvider::getFeatures);
     }
 
+    public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
+        return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
+    }
+
     public Stream<Poi> getFeaturesAsPois() {
         return getFeatures().map(feature -> new MapFeaturePoiWrapper(feature, resolveMapAttributes(feature)));
     }
@@ -252,10 +256,6 @@ public class MapDataService extends Service {
         }
 
         return 0;
-    }
-
-    public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
-        return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
     }
 
     private static final class PlaceholderProvider implements MapDataProvider {
