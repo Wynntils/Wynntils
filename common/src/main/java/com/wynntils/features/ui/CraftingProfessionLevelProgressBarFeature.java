@@ -48,7 +48,7 @@ public class CraftingProfessionLevelProgressBarFeature extends Feature {
                 screen.leftPos,
                 screen.topPos - 6,
                 screen.leftPos + screen.imageWidth,
-                screen.topPos - 3,
+                screen.topPos - 1,
                 0,
                 texture.get().getTextureY1(),
                 Texture.EXPERIENCE_BAR.width(),
