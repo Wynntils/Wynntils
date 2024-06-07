@@ -54,9 +54,7 @@ public final class WynntilsAccountService extends Service {
         if (!event.isFirstJoinWorld()) return;
 
         if (!loggedIn) {
-            MutableComponent failed = Component.literal(
-                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+            MutableComponent failed = Component.translatable("service.wynntils.wynntilsAccount.failedToConnect")
                     .withStyle(ChatFormatting.GREEN);
             failed.append(Component.literal("/wynntils reauth")
                     .withStyle(Style.EMPTY

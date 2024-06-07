@@ -164,7 +164,7 @@ public final class HadesService extends Service {
 
         if (event.isFirstJoinWorld()) {
             if (!isConnected()) {
-                MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
+                MutableComponent failed = Component.translatable("service.wynntils.hades.failedToConnect")
                         .withStyle(ChatFormatting.GREEN);
                 failed.append(Component.literal("/wynntils reauth")
                         .withStyle(Style.EMPTY
