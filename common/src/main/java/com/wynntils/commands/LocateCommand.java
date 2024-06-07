@@ -35,7 +35,7 @@ public class LocateCommand extends Command {
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Services.MapData.getFeaturesForCategory("wynntils:places")
+                    Services.MapData.getFeaturesForCategory("wynntils:place")
                             .map(f -> Services.MapData.resolveMapAttributes(f).label()),
                     builder);
 
@@ -147,7 +147,7 @@ public class LocateCommand extends Command {
         // Sort in order of closeness to the player
         Position currentPosition = McUtils.player().position();
 
-        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:places")
+        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:place")
                 .map(f -> (MapLocation) f)
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))

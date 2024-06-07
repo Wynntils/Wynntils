@@ -204,7 +204,7 @@ public class CompassCommand extends Command {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:places")
+        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:place")
                 .map(f -> (MapLocation) f)
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))
