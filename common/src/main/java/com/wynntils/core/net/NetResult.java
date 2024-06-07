@@ -56,7 +56,7 @@ public abstract class NetResult {
                     try {
                         handler.accept(JsonParser.parseReader(reader).getAsJsonObject());
                     } catch (Throwable t) {
-                        WynntilsMod.warn("Failure in net manager [handleJsonObject], processing " + desc, t);
+                        WynntilsMod.warn("Failure in net manager [handleJsonObject], processing " + desc + ": " + t.getMessage());
                         onError.accept(t);
                     }
                 },
