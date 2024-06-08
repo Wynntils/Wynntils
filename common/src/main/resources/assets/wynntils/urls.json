@@ -105,7 +105,7 @@
   },
   {
     "id": "dataStaticCombatMapFeatures",
-    "md5": "6b3655631a5dd58e307eac49d7f0b1ce",
+    "md5": "4f08f016de175c11a5ddc899f5bf6d53",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/combat_mapfeatures.json"
   },
   {
@@ -180,7 +180,7 @@
   },
   {
     "id": "dataStaticPlaceMapFeatures",
-    "md5": "c337368fe24bd263ff64a4172b109316",
+    "md5": "fba1ef5092add312b243e5dde3ab9004",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/place_mapfeatures.json"
   },
   {
