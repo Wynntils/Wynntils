@@ -76,7 +76,7 @@ public class MinimapOverlay extends Overlay {
     public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    public final Config<Float> remotePlayersHeadScale = new Config<>(0.8f);
+    public final Config<Float> remotePlayersHeadScale = new Config<>(0.7f);
 
     public MinimapOverlay() {
         super(

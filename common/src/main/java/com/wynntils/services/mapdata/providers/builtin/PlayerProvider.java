@@ -13,14 +13,10 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.event.HadesUserEvent;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
-import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
-import com.wynntils.services.mapdata.attributes.type.MapVisibility;
-import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.Texture;
@@ -36,10 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PlayerProvider extends BuiltInProvider {
-    private static final List<RemotePlayerLocation> PLAYERS = new ArrayList<>();
-
-    // Provided features and categories
-    private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
+    private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
 
     @SubscribeEvent
     public void onHadesAuthenticatedEvent(HadesEvent.Authenticated event) {
@@ -62,9 +55,9 @@ public class PlayerProvider extends BuiltInProvider {
     }
 
     private void reloadHadesUsers() {
-        PLAYERS.forEach(this::notifyCallbacks);
-        PLAYERS.clear();
-        Services.Hades.getHadesUsers().map(RemotePlayerLocation::new).forEach(PLAYERS::add);
+        PROVIDED_FEATURES.forEach(this::notifyCallbacks);
+        PROVIDED_FEATURES.clear();
+        Services.Hades.getHadesUsers().map(RemotePlayerLocation::new).forEach(PROVIDED_FEATURES::add);
     }
 
     @Override
@@ -74,39 +67,7 @@ public class PlayerProvider extends BuiltInProvider {
 
     @Override
     public Stream<MapFeature> getFeatures() {
-        return PLAYERS.stream().map(MapFeature.class::cast);
-    }
-
-    @Override
-    public Stream<MapCategory> getCategories() {
-        return PROVIDED_CATEGORIES.stream();
-    }
-
-    private static final class PlayersCategory implements MapCategory {
-        @Override
-        public String getCategoryId() {
-            return "wynntils:player";
-        }
-
-        @Override
-        public Optional<String> getName() {
-            return Optional.of("Player positions");
-        }
-
-        @Override
-        public Optional<MapAttributes> getAttributes() {
-            return Optional.of(new AbstractMapAttributes() {
-                @Override
-                public Optional<Integer> getPriority() {
-                    return Optional.of(900);
-                }
-
-                @Override
-                public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(FixedMapVisibility.ICON_ALWAYS);
-                }
-            });
-        }
+        return PROVIDED_FEATURES.stream();
     }
 
     public static final class RemotePlayerLocation implements MapLocation {
@@ -128,7 +89,7 @@ public class PlayerProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:players:" + (hadesUser.getRelation().isEmpty() ? "other" : hadesUser.getRelation());
+            return "wynntils:players:" + (hadesUser.getRelation().name().toLowerCase(Locale.ROOT));
         }
 
         @Override
@@ -140,18 +101,8 @@ public class PlayerProvider extends BuiltInProvider {
                 }
 
                 @Override
-                public Optional<CustomColor> getLabelColor() {
-                    return Optional.of(hadesUser.getRelationColor());
-                }
-
-                @Override
-                public Optional<String> getIconId() {
-                    return Optional.of("wynntils:icon:player:head");
-                }
-
-                @Override
                 public Optional<MapDecoration> getIconDecoration() {
-                    return Optional.of(new MainMapIconDecoration());
+                    return Optional.of(new PlayerIconDecoration());
                 }
             });
         }
@@ -161,7 +112,7 @@ public class PlayerProvider extends BuiltInProvider {
             return List.of();
         }
 
-        private final class MainMapIconDecoration implements MapDecoration {
+        private final class PlayerIconDecoration implements MapDecoration {
             private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 24;
 
             @Override

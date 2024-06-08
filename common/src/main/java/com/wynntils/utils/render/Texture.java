@@ -176,7 +176,7 @@ public enum Texture implements AbstractTexture {
     SHRINE("icons/map/shrine.png", 18, 18),
     SIGN("icons/map/sign.png", 17, 18),
     STAR("icons/map/star.png", 18, 18),
-    STEVE_HEAD("icons/map/steve_head.png", 24, 24),
+    PLAYER_HEAD("icons/map/player_head.png", 24, 24),
     TAILORING_STATION("icons/map/tailoring_station.png", 18, 15),
     TOOL_MERCHANT("icons/map/tool_merchant.png", 17, 15),
     TRADE_MARKET("icons/map/trade_market.png", 18, 18),
