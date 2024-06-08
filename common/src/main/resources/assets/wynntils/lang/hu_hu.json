@@ -61,7 +61,6 @@
   "feature.wynntils.chatTimestamp.formatPattern.name": "Időpont Formátuma",
   "feature.wynntils.chatTimestamp.invalidFormatMsg": "Érvénytelen a beállított idő formátum! Az idő megjelenítése ki lesz kapcsolva amíg egy érvényes formátum nincs beállítva.",
   "feature.wynntils.chatTimestamp.name": "Csevegés Időpontok",
-  "feature.wynntils.combatXpGainMessage.name": "Harc XP Üzenetek",
   "feature.wynntils.commandAliases.name": "Parancs Rövidítések",
   "feature.wynntils.commands.name": "Egyedi Wynntils Parancsok",
   "feature.wynntils.connectionProgress.name": "Csatlakozási Folyamat",
