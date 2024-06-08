@@ -54,7 +54,7 @@ public class ExperienceGainMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onCombatXpGain(CombatXpGainEvent event) {
-        if (!Models.WorldState.onWorld() || !combat.get()) return;
+        if (!(combat.get() && Models.WorldState.onWorld())) return;
         if (lastCombatMessage != null && shouldEditOldMessage(lastCombatXpDisplayTime)) {
             Managers.Notification.editMessage(
                     lastCombatMessage,
@@ -77,7 +77,7 @@ public class ExperienceGainMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onProfessionXpGain(ProfessionXpGainEvent event) {
-        if (!Models.WorldState.onWorld() || !professions.get()) return;
+        if (!(professions.get() && Models.WorldState.onWorld())) return;
         ProfessionType profession = event.getProfession();
         float lastRawXpGain = lastRawProfessionXpGains.getOrDefault(profession, 0F);
         float currentXpPercentage = event.getCurrentXpPercentage();
