@@ -207,6 +207,27 @@ public class WarFunctions {
         }
     }
 
+    public static class IsTerritoryQueuedFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String territoryName = arguments.getArgument("territoryName").getStringValue();
+
+            return Models.GuildAttackTimer.getAttackTimerForTerritory(territoryName)
+                    .isPresent();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("is_queued");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("territoryName", String.class, null)));
+        }
+    }
+
     public static class WarsSinceFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
