@@ -166,10 +166,15 @@ public final class HadesService extends Service {
             if (!isConnected()) {
                 MutableComponent failed = Component.translatable("service.wynntils.hades.failedToConnect")
                         .withStyle(ChatFormatting.GREEN);
-                failed.append(Component.literal("/wynntils reauth")
+                failed.append(Component.translatable("service.wynntils.hades.clickToConnect1")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
+                failed.append(Component.translatable("service.wynntils.hades.clickToConnect2")
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
+                                .withUnderlined(true)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
                 McUtils.sendMessageToClient(failed);
 

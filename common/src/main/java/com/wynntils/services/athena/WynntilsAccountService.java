@@ -56,10 +56,15 @@ public final class WynntilsAccountService extends Service {
         if (!loggedIn) {
             MutableComponent failed = Component.translatable("service.wynntils.wynntilsAccount.failedToConnect")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reauth")
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect1")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect2")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
+                            .withUnderlined(true)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect3")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
             McUtils.sendMessageToClient(failed);
         }
