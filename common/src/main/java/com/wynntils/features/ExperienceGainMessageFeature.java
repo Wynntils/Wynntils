@@ -40,7 +40,7 @@ public class ExperienceGainMessageFeature extends Feature {
 
     private MessageContainer lastCombatMessage = null;
     private float lastRawCombatXpGain = 0;
-    
+
     private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private final Map<ProfessionType, Float> lastRawProfessionXpGains = new EnumMap<>(ProfessionType.class);
     private float lastPercentageXpGain = 0;
