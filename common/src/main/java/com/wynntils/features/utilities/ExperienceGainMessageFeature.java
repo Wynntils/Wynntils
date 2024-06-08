@@ -109,12 +109,12 @@ public class ExperienceGainMessageFeature extends Feature {
     }
 
     private static StyledText getProfessionXpGainMessage(
-            ProfessionType profession, float lastRawXpGain, float currentXpPercentage) {
+            ProfessionType profession, float rawXpGain, float currentXpPercentage) {
         return StyledText.fromString(String.format(
-                "§2+%.0f %s XP (§6%.2f%%§2)", lastRawXpGain, profession.getProfessionIconChar(), currentXpPercentage));
+                "§2+%.0f %s XP (§6%.2f%%§2)", rawXpGain, profession.getProfessionIconChar(), currentXpPercentage));
     }
 
-    private static StyledText getCombatXpGainMessage(float rawGain, float percentageGain) {
-        return StyledText.fromString(String.format("§2+%.0f XP (§6%.2f%%§2)", rawGain, percentageGain));
+    private static StyledText getCombatXpGainMessage(float rawXpGain, float currentXpPercentage) {
+        return StyledText.fromString(String.format("§2+%.0f XP (§6%.2f%%§2)", rawXpGain, currentXpPercentage));
     }
 }
