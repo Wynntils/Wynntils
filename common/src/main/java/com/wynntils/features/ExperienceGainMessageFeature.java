@@ -39,8 +39,9 @@ public class ExperienceGainMessageFeature extends Feature {
     private final Map<ProfessionType, Long> lastProfessionXpDisplayTimes = new EnumMap<>(ProfessionType.class);
 
     private MessageContainer lastCombatMessage = null;
-    private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private float lastRawCombatXpGain = 0;
+    
+    private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private final Map<ProfessionType, Float> lastRawProfessionXpGains = new EnumMap<>(ProfessionType.class);
     private float lastPercentageXpGain = 0;
 
@@ -77,7 +78,7 @@ public class ExperienceGainMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onProfessionXpGain(ProfessionXpGainEvent event) {
-        if (!(professions.get() && Models.WorldState.onWorld())) return;
+        if (!professions.get() || !Models.WorldState.onWorld()) return;
         ProfessionType profession = event.getProfession();
         float lastRawXpGain = lastRawProfessionXpGains.getOrDefault(profession, 0F);
         float currentXpPercentage = event.getCurrentXpPercentage();

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CombatXpGainToExperienceGainUpfixer extends RenamedPrefixesUpfixer {
     private static final List<Pair<String, String>> RENAMED_PREFIXES =
-            List.of(Pair.of("combatXpGainMessage.", "experienceGainMessage."));
+            List.of(Pair.of("combatXpGainMessageFeature.", "experienceGainMessageFeature."));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {
