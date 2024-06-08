@@ -22,7 +22,7 @@ import java.util.Map;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
-public class ExperienceGainMessageFeature extends Feature {
+public class XpGainMessageFeature extends Feature {
     @Persisted
     public final Config<Boolean> combat = new Config<>(true);
 
@@ -40,7 +40,7 @@ public class ExperienceGainMessageFeature extends Feature {
 
     private MessageContainer lastCombatMessage = null;
     private float lastRawCombatXpGain = 0;
-    private float lastPercentageCombatXpGain = 0;
+    private float currentCombatXpPercentage = 0;
 
     private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private final Map<ProfessionType, Float> lastRawProfessionXpGains = new EnumMap<>(ProfessionType.class);
@@ -61,13 +61,13 @@ public class ExperienceGainMessageFeature extends Feature {
                     lastCombatMessage,
                     getCombatXpGainMessage(
                             lastRawCombatXpGain + event.getGainedXpRaw(),
-                            lastPercentageCombatXpGain + event.getGainedXpPercentage()));
+                            currentCombatXpPercentage + event.getGainedXpPercentage()));
 
             lastRawCombatXpGain += event.getGainedXpRaw();
-            lastPercentageCombatXpGain += event.getGainedXpPercentage();
+            currentCombatXpPercentage += event.getGainedXpPercentage();
         } else {
             lastRawCombatXpGain = event.getGainedXpRaw();
-            lastPercentageCombatXpGain = event.getGainedXpPercentage();
+            currentCombatXpPercentage = event.getGainedXpPercentage();
 
             lastCombatMessage = Managers.Notification.queueMessage(
                     getCombatXpGainMessage(event.getGainedXpRaw(), event.getGainedXpPercentage()));
