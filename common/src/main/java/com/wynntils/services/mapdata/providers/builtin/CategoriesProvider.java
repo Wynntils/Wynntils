@@ -52,6 +52,9 @@ public class CategoriesProvider extends BuiltInProvider {
         return PROVIDED_CATEGORIES.stream();
     }
 
+    @Override
+    public void reloadData() {}
+
     private static final class WynntilsCategory implements MapCategory {
         @Override
         public String getCategoryId() {

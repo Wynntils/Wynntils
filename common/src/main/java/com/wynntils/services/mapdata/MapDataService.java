@@ -281,5 +281,8 @@ public class MapDataService extends Service {
 
         @Override
         public void onChange(Consumer<MapDataProvidedType> callback) {}
+
+        @Override
+        public void reloadData() {}
     }
 }

@@ -23,6 +23,9 @@ public class LootChestsProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
+    @Override
+    public void reloadData() {}
+
     public void updateFoundChests(List<FoundChestLocation> foundChests) {
         PROVIDED_FEATURES.forEach(this::notifyCallbacks);
         PROVIDED_FEATURES.clear();

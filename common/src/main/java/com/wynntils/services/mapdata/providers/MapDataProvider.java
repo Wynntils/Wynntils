@@ -20,7 +20,5 @@ public interface MapDataProvider {
 
     void onChange(Consumer<MapDataProvidedType> callback);
 
-    default void reloadData() {
-        // Do nothing by default
-    }
+    void reloadData();
 }

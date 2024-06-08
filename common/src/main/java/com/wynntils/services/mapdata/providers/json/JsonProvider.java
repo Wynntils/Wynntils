@@ -161,6 +161,11 @@ public final class JsonProvider implements MapDataProvider {
         // reload of the file, so we do not need to register callbacks.
     }
 
+    @Override
+    public void reloadData() {
+        // To be implemented if needed
+    }
+
     private static final class CategoryDeserializer implements JsonDeserializer<MapCategory> {
         @Override
         public MapCategory deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)

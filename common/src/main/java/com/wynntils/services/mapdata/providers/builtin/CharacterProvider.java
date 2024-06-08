@@ -44,6 +44,9 @@ public class CharacterProvider extends BuiltInProvider {
         return PROVIDED_CATEGORIES.stream();
     }
 
+    @Override
+    public void reloadData() {}
+
     private static final class PlayersCategory implements MapCategory {
         @Override
         public String getCategoryId() {
