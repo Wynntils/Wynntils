@@ -4,6 +4,10 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
+import com.google.gson.reflect.TypeToken;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.services.mapdata.features.CombatLocation;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.util.ArrayList;
@@ -12,6 +16,10 @@ import java.util.stream.Stream;
 
 public class CombatListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
+
+    public CombatListProvider() {
+        loadCombatLocations();
+    }
 
     @Override
     public String getProviderId() {
@@ -23,13 +31,14 @@ public class CombatListProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public void updateCombats(List<CombatLocation> combats) {
-        PROVIDED_FEATURES.forEach(this::notifyCallbacks);
-        PROVIDED_FEATURES.clear();
-        combats.forEach(CombatListProvider::registerFeature);
-    }
-
-    private static void registerFeature(CombatLocation location) {
-        PROVIDED_FEATURES.add(location);
+    private void loadCombatLocations() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_COMBAT_MAPFEATURES);
+        dl.handleReader(reader -> {
+            TypeToken<List<CombatLocation>> type = new TypeToken<>() {};
+            List<CombatLocation> combatLocations = Managers.Json.GSON.fromJson(reader, type.getType());
+            PROVIDED_FEATURES.forEach(this::notifyCallbacks);
+            PROVIDED_FEATURES.clear();
+            PROVIDED_FEATURES.addAll(combatLocations);
+        });
     }
 }

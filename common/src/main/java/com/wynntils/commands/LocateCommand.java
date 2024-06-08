@@ -35,8 +35,8 @@ public class LocateCommand extends Command {
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Services.MapData.PLACE_LIST_PROVIDER.getFeatures().map(f -> Services.MapData.resolveMapAttributes(f)
-                            .label()),
+                    Services.MapData.getFeaturesForCategory("wynntils:place")
+                            .map(f -> Services.MapData.resolveMapAttributes(f).label()),
                     builder);
 
     @Override
@@ -112,9 +112,8 @@ public class LocateCommand extends Command {
         // Only keep the 4 closest results
         Position currentPosition = McUtils.player().position();
 
-        List<MapLocation> services = Services.MapData.SERVICE_LIST_PROVIDER
-                .getFeatures()
-                .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
+        List<MapLocation> services = Services.MapData.getFeaturesForCategory(
+                        "wynntils:service:" + selectedKind.getMapDataId())
                 .map(f -> (MapLocation) f)
                 .sorted(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)))
                 .limit(4)
@@ -148,8 +147,7 @@ public class LocateCommand extends Command {
         // Sort in order of closeness to the player
         Position currentPosition = McUtils.player().position();
 
-        List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
-                .getFeatures()
+        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:place")
                 .map(f -> (MapLocation) f)
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))
