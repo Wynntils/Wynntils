@@ -9,9 +9,7 @@ public record LeaderboardBadge(int uOffset, int vOffset) {
     public static final int HEIGHT = 17;
 
     public static LeaderboardBadge from(LeaderboardType leaderboardType, int standing) {
-        int uOffset;
-
-        uOffset = leaderboardType.ordinal() * WIDTH;
+        int uOffset = leaderboardType.ordinal() * WIDTH;
 
         int color = 2; // just in case Athena gives a number not between 1 and 9
 
