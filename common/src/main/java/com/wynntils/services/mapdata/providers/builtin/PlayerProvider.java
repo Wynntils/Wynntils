@@ -102,7 +102,7 @@ public class PlayerProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapDecoration> getIconDecoration() {
-                    return Optional.of(new PlayerIconDecoration());
+                    return Optional.of(new PlayerIconDecoration(hadesUser));
                 }
             });
         }
@@ -112,8 +112,14 @@ public class PlayerProvider extends BuiltInProvider {
             return List.of();
         }
 
-        private final class PlayerIconDecoration implements MapDecoration {
+        private static final class PlayerIconDecoration implements MapDecoration {
             private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 24;
+
+            private final HadesUser hadesUser;
+
+            private PlayerIconDecoration(HadesUser hadesUser) {
+                this.hadesUser = hadesUser;
+            }
 
             @Override
             public boolean isVisible() {
@@ -139,15 +145,14 @@ public class PlayerProvider extends BuiltInProvider {
                 // center the player icon
                 poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0);
 
-                HadesUser user = RemotePlayerLocation.this.hadesUser;
-                ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
+                ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
 
                 if (!fullscreenMap) {
                     // outline
                     BufferedRenderUtils.drawRectBorders(
                             poseStack,
                             bufferSource,
-                            user.getRelationColor(),
+                            hadesUser.getRelationColor(),
                             0,
                             0,
                             playerHeadRenderSize,
@@ -207,7 +212,7 @@ public class PlayerProvider extends BuiltInProvider {
                             healthTexture.getTextureY1(),
                             81,
                             healthTexture.getTextureY2(),
-                            (float) user.getHealth().getProgress());
+                            (float) hadesUser.getHealth().getProgress());
                 }
 
                 poseStack.popPose();
