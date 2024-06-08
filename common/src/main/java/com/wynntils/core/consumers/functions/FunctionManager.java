@@ -595,6 +595,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.InitialTowerDamageFunction());
         registerFunction(new WarFunctions.InitialTowerDefenseFunction());
         registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.IsTerritoryQueuedFunction());
         registerFunction(new WarFunctions.TeamDpsFunction());
         registerFunction(new WarFunctions.TimeInWarFunction());
         registerFunction(new WarFunctions.TowerDpsFunction());

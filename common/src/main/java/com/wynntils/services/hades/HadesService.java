@@ -27,7 +27,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.PlayerStatus;
-import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -58,13 +57,6 @@ public final class HadesService extends Service {
 
     public HadesService() {
         super(List.of());
-    }
-
-    public Stream<PlayerMainMapPoi> getPlayerPois(boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
-        return getHadesUsers()
-                .filter(hadesUser -> (hadesUser.isPartyMember() && renderRemotePartyPlayers)
-                        || (hadesUser.isMutualFriend() && renderRemoteFriendPlayers))
-                .map(PlayerMainMapPoi::new);
     }
 
     public Stream<HadesUser> getHadesUsers() {
@@ -164,12 +156,17 @@ public final class HadesService extends Service {
 
         if (event.isFirstJoinWorld()) {
             if (!isConnected()) {
-                MutableComponent failed = Component.literal("Welps! Trying to connect to Hades failed.")
+                MutableComponent failed = Component.translatable("service.wynntils.hades.failedToConnect")
                         .withStyle(ChatFormatting.GREEN);
-                failed.append(Component.literal("/wynntils reauth")
+                failed.append(Component.translatable("service.wynntils.hades.clickToConnect1")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
+                failed.append(Component.translatable("service.wynntils.hades.clickToConnect2")
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
+                                .withUnderlined(true)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
                 McUtils.sendMessageToClient(failed);
 

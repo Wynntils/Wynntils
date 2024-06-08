@@ -5,12 +5,12 @@
 package com.wynntils.utils.render.type;
 
 public enum ObjectivesTextures implements BarTexture {
-    WYNN(0, 9, 4),
-    LIQUID(40, 49, 4),
-    EMERALD(50, 59, 4),
-    A(10, 19, 4),
-    B(20, 29, 4),
-    C(30, 39, 4);
+    WYNN(0, 9, 5),
+    LIQUID(40, 49, 5),
+    EMERALD(50, 59, 5),
+    A(10, 19, 5),
+    B(20, 29, 5),
+    C(30, 39, 5);
     private final int textureY1, textureY2, height;
 
     ObjectivesTextures(int textureY1, int textureY2, int height) {

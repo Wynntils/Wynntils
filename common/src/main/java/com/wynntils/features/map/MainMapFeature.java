@@ -20,7 +20,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
-import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.glfw.GLFW;
@@ -47,22 +46,13 @@ public class MainMapFeature extends Feature {
     public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
     @Persisted
-    public final Config<Float> poiScale = new Config<>(1f);
+    public final Config<Float> mapFeatureScale = new Config<>(1f);
 
     @Persisted
     public final Config<Boolean> centerWhenUnmapped = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
-
-    @Persisted
     public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.A);
-
-    @Persisted
-    public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     public final Config<Boolean> holdGuildMapOpen = new Config<>(true);

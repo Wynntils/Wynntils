@@ -21,6 +21,7 @@ import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
+import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -35,6 +36,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -363,7 +365,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                     bufferSource,
                     MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
                     MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
-                    hovered == poi,
+                    hoveredFeature == poi,
                     1,
                     zoomRenderScale,
                     zoomLevel,
@@ -566,6 +568,11 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
     @Override
     public void onClose() {
         McUtils.mc().setScreen(returnScreen);
+    }
+
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        return Stream.empty();
     }
 
     private void updateSaveStatus() {
