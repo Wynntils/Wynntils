@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -40,10 +40,10 @@ public class ExperienceGainMessageFeature extends Feature {
 
     private MessageContainer lastCombatMessage = null;
     private float lastRawCombatXpGain = 0;
+    private float lastPercentageCombatXpGain = 0;
 
     private final Map<ProfessionType, MessageContainer> lastProfessionMessages = new EnumMap<>(ProfessionType.class);
     private final Map<ProfessionType, Float> lastRawProfessionXpGains = new EnumMap<>(ProfessionType.class);
-    private float lastPercentageXpGain = 0;
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -55,19 +55,19 @@ public class ExperienceGainMessageFeature extends Feature {
 
     @SubscribeEvent
     public void onCombatXpGain(CombatXpGainEvent event) {
-        if (!(combat.get() && Models.WorldState.onWorld())) return;
+        if (!combat.get() || !Models.WorldState.onWorld()) return;
         if (lastCombatMessage != null && shouldEditOldMessage(lastCombatXpDisplayTime)) {
             Managers.Notification.editMessage(
                     lastCombatMessage,
                     getCombatXpGainMessage(
                             lastRawCombatXpGain + event.getGainedXpRaw(),
-                            lastPercentageXpGain + event.getGainedXpPercentage()));
+                            lastPercentageCombatXpGain + event.getGainedXpPercentage()));
 
             lastRawCombatXpGain += event.getGainedXpRaw();
-            lastPercentageXpGain += event.getGainedXpPercentage();
+            lastPercentageCombatXpGain += event.getGainedXpPercentage();
         } else {
             lastRawCombatXpGain = event.getGainedXpRaw();
-            lastPercentageXpGain = event.getGainedXpPercentage();
+            lastPercentageCombatXpGain = event.getGainedXpPercentage();
 
             lastCombatMessage = Managers.Notification.queueMessage(
                     getCombatXpGainMessage(event.getGainedXpRaw(), event.getGainedXpPercentage()));

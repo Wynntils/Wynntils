@@ -165,6 +165,23 @@ public class ProfessionModel extends Model {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onXpGain(ProfessionXpGainEvent event) {
+        ProfessionType profession = event.getProfession();
+        ProfessionProgress oldValue = professionProgressMap.getOrDefault(profession, ProfessionProgress.NO_PROGRESS);
+
+        // We leveled up, but we don't know how many times.
+        // Set the progress, level will be parsed from other messages.
+        float newPercentage = event.getCurrentXpPercentage();
+        if (newPercentage == 100) {
+            newPercentage = 0;
+        }
+
+        professionProgressMap.put(profession, new ProfessionProgress(oldValue.level(), newPercentage));
+
+        rawXpGainInLastMinute.get(profession).put(event.getGainedXpRaw());
+    }
+
     public void resetValueFromItem(ItemStack professionInfoItem) {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
         List<StyledText> professionLore = LoreUtils.getLore(professionInfoItem);
@@ -185,23 +202,6 @@ public class ProfessionModel extends Model {
         }
 
         professionProgressMap = levels;
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onXpGain(ProfessionXpGainEvent event) {
-        ProfessionType profession = event.getProfession();
-        ProfessionProgress oldValue = professionProgressMap.getOrDefault(profession, ProfessionProgress.NO_PROGRESS);
-
-        // We leveled up, but we don't know how many times.
-        // Set the progress, level will be parsed from other messages.
-        float newPercentage = event.getCurrentXpPercentage();
-        if (newPercentage == 100) {
-            newPercentage = 0;
-        }
-
-        professionProgressMap.put(profession, new ProfessionProgress(oldValue.level(), newPercentage));
-
-        rawXpGainInLastMinute.get(profession).put(event.getGainedXpRaw());
     }
 
     private void updateLevel(ProfessionType type, int newLevel) {
