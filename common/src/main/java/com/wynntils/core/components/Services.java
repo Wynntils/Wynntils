@@ -19,7 +19,6 @@ import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
 import com.wynntils.services.mapdata.MapDataService;
-import com.wynntils.services.mapdata.MapFeatureService;
 import com.wynntils.services.mapdata.WaypointsService;
 import com.wynntils.services.ping.PingService;
 import com.wynntils.services.resourcepack.ResourcePackService;
@@ -51,7 +50,4 @@ public final class Services {
     public static final UpdateService Update = new UpdateService();
     public static final WaypointsService Waypoints = new WaypointsService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
-
-    // Services with dependencies
-    public static final MapFeatureService MapFeature = new MapFeatureService(MapData);
 }
