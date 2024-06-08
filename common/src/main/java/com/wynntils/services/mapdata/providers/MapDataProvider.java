@@ -19,4 +19,8 @@ public interface MapDataProvider {
     Stream<MapIcon> getIcons();
 
     void onChange(Consumer<MapDataProvidedType> callback);
+
+    default void reloadData() {
+        // Do nothing by default
+    }
 }

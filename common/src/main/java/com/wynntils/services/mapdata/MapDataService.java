@@ -62,10 +62,7 @@ public class MapDataService extends Service {
 
     @Override
     public void reloadData() {
-        getProviders()
-                .filter(provider -> provider instanceof BuiltInProvider)
-                .map(provider -> (BuiltInProvider) provider)
-                .forEach(BuiltInProvider::reloadData);
+        getProviders().forEach(MapDataProvider::reloadData);
     }
 
     public Stream<MapFeature> getFeatures() {

@@ -19,10 +19,6 @@ public abstract class BuiltInProvider implements MapDataProvider {
 
     public abstract String getProviderId();
 
-    public void reloadData() {
-        // Do nothing by default
-    }
-
     @Override
     public Stream<MapFeature> getFeatures() {
         return Stream.empty();
