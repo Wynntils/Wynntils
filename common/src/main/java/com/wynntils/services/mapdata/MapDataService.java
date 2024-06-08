@@ -60,6 +60,14 @@ public class MapDataService extends Service {
         createBuiltInProviders();
     }
 
+    @Override
+    public void reloadData() {
+        getProviders()
+                .filter(provider -> provider instanceof BuiltInProvider)
+                .map(provider -> (BuiltInProvider) provider)
+                .forEach(BuiltInProvider::reloadData);
+    }
+
     public Stream<MapFeature> getFeatures() {
         return getProviders().flatMap(MapDataProvider::getFeatures);
     }
