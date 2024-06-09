@@ -408,7 +408,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:players:" + relation.name().toLowerCase();
+            return "wynntils:player:" + relation.name().toLowerCase();
         }
 
         @Override

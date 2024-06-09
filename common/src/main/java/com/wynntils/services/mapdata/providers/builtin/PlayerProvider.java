@@ -89,7 +89,7 @@ public class PlayerProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:players:" + (hadesUser.getRelation().name().toLowerCase(Locale.ROOT));
+            return "wynntils:player:" + (hadesUser.getRelation().name().toLowerCase(Locale.ROOT));
         }
 
         @Override
