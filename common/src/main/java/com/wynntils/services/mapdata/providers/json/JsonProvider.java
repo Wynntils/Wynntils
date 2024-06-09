@@ -163,7 +163,7 @@ public final class JsonProvider implements MapDataProvider {
 
     @Override
     public void reloadData() {
-        // To be implemented if needed
+        // FIXME: To be implemented if needed (when the first json provider is added)
     }
 
     private static final class CategoryDeserializer implements JsonDeserializer<MapCategory> {
