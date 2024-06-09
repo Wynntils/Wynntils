@@ -40,7 +40,7 @@ public class MapDataService extends Service {
     private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
     private static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
     private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
-    private static final PlayerProvider CHARACTER_PROVIDER = new PlayerProvider();
+    private static final PlayerProvider PLAYER_PROVIDER = new PlayerProvider();
     public static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
     public static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
 
@@ -165,7 +165,7 @@ public class MapDataService extends Service {
         registerBuiltInProvider(SERVICE_LIST_PROVIDER);
         registerBuiltInProvider(COMBAT_LIST_PROVIDER);
         registerBuiltInProvider(PLACE_LIST_PROVIDER);
-        registerBuiltInProvider(CHARACTER_PROVIDER);
+        registerBuiltInProvider(PLAYER_PROVIDER);
         registerBuiltInProvider(WAYPOINTS_PROVIDER);
         registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
     }
