@@ -20,7 +20,7 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.mapdata.MapFeaturePoiWrapper;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
+import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -410,7 +410,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hovered instanceof MapFeaturePoiWrapper wrapper
-                        && wrapper.getFeature() instanceof WaypointsProvider.WaypointLocation location) {
+                        && wrapper.getFeature() instanceof WaypointLocation location) {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, location));
                 } else {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
@@ -420,7 +420,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof MapFeaturePoiWrapper wrapper
-                        && wrapper.getFeature() instanceof WaypointsProvider.WaypointLocation location) {
+                        && wrapper.getFeature() instanceof WaypointLocation location) {
                     Services.Waypoints.removeWaypoint(location);
                 }
             } else {

@@ -18,7 +18,6 @@ import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.WaypointLocation;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
@@ -95,7 +94,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private boolean visibilityTab = false;
     private int iconScrollOffset = 0;
     private Location setupLocation;
-    private WaypointsProvider.WaypointLocation oldWaypoint;
+    private WaypointLocation oldWaypoint;
 
     // Waypoint details
     private CustomColor iconColorCache = CommonColors.WHITE;
@@ -112,7 +111,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private TextShadow labelShadow = TextShadow.NORMAL;
     private VisibilityType iconVisibilityType = VisibilityType.CUSTOM;
     private VisibilityType labelVisibilityType = VisibilityType.CUSTOM;
-    private WaypointsProvider.WaypointLocation waypoint;
+    private WaypointLocation waypoint;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super();
@@ -128,14 +127,14 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(MainMapScreen oldMapScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
+    private PoiCreationScreen(MainMapScreen oldMapScreen, WaypointLocation oldWaypoint) {
         this(oldMapScreen);
 
         this.oldWaypoint = oldWaypoint;
         this.firstSetup = true;
     }
 
-    private PoiCreationScreen(PoiManagementScreen managementScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
+    private PoiCreationScreen(PoiManagementScreen managementScreen, WaypointLocation oldWaypoint) {
         super();
         this.returnScreen = managementScreen;
 
@@ -151,11 +150,11 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         return new PoiCreationScreen(oldMapScreen, setupLocation);
     }
 
-    public static Screen create(MainMapScreen oldMapScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
+    public static Screen create(MainMapScreen oldMapScreen, WaypointLocation oldWaypoint) {
         return new PoiCreationScreen(oldMapScreen, oldWaypoint);
     }
 
-    public static Screen create(PoiManagementScreen managementScreen, WaypointsProvider.WaypointLocation oldWaypoint) {
+    public static Screen create(PoiManagementScreen managementScreen, WaypointLocation oldWaypoint) {
         return new PoiCreationScreen(managementScreen, oldWaypoint);
     }
 
@@ -269,20 +268,16 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     } else if (oldIconId.startsWith("wynntils:icon:personal:")) {
                         iconType = IconType.CUSTOM;
                     } else {
-                        Optional<MapIcon> oldMapIcon = Services.MapData.MAP_ICONS_PROVIDER
-                                .getIcons()
+                        Optional<MapIcon> oldMapIcon = Services.MapData.getIcons()
                                 .filter(mapIcon -> mapIcon.getIconId().equals(oldIconId))
                                 .findFirst();
 
-                        oldMapIcon.ifPresent(oldIcon -> selectedIconIndex = Services.MapData.MAP_ICONS_PROVIDER
-                                .getIcons()
-                                .toList()
-                                .indexOf(oldMapIcon.get()));
+                        oldMapIcon.ifPresent(oldIcon -> selectedIconIndex =
+                                Services.MapData.getIcons().toList().indexOf(oldMapIcon.get()));
 
                         iconScrollOffset = selectedIconIndex;
 
-                        availableIcons.addAll(
-                                Services.MapData.MAP_ICONS_PROVIDER.getIcons().toList());
+                        availableIcons.addAll(Services.MapData.getIcons().toList());
                     }
 
                     iconId = oldIconId;
@@ -290,8 +285,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                     iconType = IconType.NONE;
                 }
             } else {
-                availableIcons.addAll(
-                        Services.MapData.MAP_ICONS_PROVIDER.getIcons().toList());
+                availableIcons.addAll(Services.MapData.getIcons().toList());
             }
 
             updateIcon();
@@ -653,7 +647,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // endregion
 
         if (iconType == IconType.WYNNTILS) {
-            availableIcons.addAll(Services.MapData.MAP_ICONS_PROVIDER.getIcons().toList());
+            availableIcons.addAll(Services.MapData.getIcons().toList());
         } else if (iconType == IconType.CUSTOM) {
             availableIcons.addAll(Services.Waypoints.getCustomIcons());
         }
@@ -1073,8 +1067,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private void updateIcon() {
         switch (iconType) {
             case WYNNTILS -> {
-                iconId = Services.MapData.MAP_ICONS_PROVIDER
-                        .getIcons()
+                iconId = Services.MapData.getIcons()
                         .toList()
                         .get(selectedIconIndex)
                         .getIconId();
@@ -1208,7 +1201,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         iconScrollOffset = 0;
 
         if (iconType == IconType.WYNNTILS) {
-            availableIcons.addAll(Services.MapData.MAP_ICONS_PROVIDER.getIcons().toList());
+            availableIcons.addAll(Services.MapData.getIcons().toList());
         } else if (iconType == IconType.CUSTOM) {
             availableIcons.addAll(Services.Waypoints.getCustomIcons());
         }
