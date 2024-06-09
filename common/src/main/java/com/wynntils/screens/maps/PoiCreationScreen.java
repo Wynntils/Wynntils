@@ -17,6 +17,7 @@ import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
@@ -1122,7 +1123,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .setIconVisibility(iconVisibility)
                 .build();
 
-        waypoint = new WaypointsProvider.WaypointLocation(location, label, category, attributes);
+        waypoint = new WaypointLocation(location, label, category, attributes);
 
         saveButton.active = !labelInput.getTextBoxInput().isBlank()
                 && CustomColor.fromHexString(iconColorInput.getTextBoxInput()) != CustomColor.NONE

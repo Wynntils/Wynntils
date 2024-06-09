@@ -509,6 +509,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new GuildFunctions.GuildLevelFunction());
         registerFunction(new GuildFunctions.GuildNameFunction());
         registerFunction(new GuildFunctions.GuildRankFunction());
+        registerFunction(new GuildFunctions.IsAlliedGuildFunction());
         registerFunction(new GuildFunctions.ObjectiveStreakFunction());
 
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
@@ -594,6 +595,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.InitialTowerDamageFunction());
         registerFunction(new WarFunctions.InitialTowerDefenseFunction());
         registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.IsTerritoryQueuedFunction());
         registerFunction(new WarFunctions.TeamDpsFunction());
         registerFunction(new WarFunctions.TimeInWarFunction());
         registerFunction(new WarFunctions.TowerDpsFunction());

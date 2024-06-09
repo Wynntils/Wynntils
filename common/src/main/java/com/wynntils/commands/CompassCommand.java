@@ -14,8 +14,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.services.mapdata.MapIconTextureWrapper;
+import com.wynntils.services.mapdata.features.ServiceLocation;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -169,13 +169,12 @@ public class CompassCommand extends Command {
     private int compassService(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
+        ServiceLocation.ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
         Position currentPosition = McUtils.player().position();
-        Optional<MapLocation> closestServiceOptional = Services.MapData.SERVICE_LIST_PROVIDER
-                .getFeatures()
-                .filter(f1 -> f1.getCategoryId().startsWith("wynntils:service:" + selectedKind.getMapDataId()))
+        Optional<MapLocation> closestServiceOptional = Services.MapData.getFeaturesForCategory(
+                        "wynntils:service:" + selectedKind.getMapDataId())
                 .map(f -> (MapLocation) f)
                 .min(Comparator.comparingDouble(loc -> loc.getLocation().distanceToSqr(currentPosition)));
 
@@ -205,8 +204,7 @@ public class CompassCommand extends Command {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<MapLocation> places = Services.MapData.PLACE_LIST_PROVIDER
-                .getFeatures()
+        List<MapLocation> places = Services.MapData.getFeaturesForCategory("wynntils:place")
                 .map(f -> (MapLocation) f)
                 .filter(loc -> StringUtils.partialMatch(
                         Services.MapData.resolveMapAttributes(loc).label(), searchedName))

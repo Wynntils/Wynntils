@@ -38,7 +38,7 @@ public class MapFeatureRenderer {
             boolean hovered,
             float scale,
             float zoomLevel,
-            boolean showLabels) {
+            boolean fullscreenMap) {
         float renderScale = hovered ? scale * 1.05f : scale;
         int labelHeight = (int) (FontRenderer.getInstance().getFont().lineHeight * renderScale * TEXT_SCALE);
 
@@ -80,7 +80,7 @@ public class MapFeatureRenderer {
         float labelAlpha = Services.MapData.calculateVisibility(attributes.labelVisibility(), zoomLevel);
         // Always draw labels for hovered icons, regardless of label visibility rules
         boolean drawLabel = labelAlpha > MINIMUM_RENDER_ALPHA || (drawIcon && hovered);
-        if (!attributes.label().isEmpty() && drawLabel && showLabels) {
+        if (!attributes.label().isEmpty() && drawLabel && fullscreenMap) {
             if (drawIcon && hovered) {
                 // If this is hovered, show with full alpha
                 labelAlpha = 1f;
@@ -125,7 +125,7 @@ public class MapFeatureRenderer {
         // Draw decoration, if applicable
         MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
-            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
+            decoration.render(poseStack, bufferSource, hovered, fullscreenMap, zoomLevel);
         }
 
         poseStack.popPose();

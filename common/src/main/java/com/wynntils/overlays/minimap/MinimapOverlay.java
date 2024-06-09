@@ -76,13 +76,7 @@ public class MinimapOverlay extends Overlay {
     public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
-
-    @Persisted
-    public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
+    public final Config<Float> remotePlayersHeadScale = new Config<>(0.7f);
 
     public MinimapOverlay() {
         super(
@@ -152,7 +146,10 @@ public class MinimapOverlay extends Overlay {
         if (followPlayerRotation.get()) {
             poseStack.pushPose();
             RenderUtils.rotatePose(
-                    poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
         }
 
         // avoid rotational overpass - This is a rather loose oversizing, if possible later
@@ -239,7 +236,8 @@ public class MinimapOverlay extends Overlay {
         float cosRotationRadians;
 
         if (followPlayerRotation.get()) {
-            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            double rotationRadians =
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
             sinRotationRadians = (float) StrictMath.sin(rotationRadians);
             cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
         } else {
@@ -255,9 +253,6 @@ public class MinimapOverlay extends Overlay {
         // Append the pois that are still not converted to MapData
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
-        poisToRender = Stream.concat(
-                poisToRender,
-                Services.Hades.getPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
@@ -424,7 +419,8 @@ public class MinimapOverlay extends Overlay {
         float northDY;
 
         if (followPlayerRotation.get()) {
-            float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
+            float yawRadians = (float)
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
             northDX = (float) StrictMath.sin(yawRadians);
             northDY = (float) StrictMath.cos(yawRadians);
 

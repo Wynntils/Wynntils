@@ -120,6 +120,7 @@ public class MapFeaturePoiWrapper implements Poi {
             float zoomRenderScale,
             float zoomLevel,
             boolean showLabels) {
+        // showLabels = fullScreenMap, to be removed when POIs are fully removed, and replaced by MapFeatureRenderer
         MapFeatureRenderer.renderMapFeature(
                 poseStack, bufferSource, feature, attributes, renderX, renderY, hovered, scale, zoomLevel, showLabels);
     }
