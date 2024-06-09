@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.models.containers.type.LootChestTier;
+import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -15,10 +16,12 @@ import com.wynntils.services.mapdata.features.PlaceLocation;
 import com.wynntils.services.mapdata.features.ServiceLocation;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -38,8 +41,12 @@ public class CategoriesProvider extends BuiltInProvider {
         for (int tier = 1; tier <= LootChestTier.values().length; tier++) {
             PROVIDED_CATEGORIES.add(new FoundChestCategory(tier));
         }
+        for (PlayerRelation relation : PlayerRelation.values()) {
+            PROVIDED_CATEGORIES.add(new RemotePlayerCategory(relation));
+        }
         PROVIDED_CATEGORIES.add(new WaypointCategory());
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
+        PROVIDED_CATEGORIES.add(new PlayersCategory());
     }
 
     @Override
@@ -358,6 +365,66 @@ public class CategoriesProvider extends BuiltInProvider {
                                 case CITY -> CITY_VISIBILITY;
                                 case TOWN_OR_PLACE -> PLACE_VISIBILITY;
                             });
+                }
+            });
+        }
+    }
+
+    private static final class PlayersCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return "wynntils:player";
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("Player positions");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<Integer> getPriority() {
+                    return Optional.of(900);
+                }
+
+                @Override
+                public Optional<String> getIconId() {
+                    return Optional.of("wynntils:icon:player:head");
+                }
+
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(FixedMapVisibility.ICON_ALWAYS);
+                }
+            });
+        }
+    }
+
+    private static final class RemotePlayerCategory implements MapCategory {
+        private final PlayerRelation relation;
+
+        private RemotePlayerCategory(PlayerRelation relation) {
+            this.relation = relation;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return "wynntils:player:" + relation.name().toLowerCase();
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of(StringUtils.capitalizeFirst(relation.name().toLowerCase(Locale.ROOT)) + " Players");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(relation.getRelationColor());
                 }
             });
         }

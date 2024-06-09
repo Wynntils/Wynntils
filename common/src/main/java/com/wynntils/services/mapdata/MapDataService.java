@@ -14,11 +14,11 @@ import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
-import com.wynntils.services.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
 import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
+import com.wynntils.services.mapdata.providers.builtin.PlayerProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
@@ -40,7 +40,7 @@ public class MapDataService extends Service {
     private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
     private static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
     private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
-    private static final CharacterProvider CHARACTER_PROVIDER = new CharacterProvider();
+    private static final PlayerProvider CHARACTER_PROVIDER = new PlayerProvider();
     public static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
     public static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
 
