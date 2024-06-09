@@ -23,6 +23,9 @@ public class WaypointsProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
+    @Override
+    public void reloadData() {}
+
     public void updateWaypoints(List<WaypointLocation> waypoints) {
         PROVIDED_FEATURES.forEach(this::notifyCallbacks);
         PROVIDED_FEATURES.clear();
