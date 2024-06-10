@@ -74,6 +74,9 @@ public class MapIconsProvider extends BuiltInProvider {
         return PROVIDED_ICONS.stream();
     }
 
+    @Override
+    public void reloadData() {}
+
     public static String getIconIdFromTexture(Texture texture) {
         for (MapIcon icon : PROVIDED_ICONS) {
             if (icon.getResourceLocation().equals(texture.resource())) {

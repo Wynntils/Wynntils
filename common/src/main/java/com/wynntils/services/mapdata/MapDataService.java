@@ -59,6 +59,11 @@ public class MapDataService extends Service {
         createBuiltInProviders();
     }
 
+    @Override
+    public void reloadData() {
+        getProviders().forEach(MapDataProvider::reloadData);
+    }
+
     public Stream<MapFeature> getFeatures() {
         return getProviders().flatMap(MapDataProvider::getFeatures);
     }
@@ -271,5 +276,8 @@ public class MapDataService extends Service {
 
         @Override
         public void onChange(Consumer<MapDataProvidedType> callback) {}
+
+        @Override
+        public void reloadData() {}
     }
 }
