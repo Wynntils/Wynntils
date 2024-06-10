@@ -69,8 +69,9 @@ public final class McUtils {
         playSoundAmbient(sound, 1.0F, 1.0F);
     }
 
-    public static void playSoundAmbient(SoundEvent sound, float volume, float pitch) {
-        mc().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(sound, volume, pitch));
+    public static void playSoundAmbient(SoundEvent sound, float pitch, float volume) {
+        // forLocalAmbience has the parameters volume then pitch but it is incorrect
+        mc().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(sound, pitch, volume));
     }
 
     public static void sendMessageToClient(Component component) {

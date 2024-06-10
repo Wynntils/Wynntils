@@ -28,6 +28,6 @@ public class WarHornFeature extends Feature {
 
     @SubscribeEvent
     public void onWarQueued(GuildWarQueuedEvent event) {
-        McUtils.playSoundAmbient(WAR_HORN_SOUND, soundVolume.get(), soundPitch.get());
+        McUtils.playSoundAmbient(WAR_HORN_SOUND, soundPitch.get(), soundVolume.get());
     }
 }
