@@ -255,12 +255,11 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
             return;
         }
 
-        byte[] texture = Base64.getDecoder().decode(iconBase64Input.getTextBoxInput());
-
         try {
+            byte[] texture = Base64.getDecoder().decode(iconBase64Input.getTextBoxInput());
             newIcon = new JsonIcon("wynntils:icon:personal:" + iconNameInput.getTextBoxInput(), texture);
             saveIconButton.active = true;
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             WynntilsMod.warn("Bad icon texture for " + iconNameInput.getTextBoxInput(), e);
             newIcon = null;
             saveIconButton.active = false;
