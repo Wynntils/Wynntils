@@ -47,4 +47,9 @@ public class TerritoryProvider extends BuiltInProvider {
     public String getProviderId() {
         return "territory";
     }
+
+    @Override
+    public void reloadData() {
+        updateTerritories();
+    }
 }

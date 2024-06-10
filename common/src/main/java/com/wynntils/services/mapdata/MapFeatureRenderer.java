@@ -193,7 +193,7 @@ public class MapFeatureRenderer {
         // Draw decoration, if applicable
         MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
-            decoration.render(poseStack, bufferSource, hovered, zoomLevel);
+            decoration.render(poseStack, bufferSource, hovered, fullscreenMap, zoomLevel);
         }
 
         poseStack.popPose();
