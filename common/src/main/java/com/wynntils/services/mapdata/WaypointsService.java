@@ -47,6 +47,10 @@ public class WaypointsService extends Service {
             startPoiMigration();
             Services.MapData.WAYPOINTS_PROVIDER.updateWaypoints(waypoints.get());
         }
+
+        if (storage == customIcons) {
+            Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
+        }
     }
 
     public List<WaypointLocation> getWaypoints() {
@@ -60,11 +64,13 @@ public class WaypointsService extends Service {
     public void addCustomIcon(JsonIcon iconToAdd) {
         customIcons.get().add(iconToAdd);
         customIcons.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
     }
 
     public void removeCustomIcon(JsonIcon iconToRemove) {
         customIcons.get().remove(iconToRemove);
         customIcons.touched();
+        Services.MapData.WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
     }
 
     public Set<String> getCategories() {
