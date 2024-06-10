@@ -50,7 +50,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     private TextInputBoxWidget iconBase64Input;
 
     private CustomWaypointIconScreen(PoiCreationScreen creationScreen) {
-        super(Component.literal("Waypoint Category Screen"));
+        super(Component.literal("Custom Waypoint Icon Screen"));
 
         this.creationScreen = creationScreen;
     }
@@ -73,7 +73,6 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
                 iconNameInput);
         iconNameInput.setTooltip(
                 Tooltip.create(Component.translatable("screens.wynntils.customWaypointIcon.nameTooltip")));
-
         this.addRenderableWidget(iconNameInput);
 
         iconBase64Input = new TextInputBoxWidget(
@@ -86,7 +85,6 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
                 iconBase64Input);
         iconBase64Input.setTooltip(
                 Tooltip.create(Component.translatable("screens.wynntils.customWaypointIcon.base64Tooltip")));
-
         this.addRenderableWidget(iconBase64Input);
 
         saveIconButton = new Button.Builder(
@@ -241,6 +239,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     public void removeIcon(JsonIcon iconToRemove) {
         Services.Waypoints.removeCustomIcon(iconToRemove);
 
+        scrollOffset = 0;
         populateIcons();
     }
 

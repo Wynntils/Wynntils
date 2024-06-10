@@ -100,7 +100,6 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                 newCategoryInput);
         newCategoryInput.setTooltip(
                 Tooltip.create(Component.translatable("screens.wynntils.waypointCategory.nameTooltip")));
-
         this.addRenderableWidget(newCategoryInput);
 
         this.addRenderableWidget(
