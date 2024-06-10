@@ -7,7 +7,6 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
@@ -71,10 +70,6 @@ public class MapDataService extends Service {
 
     public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
-    }
-
-    public Stream<Poi> getFeaturesAsPois() {
-        return getFeatures().map(feature -> new MapFeaturePoiWrapper(feature, resolveMapAttributes(feature)));
     }
 
     // region Lookup features and resolve attributes
