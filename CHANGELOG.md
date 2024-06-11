@@ -1,3 +1,27 @@
+## [1.2.22](https://github.com/Wynntils/Artemis/compare/v1.2.21...v1.2.22) (2024-06-11)
+
+
+### New Features
+
+* Add crafting level progress bar [skip ci] ([#2569](https://github.com/Wynntils/Artemis/issues/2569)) ([2560a42](https://github.com/Wynntils/Artemis/commit/2560a42ab7e1c77849d4ac41cc3284d4f8990067))
+* Add option to disable Discord rich presence in streamer mode ([#2585](https://github.com/Wynntils/Artemis/issues/2585)) ([21ac14d](https://github.com/Wynntils/Artemis/commit/21ac14da9c0ed89853d4d39c651e98283c9e8f9e))
+* Add profession XP gain message feature [skip ci] ([#2572](https://github.com/Wynntils/Artemis/issues/2572)) ([86e208a](https://github.com/Wynntils/Artemis/commit/86e208ae532bd8bc28d332b40fa9d66e6d848c08))
+* Is Territory Queued function [skip ci] ([#2575](https://github.com/Wynntils/Artemis/issues/2575)) ([2e14f5e](https://github.com/Wynntils/Artemis/commit/2e14f5ee780119e2105f207e9057aacd7a4cef8c))
+
+
+### Bug Fixes
+
+* minor fixes to error messages [skip ci] ([#2581](https://github.com/Wynntils/Artemis/issues/2581)) ([4e0db5b](https://github.com/Wynntils/Artemis/commit/4e0db5b6ae4f1ce921e76d44f4c0fbeb1196faef))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2566](https://github.com/Wynntils/Artemis/issues/2566)) ([40ef8ed](https://github.com/Wynntils/Artemis/commit/40ef8ed8dec8ae14520721d63922004e434bfedf))
+* [auto-generated] Update urls.json [ci skip] ([#2567](https://github.com/Wynntils/Artemis/issues/2567)) ([1957ee1](https://github.com/Wynntils/Artemis/commit/1957ee168e9842c49af548cbba008489e8fe0968))
+* [auto-generated] Update urls.json [ci skip] ([#2576](https://github.com/Wynntils/Artemis/issues/2576)) ([d3bc412](https://github.com/Wynntils/Artemis/commit/d3bc412c790a2db345f983c140a9b638ea520615))
+* Don't spam the log with exception stack traces [skip ci] ([#2571](https://github.com/Wynntils/Artemis/issues/2571)) ([88d1a9e](https://github.com/Wynntils/Artemis/commit/88d1a9ea7187b8f1752d88eb0504c27b7569d18f))
+* Update the failed to connect messages [skip ci] ([#2574](https://github.com/Wynntils/Artemis/issues/2574)) ([dd16efa](https://github.com/Wynntils/Artemis/commit/dd16efaef6bd48a33b99136fecfbfda665beb996))
+
 ## [1.2.21](https://github.com/Wynntils/Artemis/compare/v1.2.20...v1.2.21) (2024-06-06)
 
 
@@ -5,6 +29,11 @@
 
 * Don't block emerald pouches inside reward containers ([#2565](https://github.com/Wynntils/Artemis/issues/2565)) ([c880520](https://github.com/Wynntils/Artemis/commit/c880520f08fae11945eabb7da20725971527b261))
 * Fix bomb tracking issues [skip ci] ([#2564](https://github.com/Wynntils/Artemis/issues/2564)) ([a631e17](https://github.com/Wynntils/Artemis/commit/a631e17b7d712d09e94f153ffa8131e5abefd9c5))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.21 [skip ci] ([992a2d9](https://github.com/Wynntils/Artemis/commit/992a2d97c64943fc89cb99c212aa2e2fa0bdd652))
 
 ## [1.2.20](https://github.com/Wynntils/Artemis/compare/v1.2.19...v1.2.20) (2024-06-05)
 
@@ -54,18 +83,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.18 [skip ci] ([c6e982b](https://github.com/Wynntils/Artemis/commit/c6e982b7a5488589f6ad8fa523c35645cda0fdfc))
-
-## [1.2.17](https://github.com/Wynntils/Artemis/compare/v1.2.16...v1.2.17) (2024-05-29)
-
-
-### New Features
-
-* Settings Screen Redesign ([#2335](https://github.com/Wynntils/Artemis/issues/2335)) ([f0a73be](https://github.com/Wynntils/Artemis/commit/f0a73be93fe14f576b7242bdb0fd759521645dd9))
-* Start using MapData for some providers [skip ci] ([#2536](https://github.com/Wynntils/Artemis/issues/2536)) ([d5598ed](https://github.com/Wynntils/Artemis/commit/d5598edaac6d0a5d04db4cc5e4c9c7a19a6c5f7b))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.17 [skip ci] ([952d6a2](https://github.com/Wynntils/Artemis/commit/952d6a2e8f79d5801fbf6084ba56fbdd082e413f))
-* Revert "feat: Start using MapData for some providers [skip ci]" [skip ci] ([#2538](https://github.com/Wynntils/Artemis/issues/2538)) ([7940283](https://github.com/Wynntils/Artemis/commit/794028369a209b1b9ca9ff175021bda599c71033)), closes [#2536](https://github.com/Wynntils/Artemis/issues/2536)
 
