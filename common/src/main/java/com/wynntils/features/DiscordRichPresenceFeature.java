@@ -96,9 +96,9 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onStreamToggle(StreamModeEvent e) {
-        if (e.isEnabled()) {
+        if (disableInStream.get() && e.isEnabled()) {
             onDisable();
-        } else {
+        } else if (!e.isEnabled()) {
             onEnable();
         }
     }
