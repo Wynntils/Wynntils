@@ -458,6 +458,8 @@
   "feature.wynntils.dialogueOptionOverride.description": "Adds the ability to select dialogue options with slot buttons.",
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override",
   "feature.wynntils.discordRichPresence.description": "Adds Discord Rich Presence support.",
+  "feature.wynntils.discordRichPresence.disableInStream.description": "Should the rich presence be disabled when in streamer mode?",
+  "feature.wynntils.discordRichPresence.disableInStream.name": "Disable in Streamer Mode",
   "feature.wynntils.discordRichPresence.displayCharacterInfo.description": "Should your character info be displayed in Discord?",
   "feature.wynntils.discordRichPresence.displayCharacterInfo.name": "Display Character Info",
   "feature.wynntils.discordRichPresence.displayLocation.description": "Should your location be displayed in Discord?",
