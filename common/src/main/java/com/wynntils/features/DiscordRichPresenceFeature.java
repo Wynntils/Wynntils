@@ -110,7 +110,15 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        tryUpdateDisplayedInfo();
+        if (config == disableInStream && Models.WorldState.isInStream()) {
+            if (disableInStream.get()) {
+                disableRichPresence();
+            } else {
+                enableRichPresence();
+            }
+        } else {
+            tryUpdateDisplayedInfo();
+        }
     }
 
     @Override
