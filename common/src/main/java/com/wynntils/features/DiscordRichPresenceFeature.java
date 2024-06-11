@@ -97,16 +97,15 @@ public class DiscordRichPresenceFeature extends Feature {
     @SubscribeEvent
     public void onStreamToggle(StreamModeEvent e) {
         if (disableInStream.get() && e.isEnabled()) {
-            onDisable();
+            disableRichPresence();
         } else if (!e.isEnabled()) {
-            onEnable();
+            enableRichPresence();
         }
     }
 
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
-        Services.Discord.unload();
-        stopTerritoryCheck();
+        disableRichPresence();
     }
 
     @Override
@@ -116,6 +115,15 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @Override
     public void onEnable() {
+        enableRichPresence();
+    }
+
+    @Override
+    public void onDisable() {
+        disableRichPresence();
+    }
+
+    private void enableRichPresence() {
         // This isReady() check is required for Linux to not crash on config change.
         if (!Services.Discord.isReady()) {
             // Load the Discord SDK
@@ -129,8 +137,7 @@ public class DiscordRichPresenceFeature extends Feature {
         tryUpdateDisplayedInfo();
     }
 
-    @Override
-    public void onDisable() {
+    private void disableRichPresence() {
         Services.Discord.unload();
         stopTerritoryCheck();
     }
