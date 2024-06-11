@@ -17,6 +17,7 @@ import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -33,6 +34,9 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> displayWorld = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> disableInStream = new Config<>(true);
 
     private static final int TERRITORY_TICKS_DELAY = 10;
 
@@ -87,6 +91,15 @@ public class DiscordRichPresenceFeature extends Feature {
         } else {
             Services.Discord.setState("");
             stopTerritoryCheck();
+        }
+    }
+
+    @SubscribeEvent
+    public void onStreamToggle(StreamModeEvent e) {
+        if (e.isEnabled()) {
+            onDisable();
+        } else {
+            onEnable();
         }
     }
 
