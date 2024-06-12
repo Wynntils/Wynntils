@@ -38,7 +38,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     private static final float SCROLL_FACTOR = 10f;
     private static final Pattern ICON_NAME_PATTERN = Pattern.compile("^[a-z0-9/._-]+$");
 
-    private final PoiCreationScreen creationScreen;
+    private final WaypointCreationScreen creationScreen;
     private List<CustomIconWidget> iconWidgets = new ArrayList<>();
 
     private boolean draggingScroll;
@@ -49,13 +49,13 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     private TextInputBoxWidget iconNameInput;
     private TextInputBoxWidget iconBase64Input;
 
-    private CustomWaypointIconScreen(PoiCreationScreen creationScreen) {
+    private CustomWaypointIconScreen(WaypointCreationScreen creationScreen) {
         super(Component.literal("Custom Waypoint Icon Screen"));
 
         this.creationScreen = creationScreen;
     }
 
-    public static Screen create(PoiCreationScreen creationScreen) {
+    public static Screen create(WaypointCreationScreen creationScreen) {
         return new CustomWaypointIconScreen(creationScreen);
     }
 

@@ -39,7 +39,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
     private static final Pattern CATEGORY_PATTERN = Pattern.compile("^[a-zA-Z0-9:-]+$");
 
     private final List<String> categoriesList = new ArrayList<>();
-    private final PoiCreationScreen creationScreen;
+    private final WaypointCreationScreen creationScreen;
     private List<CategoryWidget> categoryWidgets = new ArrayList<>();
 
     private boolean draggingScroll;
@@ -51,7 +51,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
     private Set<String> allCategories;
     private TextInputBoxWidget newCategoryInput;
 
-    private WaypointCategoryScreen(PoiCreationScreen creationScreen, String categoryPath) {
+    private WaypointCategoryScreen(WaypointCreationScreen creationScreen, String categoryPath) {
         super(Component.literal("Waypoint Category Screen"));
 
         this.creationScreen = creationScreen;
@@ -81,7 +81,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
         updateCategoryList();
     }
 
-    public static Screen create(PoiCreationScreen creationScreen, String categoryPath) {
+    public static Screen create(WaypointCreationScreen creationScreen, String categoryPath) {
         return new WaypointCategoryScreen(creationScreen, categoryPath);
     }
 
