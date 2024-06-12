@@ -76,7 +76,7 @@ public final class JsonProvider implements MapDataProvider {
      */
     public static JsonProvider loadBundledResource(String id, String filename) {
         try (InputStream inputStream = WynntilsMod.getModResourceAsStream(filename);
-             Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+                Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             return GSON.fromJson(targetReader, JsonProvider.class);
         } catch (MalformedJsonException e) {
             McUtils.sendErrorToClient("Error parsing map data for '" + id + "'");

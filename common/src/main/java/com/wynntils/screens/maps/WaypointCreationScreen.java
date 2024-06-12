@@ -14,7 +14,6 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.maps.widgets.IconButton;
-import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
@@ -22,12 +21,12 @@ import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
+import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
@@ -496,7 +496,11 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         this.addRenderableWidget(iconVisiblityButton);
 
         labelMinVisibilitySlider = new VisibilitySlider(
-                (int) dividedWidth, (int) (dividedHeight * 25), (int) (dividedWidth * 9), Component.literal("100"), 1.0);
+                (int) dividedWidth,
+                (int) (dividedHeight * 25),
+                (int) (dividedWidth * 9),
+                Component.literal("100"),
+                1.0);
         this.addRenderableWidget(labelMinVisibilitySlider);
 
         labelMaxVisibilitySlider = new VisibilitySlider(
@@ -632,20 +636,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
-
-        if (waypoint != null) {
-            MapFeatureRenderer.renderMapFeature(
-                    poseStack,
-                    guiGraphics.bufferSource(),
-                    waypoint,
-                    Services.MapData.resolveMapAttributes(waypoint),
-                    MapRenderer.getRenderX(waypoint.getLocation().x, mapCenterX, centerX, zoomRenderScale),
-                    MapRenderer.getRenderZ(waypoint.getLocation().z, mapCenterZ, centerZ, zoomRenderScale),
-                    false,
-                    1,
-                    zoomRenderScale,
-                    false);
-        }
 
         renderCursor(
                 poseStack,
@@ -986,6 +976,11 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
         this.focusedTextInput = focusedTextInput;
+    }
+
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        return Stream.of(waypoint);
     }
 
     public void setCategory(String category) {
