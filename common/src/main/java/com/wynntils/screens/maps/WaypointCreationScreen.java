@@ -637,6 +637,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
+        if (waypoint != null) {
+            renderMapFeatures(poseStack, mouseX, mouseY);
+        }
+
         renderCursor(
                 poseStack,
                 1.5f,
