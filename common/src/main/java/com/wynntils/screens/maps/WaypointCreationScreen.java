@@ -935,6 +935,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
             int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
+            yInput.setTextBoxInput("0");
             zInput.setTextBoxInput(String.valueOf(gameZ));
         }
 
