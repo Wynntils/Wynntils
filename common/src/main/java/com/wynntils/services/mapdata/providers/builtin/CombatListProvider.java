@@ -18,6 +18,11 @@ public class CombatListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
 
     public CombatListProvider() {
+        reloadData();
+    }
+
+    @Override
+    public void reloadData() {
         loadCombatLocations();
     }
 

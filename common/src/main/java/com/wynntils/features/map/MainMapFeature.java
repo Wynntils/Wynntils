@@ -46,7 +46,7 @@ public class MainMapFeature extends Feature {
     public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
     @Persisted
-    public final Config<Float> poiScale = new Config<>(1f);
+    public final Config<Float> mapFeatureScale = new Config<>(1f);
 
     @Persisted
     public final Config<Boolean> centerWhenUnmapped = new Config<>(true);

@@ -76,7 +76,7 @@ public final class JsonProvider implements MapDataProvider {
      */
     public static JsonProvider loadBundledResource(String id, String filename) {
         try (InputStream inputStream = WynntilsMod.getModResourceAsStream(filename);
-                Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+             Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             return GSON.fromJson(targetReader, JsonProvider.class);
         } catch (MalformedJsonException e) {
             McUtils.sendErrorToClient("Error parsing map data for '" + id + "'");
@@ -164,6 +164,11 @@ public final class JsonProvider implements MapDataProvider {
     public void onChange(Consumer<MapDataProvidedType> callback) {
         // The json does not change, as long as we do not implement a
         // reload of the file, so we do not need to register callbacks.
+    }
+
+    @Override
+    public void reloadData() {
+        // FIXME: To be implemented if needed (when the first json provider is added)
     }
 
     public static final class JsonCategorySerializer

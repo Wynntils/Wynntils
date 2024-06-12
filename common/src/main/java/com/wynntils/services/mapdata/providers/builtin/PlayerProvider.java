@@ -70,6 +70,11 @@ public class PlayerProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
+    @Override
+    public void reloadData() {
+        reloadHadesUsers();
+    }
+
     public static final class RemotePlayerLocation implements MapLocation {
         private final HadesUser hadesUser;
 

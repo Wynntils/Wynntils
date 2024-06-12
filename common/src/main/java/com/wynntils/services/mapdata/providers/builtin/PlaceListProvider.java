@@ -18,6 +18,11 @@ public class PlaceListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
 
     public PlaceListProvider() {
+        reloadData();
+    }
+
+    @Override
+    public void reloadData() {
         loadPlaces();
     }
 
