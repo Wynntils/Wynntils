@@ -163,6 +163,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     protected void doInit() {
         availableIcons.clear();
 
+        if (firstSetup) {
+            updateMapCenter(McUtils.player().getBlockX(), McUtils.player().getBlockZ());
+        }
+
         ResolvedMapAttributes oldAttributes = null;
 
         if (oldWaypoint != null) {
