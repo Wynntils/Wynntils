@@ -12,9 +12,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.attributes.MapVisibilityBuilder;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.features.WaypointLocation;
@@ -66,7 +68,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private Button saveButton;
     private Button tabButton;
     private OptionButton labelShadowButton;
-    private OptionButton iconTypeButton;
     private OptionButton labelVisiblityButton;
     private OptionButton iconVisiblityButton;
     private TextInputBoxWidget labelInput;
@@ -83,6 +84,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private VisibilitySlider iconMinVisibilitySlider;
     private VisibilitySlider iconMaxVisibilitySlider;
     private VisibilitySlider iconFadeSlider;
+    private WynntilsCheckbox iconCheckbox;
 
     // UI Size, positions etc
     private float dividedWidth;
@@ -97,16 +99,16 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private WaypointLocation oldWaypoint;
 
     // Waypoint details
+    private boolean useIcon = true;
     private CustomColor iconColorCache = CommonColors.WHITE;
     private CustomColor labelColorCache = CommonColors.WHITE;
-    private IconType iconType = IconType.WYNNTILS;
-    private int selectedIconIndex = 0;
+    private MapIcon selectedIcon;
     private Integer parsedXInput;
     private Integer parsedYInput = 0;
     private Integer parsedZInput;
     private int priority = 500;
     private String category = "";
-    private String iconId = "";
+    private String iconId = MapIcon.NO_ICON_ID;
     private String label = "";
     private TextShadow labelShadow = TextShadow.NORMAL;
     private VisibilityType iconVisibilityType = VisibilityType.CUSTOM;
@@ -160,6 +162,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     protected void doInit() {
+        availableIcons.clear();
+
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
 
@@ -259,30 +263,27 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // region Icon
         if (firstSetup) {
             if (oldWaypoint != null && oldWaypoint.getAttributes().isPresent()) {
-                if (oldWaypoint.getAttributes().get().getIconId().isPresent()) {
-                    String oldIconId =
-                            oldWaypoint.getAttributes().get().getIconId().get();
+                Optional<String> oldIconIdOpt =
+                        oldWaypoint.getAttributes().get().getIconId();
 
-                    if (oldIconId.equals(MapIcon.NO_ICON_ID)) {
-                        iconType = IconType.NONE;
-                    } else if (oldIconId.startsWith("wynntils:icon:personal:")) {
-                        iconType = IconType.CUSTOM;
+                if (oldIconIdOpt.isPresent()) {
+                    if (oldIconIdOpt.get().equals(MapIcon.NO_ICON_ID)) {
+                        useIcon = false;
                     } else {
-                        Optional<MapIcon> oldMapIcon = Services.MapData.getIcons()
-                                .filter(mapIcon -> mapIcon.getIconId().equals(oldIconId))
+                        availableIcons.addAll(Services.MapData.getIcons().toList());
+
+                        Optional<MapIcon> oldMapIcon = availableIcons.stream()
+                                .filter(mapIcon -> mapIcon.getIconId().equals(oldIconIdOpt.get()))
                                 .findFirst();
 
-                        oldMapIcon.ifPresent(oldIcon -> selectedIconIndex =
-                                Services.MapData.getIcons().toList().indexOf(oldMapIcon.get()));
+                        oldMapIcon.ifPresent(oldIcon -> selectedIcon = oldIcon);
 
-                        iconScrollOffset = selectedIconIndex;
-
-                        availableIcons.addAll(Services.MapData.getIcons().toList());
+                        iconScrollOffset = availableIcons.indexOf(selectedIcon);
                     }
 
-                    iconId = oldIconId;
+                    iconId = oldIconIdOpt.get();
                 } else {
-                    iconType = IconType.NONE;
+                    useIcon = false;
                 }
             } else {
                 availableIcons.addAll(Services.MapData.getIcons().toList());
@@ -291,12 +292,16 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             updateIcon();
         }
 
-        iconTypeButton = new OptionButton(
+        iconCheckbox = new WynntilsCheckbox(
                 (int) dividedWidth,
                 (int) (dividedHeight * 25),
+                20,
+                20,
+                Component.translatable("screens.wynntils.poiCreation.icon"),
+                useIcon,
                 (int) (dividedWidth * 6),
-                Component.literal(iconType.name()));
-        this.addRenderableWidget(iconTypeButton);
+                (b -> toggleIcon()));
+        this.addRenderableWidget(iconCheckbox);
 
         previousIconButton = new Button.Builder(Component.literal("<"), (button) -> {
                     if (iconScrollOffset - 1 < 0) {
@@ -334,7 +339,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .build();
         this.addRenderableWidget(addCustomIconButton);
 
-        addCustomIconButton.visible = iconType == IconType.CUSTOM;
+        addCustomIconButton.visible = useIcon;
 
         iconColorInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 23),
@@ -646,12 +651,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         this.addRenderableWidget(saveButton);
         // endregion
 
-        if (iconType == IconType.WYNNTILS) {
-            availableIcons.addAll(Services.MapData.getIcons().toList());
-        } else if (iconType == IconType.CUSTOM) {
-            availableIcons.addAll(Services.Waypoints.getCustomIcons());
-        }
-
         toggleWidgets();
         updateWaypoint();
         populateIcons();
@@ -743,18 +742,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             // endregion
 
             // region Icon
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.icon") + ":"),
-                            dividedWidth,
-                            dividedHeight * 23.5f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            if (iconType != IconType.NONE) {
+            if (useIcon) {
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
@@ -828,7 +816,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            if (iconType != IconType.NONE) {
+            if (useIcon) {
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
@@ -874,7 +862,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            if (iconType != IconType.NONE) {
+            if (useIcon) {
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,
@@ -940,13 +928,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             updateWaypoint();
 
             return true;
-        } else if (iconTypeButton != null && iconTypeButton.isMouseOver(mouseX, mouseY)) {
-            handleIconTypeClick(button);
-
-            populateIcons();
-            updateIcon();
-            updateWaypoint();
-            return true;
         } else if (labelVisiblityButton != null && labelVisiblityButton.isMouseOver(mouseX, mouseY)) {
             handleLabelVisibilityClick(button);
 
@@ -967,7 +948,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             }
         }
 
-        if (visibilityTab && iconType != IconType.NONE) {
+        if (visibilityTab && useIcon) {
             for (VisibilitySlider slider : iconSliders) {
                 if (slider.isMouseOver(mouseX, mouseY)) {
                     iconVisibilityType = VisibilityType.CUSTOM;
@@ -1043,15 +1024,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     public void setSelectedIcon(MapIcon selectedIcon) {
-        selectedIconIndex = availableIcons.indexOf(selectedIcon);
-
-        populateIcons();
-        updateIcon();
-        updateWaypoint();
-    }
-
-    public void setCustomIcon(int newIndex) {
-        selectedIconIndex = newIndex;
+        this.selectedIcon = selectedIcon;
 
         populateIcons();
         updateIcon();
@@ -1065,26 +1038,9 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     private void updateIcon() {
-        switch (iconType) {
-            case WYNNTILS -> {
-                iconId = Services.MapData.getIcons()
-                        .toList()
-                        .get(selectedIconIndex)
-                        .getIconId();
-            }
-            case CUSTOM -> {
-                if (Services.Waypoints.getCustomIcons().isEmpty()) {
-                    iconId = "";
-                } else {
-                    iconId = Services.Waypoints.getCustomIcons()
-                            .get(selectedIconIndex)
-                            .getIconId();
-                }
-            }
-            default -> {
-                iconId = MapIcon.NO_ICON_ID;
-            }
-        }
+        if (selectedIcon == null) return;
+
+        iconId = selectedIcon.getIconId();
     }
 
     private void updateWaypoint() {
@@ -1153,7 +1109,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             int xPos = (int) (dividedWidth * 8) + 20 + (i * buttonWidth);
 
             IconButton iconButton = new IconButton(
-                    xPos, (int) (dividedHeight * 25), buttonWidth, currentIcon, iconIndex == selectedIconIndex);
+                    xPos, (int) (dividedHeight * 25), buttonWidth, currentIcon, currentIcon == selectedIcon);
 
             iconButtons.add(iconButton);
         }
@@ -1174,37 +1130,29 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         labelShadowButton.setMessage(Component.literal(labelShadow.name()));
     }
 
-    private void handleIconTypeClick(int button) {
-        int index = iconType.ordinal();
-        int numValues = IconType.values().length;
+    private void toggleIcon() {
+        useIcon = !useIcon;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            index = (index + 1) % numValues;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            index = (index - 1 + numValues) % numValues;
-        }
+        previousIconButton.visible = useIcon;
+        nextIconButton.visible = useIcon;
+        addCustomIconButton.visible = useIcon;
+        iconColorInput.visible = useIcon;
 
-        iconType = IconType.values()[index];
-
-        iconTypeButton.setMessage(Component.literal(iconType.name()));
-
-        previousIconButton.visible = iconType != IconType.NONE;
-        nextIconButton.visible = iconType != IconType.NONE;
-        iconColorInput.visible = iconType != IconType.NONE;
-        addCustomIconButton.visible = iconType == IconType.CUSTOM;
-
-        if (iconType == IconType.NONE && getFocusedTextInput() == iconColorInput) {
+        if (!useIcon && getFocusedTextInput() == iconColorInput) {
             this.setFocusedTextInput(null);
         }
 
-        availableIcons.clear();
-        iconScrollOffset = 0;
-
-        if (iconType == IconType.WYNNTILS) {
+        if (useIcon) {
             availableIcons.addAll(Services.MapData.getIcons().toList());
-        } else if (iconType == IconType.CUSTOM) {
-            availableIcons.addAll(Services.Waypoints.getCustomIcons());
+        } else {
+            if (getFocusedTextInput() == iconColorInput) {
+                this.setFocusedTextInput(null);
+            }
+
+            availableIcons.clear();
         }
+
+        updateWaypoint();
 
         nextIconButton.active = availableIcons.size() > ICONS_PER_PAGE;
         previousIconButton.active = availableIcons.size() > ICONS_PER_PAGE;
@@ -1275,9 +1223,10 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         labelInput.visible = !visibilityTab;
         labelShadowButton.visible = !visibilityTab;
         labelColorInput.visible = !visibilityTab;
-        iconTypeButton.visible = !visibilityTab;
-        previousIconButton.visible = !visibilityTab && iconType != IconType.NONE;
-        nextIconButton.visible = !visibilityTab && iconType != IconType.NONE;
+        iconCheckbox.visible = !visibilityTab;
+        previousIconButton.visible = !visibilityTab && useIcon;
+        nextIconButton.visible = !visibilityTab && useIcon;
+        addCustomIconButton.visible = !visibilityTab && useIcon;
         iconColorInput.visible = !visibilityTab;
         xInput.visible = !visibilityTab;
         yInput.visible = !visibilityTab;
@@ -1286,13 +1235,13 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         centerOnWorldButton.visible = !visibilityTab;
         priorityInput.visible = visibilityTab;
         labelVisiblityButton.visible = visibilityTab;
-        iconVisiblityButton.visible = visibilityTab;
+        iconVisiblityButton.visible = visibilityTab && useIcon;
         labelMinVisibilitySlider.visible = visibilityTab;
         labelMaxVisibilitySlider.visible = visibilityTab;
         labelFadeSlider.visible = visibilityTab;
-        iconMinVisibilitySlider.visible = visibilityTab;
-        iconMaxVisibilitySlider.visible = visibilityTab;
-        iconFadeSlider.visible = visibilityTab;
+        iconMinVisibilitySlider.visible = visibilityTab && useIcon;
+        iconMaxVisibilitySlider.visible = visibilityTab && useIcon;
+        iconFadeSlider.visible = visibilityTab && useIcon;
     }
 
     private static final class OptionButton extends WynntilsButton {
@@ -1334,12 +1283,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
             updateMessage();
         }
-    }
-
-    private enum IconType {
-        NONE,
-        WYNNTILS,
-        CUSTOM
     }
 
     private enum VisibilityType {

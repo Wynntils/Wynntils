@@ -232,7 +232,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     }
 
     public void selectIcon(JsonIcon icon) {
-        creationScreen.setCustomIcon(Services.Waypoints.getCustomIcons().indexOf(icon));
+        creationScreen.setSelectedIcon(icon);
         McUtils.mc().setScreen(creationScreen);
     }
 
