@@ -152,7 +152,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 this);
 
         this.itemSearchWidget.setTextBoxInput(previousSearchWidget.getTextBoxInput());
-        updateStateFromItemSearchWidget();
         // endregion
 
         setFocusedTextInput(providerSearchWidget);
@@ -306,6 +305,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         updateProviderWidgets();
         updatePresetWidgets();
+
+        updateStateFromItemSearchWidget();
     }
 
     @Override
