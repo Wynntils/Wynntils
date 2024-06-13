@@ -13,9 +13,11 @@ import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -69,9 +71,23 @@ public final class McUtils {
         playSoundAmbient(sound, 1.0F, 1.0F);
     }
 
-    public static void playSoundAmbient(SoundEvent sound, float pitch, float volume) {
-        // forLocalAmbience has the parameters volume then pitch but it is incorrect
-        mc().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(sound, pitch, volume));
+    public static void playSoundAmbient(SoundEvent sound, float volume, float pitch) {
+        // Pitch and volume are switched in the convenience method for creating this instance,
+        // so use the fully qualified method with the correct order
+        mc().getSoundManager()
+                .play(new SimpleSoundInstance(
+                        sound.getLocation(),
+                        SoundSource.AMBIENT,
+                        volume,
+                        pitch,
+                        SoundInstance.createUnseededRandom(),
+                        false,
+                        0,
+                        SoundInstance.Attenuation.NONE,
+                        0.0,
+                        0.0,
+                        0.0,
+                        true));
     }
 
     public static void sendMessageToClient(Component component) {
