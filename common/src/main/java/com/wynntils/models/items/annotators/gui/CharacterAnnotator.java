@@ -20,7 +20,9 @@ public class CharacterAnnotator implements GuiItemAnnotator {
     private static final Pattern CLASS_MENU_NAME_PATTERN =
             Pattern.compile("(?:§l)?§6(?:§l)?\\[>\\] Select ((.+)|This Character)");
 
-    private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §7Class: §f(.+)");
+    // Test in CharacterAnnotator_CLASS_MENU_CLASS_PATTERN
+    private static final Pattern CLASS_MENU_CLASS_PATTERN =
+            Pattern.compile("§e- §7Class:(?: (?<gamemodes>§.[\uE027\uE083\uE026\uE029\uE028])+§r)? §f(?<class>.+)");
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
 
     @Override
@@ -36,8 +38,8 @@ public class CharacterAnnotator implements GuiItemAnnotator {
         for (StyledText lore : LoreUtils.getLore(itemStack)) {
             Matcher classMatcher = lore.getMatcher(CLASS_MENU_CLASS_PATTERN);
             if (classMatcher.matches()) {
-                classType = ClassType.fromName(classMatcher.group(1));
-                reskinned = ClassType.isReskinned(classMatcher.group(1));
+                classType = ClassType.fromName(classMatcher.group("class"));
+                reskinned = ClassType.isReskinned(classMatcher.group("class"));
             }
 
             Matcher levelMatcher = lore.getMatcher(CLASS_MENU_LEVEL_PATTERN);
