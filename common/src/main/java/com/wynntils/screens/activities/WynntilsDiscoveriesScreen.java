@@ -95,7 +95,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
     @Override
     protected void doInit() {
-        Models.Discovery.reloadDiscoveries(isShowingSecrets(), isShowingWorld(), isShowingTerritory());
+        Models.Discovery.reloadDiscoveries(shouldQuerySecrets(), shouldQueryWorld(), shouldQueryTerritory());
 
         super.doInit();
 
@@ -247,7 +247,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "discovery",
-                () -> Models.Discovery.reloadDiscoveries(isShowingSecrets(), isShowingWorld(), isShowingTerritory())));
+                () -> Models.Discovery.reloadDiscoveries(
+                        shouldQuerySecrets(), shouldQueryWorld(), shouldQueryTerritory())));
 
         this.addRenderableWidget(new SortOrderWidget(
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1,
@@ -394,6 +395,10 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 .get();
     }
 
+    private boolean shouldQuerySecrets() {
+        return isShowingSecrets() || isShowingUndiscoveredSecrets();
+    }
+
     private boolean isShowingWorld() {
         return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .worldSelected
@@ -406,6 +411,10 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 .get();
     }
 
+    private boolean shouldQueryWorld() {
+        return isShowingWorld() || isShowingUndiscoveredWorld();
+    }
+
     private boolean isShowingTerritory() {
         return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .territorySelected
@@ -416,5 +425,9 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .undiscoveredTerritorySelected
                 .get();
+    }
+
+    private boolean shouldQueryTerritory() {
+        return isShowingTerritory() || isShowingUndiscoveredTerritory();
     }
 }
