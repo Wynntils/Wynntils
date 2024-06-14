@@ -57,7 +57,7 @@ public abstract class LootrunFinishedEventBuilder {
 
         public LootrunFinishedEvent.Completed build() {
             return new LootrunFinishedEvent.Completed(
-                    challengesCompleted, timeElapsed, rewardPulls, rewardRerolls, experienceGained, mobsKilled);
+                    challengesCompleted, timeElapsed, rewardPulls, rewardRerolls, rewardSacrifices, experienceGained, mobsKilled, chestsOpened);
         }
     }
 
