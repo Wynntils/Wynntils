@@ -36,7 +36,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
     private static final int SCROLLBAR_HEIGHT = 40;
     private static final float SCROLL_FACTOR = 10f;
     private static final String DEFAULT_CATEGORY = "wynntils:personal:waypoint";
-    private static final Pattern CATEGORY_PATTERN = Pattern.compile("^[a-zA-Z0-9:-]+$");
+    private static final Pattern CATEGORY_PATTERN = Pattern.compile("^[a-z0-9:-]+$");
 
     private final List<String> categoriesList = new ArrayList<>();
     private final WaypointCreationScreen creationScreen;
