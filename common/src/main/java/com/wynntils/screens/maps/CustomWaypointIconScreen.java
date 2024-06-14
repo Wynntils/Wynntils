@@ -36,7 +36,9 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     private static final int ICONS_PER_PAGE = 16;
     private static final int SCROLLBAR_HEIGHT = 40;
     private static final float SCROLL_FACTOR = 10f;
-    private static final Pattern ICON_NAME_PATTERN = Pattern.compile("^[a-z0-9/._-]+$");
+    // Accepted resource location name pattern `^[a-z0-9/._-]+`
+    // This is made stricter to avoid weird names
+    private static final Pattern ICON_NAME_PATTERN = Pattern.compile("^[a-z0-9-]+$");
 
     private final WaypointCreationScreen creationScreen;
     private List<CustomIconWidget> iconWidgets = new ArrayList<>();
