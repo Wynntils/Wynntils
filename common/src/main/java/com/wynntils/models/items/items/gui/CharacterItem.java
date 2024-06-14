@@ -34,4 +34,13 @@ public class CharacterItem extends GuiItem {
     public boolean isReskinned() {
         return reskinned;
     }
+
+    @Override
+    public String toString() {
+        return "CharacterItem{" + "className='"
+                + className + '\'' + ", level="
+                + level + ", classType="
+                + classType + ", reskinned="
+                + reskinned + '}';
+    }
 }
