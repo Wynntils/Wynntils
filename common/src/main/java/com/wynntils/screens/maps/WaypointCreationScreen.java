@@ -101,11 +101,14 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private boolean useIcon = true;
     private CustomColor iconColorCache = CommonColors.WHITE;
     private CustomColor labelColorCache = CommonColors.WHITE;
-    private MapIcon selectedIcon;
     private Integer parsedXInput;
     private Integer parsedYInput;
     private Integer parsedZInput;
     private int priority = 0;
+    private JsonMapVisibility iconVisibility;
+    private JsonMapVisibility labelVisibility;
+    private MapIcon selectedIcon;
+    private ResolvedMapAttributes waypointAttributes;
     private String category = "";
     private String iconId = MapIcon.NO_ICON_ID;
     private String label = "";
@@ -543,6 +546,9 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 0.06);
         this.addRenderableWidget(iconFadeSlider);
 
+        // For first setup with a previous waypoint get the visibility from oldAttributes
+        // If current waypoint has all required fields then get from resolved attributes
+        // Otherwise just get what has been set from iconVisibility and labelVisibility
         if (firstSetup && oldAttributes != null) {
             labelMinVisibilitySlider.setVisibility(
                     oldAttributes.labelVisibility().min());
@@ -553,6 +559,30 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             iconMinVisibilitySlider.setVisibility(oldAttributes.iconVisibility().min());
             iconMaxVisibilitySlider.setVisibility(oldAttributes.iconVisibility().max());
             iconFadeSlider.setVisibility(oldAttributes.iconVisibility().fade());
+        } else if (waypointAttributes != null) {
+            labelMinVisibilitySlider.setVisibility(
+                    waypointAttributes.labelVisibility().min());
+            labelMaxVisibilitySlider.setVisibility(
+                    waypointAttributes.labelVisibility().max());
+            labelFadeSlider.setVisibility(waypointAttributes.labelVisibility().fade());
+
+            iconMinVisibilitySlider.setVisibility(
+                    waypointAttributes.iconVisibility().min());
+            iconMaxVisibilitySlider.setVisibility(
+                    waypointAttributes.iconVisibility().max());
+            iconFadeSlider.setVisibility(waypointAttributes.iconVisibility().fade());
+        } else {
+            if (labelVisibility != null) {
+                labelVisibility.getMin().ifPresent(labelMin -> labelMinVisibilitySlider.setVisibility(labelMin));
+                labelVisibility.getMax().ifPresent(labelMax -> labelMaxVisibilitySlider.setVisibility(labelMax));
+                labelVisibility.getFade().ifPresent(labelFade -> labelFadeSlider.setVisibility(labelFade));
+            }
+
+            if (iconVisibility != null) {
+                iconVisibility.getMin().ifPresent(iconMin -> iconMinVisibilitySlider.setVisibility(iconMin));
+                iconVisibility.getMax().ifPresent(iconMax -> iconMaxVisibilitySlider.setVisibility(iconMax));
+                iconVisibility.getFade().ifPresent(iconFade -> iconFadeSlider.setVisibility(iconFade));
+            }
         }
 
         labelSliders.add(labelMinVisibilitySlider);
@@ -1018,21 +1048,23 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     private void updateWaypoint() {
         if (saveButton == null) return;
+
+        // Set visibility first so that the values can be saved even if no location has been set
+        labelVisibility = new JsonMapVisibility(
+                (float) labelMinVisibilitySlider.getVisibility(),
+                (float) labelMaxVisibilitySlider.getVisibility(),
+                (float) labelFadeSlider.getVisibility());
+        iconVisibility = new JsonMapVisibility(
+                (float) iconMinVisibilitySlider.getVisibility(),
+                (float) iconMaxVisibilitySlider.getVisibility(),
+                (float) iconFadeSlider.getVisibility());
+
         if (parsedXInput == null || parsedYInput == null || parsedZInput == null) {
             saveButton.active = false;
             return;
         }
 
         Location location = new Location(parsedXInput, parsedYInput, parsedZInput);
-
-        JsonMapVisibility labelVisibility = new JsonMapVisibility(
-                (float) labelMinVisibilitySlider.getVisibility(),
-                (float) labelMaxVisibilitySlider.getVisibility(),
-                (float) labelFadeSlider.getVisibility());
-        JsonMapVisibility iconVisibility = new JsonMapVisibility(
-                (float) iconMinVisibilitySlider.getVisibility(),
-                (float) iconMaxVisibilitySlider.getVisibility(),
-                (float) iconFadeSlider.getVisibility());
 
         JsonMapAttributes attributes = new JsonMapAttributesBuilder()
                 .setLabel(label)
@@ -1046,6 +1078,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .build();
 
         waypoint = new WaypointLocation(location, label, category, attributes);
+
+        waypointAttributes = Services.MapData.resolveMapAttributes(waypoint);
 
         saveButton.active = !labelInput.getTextBoxInput().isBlank()
                 && CustomColor.fromHexString(iconColorInput.getTextBoxInput()) != CustomColor.NONE
