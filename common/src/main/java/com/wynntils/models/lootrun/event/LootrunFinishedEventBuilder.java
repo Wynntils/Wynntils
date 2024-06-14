@@ -10,8 +10,10 @@ public abstract class LootrunFinishedEventBuilder {
         private int timeElapsed;
         private int rewardPulls;
         private int rewardRerolls;
+        private int rewardSacrifices;
         private int experienceGained;
         private int mobsKilled;
+        private int chestsOpened;
 
         public Completed setChallengesCompleted(int challengesCompleted) {
             this.challengesCompleted = challengesCompleted;
@@ -33,6 +35,11 @@ public abstract class LootrunFinishedEventBuilder {
             return this;
         }
 
+        public Completed setRewardSacrifices(int rewardSacrifices) {
+            this.rewardSacrifices = rewardSacrifices;
+            return this;
+        }
+
         public Completed setExperienceGained(int experienceGained) {
             this.experienceGained = experienceGained;
             return this;
@@ -40,6 +47,11 @@ public abstract class LootrunFinishedEventBuilder {
 
         public Completed setMobsKilled(int mobsKilled) {
             this.mobsKilled = mobsKilled;
+            return this;
+        }
+
+        public Completed setChestsOpened(int chestsOpened) {
+            this.chestsOpened = chestsOpened;
             return this;
         }
 

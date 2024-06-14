@@ -91,11 +91,13 @@ public class LootrunModel extends Model {
     // Rewards
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Pulls§r");
     private static final Pattern REWARD_REROLLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Rerolls§r");
+    private static final Pattern REWARD_SACRIFICES_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Sacrif§r");
     private static final Pattern LOOTRUN_EXPERIENCE_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Lootrun Experience§r");
 
     // Statistics
     private static final Pattern TIME_ELAPSED_PATTERN = Pattern.compile("[À\\s]*§7Time Elapsed: §.(\\d+):(\\d+)");
     private static final Pattern MOBS_KILLED_PATTERN = Pattern.compile("[À\\s]*§7Mobs Killed: §.(\\d+)");
+    private static final Pattern CHESTS_OPENED_PATTERN = Pattern.compile("[À\\s]*§7Chests Open: §.(\\d+)");
     private static final Pattern CHALLENGES_COMPLETED_PATTERN =
             Pattern.compile("[À\\s]*§7Challenges Completed: §.(\\d+)");
 
@@ -718,6 +720,19 @@ public class LootrunModel extends Model {
             }
 
             WynntilsMod.warn("Found lootrun rerolls but no mobs killed: " + styledText);
+        }
+
+        matcher = styledText.getMatcher(REWARD_SACRIFICES_PATTERN);
+        if (matcher.find()) {
+            lootrunCompletedBuilder.setRewardSacrifices(Integer.parseInt(matcher.group(1)));
+
+            matcher = styledText.getMatcher(CHESTS_OPENED_PATTERN);
+            if (matcher.find()) {
+                lootrunCompletedBuilder.setChestsOpened(Integer.parseInt(matcher.group(1)));
+                return;
+            }
+
+            WynntilsMod.warn("Found lootrun sacrifices but no chests opened: " + styledText);
         }
 
         matcher = styledText.getMatcher(LOOTRUN_EXPERIENCE_PATTERN);
