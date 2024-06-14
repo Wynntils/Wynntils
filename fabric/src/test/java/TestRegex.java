@@ -24,6 +24,7 @@ import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
+import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.players.FriendsModel;
@@ -915,5 +916,14 @@ public class TestRegex {
         p.shouldMatch("§f⬡ §5Shiny Stratiformis");
         p.shouldMatch("§f⬡ §5Shiny Aftershock");
         p.shouldMatch("§f⬡ §5Shiny Crusade Sabatons");
+    }
+
+    @Test
+    public void CharacterAnnotator_CLASS_MENU_CLASS_PATTERN() {
+        PatternTester p = new PatternTester(CharacterAnnotator.class, "CLASS_MENU_CLASS_PATTERN");
+
+        p.shouldMatch("§e- §7Class: §6\uE029§5\uE028§r §fAssassin");
+        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§r §fKnight");
+        p.shouldMatch("§e- §7Class: §fWarrior");
     }
 }

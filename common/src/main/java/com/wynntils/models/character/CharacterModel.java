@@ -23,6 +23,7 @@ import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -31,6 +32,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,8 +44,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CharacterModel extends Model {
-    private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §7Class: §f(.+)");
-    private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
     // Test in CharacterModel_SILVERBULL_PATTERN
@@ -200,8 +200,7 @@ public final class CharacterModel extends Model {
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
-            if (e.getItemStack().getItem() == Items.AIR) return;
-            parseCharacter(e.getItemStack());
+            if (!parseCharacter(e.getItemStack())) return;
             hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
@@ -347,28 +346,14 @@ public final class CharacterModel extends Model {
         updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
     }
 
-    private void parseCharacter(ItemStack itemStack) {
-        List<StyledText> lore = LoreUtils.getLore(itemStack);
+    private boolean parseCharacter(ItemStack itemStack) {
+        Optional<CharacterItem> characterItemOpt = Models.Item.asWynnItem(itemStack, CharacterItem.class);
+        if (characterItemOpt.isEmpty()) return false;
 
-        int level = 0;
-        String className = "";
+        CharacterItem characterItem = characterItemOpt.get();
 
-        for (StyledText line : lore) {
-            Matcher levelMatcher = line.getMatcher(CLASS_MENU_LEVEL_PATTERN);
-            if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
-                continue;
-            }
-
-            Matcher classMatcher = line.getMatcher(CLASS_MENU_CLASS_PATTERN);
-
-            if (classMatcher.matches()) {
-                className = classMatcher.group(1);
-            }
-        }
-        ClassType classType = ClassType.fromName(className);
-
-        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
+        updateCharacterInfo(characterItem.getClassType(), characterItem.isReskinned(), characterItem.getLevel());
+        return true;
     }
 
     private void updateCharacterInfo(ClassType classType, boolean reskinned, int level) {

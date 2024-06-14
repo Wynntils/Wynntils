@@ -89,7 +89,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     public void updateY(int y) {
         setY(y);
 
-        usedCheckbox.setY(y);
+        usedCheckbox.setY(y + 2);
     }
 
     @Override
