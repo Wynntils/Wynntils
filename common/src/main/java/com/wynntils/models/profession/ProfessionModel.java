@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession;
@@ -16,6 +16,7 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.event.ProfessionNodeGatheredEvent;
+import com.wynntils.models.profession.event.ProfessionXpGainEvent;
 import com.wynntils.models.profession.label.GatheringNodeLabelParser;
 import com.wynntils.models.profession.label.GatheringStationLabelParser;
 import com.wynntils.models.profession.type.HarvestInfo;
@@ -37,6 +38,8 @@ import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
@@ -109,10 +112,10 @@ public class ProfessionModel extends Model {
 
             gatheredNodes.put(entityPosition);
 
-            updatePercentage(
+            WynntilsMod.postEvent(new ProfessionXpGainEvent(
                     ProfessionType.fromString(matcher.group("name")),
-                    Float.parseFloat(matcher.group("current")),
-                    Float.parseFloat(matcher.group("gain")));
+                    Float.parseFloat(matcher.group("gain")),
+                    Float.parseFloat(matcher.group("current"))));
 
             ProfessionNodeGatheredEvent.LabelShown gatherEvent = new ProfessionNodeGatheredEvent.LabelShown();
             WynntilsMod.postEvent(gatherEvent);
@@ -139,23 +142,44 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText codedMessage = event.getOriginalStyledText();
+        StyledText message = event.getOriginalStyledText();
 
-        Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
-
-        if (matcher.matches()) {
-            updatePercentage(
-                    ProfessionType.fromString(matcher.group("name")),
-                    Float.parseFloat(matcher.group("current")),
-                    Float.parseFloat(matcher.group("gain")));
+        Matcher craftMatcher = message.getMatcher(PROFESSION_CRAFT_PATTERN);
+        if (craftMatcher.matches()) {
+            Event xpGainEvent = new ProfessionXpGainEvent(
+                    ProfessionType.fromString(craftMatcher.group("name")),
+                    Float.parseFloat(craftMatcher.group("gain")),
+                    Float.parseFloat(craftMatcher.group("current")));
+            WynntilsMod.postEvent(xpGainEvent);
+            if (xpGainEvent.isCanceled()) {
+                event.setCanceled(true);
+            }
             return;
         }
 
-        matcher = codedMessage.getMatcher(PROFESSION_LEVELUP_PATTERN);
-
-        if (matcher.matches()) {
-            updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
+        Matcher levelUpMatcher = message.getMatcher(PROFESSION_LEVELUP_PATTERN);
+        if (levelUpMatcher.matches()) {
+            updateLevel(
+                    ProfessionType.fromString(levelUpMatcher.group("name")),
+                    Integer.parseInt(levelUpMatcher.group("level")));
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onXpGain(ProfessionXpGainEvent event) {
+        ProfessionType profession = event.getProfession();
+        ProfessionProgress oldValue = professionProgressMap.getOrDefault(profession, ProfessionProgress.NO_PROGRESS);
+
+        // We leveled up, but we don't know how many times.
+        // Set the progress, level will be parsed from other messages.
+        float newPercentage = event.getCurrentXpPercentage();
+        if (newPercentage == 100) {
+            newPercentage = 0;
+        }
+
+        professionProgressMap.put(profession, new ProfessionProgress(oldValue.level(), newPercentage));
+
+        rawXpGainInLastMinute.get(profession).put(event.getGainedXpRaw());
     }
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
@@ -178,20 +202,6 @@ public class ProfessionModel extends Model {
         }
 
         professionProgressMap = levels;
-    }
-
-    private void updatePercentage(ProfessionType type, float newPercentage, float xpGain) {
-        ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
-
-        // We leveled up, but we don't know how many times.
-        // Set the progress, level will be parsed from other messages.
-        if (newPercentage == 100) {
-            newPercentage = 0;
-        }
-
-        professionProgressMap.put(type, new ProfessionProgress(oldValue.level(), newPercentage));
-
-        rawXpGainInLastMinute.get(type).put(xpGain);
     }
 
     private void updateLevel(ProfessionType type, int newLevel) {
