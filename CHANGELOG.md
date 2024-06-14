@@ -1,3 +1,20 @@
+## [1.2.23](https://github.com/Wynntils/Artemis/compare/v1.2.22...v1.2.23) (2024-06-14)
+
+
+### New Features
+
+* Item Filter screen smooth scrolling [skip ci] ([#2590](https://github.com/Wynntils/Artemis/issues/2590)) ([929625b](https://github.com/Wynntils/Artemis/commit/929625bff769f66d4c1d0029e3e2e03332544df0))
+
+
+### Bug Fixes
+
+* Add priority to MessageFilterFeature to cancel messages before mention [skip ci] ([#2592](https://github.com/Wynntils/Artemis/issues/2592)) ([58f15d5](https://github.com/Wynntils/Artemis/commit/58f15d529b76c2301ebb1122ae18c467253ec113))
+* Correct war horn configs [skip ci] ([#2584](https://github.com/Wynntils/Artemis/issues/2584)) ([c989674](https://github.com/Wynntils/Artemis/commit/c9896749ed6df7309dba95a1de1ba17d17c58db2))
+* Fix discoveries not being queried when only showing undiscovered [skip ci] ([#2588](https://github.com/Wynntils/Artemis/issues/2588)) ([7f97845](https://github.com/Wynntils/Artemis/commit/7f978450e232aced87d90af23976b613992d5823))
+* Fix notification stacking in chat [skip ci] ([#2589](https://github.com/Wynntils/Artemis/issues/2589)) ([8b0d186](https://github.com/Wynntils/Artemis/commit/8b0d1862bd6d582152a7be3c752e84f7d2ccf1df))
+* Properly detect class joining ([#2594](https://github.com/Wynntils/Artemis/issues/2594)) ([c42857f](https://github.com/Wynntils/Artemis/commit/c42857f329d59961800caeb6663d8076b4cc22cf))
+* small localization fix for error messages [skip ci] ([#2591](https://github.com/Wynntils/Artemis/issues/2591)) ([7bf6d8f](https://github.com/Wynntils/Artemis/commit/7bf6d8f907414952dd9fe26baa63ee8c6e5cf986))
+
 ## [1.2.22](https://github.com/Wynntils/Artemis/compare/v1.2.21...v1.2.22) (2024-06-11)
 
 
@@ -20,6 +37,7 @@
 * [auto-generated] Update urls.json [ci skip] ([#2567](https://github.com/Wynntils/Artemis/issues/2567)) ([1957ee1](https://github.com/Wynntils/Artemis/commit/1957ee168e9842c49af548cbba008489e8fe0968))
 * [auto-generated] Update urls.json [ci skip] ([#2576](https://github.com/Wynntils/Artemis/issues/2576)) ([d3bc412](https://github.com/Wynntils/Artemis/commit/d3bc412c790a2db345f983c140a9b638ea520615))
 * Don't spam the log with exception stack traces [skip ci] ([#2571](https://github.com/Wynntils/Artemis/issues/2571)) ([88d1a9e](https://github.com/Wynntils/Artemis/commit/88d1a9ea7187b8f1752d88eb0504c27b7569d18f))
+* **release:** v1.2.22 [skip ci] ([48a5143](https://github.com/Wynntils/Artemis/commit/48a51435583b94e322c06c88cf0e208f67137b89))
 * Update the failed to connect messages [skip ci] ([#2574](https://github.com/Wynntils/Artemis/issues/2574)) ([dd16efa](https://github.com/Wynntils/Artemis/commit/dd16efaef6bd48a33b99136fecfbfda665beb996))
 
 ## [1.2.21](https://github.com/Wynntils/Artemis/compare/v1.2.20...v1.2.21) (2024-06-06)
@@ -71,16 +89,4 @@
 
 * Once again, use old POI system instead of MapData ([#2545](https://github.com/Wynntils/Artemis/issues/2545)) ([d1eb0ad](https://github.com/Wynntils/Artemis/commit/d1eb0ad0dad4446f67edaaf53375a7f759236eac))
 * **release:** v1.2.19 [skip ci] ([d4e62c2](https://github.com/Wynntils/Artemis/commit/d4e62c2d88e3690477105f3ef86b7dca68d9f2fb))
-
-## [1.2.18](https://github.com/Wynntils/Artemis/compare/v1.2.17...v1.2.18) (2024-05-30)
-
-
-### New Features
-
-* Start using mapdata for some providers - remerge ([#2539](https://github.com/Wynntils/Artemis/issues/2539)) ([542aca5](https://github.com/Wynntils/Artemis/commit/542aca5af04d7a95a3d48c916cb2207b99663c21))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.18 [skip ci] ([c6e982b](https://github.com/Wynntils/Artemis/commit/c6e982b7a5488589f6ad8fa523c35645cda0fdfc))
 
