@@ -4,24 +4,44 @@
  */
 package com.wynntils.utils.type;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class TimedValue<T> {
-    private final T value;
-    private final long creation;
+    private Optional<T> value = Optional.empty();
+    private long creation;
     private final long duration;
 
-    public TimedValue(T value, long duration, TimeUnit unit) {
-        this.value = value;
+    public TimedValue(long duration, TimeUnit unit, T initial) {
+        this.value = Optional.ofNullable(initial);
         this.creation = System.currentTimeMillis();
         this.duration = unit.toMillis(duration);
     }
 
-    public T get() {
-        return value;
+    public TimedValue(long duration, TimeUnit unit) {
+        this.creation = System.currentTimeMillis();
+        this.duration = unit.toMillis(duration);
+    }
+
+    public T get() throws ValueExpiredException {
+        if (value.isEmpty() || isExpired()) {
+            throw new ValueExpiredException();
+        }
+        return value.get();
+    }
+
+    public void set(T value) {
+        this.value = Optional.ofNullable(value);
+        this.creation = System.currentTimeMillis();
+    }
+
+    public void reset() {
+        this.value = Optional.empty();
     }
 
     public boolean isExpired() {
-        return System.currentTimeMillis() >= creation + duration;
+        return value.isEmpty() || System.currentTimeMillis() >= creation + duration;
     }
+
+    public static final class ValueExpiredException extends Exception {}
 }

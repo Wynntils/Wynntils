@@ -77,7 +77,8 @@ public class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
-    private TimedValue<StyledText> lastProfessionLabel = new TimedValue<>(StyledText.EMPTY, 0, TimeUnit.MILLISECONDS);
+    private final TimedValue<StyledText> lastProfessionLabel =
+            new TimedValue<>(MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS);
 
     public ProfessionModel() {
         super(List.of());
@@ -100,7 +101,7 @@ public class ProfessionModel extends Model {
     }
 
     @SubscribeEvent
-    public void onLabelSpawn(EntityLabelChangedEvent event) {
+    public void onLabelSpawn(EntityLabelChangedEvent event) throws TimedValue.ValueExpiredException {
         StyledText label = event.getName();
 
         Matcher professionNodeExperienceMatcher = label.getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
@@ -121,7 +122,7 @@ public class ProfessionModel extends Model {
                     && !lastProfessionLabel.isExpired()
                     && label.equals(lastProfessionLabel.get())) return;
 
-            lastProfessionLabel = new TimedValue<>(label, MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS);
+            lastProfessionLabel.set(label);
             gatheredNodes.put(entityPosition);
 
             WynntilsMod.postEvent(new ProfessionXpGainEvent(
