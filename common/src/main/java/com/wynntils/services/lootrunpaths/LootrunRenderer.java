@@ -354,24 +354,20 @@ public final class LootrunRenderer {
         pos4 = pos4.add(startVec).sub(camPos);
 
         vertexConsumer
-                .vertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z)
-                .color(color)
-                .uv(0, 1)
-                .endVertex();
+                .addVertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z)
+                .setUv(0, 1)
+                .setColor(color);
         vertexConsumer
-                .vertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z)
-                .color(color)
-                .uv(0, 0)
-                .endVertex();
+                .addVertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z)
+                .setUv(0, 0)
+                .setColor(color);
         vertexConsumer
-                .vertex(poseStack.last().pose(), pos3.x, pos3.y, pos3.z)
-                .color(color)
-                .uv(1, 0)
-                .endVertex();
+                .addVertex(poseStack.last().pose(), pos3.x, pos3.y, pos3.z)
+                .setUv(1, 0)
+                .setColor(color);
         vertexConsumer
-                .vertex(poseStack.last().pose(), pos4.x, pos4.y, pos4.z)
-                .color(color)
-                .uv(1, 1)
-                .endVertex();
+                .addVertex(poseStack.last().pose(), pos4.x, pos4.y, pos4.z)
+                .setUv(1, 1)
+                .setColor(color);
     }
 }

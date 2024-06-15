@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
 
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -66,8 +66,7 @@ public class BeaconBeamFeature extends Feature {
         if (markers.isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
         for (MarkerInfo marker : markers) {
             Position camera = event.getCamera().getPosition();

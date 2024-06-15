@@ -6,8 +6,8 @@ package com.wynntils.features.map;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -208,8 +208,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
                 poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-                MultiBufferSource.BufferSource bufferSource =
-                        MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
                 DUMMY_WAYPOINT
                         .getPointerPoi()
                         .renderAt(

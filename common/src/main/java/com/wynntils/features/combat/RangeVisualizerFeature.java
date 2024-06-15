@@ -173,17 +173,13 @@ public class RangeVisualizerFeature extends Feature {
             }
             float x = (float) (position.x() + Math.sin(angle) * radius);
             float z = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) position.y(), z).color(color).endVertex();
-            consumer.vertex(matrix4f, x, (float) position.y() + HEIGHT, z)
-                    .color(color)
-                    .endVertex();
+            consumer.addVertex(matrix4f, x, (float) position.y(), z).setColor(color);
+            consumer.addVertex(matrix4f, x, (float) position.y() + HEIGHT, z).setColor(color);
             angle += angleStep;
             float x2 = (float) (position.x() + Math.sin(angle) * radius);
             float z2 = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2)
-                    .color(color)
-                    .endVertex();
-            consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(color).endVertex();
+            consumer.addVertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).setColor(color);
+            consumer.addVertex(matrix4f, x2, (float) position.y(), z2).setColor(color);
         }
 
         BUFFER_SOURCE.endBatch();
