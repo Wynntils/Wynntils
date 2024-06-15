@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class WarHornFeature extends Feature {
-    private static final ResourceLocation WAR_HORN_ID = new ResourceLocation("wynntils:war.horn");
+    private static final ResourceLocation WAR_HORN_ID = ResourceLocation.fromNamespaceAndPath("wynntils", "war.horn");
     private static final SoundEvent WAR_HORN_SOUND = SoundEvent.createVariableRangeEvent(WAR_HORN_ID);
 
     @Persisted

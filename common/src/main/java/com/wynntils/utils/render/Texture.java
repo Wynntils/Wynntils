@@ -281,7 +281,7 @@ public enum Texture {
     private final int height;
 
     Texture(String name, int width, int height) {
-        this.resource = new ResourceLocation("wynntils", "textures/" + name);
+        this.resource = ResourceLocation.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
     }

@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.colors.CustomColor;
@@ -96,11 +95,6 @@ public record ItemMaterial(ItemStack itemStack) {
     }
 
     private static Item getItem(String itemId) {
-        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(itemId));
-        if (item == null) {
-            WynntilsMod.error("Cannot create item for " + itemId);
-            throw new RuntimeException();
-        }
-        return item;
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
     }
 }

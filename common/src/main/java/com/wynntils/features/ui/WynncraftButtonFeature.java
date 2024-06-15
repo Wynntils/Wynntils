@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -160,8 +160,8 @@ public class WynncraftButtonFeature extends Feature {
         @SuppressWarnings("deprecation")
         private void loadResource(boolean allowStale) {
             // Try default
-            ResourceLocation destination =
-                    new ResourceLocation("servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
+            ResourceLocation destination = ResourceLocation.withDefaultNamespace(
+                    "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
 
             // If someone converts this to get the actual ServerData used by the gui, check
             // ServerData#pinged here and

@@ -25,7 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MythicFoundFeature extends Feature {
-    private static final ResourceLocation MYTHIC_FOUND_ID = new ResourceLocation("wynntils:misc.mythic-found");
+    private static final ResourceLocation MYTHIC_FOUND_ID =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found");
     private static final SoundEvent MYTHIC_FOUND_SOUND = SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_ID);
 
     @Persisted
