@@ -110,12 +110,12 @@ public final class MapRenderer {
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
 
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder builder =
+                Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
 
-        BufferUploader.drawWithShader(builder.end());
+        BufferUploader.drawWithShader(builder.build());
     }
 
     private static void renderMap(
@@ -139,18 +139,14 @@ public final class MapRenderer {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        buffer.vertex(matrix, (centerX - halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
-                .uv((textureX - halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale)
-                .endVertex();
-        buffer.vertex(matrix, (centerX + halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
-                .uv((textureX + halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale)
-                .endVertex();
-        buffer.vertex(matrix, (centerX + halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
-                .uv((textureX + halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
-                .endVertex();
-        buffer.vertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
-                .uv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
-                .endVertex();
+        buffer.addVertex(matrix, (centerX - halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
+                .setUv((textureX - halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale);
+        buffer.addVertex(matrix, (centerX + halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
+                .setUv((textureX + halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale);
+        buffer.addVertex(matrix, (centerX + halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
+                .setUv((textureX + halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale);
+        buffer.addVertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
+                .setUv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale);
     }
 
     public static void renderCursor(
@@ -208,8 +204,8 @@ public final class MapRenderer {
             int outlineColor) {
         if (lootrun.simplifiedPath().size() < 3) return;
 
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder bufferBuilder =
+                Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableCull();
@@ -266,7 +262,7 @@ public final class MapRenderer {
                     lootrunWidth);
         }
 
-        BufferUploader.drawWithShader(bufferBuilder.end());
+        BufferUploader.drawWithShader(bufferBuilder.build());
         RenderSystem.enableCull();
     }
 
@@ -423,10 +419,7 @@ public final class MapRenderer {
     }
 
     private static void addVertex(BufferBuilder bufferBuilder, Vector2f pos, int color, PoseStack poseStack) {
-        bufferBuilder
-                .vertex(poseStack.last().pose(), pos.x(), pos.y(), 0)
-                .color(color)
-                .endVertex();
+        bufferBuilder.addVertex(poseStack.last().pose(), pos.x(), pos.y(), 0).setColor(color);
     }
 
     /**

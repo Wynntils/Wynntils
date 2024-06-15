@@ -295,10 +295,9 @@ public final class LootrunRenderer {
     private static void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPosition coloredPosition) {
         Position position = coloredPosition.position();
         int pathColor = coloredPosition.color();
-        consumer.vertex(lastMatrix, (float) position.x(), (float) position.y(), (float) position.z())
-                .color(pathColor)
-                .normal(0, 0, 1)
-                .endVertex();
+        consumer.addVertex(lastMatrix, (float) position.x(), (float) position.y(), (float) position.z())
+                .setColor(pathColor)
+                .setNormal(0, 0, 1);
     }
 
     private static void renderTexturedQueuedPoints(
