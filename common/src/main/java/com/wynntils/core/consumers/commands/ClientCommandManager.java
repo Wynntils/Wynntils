@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
@@ -118,8 +117,6 @@ public final class ClientCommandManager extends Manager {
 
         try {
             clientDispatcher.execute(parse);
-        } catch (CommandRuntimeException e) {
-            McUtils.sendErrorToClient(e.getMessage());
         } catch (CommandSyntaxException e) {
             McUtils.sendErrorToClient(e.getRawMessage().getString());
             if (e.getInput() != null && e.getCursor() >= 0) {
