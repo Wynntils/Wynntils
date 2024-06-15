@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -26,6 +26,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -178,7 +179,7 @@ public final class LoreUtils {
 
     public static List<Component> getTooltipLines(ItemStack itemStack) {
         TooltipFlag flag = McUtils.options().advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
-        return itemStack.getTooltipLines(McUtils.player(), flag);
+        return itemStack.getTooltipLines(Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), flag);
     }
 
     public static List<Component> appendTooltip(
