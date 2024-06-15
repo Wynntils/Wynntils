@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -29,9 +29,9 @@ public class TooltipVanillaHideFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipFlagsMask(ItemTooltipFlagsEvent.Mask event) {
+    public void onTooltipFlagsMask(ItemTooltipFlagsEvent.HideAdditionalTooltip event) {
         if (!hideAdditionalInfo.get()) return;
 
-        event.setMask(-1);
+        event.setHideAdditionalTooltip(true);
     }
 }

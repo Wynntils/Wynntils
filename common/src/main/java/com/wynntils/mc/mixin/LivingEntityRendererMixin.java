@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityExtension;
+import com.wynntils.utils.colors.CommonColors;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -68,8 +69,13 @@ public abstract class LivingEntityRendererMixin {
             int overlayCoords,
             int originalTranslucence,
             Operation<Void> original) {
-        // FIXME: Use wynntilsTranslucence instead of originalTranslucence
-        original.call(instance, poseStack, consumer, packedLight, overlayCoords, originalTranslucence);
+        original.call(
+                instance,
+                poseStack,
+                consumer,
+                packedLight,
+                overlayCoords,
+                CommonColors.WHITE.withAlpha(wynntilsTranslucence).asInt());
     }
 
     @Inject(

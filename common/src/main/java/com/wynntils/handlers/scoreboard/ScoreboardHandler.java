@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.scoreboard;
@@ -12,9 +12,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
+import com.wynntils.mc.event.ScoreboardEvent;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
-import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -63,7 +63,14 @@ public final class ScoreboardHandler extends Handler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onSetScore(ScoreboardSetScoreEvent event) {
+    public void onSetScore(ScoreboardEvent.Set event) {
+        if (!currentScoreboardName.equals(event.getObjectiveName())) return;
+
+        handleUpdate();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetScore(ScoreboardEvent.Reset event) {
         if (!currentScoreboardName.equals(event.getObjectiveName())) return;
 
         handleUpdate();

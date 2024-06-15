@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.fabric.mixins;
+package com.wynntils.mc.mixin;
 
 import com.wynntils.services.resourcepack.WynntilsResourceProvider;
 import java.util.LinkedHashSet;

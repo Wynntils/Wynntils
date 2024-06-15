@@ -32,7 +32,7 @@ public class LivingEntityRenderTranslucentCheckEvent extends Event {
 
     public void setTranslucence(float translucence) {
         this.translucence = translucence;
-        this.translucent = translucence >= 1.0f;
+        this.translucent = translucence < 1.0f;
     }
 
     public boolean isTranslucent() {
