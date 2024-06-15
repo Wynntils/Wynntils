@@ -90,7 +90,7 @@ public class WynncraftButtonFeature extends Feature {
 
     private static void connectToServer(ServerData serverData) {
         ConnectScreen.startConnecting(
-                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false);
+                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
     }
 
     private static class WynncraftButton extends Button {
@@ -176,7 +176,7 @@ public class WynncraftButtonFeature extends Feature {
                 ServerStatusPinger pinger = new ServerStatusPinger();
                 // FIXME: DynamicTexture issues in loadServerIcon
                 //        loadServerIcon(destination);
-                pinger.pingServer(server, this::onDone);
+                pinger.pingServer(server, () -> {}, this::onDone);
             } catch (Exception e) {
                 WynntilsMod.warn("Failed to ping server", e);
                 onDone();
