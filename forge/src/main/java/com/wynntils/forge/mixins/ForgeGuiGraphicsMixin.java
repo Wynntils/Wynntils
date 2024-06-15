@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.forge.mixins;
@@ -44,7 +44,7 @@ public abstract class ForgeGuiGraphicsMixin {
             int mouseX,
             int mouseY,
             Operation<Void> operation,
-            @Local ItemStack itemStack) {
+            @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
                 (GuiGraphics) (Object) this,
                 itemStack,

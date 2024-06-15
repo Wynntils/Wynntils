@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -77,18 +78,19 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     protected abstract List<T> getPreviewChildren();
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-        children.forEach(o -> o.render(poseStack, bufferSource, partialTicks, window));
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        children.forEach(o -> o.render(poseStack, bufferSource, deltaTracker, window));
     }
 
     @Override
-    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+    public void renderPreview(
+            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<T> previewChildren = getPreviewChildren();
         Map<T, OverlaySize> previewSize =
                 previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
 
         updateLayout(previewChildren, previewSize);
-        previewChildren.forEach(o -> o.renderPreview(poseStack, bufferSource, partialTicks, window));
+        previewChildren.forEach(o -> o.renderPreview(poseStack, bufferSource, deltaTracker, window));
     }
 
     @Override

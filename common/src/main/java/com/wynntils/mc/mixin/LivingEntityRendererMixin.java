@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,9 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
-    @Shadow
-    protected abstract RenderType getRenderType(LivingEntity livingEntity, boolean bl, boolean bl2, boolean bl3);
-
     @Unique
     private float wynntilsTranslucence;
 
@@ -63,19 +59,17 @@ public abstract class LivingEntityRendererMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
+                                    "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
     private void onOpacityUse(
-            EntityModel<?> instance,
+            EntityModel<? extends LivingEntity> instance,
             PoseStack poseStack,
             VertexConsumer consumer,
             int packedLight,
-            int packetOverlay,
-            float r,
-            float g,
-            float b,
-            float a,
+            int overlayCoords,
+            int originalTranslucence,
             Operation<Void> original) {
-        original.call(instance, poseStack, consumer, packedLight, packetOverlay, r, g, b, wynntilsTranslucence);
+        // FIXME: Use wynntilsTranslucence instead of originalTranslucence
+        original.call(instance, poseStack, consumer, packedLight, overlayCoords, originalTranslucence);
     }
 
     @Inject(
@@ -83,7 +77,7 @@ public abstract class LivingEntityRendererMixin {
                     "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At("HEAD"),
             cancellable = true)
-    private <T extends LivingEntity, M extends EntityModel<T>> void onRender(
+    private <T extends LivingEntity> void onRender(
             T entity,
             float entityYaw,
             float partialTicks,
