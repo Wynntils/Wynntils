@@ -45,8 +45,8 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
 
         used = filterPair.isPresent();
 
-        this.usedCheckbox = new WynntilsCheckbox(
-                x + width - 16, y + 2, 16, 16, Component.literal(""), used, 0, (b -> toggleUsed()));
+        this.usedCheckbox =
+                new WynntilsCheckbox(x + width - 16, y + 2, 16, Component.literal(""), used, 0, (c, b) -> toggleUsed());
     }
 
     @Override
