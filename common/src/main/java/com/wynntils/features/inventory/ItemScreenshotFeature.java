@@ -7,7 +7,7 @@ package com.wynntils.features.inventory;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.pipeline.MainTarget;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -120,7 +120,8 @@ public class ItemScreenshotFeature extends Feature {
         // draw tooltip to framebuffer, create image
         McUtils.mc().getMainRenderTarget().unbindWrite();
 
-        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), MultiBufferSource.immediate(new BufferBuilder(256)));
+        GuiGraphics guiGraphics =
+                new GuiGraphics(McUtils.mc(), MultiBufferSource.immediate(new ByteBufferBuilder(256)));
         RenderTarget fb = new MainTarget(width * 2, height * 2);
         fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2, false);

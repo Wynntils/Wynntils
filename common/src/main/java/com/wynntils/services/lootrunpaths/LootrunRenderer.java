@@ -5,7 +5,7 @@
 package com.wynntils.services.lootrunpaths;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Managers;
@@ -43,7 +43,7 @@ import org.joml.Vector3f;
 
 public final class LootrunRenderer {
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new BufferBuilder(256));
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     public static void renderLootrun(PoseStack poseStack, LootrunPathInstance lootrun, int color) {
         if (lootrun == null) {

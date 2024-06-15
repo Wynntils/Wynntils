@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
@@ -40,7 +40,7 @@ import org.joml.Matrix4f;
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new BufferBuilder(256));
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     // number of straight lines to draw when rendering circle, higher = smoother but more expensive
     private static final int SEGMENTS = 128;

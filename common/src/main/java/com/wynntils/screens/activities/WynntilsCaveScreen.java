@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
@@ -228,7 +228,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
 
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
