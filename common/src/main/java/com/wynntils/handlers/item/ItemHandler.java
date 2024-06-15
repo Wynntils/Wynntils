@@ -137,7 +137,7 @@ public class ItemHandler extends Handler {
 
         // Item entities can have an item that needs to be annotated
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
-            if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
+            if (packedItem.id() == ItemEntity.DATA_ITEM.id()) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
                 annotate(itemStack);

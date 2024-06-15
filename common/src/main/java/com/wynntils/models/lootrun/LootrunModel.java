@@ -357,7 +357,7 @@ public class LootrunModel extends Model {
         // This is much more reliable than checking the item in the chest,
         // as the chest can be rerolled, etc.
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
-            if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
+            if (packedItem.id() == ItemEntity.DATA_ITEM.id()) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
                 boolean foundLootrunMythic = false;

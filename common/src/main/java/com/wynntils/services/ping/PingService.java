@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.ping;
@@ -41,7 +41,7 @@ public class PingService extends Service {
     // We are specifically looking for the packet itself, not it's processing. This is why we are using the PacketEvent.
     @SubscribeEvent
     public void onCommandSuggestions(PacketEvent.PacketReceivedEvent<ClientboundCommandSuggestionsPacket> event) {
-        if (event.getPacket().getId() != -1) return;
+        if (event.getPacket().id() != -1) return;
 
         lastPing = (int) (System.currentTimeMillis() - lastPingSent);
 
