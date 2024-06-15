@@ -154,7 +154,8 @@ public class HorseMountFeature extends Feature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
+                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
+                            InteractionHand.MAIN_HAND, id, player.getXRot(), player.getYRot()));
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
