@@ -26,6 +26,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
+import com.wynntils.utils.type.TimedValue;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,7 @@ public class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
-    private StyledText lastProfessionLabel = StyledText.EMPTY;
+    private TimedValue<StyledText> lastProfessionLabel = new TimedValue<>(StyledText.EMPTY, 0, TimeUnit.MILLISECONDS);
 
     public ProfessionModel() {
         super(List.of());
@@ -116,9 +117,11 @@ public class ProfessionModel extends Model {
             ProfessionType profession = ProfessionType.fromString(professionNodeExperienceMatcher.group("name"));
 
             // Woodcutting labels can move during "display", so position based checks don't always work
-            if (profession == ProfessionType.WOODCUTTING && label.equals(lastProfessionLabel)) return;
+            if (profession == ProfessionType.WOODCUTTING
+                    && !lastProfessionLabel.isExpired()
+                    && label.equals(lastProfessionLabel.get())) return;
 
-            lastProfessionLabel = label;
+            lastProfessionLabel = new TimedValue<>(label, MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS);
             gatheredNodes.put(entityPosition);
 
             WynntilsMod.postEvent(new ProfessionXpGainEvent(
