@@ -15,12 +15,14 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.WaypointLocation;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonMapAttributesBuilder;
 import com.wynntils.services.mapdata.providers.json.JsonMapVisibility;
+import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -75,7 +77,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private TextInputBoxWidget xInput;
     private TextInputBoxWidget yInput;
     private TextInputBoxWidget zInput;
-    private TextInputBoxWidget priorityInput;
     private TextInputBoxWidget focusedTextInput;
     private VisibilitySlider labelMinVisibilitySlider;
     private VisibilitySlider labelMaxVisibilitySlider;
@@ -104,7 +105,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private Integer parsedXInput;
     private Integer parsedYInput;
     private Integer parsedZInput;
-    private int priority = 0;
     private JsonMapVisibility iconVisibility;
     private JsonMapVisibility labelVisibility;
     private MapIcon selectedIcon;
@@ -459,47 +459,15 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Visibility
-        priorityInput = new TextInputBoxWidget(
-                (int) dividedWidth,
-                (int) (dividedHeight * 14),
-                (int) (dividedWidth * 9),
-                20,
-                s -> {
-                    try {
-                        priority = Integer.parseInt(s);
-                        priorityInput.setRenderColor(CommonColors.WHITE);
-                    } catch (NumberFormatException e) {
-                        priority = -1;
-                        priorityInput.setRenderColor(CommonColors.RED);
-                    }
-
-                    if (priority < 0 || priority > 1000) {
-                        priorityInput.setRenderColor(CommonColors.RED);
-                    }
-
-                    updateWaypoint();
-                },
-                this,
-                priorityInput);
-        this.addRenderableWidget(priorityInput);
-
-        if (firstSetup) {
-            if (oldAttributes != null) {
-                priorityInput.setTextBoxInput(String.valueOf(oldAttributes.priority()));
-            } else {
-                priorityInput.setTextBoxInput("0");
-            }
-        }
-
         labelVisiblityButton = new OptionButton(
-                (int) (dividedWidth * 11),
+                (int) (dividedWidth * 4),
                 (int) (dividedHeight * 14),
                 (int) (dividedWidth * 9),
                 Component.literal(labelVisibilityType.name()));
         this.addRenderableWidget(labelVisiblityButton);
 
         iconVisiblityButton = new OptionButton(
-                (int) (dividedWidth * 21),
+                (int) (dividedWidth * 17),
                 (int) (dividedHeight * 14),
                 (int) (dividedWidth * 9),
                 Component.literal(iconVisibilityType.name()));
@@ -787,19 +755,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(I18n.get("screens.wynntils.poiCreation.priority") + ":"),
-                            dividedWidth,
-                            dividedHeight * 12.5f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.poiCreation.labelVisibility") + ":"),
-                            dividedWidth * 11.0f,
+                            dividedWidth * 4.0f,
                             dividedHeight * 12.5f,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
@@ -811,7 +768,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         .renderText(
                                 poseStack,
                                 StyledText.fromString(I18n.get("screens.wynntils.poiCreation.iconVisibility") + ":"),
-                                dividedWidth * 21.0f,
+                                dividedWidth * 17.0f,
                                 dividedHeight * 12.5f,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
@@ -1069,10 +1026,18 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         Location location = new Location(parsedXInput, parsedYInput, parsedZInput);
 
+        Optional<MapCategory> waypointCategoryOpt = Services.MapData.getCategoryDefinitions(
+                        "wynntils:personal:waypoint")
+                .findFirst();
+
+        int defaultPriority = waypointCategoryOpt
+                .flatMap(waypointCategory -> waypointCategory.getAttributes().flatMap(MapAttributes::getPriority))
+                .orElse(1000);
+
         JsonMapAttributes attributes = new JsonMapAttributesBuilder()
                 .setLabel(label)
                 .setIcon(iconId)
-                .setPriority(priority)
+                .setPriority(defaultPriority)
                 .setLabelColor(labelColorCache)
                 .setLabelShadow(labelShadow)
                 .setLabelVisibility(labelVisibility)
@@ -1089,9 +1054,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 && COORDINATE_PATTERN.matcher(xInput.getTextBoxInput()).matches()
                 && (COORDINATE_PATTERN.matcher(yInput.getTextBoxInput()).matches()
                         || yInput.getTextBoxInput().isEmpty())
-                && COORDINATE_PATTERN.matcher(zInput.getTextBoxInput()).matches()
-                && priority >= 0
-                && priority <= 1000;
+                && COORDINATE_PATTERN.matcher(zInput.getTextBoxInput()).matches();
     }
 
     private void saveWaypoint() {
@@ -1244,7 +1207,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         zInput.visible = !visibilityTab;
         centerOnPlayerButton.visible = !visibilityTab;
         centerOnWorldButton.visible = !visibilityTab;
-        priorityInput.visible = visibilityTab;
         labelVisiblityButton.visible = visibilityTab;
         iconVisiblityButton.visible = visibilityTab && useIcon;
         labelMinVisibilitySlider.visible = visibilityTab;
