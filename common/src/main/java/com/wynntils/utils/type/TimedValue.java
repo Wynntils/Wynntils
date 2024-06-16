@@ -4,16 +4,16 @@
  */
 package com.wynntils.utils.type;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 public class TimedValue<T> {
-    private Optional<T> value = Optional.empty();
+    private T value = null;
     private long creation;
     private final long duration;
 
     public TimedValue(long duration, TimeUnit unit, T initial) {
-        this.value = Optional.ofNullable(initial);
+        this.value = initial;
         this.creation = System.currentTimeMillis();
         this.duration = unit.toMillis(duration);
     }
@@ -23,25 +23,27 @@ public class TimedValue<T> {
         this.duration = unit.toMillis(duration);
     }
 
-    public T get() throws ValueExpiredException {
-        if (value.isEmpty() || isExpired()) {
-            throw new ValueExpiredException();
+    public T get() {
+        if (value == null || isExpired()) {
+            throw new NoSuchElementException("No value present");
         }
-        return value.get();
+        return value;
+    }
+
+    public boolean matches(T value) {
+        return !isExpired() && this.value.equals(value);
     }
 
     public void set(T value) {
-        this.value = Optional.ofNullable(value);
+        this.value = value;
         this.creation = System.currentTimeMillis();
     }
 
     public void reset() {
-        this.value = Optional.empty();
+        this.value = null;
     }
 
     public boolean isExpired() {
-        return value.isEmpty() || System.currentTimeMillis() >= creation + duration;
+        return value == null || System.currentTimeMillis() >= creation + duration;
     }
-
-    public static final class ValueExpiredException extends Exception {}
 }

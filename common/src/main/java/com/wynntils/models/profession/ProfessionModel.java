@@ -101,7 +101,7 @@ public class ProfessionModel extends Model {
     }
 
     @SubscribeEvent
-    public void onLabelSpawn(EntityLabelChangedEvent event) throws TimedValue.ValueExpiredException {
+    public void onLabelSpawn(EntityLabelChangedEvent event) {
         StyledText label = event.getName();
 
         Matcher professionNodeExperienceMatcher = label.getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
@@ -118,9 +118,9 @@ public class ProfessionModel extends Model {
             ProfessionType profession = ProfessionType.fromString(professionNodeExperienceMatcher.group("name"));
 
             // Woodcutting labels can move during "display", so position based checks don't always work
-            if (profession == ProfessionType.WOODCUTTING
-                    && !lastProfessionLabel.isExpired()
-                    && label.equals(lastProfessionLabel.get())) return;
+            if (profession == ProfessionType.WOODCUTTING && lastProfessionLabel.matches(label)) {
+                return;
+            }
 
             lastProfessionLabel.set(label);
             gatheredNodes.put(entityPosition);
