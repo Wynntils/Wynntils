@@ -18,8 +18,7 @@ public enum MissionType {
     STASIS("Stasis", ChatFormatting.GREEN),
     GAMBLING_BEAST("Gambling Beast", ChatFormatting.RED),
     REDEMPTION("Redemption", ChatFormatting.RED),
-    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED),
-    FAILED("Failed", ChatFormatting.DARK_RED);
+    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED);
 
     private final String name;
     private final ChatFormatting color;
