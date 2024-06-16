@@ -47,6 +47,7 @@ import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.Connection;
@@ -85,7 +86,9 @@ import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -105,6 +108,10 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
     @Shadow
     private MessageSignatureCache messageSignatureCache;
+
+    @Shadow
+    @Final
+    private FeatureFlagSet enabledFeatures;
 
     protected ClientPacketListenerMixin(
             Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
@@ -153,7 +160,8 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         // We need to read the root from the CommandDispatcher, not the packet,
         // due to interop with other mods
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsAddedEvent event = new CommandsAddedEvent(root);
+        CommandsAddedEvent event =
+                new CommandsAddedEvent(root, CommandBuildContext.simple(this.registryAccess, this.enabledFeatures));
         MixinHelper.post(event);
 
         if (event.getRoot() != root) {

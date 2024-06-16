@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
@@ -60,8 +61,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public final class ClientCommandManager extends Manager {
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
-
     private final List<Command> commandInstanceSet = new ArrayList<>();
+
     private WynntilsCommand wynntilsCommand;
 
     public ClientCommandManager() {
@@ -72,18 +73,30 @@ public final class ClientCommandManager extends Manager {
 
     @SubscribeEvent
     public void onCommandsAdded(CommandsAddedEvent event) {
+        CommandBuildContext context = event.getContext();
+
         for (Command command : commandInstanceSet) {
-            command.getCommandBuilders().stream()
+            // Register the command to the client dispatcher
+            command.getCommandBuilders(context).forEach(clientDispatcher::register);
+
+            // Register the command to the server dispatcher
+            command.getCommandBuilders(context).stream()
                     .map(LiteralArgumentBuilder::build)
                     .forEach(node -> addNode(event.getRoot(), node));
         }
 
         // Wynntils command is special,
         // it registers every other command as a subcommand
+
+        // Register the command to the client dispatcher
+        wynntilsCommand.registerWithCommands(clientDispatcher::register, context, commandInstanceSet);
+
+        // Register the command to the server dispatcher
         wynntilsCommand.registerWithCommands(
                 builder -> {
                     addNode(event.getRoot(), builder.build());
                 },
+                context,
                 commandInstanceSet);
     }
 
@@ -166,11 +179,9 @@ public final class ClientCommandManager extends Manager {
 
     private void registerCommand(Command command) {
         commandInstanceSet.add(command);
-        command.getCommandBuilders().forEach(clientDispatcher::register);
     }
 
     private void registerCommandWithCommandSet(WynntilsCommand command) {
-        command.registerWithCommands(clientDispatcher::register, commandInstanceSet);
         wynntilsCommand = command;
     }
 
