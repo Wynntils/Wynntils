@@ -1,3 +1,12 @@
+## [1.2.24](https://github.com/Wynntils/Artemis/compare/v1.2.23...v1.2.24) (2024-06-16)
+
+
+### Bug Fixes
+
+* Fix emitting ProfessionXpGainEvent twice for woodcutting [skip ci] ([#2596](https://github.com/Wynntils/Artemis/issues/2596)) ([054a94f](https://github.com/Wynntils/Artemis/commit/054a94f2d83d6d3878c39422fb02b153ece04a1d))
+* Fix hades users appearing in full size on minimap ([#2601](https://github.com/Wynntils/Artemis/issues/2601)) ([ecc2a5f](https://github.com/Wynntils/Artemis/commit/ecc2a5f4f86e48680548cd6116f0f299f90d5045))
+* fix race-like crashes in ServerListModel [skip ci] ([#2600](https://github.com/Wynntils/Artemis/issues/2600)) ([beb6507](https://github.com/Wynntils/Artemis/commit/beb65072a8171a019beba400cfcda954becf4928))
+
 ## [1.2.23](https://github.com/Wynntils/Artemis/compare/v1.2.22...v1.2.23) (2024-06-14)
 
 
@@ -14,6 +23,11 @@
 * Fix notification stacking in chat [skip ci] ([#2589](https://github.com/Wynntils/Artemis/issues/2589)) ([8b0d186](https://github.com/Wynntils/Artemis/commit/8b0d1862bd6d582152a7be3c752e84f7d2ccf1df))
 * Properly detect class joining ([#2594](https://github.com/Wynntils/Artemis/issues/2594)) ([c42857f](https://github.com/Wynntils/Artemis/commit/c42857f329d59961800caeb6663d8076b4cc22cf))
 * small localization fix for error messages [skip ci] ([#2591](https://github.com/Wynntils/Artemis/issues/2591)) ([7bf6d8f](https://github.com/Wynntils/Artemis/commit/7bf6d8f907414952dd9fe26baa63ee8c6e5cf986))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.23 [skip ci] ([a1ff212](https://github.com/Wynntils/Artemis/commit/a1ff21216c5d79ddcca9ae881e16fed6bb232440))
 
 ## [1.2.22](https://github.com/Wynntils/Artemis/compare/v1.2.21...v1.2.22) (2024-06-11)
 
@@ -76,17 +90,4 @@
 * [auto-generated] Update urls.json [ci skip] ([#2552](https://github.com/Wynntils/Artemis/issues/2552)) ([99906d2](https://github.com/Wynntils/Artemis/commit/99906d2464ab487615a1183c417e4544db750a47))
 * [auto-generated] Update urls.json [ci skip] ([#2557](https://github.com/Wynntils/Artemis/issues/2557)) ([07e9c90](https://github.com/Wynntils/Artemis/commit/07e9c90f014131e227d2190b351090997c3b1952))
 * **release:** v1.2.20 [skip ci] ([bd10685](https://github.com/Wynntils/Artemis/commit/bd10685234b9f92d925ec25de7041715518df335))
-
-## [1.2.19](https://github.com/Wynntils/Artemis/compare/v1.2.18...v1.2.19) (2024-05-31)
-
-
-### Bug Fixes
-
-* Make sure StorageManager upfixers run before populating components storages [skip ci] ([#2544](https://github.com/Wynntils/Artemis/issues/2544)) ([1b712e5](https://github.com/Wynntils/Artemis/commit/1b712e5fb7fc94af1813623bf646b30aa5a2ec7a))
-
-
-### Miscellaneous Chores
-
-* Once again, use old POI system instead of MapData ([#2545](https://github.com/Wynntils/Artemis/issues/2545)) ([d1eb0ad](https://github.com/Wynntils/Artemis/commit/d1eb0ad0dad4446f67edaaf53375a7f759236eac))
-* **release:** v1.2.19 [skip ci] ([d4e62c2](https://github.com/Wynntils/Artemis/commit/d4e62c2d88e3690477105f3ef86b7dca68d9f2fb))
 
