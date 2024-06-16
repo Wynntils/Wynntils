@@ -316,11 +316,14 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 .build();
         this.addRenderableWidget(nextIconButton);
 
+        // Keep this buttons width the same as the area for the displayed icons
+        int iconButtonWidth = (int) (dividedWidth * 20) - (int) ((dividedWidth * 8) + 20);
+
         addCustomIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiCreation.addCustomIcon"),
                         (button) -> McUtils.mc().setScreen(CustomWaypointIconScreen.create(this)))
                 .pos((int) (dividedWidth * 8) + 20, (int) (dividedHeight * 25) + 20)
-                .size((int) (dividedWidth * 10), 20)
+                .size(iconButtonWidth, 20)
                 .build();
         this.addRenderableWidget(addCustomIconButton);
 
