@@ -91,7 +91,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
 
         newCategoryInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 49),
-                (int) (dividedHeight * 30),
+                (int) (dividedHeight * 27),
                 (int) (dividedWidth * 14),
                 BUTTON_HEIGHT,
                 (s) -> useNewCategoryButton.active =
@@ -107,7 +107,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                             creationScreen.setCategory(categoryPath);
                             onClose();
                         })
-                        .pos((int) (dividedWidth * 35), (int) (dividedHeight * 36))
+                        .pos((int) (dividedWidth * 35), (int) (dividedHeight * 33))
                         .size((int) (dividedWidth * 12), BUTTON_HEIGHT)
                         .build());
 
@@ -116,12 +116,18 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                             creationScreen.setCategory(newCategoryInput.getTextBoxInput());
                             onClose();
                         })
-                .pos((int) (dividedWidth * 50), (int) (dividedHeight * 36))
+                .pos((int) (dividedWidth * 50), (int) (dividedHeight * 33))
                 .size((int) (dividedWidth * 12), BUTTON_HEIGHT)
                 .build();
         useNewCategoryButton.active =
                 CATEGORY_PATTERN.matcher(newCategoryInput.getTextBoxInput()).matches();
         this.addRenderableWidget(useNewCategoryButton);
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointCategory.back"), (button) -> onClose())
+                .pos((int) (dividedWidth * 45), (int) (dividedHeight * 39))
+                .size((int) (dividedWidth * 7), BUTTON_HEIGHT)
+                .build());
 
         if (!categoryPath.isEmpty()) {
             newCategoryInput.setTextBoxInput(categoryPath);
@@ -138,10 +144,10 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                 poseStack,
                 CommonColors.BLACK.withAlpha(100),
                 dividedWidth * 33,
-                dividedHeight * 22,
+                dividedHeight * 18,
                 0,
                 dividedWidth * 31,
-                dividedHeight * 20);
+                dividedHeight * 26);
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -172,7 +178,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.waypointCategory.currentCategory") + ": " + currentCategory),
                         dividedWidth * 34,
-                        dividedHeight * 24,
+                        dividedHeight * 21,
                         dividedWidth * 30,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -186,7 +192,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                         StyledText.fromString(
                                 I18n.get("screens.wynntils.waypointCategory.categoryPath") + ": " + categoryPath),
                         dividedWidth * 34,
-                        dividedHeight * 28,
+                        dividedHeight * 25,
                         dividedWidth * 30,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -199,7 +205,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.newCategory") + ":"),
                         dividedWidth * 34,
-                        dividedHeight * 32,
+                        dividedHeight * 29,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
