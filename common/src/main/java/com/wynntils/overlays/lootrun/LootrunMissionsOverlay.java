@@ -13,7 +13,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class LootrunMissionsOverlay extends TextOverlay {
     private static final String TEMPLATE =
-            "{if_string(string_equals(lootrun_state;\"NOT_RUNNING\");\"\";concat(\"§7Mission #1: \";lootrun_mission(0);\"\\n§7Mission #2: \";lootrun_mission(1);\"\\n§7Mission #3: \";lootrun_mission(2);\"\\n§7Mission #4: \";lootrun_mission(3)))}";
+            "{if_string(string_equals(lootrun_state;\"NOT_RUNNING\");\"\";concat(\"§7Mission #1: \";lootrun_mission(0; true);\"\\n§7Mission #2: \";lootrun_mission(1; true);\"\\n§7Mission #3: \";lootrun_mission(2; true);\"\\n§7Mission #4: \";lootrun_mission(3; true)))}";
 
     private static final String PREVIEW_TEMPLATE =
             """

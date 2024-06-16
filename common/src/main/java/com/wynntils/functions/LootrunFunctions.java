@@ -125,14 +125,16 @@ public class LootrunFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             int missionIndex = arguments.getArgument("index").getIntegerValue();
+            boolean colored = arguments.getArgument("colored").getBooleanValue();
 
-            return Models.Lootrun.getMissionStatus(missionIndex);
+            return Models.Lootrun.getMissionStatus(missionIndex, colored);
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null)));
+                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null),
+                            new FunctionArguments.Argument<>("colored", Boolean.class, false)));
         }
     }
 

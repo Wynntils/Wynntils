@@ -1826,6 +1826,7 @@
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "The color of the beacon you have last selected in your lootrun",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Lootrun Last Selected Beacon Color",
   "function.wynntils.lootrunMission.argument.index": "The index of the Mission",
+  "function.wynntils.lootrunMission.argument.colored": "Whether or not the output should return colored",
   "function.wynntils.lootrunMission.description": "The name of the Lootrun Mission at the given Index",
   "function.wynntils.lootrunMission.name": "Lootrun Mission",
   "function.wynntils.lootrunRedBeaconChallengeCount.description": "The number of red beacon challenges you have remaining in your lootrun",

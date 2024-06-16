@@ -293,30 +293,30 @@ public class LootrunModel extends Model {
             parseFailedMessages(styledText);
         }
 
-        Matcher matcher = missionPatterns[0].matcher(styledText.toString());
-        if (matcher.find()) {
+        Matcher matcher = missionPatterns[0].matcher(styledText.getString());
+        if (matcher.matches()) {
             MissionType mission = MissionType.fromName(matcher.group(1));
             addMission(mission.name());
             return;
         }
 
-        matcher = missionPatterns[1].matcher(styledText.toString());
+        matcher = missionPatterns[1].matcher(styledText.getString());
 
-        if (matcher.find()) {
+        if (matcher.matches()) {
             MissionType mission = MissionType.fromName(matcher.group(1));
 
             for (StyledText recentChatMessage : recentChatMessages) {
                 matcher = MISSION_COMPLETED_PATTERN.matcher(recentChatMessage.toString());
-                if (matcher.find()) {
+                if (matcher.matches()) {
                     addMission(mission.name());
                     return;
                 }
             }
         }
 
-        matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.toString());
+        matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.getString());
 
-        if (matcher.find()) {
+        if (matcher.matches()) {
             BeaconColor color = getLastTaskBeaconColor();
             if (color == BeaconColor.GRAY) addMission("FAILED");
         }
@@ -475,17 +475,17 @@ public class LootrunModel extends Model {
         return selectedBeacons.getOrDefault(color, 0);
     }
 
-    public String getMissionStatus(int index) {
+    public String getMissionStatus(int index, boolean colored) {
         List<String> missions = missionStorage.get().get(Models.Character.getId());
-        if (missions == null) return "§cNone";
-
-        if (index < 0 || index >= missions.size()) return "§cNone";
+        if (missions == null || index < 0 || index >= missions.size()) return (colored ? "§c" : "") + "None";
 
         String identifier = missionStorage.get().get(Models.Character.getId()).get(index);
-        if (identifier.equals("FAILED")) return "§4Failed";
+        if (identifier.equals("FAILED")) return (colored ? "§4" : "") + "Failed";
 
         MissionType mission = MissionType.valueOf(identifier);
-        return mission == null ? "§7Unknown" : mission.getColoredName();
+
+        if (mission == null) return (colored ? "§7" : "") + "Unknown";
+        else return colored ? mission.getName() : mission.getColoredName();
     }
 
     public LootrunningState getState() {
