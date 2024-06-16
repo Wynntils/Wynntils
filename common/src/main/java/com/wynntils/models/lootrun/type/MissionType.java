@@ -4,26 +4,27 @@
  */
 package com.wynntils.models.lootrun.type;
 
+import net.minecraft.ChatFormatting;
+
 public enum MissionType {
-    CLEANSING_GREED("Cleansing Greed", 'e'),
-    HIGH_ROLLER("High Roller", 'e'),
-    MATERIALISM("Materialism", 'e'),
-    ORPHIONS_GRACE("Orphion's Grace", '9'),
-    CLEANSING_RITUAL("Cleansing Ritual", '5'),
-    EQUILIBRIUM("Equilibrium", '5'),
-    INNER_PEACE("Inner Peace", '5'),
-    BACKUP_BEAT("Backup Beat", 'a'),
-    STASIS("Stasis", 'a'),
-    GAMBLING_BEAST("Gambling Beast", 'c'),
-    REDEMPTION("Redemption", 'c'),
-    ULTIMATE_SACRIFICE("Ultimate Sacrifice", 'c'),
-    FAILED("Failed", '4'),
-    ;
+    CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
+    HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
+    MATERIALISM("Materialism", ChatFormatting.YELLOW),
+    ORPHIONS_GRACE("Orphion's Grace", ChatFormatting.BLUE),
+    CLEANSING_RITUAL("Cleansing Ritual", ChatFormatting.DARK_PURPLE),
+    EQUILIBRIUM("Equilibrium", ChatFormatting.DARK_PURPLE),
+    INNER_PEACE("Inner Peace", ChatFormatting.DARK_PURPLE),
+    BACKUP_BEAT("Backup Beat", ChatFormatting.GREEN),
+    STASIS("Stasis", ChatFormatting.GREEN),
+    GAMBLING_BEAST("Gambling Beast", ChatFormatting.RED),
+    REDEMPTION("Redemption", ChatFormatting.RED),
+    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED),
+    FAILED("Failed", ChatFormatting.DARK_RED);
 
     private final String name;
-    private final char color;
+    private final ChatFormatting color;
 
-    MissionType(String name, char color) {
+    MissionType(String name, ChatFormatting color) {
         this.name = name;
         this.color = color;
     }
@@ -33,10 +34,10 @@ public enum MissionType {
     }
 
     public String getColoredName() {
-        return "§" + color + name;
+        return color + name;
     }
 
-    public char getColor() {
+    public ChatFormatting getColor() {
         return color;
     }
 
