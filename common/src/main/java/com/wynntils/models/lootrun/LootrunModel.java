@@ -41,6 +41,7 @@ import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
+import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
@@ -57,6 +58,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -91,7 +93,7 @@ public class LootrunModel extends Model {
     // Rewards
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Pulls§r");
     private static final Pattern REWARD_REROLLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Rerolls§r");
-    private static final Pattern REWARD_SACRIFICES_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Sacrif§r");
+    private static final Pattern REWARD_SACRIFICES_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Sacrifices§r");
     private static final Pattern LOOTRUN_EXPERIENCE_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Lootrun Experience§r");
 
     // Statistics
@@ -109,6 +111,11 @@ public class LootrunModel extends Model {
     //                        ÀÀÀ§7Challenges Completed: §f7
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
+    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("À.*?§c§lChallenge Failed!");
+
+    private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
+    private static final Pattern ADVANCED_MISSION_PATTERN = Pattern.compile("À.*?§b§l");
+    private static final Pattern MISSION_PATTERN = Pattern.compile(".*?§.");
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
@@ -160,6 +167,12 @@ public class LootrunModel extends Model {
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
+    @Persisted
+    private final Storage<Map<String, List<MissionType>>> missionStorage = new Storage<>(new TreeMap<>());
+
+    private final Pattern[] missionPatterns = new Pattern[2];
+    private final StyledText[] recentChatMessages = new StyledText[5];
+
     private int timeLeft = 0;
     private CappedValue challenges = CappedValue.EMPTY;
 
@@ -170,6 +183,7 @@ public class LootrunModel extends Model {
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
         reloadData();
+        generateMissionPatterns();
     }
 
     @Override
@@ -248,12 +262,16 @@ public class LootrunModel extends Model {
         selectedBeacons = selectedBeaconsStorage.get().get(id);
 
         selectedBeaconsStorage.touched();
+
+        missionStorage.get().putIfAbsent(id, new LinkedList<>());
+        missionStorage.touched();
     }
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.INFO) return;
         StyledText styledText = event.getOriginalStyledText();
+        updateRecentChatMessages(styledText);
 
         if (styledText.matches(LOOTRUN_COMPLETED_PATTERN)) {
             lootrunCompletedBuilder = new LootrunFinishedEventBuilder.Completed();
@@ -270,6 +288,34 @@ public class LootrunModel extends Model {
             parseCompletedMessages(styledText);
         } else if (lootrunFailedBuilder != null) {
             parseFailedMessages(styledText);
+        }
+
+        Matcher matcher = missionPatterns[0].matcher(styledText.toString());
+        if (matcher.find()) {
+            MissionType mission = MissionType.fromName(matcher.group(1));
+            addMission(mission);
+            return;
+        }
+
+        matcher = missionPatterns[1].matcher(styledText.toString());
+
+        if (matcher.find()) {
+            MissionType mission = MissionType.fromName(matcher.group(1));
+
+            for (StyledText recentChatMessage : recentChatMessages) {
+                matcher = MISSION_COMPLETED_PATTERN.matcher(recentChatMessage.toString());
+                if (matcher.find()) {
+                    addMission(mission);
+                    return;
+                }
+            }
+        }
+
+        matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.toString());
+
+        if (matcher.find()) {
+            BeaconColor color = getLastTaskBeaconColor();
+            if (color == BeaconColor.GRAY) addMission(MissionType.FAILED);
         }
     }
 
@@ -426,6 +472,14 @@ public class LootrunModel extends Model {
         return selectedBeacons.getOrDefault(color, 0);
     }
 
+    public MissionType getMission(int index) {
+        List<MissionType> missions = missionStorage.get().get(Models.Character.getId());
+        if (missions == null) return null;
+
+        if (index < 0 || index >= missions.size()) return null;
+        return missionStorage.get().get(Models.Character.getId()).get(index);
+    }
+
     public LootrunningState getState() {
         return lootrunningState;
     }
@@ -516,6 +570,28 @@ public class LootrunModel extends Model {
         redBeaconTaskCountStorage.touched();
     }
 
+    public void resetMissions() {
+        List<MissionType> missions = missionStorage.get().get(Models.Character.getId());
+        if (missions == null) return;
+
+        missions.clear();
+        missionStorage.get().put(Models.Character.getId(), missions);
+        missionStorage.touched();
+    }
+
+    public void addMission(MissionType mission) {
+        List<MissionType> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new LinkedList<>());
+
+        if (missions.contains(mission)) {
+            WynntilsMod.info("Mission already exists.");
+            return;
+        }
+
+        missions.add(mission);
+        missionStorage.get().put(Models.Character.getId(), missions);
+        missionStorage.touched();
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
@@ -540,6 +616,7 @@ public class LootrunModel extends Model {
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             resetBeaconStorage();
+            resetMissions();
 
             taskType = null;
             setClosestBeacon(null);
@@ -766,5 +843,34 @@ public class LootrunModel extends Model {
             lootrunFailedBuilder = null;
             return;
         }
+    }
+
+    private void generateMissionPatterns() {
+        List<Pattern> patterns = new LinkedList<>();
+        patterns.add(ADVANCED_MISSION_PATTERN);
+        patterns.add(MISSION_PATTERN);
+
+        for (int i = 0; i < patterns.size(); i++) {
+            Pattern pattern = patterns.get(i);
+            StringBuilder patternBuilder = new StringBuilder(pattern.pattern());
+
+            patternBuilder.append("(");
+
+            for (MissionType mission : MissionType.values()) {
+                patternBuilder.append(Pattern.quote(mission.getName())).append("|");
+            }
+
+            patternBuilder.setLength(patternBuilder.length() - 1);
+
+            patternBuilder.append(")");
+            missionPatterns[i] = Pattern.compile(patternBuilder.toString());
+        }
+    }
+
+    private void updateRecentChatMessages(StyledText newMessage) {
+        for (int i = recentChatMessages.length - 1; i > 0; i--) {
+            recentChatMessages[i] = recentChatMessages[i - 1];
+        }
+        recentChatMessages[0] = newMessage;
     }
 }

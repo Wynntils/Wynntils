@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.event;
@@ -57,7 +57,14 @@ public abstract class LootrunFinishedEventBuilder {
 
         public LootrunFinishedEvent.Completed build() {
             return new LootrunFinishedEvent.Completed(
-                    challengesCompleted, timeElapsed, rewardPulls, rewardRerolls, rewardSacrifices, experienceGained, mobsKilled, chestsOpened);
+                    challengesCompleted,
+                    timeElapsed,
+                    rewardPulls,
+                    rewardRerolls,
+                    rewardSacrifices,
+                    experienceGained,
+                    mobsKilled,
+                    chestsOpened);
         }
     }
 

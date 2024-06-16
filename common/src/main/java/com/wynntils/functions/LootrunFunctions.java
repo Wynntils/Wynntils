@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
+import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -118,6 +119,24 @@ public class LootrunFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+        }
+    }
+
+    public static class LootrunMissionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int missionIndex = arguments.getArgument("index").getIntegerValue();
+
+            MissionType mission = Models.Lootrun.getMission(missionIndex);
+            if (mission == null) return "§cNone";
+
+            return mission.getColoredName();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("index", Integer.class, -1)));
         }
     }
 
