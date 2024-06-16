@@ -263,7 +263,7 @@ public class MinimapOverlay extends Overlay {
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
         poisToRender = Stream.concat(
                 poisToRender,
-                Services.Hades.getPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
+                Services.Hades.getMiniPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();

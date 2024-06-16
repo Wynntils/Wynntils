@@ -26,6 +26,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
+import com.wynntils.utils.type.TimedValue;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,9 @@ public class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
+    private final TimedValue<StyledText> lastProfessionLabel =
+            new TimedValue<>(MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS);
+
     public ProfessionModel() {
         super(List.of());
 
@@ -98,9 +102,10 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
+        StyledText label = event.getName();
 
-        if (matcher.matches()) {
+        Matcher professionNodeExperienceMatcher = label.getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
+        if (professionNodeExperienceMatcher.matches()) {
             Vec3 entityPosition = event.getEntity().position();
 
             if (gatheredNodes.stream()
@@ -110,12 +115,20 @@ public class ProfessionModel extends Model {
                 return;
             }
 
+            ProfessionType profession = ProfessionType.fromString(professionNodeExperienceMatcher.group("name"));
+
+            // Woodcutting labels can move during "display", so position based checks don't always work
+            if (profession == ProfessionType.WOODCUTTING && lastProfessionLabel.matches(label)) {
+                return;
+            }
+
+            lastProfessionLabel.set(label);
             gatheredNodes.put(entityPosition);
 
             WynntilsMod.postEvent(new ProfessionXpGainEvent(
-                    ProfessionType.fromString(matcher.group("name")),
-                    Float.parseFloat(matcher.group("gain")),
-                    Float.parseFloat(matcher.group("current"))));
+                    profession,
+                    Float.parseFloat(professionNodeExperienceMatcher.group("gain")),
+                    Float.parseFloat(professionNodeExperienceMatcher.group("current"))));
 
             ProfessionNodeGatheredEvent.LabelShown gatherEvent = new ProfessionNodeGatheredEvent.LabelShown();
             WynntilsMod.postEvent(gatherEvent);
@@ -123,8 +136,8 @@ public class ProfessionModel extends Model {
             return;
         }
 
-        matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
-        if (matcher.matches()) {
+        Matcher professionNodeHarvestMatcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
+        if (professionNodeHarvestMatcher.matches()) {
             if (lastHarvestItemGain.a() + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()
                     && lastHarvestItemGain.b() != null) {
                 MaterialItem materialItem = lastHarvestItemGain.b();
