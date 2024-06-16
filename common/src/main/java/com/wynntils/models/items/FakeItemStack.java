@@ -27,7 +27,7 @@ public class FakeItemStack extends ItemStack {
 
     public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source) {
         super(itemStack.getItem(), 1);
-        this.setTag(itemStack.getTag());
+        this.applyComponents(itemStack.getComponentsPatch());
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));

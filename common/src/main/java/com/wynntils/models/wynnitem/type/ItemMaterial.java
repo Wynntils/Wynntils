@@ -10,14 +10,16 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.SkinUtils;
 import java.util.Locale;
 import java.util.Optional;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.ItemIdFix;
 import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.component.Unbreakable;
 
 public record ItemMaterial(ItemStack itemStack) {
     public static ItemMaterial getDefaultTomeItemMaterial() {
@@ -38,11 +40,7 @@ public record ItemMaterial(ItemStack itemStack) {
         ItemStack itemStack = createItemStack(getItem("minecraft:" + itemId), 0);
         if (color != null) {
             // color is only set in case of leather
-            CompoundTag tag = itemStack.getOrCreateTag();
-            CompoundTag displayTag = new CompoundTag();
-            tag.put("display", displayTag);
-            displayTag.putInt("color", color.asInt());
-            itemStack.setTag(tag);
+            itemStack.set(DataComponents.DYED_COLOR, new DyedItemColor(color.asInt(), false));
         }
 
         return new ItemMaterial(itemStack);
@@ -89,8 +87,7 @@ public record ItemMaterial(ItemStack itemStack) {
         ItemStack itemStack = new ItemStack(item);
 
         itemStack.setDamageValue(damageValue);
-        CompoundTag tag = itemStack.getOrCreateTag();
-        tag.putBoolean("Unbreakable", true);
+        itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
         return itemStack;
     }
 

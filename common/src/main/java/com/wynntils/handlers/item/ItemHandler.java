@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -196,7 +196,7 @@ public class ItemHandler extends Handler {
             ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
             if (event.isCanceled()) {
-                newItem.setHoverName(existingItem.getHoverName());
+                newItem.set(DataComponents.CUSTOM_NAME, existingItem.getHoverName());
             }
         } else {
             // The name is different, and it is not a know special name. This means it could be a
@@ -240,16 +240,16 @@ public class ItemHandler extends Handler {
      * It might have additional lines added, but these are not checked.
      */
     private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
-        ListTag firstLoreTags = LoreUtils.getLoreTag(firstItem);
-        ListTag secondLoreTags = LoreUtils.getLoreTag(secondItem);
+        List<StyledText> firstLoreLines = LoreUtils.getLore(firstItem);
+        List<StyledText> secondLoreLines = LoreUtils.getLore(secondItem);
 
         // Tags implement equals, so we can use this to check if the lore is identical
         // This is the most common short-circuit case
-        if (Objects.equals(firstLoreTags, secondLoreTags)) return true;
+        if (Objects.equals(firstLoreLines, secondLoreLines)) return true;
 
         // Continue, as we allow 3 lines to differ
-        int firstLinesLen = firstLoreTags.size();
-        int secondLinesLen = secondLoreTags.size();
+        int firstLinesLen = firstLoreLines.size();
+        int secondLinesLen = secondLoreLines.size();
 
         // Only allow a maximum number of additional lines in the longer tooltip
         if (Math.abs(firstLinesLen - secondLinesLen) > 3) return false;
@@ -259,8 +259,8 @@ public class ItemHandler extends Handler {
         if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
 
         for (int i = 0; i < linesToCheck; i++) {
-            StyledText firstLine = StyledText.fromJson(firstLoreTags.get(i).getAsString());
-            StyledText secondLine = StyledText.fromJson(secondLoreTags.get(i).getAsString());
+            StyledText firstLine = firstLoreLines.get(i);
+            StyledText secondLine = secondLoreLines.get(i);
 
             if (!firstLine.equals(secondLine)) return false;
         }
@@ -292,7 +292,7 @@ public class ItemHandler extends Handler {
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
                 WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
+                WynntilsMod.warn("Problematic item tags:" + itemStack.getTags());
 
                 McUtils.sendErrorToClient("Not all items will be properly parsed.");
             }
