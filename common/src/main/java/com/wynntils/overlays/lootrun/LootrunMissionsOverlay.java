@@ -16,10 +16,10 @@ public class LootrunMissionsOverlay extends TextOverlay {
     private static final String TEMPLATE =
             """
                     {concat(
-                        concat("§7Mission #1: "; lootrun_mission(0; true));
-                        if_string(string_equals(lootrun_mission(0; false); "Unknown");"";concat("§7Mission #2: "; lootrun_mission(1; true)));
-                        if_string(string_equals(lootrun_mission(1; false); "Unknown");"";concat("§7Mission #3: "; lootrun_mission(2; true)));
-                        if_string(string_equals(lootrun_mission(2; false); "Unknown");"";concat("§7Mission #4: "; lootrun_mission(3; true)))
+                        if_string(string_equals(lootrun_mission(0; false); "Unknown");"";concat("\\n§7Mission #1: "; lootrun_mission(0; true)));
+                        if_string(string_equals(lootrun_mission(1; false); "Unknown");"";concat("\\n§7Mission #2: "; lootrun_mission(1; true)));
+                        if_string(string_equals(lootrun_mission(2; false); "Unknown");"";concat("\\n§7Mission #3: "; lootrun_mission(2; true)));
+                        if_string(string_equals(lootrun_mission(3; false); "Unknown");"";concat("\\n§7Mission #4: "; lootrun_mission(3; true)))
                     )}
                     """;
 
