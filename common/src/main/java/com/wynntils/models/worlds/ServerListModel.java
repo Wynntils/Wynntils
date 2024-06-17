@@ -49,14 +49,16 @@ public final class ServerListModel extends Model {
     }
 
     public String getNewestServer() {
-        return getServers().stream()
-                .max(Comparator.comparingLong(profile -> getServer(profile).getFirstSeen()))
+        return availableServers.entrySet().stream()
+                .max(Comparator.comparingLong(entry -> entry.getValue().getFirstSeen()))
+                .map(Map.Entry::getKey)
                 .orElse(null);
     }
 
     public List<String> getServersSortedOnUptime() {
-        return getServers().stream()
-                .sorted(Comparator.comparingLong(profile -> -getServer(profile).getFirstSeen()))
+        return availableServers.entrySet().stream()
+                .sorted(Comparator.comparingLong(entry -> -entry.getValue().getFirstSeen()))
+                .map(Map.Entry::getKey)
                 .toList();
     }
 
