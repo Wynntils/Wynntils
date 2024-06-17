@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.event;
@@ -10,8 +10,10 @@ public abstract class LootrunFinishedEventBuilder {
         private int timeElapsed;
         private int rewardPulls;
         private int rewardRerolls;
+        private int rewardSacrifices;
         private int experienceGained;
         private int mobsKilled;
+        private int chestsOpened;
 
         public Completed setChallengesCompleted(int challengesCompleted) {
             this.challengesCompleted = challengesCompleted;
@@ -33,6 +35,11 @@ public abstract class LootrunFinishedEventBuilder {
             return this;
         }
 
+        public Completed setRewardSacrifices(int rewardSacrifices) {
+            this.rewardSacrifices = rewardSacrifices;
+            return this;
+        }
+
         public Completed setExperienceGained(int experienceGained) {
             this.experienceGained = experienceGained;
             return this;
@@ -43,9 +50,21 @@ public abstract class LootrunFinishedEventBuilder {
             return this;
         }
 
+        public Completed setChestsOpened(int chestsOpened) {
+            this.chestsOpened = chestsOpened;
+            return this;
+        }
+
         public LootrunFinishedEvent.Completed build() {
             return new LootrunFinishedEvent.Completed(
-                    challengesCompleted, timeElapsed, rewardPulls, rewardRerolls, experienceGained, mobsKilled);
+                    challengesCompleted,
+                    timeElapsed,
+                    rewardPulls,
+                    rewardRerolls,
+                    rewardSacrifices,
+                    experienceGained,
+                    mobsKilled,
+                    chestsOpened);
         }
     }
 
