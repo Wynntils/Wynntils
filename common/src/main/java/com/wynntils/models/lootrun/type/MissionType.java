@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 
 public enum MissionType {
     UNKNOWN("Unknown", ChatFormatting.WHITE),
-    FAILED("Failed", ChatFormatting.RED),
+    FAILED("Failed", ChatFormatting.DARK_RED),
 
     CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
     HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
