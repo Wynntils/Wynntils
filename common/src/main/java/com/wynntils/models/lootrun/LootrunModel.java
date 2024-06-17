@@ -111,13 +111,13 @@ public class LootrunModel extends Model {
     //                        ÀÀÀ§7Challenges Completed: §f7
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
-    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("À.*?§c§lChallenge Failed!");
+    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lChallenge Failed!");
 
     private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
 
     // These two prefixes are used to identify when a mission is completed,
     // as this information is presented in multiple ways
-    private static final String ADVANCED_MISSION_PREFIX = "À.*?§b§l";
+    private static final String ADVANCED_MISSION_PREFIX = ".*[À\\\\s]*§b§l";
     private static final String MISSION_PREFIX = ".*?§.";
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
@@ -174,7 +174,8 @@ public class LootrunModel extends Model {
     private final Storage<Map<String, List<String>>> missionStorage = new Storage<>(new TreeMap<>());
 
     private final Pattern[] missionPatterns = new Pattern[2];
-    private final StyledText[] recentChatMessages = new StyledText[5];
+
+    private boolean expectMissionComplete = false;
 
     private int timeLeft = 0;
     private CappedValue challenges = CappedValue.EMPTY;
@@ -274,7 +275,6 @@ public class LootrunModel extends Model {
     public void onChatMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.INFO) return;
         StyledText styledText = event.getOriginalStyledText();
-        updateRecentChatMessages(styledText);
 
         if (styledText.matches(LOOTRUN_COMPLETED_PATTERN)) {
             lootrunCompletedBuilder = new LootrunFinishedEventBuilder.Completed();
@@ -293,7 +293,14 @@ public class LootrunModel extends Model {
             parseFailedMessages(styledText);
         }
 
-        Matcher matcher = missionPatterns[0].matcher(styledText.getString());
+        Matcher matcher = MISSION_COMPLETED_PATTERN.matcher(styledText.getString());
+        if (matcher.matches()) {
+            expectMissionComplete = true;
+            return;
+        }
+
+        matcher = missionPatterns[0].matcher(styledText.getString());
+
         if (matcher.matches()) {
             MissionType mission = MissionType.fromName(matcher.group(1));
             addMission(mission.name());
@@ -304,14 +311,8 @@ public class LootrunModel extends Model {
 
         if (matcher.matches()) {
             MissionType mission = MissionType.fromName(matcher.group(1));
-
-            for (StyledText recentChatMessage : recentChatMessages) {
-                matcher = MISSION_COMPLETED_PATTERN.matcher(recentChatMessage.toString());
-                if (matcher.matches()) {
-                    addMission(mission.name());
-                    return;
-                }
-            }
+            if (expectMissionComplete) addMission(mission.name());
+            return;
         }
 
         matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.getString());
@@ -485,7 +486,7 @@ public class LootrunModel extends Model {
         MissionType mission = MissionType.valueOf(identifier);
 
         if (mission == null) return (colored ? "§7" : "") + "Unknown";
-        else return colored ? mission.getName() : mission.getColoredName();
+        else return colored ? mission.getColoredName() : mission.getName();
     }
 
     public LootrunningState getState() {
@@ -600,6 +601,8 @@ public class LootrunModel extends Model {
         missions.add(identifier);
         missionStorage.get().put(Models.Character.getId(), missions);
         missionStorage.touched();
+
+        expectMissionComplete = false;
     }
 
     public void setTimeLeft(int seconds) {
@@ -874,12 +877,5 @@ public class LootrunModel extends Model {
             patternBuilder.append(")");
             missionPatterns[i] = Pattern.compile(patternBuilder.toString());
         }
-    }
-
-    private void updateRecentChatMessages(StyledText newMessage) {
-        for (int i = recentChatMessages.length - 1; i > 0; i--) {
-            recentChatMessages[i] = recentChatMessages[i - 1];
-        }
-        recentChatMessages[0] = newMessage;
     }
 }

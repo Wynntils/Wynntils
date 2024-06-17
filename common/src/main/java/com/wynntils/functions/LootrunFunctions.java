@@ -132,9 +132,9 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("index", Integer.class, null),
-                            new FunctionArguments.Argument<>("colored", Boolean.class, false)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("index", Integer.class, null),
+                    new FunctionArguments.Argument<>("colored", Boolean.class, false)));
         }
     }
 
