@@ -4,9 +4,14 @@
  */
 package com.wynntils.models.lootrun.type;
 
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 
 public enum MissionType {
+    UNKNOWN("Unknown", ChatFormatting.WHITE),
+    FAILED("Failed", ChatFormatting.RED),
+
     CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
     HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
     MATERIALISM("Materialism", ChatFormatting.YELLOW),
@@ -42,10 +47,18 @@ public enum MissionType {
 
     public static MissionType fromName(String name) {
         for (MissionType type : values()) {
+            if (type == UNKNOWN || type == FAILED) continue;
             if (type.getName().equalsIgnoreCase(name)) {
                 return type;
             }
         }
-        return null;
+
+        return UNKNOWN;
+    }
+
+    public static List<MissionType> missionTypes() {
+        return Arrays.stream(values())
+                .filter(type -> type != UNKNOWN && type != FAILED)
+                .toList();
     }
 }

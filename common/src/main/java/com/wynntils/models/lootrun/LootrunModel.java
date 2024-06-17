@@ -115,10 +115,12 @@ public class LootrunModel extends Model {
 
     private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
 
-    // These two prefixes are used to identify when a mission is completed,
-    // as this information is presented in multiple ways
-    private static final String ADVANCED_MISSION_PREFIX = ".*[À\\\\s]*§b§l";
-    private static final String MISSION_PREFIX = ".*?§.";
+    // Some missions don't have a mission completed message, so we also look for "active" missions
+    // (missions that apply effects on challenge completion)
+    private static final Pattern COMPLETED_MISSION_PATTERN = Pattern.compile("[À\\s]*?§.(?<mission>"
+            + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
+    private static final Pattern ACTIVE_MISSION_PATTERN = Pattern.compile("[À\\s]*?§b§l(?<mission>"
+            + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
@@ -154,6 +156,12 @@ public class LootrunModel extends Model {
     // particles can accurately show task locations
     private Set<TaskLocation> possibleTaskLocations = new HashSet<>();
 
+    private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
+    private int timeLeft = 0;
+    private CappedValue challenges = CappedValue.EMPTY;
+
+    private boolean expectMissionComplete = false;
+
     // Data to be persisted
     @Persisted
     private final Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage =
@@ -169,16 +177,7 @@ public class LootrunModel extends Model {
     private final Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, List<String>>> missionStorage = new Storage<>(new TreeMap<>());
-
-    private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
-
-    private final Pattern[] missionPatterns = new Pattern[2];
-
-    private boolean expectMissionComplete = false;
-
-    private int timeLeft = 0;
-    private CappedValue challenges = CappedValue.EMPTY;
+    private final Storage<Map<String, List<MissionType>>> missionStorage = new Storage<>(new TreeMap<>());
 
     public LootrunModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -186,8 +185,8 @@ public class LootrunModel extends Model {
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
+
         reloadData();
-        generateMissionPatterns();
     }
 
     @Override
@@ -299,27 +298,28 @@ public class LootrunModel extends Model {
             return;
         }
 
-        matcher = missionPatterns[0].matcher(styledText.getString());
-
-        if (matcher.matches()) {
-            MissionType mission = MissionType.fromName(matcher.group(1));
-            addMission(mission.name());
-            return;
+        if (expectMissionComplete) {
+            matcher = COMPLETED_MISSION_PATTERN.matcher(styledText.getString());
+            if (matcher.matches()) {
+                MissionType mission = MissionType.fromName(matcher.group("mission"));
+                addMission(mission);
+                return;
+            }
         }
 
-        matcher = missionPatterns[1].matcher(styledText.getString());
-
+        matcher = ACTIVE_MISSION_PATTERN.matcher(styledText.getString());
         if (matcher.matches()) {
-            MissionType mission = MissionType.fromName(matcher.group(1));
-            if (expectMissionComplete) addMission(mission.name());
+            MissionType mission = MissionType.fromName(matcher.group("mission"));
+            addMission(mission);
             return;
         }
 
         matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.getString());
-
         if (matcher.matches()) {
             BeaconColor color = getLastTaskBeaconColor();
-            if (color == BeaconColor.GRAY) addMission("FAILED");
+            if (color == BeaconColor.GRAY) {
+                addMission(MissionType.FAILED);
+            }
         }
     }
 
@@ -477,16 +477,13 @@ public class LootrunModel extends Model {
     }
 
     public String getMissionStatus(int index, boolean colored) {
-        List<String> missions = missionStorage.get().get(Models.Character.getId());
-        if (missions == null || index < 0 || index >= missions.size()) return (colored ? "§c" : "") + "None";
+        List<MissionType> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
+        if (index < 0 || index >= missions.size()) {
+            return colored ? MissionType.UNKNOWN.getColoredName() : MissionType.UNKNOWN.getName();
+        }
 
-        String identifier = missionStorage.get().get(Models.Character.getId()).get(index);
-        if (identifier.equals("FAILED")) return (colored ? "§4" : "") + "Failed";
-
-        MissionType mission = MissionType.valueOf(identifier);
-
-        if (mission == null) return (colored ? "§7" : "") + "Unknown";
-        else return colored ? mission.getColoredName() : mission.getName();
+        MissionType mission = missionStorage.get().get(Models.Character.getId()).get(index);
+        return colored ? mission.getColoredName() : mission.getName();
     }
 
     public LootrunningState getState() {
@@ -580,22 +577,18 @@ public class LootrunModel extends Model {
     }
 
     private void resetMissions() {
-        List<String> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
-        missions.clear();
+        missionStorage.get().putIfAbsent(Models.Character.getId(), new ArrayList<>());
+        missionStorage.get().get(Models.Character.getId()).clear();
         missionStorage.touched();
     }
 
-    private void addMission(String identifier) {
-        List<String> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
-
-        if (missions.contains(identifier)) {
-            WynntilsMod.warn(
-                    "Mission already completed: " + identifier + ", mission list: " + String.join(", ", missions));
-            return;
+    private void addMission(MissionType mission) {
+        List<MissionType> missions =
+                missionStorage.get().computeIfAbsent(Models.Character.getId(), k -> new ArrayList<>());
+        if (!missions.contains(mission)) {
+            missions.add(mission);
         }
 
-        missions.add(identifier);
-        missionStorage.get().put(Models.Character.getId(), missions);
         missionStorage.touched();
 
         expectMissionComplete = false;
@@ -851,27 +844,6 @@ public class LootrunModel extends Model {
             WynntilsMod.postEvent(lootrunFailedBuilder.build());
             lootrunFailedBuilder = null;
             return;
-        }
-    }
-
-    private void generateMissionPatterns() {
-        List<String> patterns = new ArrayList<>();
-        patterns.add(ADVANCED_MISSION_PREFIX);
-        patterns.add(MISSION_PREFIX);
-
-        for (int i = 0; i < patterns.size(); i++) {
-            StringBuilder patternBuilder = new StringBuilder(patterns.get(i));
-
-            patternBuilder.append("(");
-
-            for (MissionType mission : MissionType.values()) {
-                patternBuilder.append(Pattern.quote(mission.getName())).append("|");
-            }
-
-            patternBuilder.setLength(patternBuilder.length() - 1);
-
-            patternBuilder.append(")");
-            missionPatterns[i] = Pattern.compile(patternBuilder.toString());
         }
     }
 }
