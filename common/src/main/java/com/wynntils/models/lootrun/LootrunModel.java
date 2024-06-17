@@ -268,7 +268,7 @@ public class LootrunModel extends Model {
 
         selectedBeaconsStorage.touched();
 
-        missionStorage.get().putIfAbsent(id, new LinkedList<>());
+        missionStorage.get().putIfAbsent(id, new ArrayList<>());
         missionStorage.touched();
     }
 
@@ -587,7 +587,7 @@ public class LootrunModel extends Model {
     }
 
     private void addMission(String identifier) {
-        List<String> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new LinkedList<>());
+        List<String> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
 
         for (String mission : missions) {
             if (mission.equals(identifier)) {
@@ -857,7 +857,7 @@ public class LootrunModel extends Model {
     }
 
     private void generateMissionPatterns() {
-        List<String> patterns = new LinkedList<>();
+        List<String> patterns = new ArrayList<>();
         patterns.add(ADVANCED_MISSION_PREFIX);
         patterns.add(MISSION_PREFIX);
 
