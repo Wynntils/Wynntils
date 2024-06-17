@@ -24,9 +24,9 @@ public abstract class ClientCommonPacketListenerImplMixin {
                     "handleResourcePackPush(Lnet/minecraft/network/protocol/common/ClientboundResourcePackPushPacket;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void handleResourcePackPre(ClientboundResourcePackPushPacket packet, CallbackInfo ci) {
+    private void handleResourcePackPushPre(ClientboundResourcePackPushPacket packet, CallbackInfo ci) {
         ServerResourcePackEvent.Load event =
-                new ServerResourcePackEvent.Load(packet.url(), packet.hash(), packet.required());
+                new ServerResourcePackEvent.Load(packet.id(), packet.url(), packet.hash(), packet.required());
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             McUtils.sendPacket(new ServerboundResourcePackPacket(
