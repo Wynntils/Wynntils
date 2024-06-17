@@ -588,12 +588,10 @@ public class LootrunModel extends Model {
     private void addMission(String identifier) {
         List<String> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
 
-        for (String mission : missions) {
-            if (mission.equals(identifier)) {
-                WynntilsMod.info("Mission already exists.");
-                return;
-            }
-        }
+    if (missions.contains(identifier)) {
+            WynntilsMod.warn("Mission already completed: " + identifier + ", mission list: " + String.join(", ", missions));
+            return;
+    }
 
         missions.add(identifier);
         missionStorage.get().put(Models.Character.getId(), missions);
