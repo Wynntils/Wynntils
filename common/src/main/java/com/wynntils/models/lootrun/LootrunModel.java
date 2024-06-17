@@ -55,6 +55,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -168,10 +169,10 @@ public class LootrunModel extends Model {
     @Persisted
     private final Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
 
-    private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
-
     @Persisted
     private final Storage<Map<String, List<String>>> missionStorage = new Storage<>(new TreeMap<>());
+
+    private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
     private final Pattern[] missionPatterns = new Pattern[2];
 
@@ -580,11 +581,8 @@ public class LootrunModel extends Model {
     }
 
     private void resetMissions() {
-        List<String> missions = missionStorage.get().get(Models.Character.getId());
-        if (missions == null) return;
-
+        List<String> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
         missions.clear();
-        missionStorage.get().put(Models.Character.getId(), missions);
         missionStorage.touched();
     }
 
