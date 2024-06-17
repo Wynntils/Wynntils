@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -27,6 +27,6 @@ public abstract class ClientLevelMixin {
     @Inject(method = "disconnect()V", at = @At("HEAD"))
     private void disconnectPre(CallbackInfo ci) {
         // User-triggered logoff
-        MixinHelper.post(new ConnectionEvent.DisconnectedEvent());
+        MixinHelper.postAlways(new ConnectionEvent.DisconnectedEvent());
     }
 }
