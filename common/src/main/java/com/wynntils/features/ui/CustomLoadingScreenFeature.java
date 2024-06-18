@@ -65,7 +65,7 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onResourcePack(ServerResourcePackEvent.ServerResourcePackLoadEvent e) {
+    public void onResourcePack(ServerResourcePackEvent.Load e) {
         if (loadingScreen == null) return;
 
         loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.resourcePack"));

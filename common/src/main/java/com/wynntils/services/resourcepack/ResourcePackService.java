@@ -37,7 +37,7 @@ public final class ResourcePackService extends Service {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onServerResourcePackLoad(ServerResourcePackEvent.ServerResourcePackLoadEvent event) {
+    public void onServerResourcePackLoad(ServerResourcePackEvent.Load event) {
         Pack preloadedPack = getPreloadedPack();
 
         // 1. We have no preloaded pack
@@ -74,7 +74,7 @@ public final class ResourcePackService extends Service {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onServerResourcePackClear(ServerResourcePackEvent.ServerResourcePackClearEvent event) {
+    public void onServerResourcePackClear(ServerResourcePackEvent.Clear event) {
         PackRepository resourcePackRepository = McUtils.mc().getResourcePackRepository();
 
         Pack preloadedPack = getPreloadedPack();

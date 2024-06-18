@@ -79,8 +79,7 @@ public abstract class MinecraftMixin {
             method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GameNarrator;clear()V", shift = At.Shift.AFTER))
     private void handleResourcePackPopPre(CallbackInfo ci) {
-        ServerResourcePackEvent.ServerResourcePackClearEvent event =
-                new ServerResourcePackEvent.ServerResourcePackClearEvent();
+        ServerResourcePackEvent.Clear event = new ServerResourcePackEvent.Clear();
         MixinHelper.postAlways(event);
     }
 }

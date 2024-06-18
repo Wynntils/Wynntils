@@ -14,12 +14,12 @@ public abstract class ServerResourcePackEvent extends Event {
      */
     @EventThread(EventThread.Type.ANY)
     @Cancelable
-    public static class ServerResourcePackLoadEvent extends ServerResourcePackEvent {
+    public static class Load extends ServerResourcePackEvent {
         private final String url;
         private final String hash;
         private final boolean required;
 
-        public ServerResourcePackLoadEvent(String url, String hash, boolean required) {
+        public Load(String url, String hash, boolean required) {
             this.url = url;
             this.hash = hash;
             this.required = required;
@@ -39,5 +39,5 @@ public abstract class ServerResourcePackEvent extends Event {
     }
 
     @EventThread(EventThread.Type.ANY)
-    public static class ServerResourcePackClearEvent extends ServerResourcePackEvent {}
+    public static class Clear extends ServerResourcePackEvent {}
 }

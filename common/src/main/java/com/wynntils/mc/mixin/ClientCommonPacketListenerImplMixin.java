@@ -28,13 +28,12 @@ public abstract class ClientCommonPacketListenerImplMixin {
     private void handleResourcePackPre(ClientboundResourcePackPacket packet, CallbackInfo ci) {
         // Hash is SHA-1 of the URL in 1.20.2
         // Hash is packet#hash() in 1.21
-        ServerResourcePackEvent.ServerResourcePackLoadEvent event =
-                new ServerResourcePackEvent.ServerResourcePackLoadEvent(
-                        packet.getUrl(),
-                        Hashing.sha1()
-                                .hashString(packet.getUrl().toString(), StandardCharsets.UTF_8)
-                                .toString(),
-                        packet.isRequired());
+        ServerResourcePackEvent.Load event = new ServerResourcePackEvent.Load(
+                packet.getUrl(),
+                Hashing.sha1()
+                        .hashString(packet.getUrl().toString(), StandardCharsets.UTF_8)
+                        .toString(),
+                packet.isRequired());
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             McUtils.sendPacket(

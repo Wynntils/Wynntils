@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.DEBUG)
 public class ConnectionProgressFeature extends Feature {
     @SubscribeEvent
-    public void onResourcePack(ServerResourcePackEvent.ServerResourcePackLoadEvent e) {
+    public void onResourcePack(ServerResourcePackEvent.Load e) {
         if (!Managers.Connection.onServer()) return;
         WynntilsMod.info("Connection confirmed");
     }

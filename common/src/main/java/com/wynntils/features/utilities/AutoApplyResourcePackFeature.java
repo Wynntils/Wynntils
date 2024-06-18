@@ -20,7 +20,7 @@ public class AutoApplyResourcePackFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onResourcePackLoad(ServerResourcePackEvent.ServerResourcePackLoadEvent event) {
+    public void onResourcePackLoad(ServerResourcePackEvent.Load event) {
         if (!Managers.Connection.onServer()) return;
         String packHash = event.getHash();
 
