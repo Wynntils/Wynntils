@@ -149,22 +149,32 @@ public final class ResourcePackService extends Service {
             return anyRemoved;
         }
 
+        // We want to position the preloaded pack above the vanilla pack, or above the first selected pack
+        int positionToInject = 0;
+        if (selectedIds.contains("vanilla")) {
+            positionToInject = selectedIds.indexOf("vanilla") + 1;
+        } else if (!selectedIds.isEmpty()) {
+            positionToInject = 1;
+        }
+
         // We have a pack to preload, make sure it's selected
         for (Pack pack : resourcePackRepository.getAvailablePacks()) {
             if (!pack.getId().equals(getExpectedPackId())) continue;
 
             // If the resource pack is not already selected, select it, and load it
             if (!selectedIds.contains(pack.getId())) {
-                selectedIds.add(pack.getId());
+                selectedIds.add(positionToInject, pack.getId());
                 resourcePackRepository.setSelected(selectedIds);
                 return true;
             }
 
             // We found the pack, no need to continue
-            return false;
+            break;
         }
 
-        return false;
+        WynntilsMod.warn("Could not find the preload target pack to select it.");
+        resourcePackRepository.setSelected(selectedIds);
+        return anyRemoved;
     }
 
     // Note: This method checks if the preloaded pack is selected,
