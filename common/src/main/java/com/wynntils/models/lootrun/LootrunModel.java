@@ -308,7 +308,7 @@ public class LootrunModel extends Model {
         }
 
         matcher = ACTIVE_MISSION_PATTERN.matcher(styledText.getString());
-        if (matcher.matches()) {
+        if (matcher.find()) {
             MissionType mission = MissionType.fromName(matcher.group("mission"));
             addMission(mission);
             return;
