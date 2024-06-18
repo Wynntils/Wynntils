@@ -10,7 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.ServerResourcePackLoadEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.DEBUG)
 public class ConnectionProgressFeature extends Feature {
     @SubscribeEvent
-    public void onResourcePack(ServerResourcePackLoadEvent e) {
+    public void onResourcePack(ServerResourcePackEvent.ServerResourcePackLoadEvent e) {
         if (!Managers.Connection.onServer()) return;
         WynntilsMod.info("Connection confirmed");
     }

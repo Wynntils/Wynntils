@@ -10,8 +10,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ConnectionEvent;
-import com.wynntils.mc.event.ServerResourcePackClearEvent;
-import com.wynntils.mc.event.ServerResourcePackLoadEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public final class ResourcePackService extends Service {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onServerResourcePackLoad(ServerResourcePackLoadEvent event) {
+    public void onServerResourcePackLoad(ServerResourcePackEvent.ServerResourcePackLoadEvent event) {
         Pack preloadedPack = getPreloadedPack();
 
         // 1. We have no preloaded pack
@@ -75,7 +74,7 @@ public final class ResourcePackService extends Service {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onServerResourcePackClear(ServerResourcePackClearEvent event) {
+    public void onServerResourcePackClear(ServerResourcePackEvent.ServerResourcePackClearEvent event) {
         PackRepository resourcePackRepository = McUtils.mc().getResourcePackRepository();
 
         Pack preloadedPack = getPreloadedPack();

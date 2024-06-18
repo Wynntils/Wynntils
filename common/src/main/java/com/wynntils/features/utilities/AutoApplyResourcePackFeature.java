@@ -9,7 +9,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.ServerResourcePackLoadEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -20,7 +20,7 @@ public class AutoApplyResourcePackFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onResourcePackLoad(ServerResourcePackLoadEvent event) {
+    public void onResourcePackLoad(ServerResourcePackEvent.ServerResourcePackLoadEvent event) {
         if (!Managers.Connection.onServer()) return;
         String packHash = event.getHash();
 

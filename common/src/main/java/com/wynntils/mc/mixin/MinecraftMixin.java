@@ -11,7 +11,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.mc.event.ServerResourcePackClearEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import net.minecraft.client.Minecraft;
@@ -79,7 +79,8 @@ public abstract class MinecraftMixin {
             method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GameNarrator;clear()V", shift = At.Shift.AFTER))
     private void handleResourcePackPopPre(CallbackInfo ci) {
-        ServerResourcePackClearEvent event = new ServerResourcePackClearEvent();
+        ServerResourcePackEvent.ServerResourcePackClearEvent event =
+                new ServerResourcePackEvent.ServerResourcePackClearEvent();
         MixinHelper.postAlways(event);
     }
 }

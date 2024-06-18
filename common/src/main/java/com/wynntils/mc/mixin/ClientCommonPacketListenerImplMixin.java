@@ -7,7 +7,7 @@ package com.wynntils.mc.mixin;
 import com.google.common.hash.Hashing;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ConnectionEvent;
-import com.wynntils.mc.event.ServerResourcePackLoadEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.nio.charset.StandardCharsets;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
@@ -28,12 +28,13 @@ public abstract class ClientCommonPacketListenerImplMixin {
     private void handleResourcePackPre(ClientboundResourcePackPacket packet, CallbackInfo ci) {
         // Hash is SHA-1 of the URL in 1.20.2
         // Hash is packet#hash() in 1.21
-        ServerResourcePackLoadEvent event = new ServerResourcePackLoadEvent(
-                packet.getUrl(),
-                Hashing.sha1()
-                        .hashString(packet.getUrl().toString(), StandardCharsets.UTF_8)
-                        .toString(),
-                packet.isRequired());
+        ServerResourcePackEvent.ServerResourcePackLoadEvent event =
+                new ServerResourcePackEvent.ServerResourcePackLoadEvent(
+                        packet.getUrl(),
+                        Hashing.sha1()
+                                .hashString(packet.getUrl().toString(), StandardCharsets.UTF_8)
+                                .toString(),
+                        packet.isRequired());
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             McUtils.sendPacket(
