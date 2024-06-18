@@ -196,7 +196,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                 BUTTON_SIZE,
                 Component.translatable("screens.wynntils.chatTabsGui.consuming"),
                 consumingCheckbox != null && consumingCheckbox.isSelected(),
-                (int) (dividedWidth * 7) - 24);
+                (int) (dividedWidth * 15));
         this.addRenderableWidget(consumingCheckbox);
         if (firstSetup && edited != null) {
             consumingCheckbox.selected = edited.isConsuming();
