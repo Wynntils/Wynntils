@@ -21,6 +21,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ResourcePackService extends Service {
+    private static final String VANILLA_PACK_ID = "vanilla";
     private static final String PRELOADED_PACK_PREFIX = "wynntils_preloaded/";
 
     @Persisted
@@ -151,8 +152,8 @@ public final class ResourcePackService extends Service {
 
         // We want to position the preloaded pack above the vanilla pack, or above the first selected pack
         int positionToInject = 0;
-        if (selectedIds.contains("vanilla")) {
-            positionToInject = selectedIds.indexOf("vanilla") + 1;
+        if (selectedIds.contains(VANILLA_PACK_ID)) {
+            positionToInject = selectedIds.indexOf(VANILLA_PACK_ID) + 1;
         } else if (!selectedIds.isEmpty()) {
             positionToInject = 1;
         }
