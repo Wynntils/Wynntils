@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.google.common.collect.ImmutableSet;
 import com.wynntils.services.resourcepack.WynntilsResourceProvider;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
@@ -28,9 +28,8 @@ public abstract class PackRepositoryMixin {
     private void onInit(CallbackInfo ci) {
         // WynntilsResourceProvider is directly injected, as this called really early in the game initialization
         // See WynntilsResourceProvider and ResourcePackService for more information
-        this.sources = new ImmutableSet.Builder<RepositorySource>()
-                .addAll(this.sources)
-                .add(new WynntilsResourceProvider())
-                .build();
+        LinkedHashSet<RepositorySource> repositorySources = new LinkedHashSet<>(this.sources);
+        repositorySources.add(new WynntilsResourceProvider());
+        this.sources = repositorySources;
     }
 }
