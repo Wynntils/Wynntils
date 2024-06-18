@@ -1,3 +1,16 @@
+## [1.2.25](https://github.com/Wynntils/Artemis/compare/v1.2.24...v1.2.25) (2024-06-18)
+
+
+### New Features
+
+* Lootrun Mission Tracker Overlay [skip ci] ([#2599](https://github.com/Wynntils/Artemis/issues/2599)) ([6fda790](https://github.com/Wynntils/Artemis/commit/6fda7906d0ea1d9e79711c2af83be625f3f6afa0))
+* Rewrite ResourcePackService to work better with Minecraft (1.21 backport) ([#2605](https://github.com/Wynntils/Artemis/issues/2605)) ([e8d2ef1](https://github.com/Wynntils/Artemis/commit/e8d2ef16704a4ec5de4dd0f92bc846a13ed452e7))
+
+
+### Bug Fixes
+
+* mission detection for lootruns [skip ci] ([#2603](https://github.com/Wynntils/Artemis/issues/2603)) ([834c645](https://github.com/Wynntils/Artemis/commit/834c6454e0598bb4c211d305762a589b872f6dc9))
+
 ## [1.2.24](https://github.com/Wynntils/Artemis/compare/v1.2.23...v1.2.24) (2024-06-16)
 
 
@@ -6,6 +19,11 @@
 * Fix emitting ProfessionXpGainEvent twice for woodcutting [skip ci] ([#2596](https://github.com/Wynntils/Artemis/issues/2596)) ([054a94f](https://github.com/Wynntils/Artemis/commit/054a94f2d83d6d3878c39422fb02b153ece04a1d))
 * Fix hades users appearing in full size on minimap ([#2601](https://github.com/Wynntils/Artemis/issues/2601)) ([ecc2a5f](https://github.com/Wynntils/Artemis/commit/ecc2a5f4f86e48680548cd6116f0f299f90d5045))
 * fix race-like crashes in ServerListModel [skip ci] ([#2600](https://github.com/Wynntils/Artemis/issues/2600)) ([beb6507](https://github.com/Wynntils/Artemis/commit/beb65072a8171a019beba400cfcda954becf4928))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.24 [skip ci] ([d0d330e](https://github.com/Wynntils/Artemis/commit/d0d330ec7951683dea0eec5edf288a3acff8009d))
 
 ## [1.2.23](https://github.com/Wynntils/Artemis/compare/v1.2.22...v1.2.23) (2024-06-14)
 
@@ -66,28 +84,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.21 [skip ci] ([992a2d9](https://github.com/Wynntils/Artemis/commit/992a2d97c64943fc89cb99c212aa2e2fa0bdd652))
-
-## [1.2.20](https://github.com/Wynntils/Artemis/compare/v1.2.19...v1.2.20) (2024-06-05)
-
-
-### New Features
-
-* Add click-to-message usernames in onlinemembers [skip ci] ([#2551](https://github.com/Wynntils/Artemis/issues/2551)) ([038ba2d](https://github.com/Wynntils/Artemis/commit/038ba2d2842583502a5168da1a965983f574c4c0))
-* Add guild diplomacy tracking ([#2528](https://github.com/Wynntils/Artemis/issues/2528)) ([3bf68eb](https://github.com/Wynntils/Artemis/commit/3bf68ebc40486367d2f42f10c473b36640054a8d))
-* Block accidental pouch clicks when a reward chest is open [skip ci] ([#2563](https://github.com/Wynntils/Artemis/issues/2563)) ([7d095f0](https://github.com/Wynntils/Artemis/commit/7d095f085d694c183980da05fd7d2f4b27a8de7e))
-
-
-### Bug Fixes
-
-* Horse keybind spams during wars [skip ci] ([#2561](https://github.com/Wynntils/Artemis/issues/2561)) ([48e6478](https://github.com/Wynntils/Artemis/commit/48e6478d013e58bd7fb70aac285a2b6ab1b356ed))
-* Include authToken in Athena requests [skip ci] ([#2555](https://github.com/Wynntils/Artemis/issues/2555)) ([a969af7](https://github.com/Wynntils/Artemis/commit/a969af7b1edd402f0cbef17519275b2681b36ac3))
-* Make Minimap pointer follow player rotation [skip ci] ([#2556](https://github.com/Wynntils/Artemis/issues/2556)) ([60d4e10](https://github.com/Wynntils/Artemis/commit/60d4e10a7f92d374ffa9b2b115ebbdd68ca96f4d))
-* Rotate minimap based on camera rotation instead of player rotation [skip ci] ([#2554](https://github.com/Wynntils/Artemis/issues/2554)) ([4c7f51e](https://github.com/Wynntils/Artemis/commit/4c7f51ee8c0b2acbeb57dbe716dd0301295b6256))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2552](https://github.com/Wynntils/Artemis/issues/2552)) ([99906d2](https://github.com/Wynntils/Artemis/commit/99906d2464ab487615a1183c417e4544db750a47))
-* [auto-generated] Update urls.json [ci skip] ([#2557](https://github.com/Wynntils/Artemis/issues/2557)) ([07e9c90](https://github.com/Wynntils/Artemis/commit/07e9c90f014131e227d2190b351090997c3b1952))
-* **release:** v1.2.20 [skip ci] ([bd10685](https://github.com/Wynntils/Artemis/commit/bd10685234b9f92d925ec25de7041715518df335))
 
