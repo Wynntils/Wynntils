@@ -134,11 +134,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (Texture.OVERLAY_SELECTION_GUI.width() / 2) - 70,
                 (int) (this.height - 70 - translationY),
                 20,
-                20,
                 Component.translatable("screens.wynntils.overlaySelection.showOverlays"),
                 showOverlays,
                 120,
-                (b) -> showOverlays = !showOverlays,
+                (c, b) -> showOverlays = b,
                 ComponentUtils.wrapTooltips(
                         List.of(Component.translatable("screens.wynntils.overlaySelection.showOverlaysTooltip")),
                         150)));

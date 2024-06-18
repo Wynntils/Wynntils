@@ -121,6 +121,23 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunMissionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int missionIndex = arguments.getArgument("index").getIntegerValue();
+            boolean colored = arguments.getArgument("colored").getBooleanValue();
+
+            return Models.Lootrun.getMissionStatus(missionIndex, colored);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("index", Integer.class, null),
+                    new FunctionArguments.Argument<>("colored", Boolean.class, null)));
+        }
+    }
+
     public static class LootrunTaskNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
