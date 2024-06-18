@@ -9,8 +9,8 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
-import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
@@ -65,7 +65,7 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onResourcePack(ResourcePackEvent e) {
+    public void onResourcePack(ServerResourcePackEvent.Load e) {
         if (loadingScreen == null) return;
 
         loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.resourcePack"));
