@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
     private static final float GRID_DIVISIONS = 64f;
     // Certain elements require static 20 height or button textures will break
-    protected static final int BUTTON_HEIGHT = 20;
+    protected static final int BUTTON_SIZE = 20;
     protected float dividedHeight;
     protected float dividedWidth;
     /*

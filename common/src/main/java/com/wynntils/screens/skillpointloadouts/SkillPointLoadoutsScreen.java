@@ -110,7 +110,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 35),
                 (int) (dividedHeight * 24),
                 (int) ((dividedWidth * 48) - (dividedWidth * 35)),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 (x) -> {
                     saveAssignedButton.active = !x.isBlank();
                     saveBuildButton.active = !x.isBlank();
@@ -125,7 +125,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 49),
                 (int) (dividedHeight * 24),
                 (int) ((dividedWidth * 53) - (dividedWidth * 49)),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 Component.translatable("screens.wynntils.skillPointLoadouts.save"),
                 this,
                 Models.SkillPoint::saveCurrentSkillPoints);
@@ -135,7 +135,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 54),
                 (int) (dividedHeight * 24),
                 (int) ((dividedWidth * 59) - (dividedWidth * 54)),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"),
                 this,
                 Models.SkillPoint::saveCurrentBuild);
@@ -145,7 +145,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 35),
                 (int) (dividedHeight * 52),
                 (int) ((dividedWidth * 44) - (dividedWidth * 35)),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 Component.translatable("screens.wynntils.skillPointLoadouts.load"),
                 this);
         this.addRenderableWidget(loadButton);
@@ -154,7 +154,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 45),
                 (int) (dividedHeight * 52),
                 (int) ((dividedWidth * 51) - (dividedWidth * 45)),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 Component.translatable("screens.wynntils.skillPointLoadouts.delete")
                         .withStyle(ChatFormatting.RED),
                 this);
@@ -164,7 +164,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 52),
                 (int) (dividedHeight * 52),
                 (int) ((dividedWidth * 59) - (dividedWidth * 52)),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 Component.translatable("screens.wynntils.skillPointLoadouts.convert"),
                 this);
         this.addRenderableWidget(convertButton);

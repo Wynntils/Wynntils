@@ -65,7 +65,7 @@ public class ConfigurableButton extends WynntilsButton {
             enabled = selectedFeature.isEnabled();
         }
 
-        this.enabledCheckbox = new WynntilsCheckbox(x + width - 10, y, 10, 10, Component.literal(""), enabled, 0);
+        this.enabledCheckbox = new WynntilsCheckbox(x + width - 10, y, 10, Component.literal(""), enabled, 0);
 
         this.maskTopY = settingsScreen.getMaskTopY();
         this.maskBottomY = settingsScreen.getConfigurableMaskBottomY();
