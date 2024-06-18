@@ -24,7 +24,7 @@ public final class ResourcePackService extends Service {
     private static final String PRELOADED_PACK_PREFIX = "wynntils_preloaded/";
 
     @Persisted
-    private final Storage<String> resourcePackHash = new Storage<>("");
+    private final Storage<String> requestedPreloadHash = new Storage<>("");
 
     private boolean serverHasResourcePack = false;
 
@@ -33,7 +33,7 @@ public final class ResourcePackService extends Service {
     }
 
     public void setRequestedPreloadHash(String hash) {
-        resourcePackHash.store(hash);
+        requestedPreloadHash.store(hash);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -197,11 +197,11 @@ public final class ResourcePackService extends Service {
     }
 
     private boolean isResourcePackInfoMissing() {
-        String resourceInfo = resourcePackHash.get();
+        String resourceInfo = requestedPreloadHash.get();
         return resourceInfo == null || resourceInfo.isEmpty();
     }
 
     private String getExpectedPackId() {
-        return PRELOADED_PACK_PREFIX + resourcePackHash.get();
+        return PRELOADED_PACK_PREFIX + requestedPreloadHash.get();
     }
 }
