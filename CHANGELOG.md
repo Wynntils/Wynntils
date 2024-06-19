@@ -1,9 +1,21 @@
+## [1.2.27](https://github.com/Wynntils/Artemis/compare/v1.2.26...v1.2.27) (2024-06-19)
+
+
+### Bug Fixes
+
+* Don't load pre-loadable resource packs on Forge ([e5c755c](https://github.com/Wynntils/Artemis/commit/e5c755caabbe427c4c126fa2a3423ce984d02d4f))
+
 ## [1.2.26](https://github.com/Wynntils/Artemis/compare/v1.2.25...v1.2.26) (2024-06-19)
 
 
 ### Bug Fixes
 
 * Disable AutoApplyResourcePackFeature on Forge (until 1.21/NeoForge)  ([#2607](https://github.com/Wynntils/Artemis/issues/2607)) ([8eb2fa7](https://github.com/Wynntils/Artemis/commit/8eb2fa783b1589c6f7b30ccfb7064db82825ff58))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.26 [skip ci] ([f930bc5](https://github.com/Wynntils/Artemis/commit/f930bc5af378055bf3f4b2ad7e38f32667906409))
 
 ## [1.2.25](https://github.com/Wynntils/Artemis/compare/v1.2.24...v1.2.25) (2024-06-18)
 
@@ -58,29 +70,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.23 [skip ci] ([a1ff212](https://github.com/Wynntils/Artemis/commit/a1ff21216c5d79ddcca9ae881e16fed6bb232440))
-
-## [1.2.22](https://github.com/Wynntils/Artemis/compare/v1.2.21...v1.2.22) (2024-06-11)
-
-
-### New Features
-
-* Add crafting level progress bar [skip ci] ([#2569](https://github.com/Wynntils/Artemis/issues/2569)) ([2560a42](https://github.com/Wynntils/Artemis/commit/2560a42ab7e1c77849d4ac41cc3284d4f8990067))
-* Add option to disable Discord rich presence in streamer mode ([#2585](https://github.com/Wynntils/Artemis/issues/2585)) ([21ac14d](https://github.com/Wynntils/Artemis/commit/21ac14da9c0ed89853d4d39c651e98283c9e8f9e))
-* Add profession XP gain message feature [skip ci] ([#2572](https://github.com/Wynntils/Artemis/issues/2572)) ([86e208a](https://github.com/Wynntils/Artemis/commit/86e208ae532bd8bc28d332b40fa9d66e6d848c08))
-* Is Territory Queued function [skip ci] ([#2575](https://github.com/Wynntils/Artemis/issues/2575)) ([2e14f5e](https://github.com/Wynntils/Artemis/commit/2e14f5ee780119e2105f207e9057aacd7a4cef8c))
-
-
-### Bug Fixes
-
-* minor fixes to error messages [skip ci] ([#2581](https://github.com/Wynntils/Artemis/issues/2581)) ([4e0db5b](https://github.com/Wynntils/Artemis/commit/4e0db5b6ae4f1ce921e76d44f4c0fbeb1196faef))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2566](https://github.com/Wynntils/Artemis/issues/2566)) ([40ef8ed](https://github.com/Wynntils/Artemis/commit/40ef8ed8dec8ae14520721d63922004e434bfedf))
-* [auto-generated] Update urls.json [ci skip] ([#2567](https://github.com/Wynntils/Artemis/issues/2567)) ([1957ee1](https://github.com/Wynntils/Artemis/commit/1957ee168e9842c49af548cbba008489e8fe0968))
-* [auto-generated] Update urls.json [ci skip] ([#2576](https://github.com/Wynntils/Artemis/issues/2576)) ([d3bc412](https://github.com/Wynntils/Artemis/commit/d3bc412c790a2db345f983c140a9b638ea520615))
-* Don't spam the log with exception stack traces [skip ci] ([#2571](https://github.com/Wynntils/Artemis/issues/2571)) ([88d1a9e](https://github.com/Wynntils/Artemis/commit/88d1a9ea7187b8f1752d88eb0504c27b7569d18f))
-* **release:** v1.2.22 [skip ci] ([48a5143](https://github.com/Wynntils/Artemis/commit/48a51435583b94e322c06c88cf0e208f67137b89))
-* Update the failed to connect messages [skip ci] ([#2574](https://github.com/Wynntils/Artemis/issues/2574)) ([dd16efa](https://github.com/Wynntils/Artemis/commit/dd16efaef6bd48a33b99136fecfbfda665beb996))
 
