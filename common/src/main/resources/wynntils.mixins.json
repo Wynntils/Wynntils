@@ -33,7 +33,6 @@
     "MinecraftMixin",
     "MouseHandlerMixin",
     "MultiPlayerGameModeMixin",
-    "PackRepositoryMixin",
     "PlayerMixin",
     "PlayerRendererMixin",
     "PlayerTabOverlayMixin",
