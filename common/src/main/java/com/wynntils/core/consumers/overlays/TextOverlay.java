@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -21,7 +20,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * An overlay, which main purpose is to display function templates.
@@ -106,10 +104,9 @@ public abstract class TextOverlay extends DynamicOverlay {
         }
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
+    @Override
+    public void tick() {
         if (!Models.WorldState.onWorld()) return;
-
         cachedLines = calculateTemplateValue(getTemplate());
     }
 
