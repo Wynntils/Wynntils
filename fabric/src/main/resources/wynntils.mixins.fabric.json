@@ -1,5 +1,7 @@
 {
   "client": [
+    "MinecraftMixin",
+    "PackRepositoryMixin",
     "RenderTargetMixin"
   ],
   "compatibilityLevel": "JAVA_17",
