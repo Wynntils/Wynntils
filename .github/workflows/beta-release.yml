@@ -102,7 +102,7 @@ jobs:
           prerelease: true
           files: |
             **/build/libs/*-fabric+MC-*.jar
-            **/build/libs/*-forge+MC-*.jar
+            **/build/libs/*-neoforge+MC-*.jar
 
   release-gh:
     name: Release Github
