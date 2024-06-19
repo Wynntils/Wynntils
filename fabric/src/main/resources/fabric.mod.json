@@ -16,8 +16,8 @@
     "sources": "https://github.com/Wynntils/Artemis"
   },
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "minecraft": "1.21"
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "${minecraft_version}"
   },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
@@ -27,7 +27,7 @@
   },
   "environment": "*",
   "icon": "assets/wynntils/logo.png",
-  "id": "wynntils",
+  "id": "${mod_id}",
   "license": "LGPL-3.0-only",
   "mixins": [
     "wynntils.mixins.json",
@@ -38,5 +38,5 @@
   "suggests": {
     "flamingo": "*"
   },
-  "version": "${version}"
+  "version": "${mod_version}"
 }

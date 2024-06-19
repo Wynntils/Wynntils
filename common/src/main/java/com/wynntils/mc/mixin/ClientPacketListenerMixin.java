@@ -232,7 +232,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleOpenScreenPre(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MenuEvent.MenuOpenedEvent event =
+        MenuEvent.MenuOpenedEvent.Pre event =
                 new MenuEvent.MenuOpenedEvent.Pre(packet.getType(), packet.getTitle(), packet.getContainerId());
         MixinHelper.post(event);
         if (event.isCanceled()) {
@@ -273,7 +273,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        ContainerSetContentEvent event = new ContainerSetContentEvent.Pre(
+        ContainerSetContentEvent.Pre event = new ContainerSetContentEvent.Pre(
                 packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
         MixinHelper.post(event);
         if (event.isCanceled()) {

@@ -1,7 +1,8 @@
 {
   "client": [
-    "ForgeGuiMixin",
-    "ForgeGuiGraphicsMixin"
+    "ForgeAbstractContainerScreenMixin",
+    "ForgeGuiGraphicsMixin",
+    "ForgeGuiMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
@@ -9,6 +10,6 @@
   },
   "minVersion": "0.8.5",
   "mixins": [],
-  "package": "com.wynntils.forge.mixins",
+  "package": "com.wynntils.neoforge.mixins",
   "required": true
 }

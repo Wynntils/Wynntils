@@ -4,9 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -14,7 +11,6 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
@@ -98,31 +94,6 @@ public abstract class GuiMixin {
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         MixinHelper.post(new RenderEvent.Post(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
-    }
-
-    // This does not work on Forge. See ForgeGuiMixin for replacement.
-    @WrapOperation(
-            method = "renderPlayerHealth(Lnet/minecraft/client/gui/GuiGraphics;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
-    private int onRenderFood(
-            Gui instance,
-            LivingEntity entity,
-            Operation<Integer> original,
-            @Local(argsOnly = true) GuiGraphics guiGraphics) {
-        if (!MixinHelper.onWynncraft()) return original.call(instance, entity);
-
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
-        MixinHelper.post(event);
-
-        // Return a non-zero value to cancel rendering
-        if (event.isCanceled()) return 1;
-
-        return original.call(instance, entity);
     }
 
     @Inject(

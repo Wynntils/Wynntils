@@ -1,18 +1,18 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.forge;
+package com.wynntils.neoforge;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import java.io.File;
 import java.nio.file.Path;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {

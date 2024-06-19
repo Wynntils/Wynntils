@@ -1,6 +1,8 @@
 {
   "client": [
-    "RenderTargetMixin"
+    "FabricAbstractContainerScreenMixin",
+    "FabricGuiMixin",
+    "FabricRenderTargetMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injected_interfaces": {},

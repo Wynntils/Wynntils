@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.fabric.mixins;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
  * See https://gist.github.com/burgerguy/8233170683ad93eea6aa27ee02a5c4d1
  */
 @Mixin(RenderTarget.class)
-public class RenderTargetMixin {
+public class FabricRenderTargetMixin {
     @Shadow
     protected int depthBufferId;
 
