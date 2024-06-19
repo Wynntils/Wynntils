@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -12,7 +12,6 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -65,8 +64,8 @@ public class SpellCastMessageOverlay extends Overlay {
         spellMessageTimer = SPELL_MESSAGE_TICKS;
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
+    @Override
+    public void tick() {
         if (spellMessageTimer <= 0) return;
 
         spellMessageTimer--;

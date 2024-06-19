@@ -16,7 +16,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
@@ -69,8 +68,8 @@ public abstract class BaseBarOverlay extends Overlay {
         }
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
+    @Override
+    public void tick() {
         if (!Models.WorldState.onWorld() || !isActive()) return;
 
         if (animationTime.get() == 0) {
