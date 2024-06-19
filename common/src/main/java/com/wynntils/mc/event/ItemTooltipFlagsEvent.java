@@ -6,7 +6,7 @@ package com.wynntils.mc.event;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public abstract class ItemTooltipFlagsEvent extends Event {
     private final ItemStack itemStack;

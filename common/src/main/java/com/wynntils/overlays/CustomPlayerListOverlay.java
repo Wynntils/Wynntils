@@ -34,7 +34,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class CustomPlayerListOverlay extends Overlay {
     private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =

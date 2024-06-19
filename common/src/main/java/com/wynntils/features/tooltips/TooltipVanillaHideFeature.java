@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class TooltipVanillaHideFeature extends Feature {

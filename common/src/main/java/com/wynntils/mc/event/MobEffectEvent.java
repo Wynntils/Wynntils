@@ -6,7 +6,7 @@ package com.wynntils.mc.event;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public abstract class MobEffectEvent extends Event {
     private final Entity entity;

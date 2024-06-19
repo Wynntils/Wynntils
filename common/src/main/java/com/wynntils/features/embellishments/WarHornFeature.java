@@ -13,7 +13,7 @@ import com.wynntils.models.territories.event.GuildWarQueuedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class WarHornFeature extends Feature {

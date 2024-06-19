@@ -8,8 +8,8 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class RenderEvent extends Event {
     private final GuiGraphics guiGraphics;
@@ -52,8 +52,7 @@ public abstract class RenderEvent extends Event {
         PLAYER_TAB_LIST
     }
 
-    @Cancelable
-    public static class Pre extends RenderEvent {
+    public static class Pre extends RenderEvent implements ICancellableEvent {
         public Pre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window, ElementType type) {
             super(guiGraphics, deltaTracker, window, type);
         }

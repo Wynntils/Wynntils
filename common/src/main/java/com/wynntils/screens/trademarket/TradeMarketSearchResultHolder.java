@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMarketSearchResultScreen> {

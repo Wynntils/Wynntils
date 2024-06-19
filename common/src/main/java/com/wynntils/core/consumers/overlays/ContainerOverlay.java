@@ -20,7 +20,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private static final int DEFAULT_SPACING = 3;
@@ -46,6 +45,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
         this.spacing.store(spacing);
         this.horizontalAlignmentOverride.store(horizontalAlignment);
         this.verticalAlignmentOverride.store(verticalAlignment);
+        WynntilsMod.registerListener(this::onResizeEvent);
     }
 
     protected ContainerOverlay(
@@ -119,7 +119,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
         updateAllChildren();
     }
 
-    @SubscribeEvent
+    // As this is an abstract class, this event was subscribed to manually in ctor
     public void onResizeEvent(DisplayResizeEvent event) {
         updateAllChildren();
     }

@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * The responsibility of this class is to act as the first gateway for incoming
@@ -102,7 +102,7 @@ public final class ChatHandler extends Handler {
     private List<Component> collectedLines = new ArrayList<>();
 
     @SubscribeEvent
-    public void onConnectionChange(WynncraftConnectionEvent event) {
+    public void onConnectionChange(WynncraftConnectionEvent.Connected event) {
         // Reset chat handler
         collectedLines = new ArrayList<>();
         chatScreenTicks = 0;
@@ -128,9 +128,16 @@ public final class ChatHandler extends Handler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatPacketReceivedEvent event) {
-        if (event instanceof ChatPacketReceivedEvent.GameInfo) return;
+    public void onPlayerChatReceived(ChatPacketReceivedEvent.Player event) {
+        if (shouldSeparateNPC()) {
+            handleWithSeparation(event);
+        } else {
+            handleIncomingChatLine(event);
+        }
+    }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSystemChatReceived(ChatPacketReceivedEvent.System event) {
         if (shouldSeparateNPC()) {
             handleWithSeparation(event);
         } else {

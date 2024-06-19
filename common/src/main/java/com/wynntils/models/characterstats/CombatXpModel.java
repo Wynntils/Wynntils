@@ -16,8 +16,8 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class CombatXpModel extends Model {
     /* These values are copied from a post by Salted, https://forums.wynncraft.com/threads/2-0-3-hotfix-3.310064/

@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.text.StyledText;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public abstract class ScoreboardEvent extends Event {
     private final StyledText owner;

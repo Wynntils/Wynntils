@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.ListIterator;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class GameNotificationOverlay extends Overlay {
     @Persisted

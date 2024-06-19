@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.damage.type;
 
 import com.wynntils.models.stats.type.DamageType;
 import java.util.Map;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /**
  * This event is sent out whenever Wynntils register that a mob has received damage.

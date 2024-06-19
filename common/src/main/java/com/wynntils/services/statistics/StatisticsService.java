@@ -17,7 +17,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsService extends Service {
     private final StatisticsCollectors collectors = new StatisticsCollectors();

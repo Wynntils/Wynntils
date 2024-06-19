@@ -19,8 +19,8 @@ import java.util.UUID;
 import java.util.Objects;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ResourcePackService extends Service {
     private static final String PRELOADED_PACK_PREFIX = "wynntils_preloaded/";

@@ -36,7 +36,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class OverlayManager extends Manager {
@@ -254,7 +255,9 @@ public final class OverlayManager extends Manager {
                 if (renderState != RenderState.PRE) {
                     continue;
                 }
-                event.setCanceled(true);
+                if (event instanceof ICancellableEvent cancellableEvent) {
+                    cancellableEvent.setCanceled(true);
+                }
             } else {
                 if (renderInfo.renderState() != renderState) {
                     continue;

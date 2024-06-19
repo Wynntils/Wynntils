@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.mojang.brigadier.tree.RootCommandNode;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public class CommandsAddedEvent extends Event {
     private final CommandBuildContext context;
