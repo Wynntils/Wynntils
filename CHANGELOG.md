@@ -1,3 +1,10 @@
+## [1.2.26](https://github.com/Wynntils/Artemis/compare/v1.2.25...v1.2.26) (2024-06-19)
+
+
+### Bug Fixes
+
+* Disable AutoApplyResourcePackFeature on Forge (until 1.21/NeoForge)  ([#2607](https://github.com/Wynntils/Artemis/issues/2607)) ([8eb2fa7](https://github.com/Wynntils/Artemis/commit/8eb2fa783b1589c6f7b30ccfb7064db82825ff58))
+
 ## [1.2.25](https://github.com/Wynntils/Artemis/compare/v1.2.24...v1.2.25) (2024-06-18)
 
 
@@ -10,6 +17,11 @@
 ### Bug Fixes
 
 * mission detection for lootruns [skip ci] ([#2603](https://github.com/Wynntils/Artemis/issues/2603)) ([834c645](https://github.com/Wynntils/Artemis/commit/834c6454e0598bb4c211d305762a589b872f6dc9))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.25 [skip ci] ([24e08a0](https://github.com/Wynntils/Artemis/commit/24e08a083cfa86bbb9f9ea50b05d7e0fe1e33cc4))
 
 ## [1.2.24](https://github.com/Wynntils/Artemis/compare/v1.2.23...v1.2.24) (2024-06-16)
 
@@ -71,17 +83,4 @@
 * Don't spam the log with exception stack traces [skip ci] ([#2571](https://github.com/Wynntils/Artemis/issues/2571)) ([88d1a9e](https://github.com/Wynntils/Artemis/commit/88d1a9ea7187b8f1752d88eb0504c27b7569d18f))
 * **release:** v1.2.22 [skip ci] ([48a5143](https://github.com/Wynntils/Artemis/commit/48a51435583b94e322c06c88cf0e208f67137b89))
 * Update the failed to connect messages [skip ci] ([#2574](https://github.com/Wynntils/Artemis/issues/2574)) ([dd16efa](https://github.com/Wynntils/Artemis/commit/dd16efaef6bd48a33b99136fecfbfda665beb996))
-
-## [1.2.21](https://github.com/Wynntils/Artemis/compare/v1.2.20...v1.2.21) (2024-06-06)
-
-
-### Bug Fixes
-
-* Don't block emerald pouches inside reward containers ([#2565](https://github.com/Wynntils/Artemis/issues/2565)) ([c880520](https://github.com/Wynntils/Artemis/commit/c880520f08fae11945eabb7da20725971527b261))
-* Fix bomb tracking issues [skip ci] ([#2564](https://github.com/Wynntils/Artemis/issues/2564)) ([a631e17](https://github.com/Wynntils/Artemis/commit/a631e17b7d712d09e94f153ffa8131e5abefd9c5))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.21 [skip ci] ([992a2d9](https://github.com/Wynntils/Artemis/commit/992a2d97c64943fc89cb99c212aa2e2fa0bdd652))
 
