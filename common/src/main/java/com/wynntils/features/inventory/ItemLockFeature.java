@@ -18,6 +18,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
+import com.wynntils.models.items.items.game.MultiHealthPotionItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -49,6 +50,9 @@ public class ItemLockFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> allowClickOnEmeraldPouchInBlockingMode = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -86,13 +90,18 @@ public class ItemLockFeature extends Feature {
             return;
         }
 
-        // We want to allow opening emerald pouch even if locked
-        // Right click is opening pouch, left click is picking it up.
-        // We want to allow opening pouch even if locked, but not picking it up.
-        if (allowClickOnEmeraldPouchInBlockingMode.get()
-                && event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
-            return;
+        // We want to allow opening emerald pouches and deleting potions even if locked
+        // Right click is used to perform these actions, left click picks them up
+        // So only allow right click actions
+        if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (allowClickOnEmeraldPouchInBlockingMode.get()
+                    && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
+                return;
+            } else if (allowClickOnMultiHealthPotionsInBlockingMode.get()
+                    && Models.Item.asWynnItem(slotOptional.get().getItem(), MultiHealthPotionItem.class)
+                            .isPresent()) {
+                return;
+            }
         }
 
         if (classSlotLockMap
