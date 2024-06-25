@@ -97,7 +97,9 @@ public class ItemLockFeature extends Feature {
             if (allowClickOnEmeraldPouchInBlockingMode.get()
                     && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
                 return;
-            } else if (allowClickOnMultiHealthPotionsInBlockingMode.get()
+            }
+
+            if (allowClickOnMultiHealthPotionsInBlockingMode.get()
                     && Models.Item.asWynnItem(slotOptional.get().getItem(), MultiHealthPotionItem.class)
                             .isPresent()) {
                 return;
