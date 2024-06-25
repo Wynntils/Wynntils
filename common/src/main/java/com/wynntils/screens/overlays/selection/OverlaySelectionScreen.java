@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
+import com.wynntils.core.consumers.overlays.MinecraftOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.Translatable;
@@ -74,6 +75,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private OverlayOptionsButton allButton;
     private OverlayOptionsButton builtInButton;
     private OverlayOptionsButton customButton;
+    private OverlayOptionsButton minecraftButton;
     private OverlayOptionsButton selectedFilterButton;
     private TextInputBoxWidget focusedTextInput;
     private WynntilsCheckbox renderOverlaysCheckbox;
@@ -447,23 +449,30 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 .filter(this::searchMatches)
                 .toList();
 
-        // If not in the "All" filter, then only show overlays that are built-in, or custom bars/info boxes
+        // If not in the "All" filter, then only show overlays for selected type
+        // Built in includes all feature overlays
+        // Custom includes info boxes and custom bars
+        // Minecraft includes the replacements for vanilla HUD elements
         if (filterType == FilterType.BUILT_IN) {
             overlayList = overlayList.stream()
                     .filter(overlay ->
-                            !(overlay instanceof CustomBarOverlayBase) && !(overlay instanceof InfoBoxOverlay))
+                            !(overlay instanceof CustomNameProperty) && !(overlay instanceof MinecraftOverlay))
                     .toList();
         } else if (filterType == FilterType.CUSTOM) {
             overlayList = overlayList.stream()
-                    .filter(overlay -> (overlay instanceof CustomBarOverlayBase) || (overlay instanceof InfoBoxOverlay))
+                    .filter(overlay -> (overlay instanceof CustomNameProperty))
+                    .toList();
+        } else if (filterType == FilterType.MINECRAFT) {
+            overlayList = overlayList.stream()
+                    .filter(overlay -> (overlay instanceof MinecraftOverlay))
                     .toList();
         }
 
         if (!overlayList.contains(selectedOverlay)) {
             // Don't deselect custom overlays as they will always fail the above check
             if (filterType == FilterType.BUILT_IN
-                    || !(selectedOverlay instanceof CustomBarOverlayBase
-                            || selectedOverlay instanceof InfoBoxOverlay)) {
+                    || filterType == FilterType.MINECRAFT
+                    || !(selectedOverlay instanceof CustomNameProperty)) {
                 setSelectedOverlay(null);
             }
         }
@@ -708,6 +717,10 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 customButton.setIsSelected(true);
                 selectedFilterButton = customButton;
             }
+            case MINECRAFT -> {
+                minecraftButton.setIsSelected(true);
+                selectedFilterButton = minecraftButton;
+            }
             default -> {
                 allButton.setIsSelected(true);
                 selectedFilterButton = allButton;
@@ -752,7 +765,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> addInfoBox(),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.addInfoBoxTooltip")),
                 Texture.PAPER_BUTTON_TOP,
-                false));
+                false,
+                translationX,
+                translationY));
 
         optionButtons.add(new OverlayOptionsButton(
                 (Texture.OVERLAY_SELECTION_GUI.width() / 2) + 10,
@@ -763,7 +778,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> McUtils.mc().setScreen(CustomBarSelectionScreen.create(this)),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.addCustomBarTooltip")),
                 Texture.PAPER_BUTTON_TOP,
-                false));
+                false,
+                translationX,
+                translationY));
         // endregion
 
         // region Filter buttons
@@ -776,7 +793,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> setSelectedFilter(FilterType.ALL),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.allTooltip")),
                 Texture.PAPER_BUTTON_LEFT,
-                filterType == FilterType.ALL);
+                filterType == FilterType.ALL,
+                translationX,
+                translationY);
 
         optionButtons.add(allButton);
 
@@ -789,7 +808,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> setSelectedFilter(FilterType.BUILT_IN),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.builtInTooltip")),
                 Texture.PAPER_BUTTON_LEFT,
-                filterType == FilterType.BUILT_IN);
+                filterType == FilterType.BUILT_IN,
+                translationX,
+                translationY);
 
         optionButtons.add(builtInButton);
 
@@ -802,13 +823,31 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> setSelectedFilter(FilterType.CUSTOM),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.customTooltip")),
                 Texture.PAPER_BUTTON_LEFT,
-                filterType == FilterType.CUSTOM);
+                filterType == FilterType.CUSTOM,
+                translationX,
+                translationY);
 
         optionButtons.add(customButton);
+
+        minecraftButton = new OverlayOptionsButton(
+                -(Texture.PAPER_BUTTON_LEFT.width()) + 4,
+                20 + (Texture.PAPER_BUTTON_LEFT.height() / 2) * 3,
+                Texture.PAPER_BUTTON_LEFT.width(),
+                Texture.PAPER_BUTTON_LEFT.height() / 2,
+                StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySelection.minecraft")),
+                (button) -> setSelectedFilter(FilterType.MINECRAFT),
+                List.of(Component.translatable("screens.wynntils.overlaySelection.minecraftTooltip")),
+                Texture.PAPER_BUTTON_LEFT,
+                filterType == FilterType.MINECRAFT,
+                translationX,
+                translationY);
+
+        optionButtons.add(minecraftButton);
 
         switch (filterType) {
             case BUILT_IN -> selectedFilterButton = builtInButton;
             case CUSTOM -> selectedFilterButton = customButton;
+            case MINECRAFT -> selectedFilterButton = minecraftButton;
             default -> selectedFilterButton = allButton;
         }
         // endregion
@@ -823,7 +862,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> deleteOverlay(),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.deleteTooltip")),
                 Texture.PAPER_BUTTON_LEFT,
-                false);
+                false,
+                translationX,
+                translationY);
 
         optionButtons.add(deleteButton);
         deleteButton.visible = selectedOverlay != null
@@ -843,7 +884,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 },
                 List.of(Component.translatable("screens.wynntils.overlaySelection.freeMoveTooltip")),
                 Texture.PAPER_BUTTON_BOTTOM,
-                false));
+                false,
+                translationX,
+                translationY));
 
         optionButtons.add(new OverlayOptionsButton(
                 (Texture.OVERLAY_SELECTION_GUI.width() / 2) - 30,
@@ -854,7 +897,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 (button) -> onClose(),
                 List.of(Component.translatable("screens.wynntils.overlaySelection.closeTooltip")),
                 Texture.PAPER_BUTTON_BOTTOM,
-                false));
+                false,
+                translationX,
+                translationY));
 
         optionButtons.add(new OverlayOptionsButton(
                 (Texture.OVERLAY_SELECTION_GUI.width() / 2) + 40,
@@ -868,7 +913,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 },
                 List.of(Component.translatable("screens.wynntils.overlaySelection.saveTooltip")),
                 Texture.PAPER_BUTTON_BOTTOM,
-                false));
+                false,
+                translationX,
+                translationY));
 
         // Add the two buttons that should only be visible when an overlay is selected
         if (selectedOverlay != null) {
@@ -881,7 +928,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     (button) -> togglePreview(true),
                     List.of(Component.translatable("screens.wynntils.overlaySelection.previewTooltip")),
                     Texture.PAPER_BUTTON_BOTTOM,
-                    false));
+                    false,
+                    translationX,
+                    translationY));
 
             optionButtons.add(new OverlayOptionsButton(
                     (Texture.OVERLAY_SELECTION_GUI.width() / 2) + 110,
@@ -897,7 +946,9 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                     },
                     List.of(Component.translatable("screens.wynntils.overlaySelection.editTooltip")),
                     Texture.PAPER_BUTTON_BOTTOM,
-                    false));
+                    false,
+                    translationX,
+                    translationY));
         }
         // endregion
     }
@@ -977,6 +1028,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private enum FilterType {
         ALL,
         BUILT_IN,
-        CUSTOM
+        CUSTOM,
+        MINECRAFT
     }
 }

@@ -21,6 +21,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class OverlayOptionsButton extends BasicTexturedButton {
+    private final float translationX;
+    private final float translationY;
     private final StyledText message;
     private final Texture texture;
 
@@ -35,12 +37,16 @@ public class OverlayOptionsButton extends BasicTexturedButton {
             Consumer<Integer> onClick,
             List<Component> tooltip,
             Texture texture,
-            boolean isSelected) {
+            boolean isSelected,
+            float translationX,
+            float translationY) {
         super(x, y, width, height, texture, onClick, tooltip);
 
         this.message = message;
         this.texture = texture;
         this.isSelected = isSelected;
+        this.translationX = translationX;
+        this.translationY = translationY;
     }
 
     @Override
@@ -64,14 +70,16 @@ public class OverlayOptionsButton extends BasicTexturedButton {
         RenderUtils.drawHoverableTexturedRect(poseStack, texture, getX(), getY(), this.isHovered || this.isSelected);
 
         FontRenderer.getInstance()
-                .renderAlignedTextInBox(
+                .renderScrollingAlignedTextInBox(
                         poseStack,
                         message,
-                        getX() + 2,
+                        getX() + 4,
                         getX() + getWidth() - 4,
                         getY() + 10,
                         getY() + getHeight() - 10,
-                        getWidth() - 4,
+                        getWidth() - 9,
+                        translationX,
+                        translationY,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
