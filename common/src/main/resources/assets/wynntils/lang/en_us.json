@@ -719,6 +719,8 @@
   "feature.wynntils.itemHighlight.zeroStarIngredientHighlightEnabled.name": "0 Star Ingredient Highlight",
   "feature.wynntils.itemLock.allowClickOnEmeraldPouchInBlockingMode.description": "If Block All Actions on Locked Items is enabled, should opening an Emerald Pouch be allowed? You still won't be able to move your pouch.",
   "feature.wynntils.itemLock.allowClickOnEmeraldPouchInBlockingMode.name": "Allow Click on Emerald Pouch in Blocking Mode",
+  "feature.wynntils.itemLock.allowClickOnMultiHealthPotionsInBlockingMode.description": "If Block All Actions on Locked Items is enabled, should opening the Delete Potions menu be allowed? You still won't be able to move your potions.",
+  "feature.wynntils.itemLock.allowClickOnMultiHealthPotionsInBlockingMode.name": "Allow Click on Multi Health Potions in Blocking Mode",
   "feature.wynntils.itemLock.blockAllActionsOnLockedItems.description": "Should any click types be blocked on locked items?",
   "feature.wynntils.itemLock.blockAllActionsOnLockedItems.name": "Block All Actions on Locked Items",
   "feature.wynntils.itemLock.description": "Adds the ability to lock items in your inventory to prevent dropping or interacting with them.",
