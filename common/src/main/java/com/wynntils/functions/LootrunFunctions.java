@@ -11,6 +11,7 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
@@ -150,6 +151,27 @@ public class LootrunFunctions {
             if (taskLocation == null) return "";
 
             return taskLocation.name();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+        }
+    }
+
+    public static class LootrunTaskLocationFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            String color = arguments.getArgument("color").getStringValue();
+
+            BeaconColor beaconColor = BeaconColor.fromName(color);
+            if (beaconColor == null) return new Location(0, 0, 0);
+
+            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(beaconColor);
+            if (taskLocation == null) return new Location(0, 0, 0);
+
+            return taskLocation.location();
         }
 
         @Override
