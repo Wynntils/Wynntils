@@ -7,9 +7,9 @@ on:
       - development
 
 jobs:
-  update-alpha:
+  update-beta:
     if: github.ref == 'refs/heads/development'
-    name: Merge development into alpha after a PR is merged
+    name: Merge development into beta after a PR is merged
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -20,7 +20,7 @@ jobs:
         with:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'development'
-          target: 'alpha'
+          target: 'beta'
 
   update-release:
     if: github.ref == 'refs/heads/main'
