@@ -1,3 +1,10 @@
+## [1.2.29](https://github.com/Wynntils/Artemis/compare/v1.2.28...v1.2.29) (2024-06-29)
+
+
+### Bug Fixes
+
+* Pre-load Wynncraft resource pack above all required resource packs ([#2613](https://github.com/Wynntils/Artemis/issues/2613)) ([09f7b50](https://github.com/Wynntils/Artemis/commit/09f7b50452654c5fd6c488e30694b883378f42de))
+
 ## [1.2.28](https://github.com/Wynntils/Artemis/compare/v1.2.27...v1.2.28) (2024-06-29)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * fix bigger config/storage files not getting saved properly ([#2612](https://github.com/Wynntils/Artemis/issues/2612)) ([682e711](https://github.com/Wynntils/Artemis/commit/682e711edc69fe0230580a4991983f0ab26820bb))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.28 [skip ci] ([e1936ff](https://github.com/Wynntils/Artemis/commit/e1936ffd3d126b6f2d66445cc83deb4999b30215))
 
 
 ### Code Refactoring
@@ -56,18 +68,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.25 [skip ci] ([24e08a0](https://github.com/Wynntils/Artemis/commit/24e08a083cfa86bbb9f9ea50b05d7e0fe1e33cc4))
-
-## [1.2.24](https://github.com/Wynntils/Artemis/compare/v1.2.23...v1.2.24) (2024-06-16)
-
-
-### Bug Fixes
-
-* Fix emitting ProfessionXpGainEvent twice for woodcutting [skip ci] ([#2596](https://github.com/Wynntils/Artemis/issues/2596)) ([054a94f](https://github.com/Wynntils/Artemis/commit/054a94f2d83d6d3878c39422fb02b153ece04a1d))
-* Fix hades users appearing in full size on minimap ([#2601](https://github.com/Wynntils/Artemis/issues/2601)) ([ecc2a5f](https://github.com/Wynntils/Artemis/commit/ecc2a5f4f86e48680548cd6116f0f299f90d5045))
-* fix race-like crashes in ServerListModel [skip ci] ([#2600](https://github.com/Wynntils/Artemis/issues/2600)) ([beb6507](https://github.com/Wynntils/Artemis/commit/beb65072a8171a019beba400cfcda954becf4928))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.24 [skip ci] ([d0d330e](https://github.com/Wynntils/Artemis/commit/d0d330ec7951683dea0eec5edf288a3acff8009d))
 
