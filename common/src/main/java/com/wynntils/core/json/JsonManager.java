@@ -76,6 +76,7 @@ public final class JsonManager extends Manager {
         try (OutputStreamWriter fileWriter =
                 new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8)) {
             GSON.toJson(jsonObject, fileWriter);
+            fileWriter.flush();
         } catch (IOException e) {
             WynntilsMod.error("Failed to save json file " + jsonFile, e);
         }
