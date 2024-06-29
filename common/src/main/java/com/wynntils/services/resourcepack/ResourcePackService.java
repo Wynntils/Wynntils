@@ -14,13 +14,13 @@ import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ResourcePackService extends Service {
-    private static final String VANILLA_PACK_ID = "vanilla";
     private static final String PRELOADED_PACK_PREFIX = "wynntils_preloaded/";
 
     @Persisted
@@ -149,13 +149,15 @@ public final class ResourcePackService extends Service {
             return anyRemoved;
         }
 
-        // We want to position the preloaded pack above the vanilla pack, or above the first selected pack
-        int positionToInject = 0;
-        if (selectedIds.contains(VANILLA_PACK_ID)) {
-            positionToInject = selectedIds.indexOf(VANILLA_PACK_ID) + 1;
-        } else if (!selectedIds.isEmpty()) {
-            positionToInject = 1;
-        }
+        // We want to position the preloaded pack above the last required pack
+        Pack lastRequiredPack = selectedIds.stream()
+                .map(resourcePackRepository::getPack)
+                .filter(Objects::nonNull)
+                .filter(Pack::isRequired)
+                .reduce((first, second) -> second)
+                .orElse(null);
+
+        int positionToInject = lastRequiredPack == null ? 0 : selectedIds.indexOf(lastRequiredPack.getId()) + 1;
 
         // We have a pack to preload, make sure it's selected
         for (Pack pack : resourcePackRepository.getAvailablePacks()) {
