@@ -110,6 +110,8 @@
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Beacon Beam Color",
   "feature.wynntils.betaWarning.description": "Adds a warning when you are playing on the beta server without the correct version.",
   "feature.wynntils.betaWarning.name": "Beta Warning",
+  "feature.wynntils.betaWarning.usingBetaOnNormalServer": "You are using a beta version of Wynntils. This version is only supported on the Wynncraft Beta. Please use the normal release version, or connect to the beta server instead.",
+  "feature.wynntils.betaWarning.usingReleaseOnBetaServer": "You are using a release version of Wynntils. This version is not supported on the Wynncraft Beta and various features may be broken. Please connect to the normal Wynncraft server or use a beta version of Wynntils which you can find in our Discord at %s.",
   "feature.wynntils.blacksmithRedirect.description": "Adds the ability to redirect blacksmith messages to the game update overlay.",
   "feature.wynntils.blacksmithRedirect.name": "Blacksmith Messages",
   "feature.wynntils.bombBellOverlay.description": "Adds an overlay to see active bombs.",
