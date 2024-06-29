@@ -1,9 +1,31 @@
+## [1.2.28](https://github.com/Wynntils/Artemis/compare/v1.2.27...v1.2.28) (2024-06-29)
+
+
+### New Features
+
+* Allow opening delete potions menu when item locked in blocking mode [skip ci] ([#2609](https://github.com/Wynntils/Artemis/issues/2609)) ([2835656](https://github.com/Wynntils/Artemis/commit/283565620671357005f463ed4c924f43a579fdbb))
+
+
+### Bug Fixes
+
+* fix bigger config/storage files not getting saved properly ([#2612](https://github.com/Wynntils/Artemis/issues/2612)) ([682e711](https://github.com/Wynntils/Artemis/commit/682e711edc69fe0230580a4991983f0ab26820bb))
+
+
+### Code Refactoring
+
+* Introduce overlay ticking [skip ci] ([#2608](https://github.com/Wynntils/Artemis/issues/2608)) ([a59f9fd](https://github.com/Wynntils/Artemis/commit/a59f9fdaaa7df7a8e4f3fcd802526bf7478b27dc))
+
 ## [1.2.27](https://github.com/Wynntils/Artemis/compare/v1.2.26...v1.2.27) (2024-06-19)
 
 
 ### Bug Fixes
 
 * Don't load pre-loadable resource packs on Forge ([e5c755c](https://github.com/Wynntils/Artemis/commit/e5c755caabbe427c4c126fa2a3423ce984d02d4f))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.27 [skip ci] ([7ed5f3c](https://github.com/Wynntils/Artemis/commit/7ed5f3cdb54989ca9398121d03c12506ffdb3e3a))
 
 ## [1.2.26](https://github.com/Wynntils/Artemis/compare/v1.2.25...v1.2.26) (2024-06-19)
 
@@ -48,26 +70,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.24 [skip ci] ([d0d330e](https://github.com/Wynntils/Artemis/commit/d0d330ec7951683dea0eec5edf288a3acff8009d))
-
-## [1.2.23](https://github.com/Wynntils/Artemis/compare/v1.2.22...v1.2.23) (2024-06-14)
-
-
-### New Features
-
-* Item Filter screen smooth scrolling [skip ci] ([#2590](https://github.com/Wynntils/Artemis/issues/2590)) ([929625b](https://github.com/Wynntils/Artemis/commit/929625bff769f66d4c1d0029e3e2e03332544df0))
-
-
-### Bug Fixes
-
-* Add priority to MessageFilterFeature to cancel messages before mention [skip ci] ([#2592](https://github.com/Wynntils/Artemis/issues/2592)) ([58f15d5](https://github.com/Wynntils/Artemis/commit/58f15d529b76c2301ebb1122ae18c467253ec113))
-* Correct war horn configs [skip ci] ([#2584](https://github.com/Wynntils/Artemis/issues/2584)) ([c989674](https://github.com/Wynntils/Artemis/commit/c9896749ed6df7309dba95a1de1ba17d17c58db2))
-* Fix discoveries not being queried when only showing undiscovered [skip ci] ([#2588](https://github.com/Wynntils/Artemis/issues/2588)) ([7f97845](https://github.com/Wynntils/Artemis/commit/7f978450e232aced87d90af23976b613992d5823))
-* Fix notification stacking in chat [skip ci] ([#2589](https://github.com/Wynntils/Artemis/issues/2589)) ([8b0d186](https://github.com/Wynntils/Artemis/commit/8b0d1862bd6d582152a7be3c752e84f7d2ccf1df))
-* Properly detect class joining ([#2594](https://github.com/Wynntils/Artemis/issues/2594)) ([c42857f](https://github.com/Wynntils/Artemis/commit/c42857f329d59961800caeb6663d8076b4cc22cf))
-* small localization fix for error messages [skip ci] ([#2591](https://github.com/Wynntils/Artemis/issues/2591)) ([7bf6d8f](https://github.com/Wynntils/Artemis/commit/7bf6d8f907414952dd9fe26baa63ee8c6e5cf986))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.23 [skip ci] ([a1ff212](https://github.com/Wynntils/Artemis/commit/a1ff21216c5d79ddcca9ae881e16fed6bb232440))
 
