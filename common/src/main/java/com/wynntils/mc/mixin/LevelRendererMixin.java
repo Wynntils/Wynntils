@@ -45,10 +45,10 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f viewMatrix,
             Matrix4f projectionMatrix,
-            CallbackInfo ci,
-            @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderLevelEvent.Post(
-                this.minecraft.levelRenderer, poseStack, deltaTracker, projectionMatrix, camera));
+            CallbackInfo ci) {
+        // No PoseStack is provided here, as it'd be just an empty stack.
+        MixinHelper.post(
+                new RenderLevelEvent.Post(this.minecraft.levelRenderer, deltaTracker, projectionMatrix, camera));
     }
 
     @Inject(

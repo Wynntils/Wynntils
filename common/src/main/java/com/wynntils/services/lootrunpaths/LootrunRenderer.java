@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.services.lootrunpaths.type.BlockValidness;
@@ -59,6 +60,9 @@ public final class LootrunRenderer {
         poseStack.pushPose();
 
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+
+        poseStack.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
+        poseStack.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
 
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 

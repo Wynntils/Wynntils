@@ -281,7 +281,7 @@ public final class LootrunPathsService extends Service {
 
     @SubscribeEvent
     public void onRenderLastLevel(RenderLevelEvent.Post event) {
-        PoseStack poseStack = event.getPoseStack();
+        PoseStack poseStack = new PoseStack();
 
         LootrunRenderer.renderLootrun(
                 poseStack,
