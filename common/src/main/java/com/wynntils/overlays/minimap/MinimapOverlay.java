@@ -18,7 +18,6 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.MathUtils;
@@ -155,7 +154,10 @@ public class MinimapOverlay extends Overlay {
         if (followPlayerRotation.get()) {
             poseStack.pushPose();
             RenderUtils.rotatePose(
-                    poseStack, centerX, centerZ, 180 - McUtils.player().getYRot());
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
         }
 
         // avoid rotational overpass - This is a rather loose oversizing, if possible later
@@ -193,7 +195,16 @@ public class MinimapOverlay extends Overlay {
         }
 
         renderPois(
-                poseStack, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, textureBoundingCircle);
+                poseStack,
+                centerX,
+                centerZ,
+                width,
+                height,
+                playerX,
+                playerZ,
+                zoomRenderScale,
+                zoomLevel.get(),
+                textureBoundingCircle);
 
         // cursor
         MapRenderer.renderCursor(
@@ -227,12 +238,14 @@ public class MinimapOverlay extends Overlay {
             double playerX,
             double playerZ,
             float zoomRenderScale,
+            float zoomLevel,
             BoundingCircle textureBoundingCircle) {
         float sinRotationRadians;
         float cosRotationRadians;
 
         if (followPlayerRotation.get()) {
-            double rotationRadians = Math.toRadians(McUtils.player().getYRot());
+            double rotationRadians =
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
             sinRotationRadians = (float) StrictMath.sin(rotationRadians);
             cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
         } else {
@@ -243,19 +256,14 @@ public class MinimapOverlay extends Overlay {
         float currentZoom = 1f / zoomRenderScale;
 
         Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
-
-        poisToRender = Stream.concat(
-                poisToRender,
-                Services.Hades.getHadesUsers()
-                        .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers.get())
-                                || (user.isMutualFriend() && renderRemoteFriendPlayers.get()))
-                        .map(PlayerMiniMapPoi::new));
-
         poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
         poisToRender = Stream.concat(
                 poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
+        poisToRender = Stream.concat(
+                poisToRender,
+                Services.Hades.getMiniPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
@@ -282,7 +290,16 @@ public class MinimapOverlay extends Overlay {
                     poi.getLocation().getX(), poi.getLocation().getZ(), (int) poiWidth, (int) poiHeight);
 
             if (BoundingShape.intersects(box, textureBoundingCircle)) {
-                poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, false, poiScale.get(), currentZoom);
+                poi.renderAt(
+                        poseStack,
+                        bufferSource,
+                        poiRenderX,
+                        poiRenderZ,
+                        false,
+                        poiScale.get(),
+                        currentZoom,
+                        zoomLevel,
+                        false);
             }
         }
 
@@ -353,11 +370,21 @@ public class MinimapOverlay extends Overlay {
                                 compassRenderZ,
                                 false,
                                 poiScale.get(),
-                                1f / zoomRenderScale);
+                                1f / zoomRenderScale,
+                                zoomLevel,
+                                false);
                 poseStack.popPose();
             } else {
                 waypointPoi.renderAt(
-                        poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale.get(), currentZoom);
+                        poseStack,
+                        bufferSource,
+                        compassRenderX,
+                        compassRenderZ,
+                        false,
+                        poiScale.get(),
+                        currentZoom,
+                        zoomLevel,
+                        false);
             }
 
             bufferSource.endBatch();
@@ -403,7 +430,8 @@ public class MinimapOverlay extends Overlay {
         float northDY;
 
         if (followPlayerRotation.get()) {
-            float yawRadians = (float) Math.toRadians(McUtils.player().getYRot());
+            float yawRadians = (float)
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
             northDX = (float) StrictMath.sin(yawRadians);
             northDY = (float) StrictMath.cos(yawRadians);
 

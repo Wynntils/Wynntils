@@ -7,10 +7,13 @@ package com.wynntils.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -22,20 +25,43 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
 public class ConfigTile extends WynntilsButton {
-    private final WynntilsBookSettingsScreen settingsScreen;
-    private final Config<?> config;
+    private final TextboxScreen screen;
     private final int maskTopY;
     private final int maskBottomY;
+    private final float translationX;
+    private final float translationY;
     private final GeneralSettingsButton resetButton;
+    private final StyledText displayName;
     private AbstractWidget configOptionElement;
 
-    public ConfigTile(
-            int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, Config<?> config) {
+    public ConfigTile(int x, int y, int width, int height, TextboxScreen screen, Config<?> config) {
         super(x, y, width, height, Component.literal(config.getJsonName()));
-        this.settingsScreen = settingsScreen;
-        this.maskTopY = settingsScreen.getConfigMaskTopY();
-        this.maskBottomY = settingsScreen.getConfigMaskBottomY();
-        this.config = config;
+        this.screen = screen;
+
+        if (screen instanceof WynntilsBookSettingsScreen settingsScreen) {
+            maskTopY = settingsScreen.getMaskTopY();
+            maskBottomY = settingsScreen.getConfigMaskBottomY();
+            displayName = settingsScreen.configOptionContains(config)
+                    ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
+                    : StyledText.fromString(config.getDisplayName());
+            translationX = settingsScreen.getTranslationX();
+            translationY = settingsScreen.getTranslationY();
+        } else if (screen instanceof OverlaySelectionScreen overlaySelectionScreen) {
+            maskTopY = overlaySelectionScreen.getConfigMaskTopY();
+            maskBottomY = overlaySelectionScreen.getConfigMaskBottomY();
+            displayName = overlaySelectionScreen.configOptionContains(config)
+                    ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
+                    : StyledText.fromString(config.getDisplayName());
+            translationX = overlaySelectionScreen.getTranslationX();
+            translationY = overlaySelectionScreen.getTranslationY();
+        } else {
+            maskTopY = 0;
+            maskBottomY = McUtils.mc().screen.height;
+            displayName = StyledText.fromString(config.getDisplayName());
+            translationX = 0;
+            translationY = 0;
+        }
+
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config,
@@ -68,18 +94,15 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private void renderDisplayName(PoseStack poseStack) {
-        StyledText displayName = settingsScreen.configOptionContains(config)
-                ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
-                : StyledText.fromString(config.getDisplayName());
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
                         displayName,
                         getRenderX(),
                         this.getY() + 3,
-                        this.width,
-                        settingsScreen.getTranslationX(),
-                        settingsScreen.getTranslationY(),
+                        this.width - 3,
+                        translationX,
+                        translationY,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -135,21 +158,28 @@ public class ConfigTile extends WynntilsButton {
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanSettingsButton(
-                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
-        } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>(
-                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY);
-        } else if (configOption.getType().equals(CustomColor.class)) {
-            return new CustomColorSettingsButton(
                     getRenderX(),
                     getRenderY(),
-                    (Config<CustomColor>) configOption,
-                    settingsScreen,
+                    (Config<Boolean>) configOption,
                     maskTopY,
-                    maskBottomY);
+                    maskBottomY,
+                    translationX,
+                    translationY);
+        } else if (configOption.isEnum()) {
+            return new EnumSettingsButton<>(
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<E>) configOption,
+                    maskTopY,
+                    maskBottomY,
+                    translationX,
+                    translationY);
+        } else if (configOption.getType().equals(CustomColor.class)) {
+            return new CustomColorSettingsButton(
+                    getRenderX(), getRenderY(), (Config<CustomColor>) configOption, screen, maskTopY, maskBottomY);
         } else {
             return new TextInputBoxSettingsWidget<>(
-                    getRenderX(), getRenderY(), configOption, settingsScreen, maskTopY, maskBottomY);
+                    getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY);
         }
     }
 }

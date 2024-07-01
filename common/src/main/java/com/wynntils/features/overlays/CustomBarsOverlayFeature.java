@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -20,6 +20,7 @@ import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
+    // If adding a new bar, make sure to update CustomBarSelectionScreen
     @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<UniversalTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 

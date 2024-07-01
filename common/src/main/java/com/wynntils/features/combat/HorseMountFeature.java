@@ -51,7 +51,8 @@ public class HorseMountFeature extends Feature {
             StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby."),
             StyledText.fromString("§4You cannot interact with your horse at the moment."),
             StyledText.fromString("§4You cannot use your horse here!"),
-            StyledText.fromString("§4Your horse spawn was disabled (in vanish)!"));
+            StyledText.fromString("§4Your horse spawn was disabled (in vanish)!"),
+            StyledText.fromString("§4You can not use a horse while in war."));
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;

@@ -4,14 +4,20 @@
  */
 package com.wynntils.overlays;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class ServerUptimeInfoOverlay extends TextOverlay {
+    @Persisted
+    public final Config<Boolean> showWorldInStream = new Config<>(false);
+
     public ServerUptimeInfoOverlay() {
         super(
                 new OverlayPosition(
@@ -27,7 +33,10 @@ public class ServerUptimeInfoOverlay extends TextOverlay {
 
     @Override
     protected String getTemplate() {
-        return "§7Your World: §b({current_world}) §e{current_world_uptime}\n§7Newest World: §b({newest_world}) §e{world_uptime(newest_world)}";
+        String currentWorldStr = !showWorldInStream.get() && Models.WorldState.isInStream() ? "-" : "{current_world}";
+
+        return "§7Your World: §b(" + currentWorldStr
+                + ") §e{current_world_uptime}\n§7Newest World: §b({newest_world}) §e{world_uptime(newest_world)}";
     }
 
     @Override

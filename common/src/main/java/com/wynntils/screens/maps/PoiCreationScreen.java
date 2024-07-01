@@ -360,7 +360,9 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                     MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
                     hovered == poi,
                     1,
-                    zoomRenderScale);
+                    zoomRenderScale,
+                    zoomLevel,
+                    true);
 
             bufferSource.endBatch();
         }
@@ -593,5 +595,6 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
         }
 
         customPoiConfig.touched();
+        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
     }
 }

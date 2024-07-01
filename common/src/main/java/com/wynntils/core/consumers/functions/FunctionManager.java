@@ -18,6 +18,7 @@ import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
+import com.wynntils.functions.GuildFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
@@ -413,6 +414,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.InMappedAreaFunction());
+        registerFunction(new WorldFunctions.InStreamFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemFunction());
@@ -502,6 +504,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
+        registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
+        registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
+        registerFunction(new GuildFunctions.GuildLevelFunction());
+        registerFunction(new GuildFunctions.GuildNameFunction());
+        registerFunction(new GuildFunctions.GuildRankFunction());
+        registerFunction(new GuildFunctions.IsAlliedGuildFunction());
+        registerFunction(new GuildFunctions.ObjectiveStreakFunction());
+
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
         registerFunction(new HorseFunctions.CappedHorseXpFunction());
         registerFunction(new HorseFunctions.HorseLevelFunction());
@@ -520,8 +530,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunChallengesFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
+        registerFunction(new LootrunFunctions.LootrunMissionFunction());
         registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
@@ -585,6 +597,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.InitialTowerDamageFunction());
         registerFunction(new WarFunctions.InitialTowerDefenseFunction());
         registerFunction(new WarFunctions.InitialTowerHealthFunction());
+        registerFunction(new WarFunctions.IsTerritoryQueuedFunction());
         registerFunction(new WarFunctions.TeamDpsFunction());
         registerFunction(new WarFunctions.TimeInWarFunction());
         registerFunction(new WarFunctions.TowerDpsFunction());

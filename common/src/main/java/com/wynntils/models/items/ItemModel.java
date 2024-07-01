@@ -37,6 +37,7 @@ import com.wynntils.models.items.annotators.game.UnknownGearAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
+import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
@@ -46,6 +47,7 @@ import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -85,6 +87,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
         Handlers.Item.registerAnnotator(new ActivityAnnotator());
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
+        Handlers.Item.registerAnnotator(new CharacterAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
@@ -94,6 +97,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
         Handlers.Item.registerAnnotator(new TerritoryAnnotator());
+        Handlers.Item.registerAnnotator(new TerritoryUpgradeAnnotator());
 
         // ItemAnnotators
         // This must be done last

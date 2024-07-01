@@ -17,39 +17,27 @@ import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
     private static final String WIKI_APOSTROPHE = "&#039;";
 
-    private List<QuestInfo> quests = List.of();
-    private List<QuestInfo> miniQuests = List.of();
+    private final Map<String, QuestStorage> questStorage = new HashMap<>();
 
     public QuestModel() {
         super(List.of());
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onWorldStateChanged(WorldStateEvent e) {
-        reset();
-    }
-
-    private void reset() {
-        quests = List.of();
-        miniQuests = List.of();
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
@@ -63,25 +51,35 @@ public final class QuestModel extends Model {
     }
 
     public Optional<QuestInfo> getQuestFromName(String name) {
-        return quests.stream().filter(quest -> quest.getName().equals(name)).findFirst();
+        return questStorage.getOrDefault(Models.Character.getId(), QuestStorage.EMPTY).quests().stream()
+                .filter(quest -> quest.getName().equals(name))
+                .findFirst();
     }
 
     public List<QuestInfo> getQuestsRaw() {
-        return quests;
+        return Collections.unmodifiableList(questStorage
+                .getOrDefault(Models.Character.getId(), QuestStorage.EMPTY)
+                .quests());
     }
 
     public List<QuestInfo> getQuests(ActivitySortOrder sortOrder) {
-        return sortQuestInfoList(sortOrder, quests);
+        return sortQuestInfoList(sortOrder, getQuestsRaw());
+    }
+
+    public List<QuestInfo> getMiniQuestsRaw() {
+        return Collections.unmodifiableList(questStorage
+                .getOrDefault(Models.Character.getId(), QuestStorage.EMPTY)
+                .miniQuests());
     }
 
     public List<QuestInfo> getMiniQuests(ActivitySortOrder sortOrder) {
-        return sortQuestInfoList(sortOrder, miniQuests);
+        return sortQuestInfoList(sortOrder, getMiniQuestsRaw());
     }
 
     public List<QuestInfo> getSortedQuests(
             ActivitySortOrder sortOrder, boolean includeQuests, boolean includeMiniQuests) {
-        List<QuestInfo> quests = includeQuests ? this.quests : List.of();
-        List<QuestInfo> miniQuests = includeMiniQuests ? this.miniQuests : List.of();
+        List<QuestInfo> quests = includeQuests ? getQuestsRaw() : List.of();
+        List<QuestInfo> miniQuests = includeMiniQuests ? getMiniQuestsRaw() : List.of();
 
         return sortQuestInfoList(
                 sortOrder, Stream.concat(quests.stream(), miniQuests.stream()).toList());
@@ -148,7 +146,7 @@ public final class QuestModel extends Model {
     }
 
     public Optional<QuestInfo> getQuestInfoFromName(String name) {
-        return Stream.concat(quests.stream(), miniQuests.stream())
+        return Stream.concat(getQuestsRaw().stream(), getMiniQuestsRaw().stream())
                 .filter(quest -> quest.getName().equals(stripPrefix(name)))
                 .findFirst();
     }
@@ -168,9 +166,11 @@ public final class QuestModel extends Model {
             QuestInfo questInfo = getQuestInfoFromActivity(activity);
             newQuests.add(questInfo);
         }
-        quests = newQuests;
+        questStorage.put(
+                Models.Character.getId(),
+                new QuestStorage(Collections.unmodifiableList(newQuests), getMiniQuestsRaw()));
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.QUEST));
-        WynntilsMod.info("Updated quests from query, got " + quests.size() + " quests.");
+        WynntilsMod.info("Updated quests from query, got " + newQuests.size() + " quests.");
     }
 
     private void updateMiniQuestsFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
@@ -185,9 +185,11 @@ public final class QuestModel extends Model {
             newMiniQuests.add(questInfo);
         }
 
-        miniQuests = newMiniQuests;
+        questStorage.put(
+                Models.Character.getId(),
+                new QuestStorage(getQuestsRaw(), Collections.unmodifiableList(newMiniQuests)));
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.MINI_QUEST));
-        WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
+        WynntilsMod.info("Updated mini-quests from query, got " + newMiniQuests.size() + " mini-quests.");
     }
 
     private static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
@@ -204,6 +206,10 @@ public final class QuestModel extends Model {
                 activity.requirements(),
                 activity.type() == ActivityType.MINI_QUEST,
                 activity.rewards());
+    }
+
+    private record QuestStorage(List<QuestInfo> quests, List<QuestInfo> miniQuests) {
+        private static final QuestStorage EMPTY = new QuestStorage(List.of(), List.of());
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {

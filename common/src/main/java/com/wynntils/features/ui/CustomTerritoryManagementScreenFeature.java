@@ -19,6 +19,7 @@ import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -49,6 +50,9 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
 
     @Persisted
     public final Storage<Boolean> screenHighlightLegend = new Storage<>(true);
+
+    @Persisted
+    public final Storage<Boolean> screenTerritoryProductionTooltip = new Storage<>(true);
 
     private boolean shiftClickedTerritoryItem = false;
 
@@ -88,6 +92,15 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
         // Reset the flag when the screen is closed
         customScreenOpened = false;
         openTerritoryManagement = false;
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent event) {
+        if (StyledText.fromComponent(event.getScreen().getTitle()).matches(MANAGE_TITLE_PATTERN)) {
+            // We might have opened a different screen,
+            // but ScreenClosedEvent did not fire (as the screen was overridden).
+            customScreenOpened = false;
+        }
     }
 
     @SubscribeEvent

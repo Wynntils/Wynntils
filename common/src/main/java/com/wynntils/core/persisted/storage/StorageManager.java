@@ -12,13 +12,17 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.UpfixerType;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,6 +41,8 @@ public final class StorageManager extends Manager {
     private final Map<String, Storage<?>> storages = new TreeMap<>();
     private final Map<Storage<?>, Type> storageTypes = new HashMap<>();
     private final Map<Storage<?>, Storageable> storageOwner = new HashMap<>();
+
+    private JsonObject storageObject;
 
     private long lastPersisted;
     private boolean scheduledPersist;
@@ -57,6 +63,8 @@ public final class StorageManager extends Manager {
     public void initFeatures() {
         // Register all storageables
         Managers.Feature.getFeatures().forEach(this::registerStorageable);
+
+        runUpfixers();
 
         readFromJson();
 
@@ -115,13 +123,27 @@ public final class StorageManager extends Manager {
         scheduledPersist = true;
     }
 
+    private void runUpfixers() {
+        storageObject = Managers.Json.loadPreciousJson(userStorageFile);
+
+        // Now, we have to apply upfixers, before any storage loading happens
+        // FIXME: Solve generics type issue
+        Set<PersistedValue<?>> workaround = new HashSet<>(storages.values());
+        if (Managers.Upfixer.runUpfixers(storageObject, workaround, UpfixerType.STORAGE)) {
+            Managers.Json.savePreciousJson(userStorageFile, storageObject);
+
+            // Re-read the storage file after upfixing
+            readFromJson();
+        }
+    }
+
     private void readFromJson() {
-        JsonObject storageJson = Managers.Json.loadPreciousJson(userStorageFile);
+        storageObject = Managers.Json.loadPreciousJson(userStorageFile);
         storages.forEach((jsonName, storage) -> {
-            if (!storageJson.has(jsonName)) return;
+            if (!storageObject.has(jsonName)) return;
 
             // read value and update option
-            JsonElement jsonElem = storageJson.get(jsonName);
+            JsonElement jsonElem = storageObject.get(jsonName);
             Object value = Managers.Json.GSON.fromJson(jsonElem, storageTypes.get(storage));
             Managers.Persisted.setRaw(storage, value);
 
@@ -132,6 +154,10 @@ public final class StorageManager extends Manager {
 
     private void writeToJson() {
         JsonObject storageJson = new JsonObject();
+
+        // Save upfixers
+        String upfixerJsonMemberName = Managers.Upfixer.UPFIXER_JSON_MEMBER_NAME;
+        storageJson.add(upfixerJsonMemberName, storageObject.get(upfixerJsonMemberName));
 
         storages.forEach((jsonName, storage) -> {
             try {

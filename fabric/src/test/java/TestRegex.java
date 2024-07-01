@@ -9,6 +9,7 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
@@ -18,11 +19,14 @@ import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
+import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
+import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
@@ -31,6 +35,8 @@ import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
+import com.wynntils.models.worlds.BombModel;
+import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
@@ -129,6 +135,15 @@ public class TestRegex {
         p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
         p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
         p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
+    }
+
+    @Test
+    public void BombModel_BOMB_THROWN_PATTERN() {
+        PatternTester p = new PatternTester(BombModel.class, "BOMB_THROWN_PATTERN");
+        p.shouldMatch(
+                "§bExampleUser1§3 has thrown a §bProfession XP Bomb§3! The entire server gets §bdouble profession xp §3for §b20 minutes§3!");
+        p.shouldMatch(
+                "§bExampleUser1§3 has thrown a §bProfession Speed Bomb§3! The entire server gets §bdouble Crafting/Gathering Speed, and Resource respawn time/Crafting Resource requirements are halved §3for §b10 minutes§3!");
     }
 
     @Test
@@ -299,9 +314,12 @@ public class TestRegex {
     @Test
     public void GuildModel_GUILD_NAME_MATCHER() {
         PatternTester p = new PatternTester(GuildModel.class, "GUILD_NAME_MATCHER");
+        // Guild menu item
         p.shouldMatch("§3guildName§b [aAaA]");
         p.shouldMatch("§3guild Name§b [aaaa]");
         p.shouldMatch("§3GUILD NAME§b [wynn]");
+        // Allied guild item
+        p.shouldMatch("§a§lGUILD NAME [wynn]");
     }
 
     @Test
@@ -313,6 +331,18 @@ public class TestRegex {
         p.shouldMatch("§7Rank: §fStrategist");
         p.shouldMatch("§7Rank: §fChief");
         p.shouldMatch("§7Rank: §fOwner");
+    }
+
+    @Test
+    public void GuildModel_LEVEL_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "LEVEL_MATCHER");
+        p.shouldMatch("§b§lChiefs Of Corkus§3§l [Lv. 87]");
+    }
+
+    @Test
+    public void GuildModel_LEVEL_PROGRESS_MATCHER() {
+        PatternTester p = new PatternTester(GuildModel.class, "LEVEL_PROGRESS_MATCHER");
+        p.shouldMatch("§f20,588,573,849§7/25,447,702,087 XP");
     }
 
     @Test
@@ -335,6 +365,93 @@ public class TestRegex {
     }
 
     @Test
+    public void GuildModel_MSG_OBJECTIVE_COMPLETED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_OBJECTIVE_COMPLETED");
+        p.shouldMatch("§3[INFO]§b Flyxdre has finished their weekly objective.");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 has finished their weekly objective.");
+    }
+
+    @Test
+    public void GuildModel_MSG_NEW_OBJECTIVES() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_NEW_OBJECTIVES");
+        p.shouldMatch("§3[INFO]§b New Weekly Guild Objectives are being assigned.");
+    }
+
+    @Test
+    public void GuildModel_MSG_TRIBUTE_SCEDULED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_SCEDULED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 1 Emerald per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 1 Crop per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 1 Fish per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 1 Wood per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 1 Ore per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled 2 Emeralds per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓙ 2 Crops per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓚ 2 Fish per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓒ 2 Wood per hour to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 scheduled Ⓑ 2 Ore per hour to Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_TRIBUTE_STOPPED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_TRIBUTE_STOPPED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Emeralds to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Fish to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Ore to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Wood to Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 stopped scheduling Crops to Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild stopped scheduling Emeralds to Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_ALLIANCE_FORMED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_ALLIANCE_FORMED");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 formed an alliance with Example Guild");
+        p.shouldMatch("§3[INFO]§b Example Guild formed an alliance with Example Guild");
+    }
+
+    @Test
+    public void GuildModel_MSG_ALLIANCE_REVOKED() {
+        PatternTester p = new PatternTester(GuildModel.class, "MSG_ALLIANCE_REVOKED");
+        p.shouldMatch("§3[INFO]§b Example Guild revoked the alliance with Example Guild");
+        p.shouldMatch("§3[INFO]§b ExamplePlayer1 revoked the alliance with Example Guild");
+    }
+
+    @Test
+    public void GuildModel_OBJECTIVES_COMPLETED_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVES_COMPLETED_PATTERN");
+        p.shouldMatch("§6Current Guild Goal: §f23§7/30");
+    }
+
+    @Test
+    public void GuildModel_OBJECTIVE_STREAK_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "OBJECTIVE_STREAK_PATTERN");
+        p.shouldMatch("§a- §7Streak: §f14");
+    }
+
+    @Test
+    public void GuildModel_TRIBUTE_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "TRIBUTE_PATTERN");
+        p.shouldMatch("§fⒷ -1000 Ore per Hour");
+        p.shouldMatch("§6Ⓒ -1000 Wood per Hour");
+        p.shouldMatch("§bⓀ -11000 Fish per Hour");
+        p.shouldMatch("§eⒿ -1000 Crops per Hour");
+        p.shouldMatch("§fⒷ -1 Ore per Hour");
+        p.shouldMatch("§6Ⓒ -1 Wood per Hour");
+        p.shouldMatch("§bⓀ -1 Fish per Hour");
+        p.shouldMatch("§eⒿ -1 Crop per Hour");
+        p.shouldMatch("§a-1 Emerald per Hour");
+        p.shouldMatch("§a-2 Emeralds per Hour");
+        p.shouldMatch("§a+9000 Emeralds per Hour");
+    }
+
+    @Test
+    public void GuildModel_ALLIED_GUILD_PATTERN() {
+        PatternTester p = new PatternTester(GuildModel.class, "ALLIED_GUILD_PATTERN");
+        p.shouldMatch("§a- §7GUILD NAME [wynn]");
+    }
+
+    @Test
     public void GuildRankReplacementFeature_GUILD_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "GUILD_MESSAGE_PATTERN");
         p.shouldMatch("§3[§b★★★★★§3§oDisco reroller§3]§b");
@@ -346,6 +463,26 @@ public class TestRegex {
     public void GuildRankReplacementFeature_RECRUIT_USERNAME_PATTERN() {
         PatternTester p = new PatternTester(GuildRankReplacementFeature.class, "RECRUIT_USERNAME_PATTERN");
         p.shouldMatch("§3[_user0name_");
+    }
+
+    @Test
+    public void InfoBar_BOMB_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "BOMB_INFO_PATTERN");
+        p.shouldMatch("§3Double Profession Speed from §bCorkian§7 [§f2§7 min]");
+    }
+
+    @Test
+    public void InfoBar_GUILD_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "GUILD_INFO_PATTERN");
+        p.shouldMatch("§7Lv. 92§f - §bKingdom Foxes§f - §762% XP");
+    }
+
+    @Test
+    public void InfoBar_TERRITORY_INFO_PATTERN() {
+        PatternTester p = new PatternTester(InfoBar.class, "TERRITORY_INFO_PATTERN");
+        p.shouldMatch("§aLutho§2 [PROF]");
+        p.shouldMatch("§bCorkus City§3 [HOC]");
+        p.shouldMatch("§cDetlas§4 [AVO]");
     }
 
     @Test
@@ -363,6 +500,20 @@ public class TestRegex {
         p.shouldMatch("§b✺ 175/175");
         p.shouldMatch("§b✺ 56/175");
         p.shouldMatch("✺ 175/175");
+    }
+
+    @Test
+    public void OphanimBar_OPHANIM_PATTERN() {
+        PatternTester p = new PatternTester(OphanimBar.class, "OPHANIM_PATTERN");
+        p.shouldMatch("§710s Healed: §f66% §3[§b⏺⏺⏺⏺⏺⏺§3]");
+        p.shouldMatch("§710s Healed: §f0% §3[§b⏺§b⏺§b⏺§b⏺§b⏺§b⏺§3]");
+        p.shouldMatch("§710s Healed: §f0% §4[§c⏺§c⏺§c⏺§c⏺§c⏺§7⏺§4]");
+        p.shouldMatch("§710s Healed: §f0% §4[§e⏺§e⏺§e⏺§c⏺§c⏺§e⏺§4]");
+        p.shouldMatch("§710s Healed: §f0% §6[§e⏺§e⏺§e⏺§e⏺§e⏺§e⏺§6]");
+        p.shouldMatch("§710s Healed: §f22% §3[§b⏺§b⏺§b⏺§b⏺§b⏺§b⏺§3]");
+        p.shouldMatch("§710s Healed: §f12% §3[§e⏺§b⏺§e⏺§b⏺⏺⏺§3]");
+        p.shouldMatch("§710s Healed: §f0% §4[§c⏺⏺⏺§e⏺⏺⏺§4]");
+        p.shouldMatch("§710s Healed: §f0% §8[]");
     }
 
     @Test
@@ -587,6 +738,15 @@ public class TestRegex {
     }
 
     @Test
+    public void TerritoryUpgradeAnnotator_TERRITORY_UPGRADE_PATTERN() {
+        PatternTester p = new PatternTester(TerritoryUpgradeAnnotator.class, "TERRITORY_UPGRADE_PATTERN");
+        p.shouldMatch("§6§lDamage §7[Lv. 10]");
+        p.shouldMatch("§d§lEmerald Rate §7[Lv. 2]");
+        p.shouldMatch("§d§lTower Aura §7[Lv. 3]§8 (Max)");
+        p.shouldMatch("§d§lEmerald Seeking §7[Lv. 5]§8 (Max)");
+    }
+
+    @Test
     public void TradeMarketModel_PRICE_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketModel.class, "PRICE_PATTERN");
         p.shouldMatch("§7 - §f525§7² §8(8²½ 13²)");
@@ -737,5 +897,33 @@ public class TestRegex {
         PatternTester p = new PatternTester(GuildSeasonLeaderboardLabelParser.class, "GUILD_SEASON_LEADERBOARD_LABEL");
         p.shouldMatch("§6§l1§7 - §bIdiot Co§d (11 396 656 SR)");
         p.shouldMatch("§62§7 - §bSequoia§d (11 057 047 SR)");
+    }
+
+    @Test
+    public void GearAnnotator_GEAR_PATTERN() {
+        PatternTester p = new PatternTester(GearAnnotator.class, "GEAR_PATTERN");
+
+        // Unidentified
+        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Crusade Sabatons");
+        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Gaia");
+        p.shouldMatch("§5Unidentified Idol");
+        p.shouldMatch("§5Unidentified Nirvana");
+        p.shouldMatch("§bUnidentified Follow the Wind");
+
+        // Identified
+        p.shouldMatch("§5Apocalypse");
+        p.shouldMatch("§cRhythm of the Seasons");
+        p.shouldMatch("§f⬡ §5Shiny Stratiformis");
+        p.shouldMatch("§f⬡ §5Shiny Aftershock");
+        p.shouldMatch("§f⬡ §5Shiny Crusade Sabatons");
+    }
+
+    @Test
+    public void CharacterAnnotator_CLASS_MENU_CLASS_PATTERN() {
+        PatternTester p = new PatternTester(CharacterAnnotator.class, "CLASS_MENU_CLASS_PATTERN");
+
+        p.shouldMatch("§e- §7Class: §6\uE029§5\uE028§r §fAssassin");
+        p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§r §fKnight");
+        p.shouldMatch("§e- §7Class: §fWarrior");
     }
 }

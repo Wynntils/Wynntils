@@ -6,10 +6,12 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import net.minecraft.client.Minecraft;
@@ -56,5 +58,13 @@ public abstract class MinecraftMixin {
     @Inject(method = "resizeDisplay()V", at = @At("RETURN"))
     private void resizeDisplayPost(CallbackInfo ci) {
         MixinHelper.postAlways(new DisplayResizeEvent());
+    }
+
+    @Inject(
+            method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GameNarrator;clear()V", shift = At.Shift.AFTER))
+    private void handleResourcePackPopPre(CallbackInfo ci) {
+        ServerResourcePackEvent.Clear event = new ServerResourcePackEvent.Clear();
+        MixinHelper.postAlways(event);
     }
 }

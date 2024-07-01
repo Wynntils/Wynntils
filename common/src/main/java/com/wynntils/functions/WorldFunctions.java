@@ -100,6 +100,18 @@ public class WorldFunctions {
         }
     }
 
+    public static class InStreamFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.WorldState.isInStream();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("streamer");
+        }
+    }
+
     public static class TokenGatekeeperCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {

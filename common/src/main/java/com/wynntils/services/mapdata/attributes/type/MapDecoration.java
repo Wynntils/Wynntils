@@ -4,10 +4,22 @@
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-// Currently only for player health bar, but can be extended to more types of
-// overlays
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+
+// Allow dynamic map features to arbitrarily extend the rendering
 public interface MapDecoration {
+    MapDecoration NONE = new MapDecoration() {
+        @Override
+        public boolean isVisible() {
+            return false;
+        }
+
+        @Override
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel) {}
+    };
+
     boolean isVisible();
 
-    int getBarPercentage();
+    void render(PoseStack poseStack, MultiBufferSource bufferSource, boolean hovered, float zoomLevel);
 }

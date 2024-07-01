@@ -64,8 +64,9 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     private static final int APPLY_CONFIRMED_DAMAGE = 20;
 
     private static final int REQUEST_LOAD_DELAY = 5;
-    // If the page is not loaded after this delay, force the next page load
-    private static final int FORCED_PAGE_LOAD_DELAY = 20;
+    private static final int SELECTION_MODE_LOAD_DELAY = 20;
+    // If a change is not loaded after this delay, force the next step
+    private static final int FORCED_LOAD_DELAY = 20;
 
     // Highlighters
     private final List<TerritoryHighlighter> highlighters = new ArrayList<>();
@@ -79,6 +80,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     private int loadedItems;
     private long nextRequestTicks;
     private long lastItemLoadedTicks;
+    private boolean initialLoadFinished;
 
     // Territory data
     private Int2ObjectSortedMap<Pair<ItemStack, TerritoryItem>> territories = new Int2ObjectAVLTreeMap<>();
@@ -88,6 +90,10 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     private boolean selectionMode;
     private String territoryToBeClicked;
     private Set<String> selectedTerritories = new HashSet<>();
+    // Note: It seems like Wynn only accepts 1 territory click "request" at a time, if you do more than one,
+    //       the server will only process the first one. So, we need to queue the clicks.
+    private int currentClick;
+    private long lastClickTicks;
 
     public TerritoryManagementHolder() {
         // Register the highlighters
@@ -109,6 +115,13 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         ItemStack itemStack = event.getItemStack();
         int absSlot = getAbsoluteSlot(slot);
 
+        // If there is a click in progress,
+        // check if it is the response to the current click
+        if (absSlot == currentClick) {
+            currentClick = -1;
+            lastClickTicks = Integer.MAX_VALUE;
+        }
+
         Optional<TerritoryItem> territoryItemOpt = Models.Item.asWynnItem(itemStack, TerritoryItem.class);
         if (territoryItemOpt.isEmpty()) {
             territories.remove(absSlot);
@@ -117,18 +130,12 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             territories.put(absSlot, Pair.of(itemStack, territoryItem));
 
             if (!isSinglePage()) {
-                // There are three cases where we need to do clicking:
+                // There is cases where we need to do clicking:
                 // Normal mode:
                 // 1. The territory item is marked to be clicked
 
-                // Selection mode:
-                // 1. The territory item is selected, but it is no longer in the selected list
-                // 2. The territory item is not selected, but it is in the selected list
-
-                if (Objects.equals(territoryToBeClicked, territoryItem.getName())
-                        || (selectedTerritories.contains(territoryItem.getName()) && !territoryItem.isSelected())
-                        || (!selectedTerritories.contains(territoryItem.getName()) && territoryItem.isSelected())) {
-                    clickOnTerritory(territoryItem, slot);
+                if (Objects.equals(territoryToBeClicked, territoryItem.getName())) {
+                    clickOnTerritory(absSlot);
                 }
             }
         }
@@ -143,23 +150,43 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             loadedItems = 0;
 
             // Wait before the next request, while the page is being loaded
-            nextRequestTicks = McUtils.player().tickCount + REQUEST_LOAD_DELAY;
+            nextRequestTicks =
+                    McUtils.player().tickCount + (selectionMode ? SELECTION_MODE_LOAD_DELAY : REQUEST_LOAD_DELAY);
         }
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (McUtils.player().tickCount >= lastItemLoadedTicks + FORCED_PAGE_LOAD_DELAY) {
+        if (McUtils.player().tickCount >= lastItemLoadedTicks + FORCED_LOAD_DELAY) {
             // Force the next page load
+            WynntilsMod.warn("Forcing the next page load, as the previous one did not finish properly.");
             requestedPage = -1;
             loadedItems = 0;
             nextRequestTicks = McUtils.player().tickCount;
             lastItemLoadedTicks = Integer.MAX_VALUE;
         }
 
+        if (McUtils.player().tickCount >= lastClickTicks + FORCED_LOAD_DELAY) {
+            // Force the next click
+            WynntilsMod.warn("Forcing the next click, as the previous one did not finish properly.");
+            currentClick = -1;
+            lastClickTicks = Integer.MAX_VALUE;
+        }
+
+        // If we are in selection mode, and there are no changes needed, return
+        // If the initial load has not finished, we need to proceed anyway
+        if (initialLoadFinished && selectionMode && !shouldChangePageForSelection()) {
+            tryClickNextSelection();
+            return;
+        }
+
         // Try to cycle through the pages, if there are more than one
         if (McUtils.player().tickCount < nextRequestTicks) return;
+
+        // If there are no more pages to load, or the selection has changed, return
         if (isSinglePage()) return;
+
+        // If we already have a requested page, return
         if (requestedPage != -1) return;
 
         boolean forwardPage = StyledText.fromComponent(wrappedScreen
@@ -174,6 +201,11 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             requestedPage = currentPage + 1;
         } else {
             requestedPage = currentPage - 1;
+
+            // Initial load finished when we start going backwards
+            // (Note: this won't always work in non-selection mode,
+            // as the back button can open the menu on the second page)
+            initialLoadFinished = true;
         }
 
         // Proceed to do the requests for the next page
@@ -213,11 +245,14 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         loadedItems = 0;
         nextRequestTicks = Integer.MAX_VALUE;
         lastItemLoadedTicks = Integer.MAX_VALUE;
+        initialLoadFinished = false;
         territories = new Int2ObjectAVLTreeMap<>();
         territoryConnections = new HashMap<>();
         selectionMode = false;
         territoryToBeClicked = null;
         selectedTerritories = new HashSet<>();
+        currentClick = -1;
+        lastClickTicks = Integer.MAX_VALUE;
     }
 
     public TerritoryColor getTerritoryColor(TerritoryItem territoryItem) {
@@ -295,6 +330,17 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                 .orElse(new CappedValue(0, 0));
     }
 
+    public long getOverallUsageForResource(GuildResource resource) {
+        return territories.values().stream()
+                .map(Pair::b)
+                .map(TerritoryItem::getUpgrades)
+                .flatMap(upgrades -> upgrades.entrySet().stream())
+                .filter(entry -> entry.getKey().getCostResource() == resource)
+                .map(entry -> entry.getKey().getLevels()[entry.getValue()])
+                .mapToLong(TerritoryUpgrade.Level::cost)
+                .sum();
+    }
+
     public void territoryItemClicked(TerritoryItem territoryItem) {
         if (selectionMode) {
             if (selectedTerritories.contains(territoryItem.getName())) {
@@ -302,8 +348,6 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             } else {
                 selectedTerritories.add(territoryItem.getName());
             }
-
-            if (!isSinglePage()) return;
         } else {
             if (!Models.War.isWarActive()) {
                 Handlers.Command.sendCommandImmediately("gu territory " + territoryItem.getName());
@@ -314,11 +358,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         }
 
         // Click on the territory item to select/deselect it
-        int absSlot = territories.int2ObjectEntrySet().stream()
-                .filter(entry -> entry.getValue().b().getName().equals(territoryItem.getName()))
-                .mapToInt(Map.Entry::getKey)
-                .findFirst()
-                .orElse(-1);
+        int absSlot = getAbsoluteSlotForItem(territoryItem);
 
         int itemPage = absSlot / ITEMS_PER_PAGE;
 
@@ -328,10 +368,19 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             return;
         }
 
+        if (selectionMode && currentClick != -1) {
+            // If there is a click in progress, we need to wait for it to finish
+            return;
+        }
+
+        // Otherwise, set the current click to the item
+        currentClick = absSlot;
+        lastClickTicks = McUtils.player().tickCount;
+
         // If the item is not on the current page, we'll eventually go to the page
         if (currentPage != itemPage) return;
 
-        clickOnTerritory(territoryItem, getRelativeSlot(absSlot));
+        clickOnTerritory(getRelativeSlot(currentClick));
     }
 
     public Texture getApplyButtonTexture() {
@@ -397,7 +446,69 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         }
     }
 
-    private void clickOnTerritory(TerritoryItem territoryItem, int slot) {
+    private boolean shouldChangePageForSelection() {
+        Set<String> currentlySelectedTerritories = territories.values().stream()
+                .map(Pair::b)
+                .filter(TerritoryItem::isSelected)
+                .map(TerritoryItem::getName)
+                .collect(Collectors.toUnmodifiableSet());
+
+        // Check if there are any changes needed,
+        // but only on different pages than the current one
+        // (otherwise, we don't need to switch pages)
+        List<String> territoriesOnCurrentPage =
+                getItemsOnPage(currentPage).stream().map(TerritoryItem::getName).toList();
+
+        // Check for changes needed on the current page
+        Set<String> selectedTerritoriesOnCurrentPage = territories.values().stream()
+                .map(Pair::b)
+                .filter(TerritoryItem::isSelected)
+                .map(TerritoryItem::getName)
+                .filter(territoriesOnCurrentPage::contains)
+                .collect(Collectors.toUnmodifiableSet());
+
+        Set<String> territoriesToBeSelectedOnCurrentPage = selectedTerritories.stream()
+                .filter(territoriesOnCurrentPage::contains)
+                .collect(Collectors.toUnmodifiableSet());
+
+        // If we still have work to do on the current page, return false
+        if (!selectedTerritoriesOnCurrentPage.equals(territoriesToBeSelectedOnCurrentPage)) {
+            return false;
+        }
+
+        // Check for changes needed on different pages
+        Set<String> selectedTerritoriesOnDifferentPages = territories.values().stream()
+                .map(Pair::b)
+                .filter(TerritoryItem::isSelected)
+                .map(TerritoryItem::getName)
+                .filter(name -> !territoriesOnCurrentPage.contains(name))
+                .collect(Collectors.toUnmodifiableSet());
+
+        Set<String> territoriesToBeSelectedOnDifferentPages = selectedTerritories.stream()
+                .filter(territory -> !territoriesOnCurrentPage.contains(territory))
+                .collect(Collectors.toUnmodifiableSet());
+
+        // If there are any changes needed, return true
+        return !selectedTerritoriesOnDifferentPages.equals(territoriesToBeSelectedOnDifferentPages);
+    }
+
+    private void tryClickNextSelection() {
+        // A click is in progress, wait for it to finish
+        if (currentClick != -1) return;
+
+        int nextSelection = getNextSelectionInQueue();
+
+        if (nextSelection == -1) {
+            // If there are no more selections, we are done
+            return;
+        }
+
+        currentClick = nextSelection;
+        lastClickTicks = McUtils.player().tickCount;
+        clickOnTerritory(getRelativeSlot(currentClick));
+    }
+
+    private void clickOnTerritory(int slot) {
         ContainerUtils.clickOnSlot(
                 slot,
                 wrappedScreen.getWrappedScreenInfo().containerId(),
@@ -413,6 +524,26 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                 && territories.size() <= ITEMS_PER_PAGE;
     }
 
+    private int getNextSelectionInQueue() {
+        if (selectedTerritories.isEmpty()) return -1;
+
+        List<TerritoryItem> itemsOnPage = getItemsOnPage(currentPage);
+
+        for (TerritoryItem territoryItem : itemsOnPage) {
+            // The territory item is not selected, but it should be
+            if (!territoryItem.isSelected() && selectedTerritories.contains(territoryItem.getName())) {
+                return getAbsoluteSlotForItem(territoryItem);
+            }
+
+            // The territory item is selected, but it should not be
+            if (territoryItem.isSelected() && !selectedTerritories.contains(territoryItem.getName())) {
+                return getAbsoluteSlotForItem(territoryItem);
+            }
+        }
+
+        return -1;
+    }
+
     // Returns the actual slot of the territory items, starting from one
     // (a page fits 35 items, as the first two rows are reserved for the page navigation)
     private int getAbsoluteSlot(int slot) {
@@ -421,7 +552,23 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     }
 
     private int getRelativeSlot(int absSlot) {
-        return (absSlot + (absSlot / ITEMS_PER_ROW + 1) * 2) - currentPage * ITEMS_PER_PAGE;
+        return (absSlot + (absSlot / ITEMS_PER_ROW + 1) * 2) - currentPage * (ITEMS_PER_PAGE + 10);
+    }
+
+    private int getAbsoluteSlotForItem(TerritoryItem territoryItem) {
+        return territories.int2ObjectEntrySet().stream()
+                .filter(entry -> entry.getValue().b().getName().equals(territoryItem.getName()))
+                .mapToInt(Map.Entry::getKey)
+                .findFirst()
+                .orElse(-1);
+    }
+
+    private List<TerritoryItem> getItemsOnPage(int page) {
+        return territories.int2ObjectEntrySet().stream()
+                .filter(entry -> entry.getKey() / ITEMS_PER_PAGE == page)
+                .map(Map.Entry::getValue)
+                .map(Pair::b)
+                .collect(Collectors.toList());
     }
 
     private void updateRenderedItems() {

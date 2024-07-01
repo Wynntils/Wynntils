@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
@@ -12,6 +12,7 @@ import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CorruptedBar;
 import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
+import com.wynntils.models.abilities.bossbars.OphanimBar;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,8 +27,10 @@ public final class BossBarModel extends Model {
 
     public static final TrackedBar corruptedBar = new CorruptedBar();
 
+    public static final OphanimBar ophanimBar = new OphanimBar();
+
     private static final List<TrackedBar> ALL_BARS =
-            Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar);
+            Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar);
 
     public BossBarModel() {
         super(List.of());

@@ -5,6 +5,7 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -46,6 +47,9 @@ public class CustomPlayerListOverlay extends Overlay {
 
     @Persisted
     public final Config<Integer> openingDuration = new Config<>(125);
+
+    @Persisted
+    public final Config<Boolean> showWorldInStream = new Config<>(false);
 
     private final AnimationPercentage animationPercentage = new AnimationPercentage(
             McUtils.options().keyPlayerList::isDown, Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
@@ -99,6 +103,8 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     private void renderPlayerList(PoseStack poseStack, double animation) {
+        RenderSystem.disableDepthTest();
+
         if (animation < 1) {
             RenderUtils.enableScissor(
                     (int) (getRenderX() + ROLL_WIDTH + HALF_WIDTH - HALF_WIDTH * animation),
@@ -116,6 +122,11 @@ public class CustomPlayerListOverlay extends Overlay {
         String worldCategory = Models.WorldState.onHousing()
                 ? Models.WorldState.getCurrentHousingName()
                 : Models.WorldState.getCurrentWorldName();
+
+        if (!showWorldInStream.get() && Models.WorldState.isInStream()) {
+            worldCategory = "-";
+        }
+
         renderCategoryTitle(poseStack, worldCategory, currentDist, categoryStart);
         currentDist += DISTANCE_BETWEEN_CATEGORIES;
         renderCategoryTitle(poseStack, "Party", currentDist, categoryStart);
@@ -131,6 +142,8 @@ public class CustomPlayerListOverlay extends Overlay {
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
         renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 2 - HALF_WIDTH * animation));
         renderRoll(poseStack, (float) (middle - 2 + HALF_WIDTH * animation));
+
+        RenderSystem.enableDepthTest();
     }
 
     private void renderRoll(PoseStack poseStack, float xPos) {

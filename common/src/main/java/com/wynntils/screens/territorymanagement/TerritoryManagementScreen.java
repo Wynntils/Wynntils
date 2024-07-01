@@ -14,11 +14,11 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.models.items.items.gui.TerritoryItem;
-import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
+import com.wynntils.screens.territorymanagement.widgets.GuildOverallProductionWidget;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryApplyLoadoutButton;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryHighlightLegendWidget;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryWidget;
@@ -57,8 +57,8 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     // The render area is the area where the territories are rendered
     private static final Pair<Integer, Integer> RENDER_AREA_POSITION = new Pair<>(9, 16);
     private static final Pair<Integer, Integer> RENDER_AREA_SIZE = new Pair<>(221, 110);
-    private static final int TERRITORIES_PER_ROW = 9;
-    private static final int TERRITORY_SIZE = 24;
+    private static final int TERRITORY_SIZE = 20;
+    private static final int TERRITORIES_PER_ROW = RENDER_AREA_SIZE.a() / TERRITORY_SIZE;
     private static final int BACK_BUTTON_SLOT = 18;
     private static final int APPLY_BUTTON_SLOT = 0;
     private static final int LOADOUT_BUTTON_SLOT = 36;
@@ -126,6 +126,9 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 110,
                 holder));
 
+        this.addRenderableWidget(
+                new GuildOverallProductionWidget(getRenderX() - 190, getRenderY() + 10, 200, 150, holder));
+
         // Back button in the sidebar
         this.addRenderableWidget(new BasicTexturedButton(
                 getRenderX() - 20,
@@ -140,9 +143,29 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                             button,
                             wrappedScreenInfo.containerMenu().getItems());
                 },
-                List.of(Component.translatable("gui.back")
-                        .withStyle(ChatFormatting.GRAY)
-                        .withStyle(ChatFormatting.BOLD)),
+                List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
+                false));
+
+        // Territory production tooltip disable button
+        this.addRenderableWidget(new BasicTexturedButton(
+                getRenderX() - 20,
+                getRenderY() + 75,
+                Texture.DEFENSE_FILTER_ICON.width(),
+                Texture.DEFENSE_FILTER_ICON.height(),
+                Texture.DEFENSE_FILTER_ICON,
+                (button) -> {
+                    Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
+                                    CustomTerritoryManagementScreenFeature.class)
+                            .screenTerritoryProductionTooltip;
+                    screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
+                },
+                List.of(
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
+                                .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper")
+                                .withStyle(ChatFormatting.GRAY)),
                 false));
 
         // Highlight legend disable button
@@ -160,8 +183,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 },
                 List.of(Component.translatable(
                                 "feature.wynntils.customTerritoryManagementScreen.disableHighlightLegend")
-                        .withStyle(ChatFormatting.GRAY)
-                        .withStyle(ChatFormatting.BOLD)),
+                        .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
                 false));
 
         if (!holder.isSelectionMode()) {
@@ -297,8 +319,6 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
         // Render widget tooltip
         renderTooltip(guiGraphics, mouseX, mouseY);
-
-        renderOverallGuildProduction(guiGraphics);
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -406,61 +426,6 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         if (tooltipLines.isEmpty()) return;
 
         guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
-    }
-
-    private void renderOverallGuildProduction(GuiGraphics guiGraphics) {
-        // §f§lGuild Output
-        //
-        // §7Total resource output
-        //
-        // §a+1701462 Emeralds per Hour
-        // §a424177/532000 in storage
-        // §fⒷ +309712 Ore per Hour
-        // §fⒷ 123020/153300 in storage
-        // §6Ⓒ +368392 Wood per Hour
-        // §6Ⓒ 121088/153300 in storage
-        // §bⓀ +333606 Fish per Hour
-        // §bⓀ 123370/153300 in storage
-        // §eⒿ +298642 Crops per Hour
-        // §eⒿ 122500/153300 in storage
-
-        List<Component> lines = new ArrayList<>();
-        lines.add(Component.literal("Guild Output").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD));
-        lines.add(Component.literal(""));
-        lines.add(Component.literal("Total resource output").withStyle(ChatFormatting.GRAY));
-        lines.add(Component.literal(""));
-        lines.add(Component.literal("+%d Emeralds per Hour"
-                        .formatted(holder.getOverallProductionForResource(GuildResource.EMERALDS)))
-                .withStyle(ChatFormatting.GREEN));
-        lines.add(Component.literal(
-                        "%s in storage".formatted(holder.getOverallStorageForResource(GuildResource.EMERALDS)))
-                .withStyle(ChatFormatting.GREEN));
-        lines.add(Component.literal(
-                        "Ⓑ +%d Ore per Hour".formatted(holder.getOverallProductionForResource(GuildResource.ORE)))
-                .withStyle(ChatFormatting.WHITE));
-        lines.add(Component.literal("Ⓑ %s in storage".formatted(holder.getOverallStorageForResource(GuildResource.ORE)))
-                .withStyle(ChatFormatting.WHITE));
-        lines.add(Component.literal(
-                        "Ⓒ +%d Wood per Hour".formatted(holder.getOverallProductionForResource(GuildResource.WOOD)))
-                .withStyle(ChatFormatting.GOLD));
-        lines.add(
-                Component.literal("Ⓒ %s in storage".formatted(holder.getOverallStorageForResource(GuildResource.WOOD)))
-                        .withStyle(ChatFormatting.GOLD));
-        lines.add(Component.literal(
-                        "Ⓚ +%d Fish per Hour".formatted(holder.getOverallProductionForResource(GuildResource.FISH)))
-                .withStyle(ChatFormatting.AQUA));
-        lines.add(
-                Component.literal("Ⓚ %s in storage".formatted(holder.getOverallStorageForResource(GuildResource.FISH)))
-                        .withStyle(ChatFormatting.AQUA));
-        lines.add(Component.literal(
-                        "Ⓙ +%d Crops per Hour".formatted(holder.getOverallProductionForResource(GuildResource.CROPS)))
-                .withStyle(ChatFormatting.YELLOW));
-        lines.add(
-                Component.literal("Ⓙ %s in storage".formatted(holder.getOverallStorageForResource(GuildResource.CROPS)))
-                        .withStyle(ChatFormatting.YELLOW));
-
-        guiGraphics.renderComponentTooltip(
-                FontRenderer.getInstance().getFont(), lines, getRenderX() - 190, getRenderY() + 10);
     }
 
     @Override

@@ -433,7 +433,15 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 poi.renderAtWithoutBorders(poseStack, bufferSource, poiRenderX, poiRenderZ, zoomRenderScale);
             } else {
                 poi.renderAt(
-                        poseStack, bufferSource, poiRenderX, poiRenderZ, hoveredPoi == poi, poiScale, zoomRenderScale);
+                        poseStack,
+                        bufferSource,
+                        poiRenderX,
+                        poiRenderZ,
+                        hoveredPoi == poi,
+                        poiScale,
+                        zoomRenderScale,
+                        zoomLevel,
+                        true);
             }
         }
 

@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -58,6 +59,14 @@ public class ProfessionHighlightFeature extends Feature {
         if (!(Models.Container.getCurrentContainer()
                 instanceof HighlightableProfessionProperty highlightableProfessionProperty)) {
             return;
+        }
+
+        // When in global mode, if any prof was selected and a crafting station is opened, then set the selected type to
+        // that crafting station type
+        if (selectedProfession.get() != null
+                && selectionMode.get() == HighlightSelectionMode.GLOBAL
+                && Models.Container.getCurrentContainer() instanceof CraftingStationContainer craftingStation) {
+            setSelectedProfession(craftingStation.getProfessionType());
         }
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
@@ -181,6 +190,19 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             ProfessionType profession = feature.getSelectedProfession();
+
+            // For crafting stations, the only option should be the profession type for the station
+            if (Models.Container.getCurrentContainer() instanceof CraftingStationContainer craftingStation) {
+                if (profession == null) {
+                    profession = craftingStation.getProfessionType();
+                } else {
+                    profession = null;
+                }
+
+                feature.setSelectedProfession(profession);
+
+                return true;
+            }
 
             // Left click increases the profession type
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
