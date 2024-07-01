@@ -1,9 +1,22 @@
-## [1.2.31](https://github.com/Wynntils/Artemis/compare/v1.2.30...v1.2.31) (2024-07-01)
+## [2.0.0-beta.0](https://github.com/Wynntils/Artemis/compare/v2.0.0-alpha.0...v2.0.0-beta.0) (2024-07-01)
+
+
+### Miscellaneous Chores
+
+* Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([497297b](https://github.com/Wynntils/Artemis/commit/497297b39cfa3aaea9f19d98c36aa8bcfe6da69c))
+
+## [2.0.0-alpha.0](https://github.com/Wynntils/Artemis/compare/v1.2.30...v2.0.0-alpha.0) (2024-07-01)
 
 
 ### Bug Fixes
 
-* Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Artemis/issues/2619)) ([ed596da](https://github.com/Wynntils/Artemis/commit/ed596da994778a428181b5d6dd0890e1cd22be69))
+* Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Artemis/issues/2619)) ([dc00047](https://github.com/Wynntils/Artemis/commit/dc00047f6e763224f9db0dc19aa33247981ce2b5))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.31 [skip ci] ([5e009e9](https://github.com/Wynntils/Artemis/commit/5e009e9b1fa86aa6e9f644897c83a57eddeadd01))
+* **release:** v2.0.0-alpha.0 [skip ci] ([b2886bb](https://github.com/Wynntils/Artemis/commit/b2886bb6a1b3ed6d383f642925c2ea15eabb589d))
 
 ## [1.2.30](https://github.com/Wynntils/Artemis/compare/v1.2.29...v1.2.30) (2024-07-01)
 
@@ -57,16 +70,4 @@
 ### Code Refactoring
 
 * Introduce overlay ticking [skip ci] ([#2608](https://github.com/Wynntils/Artemis/issues/2608)) ([a59f9fd](https://github.com/Wynntils/Artemis/commit/a59f9fdaaa7df7a8e4f3fcd802526bf7478b27dc))
-
-## [1.2.27](https://github.com/Wynntils/Artemis/compare/v1.2.26...v1.2.27) (2024-06-19)
-
-
-### Bug Fixes
-
-* Don't load pre-loadable resource packs on Forge ([e5c755c](https://github.com/Wynntils/Artemis/commit/e5c755caabbe427c4c126fa2a3423ce984d02d4f))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.27 [skip ci] ([7ed5f3c](https://github.com/Wynntils/Artemis/commit/7ed5f3cdb54989ca9398121d03c12506ffdb3e3a))
 
