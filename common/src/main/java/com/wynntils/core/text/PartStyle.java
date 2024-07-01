@@ -22,7 +22,7 @@ public final class PartStyle {
             .filter(ChatFormatting::isColor)
             .collect(
                     () -> new Int2ObjectOpenHashMap<>(ChatFormatting.values().length),
-                    (map, cf) -> map.put(cf.getColor(), cf),
+                    (map, cf) -> map.put(cf.getColor() | 0xFF000000, cf),
                     Int2ObjectMap::putAll);
 
     private final StyledTextPart owner;
@@ -83,7 +83,7 @@ public final class PartStyle {
                 owner,
                 inheritedStyle.getColor() == null
                         ? CustomColor.NONE
-                        : CustomColor.fromInt(inheritedStyle.getColor().getValue()),
+                        : CustomColor.fromInt(inheritedStyle.getColor().getValue() | 0xFF000000),
                 inheritedStyle.isObfuscated(),
                 inheritedStyle.isBold(),
                 inheritedStyle.isStrikethrough(),
@@ -197,7 +197,7 @@ public final class PartStyle {
             throw new IllegalArgumentException("ChatFormatting " + color + " is not a color!");
         }
 
-        CustomColor newColor = CustomColor.fromInt(color.getColor());
+        CustomColor newColor = CustomColor.fromInt(color.getColor() | 0xFF000000);
 
         return new PartStyle(
                 owner, newColor, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
@@ -268,7 +268,7 @@ public final class PartStyle {
         if (oldColorInt == -1) {
             if (newColorInt != -1) {
                 Arrays.stream(ChatFormatting.values())
-                        .filter(c -> c.isColor() && newColorInt == c.getColor())
+                        .filter(c -> c.isColor() && newColorInt == (c.getColor() | 0xFF000000))
                         .findFirst()
                         .ifPresent(add::append);
             }
