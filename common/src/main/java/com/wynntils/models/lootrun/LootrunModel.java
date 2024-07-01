@@ -73,7 +73,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2d;
 
 /** A model dedicated to lootruns (the Wynncraft lootrun runs).
@@ -357,7 +357,7 @@ public class LootrunModel extends Model {
         // This is much more reliable than checking the item in the chest,
         // as the chest can be rerolled, etc.
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
-            if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
+            if (packedItem.id() == ItemEntity.DATA_ITEM.id()) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
                 boolean foundLootrunMythic = false;

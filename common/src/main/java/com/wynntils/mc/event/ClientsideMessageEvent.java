@@ -1,17 +1,16 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.wynntils.core.text.StyledText;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 // Fired when a message is sent to the local chat.
-@Cancelable
-public class ClientsideMessageEvent extends Event {
+public class ClientsideMessageEvent extends Event implements ICancellableEvent {
     private final Component originalComponent;
     private final StyledText originalStyledText;
 

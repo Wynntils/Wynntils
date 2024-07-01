@@ -2,19 +2,17 @@ plugins {
     id "com.github.johnrengelman.shadow" version "${shadow_version}"
 }
 
+repositories {
+    maven { url 'https://maven.neoforged.net/releases'}
+}
+
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
-    forge {
-        mixinConfig("wynntils.mixins.json", "wynntils.mixins.forge.json")
-
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-    }
 }
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
 configurations {
@@ -23,29 +21,39 @@ configurations {
     shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
+    developmentNeoForge.extendsFrom common
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${forge_version}"
-    modRuntimeOnly "me.djtheredstoner:DevAuth-forge-latest:${devauth_version}"
+    neoForge "net.neoforged:neoforge:${neoforge_version}"
+    modRuntimeOnly "me.djtheredstoner:DevAuth-neoforge:${devauth_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     // Hades Protocol
     include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
     include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:${mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-neoforge:${mixinextras_version}"))
 }
 
 processResources {
-    inputs.property "version", rootProject.version
+    var replaceProperties = [
+        mod_version                : rootProject.version,
+        minecraft_version          : minecraft_version,
+        neoforge_version_range     : neoforge_version_range,
+        loader_version_range       : neoforge_loader_version_range,
+        mod_id                     : mod_id
+    ]
+    inputs.properties replaceProperties
 
-    filesMatching("META-INF/mods.toml") {
-        expand "version": rootProject.version
+    filesMatching([
+        'META-INF/neoforge.mods.toml',
+        'pack.mcmeta'
+    ]) {
+        expand replaceProperties
     }
 }
 
@@ -60,19 +68,14 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier = "forge+MC-${minecraft_version}"
+    archiveClassifier = "neoforge+MC-${minecraft_version}"
+    atAccessWideners.add loom.accessWidenerPath.get().asFile.name
 }
 
 jar {
     archiveClassifier = "dev"
-}
-
-sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 components.java {

@@ -27,8 +27,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class LabelHandler extends Handler {
     private final List<LabelParser> parsers = new ArrayList<>();
@@ -44,12 +44,12 @@ public class LabelHandler extends Handler {
         SynchedEntityData.DataValue<Optional<Component>> newCustomNameData = null;
 
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
-            if (packedItem.id() == Entity.DATA_CUSTOM_NAME_VISIBLE.getId()) {
+            if (packedItem.id() == Entity.DATA_CUSTOM_NAME_VISIBLE.id()) {
                 WynntilsMod.postEvent(new EntityLabelVisibilityEvent(entity, (Boolean) packedItem.value()));
                 continue;
             }
 
-            if (packedItem.id() == Entity.DATA_CUSTOM_NAME.getId()) {
+            if (packedItem.id() == Entity.DATA_CUSTOM_NAME.id()) {
                 Optional<Component> value = (Optional<Component>) packedItem.value();
                 if (value.isEmpty()) continue;
 
@@ -80,7 +80,7 @@ public class LabelHandler extends Handler {
                 if (!labelChangedEvent.getName().equals(newName)) {
                     oldNameData = packedItem;
                     newCustomNameData = new SynchedEntityData.DataValue<>(
-                            Entity.DATA_CUSTOM_NAME.getId(),
+                            Entity.DATA_CUSTOM_NAME.id(),
                             (EntityDataSerializer<Optional<Component>>) packedItem.serializer(),
                             Optional.of(labelChangedEvent.getName().getComponent()));
                 }

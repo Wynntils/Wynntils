@@ -24,12 +24,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Unbreakable;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
@@ -93,10 +96,13 @@ public class CustomBankQuickJumpsFeature extends Feature {
             ItemStack jumpButton = new ItemStack(Items.DIAMOND_AXE);
             jumpButton.setDamageValue(92);
 
-            CompoundTag jumpTag = jumpButton.getOrCreateTag();
-            jumpTag.putInt("HideFlags", 6);
-            jumpTag.putBoolean("Unbreakable", true);
-            jumpButton.setTag(jumpTag);
+            jumpButton.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+            jumpButton.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+            jumpButton.set(
+                    DataComponents.ATTRIBUTE_MODIFIERS,
+                    jumpButton
+                            .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
+                            .withTooltip(false));
 
             int buttonIndex = BUTTON_SLOTS.indexOf(e.getSlot());
             int buttonDestination = customJumpDestinations.get(buttonIndex);
@@ -112,7 +118,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
                 hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination;
             }
 
-            jumpButton.setHoverName(Component.literal(hoverName));
+            jumpButton.set(DataComponents.CUSTOM_NAME, Component.literal(hoverName));
 
             e.setItemStack(jumpButton);
         }

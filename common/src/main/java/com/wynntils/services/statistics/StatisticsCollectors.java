@@ -15,7 +15,7 @@ import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.services.statistics.type.StatisticKind;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsCollectors {
     @SubscribeEvent

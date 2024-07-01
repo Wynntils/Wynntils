@@ -4,8 +4,8 @@
  */
 package com.wynntils.utils.render;
 
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
@@ -54,8 +54,7 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
-        MultiBufferSource.BufferSource bufferSource =
-                MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
         BufferedFontRenderer.getInstance()
                 .renderText(

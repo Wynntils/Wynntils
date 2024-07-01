@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -74,7 +74,7 @@ public class LogItemInfoFeature extends Feature {
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "
-                + itemStack.getOrCreateTag().toString().replace('§', '&') + "\nGlint: "
+                + itemStack.getComponentsPatch().toString().replace('§', '&') + "\nGlint: "
                 + itemStack.hasFoil();
     }
 }

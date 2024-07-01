@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class TokenModel extends Model {
     private static final Pattern TOA_GATEKEEPER_NAME_PATTERN =

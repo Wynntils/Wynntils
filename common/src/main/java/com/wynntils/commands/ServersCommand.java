@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
@@ -40,7 +41,7 @@ public class ServersCommand extends Command {
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
-            LiteralArgumentBuilder<CommandSourceStack> base) {
+            LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         LiteralCommandNode<CommandSourceStack> listBuilder = Commands.literal("list")
                 .then(Commands.literal("up").executes(this::serverUptimeList))
                 .executes(this::serverList)

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons;
@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.compress.utils.Lists;
 
 public class BeaconModel extends Model {
@@ -44,19 +44,19 @@ public class BeaconModel extends Model {
     @SubscribeEvent
     public void onEntityAdd(AddEntityEvent event) {
         if (event.getType() != EntityType.ARMOR_STAND) return;
+        if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
 
-        Entity entity = event.getEntity();
-        Position position = entity.position();
+        Position position = livingEntity.position();
 
         if (isDuplicateBeacon(position)) return;
 
         UnverifiedBeacon unverifiedBeacon = getUnverifiedBeaconAt(position);
         if (unverifiedBeacon == null) {
-            unverifiedBeacons.put(new UnverifiedBeacon(position, entity));
+            unverifiedBeacons.put(new UnverifiedBeacon(position, livingEntity));
             return;
         }
 
-        boolean correctLocation = unverifiedBeacon.addEntity(entity);
+        boolean correctLocation = unverifiedBeacon.addEntity(livingEntity);
 
         if (!correctLocation) {
             unverifiedBeacons.remove(unverifiedBeacon);
@@ -119,10 +119,10 @@ public class BeaconModel extends Model {
     }
 
     private BeaconColor getBeaconColor(UnverifiedBeacon unverifiedBeacon) {
-        List<Entity> entities = unverifiedBeacon.getEntities();
+        List<LivingEntity> entities = unverifiedBeacon.getEntities();
         if (entities.isEmpty()) return null;
 
-        Entity entity = entities.get(0);
+        LivingEntity entity = entities.get(0);
         List<ItemStack> armorSlots = Lists.newArrayList(entity.getArmorSlots().iterator());
         if (armorSlots.size() != 4) return null;
 
@@ -134,9 +134,9 @@ public class BeaconModel extends Model {
         private static final float POSITION_OFFSET_Y = 7.5f;
 
         private final Position position;
-        private final List<Entity> entities = new ArrayList<>();
+        private final List<LivingEntity> entities = new ArrayList<>();
 
-        private UnverifiedBeacon(Position position, Entity entity) {
+        private UnverifiedBeacon(Position position, LivingEntity entity) {
             this.position = position;
             entities.add(entity);
         }
@@ -145,11 +145,11 @@ public class BeaconModel extends Model {
             return position;
         }
 
-        public List<Entity> getEntities() {
+        public List<LivingEntity> getEntities() {
             return entities;
         }
 
-        public boolean addEntity(Entity entity) {
+        public boolean addEntity(LivingEntity entity) {
             Position entityPosition = entity.position();
             Position lastEntityPosition = entities.get(entities.size() - 1).position();
 
