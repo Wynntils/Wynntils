@@ -47,8 +47,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /* An "Activity" is the name we've given to the kind of stuff that appears in the Wynncraft
  * "Content Book". In user fronting text, it could be referred to as a "Content Book Activity",

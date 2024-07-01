@@ -39,9 +39,8 @@ import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
     // §7x1 [+3952§f Ⓒ§7 Woodcutting XP] §6[14.64%]
@@ -159,7 +158,7 @@ public class ProfessionModel extends Model {
 
         Matcher craftMatcher = message.getMatcher(PROFESSION_CRAFT_PATTERN);
         if (craftMatcher.matches()) {
-            Event xpGainEvent = new ProfessionXpGainEvent(
+            ProfessionXpGainEvent xpGainEvent = new ProfessionXpGainEvent(
                     ProfessionType.fromString(craftMatcher.group("name")),
                     Float.parseFloat(craftMatcher.group("gain")),
                     Float.parseFloat(craftMatcher.group("current")));

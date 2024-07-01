@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -20,8 +20,8 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket.OperationType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class FixPacketBugsFeature extends Feature {

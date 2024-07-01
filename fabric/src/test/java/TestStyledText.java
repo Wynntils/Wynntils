@@ -530,11 +530,13 @@ public class TestStyledText {
 
         StyledText styledText = StyledText.fromComponent(component);
 
-        // The reconstructed componenet differs in that StyledText always adds components as a sibling to an empty
-        // component
+        // The reconstructed component differs in that StyledText
+        // always adds components as a sibling to an empty component
+        // Note: The comparison is done on the size of the lists, as Style has an equals method that does not
+        //       behave like it's implementation (null != false, when in reality they are equal).
         Assertions.assertEquals(
-                component.toFlatList(),
-                styledText.getComponent().toFlatList(),
+                component.toFlatList().size(),
+                styledText.getComponent().toFlatList().size(),
                 "StyledText.getComponent() returned an unexpected value.");
     }
 

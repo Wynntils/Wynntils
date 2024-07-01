@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
@@ -14,7 +14,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {

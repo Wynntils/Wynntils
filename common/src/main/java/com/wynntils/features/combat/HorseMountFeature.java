@@ -33,13 +33,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
 public class HorseMountFeature extends Feature {
-    private static final ResourceLocation HORSE_WHISTLE_ID = new ResourceLocation("wynntils:horse.whistle");
+    private static final ResourceLocation HORSE_WHISTLE_ID =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "horse.whistle");
     private static final SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
@@ -153,7 +154,8 @@ public class HorseMountFeature extends Feature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
+                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
+                            InteractionHand.MAIN_HAND, id, player.getXRot(), player.getYRot()));
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
