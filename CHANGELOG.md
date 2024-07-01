@@ -1,9 +1,32 @@
+## [1.2.30](https://github.com/Wynntils/Artemis/compare/v1.2.29...v1.2.30) (2024-07-01)
+
+
+### New Features
+
+* Lootrun Task Name Force Coordinates option [skip ci] ([#2617](https://github.com/Wynntils/Artemis/issues/2617)) ([6cc3990](https://github.com/Wynntils/Artemis/commit/6cc3990853e21854e97bd5d7a9fe5728b57b8bae))
+
+
+### Miscellaneous Chores
+
+* Bump workflows from alpha to beta [skip ci] ([#2615](https://github.com/Wynntils/Artemis/issues/2615)) ([ab30808](https://github.com/Wynntils/Artemis/commit/ab30808b898bcfefede738403dfcc3b61e113535))
+* Update beta messages [skip ci] ([#2614](https://github.com/Wynntils/Artemis/issues/2614)) ([3404758](https://github.com/Wynntils/Artemis/commit/3404758939f40fdd4bb070b0f30da593f75ad2a0))
+
+
+### Code Refactoring
+
+* rewrite GammabrightFeature ([#2618](https://github.com/Wynntils/Artemis/issues/2618)) ([748aaf7](https://github.com/Wynntils/Artemis/commit/748aaf7ed373f8965554aefdcaa44aa1fab9864d))
+
 ## [1.2.29](https://github.com/Wynntils/Artemis/compare/v1.2.28...v1.2.29) (2024-06-29)
 
 
 ### Bug Fixes
 
 * Pre-load Wynncraft resource pack above all required resource packs ([#2613](https://github.com/Wynntils/Artemis/issues/2613)) ([09f7b50](https://github.com/Wynntils/Artemis/commit/09f7b50452654c5fd6c488e30694b883378f42de))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.29 [skip ci] ([cf0c55b](https://github.com/Wynntils/Artemis/commit/cf0c55badfbf72f06adb86678ab92546f2eb765d))
 
 ## [1.2.28](https://github.com/Wynntils/Artemis/compare/v1.2.27...v1.2.28) (2024-06-29)
 
@@ -50,22 +73,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.26 [skip ci] ([f930bc5](https://github.com/Wynntils/Artemis/commit/f930bc5af378055bf3f4b2ad7e38f32667906409))
-
-## [1.2.25](https://github.com/Wynntils/Artemis/compare/v1.2.24...v1.2.25) (2024-06-18)
-
-
-### New Features
-
-* Lootrun Mission Tracker Overlay [skip ci] ([#2599](https://github.com/Wynntils/Artemis/issues/2599)) ([6fda790](https://github.com/Wynntils/Artemis/commit/6fda7906d0ea1d9e79711c2af83be625f3f6afa0))
-* Rewrite ResourcePackService to work better with Minecraft (1.21 backport) ([#2605](https://github.com/Wynntils/Artemis/issues/2605)) ([e8d2ef1](https://github.com/Wynntils/Artemis/commit/e8d2ef16704a4ec5de4dd0f92bc846a13ed452e7))
-
-
-### Bug Fixes
-
-* mission detection for lootruns [skip ci] ([#2603](https://github.com/Wynntils/Artemis/issues/2603)) ([834c645](https://github.com/Wynntils/Artemis/commit/834c6454e0598bb4c211d305762a589b872f6dc9))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.25 [skip ci] ([24e08a0](https://github.com/Wynntils/Artemis/commit/24e08a083cfa86bbb9f9ea50b05d7e0fe1e33cc4))
 
