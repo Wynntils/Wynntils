@@ -27,6 +27,7 @@
     "KeyMappingMixin",
     "KeyboardHandlerMixin",
     "LevelRendererMixin",
+    "LightTextureMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
     "MainMixin",
