@@ -1,3 +1,10 @@
+## [1.2.31](https://github.com/Wynntils/Artemis/compare/v1.2.30...v1.2.31) (2024-07-01)
+
+
+### Bug Fixes
+
+* Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Artemis/issues/2619)) ([ed596da](https://github.com/Wynntils/Artemis/commit/ed596da994778a428181b5d6dd0890e1cd22be69))
+
 ## [1.2.30](https://github.com/Wynntils/Artemis/compare/v1.2.29...v1.2.30) (2024-07-01)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * Bump workflows from alpha to beta [skip ci] ([#2615](https://github.com/Wynntils/Artemis/issues/2615)) ([ab30808](https://github.com/Wynntils/Artemis/commit/ab30808b898bcfefede738403dfcc3b61e113535))
+* **release:** v1.2.30 [skip ci] ([326a78e](https://github.com/Wynntils/Artemis/commit/326a78ede2e8a10164aefc3a930356e898a71681))
 * Update beta messages [skip ci] ([#2614](https://github.com/Wynntils/Artemis/issues/2614)) ([3404758](https://github.com/Wynntils/Artemis/commit/3404758939f40fdd4bb070b0f30da593f75ad2a0))
 
 
@@ -61,16 +69,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.27 [skip ci] ([7ed5f3c](https://github.com/Wynntils/Artemis/commit/7ed5f3cdb54989ca9398121d03c12506ffdb3e3a))
-
-## [1.2.26](https://github.com/Wynntils/Artemis/compare/v1.2.25...v1.2.26) (2024-06-19)
-
-
-### Bug Fixes
-
-* Disable AutoApplyResourcePackFeature on Forge (until 1.21/NeoForge)  ([#2607](https://github.com/Wynntils/Artemis/issues/2607)) ([8eb2fa7](https://github.com/Wynntils/Artemis/commit/8eb2fa783b1589c6f7b30ccfb7064db82825ff58))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.26 [skip ci] ([f930bc5](https://github.com/Wynntils/Artemis/commit/f930bc5af378055bf3f4b2ad7e38f32667906409))
 
