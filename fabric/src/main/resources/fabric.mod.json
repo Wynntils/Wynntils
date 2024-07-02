@@ -4,12 +4,11 @@
   ],
   "breaks": {
     "exordium": "*",
-    "memoryleakfix": "<1.1.2"
+    "ias": "*"
   },
   "conflicts": {
     "avomod": "*",
-    "chatpatches": "*",
-    "weirdchat": "*"
+    "chatpatches": "*"
   },
   "contact": {
     "homepage": "https://wynntils.com",

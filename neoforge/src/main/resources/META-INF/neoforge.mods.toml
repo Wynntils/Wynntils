@@ -22,6 +22,11 @@ modId = "neoforge"
 mandatory = true
 versionRange = "${neoforge_version_range}"
 
+[[dependencies.wynntils]]
+modId = "ias"
+type = "incompatible"
+reason = "In-Game Account Switcher breaks Wynntils configs"
+
 [[mixins]]
 config = "wynntils.mixins.json"
 
