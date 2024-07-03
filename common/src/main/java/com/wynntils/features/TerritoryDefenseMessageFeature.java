@@ -44,9 +44,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
             Matcher matcher = StyledText.fromComponent(tooltipLine)
                     .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
             if (matcher.matches()) {
-                String message = I18n.get(
-                        "feature.wynntils.territoryDefenseMessage.message", titleMatcher.group(1), matcher.group(1));
-                Handlers.Command.sendCommandImmediately("g " + message);
+                Handlers.Command.sendCommandImmediately("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));
                 return;
             }
         }
