@@ -1,9 +1,24 @@
+## [2.0.0-beta.1](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2024-07-05)
+
+
+### Bug Fixes
+
+* Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Artemis/issues/2619)) ([ed596da](https://github.com/Wynntils/Artemis/commit/ed596da994778a428181b5d6dd0890e1cd22be69))
+* Fix tracked bars not updating ([#2622](https://github.com/Wynntils/Artemis/issues/2622)) ([6a1f872](https://github.com/Wynntils/Artemis/commit/6a1f872a35cd449f6447f020e64c89733d64a4c5))
+
+
+### Miscellaneous Chores
+
+* Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([0ca18d4](https://github.com/Wynntils/Artemis/commit/0ca18d4f535d2bdb23358a83fe28e6a46e8cf03e))
+* Update mod incompatibilities [skip ci] ([#2620](https://github.com/Wynntils/Artemis/issues/2620)) ([0a14acd](https://github.com/Wynntils/Artemis/commit/0a14acde7822442f32519cb7562d5a5a1eb1706e))
+
 ## [2.0.0-beta.0](https://github.com/Wynntils/Artemis/compare/v2.0.0-alpha.0...v2.0.0-beta.0) (2024-07-01)
 
 
 ### Miscellaneous Chores
 
 * Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([497297b](https://github.com/Wynntils/Artemis/commit/497297b39cfa3aaea9f19d98c36aa8bcfe6da69c))
+* **release:** v2.0.0-beta.0 [skip ci] ([2ca015e](https://github.com/Wynntils/Artemis/commit/2ca015e4659f6fa35a7ddf9f9b9324ecc6fddf8e))
 
 ## [2.0.0-alpha.0](https://github.com/Wynntils/Artemis/compare/v1.2.30...v2.0.0-alpha.0) (2024-07-01)
 
@@ -48,26 +63,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.29 [skip ci] ([cf0c55b](https://github.com/Wynntils/Artemis/commit/cf0c55badfbf72f06adb86678ab92546f2eb765d))
-
-## [1.2.28](https://github.com/Wynntils/Artemis/compare/v1.2.27...v1.2.28) (2024-06-29)
-
-
-### New Features
-
-* Allow opening delete potions menu when item locked in blocking mode [skip ci] ([#2609](https://github.com/Wynntils/Artemis/issues/2609)) ([2835656](https://github.com/Wynntils/Artemis/commit/283565620671357005f463ed4c924f43a579fdbb))
-
-
-### Bug Fixes
-
-* fix bigger config/storage files not getting saved properly ([#2612](https://github.com/Wynntils/Artemis/issues/2612)) ([682e711](https://github.com/Wynntils/Artemis/commit/682e711edc69fe0230580a4991983f0ab26820bb))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.28 [skip ci] ([e1936ff](https://github.com/Wynntils/Artemis/commit/e1936ffd3d126b6f2d66445cc83deb4999b30215))
-
-
-### Code Refactoring
-
-* Introduce overlay ticking [skip ci] ([#2608](https://github.com/Wynntils/Artemis/issues/2608)) ([a59f9fd](https://github.com/Wynntils/Artemis/commit/a59f9fdaaa7df7a8e4f3fcd802526bf7478b27dc))
 
