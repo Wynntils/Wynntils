@@ -8,16 +8,10 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.AddEntityLookupEvent;
-import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
-import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
-import java.util.UUID;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket.Operation;
-import net.minecraft.network.protocol.game.ClientboundBossEventPacket.OperationType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.bus.api.EventPriority;
@@ -26,21 +20,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class FixPacketBugsFeature extends Feature {
     private static final int METHOD_ADD = 0;
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onBossEventPackageReceived(BossHealthUpdateEvent event) {
-        ClientboundBossEventPacket packet = event.getPacket();
-        Operation operation = ((ClientboundBossEventPacketAccessor) packet).getOperation();
-        OperationType type = operation.getType();
-        UUID id = ((ClientboundBossEventPacketAccessor) packet).getId();
-
-        if (type != OperationType.ADD
-                && type != OperationType.REMOVE
-                && !event.getBossEvents().containsKey(id)) {
-            // Any other operation than add/remove with invalid id will cause a NPE
-            event.setCanceled(true);
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetPlayerTeamPacket(SetPlayerTeamEvent event) {
