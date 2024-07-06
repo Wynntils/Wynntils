@@ -40,12 +40,12 @@ public abstract class PersonalStorageContainer extends Container implements Sear
 
     @Override
     public int getNextItemSlot() {
-        return 8;
+        return 52;
     }
 
     @Override
     public int getPreviousItemSlot() {
-        return 17;
+        return 51;
     }
 
     @Override

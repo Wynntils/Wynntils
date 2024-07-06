@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class ContentBookContainer extends Container
         implements SearchableContainerProperty, FullscreenContainerProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("§f\uE000\uE072");
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFEE\uE004");
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Scroll Down");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Scroll Up");
 
