@@ -42,7 +42,7 @@ public final class ConfigManager extends Manager {
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
 
-    private final File userConfigFile;
+    private File userConfigFile;
     private JsonObject configObject;
 
     public ConfigManager() {
@@ -97,6 +97,12 @@ public final class ConfigManager extends Manager {
         List<Config<?>> configs = getConfigOptions(configurable);
         configurable.addConfigOptions(configs);
         CONFIGS.addAll(configs);
+    }
+
+    public void userSwitched() {
+        userConfigFile = new File(
+                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
+        reloadConfiguration();
     }
 
     public void reloadConfiguration() {
