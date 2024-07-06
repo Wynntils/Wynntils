@@ -32,7 +32,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
             Pattern.compile("§3\\[WAR]§c ?The war for (.+) will start in \\d+ minutes?\\.");
 
     // 3 seconds for the server to respond to an attack command
-    private static final long MESSAGE_TIMEOUT = 3000; 
+    private static final long MESSAGE_TIMEOUT = 3000;
     private final Map<String, Pair<Long, String>> territoryMessages = new HashMap<>();
 
     @SubscribeEvent
