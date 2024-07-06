@@ -72,5 +72,6 @@ public class TerritoryDefenseMessageFeature extends Feature {
 
         Pair<Long, String> attackInfo = territoryMessages.get(territory);
         Handlers.Command.sendCommandImmediately(attackInfo.b());
+        territoryMessages.remove(territory);
     }
 }
