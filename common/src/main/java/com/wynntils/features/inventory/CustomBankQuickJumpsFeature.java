@@ -87,86 +87,87 @@ public class CustomBankQuickJumpsFeature extends Feature {
         quickJumping = false;
     }
 
-    @SubscribeEvent
-    public void onSetSlot(SetSlotEvent.Pre e) {
-        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
-        if (e.getContainer() instanceof Inventory) return;
-
-        if (BUTTON_SLOTS.contains(e.getSlot())) {
-            ItemStack jumpButton = new ItemStack(Items.DIAMOND_AXE);
-            jumpButton.setDamageValue(92);
-
-            jumpButton.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-            jumpButton.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
-            jumpButton.set(
-                    DataComponents.ATTRIBUTE_MODIFIERS,
-                    jumpButton
-                            .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
-                            .withTooltip(false));
-
-            int buttonIndex = BUTTON_SLOTS.indexOf(e.getSlot());
-            int buttonDestination = customJumpDestinations.get(buttonIndex);
-
-            jumpButton.setCount(buttonDestination);
-
-            String hoverName;
-
-            if (Models.Bank.getPageName(buttonDestination).isPresent()) {
-                hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination + "\n - "
-                        + Models.Bank.getPageName(buttonDestination).get();
-            } else {
-                hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination;
-            }
-
-            jumpButton.set(DataComponents.CUSTOM_NAME, Component.literal(hoverName));
-
-            e.setItemStack(jumpButton);
-        }
-    }
-
-    @SubscribeEvent
-    public void onSetSlotPost(SetSlotEvent.Post e) {
-        if (!quickJumping) return;
-
-        if (pageDestination > lastPage) {
-            quickJumping = false;
-            pageDestination = currentPage;
-        } else if (pageDestination != currentPage
-                && ((e.getSlot() == NEXT_PAGE_SLOT && pageDestination > currentPage)
-                        || (e.getSlot() == PREVIOUS_PAGE_SLOT && pageDestination < currentPage))) {
-            jumpToDestination();
-        } else if (pageDestination == currentPage) {
-            quickJumping = false;
-        }
-    }
-
-    @SubscribeEvent
-    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
-        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
-
-        if (Models.Bank.isItemIndicatingLastBankPage(e.getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))) {
-            Models.Bank.updateFinalPage();
-
-            lastPage = currentPage;
-        }
-    }
-
-    @SubscribeEvent
-    public void onSlotClicked(ContainerClickEvent e) {
-        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
-
-        int slotIndex = e.getSlotNum();
-
-        if (BUTTON_SLOTS.contains(slotIndex)) {
-            int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
-            pageDestination = customJumpDestinations.get(buttonIndex);
-            int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
-            if (pageDestination != wynnDestination) {
-                e.setCanceled(true);
-                jumpToDestination();
-            }
-        }
-    }
+    // FIXME
+//    @SubscribeEvent
+//    public void onSetSlot(SetSlotEvent.Pre e) {
+//        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
+//        if (e.getContainer() instanceof Inventory) return;
+//
+//        if (BUTTON_SLOTS.contains(e.getSlot())) {
+//            ItemStack jumpButton = new ItemStack(Items.DIAMOND_AXE);
+//            jumpButton.setDamageValue(92);
+//
+//            jumpButton.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+//            jumpButton.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+//            jumpButton.set(
+//                    DataComponents.ATTRIBUTE_MODIFIERS,
+//                    jumpButton
+//                            .getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
+//                            .withTooltip(false));
+//
+//            int buttonIndex = BUTTON_SLOTS.indexOf(e.getSlot());
+//            int buttonDestination = customJumpDestinations.get(buttonIndex);
+//
+//            jumpButton.setCount(buttonDestination);
+//
+//            String hoverName;
+//
+//            if (Models.Bank.getPageName(buttonDestination).isPresent()) {
+//                hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination + "\n - "
+//                        + Models.Bank.getPageName(buttonDestination).get();
+//            } else {
+//                hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination;
+//            }
+//
+//            jumpButton.set(DataComponents.CUSTOM_NAME, Component.literal(hoverName));
+//
+//            e.setItemStack(jumpButton);
+//        }
+//    }
+//
+//    @SubscribeEvent
+//    public void onSetSlotPost(SetSlotEvent.Post e) {
+//        if (!quickJumping) return;
+//
+//        if (pageDestination > lastPage) {
+//            quickJumping = false;
+//            pageDestination = currentPage;
+//        } else if (pageDestination != currentPage
+//                && ((e.getSlot() == NEXT_PAGE_SLOT && pageDestination > currentPage)
+//                        || (e.getSlot() == PREVIOUS_PAGE_SLOT && pageDestination < currentPage))) {
+//            jumpToDestination();
+//        } else if (pageDestination == currentPage) {
+//            quickJumping = false;
+//        }
+//    }
+//
+//    @SubscribeEvent
+//    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+//        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
+//
+//        if (Models.Bank.isItemIndicatingLastBankPage(e.getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))) {
+//            Models.Bank.updateFinalPage();
+//
+//            lastPage = currentPage;
+//        }
+//    }
+//
+//    @SubscribeEvent
+//    public void onSlotClicked(ContainerClickEvent e) {
+//        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
+//
+//        int slotIndex = e.getSlotNum();
+//
+//        if (BUTTON_SLOTS.contains(slotIndex)) {
+//            int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
+//            pageDestination = customJumpDestinations.get(buttonIndex);
+//            int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
+//            if (pageDestination != wynnDestination) {
+//                e.setCanceled(true);
+//                jumpToDestination();
+//            }
+//        }
+//    }
 
     @Override
     protected void onConfigUpdate(Config<?> unknownConfig) {
