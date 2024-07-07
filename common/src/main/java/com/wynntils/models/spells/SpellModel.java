@@ -11,7 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.spells.actionbar.SpellSegment;
+import com.wynntils.models.spells.actionbar.SpellSegmentOld;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
 import com.wynntils.models.spells.type.PartialSpellSource;
@@ -34,7 +34,7 @@ public class SpellModel extends Model {
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
     private static final int SPELL_COST_RESET_TICKS = 60;
 
-    private final SpellSegment spellSegment = new SpellSegment();
+    private final SpellSegmentOld spellSegment = new SpellSegmentOld();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";

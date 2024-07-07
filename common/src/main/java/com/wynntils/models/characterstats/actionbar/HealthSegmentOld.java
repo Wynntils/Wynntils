@@ -1,51 +1,50 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
-import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.OldActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ManaSegment implements ActionBarSegment {
-    // Test in ManaSegment_MANA_PATTERN
-    private static final Pattern MANA_PATTERN = Pattern.compile("(?:§b)?✺ (\\d+)/(\\d+)");
+public class HealthSegmentOld implements OldActionBarSegment {
+    private static final Pattern HEALTH_PATTERN = Pattern.compile("§c❤ (\\d+)/(\\d+)");
 
-    private CappedValue mana = CappedValue.EMPTY;
+    private CappedValue health = CappedValue.EMPTY;
     private boolean hidden;
 
     @Override
     public Pattern getPattern() {
-        return MANA_PATTERN;
+        return HEALTH_PATTERN;
     }
 
     @Override
     public void update(Matcher matcher) {
-        updateMana(matcher);
+        updateHealth(matcher);
     }
 
     @Override
     public void appeared(Matcher matcher) {
-        updateMana(matcher);
+        updateHealth(matcher);
     }
 
-    private void updateMana(Matcher matcher) {
-        int currentMana = Integer.parseInt(matcher.group(1));
-        int maxMana = Integer.parseInt(matcher.group(2));
+    private void updateHealth(Matcher matcher) {
+        int currentHealth = Integer.parseInt(matcher.group(1));
+        int maxHealth = Integer.parseInt(matcher.group(2));
 
-        mana = new CappedValue(currentMana, maxMana);
-    }
-
-    public CappedValue getMana() {
-        return mana;
+        health = new CappedValue(currentHealth, maxHealth);
     }
 
     @Override
     public ActionBarPosition getPosition() {
-        return ActionBarPosition.RIGHT;
+        return ActionBarPosition.LEFT;
+    }
+
+    public CappedValue getHealth() {
+        return health;
     }
 
     @Override

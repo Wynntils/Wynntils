@@ -1,18 +1,18 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.OldActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SprintSegment implements ActionBarSegment {
+public class SprintSegmentOld implements OldActionBarSegment {
     // Test in SprintSegment_SPRINT_PATTERN
     private static final Pattern SPRINT_PATTERN = Pattern.compile("§[246]\\[(§.*)§[246]]");
     private static final int MAX_SPRINT = 13;

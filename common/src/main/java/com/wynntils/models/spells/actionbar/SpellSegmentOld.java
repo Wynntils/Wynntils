@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.actionbar;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.OldActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SpellSegment implements ActionBarSegment {
+public class SpellSegmentOld implements OldActionBarSegment {
     // Test in SpellSegment_SPELL_PATTERN
     private static final Pattern SPELL_PATTERN =
             Pattern.compile("§a([RL])§7-(?:§[a7n])?([RL?])(?:§r)?§7-(?:§[a7n])?([LR?])(?:§r)?");

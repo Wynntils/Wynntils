@@ -1,22 +1,22 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
-import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.OldActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CoordinatesSegment implements ActionBarSegment {
+public class CoordinatesSegmentOld implements OldActionBarSegment {
     // Test in CoordinatesSegment_COORDINATES_PATTERN
     private static final Pattern COORDINATES_PATTERN = Pattern.compile("§7(-?\\d+)§f ([NWSE]{1,2})§7 (-?\\d+)");
 
     private final Runnable onSegmentCleared;
     private boolean hidden;
 
-    public CoordinatesSegment(Runnable onSegmentCleared) {
+    public CoordinatesSegmentOld(Runnable onSegmentCleared) {
         this.onSegmentCleared = onSegmentCleared;
     }
 

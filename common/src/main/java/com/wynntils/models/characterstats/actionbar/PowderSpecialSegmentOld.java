@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.characterstats.actionbar;
 
-import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.OldActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PowderSpecialSegment implements ActionBarSegment {
+public class PowderSpecialSegmentOld implements OldActionBarSegment {
     // Test in PowderSpecialSegment_POWDER_SPECIAL_PATTERN
     private static final Pattern POWDER_SPECIAL_PATTERN = Pattern.compile(
             "§.([" + Arrays.stream(Element.values()).map(Element::getSymbol).reduce("", String::concat) + "]) (\\d+)%");

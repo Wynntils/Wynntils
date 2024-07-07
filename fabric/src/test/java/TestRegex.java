@@ -12,10 +12,10 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
-import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
-import com.wynntils.models.characterstats.actionbar.ManaSegment;
-import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
-import com.wynntils.models.characterstats.actionbar.SprintSegment;
+import com.wynntils.models.characterstats.actionbar.CoordinatesSegmentOld;
+import com.wynntils.models.characterstats.actionbar.ManaSegmentOld;
+import com.wynntils.models.characterstats.actionbar.PowderSpecialSegmentOld;
+import com.wynntils.models.characterstats.actionbar.SprintSegmentOld;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
@@ -31,7 +31,7 @@ import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.spells.SpellModel;
-import com.wynntils.models.spells.actionbar.SpellSegment;
+import com.wynntils.models.spells.actionbar.SpellSegmentOld;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
@@ -247,7 +247,7 @@ public class TestRegex {
 
     @Test
     public void CoordinatesSegment_COORDINATES_PATTERN() {
-        PatternTester p = new PatternTester(CoordinatesSegment.class, "COORDINATES_PATTERN");
+        PatternTester p = new PatternTester(CoordinatesSegmentOld.class, "COORDINATES_PATTERN");
         p.shouldMatch("§7457§f N§7 -1576");
         p.shouldMatch("§7-1§f NW§7 154");
         p.shouldMatch("§7-736§f S§7 -1575");
@@ -487,7 +487,7 @@ public class TestRegex {
 
     @Test
     public void ManaSegment_MANA_PATTERN() {
-        PatternTester p = new PatternTester(ManaSegment.class, "MANA_PATTERN");
+        PatternTester p = new PatternTester(ManaSegmentOld.class, "MANA_PATTERN");
         p.shouldMatch("§b✺ 175/175");
         p.shouldMatch("§b✺ 56/175");
         p.shouldMatch("✺ 175/175");
@@ -522,7 +522,7 @@ public class TestRegex {
 
     @Test
     public void PowderSpecialSegment_POWDER_SPECIAL_PATTERN() {
-        PatternTester p = new PatternTester(PowderSpecialSegment.class, "POWDER_SPECIAL_PATTERN");
+        PatternTester p = new PatternTester(PowderSpecialSegmentOld.class, "POWDER_SPECIAL_PATTERN");
         // curse/partial charge
         p.shouldMatch("§7❉ 87%");
         // curse/full charge
@@ -677,7 +677,7 @@ public class TestRegex {
 
     @Test
     public void SpellSegment_SPELL_PATTERN() {
-        PatternTester p = new PatternTester(SpellSegment.class, "SPELL_PATTERN");
+        PatternTester p = new PatternTester(SpellSegmentOld.class, "SPELL_PATTERN");
         // L??
         p.shouldMatch("§aL§7-§n?§r§7-?§r");
         // LR?
@@ -696,7 +696,7 @@ public class TestRegex {
 
     @Test
     public void SprintSegment_SPRINT_PATTERN() {
-        PatternTester p = new PatternTester(SprintSegment.class, "SPRINT_PATTERN");
+        PatternTester p = new PatternTester(SprintSegmentOld.class, "SPRINT_PATTERN");
         // green sprint bar
         p.shouldMatch("§2[§a|||Sprint|§8||§2]");
         // green sprint text 1

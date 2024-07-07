@@ -10,11 +10,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
-import com.wynntils.models.characterstats.actionbar.HealthSegment;
-import com.wynntils.models.characterstats.actionbar.ManaSegment;
-import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
-import com.wynntils.models.characterstats.actionbar.SprintSegment;
+import com.wynntils.models.characterstats.actionbar.CoordinatesSegmentOld;
+import com.wynntils.models.characterstats.actionbar.HealthSegmentOld;
+import com.wynntils.models.characterstats.actionbar.ManaSegmentOld;
+import com.wynntils.models.characterstats.actionbar.PowderSpecialSegmentOld;
+import com.wynntils.models.characterstats.actionbar.SprintSegmentOld;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
@@ -33,11 +33,11 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
-    private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
-    private final HealthSegment healthSegment = new HealthSegment();
-    private final ManaSegment manaSegment = new ManaSegment();
-    private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
-    private final SprintSegment sprintSegment = new SprintSegment();
+    private final CoordinatesSegmentOld coordinatesSegment = new CoordinatesSegmentOld(this::centerSegmentCleared);
+    private final HealthSegmentOld healthSegment = new HealthSegmentOld();
+    private final ManaSegmentOld manaSegment = new ManaSegmentOld();
+    private final PowderSpecialSegmentOld powderSpecialSegment = new PowderSpecialSegmentOld();
+    private final SprintSegmentOld sprintSegment = new SprintSegmentOld();
 
     public CharacterStatsModel() {
         super(List.of());
