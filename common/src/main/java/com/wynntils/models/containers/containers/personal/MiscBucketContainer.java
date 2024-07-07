@@ -9,7 +9,7 @@ import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.regex.Pattern;
 
 public class MiscBucketContainer extends PersonalStorageContainer implements HighlightableProfessionProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Misc. Bucket");
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFF0\uE00F\uDAFF\uDF68\uF004");
 
     public MiscBucketContainer() {
         super(TITLE_PATTERN, PersonalStorageType.MISC_BUCKET);

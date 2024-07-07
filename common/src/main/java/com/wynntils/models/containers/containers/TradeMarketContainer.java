@@ -10,13 +10,13 @@ import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.containers.type.ScrollableContainerProperty;
 import java.util.regex.Pattern;
 
-public class TradeMarketSecondaryContainer extends Container
+public class TradeMarketContainer extends Container
         implements ScrollableContainerProperty, HighlightableProfessionProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
-    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>");
-    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§f§lPage \\d+§a <§2<§a<§2<§a<");
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFE8\uE011");
+    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
+    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
-    public TradeMarketSecondaryContainer() {
+    public TradeMarketContainer() {
         super(TITLE_PATTERN);
     }
 
@@ -32,12 +32,12 @@ public class TradeMarketSecondaryContainer extends Container
 
     @Override
     public int getNextItemSlot() {
-        return 35;
+        return 53;
     }
 
     @Override
     public int getPreviousItemSlot() {
-        return 26;
+        return 51;
     }
 
     @Override

@@ -24,14 +24,14 @@ import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.PetMenuContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
+import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
-import com.wynntils.models.containers.containers.TradeMarketPrimaryContainer;
-import com.wynntils.models.containers.containers.TradeMarketSecondaryContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
-import com.wynntils.models.containers.containers.personal.BlockBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
+import com.wynntils.models.containers.containers.personal.IslandBlockBankContainer;
 import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
+import com.wynntils.models.containers.containers.personal.PersonalBlockBankContainer;
 import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer;
 import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
@@ -92,7 +92,6 @@ public final class ContainerModel extends Model {
         // Order does not matter here so just keep it alphabetical
         registerWynncraftContainer(new AbilityTreeContainer());
         registerWynncraftContainer(new AccountBankContainer());
-        registerWynncraftContainer(new BlockBankContainer());
         registerWynncraftContainer(new BookshelfContainer());
         registerWynncraftContainer(new ChallengeRewardContainer());
         registerWynncraftContainer(new CharacterBankContainer());
@@ -107,18 +106,19 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new HousingJukeboxContainer());
         registerWynncraftContainer(new HousingListContainer());
         registerWynncraftContainer(new IngredientPouchContainer());
+        registerWynncraftContainer(new IslandBlockBankContainer());
         registerWynncraftContainer(new InventoryContainer());
         registerWynncraftContainer(new JukeboxContainer());
         registerWynncraftContainer(new LobbyContainer());
         registerWynncraftContainer(new LootChestContainer());
         registerWynncraftContainer(new MiscBucketContainer());
         registerWynncraftContainer(new ObjectiveRewardContainer());
+        registerWynncraftContainer(new PersonalBlockBankContainer());
         registerWynncraftContainer(new PetMenuContainer());
         registerWynncraftContainer(new ScrapMenuContainer());
         registerWynncraftContainer(new SeaskipperContainer());
         registerWynncraftContainer(new TradeMarketFiltersContainer());
-        registerWynncraftContainer(new TradeMarketPrimaryContainer());
-        registerWynncraftContainer(new TradeMarketSecondaryContainer());
+        registerWynncraftContainer(new TradeMarketContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerWynncraftContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
