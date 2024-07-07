@@ -6,12 +6,13 @@ package com.wynntils.models.containers.containers.personal;
 
 import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.containers.type.PersonalStorageType;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CharacterBankContainer extends PersonalStorageContainer implements HighlightableProfessionProperty {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFF0\uE00F\uDAFF\uDF68\uF001");
 
     public CharacterBankContainer() {
-        super(TITLE_PATTERN, PersonalStorageType.CHARACTER_BANK);
+        super(TITLE_PATTERN, PersonalStorageType.CHARACTER_BANK, 10, List.of(1, 3, 5, 7, 9));
     }
 }

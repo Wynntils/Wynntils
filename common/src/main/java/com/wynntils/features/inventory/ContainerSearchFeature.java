@@ -243,10 +243,10 @@ public class ContainerSearchFeature extends Feature {
             autoSearching = true;
 
             if (KeyboardUtils.isShiftDown() && currentContainer instanceof PersonalStorageContainer) {
-                ContainerUtils.clickOnSlot(
-                        Models.Bank.QUICK_JUMP_FIRST_PAGE_SLOT,
+                ContainerUtils.pressKeyOnSlot(
+                        Models.Bank.QUICK_JUMP_SLOT,
                         abstractContainerScreen.getMenu().containerId,
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        0,
                         abstractContainerScreen.getMenu().getItems());
                 return;
             }

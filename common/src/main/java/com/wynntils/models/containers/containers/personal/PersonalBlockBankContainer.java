@@ -13,7 +13,7 @@ public class PersonalBlockBankContainer extends PersonalStorageContainer {
     private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFF0\uE00F\uDAFF\uDF68\uF002");
 
     public PersonalBlockBankContainer() {
-        super(TITLE_PATTERN, PersonalStorageType.BLOCK_BANK);
+        super(TITLE_PATTERN, PersonalStorageType.BLOCK_BANK, 12, List.of(1, 3, 5, 7, 9, 11));
     }
 
     @Override
