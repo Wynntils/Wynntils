@@ -58,7 +58,7 @@ import net.neoforged.bus.api.SubscribeEvent;
  * discoveries.
  */
 public final class ActivityModel extends Model {
-    public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
+    public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
 
     private static final Location WORLD_SPAWN = new Location(-1572, 41, -1668);
     private static final Location HUB_SPAWN = new Location(295, 34, 321);
@@ -71,9 +71,10 @@ public final class ActivityModel extends Model {
     private static final Pattern LENGTH_PATTERN = Pattern.compile("^   §7Length: (\\w*)(?:§8 \\((.+)\\))?$");
     private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^   §7Difficulty: (\\w*)$");
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
-    private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
-    private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
-    private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\s*À*§7(\\d+) of (\\d+) completed$");
+    private static final Pattern REWARD_PATTERN = Pattern.compile("^§d- §7\\+?(.*)$");
+    private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
+    private static final Pattern OVERALL_PROGRESS_PATTERN =
+            Pattern.compile("^\uDB00\uDC1F*§7(\\d+) of (\\d+) completed$");
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
@@ -128,17 +129,25 @@ public final class ActivityModel extends Model {
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
         Deque<StyledText> lore = LoreUtils.getLore(itemStack);
 
-        String statusLine = lore.pop().getString();
-        if (statusLine.charAt(0) != '§') return null;
+        StyledText statusLine = lore.pop();
 
-        ActivityStatus status = ActivityStatus.from(statusLine.charAt(1), itemStack.getItem());
-        int specialInfoEnd = statusLine.indexOf(" - ");
-        // If we have a specialInfo, skip the §x marker in the beginning, and keep everything
-        // until the " - " comes. Examples of specialInfo can be "Unlocks Dungeon" or
-        // "Storyline" (on most, but not all (!) storyline quests), or "Wynn Plains" (for
-        // discoveries).
-        String specialInfo = specialInfoEnd != -1 ? statusLine.substring(2, specialInfoEnd) : null;
-        if (!lore.pop().isEmpty()) return null;
+        StyledText[] statusLineParts = statusLine.split(" - ");
+
+        String specialInfo;
+        String statusMessage;
+
+        if (statusLineParts.length == 1) {
+            specialInfo = null;
+            statusMessage = statusLineParts[0].getString();
+        } else {
+            specialInfo = statusLineParts[0].getString();
+            statusMessage = statusLineParts[1].getString();
+        }
+
+        ActivityStatus status = ActivityStatus.from(statusMessage);
+        if (status == null) return null;
+
+        if (!lore.pop().isBlank()) return null;
 
         Pair<Integer, Boolean> levelReq = Pair.of(0, true);
         ActivityDistance distance = null;

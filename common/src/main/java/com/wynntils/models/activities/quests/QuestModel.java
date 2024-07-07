@@ -160,7 +160,7 @@ public final class QuestModel extends Model {
 
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.QUEST && activity.type() != ActivityType.STORYLINE_QUEST) {
-                WynntilsMod.warn("Incorrect quest activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect quest activity type received: " + activity);
                 continue;
             }
             QuestInfo questInfo = getQuestInfoFromActivity(activity);
@@ -178,7 +178,7 @@ public final class QuestModel extends Model {
 
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.MINI_QUEST) {
-                WynntilsMod.warn("Incorrect mini-quest activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect mini-quest activity type received: " + activity);
                 continue;
             }
             QuestInfo questInfo = getQuestInfoFromActivity(activity);
