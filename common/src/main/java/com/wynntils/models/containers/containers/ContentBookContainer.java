@@ -44,7 +44,7 @@ public class ContentBookContainer extends Container
 
     @Override
     public ContainerBounds getBounds() {
-        return new ContainerBounds(0, 0, 5, 6);
+        return new ContainerBounds(0, 0, 5, 8);
     }
 
     @Override

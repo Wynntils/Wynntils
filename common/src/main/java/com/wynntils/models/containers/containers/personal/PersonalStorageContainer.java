@@ -50,7 +50,7 @@ public abstract class PersonalStorageContainer extends Container implements Sear
 
     @Override
     public ContainerBounds getBounds() {
-        return new ContainerBounds(0, 0, 5, 6);
+        return new ContainerBounds(0, 0, 4, 8);
     }
 
     @Override
