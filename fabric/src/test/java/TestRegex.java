@@ -242,16 +242,7 @@ public class TestRegex {
     @Test
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
-        // Warrior
-        p.shouldMatch("Warrior Abilities");
-        // Shaman
-        p.shouldMatch("Shaman Abilities");
-        // Mage
-        p.shouldMatch("Mage Abilities");
-        // Assassin
-        p.shouldMatch("Assassin Abilities");
-        // Archer
-        p.shouldMatch("Archer Abilities");
+        p.shouldMatch("\uDAFF\uDFEA\uE000");
     }
 
     @Test

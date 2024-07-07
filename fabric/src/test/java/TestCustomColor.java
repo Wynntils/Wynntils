@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.utils.colors.CustomColor;
@@ -20,7 +20,7 @@ public class TestCustomColor {
     public void customColor_toHexStringWorks() {
         final CustomColor color = CustomColor.fromInt(11141290).withAlpha(255);
 
-        final String expected = "#aa00aa";
+        final String expected = "#aa00aaff";
 
         String result = color.toHexString();
 
@@ -42,7 +42,7 @@ public class TestCustomColor {
     public void customColor_toHexStringWithLeadingZeroWorks() {
         final CustomColor color = CustomColor.fromInt(0x00aabb).withAlpha(255);
 
-        final String expected = "#00aabb";
+        final String expected = "#00aabbff";
 
         String result = color.toHexString();
 

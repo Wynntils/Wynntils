@@ -47,14 +47,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     // Test in ContainerModel_ABILITY_TREE_PATTERN
-    public static final Pattern ABILITY_TREE_PATTERN =
-            Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
+    public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
 
-    public static final String CHARACTER_INFO_NAME = "Character Info";
+    public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
     public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
     public static final String GUILD_DIPLOMACY_MENU_NAME = "[a-zA-Z\\s]+: Diplomacy";
-    public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
+    public static final String MASTERY_TOMES_NAME = "\uDAFF\uDFDB\uE005";
 
     private static final List<Container> containerTypes = new ArrayList<>();
     private Container currentContainer = null;

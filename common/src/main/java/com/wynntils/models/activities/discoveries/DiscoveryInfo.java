@@ -1,19 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.activities.profile.DiscoveryProfile;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -25,15 +23,6 @@ public class DiscoveryInfo {
     private final boolean discovered;
     private final List<String> requirements;
     private List<Component> displayLore = null;
-
-    public DiscoveryInfo(DiscoveryProfile discoveryProfile) {
-        this.name = discoveryProfile.getName();
-        this.type = DiscoveryType.valueOf(discoveryProfile.getType().toUpperCase(Locale.ROOT));
-        this.description = "";
-        this.minLevel = discoveryProfile.getLevel();
-        this.discovered = false;
-        this.requirements = discoveryProfile.getRequirements();
-    }
 
     private DiscoveryInfo(String name, DiscoveryType type, String description, int minLevel, boolean discovered) {
         this.name = name;
