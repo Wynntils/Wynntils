@@ -12,6 +12,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
@@ -28,9 +29,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TerritoryDefenseMessageFeature extends Feature {
     private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
     private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
-    private static final Pattern TERRITORY_ATTACK_MESSAGE_PATTERN =
-            Pattern.compile("§3\\[WAR]§c ?The war for (.+) will start in \\d+ minutes?\\.");
-
     // 3 seconds for the server to respond to an attack command
     private static final long MESSAGE_TIMEOUT = 3000;
     private final Map<String, Pair<Long, String>> territoryMessages = new HashMap<>();
@@ -61,7 +59,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        Matcher matcher = StyledText.fromComponent(e.getMessage()).getMatcher(TERRITORY_ATTACK_MESSAGE_PATTERN);
+        Matcher matcher = StyledText.fromComponent(e.getMessage()).getMatcher(GuildAttackTimerModel.WAR_MESSAGE_PATTERN);
         if (!matcher.matches()) return;
 
         // remove all expired messages

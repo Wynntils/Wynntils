@@ -50,8 +50,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
-    private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
-            "§3\\[WAR\\]§c The war for (?<territory>.+) will start in (?<remaining>.+) (?<type>minutes|seconds)\\.");
+    public static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
+            "§3\\[WAR\\]§c The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
     private static final Pattern CAPTURED_PATTERN =
             Pattern.compile("§3\\[WAR\\]§c \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
@@ -76,9 +76,9 @@ public final class GuildAttackTimerModel extends Model {
 
         Matcher matcher = event.getOriginalStyledText().getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
-            long remaining = Long.parseLong(matcher.group("remaining"));
-            long timerEnd = (matcher.group("type").equals("minutes") ? remaining * 60 : remaining) * 1000
-                    + System.currentTimeMillis();
+            long timerEnd = System.currentTimeMillis();
+            if (matcher.group("minutes") != null) timerEnd += Long.parseLong(matcher.group("minutes")) * 60 * 1000;
+            if (matcher.group("seconds") != null) timerEnd += Long.parseLong(matcher.group("seconds")) * 1000;
 
             String territory = matcher.group("territory");
             TerritoryAttackTimer scoreboardTimer = scoreboardAttackTimers.remove(territory);

@@ -33,6 +33,7 @@ import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
+import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.worlds.BombModel;
@@ -309,6 +310,17 @@ public class TestRegex {
     public void FriendsModel_LEAVE_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
         p.shouldMatch("§aMirvun left the game.");
+    }
+
+    @Test
+    public void GuildAttackTimerModel_WAR_MESSAGE_PATTERN() {
+        PatternTester p = new PatternTester(GuildAttackTimerModel.class, "WAR_MESSAGE_PATTERN");
+        p.shouldMatch("§3[WAR]§c The war for Example Territory will start in 5 minutes.");
+        p.shouldMatch("§3[WAR]§c The war for Example Territory will start in 1 minute.");
+        p.shouldMatch("§3[WAR]§c The war for Example Territory will start in 1 second.");
+        p.shouldMatch("§3[WAR]§c The war for Example Territory will start in 20 seconds.");
+        p.shouldMatch("§3[WAR]§c The war for Aldorei's Arch will start in 14 minutes and 59 seconds.");
+        p.shouldMatch("§3[WAR]§c The war for Aldorei's Arch will start in 1 minute and 1 second.");
     }
 
     @Test
