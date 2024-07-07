@@ -824,7 +824,7 @@ public class TestStyledText {
 
         StyledText styledText = StyledText.fromComponent(component);
 
-        final String result = "§#240c2atest";
+        final String result = "§#240c2afftest";
         Assertions.assertEquals(
                 result,
                 styledText.getString(PartStyle.StyleType.DEFAULT),

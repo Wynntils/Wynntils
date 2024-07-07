@@ -36,7 +36,8 @@ import net.minecraft.server.packs.repository.RepositorySource;
 public final class WynntilsResourceProvider implements RepositorySource {
     private static final String PRELOADED_PACK_PREFIX = "wynntils_preloaded/";
     // §7WynnResourcePack - 2.0.4\n§a(1.21, Jun. 11, 2024)
-    private static final Pattern WYNNCRAFT_PACK_PATTERN = Pattern.compile("§7WynnResourcePack - .*", Pattern.DOTALL);
+    private static final Pattern WYNNCRAFT_PACK_PATTERN =
+            Pattern.compile("§(#.{8}|.)Wynncraft Resource Pack §7.+", Pattern.DOTALL);
 
     private static final Path MINECRAFT_RESOURCE_PACKS_PATH =
             McUtils.mc().gameDirectory.toPath().resolve("downloads");

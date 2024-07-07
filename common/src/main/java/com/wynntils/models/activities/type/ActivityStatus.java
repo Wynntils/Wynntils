@@ -1,42 +1,31 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.type;
 
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 
 public enum ActivityStatus {
-    STARTED(ChatFormatting.GREEN.getChar(), Items.GOLDEN_AXE),
-    AVAILABLE(ChatFormatting.YELLOW.getChar(), Items.GOLDEN_AXE),
-    UNAVAILABLE(ChatFormatting.RED.getChar(), Items.GOLDEN_AXE),
-    COMPLETED(ChatFormatting.GREEN.getChar(), Items.GOLDEN_PICKAXE);
+    STARTED(Pattern.compile(ChatFormatting.GREEN + "Currently in progress")),
+    AVAILABLE(Pattern.compile(ChatFormatting.YELLOW + "Can be .+")),
+    UNAVAILABLE(Pattern.compile(ChatFormatting.RED + "Cannot be .+")),
+    COMPLETED(Pattern.compile(ChatFormatting.GREEN + "Already completed"));
 
-    private final char colorCode;
-    private final Item item;
+    private final Pattern statusPattern;
 
-    ActivityStatus(char colorCode, Item item) {
-        this.colorCode = colorCode;
-        this.item = item;
+    ActivityStatus(Pattern statusMessage) {
+        this.statusPattern = statusMessage;
     }
 
-    public static ActivityStatus from(char colorCode, Item item) {
+    public static ActivityStatus from(String statusLine) {
         for (ActivityStatus status : values()) {
-            if ((status.getColorCode() == colorCode) && status.getItem().equals(item)) return status;
+            if (status.statusPattern.matcher(statusLine).matches()) return status;
         }
 
         return null;
-    }
-
-    public char getColorCode() {
-        return colorCode;
-    }
-
-    public Item getItem() {
-        return item;
     }
 
     public Component getQuestStateComponent() {
