@@ -231,6 +231,10 @@ public final class PartStyle {
         return hoverEvent;
     }
 
+    public CustomColor getColor() {
+        return color;
+    }
+
     public PartStyle withBold(boolean bold) {
         return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }

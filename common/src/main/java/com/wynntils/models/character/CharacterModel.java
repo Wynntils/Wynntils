@@ -58,7 +58,8 @@ public final class CharacterModel extends Model {
     private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
-    public static final int CHARACTER_INFO_SLOT = 7;
+    public static final int CHARACTER_INFO_SLOT = 8;
+    // FIXME: Remove once compass has ID
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int COSMETICS_SLOT = 25;

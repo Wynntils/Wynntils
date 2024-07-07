@@ -69,7 +69,7 @@ public class LogItemInfoFeature extends Feature {
         String wynnItemDesc = wynnItemOpt.isPresent() ? wynnItemOpt.get().toString() : "<N/A>";
 
         return "[Logging Item]\nName: "
-                + itemStack.getHoverName().getString() + "\nLore:\n"
+                + StyledText.fromComponent(itemStack.getHoverName()) + "\nLore:\n"
                 + StyledText.join("\n", LoreUtils.getLore(itemStack)) + "\nItem Type: "
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
