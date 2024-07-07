@@ -1,3 +1,15 @@
+## [2.0.0-beta.3](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2024-07-07)
+
+
+### Bug Fixes
+
+* Update containers for 2.1 ([#2627](https://github.com/Wynntils/Artemis/issues/2627)) ([d062a7e](https://github.com/Wynntils/Artemis/commit/d062a7e99e10000cd7608f8f1c7591009dab531b))
+
+
+### Miscellaneous Chores
+
+* Support fonts in StyledText [skip ci] ([#2635](https://github.com/Wynntils/Artemis/issues/2635)) ([4948a85](https://github.com/Wynntils/Artemis/commit/4948a85d4bc2c7b426cdfcc472fea8700e24de0e))
+
 ## [2.0.0-beta.2](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-07-07)
 
 
@@ -10,6 +22,11 @@
 * Fix resource pack preloading [skip ci] ([#2632](https://github.com/Wynntils/Artemis/issues/2632)) ([64fd6fb](https://github.com/Wynntils/Artemis/commit/64fd6fb727d51620d915ab10452de05dfd2454d3))
 * Fix world state not being set correctly, fix mana/health bars displaying without data [skip ci] ([#2631](https://github.com/Wynntils/Artemis/issues/2631)) ([01eca54](https://github.com/Wynntils/Artemis/commit/01eca549b1f94ebcdbfe09cd7dc4efb0a368b94b))
 * Patch SpellCastVignetteFeature until proper action bar parsing [skip ci] ([#2630](https://github.com/Wynntils/Artemis/issues/2630)) ([1ae9900](https://github.com/Wynntils/Artemis/commit/1ae9900addfd71e9a183307b3a73c2bf8edaac2a))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.0-beta.2 [skip ci] ([22b9013](https://github.com/Wynntils/Artemis/commit/22b90133e11ed8c085be2bc8533ddbff3a86389d))
 
 ## [2.0.0-beta.1](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2024-07-05)
 
@@ -46,23 +63,4 @@
 
 * **release:** v1.2.31 [skip ci] ([5e009e9](https://github.com/Wynntils/Artemis/commit/5e009e9b1fa86aa6e9f644897c83a57eddeadd01))
 * **release:** v2.0.0-alpha.0 [skip ci] ([b2886bb](https://github.com/Wynntils/Artemis/commit/b2886bb6a1b3ed6d383f642925c2ea15eabb589d))
-
-## [1.2.30](https://github.com/Wynntils/Artemis/compare/v1.2.29...v1.2.30) (2024-07-01)
-
-
-### New Features
-
-* Lootrun Task Name Force Coordinates option [skip ci] ([#2617](https://github.com/Wynntils/Artemis/issues/2617)) ([6cc3990](https://github.com/Wynntils/Artemis/commit/6cc3990853e21854e97bd5d7a9fe5728b57b8bae))
-
-
-### Miscellaneous Chores
-
-* Bump workflows from alpha to beta [skip ci] ([#2615](https://github.com/Wynntils/Artemis/issues/2615)) ([ab30808](https://github.com/Wynntils/Artemis/commit/ab30808b898bcfefede738403dfcc3b61e113535))
-* **release:** v1.2.30 [skip ci] ([326a78e](https://github.com/Wynntils/Artemis/commit/326a78ede2e8a10164aefc3a930356e898a71681))
-* Update beta messages [skip ci] ([#2614](https://github.com/Wynntils/Artemis/issues/2614)) ([3404758](https://github.com/Wynntils/Artemis/commit/3404758939f40fdd4bb070b0f30da593f75ad2a0))
-
-
-### Code Refactoring
-
-* rewrite GammabrightFeature ([#2618](https://github.com/Wynntils/Artemis/issues/2618)) ([748aaf7](https://github.com/Wynntils/Artemis/commit/748aaf7ed373f8965554aefdcaa44aa1fab9864d))
 
