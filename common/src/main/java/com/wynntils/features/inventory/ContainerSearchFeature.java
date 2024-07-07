@@ -155,6 +155,10 @@ public class ContainerSearchFeature extends Feature {
 
         matchedItems = false;
 
+        if (currentContainer instanceof PersonalStorageContainer) {
+            renderY -= 20;
+        }
+
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
 
