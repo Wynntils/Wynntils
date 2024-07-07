@@ -34,9 +34,9 @@ public class CustomBankPageNamesFeature extends Feature {
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
-
-        screen.addRenderableWidget(screen.addRenderableWidget(new ContainerEditNameButton(
-                renderX + (screen.imageWidth - screen.titleLabelX) - 10, renderY + (screen.titleLabelY) - 4, 6, 16)));
+        // FIXME
+//        screen.addRenderableWidget(screen.addRenderableWidget(new ContainerEditNameButton(
+//                renderX + (screen.imageWidth - screen.titleLabelX) - 10, renderY + (screen.titleLabelY) - 4, 6, 16)));
     }
 
     @SubscribeEvent
