@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -15,6 +16,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.type.CappedValue;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -38,6 +40,11 @@ public class SpellCastVignetteFeature extends Feature {
 
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {
+        if (Models.CharacterStats.getMana() == CappedValue.EMPTY) {
+            WynntilsMod.warn("Mana is empty, cannot calculate relative cost of spell cast");
+            return;
+        }
+
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost =
                 (float) event.getManaCost() / Models.CharacterStats.getMana().current();
