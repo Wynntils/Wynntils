@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
     private static final String VANILLA_PADDING = "\\s{4,}";
@@ -39,7 +38,8 @@ public final class ActionBarHandler extends Handler {
         ALL_SEGMENTS.get(segment.getPosition()).add(segment);
     }
 
-    @SubscribeEvent
+    // FIXME: Fix action bar
+    // @SubscribeEvent
     public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
         // FIXME: Reverse dependency!
         if (!Models.WorldState.onWorld()) return;
