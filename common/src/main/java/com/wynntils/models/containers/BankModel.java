@@ -26,9 +26,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class BankModel extends Model {
-    // When storage supports upfixing, change to finalAccountBankPage
     @Persisted
-    private final Storage<Integer> finalBankPage = new Storage<>(21);
+    private final Storage<Integer> finalAccountBankPage = new Storage<>(21);
 
     @Persisted
     private final Storage<Integer> finalBlockBankPage = new Storage<>(12);
@@ -42,9 +41,8 @@ public class BankModel extends Model {
     @Persisted
     private final Storage<Map<String, Integer>> finalCharacterBankPages = new Storage<>(new TreeMap<>());
 
-    // When storage supports upfixing, change to customAccountBankPageNames
     @Persisted
-    private final Storage<Map<Integer, String>> customBankPageNames = new Storage<>(new TreeMap<>());
+    private final Storage<Map<Integer, String>> customAccountBankPageNames = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<Integer, String>> customBlockBankPageNames = new Storage<>(new TreeMap<>());
@@ -122,8 +120,8 @@ public class BankModel extends Model {
     public void saveCurrentPageName(String nameToSet) {
         switch (storageContainerType) {
             case ACCOUNT_BANK -> {
-                customBankPageNames.get().put(currentPage, nameToSet);
-                customBankPageNames.touched();
+                customAccountBankPageNames.get().put(currentPage, nameToSet);
+                customAccountBankPageNames.touched();
             }
             case BLOCK_BANK -> {
                 customBlockBankPageNames.get().put(currentPage, nameToSet);
@@ -156,8 +154,8 @@ public class BankModel extends Model {
     public void resetCurrentPageName() {
         switch (storageContainerType) {
             case ACCOUNT_BANK -> {
-                customBankPageNames.get().remove(currentPage);
-                customBankPageNames.touched();
+                customAccountBankPageNames.get().remove(currentPage);
+                customAccountBankPageNames.touched();
             }
             case BLOCK_BANK -> {
                 customBlockBankPageNames.get().remove(currentPage);
@@ -185,7 +183,7 @@ public class BankModel extends Model {
 
     public int getFinalPage() {
         return switch (storageContainerType) {
-            case ACCOUNT_BANK -> finalBankPage.get();
+            case ACCOUNT_BANK -> finalAccountBankPage.get();
             case BLOCK_BANK -> finalBlockBankPage.get();
             case BOOKSHELF -> finalBookshelfPage.get();
             case CHARACTER_BANK -> finalCharacterBankPages
@@ -198,7 +196,7 @@ public class BankModel extends Model {
     public void updateFinalPage() {
         switch (storageContainerType) {
             case ACCOUNT_BANK -> {
-                finalBankPage.store(currentPage);
+                finalAccountBankPage.store(currentPage);
             }
             case BLOCK_BANK -> {
                 if (currentPage > finalBlockBankPage.get()) {
@@ -236,7 +234,7 @@ public class BankModel extends Model {
 
     private Map<Integer, String> getCurrentNameMap() {
         return switch (storageContainerType) {
-            case ACCOUNT_BANK -> customBankPageNames.get();
+            case ACCOUNT_BANK -> customAccountBankPageNames.get();
             case BLOCK_BANK -> customBlockBankPageNames.get();
             case BOOKSHELF -> customBookshelfPageNames.get();
             case CHARACTER_BANK -> customCharacterBankPagesNames
