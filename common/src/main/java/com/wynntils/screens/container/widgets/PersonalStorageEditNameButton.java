@@ -28,8 +28,12 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
             Component.translatable("screens.wynntils.containers.edit.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    public PersonalStorageEditNameButton(int x, int y, int width, int height) {
-        super(x, y, width, height, Component.literal("Container Edit Button"));
+    private final PersonalStorageUtilitiesWidget parent;
+
+    public PersonalStorageEditNameButton(int x, int y, int width, int height, PersonalStorageUtilitiesWidget parent) {
+        super(x, y, width, height, Component.literal("Personal Storage Edit Name Button"));
+
+        this.parent = parent;
     }
 
     @Override
@@ -62,9 +66,8 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
-
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            parent.addEditInput();
             Models.Bank.toggleEditingName(!Models.Bank.isEditingName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
             Models.Bank.resetCurrentPageName();

@@ -7,7 +7,9 @@ package com.wynntils.screens.container.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
+import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -21,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 
 public class PersonalStorageUtilitiesWidget extends AbstractWidget {
@@ -29,15 +32,23 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     private final List<QuickJumpButton> quickJumpButtons = new ArrayList<>();
     private final PersonalStorageEditNameButton editButton;
     private final PersonalStorageUtilitiesFeature feature;
+    private final AbstractContainerScreen<?> screen;
+
+    private TextInputBoxWidget editInput;
 
     public PersonalStorageUtilitiesWidget(
-            int x, int y, PersonalStorageContainer container, PersonalStorageUtilitiesFeature feature) {
+            int x,
+            int y,
+            PersonalStorageContainer container,
+            PersonalStorageUtilitiesFeature feature,
+            AbstractContainerScreen<?> screen) {
         super(x, y, 100, 110, Component.literal("Personal Storage Utilities Widget"));
 
         this.container = container;
         this.feature = feature;
+        this.screen = screen;
 
-        editButton = new PersonalStorageEditNameButton(x + 86, y + 2, 14, 14);
+        editButton = new PersonalStorageEditNameButton(x + 86, y + 2, 14, 14, this);
 
         addJumpButtons();
     }
@@ -81,6 +92,34 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
     public void jumpToPage(int destination) {
         feature.jumpToDestination(destination);
+    }
+
+    public void addEditInput() {
+        if (editInput != null) return;
+
+        editInput = new TextInputBoxWidget(
+                getX() + 4,
+                getY() + 4,
+                getWidth() - 18,
+                FontRenderer.getInstance().getFont().lineHeight,
+                null,
+                (ScreenExtension) screen);
+
+        editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
+
+        screen.addRenderableWidget(editInput);
+    }
+
+    public void removeEditInput() {
+        if (editInput == null) return;
+
+        screen.removeWidget(editInput);
+
+        editInput = null;
+    }
+
+    public String getName() {
+        return editInput.getTextBoxInput();
     }
 
     private void addJumpButtons() {

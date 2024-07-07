@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
@@ -39,6 +40,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     private int lastPage = 21;
     private int pageDestination = 1;
     private PersonalStorageContainer storageContainer;
+    private PersonalStorageUtilitiesWidget widget;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
@@ -56,8 +58,8 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        screen.addRenderableWidget(
-                new PersonalStorageUtilitiesWidget(renderX - 108, renderY + 7, storageContainer, this));
+        widget = screen.addRenderableWidget(
+                new PersonalStorageUtilitiesWidget(renderX - 108, renderY + 7, storageContainer, this, screen));
     }
 
     @SubscribeEvent
@@ -84,6 +86,8 @@ public class PersonalStorageUtilitiesFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
+        if (Models.Bank.getStorageContainerType() == null) return;
+
         // Swapping between character and account bank and island and personal storage does not call onScreenClose so
         // quick jumps need to be reset here
         if (Models.Container.getCurrentContainer() instanceof AccountBankContainer
@@ -95,6 +99,17 @@ public class PersonalStorageUtilitiesFeature extends Feature {
                 quickJumping = false;
             }
         }
+
+        Models.Bank.toggleEditingName(false);
+    }
+
+    @SubscribeEvent
+    public void onInventoryKeyPress(InventoryKeyPressEvent event) {
+        if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
+        if (!Models.Bank.isEditingName()) return;
+
+        Models.Bank.saveCurrentPageName(widget.getName());
+        widget.removeEditInput();
     }
 
     public void jumpToDestination(int destination) {
