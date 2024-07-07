@@ -9,7 +9,7 @@ import com.wynntils.models.containers.type.PersonalStorageType;
 import java.util.regex.Pattern;
 
 public class CharacterBankContainer extends PersonalStorageContainer implements HighlightableProfessionProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Character Bank");
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFF0\uE00F\uDAFF\uDF68\uF001");
 
     public CharacterBankContainer() {
         super(TITLE_PATTERN, PersonalStorageType.CHARACTER_BANK);
