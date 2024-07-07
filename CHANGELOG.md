@@ -1,3 +1,16 @@
+## [2.0.0-beta.2](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-07-07)
+
+
+### Bug Fixes
+
+* Fix 1.21 content book parsing [skip ci] ([#2629](https://github.com/Wynntils/Artemis/issues/2629)) ([2bf773b](https://github.com/Wynntils/Artemis/commit/2bf773bdd59f72394793019c3da0fbf2f96587ce))
+* Fix being able to click territories that are not rendered (TerritoryManagementScreen) [skip ci] ([#2626](https://github.com/Wynntils/Artemis/issues/2626)) ([e22e20b](https://github.com/Wynntils/Artemis/commit/e22e20bc5fec09c4c1fd0c31757118aadde326a7))
+* Fix compass menu parsing ([#2633](https://github.com/Wynntils/Artemis/issues/2633)) ([643797e](https://github.com/Wynntils/Artemis/commit/643797e50ab0a80733c53f9651f913afed5e1dbe))
+* Fix failing StyledText tests [skip ci] ([#2634](https://github.com/Wynntils/Artemis/issues/2634)) ([883acb2](https://github.com/Wynntils/Artemis/commit/883acb230f3d5a71b0483b055c45df345abf5c69))
+* Fix resource pack preloading [skip ci] ([#2632](https://github.com/Wynntils/Artemis/issues/2632)) ([64fd6fb](https://github.com/Wynntils/Artemis/commit/64fd6fb727d51620d915ab10452de05dfd2454d3))
+* Fix world state not being set correctly, fix mana/health bars displaying without data [skip ci] ([#2631](https://github.com/Wynntils/Artemis/issues/2631)) ([01eca54](https://github.com/Wynntils/Artemis/commit/01eca549b1f94ebcdbfe09cd7dc4efb0a368b94b))
+* Patch SpellCastVignetteFeature until proper action bar parsing [skip ci] ([#2630](https://github.com/Wynntils/Artemis/issues/2630)) ([1ae9900](https://github.com/Wynntils/Artemis/commit/1ae9900addfd71e9a183307b3a73c2bf8edaac2a))
+
 ## [2.0.0-beta.1](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2024-07-05)
 
 
@@ -10,6 +23,7 @@
 ### Miscellaneous Chores
 
 * Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([0ca18d4](https://github.com/Wynntils/Artemis/commit/0ca18d4f535d2bdb23358a83fe28e6a46e8cf03e))
+* **release:** v2.0.0-beta.1 [skip ci] ([3fdfd48](https://github.com/Wynntils/Artemis/commit/3fdfd48d625bb824f692ec6eb92c1c341b750c5a))
 * Update mod incompatibilities [skip ci] ([#2620](https://github.com/Wynntils/Artemis/issues/2620)) ([0a14acd](https://github.com/Wynntils/Artemis/commit/0a14acde7822442f32519cb7562d5a5a1eb1706e))
 
 ## [2.0.0-beta.0](https://github.com/Wynntils/Artemis/compare/v2.0.0-alpha.0...v2.0.0-beta.0) (2024-07-01)
@@ -51,16 +65,4 @@
 ### Code Refactoring
 
 * rewrite GammabrightFeature ([#2618](https://github.com/Wynntils/Artemis/issues/2618)) ([748aaf7](https://github.com/Wynntils/Artemis/commit/748aaf7ed373f8965554aefdcaa44aa1fab9864d))
-
-## [1.2.29](https://github.com/Wynntils/Artemis/compare/v1.2.28...v1.2.29) (2024-06-29)
-
-
-### Bug Fixes
-
-* Pre-load Wynncraft resource pack above all required resource packs ([#2613](https://github.com/Wynntils/Artemis/issues/2613)) ([09f7b50](https://github.com/Wynntils/Artemis/commit/09f7b50452654c5fd6c488e30694b883378f42de))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.29 [skip ci] ([cf0c55b](https://github.com/Wynntils/Artemis/commit/cf0c55badfbf72f06adb86678ab92546f2eb765d))
 
