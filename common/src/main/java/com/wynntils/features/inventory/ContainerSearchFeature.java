@@ -156,6 +156,8 @@ public class ContainerSearchFeature extends Feature {
         matchedItems = false;
 
         if (currentContainer instanceof PersonalStorageContainer) {
+            // Personal storage container textures extend above the normal renderY
+            // so the widgets need to be shifted up more
             renderY -= 20;
         }
 
