@@ -59,7 +59,8 @@ public class TerritoryDefenseMessageFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        Matcher matcher = StyledText.fromComponent(e.getMessage()).getMatcher(GuildAttackTimerModel.WAR_MESSAGE_PATTERN);
+        Matcher matcher =
+                StyledText.fromComponent(e.getMessage()).getMatcher(GuildAttackTimerModel.WAR_MESSAGE_PATTERN);
         if (!matcher.matches()) return;
 
         // remove all expired messages
