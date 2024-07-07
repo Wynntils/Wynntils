@@ -13,9 +13,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.models.territories.GuildAttackTimerModel;
+import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -29,9 +29,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TerritoryDefenseMessageFeature extends Feature {
     private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
     private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
+    private static final String DEFENSE_MESSAGE = "g %s defense is %s";
     // 3 seconds for the server to respond to an attack command
     private static final long MESSAGE_TIMEOUT = 3000;
-    private final Map<String, Pair<Long, String>> territoryMessages = new HashMap<>();
+    private final Map<String, QueuedTerritory> queuedTerritories = new HashMap<>();
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
@@ -47,11 +48,10 @@ public class TerritoryDefenseMessageFeature extends Feature {
                     .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
             if (matcher.matches()) {
                 // intentionally not localized to match Wynncraft language
-                territoryMessages.put(
+                queuedTerritories.put(
                         titleMatcher.group(1),
-                        Pair.of(
-                                System.currentTimeMillis(),
-                                "g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1))));
+                        new QueuedTerritory(
+                                System.currentTimeMillis(), GuildResourceValues.fromString(matcher.group(1))));
                 return;
             }
         }
@@ -64,15 +64,17 @@ public class TerritoryDefenseMessageFeature extends Feature {
         if (!matcher.matches()) return;
 
         // remove all expired messages
-        territoryMessages
+        queuedTerritories
                 .entrySet()
-                .removeIf(entry -> System.currentTimeMillis() - entry.getValue().a() > MESSAGE_TIMEOUT);
+                .removeIf(entry -> System.currentTimeMillis() - entry.getValue().timestamp() > MESSAGE_TIMEOUT);
 
         String territory = matcher.group(1);
-        if (!territoryMessages.containsKey(territory)) return;
+        if (!queuedTerritories.containsKey(territory)) return;
 
-        Pair<Long, String> attackInfo = territoryMessages.get(territory);
-        Handlers.Command.sendCommandImmediately(attackInfo.b());
-        territoryMessages.remove(territory);
+        Handlers.Command.sendCommandImmediately(DEFENSE_MESSAGE.formatted(
+                territory, queuedTerritories.get(territory).defense().getAsString()));
+        queuedTerritories.remove(territory);
     }
+
+    private record QueuedTerritory(long timestamp, GuildResourceValues defense) {}
 }
