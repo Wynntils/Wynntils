@@ -6,8 +6,13 @@ package com.wynntils.handlers.actionbar.segments;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 
-public class SpacingSegment extends ActionBarSegment {
-    public SpacingSegment(String segmentText) {
+public class HealthBarSegment extends ActionBarSegment {
+    public HealthBarSegment(String segmentText) {
         super(segmentText);
+    }
+
+    @Override
+    public String toString() {
+        return "HealthBarSegment{" + "segmentText='" + segmentText + '\'' + '}';
     }
 }

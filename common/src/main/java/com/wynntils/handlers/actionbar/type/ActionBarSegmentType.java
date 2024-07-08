@@ -5,7 +5,6 @@
 package com.wynntils.handlers.actionbar.type;
 
 public enum ActionBarSegmentType {
-    SPACING,
     HOTBAR,
     MANA_BAR,
     HEALTH_BAR,

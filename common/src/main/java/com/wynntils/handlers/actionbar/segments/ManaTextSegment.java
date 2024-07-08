@@ -4,15 +4,13 @@
  */
 package com.wynntils.handlers.actionbar.segments;
 
-import com.wynntils.handlers.actionbar.ActionBarSegment;
-
-public class HotbarSegment extends ActionBarSegment {
-    public HotbarSegment(String segmentText) {
+public class ManaTextSegment extends AbstractTextSegment {
+    public ManaTextSegment(String segmentText) {
         super(segmentText);
     }
 
     @Override
     public String toString() {
-        return "HotbarSegment{" + "segmentText='" + segmentText + '\'' + '}';
+        return "ManaTextSegment{" + "segmentText='" + segmentText + '\'' + '}';
     }
 }

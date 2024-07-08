@@ -5,7 +5,7 @@
 package com.wynntils.handlers.actionbar;
 
 public abstract class ActionBarSegment {
-    private final String segmentText;
+    protected final String segmentText;
 
     protected ActionBarSegment(String segmentText) {
         this.segmentText = segmentText;

@@ -4,8 +4,12 @@
  */
 package com.wynntils.handlers.actionbar;
 
-import com.wynntils.utils.type.StringReader;
-
 public interface ActionBarSegmentMatcher {
-    ActionBarSegment read(StringReader reader);
+    /**
+     * Parse the given action bar string and return the corresponding segment.
+     * The segment can be found anywhere in the string, and is not required to be at the start.
+     * @param actionBar The action bar string to parse
+     * @return The parsed segment, or null if the string does not match the segment
+     */
+    ActionBarSegment parse(String actionBar);
 }
