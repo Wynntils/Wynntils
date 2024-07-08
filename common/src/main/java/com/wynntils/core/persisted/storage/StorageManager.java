@@ -171,7 +171,7 @@ public final class StorageManager extends Manager {
         Managers.Json.savePreciousJson(userStorageFile, storageJson);
     }
 
-    public void userSwitched() {
+    public void reloadAll() {
         userStorageFile = new File(
                 STORAGE_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
         initFeatures();

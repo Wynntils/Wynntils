@@ -32,8 +32,8 @@ public class AccountSwitchDetectionService extends Service {
         } else if (currentAccount != McUtils.mc().getUser().getProfileId()) {
             currentAccount = McUtils.mc().getUser().getProfileId();
             WynntilsMod.info("Account switch detected, reloading configs and storages");
-            Managers.Config.userSwitched();
-            Managers.Storage.userSwitched();
+            Managers.Config.reloadAll();
+            Managers.Storage.reloadAll();
         }
     }
 }

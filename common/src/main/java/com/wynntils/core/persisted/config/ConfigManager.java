@@ -334,7 +334,7 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    public void userSwitched() {
+    public void reloadAll() {
         userConfigFile = new File(
                 CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
         init();
