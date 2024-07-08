@@ -28,6 +28,7 @@ import net.minecraft.network.chat.Component;
 
 public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     private static final int BUTTON_SPACING = 18;
+
     private final PersonalStorageContainer container;
     private final List<QuickJumpButton> quickJumpButtons = new ArrayList<>();
     private final PersonalStorageEditNameButton editButton;
@@ -106,7 +107,6 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                 (ScreenExtension) screen);
 
         editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
-
         screen.addRenderableWidget(editInput);
     }
 
@@ -114,7 +114,6 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         if (editInput == null) return;
 
         screen.removeWidget(editInput);
-
         editInput = null;
     }
 
