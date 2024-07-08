@@ -14,7 +14,6 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.container.widgets.ContainerEditNameButton;
 import com.wynntils.utils.render.FontRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -35,8 +34,9 @@ public class CustomBankPageNamesFeature extends Feature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
         // FIXME
-//        screen.addRenderableWidget(screen.addRenderableWidget(new ContainerEditNameButton(
-//                renderX + (screen.imageWidth - screen.titleLabelX) - 10, renderY + (screen.titleLabelY) - 4, 6, 16)));
+        //        screen.addRenderableWidget(screen.addRenderableWidget(new ContainerEditNameButton(
+        //                renderX + (screen.imageWidth - screen.titleLabelX) - 10, renderY + (screen.titleLabelY) - 4,
+        // 6, 16)));
     }
 
     @SubscribeEvent
