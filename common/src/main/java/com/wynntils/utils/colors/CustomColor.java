@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -193,19 +193,12 @@ public class CustomColor {
         return new float[] {r / 255f, g / 255f, b / 255f};
     }
 
-    /** #rrggbb(aa) format */
+    /**
+     * #rrggbbaa format
+     * The alpha is always included, so it can be parsed more easily
+     */
     public String toHexString() {
-        String colorHex = String.format("%06x", (0xFFFFFF & (r << 16) | (g << 8) | b));
-
-        // Only append alpha if it's not 255
-        if (a != 255) {
-            String alphaHex = String.format("%02x", (0xFF & a));
-            colorHex += alphaHex;
-        }
-
-        colorHex = "#" + colorHex;
-
-        return colorHex;
+        return "#" + String.format("%08x", ((r << 24) | (g << 16) | (b << 8) | a));
     }
 
     @Override
