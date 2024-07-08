@@ -17,6 +17,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -56,8 +57,7 @@ public class ProfessionHighlightFeature extends Feature {
 
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
 
-        if (!(Models.Container.getCurrentContainer()
-                instanceof HighlightableProfessionProperty highlightableProfessionProperty)) {
+        if (!(Models.Container.getCurrentContainer() instanceof HighlightableProfessionProperty)) {
             return;
         }
 
@@ -148,9 +148,16 @@ public class ProfessionHighlightFeature extends Feature {
     }
 
     private void addWidgets(AbstractContainerScreen<?> containerScreen, int renderX, int renderY) {
+        renderX += containerScreen.imageWidth + 2;
+
+        if (Models.Container.getCurrentContainer() instanceof PersonalStorageContainer) {
+            // Personal storage container textures extend past the normal renderX
+            // so the widgets need to be shifted more to the right
+            renderX += 10;
+        }
+
         // Add the button to the top right side of the container
-        containerScreen.addRenderableWidget(
-                new ProfessionHighlightButton(renderX + containerScreen.imageWidth + 2, renderY, 20, 20));
+        containerScreen.addRenderableWidget(new ProfessionHighlightButton(renderX, renderY, 20, 20));
     }
 
     private static final class ProfessionHighlightButton extends WynntilsButton {

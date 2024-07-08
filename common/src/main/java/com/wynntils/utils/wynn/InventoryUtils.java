@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -16,8 +16,9 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 
 public final class InventoryUtils {
-    public static final int COMPASS_SLOT_NUM = 6;
-    public static final int CONTENT_BOOK_SLOT_NUM = 7;
+    public static final int COMPASS_SLOT_NUM = 7;
+    public static final int CONTENT_BOOK_SLOT_NUM = 8;
+    // FIXME: Remove this with Soul Point changes
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 

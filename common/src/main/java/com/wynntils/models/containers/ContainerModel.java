@@ -24,14 +24,14 @@ import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.PetMenuContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
+import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
-import com.wynntils.models.containers.containers.TradeMarketPrimaryContainer;
-import com.wynntils.models.containers.containers.TradeMarketSecondaryContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
-import com.wynntils.models.containers.containers.personal.BlockBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
+import com.wynntils.models.containers.containers.personal.IslandBlockBankContainer;
 import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
+import com.wynntils.models.containers.containers.personal.PersonalBlockBankContainer;
 import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer;
 import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
@@ -47,14 +47,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     // Test in ContainerModel_ABILITY_TREE_PATTERN
-    public static final Pattern ABILITY_TREE_PATTERN =
-            Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
+    public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
 
-    public static final String CHARACTER_INFO_NAME = "Character Info";
+    public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
     public static final String COSMETICS_MENU_NAME = "Crates, Bombs & Cosmetics";
     public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
     public static final String GUILD_DIPLOMACY_MENU_NAME = "[a-zA-Z\\s]+: Diplomacy";
-    public static final String MASTERY_TOMES_NAME = "Mastery Tomes";
+    public static final String MASTERY_TOMES_NAME = "\uDAFF\uDFDB\uE005";
 
     private static final List<Container> containerTypes = new ArrayList<>();
     private Container currentContainer = null;
@@ -93,7 +92,6 @@ public final class ContainerModel extends Model {
         // Order does not matter here so just keep it alphabetical
         registerWynncraftContainer(new AbilityTreeContainer());
         registerWynncraftContainer(new AccountBankContainer());
-        registerWynncraftContainer(new BlockBankContainer());
         registerWynncraftContainer(new BookshelfContainer());
         registerWynncraftContainer(new ChallengeRewardContainer());
         registerWynncraftContainer(new CharacterBankContainer());
@@ -108,18 +106,19 @@ public final class ContainerModel extends Model {
         registerWynncraftContainer(new HousingJukeboxContainer());
         registerWynncraftContainer(new HousingListContainer());
         registerWynncraftContainer(new IngredientPouchContainer());
+        registerWynncraftContainer(new IslandBlockBankContainer());
         registerWynncraftContainer(new InventoryContainer());
         registerWynncraftContainer(new JukeboxContainer());
         registerWynncraftContainer(new LobbyContainer());
         registerWynncraftContainer(new LootChestContainer());
         registerWynncraftContainer(new MiscBucketContainer());
         registerWynncraftContainer(new ObjectiveRewardContainer());
+        registerWynncraftContainer(new PersonalBlockBankContainer());
         registerWynncraftContainer(new PetMenuContainer());
         registerWynncraftContainer(new ScrapMenuContainer());
         registerWynncraftContainer(new SeaskipperContainer());
         registerWynncraftContainer(new TradeMarketFiltersContainer());
-        registerWynncraftContainer(new TradeMarketPrimaryContainer());
-        registerWynncraftContainer(new TradeMarketSecondaryContainer());
+        registerWynncraftContainer(new TradeMarketContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerWynncraftContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
