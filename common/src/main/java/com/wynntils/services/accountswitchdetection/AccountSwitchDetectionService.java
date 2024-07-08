@@ -2,23 +2,25 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.wynntils;
+package com.wynntils.services.accountswitchdetection;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.persisted.config.Category;
-import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.components.Service;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.client.User;
+import java.util.List;
+import java.util.UUID;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@ConfigCategory(Category.WYNNTILS)
-public class AccountSwitchDetectionFeature extends Feature {
-    private User currentAccount = null;
+public class AccountSwitchDetectionService extends Service {
+    private UUID currentAccount = null;
+
+    public AccountSwitchDetectionService() {
+        super(List.of());
+    }
 
     @SubscribeEvent
     public void onTickAlways(TickAlwaysEvent e) {
@@ -26,11 +28,12 @@ public class AccountSwitchDetectionFeature extends Feature {
             return; // account switches only happen when not connected
 
         if (currentAccount == null) {
-            currentAccount = McUtils.mc().getUser();
-        } else if (currentAccount.getProfileId() != McUtils.mc().getUser().getProfileId()) {
-            currentAccount = McUtils.mc().getUser();
-            WynntilsMod.info("Account switch detected, reloading configs");
+            currentAccount = McUtils.mc().getUser().getProfileId();
+        } else if (currentAccount != McUtils.mc().getUser().getProfileId()) {
+            currentAccount = McUtils.mc().getUser().getProfileId();
+            WynntilsMod.info("Account switch detected, reloading configs and storages");
             Managers.Config.userSwitched();
+            Managers.Storage.userSwitched();
         }
     }
 }

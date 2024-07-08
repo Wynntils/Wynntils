@@ -99,12 +99,6 @@ public final class ConfigManager extends Manager {
         CONFIGS.addAll(configs);
     }
 
-    public void userSwitched() {
-        userConfigFile = new File(
-                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
-        reloadConfiguration();
-    }
-
     public void reloadConfiguration() {
         configObject = Managers.Json.loadPreciousJson(userConfigFile);
         loadConfigOptions(true, true);
@@ -338,5 +332,11 @@ public final class ConfigManager extends Manager {
         if (typedValue != null) {
             config.setValue(typedValue);
         }
+    }
+
+    public void userSwitched() {
+        userConfigFile = new File(
+                CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
+        init();
     }
 }

@@ -151,7 +151,6 @@ import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
-import com.wynntils.features.wynntils.AccountSwitchDetectionFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
@@ -372,7 +371,6 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region wynntils
-        registerFeature(new AccountSwitchDetectionFeature());
         registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
