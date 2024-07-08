@@ -633,11 +633,12 @@ public class TestRegex {
     @Test
     public void SkillPointAnnotator_LORE_PATTERN() {
         PatternTester p = new PatternTester(SkillPointAnnotator.class, "LORE_PATTERN");
-        p.shouldMatch(" ÀÀ§740 points§r    ÀÀÀ           ÀÀÀ§641 points");
-        p.shouldMatch(" ÀÀ§763 points§r    ÀÀÀ           ÀÀÀ§664 points");
-        p.shouldMatch("ÀÀÀ§7131 points§r               §6132 points");
-        p.shouldMatch(" ÀÀ§790 points§r    ÀÀÀ           ÀÀÀ§691 points");
-        p.shouldMatch(" ÀÀ§762 points§r    ÀÀÀ           ÀÀÀ§663 points");
+        p.shouldMatch("\uDB00\uDC03§7116 points§r\uDB00\uDC10       \uDB00\uDC10§6117 points");
+        p.shouldMatch("\uDB00\uDC03§7110 points§r\uDB00\uDC10       \uDB00\uDC10§6111 points");
+        p.shouldMatch("\uDB00\uDC06§798 points§r\uDB00\uDC13       \uDB00\uDC13§699 points");
+        p.shouldMatch("\uDB00\uDC03§7162 points§r\uDB00\uDC10       \uDB00\uDC10§6163 points");
+        p.shouldMatch("\uDB00\uDC06§790 points§r\uDB00\uDC13       \uDB00\uDC13§691 points");
+        p.shouldMatch("\uDB00\uDC03§7-29 points§r\uDB00\uDC10       \uDB00\uDC10§6-28 points");
     }
 
     @Test
