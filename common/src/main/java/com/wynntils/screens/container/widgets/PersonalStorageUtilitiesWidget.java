@@ -58,18 +58,20 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BANK_PANEL, getX(), getY());
 
-        FontRenderer.getInstance()
-                .renderScrollingText(
-                        guiGraphics.pose(),
-                        StyledText.fromString(Models.Bank.getPageName(Models.Bank.getCurrentPage())),
-                        getX() + 4,
-                        getY() + 4,
-                        getWidth() - 18,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL,
-                        1f);
+        if (!Models.Bank.isEditingName()) {
+            FontRenderer.getInstance()
+                    .renderScrollingText(
+                            guiGraphics.pose(),
+                            StyledText.fromString(Models.Bank.getPageName(Models.Bank.getCurrentPage())),
+                            getX() + 4,
+                            getY() + 4,
+                            getWidth() - 18,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            1f);
+        }
 
         editButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -99,10 +101,10 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         if (editInput != null) return;
 
         editInput = new TextInputBoxWidget(
-                getX() + 4,
-                getY() + 4,
+                getX() + 2,
+                getY() + 3,
                 getWidth() - 18,
-                FontRenderer.getInstance().getFont().lineHeight,
+                FontRenderer.getInstance().getFont().lineHeight + 2,
                 null,
                 (ScreenExtension) screen);
 

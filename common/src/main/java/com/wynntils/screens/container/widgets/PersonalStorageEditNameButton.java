@@ -67,7 +67,12 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            parent.addEditInput();
+            if (Models.Bank.isEditingName()) {
+                parent.removeEditInput();
+            } else {
+                parent.addEditInput();
+            }
+
             Models.Bank.toggleEditingName(!Models.Bank.isEditingName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
             Models.Bank.resetCurrentPageName();

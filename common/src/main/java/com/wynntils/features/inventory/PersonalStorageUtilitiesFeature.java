@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
@@ -101,6 +102,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         }
 
         Models.Bank.toggleEditingName(false);
+        widget.removeEditInput();
     }
 
     @SubscribeEvent
@@ -109,6 +111,15 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         if (!Models.Bank.isEditingName()) return;
 
         Models.Bank.saveCurrentPageName(widget.getName());
+        widget.removeEditInput();
+    }
+
+    @SubscribeEvent
+    public void onScroll(MouseScrollEvent event) {
+        if (!Models.Bank.isEditingName()) return;
+
+        // Scrolling with ContainerScrollFeature doesn't call ContainerClickEvent so toggle editing here
+        Models.Bank.toggleEditingName(false);
         widget.removeEditInput();
     }
 
