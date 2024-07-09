@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -59,8 +58,6 @@ public final class CharacterModel extends Model {
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
-    // FIXME: Remove once compass has ID
-    private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int COSMETICS_SLOT = 25;
     private static final int COSMETICS_BACK_SLOT = 9;
@@ -134,8 +131,9 @@ public final class CharacterModel extends Model {
         return isVeteran.get();
     }
 
+    // FIXME: Remove if this is not needed, or fix it for 2.1
     public boolean isHuntedMode() {
-        return McUtils.inventory().getItem(SOUL_POINT_SLOT).getItem() == Items.DIAMOND_AXE;
+        return false;
     }
 
     @SubscribeEvent
@@ -297,12 +295,12 @@ public final class CharacterModel extends Model {
     }
 
     private void updateCharacterId() {
-        ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
+        ItemStack compassItem = McUtils.inventory().items.get(CHARACTER_INFO_SLOT);
 
-        List<StyledText> soulLore = LoreUtils.getLore(soulPointItem);
+        List<StyledText> compassLore = LoreUtils.getLore(compassItem);
 
         String id = "";
-        for (StyledText line : soulLore) {
+        for (StyledText line : compassLore) {
             if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
                 id = line.getString(PartStyle.StyleType.NONE);
                 break;
