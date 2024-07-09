@@ -18,9 +18,11 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
     protected static final char POSITIVE_SPACE_HIGH_SURROGATE = '\uDB00';
     protected static final char NEGATIVE_SPACE_HIGH_SURROGATE = '\uDAFF';
 
+    // The separator between the display characters, usually before and after the "/" in the mana/health text
     private static final String SEPARATOR = "\uDB00\uDC02";
-    private static final String DISPLAY_CHARACTERS =
-            "\uE010\uE011\uE012\uE013\uE014\uE015\uE016\uE017\uE018\uE019\uE01A\uE01B\uE01C\uE01D\uE01E\uE01F\u0000";
+
+    // All possible display character ranges, extracted from the resource pack/font
+    private static final String DISPLAY_CHARACTERS = "\uE010-\uE01F";
 
     /**
      * Get the separators of the segment text in the action bar.
@@ -50,10 +52,10 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
             // Verify that the segment text is surrounded by the correct separators for this segment
             SegmentSeparators separators = segmentSeparators();
 
-            // First unicode characters' high surrogate
+            // First unicode character's high surrogate
             char startChar = segmentText.charAt(0);
 
-            // Last unicode characters' high surrogate
+            // Last unicode character's high surrogate
             char endChar = segmentText.charAt(segmentText.length() - 2);
 
             // Check if the segment text is surrounded by the correct separators

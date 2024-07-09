@@ -17,8 +17,8 @@ public class ManaBarSegmentMatcher implements ActionBarSegmentMatcher {
     // This is the last character of the mana bar
     private static final String LAST_SPACE_STRING = "\uDAFF\uDFA6";
 
-    // These are the characters that build the mana bar, collected from the resource pack
-    private static final String MANA_BAR_CHARS = "\uE080\uE081\uE082\uE083\uE084\uE085\uE086\uE087\uE088";
+    // These are the character ranges that build the mana bar, collected from the resource pack
+    private static final String MANA_BAR_CHARS = "\uE080-\uE088";
 
     // The mana bar should have 10 spacer+bar pairs
     private static final Pattern MANA_BAR_PATTERN = Pattern.compile("(.[" + MANA_BAR_CHARS + "]){10}");

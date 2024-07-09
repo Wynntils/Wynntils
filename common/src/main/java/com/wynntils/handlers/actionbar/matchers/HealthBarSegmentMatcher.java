@@ -8,27 +8,31 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.handlers.actionbar.segments.HealthBarSegment;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HealthBarSegmentMatcher implements ActionBarSegmentMatcher {
-    // 󏾜󏿂󏿿󏿿󏿿󏿿󏿿󏿿󏿿󏿿󏿿󐀠
-
     // The health bar can have multiple different background characters, collected from the resource pack
     private static final String HEALTH_BACKGROUND_CHARS = "\uE029\uE039\uE049\uE059\uE069";
 
+    // This is the spacer before the health bar background
+    private static final String HEALTH_BACKGROUND_SPACER = "\uDAFF\uDF9C";
+
     // This is the expected pattern for the health bar background (spacer + health bar background)
-    private static final Pattern BACKGROUND_PATTERN = Pattern.compile("\uDAFF\uDF9C[" + HEALTH_BACKGROUND_CHARS + "]");
+    private static final Pattern BACKGROUND_PATTERN =
+            Pattern.compile(HEALTH_BACKGROUND_SPACER + "[" + HEALTH_BACKGROUND_CHARS + "]");
 
     // This is the last character of the health bar
     private static final String LAST_SPACE_STRING = "\uDB00\uDC20";
 
     // These are the characters that build the health bar, collected from the resource pack
-    private static final String HEALTH_BAR_CHARS =
-            "\uE020\uE021\uE022\uE023\uE024\uE025\uE026\uE027\uE028\uE030\uE031\uE032\uE033\uE034\uE035\uE036\uE037\uE038\uE040\uE041\uE042\uE043\uE044\uE045\uE046\uE047\uE048\uE051\uE052\uE053\uE054\uE055\uE056\uE057\uE058";
+    private static final List<String> HEALTH_BAR_CHARS =
+            List.of("\uE020-\uE028", "\uE030-\uE038", "\uE040-\uE048", "\uE051-\uE058");
 
     // The health bar should have 10 spacer+bar pairs
-    private static final Pattern HEALTH_BAR_PATTERN = Pattern.compile("(.[" + HEALTH_BAR_CHARS + "]){10}");
+    private static final Pattern HEALTH_BAR_PATTERN =
+            Pattern.compile("(.[" + String.join("", HEALTH_BAR_CHARS) + "]){10}");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
