@@ -61,7 +61,7 @@ public final class ContainerModel extends Model {
     public ContainerModel() {
         super(List.of());
 
-        registerWynncraftContainers();
+        registerContainers();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -88,44 +88,44 @@ public final class ContainerModel extends Model {
         return currentContainer;
     }
 
-    private void registerWynncraftContainers() {
+    private void registerContainers() {
         // Order does not matter here so just keep it alphabetical
-        registerWynncraftContainer(new AbilityTreeContainer());
-        registerWynncraftContainer(new AccountBankContainer());
-        registerWynncraftContainer(new BookshelfContainer());
-        registerWynncraftContainer(new ChallengeRewardContainer());
-        registerWynncraftContainer(new CharacterBankContainer());
-        registerWynncraftContainer(new CharacterInfoContainer());
-        registerWynncraftContainer(new ContentBookContainer());
-        registerWynncraftContainer(new DailyRewardContainer());
-        registerWynncraftContainer(new FlyingChestContainer());
-        registerWynncraftContainer(new GuildBankContainer());
-        registerWynncraftContainer(new GuildManagementContainer());
-        registerWynncraftContainer(new GuildMemberListContainer());
-        registerWynncraftContainer(new GuildTerritoriesContainer());
-        registerWynncraftContainer(new HousingJukeboxContainer());
-        registerWynncraftContainer(new HousingListContainer());
-        registerWynncraftContainer(new IngredientPouchContainer());
-        registerWynncraftContainer(new IslandBlockBankContainer());
-        registerWynncraftContainer(new InventoryContainer());
-        registerWynncraftContainer(new JukeboxContainer());
-        registerWynncraftContainer(new LobbyContainer());
-        registerWynncraftContainer(new LootChestContainer());
-        registerWynncraftContainer(new MiscBucketContainer());
-        registerWynncraftContainer(new ObjectiveRewardContainer());
-        registerWynncraftContainer(new PersonalBlockBankContainer());
-        registerWynncraftContainer(new PetMenuContainer());
-        registerWynncraftContainer(new ScrapMenuContainer());
-        registerWynncraftContainer(new SeaskipperContainer());
-        registerWynncraftContainer(new TradeMarketFiltersContainer());
-        registerWynncraftContainer(new TradeMarketContainer());
+        registerContainer(new AbilityTreeContainer());
+        registerContainer(new AccountBankContainer());
+        registerContainer(new BookshelfContainer());
+        registerContainer(new ChallengeRewardContainer());
+        registerContainer(new CharacterBankContainer());
+        registerContainer(new CharacterInfoContainer());
+        registerContainer(new ContentBookContainer());
+        registerContainer(new DailyRewardContainer());
+        registerContainer(new FlyingChestContainer());
+        registerContainer(new GuildBankContainer());
+        registerContainer(new GuildManagementContainer());
+        registerContainer(new GuildMemberListContainer());
+        registerContainer(new GuildTerritoriesContainer());
+        registerContainer(new HousingJukeboxContainer());
+        registerContainer(new HousingListContainer());
+        registerContainer(new IngredientPouchContainer());
+        registerContainer(new IslandBlockBankContainer());
+        registerContainer(new InventoryContainer());
+        registerContainer(new JukeboxContainer());
+        registerContainer(new LobbyContainer());
+        registerContainer(new LootChestContainer());
+        registerContainer(new MiscBucketContainer());
+        registerContainer(new ObjectiveRewardContainer());
+        registerContainer(new PersonalBlockBankContainer());
+        registerContainer(new PetMenuContainer());
+        registerContainer(new ScrapMenuContainer());
+        registerContainer(new SeaskipperContainer());
+        registerContainer(new TradeMarketFiltersContainer());
+        registerContainer(new TradeMarketContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
-            registerWynncraftContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+            registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
         }
     }
 
-    private void registerWynncraftContainer(Container container) {
+    private void registerContainer(Container container) {
         containerTypes.add(container);
     }
 }
