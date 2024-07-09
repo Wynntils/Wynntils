@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.actionbar.matchers;
+package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.segments.LevelSegment;
+import com.wynntils.models.characterstats.actionbar.segments.LevelSegment;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +23,7 @@ public class LevelSegmentMatcher implements ActionBarSegmentMatcher {
     // The expected pattern for the level segment
     // Allow 6 characters for the level, because the level is 3 digits + 2-3 separator characters
     // There is also a space character at the start and end of the segment
-    private static final Pattern LEVEL_PATTERN = Pattern.compile(".[" + LEVEL_CHARS + SEPARATOR + "]{1,6}.");
+    private static final Pattern LEVEL_PATTERN = Pattern.compile(".([" + LEVEL_CHARS + "]" + SEPARATOR + "?){1,6}.");
 
     @Override
     public ActionBarSegment parse(String actionBar) {

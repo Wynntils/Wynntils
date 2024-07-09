@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.actionbar.matchers;
+package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.segments.PowderSpecialSegment;
+import com.wynntils.models.characterstats.actionbar.segments.PowderSpecialSegment;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.type.Pair;
 import java.util.Arrays;

@@ -8,13 +8,12 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
-import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.spells.actionbar.SpellSegmentOld;
+import com.wynntils.models.spells.actionbar.matchers.SpellSegmentMatcher;
+import com.wynntils.models.spells.actionbar.segments.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
-import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
-import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
@@ -22,19 +21,14 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.MatchResult;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    // Test in SpellModel_SPELL_TITLE_PATTERN
-    private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
-            "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
     private static final int SPELL_COST_RESET_TICKS = 60;
-
-    private final SpellSegmentOld spellSegment = new SpellSegmentOld();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
@@ -47,7 +41,7 @@ public class SpellModel extends Model {
     public SpellModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(spellSegment);
+        Handlers.ActionBar.registerSegment(new SpellSegmentMatcher());
         Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
     }
 
@@ -78,40 +72,24 @@ public class SpellModel extends Model {
     }
 
     @SubscribeEvent
-    public void onSpellSegmentUpdate(SpellSegmentUpdateEvent e) {
-        Matcher matcher = e.getMatcher();
-        if (!matcher.matches()) return;
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        Optional<SpellSegment> spellSegmentOpt = event.getSegments().stream()
+                .filter(SpellSegment.class::isInstance)
+                .map(SpellSegment.class::cast)
+                .findFirst();
 
-        SpellDirection[] spell = getSpellFromMatcher(e.getMatcher());
-        if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
-        lastSpell = spell;
+        if (spellSegmentOpt.isEmpty()) return;
 
-        WynntilsMod.postEvent(new SpellEvent.Partial(spell, PartialSpellSource.HOTBAR));
+        SpellSegment spellSegment = spellSegmentOpt.get();
 
-        if (!matcher.group(3).equals("?")) {
-            WynntilsMod.postEvent(new SpellEvent.Completed(
-                    spell, PartialSpellSource.HOTBAR, SpellType.fromSpellDirectionArray(spell)));
-        }
-    }
+        // Wynn sometimes sends duplicate packets, skip those
+        if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
+        lastSpell = spellSegment.getDirections();
 
-    @SubscribeEvent
-    public void onSubtitleSetText(SubtitleSetTextEvent e) {
-        Matcher matcher = SPELL_TITLE_PATTERN.matcher(e.getComponent().getString());
-        if (!matcher.matches()) return;
+        WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
-        SpellDirection[] spell = getSpellFromMatcher(matcher);
-        if (Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
-        lastSpell = spell;
-
-        // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source
-        PartialSpellSource partialSpellSource =
-                (matcher.group(1).endsWith("t")) ? PartialSpellSource.TITLE_FULL : PartialSpellSource.TITLE_LETTER;
-
-        WynntilsMod.postEvent(new SpellEvent.Partial(spell, partialSpellSource));
-
-        if (!matcher.group(3).equals("?")) {
-            WynntilsMod.postEvent(
-                    new SpellEvent.Completed(spell, partialSpellSource, SpellType.fromSpellDirectionArray(spell)));
+        if (lastSpell.length == 3) {
+            WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
         }
     }
 
@@ -183,19 +161,5 @@ public class SpellModel extends Model {
 
     public int getTicksSinceCast() {
         return ticksSinceCast;
-    }
-
-    private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {
-        int size = 1;
-        for (; size < 3; ++size) {
-            if (spellMatcher.group(size + 1).equals("?")) break;
-        }
-
-        SpellDirection[] spell = new SpellDirection[size];
-        for (int i = 0; i < size; ++i) {
-            spell[i] = spellMatcher.group(i + 1).charAt(0) == 'R' ? SpellDirection.RIGHT : SpellDirection.LEFT;
-        }
-
-        return spell;
     }
 }

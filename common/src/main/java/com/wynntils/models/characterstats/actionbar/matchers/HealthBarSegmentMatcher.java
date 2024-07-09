@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.actionbar.matchers;
+package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.segments.HealthBarSegment;
+import com.wynntils.models.characterstats.actionbar.segments.HealthBarSegment;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

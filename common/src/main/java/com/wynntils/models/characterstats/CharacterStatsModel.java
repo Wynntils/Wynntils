@@ -10,11 +10,20 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.models.characterstats.actionbar.CoordinatesSegmentOld;
 import com.wynntils.models.characterstats.actionbar.HealthSegmentOld;
 import com.wynntils.models.characterstats.actionbar.ManaSegmentOld;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegmentOld;
 import com.wynntils.models.characterstats.actionbar.SprintSegmentOld;
+import com.wynntils.models.characterstats.actionbar.matchers.HealthBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.HealthTextSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.HotbarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.LevelSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.ManaBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.ManaTextSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.MeterBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.MeterEdgeAnimationSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.MeterStateAnimationSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.PowderSpecialSegmentMatcher;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
@@ -33,7 +42,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
-    private final CoordinatesSegmentOld coordinatesSegment = new CoordinatesSegmentOld(this::centerSegmentCleared);
     private final HealthSegmentOld healthSegment = new HealthSegmentOld();
     private final ManaSegmentOld manaSegment = new ManaSegmentOld();
     private final PowderSpecialSegmentOld powderSpecialSegment = new PowderSpecialSegmentOld();
@@ -42,11 +50,17 @@ public final class CharacterStatsModel extends Model {
     public CharacterStatsModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(coordinatesSegment);
-        Handlers.ActionBar.registerSegment(healthSegment);
-        Handlers.ActionBar.registerSegment(manaSegment);
-        Handlers.ActionBar.registerSegment(powderSpecialSegment);
-        Handlers.ActionBar.registerSegment(sprintSegment);
+        // Register all segment matchers
+        Handlers.ActionBar.registerSegment(new HotbarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new MeterBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new MeterEdgeAnimationSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new MeterStateAnimationSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new LevelSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new ManaBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new HealthBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new ManaTextSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new HealthTextSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new PowderSpecialSegmentMatcher());
     }
 
     public CappedValue getHealth() {
@@ -142,7 +156,7 @@ public final class CharacterStatsModel extends Model {
 
     /**
      * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
-     *
+     * <p>
      * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
      * in which case soul points are already full
      */

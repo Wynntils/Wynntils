@@ -9,17 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
-import com.wynntils.handlers.actionbar.matchers.HealthBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.HealthTextSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.HotbarSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.LevelSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.ManaBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.ManaTextSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.MeterBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.MeterEdgeAnimationSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.MeterStateAnimationSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.PowderSpecialSegmentMatcher;
-import com.wynntils.handlers.actionbar.matchers.SpellSegmentMatcher;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.type.IterationDecision;
@@ -31,32 +21,20 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 // FIXME: Clean up old classes
 public final class ActionBarHandler extends Handler {
-    // FIXME: Remove
-    public void registerSegment(OldActionBarSegment segment) {}
-
     private static final ResourceLocation ACTION_BAR_FONT = ResourceLocation.withDefaultNamespace("hud/default/center");
     private static final ResourceLocation COORDINATES_FONT =
             ResourceLocation.withDefaultNamespace("hud/default/top_right");
 
-    // Segment matcher order is the order they get parsed in
-    // Currently, the text is parsed the last, as it's the most "unstable" segment
-    private static final List<ActionBarSegmentMatcher> SEGMENT_MATCHERS = List.of(
-            new HotbarSegmentMatcher(),
-            new MeterBarSegmentMatcher(),
-            new MeterEdgeAnimationSegmentMatcher(),
-            new MeterStateAnimationSegmentMatcher(),
-            new LevelSegmentMatcher(),
-            new ManaBarSegmentMatcher(),
-            new HealthBarSegmentMatcher(),
-            new ManaTextSegmentMatcher(),
-            new HealthTextSegmentMatcher(),
-            new SpellSegmentMatcher(),
-            new PowderSpecialSegmentMatcher());
-
     private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
+
+    private final List<ActionBarSegmentMatcher> segmentMatchers = new ArrayList<>();
 
     private StyledText lastParsedActionBarText = StyledText.EMPTY;
     private List<ActionBarSegment> lastMatchedSegments = new ArrayList<>();
+
+    public void registerSegment(ActionBarSegmentMatcher segmentMatcher) {
+        segmentMatchers.add(segmentMatcher);
+    }
 
     @SubscribeEvent
     public void onActionBarUpdate(ChatPacketReceivedEvent.GameInfo event) {
@@ -101,6 +79,8 @@ public final class ActionBarHandler extends Handler {
             if (WynntilsMod.isDevelopmentBuild() || WynntilsMod.isDevelopmentEnvironment()) {
                 debugChecks(matchedSegments, actionBarText);
             }
+
+            WynntilsMod.postEvent(new ActionBarUpdatedEvent(matchedSegments));
         }
 
         ActionBarRenderEvent actionBarRenderEvent = new ActionBarRenderEvent(matchedSegments);
@@ -125,8 +105,9 @@ public final class ActionBarHandler extends Handler {
     public List<ActionBarSegment> parseActionBarSegments(StyledText actionBarText) {
         List<ActionBarSegment> matchedSegments = new ArrayList<>();
 
-        for (ActionBarSegmentMatcher segmentMatcher : SEGMENT_MATCHERS) {
-            ActionBarSegment parsedSegment = segmentMatcher.parse(actionBarText.getString());
+        for (ActionBarSegmentMatcher segmentMatcher : segmentMatchers) {
+            ActionBarSegment parsedSegment =
+                    segmentMatcher.parse(actionBarText.getString().replaceAll("%", ""));
             if (parsedSegment == null) continue;
 
             matchedSegments.add(parsedSegment);

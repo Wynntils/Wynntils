@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.actionbar.matchers;
+package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.handlers.actionbar.segments.HotbarSegment;
+import com.wynntils.models.characterstats.actionbar.segments.HotbarSegment;
 
 public class HotbarSegmentMatcher implements ActionBarSegmentMatcher {
     // This is the expected string for the hotbar, which should be "static" and not change

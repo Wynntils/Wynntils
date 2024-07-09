@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
@@ -40,7 +39,7 @@ public class CoordinateOverlay extends TextOverlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        Models.CharacterStats.hideCoordinates(!this.shouldDisplayOriginal.get());
+        // FIXME: Port this to the new system
     }
 
     @Override

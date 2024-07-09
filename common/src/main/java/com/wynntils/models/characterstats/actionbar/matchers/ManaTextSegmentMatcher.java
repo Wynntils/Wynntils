@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.handlers.actionbar.matchers;
+package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
-import com.wynntils.handlers.actionbar.segments.HealthTextSegment;
+import com.wynntils.models.characterstats.actionbar.segments.ManaTextSegment;
 
-public class HealthTextSegmentMatcher extends AbstractTextSegmentMatcher {
+public class ManaTextSegmentMatcher extends AbstractTextSegmentMatcher {
     private static final SegmentSeparators SEPARATORS =
-            new SegmentSeparators(NEGATIVE_SPACE_HIGH_SURROGATE, POSITIVE_SPACE_HIGH_SURROGATE);
+            new SegmentSeparators(POSITIVE_SPACE_HIGH_SURROGATE, NEGATIVE_SPACE_HIGH_SURROGATE);
 
     @Override
     protected SegmentSeparators segmentSeparators() {
@@ -18,6 +18,6 @@ public class HealthTextSegmentMatcher extends AbstractTextSegmentMatcher {
 
     @Override
     protected ActionBarSegment createSegment(String segmentText) {
-        return new HealthTextSegment(segmentText);
+        return new ManaTextSegment(segmentText);
     }
 }

@@ -11,6 +11,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.neoforged.bus.api.Event;
 
+/**
+ * This event is fired on every instance of action bar recalculation, effectively, acting as a render event.
+ * It allows for the modification of the action bar segments that are displayed to the player.
+ * If you want to listen to segment changes, you should use {@link ActionBarUpdatedEvent}.
+ */
 public class ActionBarRenderEvent extends Event {
     private final Map<ActionBarSegment, Boolean> segments;
 
