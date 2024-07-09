@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
@@ -145,11 +146,11 @@ public class HorseMountFeature extends Feature {
                 return i;
             }
 
-            // weapons (temp. disabled due to wynn bug)
-            //            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-            //            if (gearItemOpt.isPresent() && gearItemOpt.get().getGearType().isWeapon()) {
-            //                return i;
-            //            }
+            // weapons
+            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+            if (gearItemOpt.isPresent() && gearItemOpt.get().getGearType().isWeapon()) {
+                return i;
+            }
         }
 
         return -1;
