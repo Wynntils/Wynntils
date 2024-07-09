@@ -76,11 +76,11 @@ public final class CharacterStatsModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.updateIfPresent(LevelSegment.class, this::updateLevel);
-        event.updateIfPresent(HealthTextSegment.class, this::updateHealth);
-        event.updateIfPresent(ManaTextSegment.class, this::updateMana);
-        event.updateIfPresent(MeterBarSegment.class, this::updateSprint);
-        event.updateIfPresent(PowderSpecialSegment.class, this::updatePowderSpecial);
+        event.runIfPresent(LevelSegment.class, this::updateLevel);
+        event.runIfPresent(HealthTextSegment.class, this::updateHealth);
+        event.runIfPresent(ManaTextSegment.class, this::updateMana);
+        event.runIfPresent(MeterBarSegment.class, this::updateSprint);
+        event.runIfPresent(PowderSpecialSegment.class, this::updatePowderSpecial);
     }
 
     @SubscribeEvent

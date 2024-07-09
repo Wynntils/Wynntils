@@ -25,7 +25,7 @@ public class ActionBarUpdatedEvent extends Event {
         return segments;
     }
 
-    public <T extends ActionBarSegment> void updateIfPresent(Class<T> clazz, Consumer<T> consumer) {
+    public <T extends ActionBarSegment> void runIfPresent(Class<T> clazz, Consumer<T> consumer) {
         segments.stream().filter(clazz::isInstance).map(clazz::cast).findFirst().ifPresent(consumer);
     }
 }

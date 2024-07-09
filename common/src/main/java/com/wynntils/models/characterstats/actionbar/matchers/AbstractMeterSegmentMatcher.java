@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A common base class for all the meter segments in the action bar (center hexagon with level, sprint and breath bars).
+ */
 public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMatcher {
     // The start of a meter segment, a spacer
     private static final String SEGMENT_START = "\uDAFF\uDFF4";

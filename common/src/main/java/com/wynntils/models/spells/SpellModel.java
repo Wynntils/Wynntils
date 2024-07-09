@@ -72,7 +72,7 @@ public class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.updateIfPresent(SpellSegment.class, this::updateFromSpellSegment);
+        event.runIfPresent(SpellSegment.class, this::updateFromSpellSegment);
     }
 
     @SubscribeEvent
@@ -146,7 +146,7 @@ public class SpellModel extends Model {
     }
 
     private void updateFromSpellSegment(SpellSegment spellSegment) {
-        // Wynn sometimes sends duplicate packets, skip those
+        // noop if the spell state hasn't changed
         if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
         lastSpell = spellSegment.getDirections();
 
