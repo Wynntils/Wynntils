@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -132,8 +131,9 @@ public final class CharacterModel extends Model {
         return isVeteran.get();
     }
 
+    // FIXME: Remove if this is not needed, or fix it for 2.1
     public boolean isHuntedMode() {
-        return McUtils.inventory().getItem(SOUL_POINT_SLOT).getItem() == Items.DIAMOND_AXE;
+        return false;
     }
 
     @SubscribeEvent
