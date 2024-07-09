@@ -8,6 +8,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
+import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
@@ -91,6 +93,8 @@ public final class ContainerModel extends Model {
     private void registerContainers() {
         // Order does not matter here so just keep it alphabetical
         registerContainer(new AbilityTreeContainer());
+        registerContainer(new AbilityTreeResetContainer());
+        registerContainer(new AspectsContainer());
         registerContainer(new AccountBankContainer());
         registerContainer(new BookshelfContainer());
         registerContainer(new ChallengeRewardContainer());
