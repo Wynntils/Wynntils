@@ -1,3 +1,24 @@
+## [2.0.0-beta.4](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2024-07-09)
+
+
+### New Features
+
+* Rework custom bank page names and quick jumps for 2.1 ([#2637](https://github.com/Wynntils/Artemis/issues/2637)) ([28c5dc1](https://github.com/Wynntils/Artemis/commit/28c5dc1ea4d7e9d6861f4d08e96abb41cda56c13))
+
+
+### Bug Fixes
+
+* Fix custom seaskipper screen [skip ci] ([#2639](https://github.com/Wynntils/Artemis/issues/2639)) ([69a64d5](https://github.com/Wynntils/Artemis/commit/69a64d50add051b1afc102cf2c2fa51ec74e9dec))
+* Fix emerald pouch annotator [skip ci] ([#2640](https://github.com/Wynntils/Artemis/issues/2640)) ([3e6e4ed](https://github.com/Wynntils/Artemis/commit/3e6e4edbed864cf20f1bb85337347b6b8d965103))
+* Fix skill point annotator [skip ci] ([#2638](https://github.com/Wynntils/Artemis/issues/2638)) ([a7923ea](https://github.com/Wynntils/Artemis/commit/a7923ea9bb2cbc6a291b51edd0ebb155706be943))
+* Horse keybind no longer relies on soul point item [skip ci] ([#2641](https://github.com/Wynntils/Artemis/issues/2641)) ([46fa447](https://github.com/Wynntils/Artemis/commit/46fa447429a52b7c055f3b2248b82c4d2f916758))
+* Teleport scroll annotator beta port [skip ci] ([#2642](https://github.com/Wynntils/Artemis/issues/2642)) ([e220265](https://github.com/Wynntils/Artemis/commit/e22026590e89e65d516119737b581e87ae872464))
+
+
+### Miscellaneous Chores
+
+* remove (almost) everything related to soul points [skip ci] ([#2643](https://github.com/Wynntils/Artemis/issues/2643)) ([d4a15b6](https://github.com/Wynntils/Artemis/commit/d4a15b6d45e6d25edbf2ed6d85786f88ce5bbfbd))
+
 ## [2.0.0-beta.3](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2024-07-07)
 
 
@@ -8,6 +29,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.0.0-beta.3 [skip ci] ([5c26511](https://github.com/Wynntils/Artemis/commit/5c265110c3df8f16402042a587d72d22373a589f))
 * Support fonts in StyledText [skip ci] ([#2635](https://github.com/Wynntils/Artemis/issues/2635)) ([4948a85](https://github.com/Wynntils/Artemis/commit/4948a85d4bc2c7b426cdfcc472fea8700e24de0e))
 
 ## [2.0.0-beta.2](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-07-07)
@@ -50,17 +72,4 @@
 
 * Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([497297b](https://github.com/Wynntils/Artemis/commit/497297b39cfa3aaea9f19d98c36aa8bcfe6da69c))
 * **release:** v2.0.0-beta.0 [skip ci] ([2ca015e](https://github.com/Wynntils/Artemis/commit/2ca015e4659f6fa35a7ddf9f9b9324ecc6fddf8e))
-
-## [2.0.0-alpha.0](https://github.com/Wynntils/Artemis/compare/v1.2.30...v2.0.0-alpha.0) (2024-07-01)
-
-
-### Bug Fixes
-
-* Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Artemis/issues/2619)) ([dc00047](https://github.com/Wynntils/Artemis/commit/dc00047f6e763224f9db0dc19aa33247981ce2b5))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.31 [skip ci] ([5e009e9](https://github.com/Wynntils/Artemis/commit/5e009e9b1fa86aa6e9f644897c83a57eddeadd01))
-* **release:** v2.0.0-alpha.0 [skip ci] ([b2886bb](https://github.com/Wynntils/Artemis/commit/b2886bb6a1b3ed6d383f642925c2ea15eabb589d))
 
