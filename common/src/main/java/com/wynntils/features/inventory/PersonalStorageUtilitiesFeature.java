@@ -60,7 +60,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         int renderY = (screen.height - screen.imageHeight) / 2;
 
         widget = screen.addRenderableWidget(
-                new PersonalStorageUtilitiesWidget(renderX - 108, renderY + 7, storageContainer, this, screen));
+                new PersonalStorageUtilitiesWidget(renderX - 108, renderY, storageContainer, this, screen));
     }
 
     @SubscribeEvent

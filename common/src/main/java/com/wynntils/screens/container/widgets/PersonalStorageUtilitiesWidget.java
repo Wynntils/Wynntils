@@ -49,7 +49,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
         this.feature = feature;
         this.screen = screen;
 
-        editButton = new PersonalStorageEditNameButton(x + 86, y + 2, 14, 14, this);
+        editButton = new PersonalStorageEditNameButton(x + 86, y + 9, 14, 14, this);
 
         addJumpButtons();
     }
@@ -64,7 +64,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                             guiGraphics.pose(),
                             StyledText.fromString(Models.Bank.getPageName(Models.Bank.getCurrentPage())),
                             getX() + 4,
-                            getY() + 4,
+                            getY() + 11,
                             getWidth() - 18,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
@@ -125,7 +125,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
     private void addJumpButtons() {
         int renderX = getX() + 6;
-        int renderY = getY() + 16;
+        int renderY = getY() + 23;
 
         for (int i = 0; i < container.getFinalPage(); i++) {
             quickJumpButtons.add(new QuickJumpButton(renderX, renderY, i + 1, this));
