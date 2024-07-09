@@ -255,7 +255,7 @@ public enum Texture {
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
-    BANK_PANEL("ui_components/bank_panel.png", 100, 110),
+    BANK_PANEL("ui_components/bank_panel.png", 100, 117),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
