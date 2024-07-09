@@ -59,8 +59,6 @@ public final class CharacterModel extends Model {
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
-    // FIXME: Remove once compass has ID
-    private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int COSMETICS_SLOT = 25;
     private static final int COSMETICS_BACK_SLOT = 9;
@@ -297,12 +295,12 @@ public final class CharacterModel extends Model {
     }
 
     private void updateCharacterId() {
-        ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
+        ItemStack compassItem = McUtils.inventory().items.get(CHARACTER_INFO_SLOT);
 
-        List<StyledText> soulLore = LoreUtils.getLore(soulPointItem);
+        List<StyledText> compassLore = LoreUtils.getLore(compassItem);
 
         String id = "";
-        for (StyledText line : soulLore) {
+        for (StyledText line : compassLore) {
             if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
                 id = line.getString(PartStyle.StyleType.NONE);
                 break;

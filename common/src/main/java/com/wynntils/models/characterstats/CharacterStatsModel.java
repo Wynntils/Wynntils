@@ -18,7 +18,6 @@ import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -27,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -105,50 +102,6 @@ public final class CharacterStatsModel extends Model {
                         (int) endY,
                         McUtils.player().blockPosition().getZ()));
         return McUtils.player().position().y - endY;
-    }
-
-    /**
-     * Return the maximum number of soul points the character can currently have
-     */
-    private int getMaxSoulPoints() {
-        if (Models.Character.isVeteran()) {
-            return 15;
-        }
-
-        int maxIfNotVeteran =
-                10 + MathUtils.clamp(Models.CombatXp.getCombatLevel().current() / 15, 0, 5);
-        if (getCurrentSoulPoints() > maxIfNotVeteran) {
-            return 15;
-        }
-        return maxIfNotVeteran;
-    }
-
-    /**
-     * Return the current number of soul points of the character, or -1 if unable to determine
-     */
-    private int getCurrentSoulPoints() {
-        ItemStack soulPoints = McUtils.inventory().getItem(8);
-        if (soulPoints.getItem() == Items.NETHER_STAR || soulPoints.getItem() == Items.DIAMOND_AXE) {
-            return soulPoints.getCount();
-        }
-
-        return -1;
-    }
-
-    public CappedValue getSoulPoints() {
-        // FIXME: We should be able to cache this
-        return new CappedValue(getCurrentSoulPoints(), getMaxSoulPoints());
-    }
-
-    /**
-     * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
-     *
-     * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
-     * in which case soul points are already full
-     */
-    public int getTicksToNextSoulPoint() {
-        if (McUtils.mc().level == null) return -1;
-        return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
     }
 
     public List<GearInfo> getWornGear() {
