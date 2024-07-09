@@ -1,3 +1,10 @@
+## [2.0.0-beta.5](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2024-07-09)
+
+
+### New Features
+
+* Support the 2.1 action bar (custom bars, disabling parts) ([#2636](https://github.com/Wynntils/Artemis/issues/2636)) ([2abca5c](https://github.com/Wynntils/Artemis/commit/2abca5c0ef5d9e3fe1ff8d6c543fb3849eb6ba6b))
+
 ## [2.0.0-beta.4](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2024-07-09)
 
 
@@ -17,6 +24,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.0.0-beta.4 [skip ci] ([b9b1437](https://github.com/Wynntils/Artemis/commit/b9b143705b433862a30693ab762bf2c3a31ea2b1))
 * remove (almost) everything related to soul points [skip ci] ([#2643](https://github.com/Wynntils/Artemis/issues/2643)) ([d4a15b6](https://github.com/Wynntils/Artemis/commit/d4a15b6d45e6d25edbf2ed6d85786f88ce5bbfbd))
 
 ## [2.0.0-beta.3](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2024-07-07)
@@ -64,12 +72,4 @@
 * Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([0ca18d4](https://github.com/Wynntils/Artemis/commit/0ca18d4f535d2bdb23358a83fe28e6a46e8cf03e))
 * **release:** v2.0.0-beta.1 [skip ci] ([3fdfd48](https://github.com/Wynntils/Artemis/commit/3fdfd48d625bb824f692ec6eb92c1c341b750c5a))
 * Update mod incompatibilities [skip ci] ([#2620](https://github.com/Wynntils/Artemis/issues/2620)) ([0a14acd](https://github.com/Wynntils/Artemis/commit/0a14acde7822442f32519cb7562d5a5a1eb1706e))
-
-## [2.0.0-beta.0](https://github.com/Wynntils/Artemis/compare/v2.0.0-alpha.0...v2.0.0-beta.0) (2024-07-01)
-
-
-### Miscellaneous Chores
-
-* Port to 1.21, using NeoForge EventBus ([#2597](https://github.com/Wynntils/Artemis/issues/2597)) ([497297b](https://github.com/Wynntils/Artemis/commit/497297b39cfa3aaea9f19d98c36aa8bcfe6da69c))
-* **release:** v2.0.0-beta.0 [skip ci] ([2ca015e](https://github.com/Wynntils/Artemis/commit/2ca015e4659f6fa35a7ddf9f9b9324ecc6fddf8e))
 
