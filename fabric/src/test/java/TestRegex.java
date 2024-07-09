@@ -13,10 +13,6 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
-import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
-import com.wynntils.models.characterstats.actionbar.ManaSegment;
-import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
-import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
@@ -30,8 +26,6 @@ import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
-import com.wynntils.models.spells.SpellModel;
-import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
@@ -231,14 +225,6 @@ public class TestRegex {
     public void ContainerModel_ABILITY_TREE_PATTERN() {
         PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
         p.shouldMatch("\uDAFF\uDFEA\uE000");
-    }
-
-    @Test
-    public void CoordinatesSegment_COORDINATES_PATTERN() {
-        PatternTester p = new PatternTester(CoordinatesSegment.class, "COORDINATES_PATTERN");
-        p.shouldMatch("§7457§f N§7 -1576");
-        p.shouldMatch("§7-1§f NW§7 154");
-        p.shouldMatch("§7-736§f S§7 -1575");
     }
 
     @Test
@@ -474,14 +460,6 @@ public class TestRegex {
     }
 
     @Test
-    public void ManaSegment_MANA_PATTERN() {
-        PatternTester p = new PatternTester(ManaSegment.class, "MANA_PATTERN");
-        p.shouldMatch("§b✺ 175/175");
-        p.shouldMatch("§b✺ 56/175");
-        p.shouldMatch("✺ 175/175");
-    }
-
-    @Test
     public void OphanimBar_OPHANIM_PATTERN() {
         PatternTester p = new PatternTester(OphanimBar.class, "OPHANIM_PATTERN");
         p.shouldMatch("§710s Healed: §f66% §3[§b⏺⏺⏺⏺⏺⏺§3]");
@@ -513,19 +491,6 @@ public class TestRegex {
         PatternTester p = new PatternTester(PersonalStorageUtilitiesFeature.class, "PAGE_PATTERN");
         p.shouldMatch("§7- §f\uE006§8 Page 1");
         p.shouldMatch("§7- §f\uE007§8 Page 3");
-    }
-
-    @Test
-    public void PowderSpecialSegment_POWDER_SPECIAL_PATTERN() {
-        PatternTester p = new PatternTester(PowderSpecialSegment.class, "POWDER_SPECIAL_PATTERN");
-        // curse/partial charge
-        p.shouldMatch("§7❉ 87%");
-        // curse/full charge
-        p.shouldMatch("§b❉ 100%");
-        // courage/partial charge
-        p.shouldMatch("§7✹ 78%");
-        // courage/full charge
-        p.shouldMatch("§c✹ 100%");
     }
 
     @Test
@@ -634,81 +599,6 @@ public class TestRegex {
         p.shouldMatch("\uDB00\uDC03§7162 points§r\uDB00\uDC10       \uDB00\uDC10§6163 points");
         p.shouldMatch("\uDB00\uDC06§790 points§r\uDB00\uDC13       \uDB00\uDC13§691 points");
         p.shouldMatch("\uDB00\uDC03§7-29 points§r\uDB00\uDC10       \uDB00\uDC10§6-28 points");
-    }
-
-    @Test
-    public void SpellModel_SPELL_TITLE_PATTERN() {
-        PatternTester p = new PatternTester(SpellModel.class, "SPELL_TITLE_PATTERN");
-        // Lv1 R??
-        p.shouldMatch("§aRight§7-§7§n?§7-§r§7?§r");
-        // Lv1 RL?
-        p.shouldMatch("§aRight§7-§aLeft§7-§r§7§n?§r");
-        // Lv1 RLR
-        p.shouldMatch("§aRight§7-§aLeft§7-§r§aRight§r");
-        // Lv1 RR?
-        p.shouldMatch("§aRight§7-§aRight§7-§r§7§n?§r");
-        // Lv1 RRL
-        p.shouldMatch("§aRight§7-§aRight§7-§r§aLeft§r");
-        // Lv1 RRR
-        p.shouldMatch("§aRight§7-§aRight§7-§r§aRight§r");
-        // Lv1 RLL
-        p.shouldMatch("§aRight§7-§aLeft§7-§r§aLeft§r");
-        // L??
-        p.shouldMatch("§aL§7-§7§n?§7-§r§7?§r");
-        // LL?
-        p.shouldMatch("§aL§7-§aL§7-§r§7§n?§r");
-        // LLL
-        p.shouldMatch("§aL§7-§aL§7-§r§aL§r");
-        // LR?
-        p.shouldMatch("§aL§7-§aR§7-§r§7§n?§r");
-        // LRL
-        p.shouldMatch("§aL§7-§aR§7-§r§aL§r");
-        // R??
-        p.shouldMatch("§aR§7-§7§n?§7-§r§7?§r");
-        // RL?
-        p.shouldMatch("§aR§7-§aL§7-§r§7§n?§r");
-        // RRL
-        p.shouldMatch("§aR§7-§aR§7-§r§aL§r");
-    }
-
-    @Test
-    public void SpellSegment_SPELL_PATTERN() {
-        PatternTester p = new PatternTester(SpellSegment.class, "SPELL_PATTERN");
-        // L??
-        p.shouldMatch("§aL§7-§n?§r§7-?§r");
-        // LR?
-        p.shouldMatch("§aL§7-§aR§7-§n?§r");
-        // LRL
-        p.shouldMatch("§aL§7-§aR§7-§aL§r");
-        // LLR
-        p.shouldMatch("§aL§7-§aL§7-§aR§r");
-        // R??
-        p.shouldMatch("§aR§7-§n?§r§7-?§r");
-        // RR?
-        p.shouldMatch("§aR§7-§aR§7-§n?§r");
-        // RRR
-        p.shouldMatch("§aR§7-§aR§7-§aR§r");
-    }
-
-    @Test
-    public void SprintSegment_SPRINT_PATTERN() {
-        PatternTester p = new PatternTester(SprintSegment.class, "SPRINT_PATTERN");
-        // green sprint bar
-        p.shouldMatch("§2[§a|||Sprint|§8||§2]");
-        // green sprint text 1
-        p.shouldMatch("§2[§a|||Sprin§8t|||§2]");
-        // green sprint text 2
-        p.shouldMatch("§6[§e|||S§8print|||§6]");
-        // yellow sprint text
-        p.shouldMatch("§6[§e|||§8Sprint|||§6]");
-        // yellow sprint bar
-        p.shouldMatch("§6[§e|§8||Sprint|||§6]");
-        // no sprint grey
-        p.shouldMatch("§4[§8|||Sprint|||§4]");
-        // no sprint red
-        p.shouldMatch("§4[§c|||Sprint|||§4]");
-        // max sprint
-        p.shouldMatch("§2[§a|||Sprint|||§2]");
     }
 
     @Test
