@@ -7,13 +7,10 @@ package com.wynntils.models.characterstats;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
-import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.models.characterstats.actionbar.HealthSegmentOld;
-import com.wynntils.models.characterstats.actionbar.ManaSegmentOld;
-import com.wynntils.models.characterstats.actionbar.PowderSpecialSegmentOld;
-import com.wynntils.models.characterstats.actionbar.SprintSegmentOld;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthTextSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HotbarSegmentMatcher;
@@ -24,25 +21,37 @@ import com.wynntils.models.characterstats.actionbar.matchers.MeterBarSegmentMatc
 import com.wynntils.models.characterstats.actionbar.matchers.MeterEdgeAnimationSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.MeterStateAnimationSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.PowderSpecialSegmentMatcher;
-import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.characterstats.actionbar.segments.HealthBarSegment;
+import com.wynntils.models.characterstats.actionbar.segments.HealthTextSegment;
+import com.wynntils.models.characterstats.actionbar.segments.LevelSegment;
+import com.wynntils.models.characterstats.actionbar.segments.ManaBarSegment;
+import com.wynntils.models.characterstats.actionbar.segments.ManaTextSegment;
+import com.wynntils.models.characterstats.actionbar.segments.MeterBarSegment;
+import com.wynntils.models.characterstats.actionbar.segments.PowderSpecialSegment;
+import com.wynntils.models.characterstats.type.MeterBarInfo;
+import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
-    private final HealthSegmentOld healthSegment = new HealthSegmentOld();
-    private final ManaSegmentOld manaSegment = new ManaSegmentOld();
-    private final PowderSpecialSegmentOld powderSpecialSegment = new PowderSpecialSegmentOld();
-    private final SprintSegmentOld sprintSegment = new SprintSegmentOld();
+    private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
+
+    private int level = 0;
+    private CappedValue health = CappedValue.EMPTY;
+    private CappedValue mana = CappedValue.EMPTY;
+    private CappedValue sprint = CappedValue.EMPTY;
+    private PowderSpecialInfo powderSpecialInfo = PowderSpecialInfo.EMPTY;
 
     public CharacterStatsModel() {
         super(List.of());
@@ -60,36 +69,24 @@ public final class CharacterStatsModel extends Model {
         Handlers.ActionBar.registerSegment(new PowderSpecialSegmentMatcher());
     }
 
-    public CappedValue getHealth() {
-        return healthSegment.getHealth();
+    @SubscribeEvent
+    public void onActionBarRender(ActionBarRenderEvent event) {
+        hiddenSegments.forEach(segment -> event.setSegmentEnabled(segment, false));
     }
 
-    public CappedValue getMana() {
-        return manaSegment.getMana();
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        event.updateIfPresent(LevelSegment.class, this::updateLevel);
+        event.updateIfPresent(HealthTextSegment.class, this::updateHealth);
+        event.updateIfPresent(ManaTextSegment.class, this::updateMana);
+        event.updateIfPresent(MeterBarSegment.class, this::updateSprint);
+        event.updateIfPresent(PowderSpecialSegment.class, this::updatePowderSpecial);
     }
 
-    public CappedValue getSprint() {
-        return sprintSegment.getSprint();
-    }
-
-    public float getPowderSpecialCharge() {
-        return powderSpecialSegment.getPowderSpecialCharge();
-    }
-
-    public Powder getPowderSpecialType() {
-        return powderSpecialSegment.getPowderSpecialType();
-    }
-
-    public void hideHealth(boolean shouldHide) {
-        healthSegment.setHidden(shouldHide);
-    }
-
-    public void hideMana(boolean shouldHide) {
-        manaSegment.setHidden(shouldHide);
-    }
-
-    public void hideCoordinates(boolean shouldHide) {
-        coordinatesSegment.setHidden(shouldHide);
+    @SubscribeEvent
+    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
+        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
+        powderSpecialInfo = PowderSpecialInfo.EMPTY;
     }
 
     public double getBlocksAboveGround() {
@@ -157,32 +154,68 @@ public final class CharacterStatsModel extends Model {
         return wornGear;
     }
 
-    private void centerSegmentCleared() {
-        powderSpecialSegment.replaced();
+    public int getLevel() {
+        return level;
     }
 
-    @SubscribeEvent
-    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
-        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
-        powderSpecialSegment.replaced();
+    public CappedValue getHealth() {
+        return health;
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTitle(SubtitleSetTextEvent event) {
-        StyledText text = StyledText.fromComponent(event.getComponent());
+    public CappedValue getMana() {
+        return mana;
+    }
 
-        for (Powder powder : Powder.values()) {
-            // If we see the name of a powder special, that special has been used
-            if (text.getStringWithoutFormatting().equals(powder.getSpecialName())) {
-                powderSpecialSegment.replaced();
-                break;
-            }
+    public CappedValue getSprint() {
+        return sprint;
+    }
 
-            // If we see just the symbol of a powder, that powder just hit 100% charge
-            if (text.equals(powder.getColoredSymbol())) {
-                powderSpecialSegment.fullyCharged(powder);
-                break;
-            }
+    public PowderSpecialInfo getPowderSpecialInfo() {
+        return powderSpecialInfo;
+    }
+
+    public void setHideHealth(boolean shouldHide) {
+        if (shouldHide) {
+            hiddenSegments.add(HealthTextSegment.class);
+            hiddenSegments.add(HealthBarSegment.class);
+        } else {
+            hiddenSegments.remove(HealthTextSegment.class);
+            hiddenSegments.remove(HealthBarSegment.class);
         }
+    }
+
+    public void setHideMana(boolean shouldHide) {
+        if (shouldHide) {
+            hiddenSegments.add(ManaTextSegment.class);
+            hiddenSegments.add(ManaBarSegment.class);
+        } else {
+            hiddenSegments.remove(ManaTextSegment.class);
+            hiddenSegments.remove(ManaBarSegment.class);
+        }
+    }
+
+    private void updateLevel(LevelSegment segment) {
+        level = segment.getLevel();
+    }
+
+    private void updateHealth(HealthTextSegment segment) {
+        health = segment.getHealth();
+    }
+
+    private void updateMana(ManaTextSegment segment) {
+        mana = segment.getMana();
+    }
+
+    private void updateSprint(MeterBarSegment segment) {
+        MeterBarInfo meterBarInfo = segment.getMeterBarInfo();
+        if (meterBarInfo.type() != MeterBarInfo.MeterActionType.SPRINT
+                && meterBarInfo.type() != MeterBarInfo.MeterActionType.BOTH) {
+            return;
+        }
+        sprint = meterBarInfo.value();
+    }
+
+    private void updatePowderSpecial(PowderSpecialSegment segment) {
+        powderSpecialInfo = segment.getPowderSpecialInfo();
     }
 }

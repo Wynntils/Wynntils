@@ -6,6 +6,7 @@ package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.models.characterstats.actionbar.segments.HealthTextSegment;
+import com.wynntils.utils.type.CappedValue;
 
 public class HealthTextSegmentMatcher extends AbstractTextSegmentMatcher {
     private static final SegmentSeparators SEPARATORS =
@@ -17,7 +18,7 @@ public class HealthTextSegmentMatcher extends AbstractTextSegmentMatcher {
     }
 
     @Override
-    protected ActionBarSegment createSegment(String segmentText) {
-        return new HealthTextSegment(segmentText);
+    protected ActionBarSegment createSegment(String segmentText, CappedValue value) {
+        return new HealthTextSegment(segmentText, value);
     }
 }

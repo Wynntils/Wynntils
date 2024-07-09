@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.LevelSegment;
@@ -18,12 +19,14 @@ public class LevelSegmentMatcher implements ActionBarSegmentMatcher {
     private static final String SEPARATOR = "\uDAFF\uDFFE";
 
     // Possible character range for the level segment, collected from the resource pack/font
-    private static final String LEVEL_CHARS = "\uE000-\uE009";
+    private static final char LEVEL_CHAR_START = '\uE000';
+    private static final char LEVEL_CHAR_END = '\uE009';
 
     // The expected pattern for the level segment
     // Allow 6 characters for the level, because the level is 3 digits + 2-3 separator characters
     // There is also a space character at the start and end of the segment
-    private static final Pattern LEVEL_PATTERN = Pattern.compile(".([" + LEVEL_CHARS + "]" + SEPARATOR + "?){1,6}.");
+    private static final Pattern LEVEL_PATTERN =
+            Pattern.compile(".(?<level>([" + LEVEL_CHAR_START + "-" + LEVEL_CHAR_END + "]" + SEPARATOR + "?){1,6}).");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
@@ -44,6 +47,32 @@ public class LevelSegmentMatcher implements ActionBarSegmentMatcher {
 
         if (!validStart || !validEnd) return null;
 
-        return new LevelSegment(matcher.group());
+        int level = parseLevel(matcher.group("level"));
+
+        return new LevelSegment(matcher.group(), level);
+    }
+
+    private int parseLevel(String levelText) {
+        try {
+            // Remove the separators from the level text
+            levelText = levelText.replace(SEPARATOR, "");
+
+            StringBuilder levelBuilder = new StringBuilder();
+
+            for (char current : levelText.toCharArray()) {
+                if (current >= LEVEL_CHAR_START && current <= LEVEL_CHAR_END) {
+                    // Each character is a digit, so we can just subtract the start character to get the digit
+                    // to get the actual number
+                    levelBuilder.append(current - LEVEL_CHAR_START);
+                } else {
+                    WynntilsMod.warn("Found unexpected character in level segment: " + current);
+                }
+            }
+
+            return Integer.parseInt(levelBuilder.toString());
+        } catch (NumberFormatException e) {
+            WynntilsMod.warn("Failed to parse level from segment: " + levelText);
+            return 0;
+        }
     }
 }

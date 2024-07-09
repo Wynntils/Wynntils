@@ -19,7 +19,6 @@ import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 
-// FIXME: Clean up old classes
 public final class ActionBarHandler extends Handler {
     private static final ResourceLocation ACTION_BAR_FONT = ResourceLocation.withDefaultNamespace("hud/default/center");
     private static final ResourceLocation COORDINATES_FONT =
@@ -91,7 +90,12 @@ public final class ActionBarHandler extends Handler {
             actionBarText = actionBarText.replaceFirst(disabledSegment.getSegmentText(), "");
         }
 
-        StyledText renderedText = actionBarText.append(coordinatesText);
+        StyledText renderedText = actionBarText;
+
+        // Append coordinates if needed
+        if (actionBarRenderEvent.shouldRenderCoordinates()) {
+            renderedText = actionBarText.append(coordinatesText);
+        }
 
         event.setMessage(renderedText.getComponent());
     }

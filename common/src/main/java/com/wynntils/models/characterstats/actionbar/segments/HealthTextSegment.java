@@ -4,13 +4,22 @@
  */
 package com.wynntils.models.characterstats.actionbar.segments;
 
+import com.wynntils.utils.type.CappedValue;
+
 public class HealthTextSegment extends AbstractTextSegment {
-    public HealthTextSegment(String segmentText) {
+    private final CappedValue health;
+
+    public HealthTextSegment(String segmentText, CappedValue health) {
         super(segmentText);
+        this.health = health;
+    }
+
+    public CappedValue getHealth() {
+        return health;
     }
 
     @Override
     public String toString() {
-        return "HealthTextSegment{" + "segmentText='" + segmentText + '\'' + '}';
+        return "HealthTextSegment{" + "health=" + health + ", segmentText='" + segmentText + '\'' + '}';
     }
 }

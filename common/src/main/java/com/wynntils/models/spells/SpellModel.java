@@ -21,7 +21,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -73,24 +72,7 @@ public class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        Optional<SpellSegment> spellSegmentOpt = event.getSegments().stream()
-                .filter(SpellSegment.class::isInstance)
-                .map(SpellSegment.class::cast)
-                .findFirst();
-
-        if (spellSegmentOpt.isEmpty()) return;
-
-        SpellSegment spellSegment = spellSegmentOpt.get();
-
-        // Wynn sometimes sends duplicate packets, skip those
-        if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
-        lastSpell = spellSegment.getDirections();
-
-        WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
-
-        if (lastSpell.length == 3) {
-            WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
-        }
+        event.updateIfPresent(SpellSegment.class, this::updateFromSpellSegment);
     }
 
     @SubscribeEvent
@@ -161,5 +143,17 @@ public class SpellModel extends Model {
 
     public int getTicksSinceCast() {
         return ticksSinceCast;
+    }
+
+    private void updateFromSpellSegment(SpellSegment spellSegment) {
+        // Wynn sometimes sends duplicate packets, skip those
+        if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
+        lastSpell = spellSegment.getDirections();
+
+        WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
+
+        if (lastSpell.length == 3) {
+            WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+        }
     }
 }

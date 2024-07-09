@@ -13,8 +13,6 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
-import com.wynntils.models.characterstats.actionbar.ManaSegmentOld;
-import com.wynntils.models.characterstats.actionbar.PowderSpecialSegmentOld;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
@@ -462,14 +460,6 @@ public class TestRegex {
     }
 
     @Test
-    public void ManaSegment_MANA_PATTERN() {
-        PatternTester p = new PatternTester(ManaSegmentOld.class, "MANA_PATTERN");
-        p.shouldMatch("§b✺ 175/175");
-        p.shouldMatch("§b✺ 56/175");
-        p.shouldMatch("✺ 175/175");
-    }
-
-    @Test
     public void OphanimBar_OPHANIM_PATTERN() {
         PatternTester p = new PatternTester(OphanimBar.class, "OPHANIM_PATTERN");
         p.shouldMatch("§710s Healed: §f66% §3[§b⏺⏺⏺⏺⏺⏺§3]");
@@ -501,19 +491,6 @@ public class TestRegex {
         PatternTester p = new PatternTester(PersonalStorageUtilitiesFeature.class, "PAGE_PATTERN");
         p.shouldMatch("§7- §f\uE006§8 Page 1");
         p.shouldMatch("§7- §f\uE007§8 Page 3");
-    }
-
-    @Test
-    public void PowderSpecialSegment_POWDER_SPECIAL_PATTERN() {
-        PatternTester p = new PatternTester(PowderSpecialSegmentOld.class, "POWDER_SPECIAL_PATTERN");
-        // curse/partial charge
-        p.shouldMatch("§7❉ 87%");
-        // curse/full charge
-        p.shouldMatch("§b❉ 100%");
-        // courage/partial charge
-        p.shouldMatch("§7✹ 78%");
-        // courage/full charge
-        p.shouldMatch("§c✹ 100%");
     }
 
     @Test

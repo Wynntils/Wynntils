@@ -4,13 +4,22 @@
  */
 package com.wynntils.models.characterstats.actionbar.segments;
 
+import com.wynntils.utils.type.CappedValue;
+
 public class ManaTextSegment extends AbstractTextSegment {
-    public ManaTextSegment(String segmentText) {
+    private final CappedValue mana;
+
+    public ManaTextSegment(String segmentText, CappedValue mana) {
         super(segmentText);
+        this.mana = mana;
+    }
+
+    public CappedValue getMana() {
+        return mana;
     }
 
     @Override
     public String toString() {
-        return "ManaTextSegment{" + "segmentText='" + segmentText + '\'' + '}';
+        return "ManaTextSegment{" + "mana=" + mana + ", segmentText='" + segmentText + '\'' + '}';
     }
 }

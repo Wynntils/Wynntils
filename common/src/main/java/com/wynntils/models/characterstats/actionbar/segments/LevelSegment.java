@@ -7,12 +7,19 @@ package com.wynntils.models.characterstats.actionbar.segments;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 
 public class LevelSegment extends ActionBarSegment {
-    public LevelSegment(String segmentText) {
+    private final int level;
+
+    public LevelSegment(String segmentText, int level) {
         super(segmentText);
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     @Override
     public String toString() {
-        return "LevelSegment{" + "segmentText='" + segmentText + '\'' + '}';
+        return "LevelSegment{" + "level=" + level + ", segmentText='" + segmentText + '\'' + '}';
     }
 }

@@ -17,16 +17,16 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
     private static final String SEGMENT_END = "\uDAFF\uDFF3";
 
     private final Pattern meterRegex =
-            Pattern.compile(SEGMENT_START + "[" + String.join("", getCharacterRange()) + "]" + SEGMENT_END);
+            Pattern.compile(SEGMENT_START + "(?<value>[" + String.join("", getCharacterRange()) + "])" + SEGMENT_END);
 
     protected abstract List<String> getCharacterRange();
 
-    protected abstract ActionBarSegment createSegment(String segmentText);
+    protected abstract ActionBarSegment createSegment(String segmentText, String segmentValue);
 
     @Override
     public ActionBarSegment parse(String actionBar) {
         Matcher matcher = meterRegex.matcher(actionBar);
         if (!matcher.find()) return null;
-        return createSegment(matcher.group());
+        return createSegment(matcher.group(), matcher.group("value"));
     }
 }

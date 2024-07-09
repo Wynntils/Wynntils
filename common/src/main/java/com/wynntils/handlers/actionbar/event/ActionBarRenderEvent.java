@@ -18,6 +18,7 @@ import net.neoforged.bus.api.Event;
  */
 public class ActionBarRenderEvent extends Event {
     private final Map<ActionBarSegment, Boolean> segments;
+    private boolean renderCoordinates = true;
 
     public ActionBarRenderEvent(List<ActionBarSegment> segments) {
         this.segments = segments.stream().collect(Collectors.toMap(segment -> segment, segment -> true));
@@ -27,13 +28,6 @@ public class ActionBarRenderEvent extends Event {
         return segments.keySet();
     }
 
-    public Set<ActionBarSegment> getEnabledSegments() {
-        return segments.entrySet().stream()
-                .filter(Map.Entry::getValue)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-    }
-
     public Set<ActionBarSegment> getDisabledSegments() {
         return segments.entrySet().stream()
                 .filter(entry -> !entry.getValue())
@@ -41,7 +35,19 @@ public class ActionBarRenderEvent extends Event {
                 .collect(Collectors.toSet());
     }
 
-    public void setSegmentEnabled(ActionBarSegment segment, boolean enabled) {
-        segments.put(segment, enabled);
+    public void setSegmentEnabled(Class<? extends ActionBarSegment> segment, boolean enabled) {
+        segments.keySet().stream()
+                .filter(segment::isInstance)
+                .map(segment::cast)
+                .findFirst()
+                .ifPresent(s -> segments.put(s, enabled));
+    }
+
+    public boolean shouldRenderCoordinates() {
+        return renderCoordinates;
+    }
+
+    public void setRenderCoordinates(boolean renderCoordinates) {
+        this.renderCoordinates = renderCoordinates;
     }
 }

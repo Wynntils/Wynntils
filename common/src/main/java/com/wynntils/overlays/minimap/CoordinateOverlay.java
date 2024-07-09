@@ -11,8 +11,10 @@ import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.features.map.MinimapFeature;
+import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class CoordinateOverlay extends TextOverlay {
     private static final String TEMPLATE = "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
@@ -26,7 +28,7 @@ public class CoordinateOverlay extends TextOverlay {
     public final Config<Boolean> shouldBeColored = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
+    public final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
 
     public CoordinateOverlay() {
         super(
@@ -37,9 +39,9 @@ public class CoordinateOverlay extends TextOverlay {
                 VerticalAlignment.MIDDLE);
     }
 
-    @Override
-    protected void onConfigUpdate(Config<?> config) {
-        // FIXME: Port this to the new system
+    @SubscribeEvent
+    public void onActionBarRender(ActionBarRenderEvent event) {
+        event.setRenderCoordinates(this.shouldDisplayOriginal.get());
     }
 
     @Override

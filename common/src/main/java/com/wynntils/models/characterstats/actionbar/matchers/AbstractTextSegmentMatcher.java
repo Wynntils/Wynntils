@@ -4,8 +4,11 @@
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
+import com.wynntils.utils.type.CappedValue;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,8 +24,15 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
     // The separator between the display characters, usually before and after the "/" in the mana/health text
     private static final String SEPARATOR = "\uDB00\uDC02";
 
-    // All possible display character ranges, extracted from the resource pack/font
-    private static final String DISPLAY_CHARACTERS = "\uE010-\uE01F";
+    // Possible display character range, extracted from the resource pack/font
+    private static final char DISPLAY_CHARACTER_START = '\uE010';
+    private static final char DISPLAY_CHARACTER_END = '\uE01F';
+
+    // The translation of the display characters to the actual values
+    private static final List<String> DISPLAY_CHARACTER_TRANSLATION =
+            List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "k", "m", "b", "t", ".", "/");
+
+    private static final Pattern VALUE_PATTERN = Pattern.compile("(?<current>\\d+)/(?<max>\\d+)");
 
     /**
      * Get the separators of the segment text in the action bar.
@@ -33,10 +43,11 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
      */
     protected abstract SegmentSeparators segmentSeparators();
 
-    protected abstract ActionBarSegment createSegment(String segmentText);
+    protected abstract ActionBarSegment createSegment(String segmentText, CappedValue value);
 
     // There is a spacing character before and after actual display characters
-    private final Pattern segmentPattern = Pattern.compile(".[" + DISPLAY_CHARACTERS + SEPARATOR + "]+.");
+    private final Pattern segmentPattern =
+            Pattern.compile(".(?<value>[" + DISPLAY_CHARACTER_START + "-" + DISPLAY_CHARACTER_END + SEPARATOR + "]+).");
 
     @Override
     public ActionBarSegment parse(String actionBar) {
@@ -64,10 +75,42 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
 
             if (!validStart || !validEnd) continue;
 
-            return createSegment(segmentText);
+            // Parse the value from the display characters
+            CappedValue value = valueFromDisplayCharacters(matcher.group("value"));
+
+            return createSegment(segmentText, value);
         } while (matcher.find());
 
         return null;
+    }
+
+    private CappedValue valueFromDisplayCharacters(String displayCharacters) {
+        // Remove all the separators
+        displayCharacters = displayCharacters.replace(SEPARATOR, "");
+
+        StringBuilder valueBuilder = new StringBuilder();
+        for (char current : displayCharacters.toCharArray()) {
+            int index = current - DISPLAY_CHARACTER_START;
+            if (index < 0 || DISPLAY_CHARACTER_TRANSLATION.size() <= index) {
+                WynntilsMod.warn("Unknown display character: " + current);
+                continue;
+            }
+
+            valueBuilder.append(DISPLAY_CHARACTER_TRANSLATION.get(index));
+        }
+
+        String value = valueBuilder.toString();
+
+        // Parse the value as a capped value
+        Matcher matcher = VALUE_PATTERN.matcher(value);
+
+        if (!matcher.matches()) {
+            WynntilsMod.warn("Could not parse text action bar segment value as capped: " + value);
+            return CappedValue.EMPTY;
+        }
+
+        // The value is capped at 100
+        return new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("max")));
     }
 
     protected record SegmentSeparators(char segmentStart, char segmentEnd) {}

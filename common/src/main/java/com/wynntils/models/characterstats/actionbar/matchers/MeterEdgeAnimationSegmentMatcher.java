@@ -19,7 +19,7 @@ public class MeterEdgeAnimationSegmentMatcher extends AbstractMeterSegmentMatche
     }
 
     @Override
-    protected ActionBarSegment createSegment(String segmentText) {
+    protected ActionBarSegment createSegment(String segmentText, String segmentValue) {
         return new MeterEdgeAnimationSegment(segmentText);
     }
 }
