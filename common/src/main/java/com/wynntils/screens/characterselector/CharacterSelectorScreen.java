@@ -290,6 +290,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.XP_BAR.height(),
                 selected.getClassInfo().xp() / 100f);
 
+        poseStack.pushPose();
+        poseStack.translate(renderWidth * 0.08f, renderHeight * 0.15f, 0);
+
         poseStack.translate(renderWidth * 0.27f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
