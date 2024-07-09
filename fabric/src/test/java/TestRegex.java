@@ -4,6 +4,7 @@
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
+import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
@@ -16,7 +17,6 @@ import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
 import com.wynntils.models.characterstats.actionbar.SprintSegment;
-import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
@@ -123,18 +123,6 @@ public class TestRegex {
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f5§7/16");
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f14§7/15");
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f0§7/15");
-    }
-
-    @Test
-    public void BankModel_PERSONAL_STORAGE_PATTERN() {
-        PatternTester p = new PatternTester(BankModel.class, "PERSONAL_STORAGE_PATTERN");
-        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Bank");
-        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Bank");
-        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Bank");
-        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Block Bank");
-        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
-        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
-        p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
     }
 
     @Test
@@ -521,6 +509,13 @@ public class TestRegex {
     }
 
     @Test
+    public void PersonalStorageUtilitiesFeature_PAGE_PATTERN() {
+        PatternTester p = new PatternTester(PersonalStorageUtilitiesFeature.class, "PAGE_PATTERN");
+        p.shouldMatch("§7- §f\uE006§8 Page 1");
+        p.shouldMatch("§7- §f\uE007§8 Page 3");
+    }
+
+    @Test
     public void PowderSpecialSegment_POWDER_SPECIAL_PATTERN() {
         PatternTester p = new PatternTester(PowderSpecialSegment.class, "POWDER_SPECIAL_PATTERN");
         // curse/partial charge
@@ -633,11 +628,12 @@ public class TestRegex {
     @Test
     public void SkillPointAnnotator_LORE_PATTERN() {
         PatternTester p = new PatternTester(SkillPointAnnotator.class, "LORE_PATTERN");
-        p.shouldMatch(" ÀÀ§740 points§r    ÀÀÀ           ÀÀÀ§641 points");
-        p.shouldMatch(" ÀÀ§763 points§r    ÀÀÀ           ÀÀÀ§664 points");
-        p.shouldMatch("ÀÀÀ§7131 points§r               §6132 points");
-        p.shouldMatch(" ÀÀ§790 points§r    ÀÀÀ           ÀÀÀ§691 points");
-        p.shouldMatch(" ÀÀ§762 points§r    ÀÀÀ           ÀÀÀ§663 points");
+        p.shouldMatch("\uDB00\uDC03§7116 points§r\uDB00\uDC10       \uDB00\uDC10§6117 points");
+        p.shouldMatch("\uDB00\uDC03§7110 points§r\uDB00\uDC10       \uDB00\uDC10§6111 points");
+        p.shouldMatch("\uDB00\uDC06§798 points§r\uDB00\uDC13       \uDB00\uDC13§699 points");
+        p.shouldMatch("\uDB00\uDC03§7162 points§r\uDB00\uDC10       \uDB00\uDC10§6163 points");
+        p.shouldMatch("\uDB00\uDC06§790 points§r\uDB00\uDC13       \uDB00\uDC13§691 points");
+        p.shouldMatch("\uDB00\uDC03§7-29 points§r\uDB00\uDC10       \uDB00\uDC10§6-28 points");
     }
 
     @Test

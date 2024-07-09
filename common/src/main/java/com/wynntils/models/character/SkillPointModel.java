@@ -47,6 +47,7 @@ public class SkillPointModel extends Model {
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int[] SKILL_POINT_TOME_SLOTS = {4, 11, 19};
+    // FIXME: Find a valid replacement for this
     private static final int CHARACTER_INFO_SOUL_POINT_SLOT = 62;
     private static final int TOME_MENU_SOUL_POINT_SLOT = 89;
 

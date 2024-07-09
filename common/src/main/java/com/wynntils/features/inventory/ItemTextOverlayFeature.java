@@ -427,6 +427,7 @@ public class ItemTextOverlayFeature extends Feature {
     private final class TeleportScrollOverlay implements TextOverlayInfo {
         private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
         private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+        private static final CustomColor OUT_OF_CHARGES_COLOR = CustomColor.fromChatFormatting(ChatFormatting.RED);
 
         private final TeleportScrollItem item;
 
@@ -441,7 +442,14 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            CustomColor textColor = item.isDungeon() ? DUNGEON_COLOR : CITY_COLOR;
+            CustomColor textColor;
+            if (item.getRemainingCharges() <= 0) {
+                textColor = OUT_OF_CHARGES_COLOR;
+            } else if (item.isDungeon()) {
+                textColor = DUNGEON_COLOR;
+            } else {
+                textColor = CITY_COLOR;
+            }
 
             String text = item.getDestination();
             TextRenderSetting style =
