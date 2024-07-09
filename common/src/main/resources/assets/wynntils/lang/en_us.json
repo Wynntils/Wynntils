@@ -585,6 +585,7 @@
   "feature.wynntils.hightlightDuplicateCosmetics.selectedHighlightColor.description": "What color should the highlight circles be for duplicate selected cosmetics?",
   "feature.wynntils.hightlightDuplicateCosmetics.selectedHighlightColor.name": "Selected Highlight color",
   "feature.wynntils.horseMount.alreadyRiding": "You are already riding a horse.",
+  "feature.wynntils.horseMount.conflictingSlots": "You must free up a slot in your hotbar to mount your horse.",
   "feature.wynntils.horseMount.description": "Adds the ability to mount horses with a keybind.",
   "feature.wynntils.horseMount.guaranteedMount.description": "Should you be guaranteed to mount your horse when right-clicking with a saddle?",
   "feature.wynntils.horseMount.guaranteedMount.name": "Guaranteed Mount",
