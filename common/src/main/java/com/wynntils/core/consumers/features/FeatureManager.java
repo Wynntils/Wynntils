@@ -58,8 +58,6 @@ import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
-import com.wynntils.features.inventory.CustomBankPageNamesFeature;
-import com.wynntils.features.inventory.CustomBankQuickJumpsFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
@@ -74,6 +72,7 @@ import com.wynntils.features.inventory.ItemLockFeature;
 import com.wynntils.features.inventory.ItemScreenshotFeature;
 import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.LootchestTextFeature;
+import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
@@ -250,8 +249,6 @@ public final class FeatureManager extends Manager {
 
         // region inventory
         registerFeature(new ContainerSearchFeature());
-        registerFeature(new CustomBankPageNamesFeature());
-        registerFeature(new CustomBankQuickJumpsFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
@@ -266,6 +263,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LootchestTextFeature());
+        registerFeature(new PersonalStorageUtilitiesFeature());
         registerFeature(new ReplaceRecipeBookFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         // endregion

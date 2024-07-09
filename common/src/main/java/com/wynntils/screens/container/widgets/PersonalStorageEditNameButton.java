@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.container.widgets;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ContainerEditNameButton extends WynntilsButton {
+public class PersonalStorageEditNameButton extends WynntilsButton {
     private static final List<Component> CANCEL_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.containers.cancel.name").withStyle(ChatFormatting.RED),
             Component.translatable("screens.wynntils.containers.cancel.description")
@@ -28,8 +28,12 @@ public class ContainerEditNameButton extends WynntilsButton {
             Component.translatable("screens.wynntils.containers.edit.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    public ContainerEditNameButton(int x, int y, int width, int height) {
-        super(x, y, width, height, Component.literal("Container Edit Button"));
+    private final PersonalStorageUtilitiesWidget parent;
+
+    public PersonalStorageEditNameButton(int x, int y, int width, int height, PersonalStorageUtilitiesWidget parent) {
+        super(x, y, width, height, Component.literal("Personal Storage Edit Name Button"));
+
+        this.parent = parent;
     }
 
     @Override
@@ -38,14 +42,14 @@ public class ContainerEditNameButton extends WynntilsButton {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.EDIT_ICON.resource(),
+                Texture.EDIT_NAME_ICON.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
-                Texture.EDIT_ICON.width(),
-                Texture.EDIT_ICON.height());
+                Texture.EDIT_NAME_ICON.width(),
+                Texture.EDIT_NAME_ICON.height());
 
         if (isHovered) {
             List<Component> tooltipToUse = Models.Bank.isEditingName() ? CANCEL_TOOLTIP : EDIT_TOOLTIP;
@@ -62,9 +66,13 @@ public class ContainerEditNameButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
-
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (Models.Bank.isEditingName()) {
+                parent.removeEditInput();
+            } else {
+                parent.addEditInput();
+            }
+
             Models.Bank.toggleEditingName(!Models.Bank.isEditingName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
             Models.Bank.resetCurrentPageName();

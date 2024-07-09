@@ -4,6 +4,7 @@
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
+import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
@@ -16,7 +17,6 @@ import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
 import com.wynntils.models.characterstats.actionbar.SprintSegment;
-import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
@@ -123,18 +123,6 @@ public class TestRegex {
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f5§7/16");
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f14§7/15");
         p.shouldMatch("§a✔ §7Unlocked Abilities: §f0§7/15");
-    }
-
-    @Test
-    public void BankModel_PERSONAL_STORAGE_PATTERN() {
-        PatternTester p = new PatternTester(BankModel.class, "PERSONAL_STORAGE_PATTERN");
-        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Bank");
-        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Bank");
-        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Bank");
-        p.shouldMatch("§0[Pg. 29] §8aA9a9G_g0g4G's§0 Block Bank");
-        p.shouldMatch("§0[Pg. 1] §8v8j's§0 Misc. Bucket");
-        p.shouldMatch("§0[Pg. 1] §8mag_icus'§0 Misc. Bucket");
-        p.shouldMatch("§0[Pg. 1] §8Housing Island's§0 Block Bank");
     }
 
     @Test
@@ -518,6 +506,13 @@ public class TestRegex {
                 "§5Party Finder:§d Hey nickname spaces, over here! Join the §bThe Canyon Colossus§d queue and match up with §e1 other player§d!"); // Nickname 1 player
         p.shouldMatch(
                 "§5Party Finder:§d Hey nickname spaces 20cr, over here! Join the §bThe Canyon Colossus§d queue and match up with §e11 other players§d!"); // Nickname 11 players
+    }
+
+    @Test
+    public void PersonalStorageUtilitiesFeature_PAGE_PATTERN() {
+        PatternTester p = new PatternTester(PersonalStorageUtilitiesFeature.class, "PAGE_PATTERN");
+        p.shouldMatch("§7- §f\uE006§8 Page 1");
+        p.shouldMatch("§7- §f\uE007§8 Page 3");
     }
 
     @Test

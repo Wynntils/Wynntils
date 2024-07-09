@@ -106,6 +106,7 @@ public enum Texture {
     CLOSE("icons/generic/close.png", 16, 16),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
+    EDIT_NAME_ICON("icons/generic/edit_name_icon.png", 16, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     INFO("icons/generic/info.png", 25, 25),
@@ -254,6 +255,7 @@ public enum Texture {
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
+    BANK_PANEL("ui_components/bank_panel.png", 100, 110),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
@@ -267,6 +269,7 @@ public enum Texture {
     PAPER_BUTTON_LEFT("ui_components/paper_button_left.png", 48, 56),
     PAPER_BUTTON_RIGHT("ui_components/paper_button_right.png", 48, 56),
     PAPER_BUTTON_TOP("ui_components/paper_button_top.png", 128, 60),
+    QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),
