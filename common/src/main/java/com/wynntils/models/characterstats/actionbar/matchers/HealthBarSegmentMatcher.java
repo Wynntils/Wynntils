@@ -23,8 +23,10 @@ public class HealthBarSegmentMatcher implements ActionBarSegmentMatcher {
     private static final Pattern BACKGROUND_PATTERN =
             Pattern.compile(HEALTH_BACKGROUND_SPACER + "[" + HEALTH_BACKGROUND_CHARS + "]");
 
-    // This is the last character of the health bar
-    private static final String LAST_SPACE_STRING = "\uDB00\uDC20";
+    // These can be the last character of the health bar
+    // It's either a normal bar with an end character, or a highlighted one, when critical damage is taken
+    private static final Pattern BAR_END_PATTERN =
+            Pattern.compile("(?<normalEnd>\uDB00\uDC20)|(?<highlightedEnd>\uDAFF\uDFBC\uE069\uDB00\uDC1B)");
 
     // These are the characters that build the health bar, collected from the resource pack
     private static final List<String> HEALTH_BAR_CHARS =
@@ -43,18 +45,19 @@ public class HealthBarSegmentMatcher implements ActionBarSegmentMatcher {
         }
 
         int beginIndex = actionBar.indexOf(matcher.group());
-        int endIndex = actionBar.indexOf(LAST_SPACE_STRING, beginIndex);
+        Matcher endMatcher = BAR_END_PATTERN.matcher(actionBar);
 
-        if (endIndex == -1) {
+        if (!endMatcher.find(beginIndex)) {
             WynntilsMod.warn("Found health bar background, but couldn't find the end of the segment: " + actionBar);
             return null;
         }
 
-        String segmentText = actionBar.substring(beginIndex, endIndex + LAST_SPACE_STRING.length());
+        String segmentText = actionBar.substring(beginIndex, endMatcher.end());
 
         // Remove the background and last space characters to get the characters that build the health bar
-        String healthBarText =
-                segmentText.substring(matcher.group().length(), segmentText.length() - LAST_SPACE_STRING.length());
+        String healthBarText = segmentText.substring(
+                matcher.group().length(),
+                segmentText.length() - endMatcher.group().length());
 
         if (!HEALTH_BAR_PATTERN.matcher(healthBarText).matches()) {
             WynntilsMod.warn("Health bar segment seems to match, but the bar text is not expected: " + healthBarText);
