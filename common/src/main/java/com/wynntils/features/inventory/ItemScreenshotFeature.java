@@ -120,8 +120,9 @@ public class ItemScreenshotFeature extends Feature {
         // draw tooltip to framebuffer, create image
         McUtils.mc().getMainRenderTarget().unbindWrite();
 
-        GuiGraphics guiGraphics =
-                new GuiGraphics(McUtils.mc(), MultiBufferSource.immediate(new ByteBufferBuilder(256)));
+        ByteBufferBuilder byteBuffer = new ByteBufferBuilder(256);
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(byteBuffer);
+        GuiGraphics guiGraphics = new GuiGraphics(McUtils.mc(), bufferSource);
         RenderTarget fb = new MainTarget(width * 2, height * 2);
         fb.setClearColor(1f, 1f, 1f, 0f);
         fb.createBuffers(width * 2, height * 2, false);
@@ -140,6 +141,10 @@ public class ItemScreenshotFeature extends Feature {
         McUtils.mc().getMainRenderTarget().bindWrite(true);
 
         BufferedImage bi = SystemUtils.createScreenshot(fb);
+
+        // Free the buffer source to prevent memory leaks
+        byteBuffer.close();
+        bufferSource = null;
 
         if (saveToDisk.get()) {
             // First try to save it to disk

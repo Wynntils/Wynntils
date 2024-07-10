@@ -44,6 +44,8 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends Feature {
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
     private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
     @Persisted
@@ -208,12 +210,11 @@ public class WorldWaypointDistanceFeature extends Feature {
                 poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
                 poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-                MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
                 DUMMY_WAYPOINT
                         .getPointerPoi()
                         .renderAt(
                                 poseStack,
-                                bufferSource,
+                                BUFFER_SOURCE,
                                 pointerDisplayPositionX,
                                 pointerDisplayPositionY,
                                 false,
@@ -221,7 +222,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 1,
                                 50,
                                 true);
-                bufferSource.endBatch();
+                BUFFER_SOURCE.endBatch();
                 poseStack.popPose();
             }
         }

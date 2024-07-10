@@ -52,6 +52,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveButton>
         implements SortableActivityScreen {
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
+
     private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
     private CaveInfo trackingRequested = null;
 
@@ -228,8 +231,6 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
 
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
@@ -237,7 +238,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
-                    bufferSource,
+                    BUFFER_SOURCE,
                     centerX,
                     centerZ,
                     textureX,
@@ -247,7 +248,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                     1f / currentZoom);
         }
 
-        bufferSource.endBatch();
+        BUFFER_SOURCE.endBatch();
 
         RenderUtils.disableScissor();
     }
