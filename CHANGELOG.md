@@ -1,3 +1,13 @@
+## [2.0.0-beta.7](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2024-07-10)
+
+
+### Bug Fixes
+
+* Fix BufferSource memory leaks ([#2650](https://github.com/Wynntils/Artemis/issues/2650)) ([d3a1f99](https://github.com/Wynntils/Artemis/commit/d3a1f998184c4ca5fc40ebf01a7c78c1e96e1674))
+* Fix health bar parsing when health is "critical" [skip ci] ([#2647](https://github.com/Wynntils/Artemis/issues/2647)) ([1bc634c](https://github.com/Wynntils/Artemis/commit/1bc634cff085bae2ac7efdc0b33fd914de3c551b))
+* Fix MaterialAnnotator crashing when trying to look up "Unprocessed" items [skip ci] ([#2648](https://github.com/Wynntils/Artemis/issues/2648)) ([2d6b789](https://github.com/Wynntils/Artemis/commit/2d6b789214e7121db8ff04a404a9b8a7b334f822))
+* SkillPointModel port to beta ([#2649](https://github.com/Wynntils/Artemis/issues/2649)) ([94ea9dc](https://github.com/Wynntils/Artemis/commit/94ea9dc061576ffadaa415d8e1a9b3ef1a8bfc40))
+
 ## [2.0.0-beta.6](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2024-07-09)
 
 
@@ -13,6 +23,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.0.0-beta.6 [skip ci] ([39070f1](https://github.com/Wynntils/Artemis/commit/39070f12bf8ed0d6cf1444ee8cb6887fea9c4a5f))
 * Update bank textures [skip ci] ([#2644](https://github.com/Wynntils/Artemis/issues/2644)) ([24df868](https://github.com/Wynntils/Artemis/commit/24df86851f74251089e2e2a680623ff889fca305))
 
 ## [2.0.0-beta.5](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2024-07-09)
@@ -61,22 +72,4 @@
 
 * **release:** v2.0.0-beta.3 [skip ci] ([5c26511](https://github.com/Wynntils/Artemis/commit/5c265110c3df8f16402042a587d72d22373a589f))
 * Support fonts in StyledText [skip ci] ([#2635](https://github.com/Wynntils/Artemis/issues/2635)) ([4948a85](https://github.com/Wynntils/Artemis/commit/4948a85d4bc2c7b426cdfcc472fea8700e24de0e))
-
-## [2.0.0-beta.2](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-07-07)
-
-
-### Bug Fixes
-
-* Fix 1.21 content book parsing [skip ci] ([#2629](https://github.com/Wynntils/Artemis/issues/2629)) ([2bf773b](https://github.com/Wynntils/Artemis/commit/2bf773bdd59f72394793019c3da0fbf2f96587ce))
-* Fix being able to click territories that are not rendered (TerritoryManagementScreen) [skip ci] ([#2626](https://github.com/Wynntils/Artemis/issues/2626)) ([e22e20b](https://github.com/Wynntils/Artemis/commit/e22e20bc5fec09c4c1fd0c31757118aadde326a7))
-* Fix compass menu parsing ([#2633](https://github.com/Wynntils/Artemis/issues/2633)) ([643797e](https://github.com/Wynntils/Artemis/commit/643797e50ab0a80733c53f9651f913afed5e1dbe))
-* Fix failing StyledText tests [skip ci] ([#2634](https://github.com/Wynntils/Artemis/issues/2634)) ([883acb2](https://github.com/Wynntils/Artemis/commit/883acb230f3d5a71b0483b055c45df345abf5c69))
-* Fix resource pack preloading [skip ci] ([#2632](https://github.com/Wynntils/Artemis/issues/2632)) ([64fd6fb](https://github.com/Wynntils/Artemis/commit/64fd6fb727d51620d915ab10452de05dfd2454d3))
-* Fix world state not being set correctly, fix mana/health bars displaying without data [skip ci] ([#2631](https://github.com/Wynntils/Artemis/issues/2631)) ([01eca54](https://github.com/Wynntils/Artemis/commit/01eca549b1f94ebcdbfe09cd7dc4efb0a368b94b))
-* Patch SpellCastVignetteFeature until proper action bar parsing [skip ci] ([#2630](https://github.com/Wynntils/Artemis/issues/2630)) ([1ae9900](https://github.com/Wynntils/Artemis/commit/1ae9900addfd71e9a183307b3a73c2bf8edaac2a))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.2 [skip ci] ([22b9013](https://github.com/Wynntils/Artemis/commit/22b90133e11ed8c085be2bc8533ddbff3a86389d))
 
