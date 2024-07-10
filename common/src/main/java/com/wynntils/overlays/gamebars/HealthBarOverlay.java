@@ -4,6 +4,7 @@
  */
 package com.wynntils.overlays.gamebars;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -25,8 +26,8 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
     public HealthBarOverlay() {
         this(
                 new OverlayPosition(
-                        -29,
-                        -52,
+                        -34,
+                        -67,
                         VerticalAlignment.BOTTOM,
                         HorizontalAlignment.CENTER,
                         OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
@@ -54,7 +55,7 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        Models.CharacterStats.hideHealth(!this.shouldDisplayOriginal.get());
+        Models.CharacterStats.setHideHealth(Managers.Overlay.isEnabled(this) && !this.shouldDisplayOriginal.get());
     }
 
     @Override
