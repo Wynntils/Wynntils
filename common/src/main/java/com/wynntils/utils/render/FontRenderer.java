@@ -25,6 +25,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 
 public final class FontRenderer {
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
     private static final FontRenderer INSTANCE = new FontRenderer();
     private final Font font;
 
@@ -54,12 +56,10 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
         BufferedFontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        bufferSource,
+                        BUFFER_SOURCE,
                         text,
                         x,
                         y,
@@ -69,7 +69,7 @@ public final class FontRenderer {
                         shadow,
                         textScale);
 
-        bufferSource.endBatch();
+        BUFFER_SOURCE.endBatch();
     }
 
     public void renderText(

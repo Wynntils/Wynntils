@@ -41,7 +41,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class OverlayManager extends Manager {
-    private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     private final Map<Feature, List<Overlay>> overlayParentMap = new HashMap<>();
     private final Map<Overlay, OverlayInfoContainer> overlayInfoMap = new HashMap<>();
@@ -269,10 +270,10 @@ public final class OverlayManager extends Manager {
                     if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
 
                     overlay.renderPreview(
-                            event.getPoseStack(), bufferSource, event.getDeltaTracker(), event.getWindow());
+                            event.getPoseStack(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
                 } else if (shouldRender) {
                     long startTime = System.currentTimeMillis();
-                    overlay.render(event.getPoseStack(), bufferSource, event.getDeltaTracker(), event.getWindow());
+                    overlay.render(event.getPoseStack(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
@@ -291,7 +292,7 @@ public final class OverlayManager extends Manager {
             }
         }
 
-        bufferSource.endBatch();
+        BUFFER_SOURCE.endBatch();
 
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {
