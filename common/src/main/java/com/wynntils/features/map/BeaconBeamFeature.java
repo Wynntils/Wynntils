@@ -28,6 +28,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
 public class BeaconBeamFeature extends Feature {
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
+
     @Persisted
     public final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
 
@@ -65,7 +68,6 @@ public class BeaconBeamFeature extends Feature {
         if (markers.isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
         for (MarkerInfo marker : markers) {
             Position camera = event.getCamera().getPosition();
@@ -106,7 +108,7 @@ public class BeaconBeamFeature extends Feature {
 
             BeaconRenderer.renderBeaconBeam(
                     poseStack,
-                    bufferSource,
+                    BUFFER_SOURCE,
                     BeaconRenderer.BEAM_LOCATION,
                     event.getDeltaTracker().getGameTimeDeltaPartialTick(false),
                     1f,
@@ -120,6 +122,6 @@ public class BeaconBeamFeature extends Feature {
             poseStack.popPose();
         }
 
-        bufferSource.endLastBatch();
+        BUFFER_SOURCE.endLastBatch();
     }
 }
