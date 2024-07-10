@@ -71,9 +71,12 @@ public class PersonalStorageUtilitiesFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        if (!quickJumping) return;
-
+        if (Models.Bank.getStorageContainerType() == null) return;
+        // onScreenInit is not called when changing pages so we have to update current and last page here
         currentPage = Models.Bank.getCurrentPage();
+        lastPage = Models.Bank.getFinalPage();
+
+        if (!quickJumping) return;
 
         if (pageDestination > lastPage) {
             quickJumping = false;
