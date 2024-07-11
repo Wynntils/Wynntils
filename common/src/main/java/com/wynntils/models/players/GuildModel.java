@@ -11,7 +11,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
@@ -256,12 +255,10 @@ public class GuildModel extends Model {
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen))
-            return;
+        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
 
         StyledText title = StyledText.fromComponent(containerScreen.getTitle());
-        if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)))
-            return;
+        if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME))) return;
 
         parseDiplomacyContent(event.getItems());
     }
@@ -294,7 +291,8 @@ public class GuildModel extends Model {
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(this::parseGuildContainer))
                 .then(
-                        //We always check diplomacy in case its changed while we weren't looking (ex. in /class or switching accounts)
+                        // We always check diplomacy in case its changed while we weren't looking (ex. in /class or
+                        // switching accounts)
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
                                 .processIncomingContainer(content -> this.parseDiplomacyContent(content.items())));
