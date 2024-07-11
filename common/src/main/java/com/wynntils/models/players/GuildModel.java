@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
@@ -19,6 +20,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
@@ -44,6 +46,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
@@ -251,6 +254,18 @@ public class GuildModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen))
+            return;
+
+        StyledText title = StyledText.fromComponent(containerScreen.getTitle());
+        if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)))
+            return;
+
+        parseDiplomacyContent(event.getItems());
+    }
+
     public void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
         List<StyledText> lore = LoreUtils.getLore(guildInfoItem);
 
@@ -278,12 +293,10 @@ public class GuildModel extends Model {
                         QueryStep.clickOnSlot(CharacterModel.GUILD_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(this::parseGuildContainer))
-                .conditionalThen(
-                        // Upon execution allied guilds have already been parsed
-                        container -> !guildDiplomacyMap.isEmpty(),
+                .then(
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
-                                .processIncomingContainer(this::parseDiplomacyContainer));
+                                .processIncomingContainer(content -> { this.parseDiplomacyContent(content.items()); }));
     }
 
     private void parseGuildContainer(ContainerContent container) {
@@ -336,9 +349,11 @@ public class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
     }
 
-    private void parseDiplomacyContainer(ContainerContent content) {
+    private void parseDiplomacyContent(List<ItemStack> items) {
+        guildDiplomacyMap.clear();
+
         for (int slot : DIPLOMACY_SLOTS) {
-            ItemStack diplomacyItem = content.items().get(slot);
+            ItemStack diplomacyItem = items.get(slot);
             if (diplomacyItem.getItem() == Items.AIR) {
                 continue;
             }
@@ -352,12 +367,7 @@ public class GuildModel extends Model {
             }
 
             String alliedGuildName = alliedGuildNameMatcher.group("name");
-            if (!guildDiplomacyMap.containsKey(alliedGuildName)) {
-                WynntilsMod.warn("Trying to parse tributes for unallied guild " + alliedGuildName);
-                continue;
-            }
-
-            DiplomacyInfo diplomacyInfo = guildDiplomacyMap.get(alliedGuildName);
+            DiplomacyInfo diplomacyInfo = guildDiplomacyMap.computeIfAbsent(alliedGuildName, DiplomacyInfo::new);
 
             for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
                 Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
