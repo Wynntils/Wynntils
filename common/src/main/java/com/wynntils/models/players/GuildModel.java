@@ -294,9 +294,10 @@ public class GuildModel extends Model {
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(this::parseGuildContainer))
                 .then(
+                        //We always check diplomacy in case its changed while we weren't looking (ex. in /class or switching accounts)
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
-                                .processIncomingContainer(content -> { this.parseDiplomacyContent(content.items()); }));
+                                .processIncomingContainer(content -> this.parseDiplomacyContent(content.items())));
     }
 
     private void parseGuildContainer(ContainerContent container) {
