@@ -7,8 +7,7 @@ package com.wynntils.handlers.labels;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
-import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
+import com.wynntils.handlers.labels.event.EntityLabelEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
@@ -90,18 +89,13 @@ public class LabelHandler extends Handler {
         }
     }
 
-    // This method is likely to be removed in the future, as it won't be used anymore
-    @Deprecated
     private void handleEntityLabelEvents(SetEntityDataEvent event) {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
         if (entity == null) return;
 
-        SynchedEntityData.DataValue<?> oldNameData = null;
-        SynchedEntityData.DataValue<Optional<Component>> newCustomNameData = null;
-
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
             if (packedItem.id() == Entity.DATA_CUSTOM_NAME_VISIBLE.id()) {
-                WynntilsMod.postEvent(new EntityLabelVisibilityEvent(entity, (Boolean) packedItem.value()));
+                WynntilsMod.postEvent(new EntityLabelEvent.Visibility(entity, (Boolean) packedItem.value()));
                 continue;
             }
 
@@ -117,40 +111,9 @@ public class LabelHandler extends Handler {
                 // Sometimes there is no actual change; ignore it then
                 if (newName.equals(oldName)) continue;
 
-                LabelInfo labelInfo = tryIdentifyLabel(newName, entity);
-                if (labelInfo != null) {
-                    liveLabels.put(entity.getId(), labelInfo);
-                }
-
-                EntityLabelChangedEvent labelChangedEvent =
-                        new EntityLabelChangedEvent(entity, newName, oldName, labelInfo);
+                EntityLabelEvent.Changed labelChangedEvent = new EntityLabelEvent.Changed(entity, newName);
                 WynntilsMod.postEvent(labelChangedEvent);
-
-                // If the event was cancelled, remove the name change data
-                if (labelChangedEvent.isCanceled()) {
-                    oldNameData = packedItem;
-                    continue;
-                }
-
-                // If the event changed the name, update the data
-                if (!labelChangedEvent.getName().equals(newName)) {
-                    oldNameData = packedItem;
-                    newCustomNameData = new SynchedEntityData.DataValue<>(
-                            Entity.DATA_CUSTOM_NAME.id(),
-                            (EntityDataSerializer<Optional<Component>>) packedItem.serializer(),
-                            Optional.of(labelChangedEvent.getName().getComponent()));
-                }
             }
-        }
-
-        // If the name was removed, remove the old data
-        if (oldNameData != null) {
-            event.removePackedItem(oldNameData);
-        }
-
-        // If the name was changed, add the new data
-        if (newCustomNameData != null) {
-            event.addPackedItem(newCustomNameData);
         }
     }
 

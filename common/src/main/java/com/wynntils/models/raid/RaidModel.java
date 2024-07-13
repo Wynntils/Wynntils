@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
+import com.wynntils.handlers.labels.event.EntityLabelEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidBossStartedEvent;
@@ -108,7 +108,7 @@ public class RaidModel extends Model {
     }
 
     @SubscribeEvent
-    public void onLabelChange(EntityLabelChangedEvent event) {
+    public void onLabelChange(EntityLabelEvent.Changed event) {
         if (!(event.getEntity() instanceof ArmorStand)) return;
         if (currentRaid == null) return;
         if (currentRoom == RaidRoomType.BOSS_FIGHT) return;
