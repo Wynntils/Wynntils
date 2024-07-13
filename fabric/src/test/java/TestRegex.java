@@ -15,6 +15,7 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
+import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
@@ -228,8 +229,8 @@ public class TestRegex {
     }
 
     @Test
-    public void DamageModel_DAMAGE_LABEL_PATTERN() {
-        PatternTester p = new PatternTester(DamageModel.class, "DAMAGE_LABEL_PATTERN");
+    public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
         p.shouldMatch("§4-13 ❤ ");
         p.shouldMatch("§4-10 ❤ ");
         p.shouldMatch("§c-8 ✹ ");
@@ -238,6 +239,7 @@ public class TestRegex {
         p.shouldMatch("§b-21 ❉ ");
         p.shouldMatch("§f-32 ❋ ");
         p.shouldMatch("§c-28 ✹ ");
+        p.shouldMatch("§c-116 ✹ §2-17 ✤ ");
     }
 
     @Test
@@ -246,7 +248,9 @@ public class TestRegex {
         p.shouldMatch("§aTravelling Merchant§r - §c5985§4❤");
         p.shouldMatch("§aGrook§r - §c23§4❤");
         p.shouldMatch("§cZombie§r - §c43§4❤");
-        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤ - §7§e✦Weak §c✹Dam §c✹Def§7");
+        p.shouldMatch("§cFeligember Frog§r - §c1553§4❤§r - §7§e✦Weak §c✹Dam §c✹Def");
+        p.shouldMatch("§cLongleg Gripper§r - §c40500§4❤§r - §2✤Dam §e✦§c✹Def");
+        p.shouldMatch("§cBlinder§r - §c6566§4❤");
     }
 
     @Test
