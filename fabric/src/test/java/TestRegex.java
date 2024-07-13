@@ -256,7 +256,8 @@ public class TestRegex {
     @Test
     public void FriendsModel_ONLINE_FRIENDS_HEADER() {
         PatternTester p = new PatternTester(FriendsModel.class, "ONLINE_FRIENDS_HEADER");
-        p.shouldMatch("§2Online §aFriends:");
+        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Online Friends:");
+        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Online Friends:");
     }
 
     @Test
@@ -270,14 +271,16 @@ public class TestRegex {
     @Test
     public void FriendsModel_JOIN_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "JOIN_PATTERN");
-        p.shouldMatch("§aMirvun§2 has logged into server §aWC1§2 as §aan Archer");
-        p.shouldMatch("§aMirvun§2 has logged into server §aWC27§2 as §aa Mage");
+        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun§2 has logged into server §aWC1§2 as §aan Archer");
+        p.shouldMatch(
+                "§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun§2 has logged into server §aWC27§2 as §aa Mage");
     }
 
     @Test
     public void FriendsModel_LEAVE_PATTERN() {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
-        p.shouldMatch("§aMirvun left the game.");
+        p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
+        p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
     }
 
     @Test
