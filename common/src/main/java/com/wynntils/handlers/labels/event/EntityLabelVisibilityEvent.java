@@ -7,6 +7,8 @@ package com.wynntils.handlers.labels.event;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.Event;
 
+// Use TextDisplayChangedEvent instead, Wynn does not use armor stands for most of its labels
+@Deprecated
 public class EntityLabelVisibilityEvent extends Event {
     private final Entity entity;
     private final boolean value;
