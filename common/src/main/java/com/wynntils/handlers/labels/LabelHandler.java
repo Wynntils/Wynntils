@@ -67,7 +67,8 @@ public class LabelHandler extends Handler {
                     liveLabels.put(entity.getId(), labelInfo);
                 }
 
-                TextDisplayChangedEvent.Text textChangedEvent = new TextDisplayChangedEvent.Text(textDisplay, newText);
+                TextDisplayChangedEvent.Text textChangedEvent =
+                        new TextDisplayChangedEvent.Text(textDisplay, labelInfo, newText);
                 WynntilsMod.postEvent(textChangedEvent);
 
                 // If the event was cancelled, remove the name change data
