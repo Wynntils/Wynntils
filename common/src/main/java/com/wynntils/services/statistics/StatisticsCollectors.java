@@ -20,7 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class StatisticsCollectors {
     @SubscribeEvent
     public void onDamageDealtEvent(DamageDealtEvent event) {
-        int damageSum = event.getDamages().values().stream().mapToInt(d -> d).sum();
+        long damageSum = event.getDamages().values().stream().mapToLong(d -> d).sum();
         Services.Statistics.addToStatistics(StatisticKind.DAMAGE_DEALT, damageSum);
     }
 
