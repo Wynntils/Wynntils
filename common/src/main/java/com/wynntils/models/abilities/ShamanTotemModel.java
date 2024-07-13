@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
+import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.Position;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +43,8 @@ public class ShamanTotemModel extends Model {
     private long totemCastTimestamp = 0;
     private int nextTotemSlot = 1;
 
-    private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(\\d+)s");
+    // §c21s\n+290❤§7/s
+    private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
     private static final double TOTEM_SEARCH_RADIUS = 1.0;
     private static final int CAST_DELAY_MAX_MS = 450;
 
@@ -149,22 +151,21 @@ public class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemRename(EntityLabelChangedEvent e) {
+    public void onTotemRename(TextDisplayChangedEvent.Text event) {
         if (!Models.WorldState.onWorld()) return;
 
-        Entity entity = e.getEntity();
-        if (!(entity instanceof ArmorStand)) return;
+        Display.TextDisplay textDisplay = event.getTextDisplay();
 
-        StyledText name = e.getName();
+        StyledText name = event.getText();
         if (name.isEmpty()) return;
 
         Matcher m = name.getMatcher(SHAMAN_TOTEM_TIMER);
         if (!m.find()) return;
 
-        int parsedTime = Integer.parseInt(m.group(1));
-        Position position = entity.position();
+        int parsedTime = Integer.parseInt(m.group("time"));
+        Position position = textDisplay.position();
 
-        int entityId = entity.getId();
+        int entityId = textDisplay.getId();
         if (getBoundTotem(entityId) == null) return;
 
         ShamanTotem boundTotem = getBoundTotem(entityId);
