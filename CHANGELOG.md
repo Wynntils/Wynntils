@@ -1,3 +1,28 @@
+## [2.0.0-beta.8](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2024-07-13)
+
+
+### New Features
+
+* Change the "purpose" of EntityLabelEvent to no longer do label matching [skip ci] ([#2659](https://github.com/Wynntils/Artemis/issues/2659)) ([9ec4990](https://github.com/Wynntils/Artemis/commit/9ec499028cfbdea6868d62f1fa9e35f18504873a))
+* Port DamageModel to TextDisplay labels [skip ci] ([#2654](https://github.com/Wynntils/Artemis/issues/2654)) ([9ffef5e](https://github.com/Wynntils/Artemis/commit/9ffef5eeaf7a0c22a022ef3570d25849162ee37d))
+* Port ExtendedSeasonLeaderboardFeature to TextDisplay (+ pass LabelInfo in TextDisplayChangedEvent) [skip ci] ([#2655](https://github.com/Wynntils/Artemis/issues/2655)) ([937c18a](https://github.com/Wynntils/Artemis/commit/937c18a2ced5a5981950ca46a8b316ca70c98e4a))
+* Port LabelHandler to TextDisplay (without porting usages) [skip ci] ([#2653](https://github.com/Wynntils/Artemis/issues/2653)) ([4bc1410](https://github.com/Wynntils/Artemis/commit/4bc14106e9a52303803df903f300bcb5d889a9c3))
+* Port MobTotemModel to TextDisplay [skip ci] ([#2658](https://github.com/Wynntils/Artemis/issues/2658)) ([531ceb6](https://github.com/Wynntils/Artemis/commit/531ceb68e7b48f964cf7701023b8fa710104eabb))
+* Port ProfessionModel to TextDisplay [skip ci] ([#2656](https://github.com/Wynntils/Artemis/issues/2656)) ([27140f5](https://github.com/Wynntils/Artemis/commit/27140f507f15ea5b980274ab863b29ef980c409c))
+* Port ShamanTotemModel to TextDisplay (tracking still broken) [skip ci] ([#2657](https://github.com/Wynntils/Artemis/issues/2657)) ([d3f5c18](https://github.com/Wynntils/Artemis/commit/d3f5c18af5ecf297cf5bac75414f1b56dcce2bd7))
+
+
+### Bug Fixes
+
+* Fix quick jump issues [skip ci] ([#2651](https://github.com/Wynntils/Artemis/issues/2651)) ([6a1b85c](https://github.com/Wynntils/Artemis/commit/6a1b85cc7f049eb6e0461eeeef6b3a5084ae32a6))
+* Improve reliability of diplomacy tracking [skip ci] ([#2652](https://github.com/Wynntils/Artemis/issues/2652)) ([4eca9fd](https://github.com/Wynntils/Artemis/commit/4eca9fd3bb9e08406d3e50157b1be0b95f45dbcb))
+* Update all friend and party regexes ([#2660](https://github.com/Wynntils/Artemis/issues/2660)) ([70db660](https://github.com/Wynntils/Artemis/commit/70db660c09b16c70795d6fe5b1cc17d4a9a101b9))
+
+
+### Miscellaneous Chores
+
+* Update dependency versions [skip ci] ([d70a1fd](https://github.com/Wynntils/Artemis/commit/d70a1fd78ae53b12984e328fad6fb96ba89dccaf))
+
 ## [2.0.0-beta.7](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2024-07-10)
 
 
@@ -7,6 +32,11 @@
 * Fix health bar parsing when health is "critical" [skip ci] ([#2647](https://github.com/Wynntils/Artemis/issues/2647)) ([1bc634c](https://github.com/Wynntils/Artemis/commit/1bc634cff085bae2ac7efdc0b33fd914de3c551b))
 * Fix MaterialAnnotator crashing when trying to look up "Unprocessed" items [skip ci] ([#2648](https://github.com/Wynntils/Artemis/issues/2648)) ([2d6b789](https://github.com/Wynntils/Artemis/commit/2d6b789214e7121db8ff04a404a9b8a7b334f822))
 * SkillPointModel port to beta ([#2649](https://github.com/Wynntils/Artemis/issues/2649)) ([94ea9dc](https://github.com/Wynntils/Artemis/commit/94ea9dc061576ffadaa415d8e1a9b3ef1a8bfc40))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.0-beta.7 [skip ci] ([d388fcc](https://github.com/Wynntils/Artemis/commit/d388fccffd035d41a31197c570459b4ec67b7d1c))
 
 ## [2.0.0-beta.6](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2024-07-09)
 
@@ -59,17 +89,4 @@
 
 * **release:** v2.0.0-beta.4 [skip ci] ([b9b1437](https://github.com/Wynntils/Artemis/commit/b9b143705b433862a30693ab762bf2c3a31ea2b1))
 * remove (almost) everything related to soul points [skip ci] ([#2643](https://github.com/Wynntils/Artemis/issues/2643)) ([d4a15b6](https://github.com/Wynntils/Artemis/commit/d4a15b6d45e6d25edbf2ed6d85786f88ce5bbfbd))
-
-## [2.0.0-beta.3](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2024-07-07)
-
-
-### Bug Fixes
-
-* Update containers for 2.1 ([#2627](https://github.com/Wynntils/Artemis/issues/2627)) ([d062a7e](https://github.com/Wynntils/Artemis/commit/d062a7e99e10000cd7608f8f1c7591009dab531b))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.3 [skip ci] ([5c26511](https://github.com/Wynntils/Artemis/commit/5c265110c3df8f16402042a587d72d22373a589f))
-* Support fonts in StyledText [skip ci] ([#2635](https://github.com/Wynntils/Artemis/issues/2635)) ([4948a85](https://github.com/Wynntils/Artemis/commit/4948a85d4bc2c7b426cdfcc472fea8700e24de0e))
 
