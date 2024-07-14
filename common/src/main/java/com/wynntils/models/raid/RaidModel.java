@@ -241,7 +241,7 @@ public class RaidModel extends Model {
 
         long intermissionTime = currentTime - raidStartTime - timeSpentInChallenges;
 
-        if (inChallengeRoom() || currentRoom == RaidRoomType.BOSS_FIGHT) {
+        if ((inChallengeRoom() && !completedCurrentChallenge) || currentRoom == RaidRoomType.BOSS_FIGHT) {
             intermissionTime -= (currentTime - roomStartTime);
         }
 
