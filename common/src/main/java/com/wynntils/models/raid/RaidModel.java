@@ -81,6 +81,8 @@ public class RaidModel extends Model {
             currentRaid = null;
             currentRoom = null;
             completedCurrentChallenge = false;
+            timeLeft = 0;
+            challenges = CappedValue.EMPTY;
             roomTimers.clear();
 
             McUtils.sendMessageToClient(Component.literal(
@@ -157,6 +159,8 @@ public class RaidModel extends Model {
         currentRaid = null;
         currentRoom = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
         roomTimers.clear();
     }
 
@@ -169,6 +173,8 @@ public class RaidModel extends Model {
         currentRaid = null;
         currentRoom = null;
         completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
         roomTimers.clear();
     }
 
@@ -176,8 +182,16 @@ public class RaidModel extends Model {
         timeLeft = seconds;
     }
 
+    public int getTimeLeft() {
+        return timeLeft;
+    }
+
     public void setChallenges(CappedValue challenges) {
         this.challenges = challenges;
+    }
+
+    public CappedValue getChallenges() {
+        return challenges;
     }
 
     public long getRaidBestTime(RaidKind raidKind) {
