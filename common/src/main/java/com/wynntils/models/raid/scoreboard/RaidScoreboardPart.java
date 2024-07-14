@@ -25,6 +25,8 @@ public class RaidScoreboardPart extends ScoreboardPart {
     private static final Pattern EXIT_PATTERN = Pattern.compile("^Go to the exit$");
     // Split onto two lines, 2nd says "died"
     private static final Pattern FAILED_PATTERN = Pattern.compile("^Too many players have$");
+    // Sometimes this will show between challenges so we don't want this change to trigger a new challenge
+    private static final Pattern PREPARE_PATTERN = Pattern.compile("^Prepare for the next$");
     private static final Pattern RAID_ENDED_PATTERN = Pattern.compile("^This raid has ended$");
     private static final Pattern TIMER_PATTERN = Pattern.compile(
             "^[-—] Time Left: (?<hours>\\d+:)?(?<minutes>\\d+):(?<seconds>\\d+)(?: \\[\\+\\d+[msMS]\\])?$");
@@ -49,9 +51,6 @@ public class RaidScoreboardPart extends ScoreboardPart {
 
         StyledText currentStateLine = content.getFirst();
 
-        // NoG had a "Slay the Restless devourer" with "devourer" on a 2nd line when entering boss fight
-        // Need to check others to see if they all start with "Slay the"
-
         if (currentStateLine.matches(EXIT_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.tryEnterChallengeIntermission();
         } else if (currentStateLine.matches(CHALLENGE_COMPLETED_PATTERN, PartStyle.StyleType.NONE)) {
@@ -62,7 +61,11 @@ public class RaidScoreboardPart extends ScoreboardPart {
             Models.Raid.completeRaid();
         } else if (currentStateLine.matches(FAILED_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.failedRaid();
-        } else {
+        } else if (Models.Raid.getCurrentRaid() != null
+                && currentStateLine.matches(
+                        Models.Raid.getCurrentRaid().getBossScoreboardPattern(), PartStyle.StyleType.NONE)) {
+            Models.Raid.startBossFight();
+        } else if (!currentStateLine.matches(PREPARE_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.tryStartChallenge();
         }
 

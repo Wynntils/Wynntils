@@ -5,19 +5,34 @@
 package com.wynntils.models.raid.type;
 
 import com.wynntils.core.text.StyledText;
+import java.util.regex.Pattern;
 
 public enum RaidKind {
-    NEST_OF_THE_GROOTSLANGS("Nest of the Grootslangs", StyledText.fromString("§2Nest of The Grootslangs")),
-    ORPHIONS_NEXUS_OF_LIGHT("Orphion's Nexus of Light", StyledText.fromString("§f§kOrphion's Nexus of §lLight")),
-    THE_CANYON_COLOSSUS("The Canyon Colossus", StyledText.fromString("§3§kThe Canyon Colossus")),
-    THE_NAMELESS_ANOMALY("The Nameless Anomaly", StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly"));
+    NEST_OF_THE_GROOTSLANGS(
+            "Nest of the Grootslangs",
+            StyledText.fromString("§2Nest of The Grootslangs"),
+            Pattern.compile("^Slay the Restless$")),
+    ORPHIONS_NEXUS_OF_LIGHT(
+            "Orphion's Nexus of Light",
+            StyledText.fromString("§f§kOrphion's Nexus of §lLight"),
+            Pattern.compile("^Save him.$")),
+    THE_CANYON_COLOSSUS(
+            "The Canyon Colossus",
+            StyledText.fromString("§3§kThe Canyon Colossus"),
+            Pattern.compile("^$")), // TCC not yet enabled in beta
+    THE_NAMELESS_ANOMALY(
+            "The Nameless Anomaly",
+            StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly"),
+            Pattern.compile("^Survive.$"));
 
     private final String name;
     private final StyledText entryTitle;
+    private final Pattern bossScoreboardPattern;
 
-    RaidKind(String name, StyledText entryTitle) {
+    RaidKind(String name, StyledText entryTitle, Pattern bossScoreboardPattern) {
         this.name = name;
         this.entryTitle = entryTitle;
+        this.bossScoreboardPattern = bossScoreboardPattern;
     }
 
     public static RaidKind fromTitle(StyledText title) {
@@ -46,5 +61,9 @@ public enum RaidKind {
 
     public StyledText getEntryTitle() {
         return entryTitle;
+    }
+
+    public Pattern getBossScoreboardPattern() {
+        return bossScoreboardPattern;
     }
 }

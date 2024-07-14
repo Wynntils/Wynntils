@@ -110,7 +110,7 @@ public class RaidModel extends Model {
     // are in the boss intermission and this is called, then we have entered the boss fight.
     // So this method will be called when no other patterns matched the first line of the raid scoreboard segment.
     public void tryStartChallenge() {
-        if (inInstructionsRoom() || currentRoom == RaidRoomType.BOSS_INTERMISSION) {
+        if (inInstructionsRoom()) {
             currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
             WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid, currentRoom));
             roomStartTime = System.currentTimeMillis();
@@ -141,6 +141,15 @@ public class RaidModel extends Model {
             McUtils.sendMessageToClient(Component.literal("Entered buff room: " + currentRoom));
 
             completedCurrentChallenge = false;
+        }
+    }
+
+    public void startBossFight() {
+        if (currentRoom == RaidRoomType.BOSS_INTERMISSION) {
+            currentRoom = RaidRoomType.BOSS_FIGHT;
+            WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid, currentRoom));
+            roomStartTime = System.currentTimeMillis();
+            McUtils.sendMessageToClient(Component.literal("Starting boss fight"));
         }
     }
 
@@ -207,7 +216,7 @@ public class RaidModel extends Model {
     }
 
     public long getRoomTime(RaidRoomType roomType) {
-        if (roomType == currentRoom) {
+        if (roomType == currentRoom && !completedCurrentChallenge) {
             return currentRoomTime();
         }
 
