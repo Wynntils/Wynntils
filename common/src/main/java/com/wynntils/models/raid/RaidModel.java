@@ -143,6 +143,8 @@ public class RaidModel extends Model {
     }
 
     public void completeRaid() {
+        if (currentRaid == null) return;
+
         McUtils.sendMessageToClient(Component.literal("Completed raid: " + currentRaid));
         // Add the boss time to room timers
         long bossTime = System.currentTimeMillis() - roomStartTime;
@@ -159,6 +161,8 @@ public class RaidModel extends Model {
     }
 
     public void failedRaid() {
+        if (currentRaid == null) return;
+
         McUtils.sendMessageToClient(Component.literal("Failed raid: " + currentRaid));
         WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
 
