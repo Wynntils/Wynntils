@@ -45,10 +45,6 @@ public class RaidScoreboardPart extends ScoreboardPart {
             return;
         }
 
-        for (int i = 0; i < content.size(); i++) {
-            System.out.println("Raid scoreboard line " + i + ": " + content.get(i));
-        }
-
         StyledText currentStateLine = content.getFirst();
 
         if (currentStateLine.matches(EXIT_PATTERN, PartStyle.StyleType.NONE)) {

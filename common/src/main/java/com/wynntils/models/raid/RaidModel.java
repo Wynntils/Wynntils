@@ -61,7 +61,6 @@ public class RaidModel extends Model {
 
         Component component = event.getComponent();
         StyledText styledText = StyledText.fromComponent(component);
-        System.out.println("Title: " + styledText);
 
         currentRaid = RaidKind.fromTitle(styledText);
 
@@ -70,7 +69,6 @@ public class RaidModel extends Model {
             currentRoom = RaidRoomType.INTRO;
             raidStartTime = System.currentTimeMillis();
             completedCurrentChallenge = false;
-            McUtils.sendMessageToClient(Component.literal("Started raid: " + currentRaid));
         }
     }
 
@@ -96,11 +94,9 @@ public class RaidModel extends Model {
     // Otherwise, if we are in the intro or another buff room then we are now in an instructions room.
     public void tryEnterChallengeIntermission() {
         if (currentRoom == RaidRoomType.BUFF_3) {
-            McUtils.sendMessageToClient(Component.literal("Entered boss intermission"));
             currentRoom = RaidRoomType.BOSS_INTERMISSION;
         } else if (inBuffRoom() || currentRoom == RaidRoomType.INTRO) {
             currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
-            McUtils.sendMessageToClient(Component.literal("Entered instructions room: " + currentRoom));
         }
     }
 
@@ -114,7 +110,6 @@ public class RaidModel extends Model {
             currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
             WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid, currentRoom));
             roomStartTime = System.currentTimeMillis();
-            McUtils.sendMessageToClient(Component.literal("Starting challenge: " + currentRoom));
         }
     }
 
@@ -123,7 +118,6 @@ public class RaidModel extends Model {
     // post the event and save timers once.
     public void completeChallenge() {
         if (!completedCurrentChallenge) {
-            McUtils.sendMessageToClient(Component.literal("Completed challenge: " + currentRoom));
             long roomTime = System.currentTimeMillis() - roomStartTime;
             roomTimers.put(currentRoom, roomTime);
             roomStartTime = System.currentTimeMillis();
@@ -138,7 +132,6 @@ public class RaidModel extends Model {
     public void enterBuffRoom() {
         if (completedCurrentChallenge) {
             currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
-            McUtils.sendMessageToClient(Component.literal("Entered buff room: " + currentRoom));
 
             completedCurrentChallenge = false;
         }
@@ -149,14 +142,12 @@ public class RaidModel extends Model {
             currentRoom = RaidRoomType.BOSS_FIGHT;
             WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid, currentRoom));
             roomStartTime = System.currentTimeMillis();
-            McUtils.sendMessageToClient(Component.literal("Starting boss fight"));
         }
     }
 
     public void completeRaid() {
         if (currentRaid == null) return;
 
-        McUtils.sendMessageToClient(Component.literal("Completed raid: " + currentRaid));
         // Add the boss time to room timers
         long bossTime = System.currentTimeMillis() - roomStartTime;
         roomTimers.put(RaidRoomType.BOSS_FIGHT, bossTime);
@@ -176,7 +167,6 @@ public class RaidModel extends Model {
     public void failedRaid() {
         if (currentRaid == null) return;
 
-        McUtils.sendMessageToClient(Component.literal("Failed raid: " + currentRaid));
         WynntilsMod.postEvent(new RaidEndedEvent.Failed(currentRaid, getAllRoomTimes(), currentRaidTime()));
 
         currentRaid = null;
