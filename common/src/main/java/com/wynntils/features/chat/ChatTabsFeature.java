@@ -132,27 +132,27 @@ public class ChatTabsFeature extends Feature {
 
         int keyCode = event.getKeyCode();
         if (keyCode == GLFW.GLFW_KEY_TAB) {
-            boolean reverse = false;
-
-            if (KeyboardUtils.isShiftDown()) {
-                if (oldTabHotkey.get()) {
-                    Services.ChatTab.setFocusedTab(Services.ChatTab.getNextFocusedTab());
-                    event.setCanceled(true);
-                    return;
-                } else {
-                    reverse = true;
+            int newTab = -1;
+            if (oldTabHotkey.get()) {
+                if (KeyboardUtils.isShiftDown()) {
+                    newTab = Services.ChatTab.getNextFocusedTab();
+                }
+            } else {
+                if (KeyboardUtils.isControlDown()) {
+                    newTab = KeyboardUtils.isShiftDown()
+                            ? Services.ChatTab.getLastFocusedTab()
+                            : Services.ChatTab.getNextFocusedTab();
                 }
             }
 
-            if (KeyboardUtils.isControlDown() && !oldTabHotkey.get()) {
-                int newTab = reverse ? Services.ChatTab.getLastFocusedTab() : Services.ChatTab.getNextFocusedTab();
-                Services.ChatTab.setFocusedTab(newTab);
-                event.setCanceled(true);
-                return;
-            }
+            if (newTab == -1) return;
+
+            Services.ChatTab.setFocusedTab(newTab);
+            event.setCanceled(true);
+            return;
         }
 
-        if (keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
+        if (KeyboardUtils.isControlDown() && keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
             ChatTab newTab = Services.ChatTab.getTab(keyCode - GLFW.GLFW_KEY_1);
             if (newTab != null) {
                 Services.ChatTab.setFocusedTab(newTab);
