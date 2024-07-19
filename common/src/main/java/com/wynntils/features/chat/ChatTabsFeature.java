@@ -50,7 +50,7 @@ public class ChatTabsFeature extends Feature {
             new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
             new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
 
-    @Persisted(i18nKey = "feature.wynntils.chatTabs.oldTabHotkey")
+    @Persisted
     public final Config<Boolean> oldTabHotkey = new Config<>(false);
 
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
@@ -140,7 +140,7 @@ public class ChatTabsFeature extends Feature {
             } else {
                 if (KeyboardUtils.isControlDown()) {
                     newTab = KeyboardUtils.isShiftDown()
-                            ? Services.ChatTab.getLastFocusedTab()
+                            ? Services.ChatTab.getPreviousFocusedTab()
                             : Services.ChatTab.getNextFocusedTab();
                 }
             }
