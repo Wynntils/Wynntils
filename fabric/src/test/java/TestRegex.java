@@ -24,6 +24,7 @@ import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
+import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
@@ -809,5 +810,12 @@ public class TestRegex {
         p.shouldMatch("§e- §7Class: §6\uE029§5\uE028§r §fAssassin");
         p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§r §fKnight");
         p.shouldMatch("§e- §7Class: §fWarrior");
+    }
+
+    @Test
+    public void NpcLabelParser_NPC_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(NpcLabelParser.class, "NPC_LABEL_PATTERN");
+
+        p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
     }
 }
