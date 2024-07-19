@@ -27,7 +27,6 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -308,8 +307,7 @@ public final class ActivityModel extends Model {
     void updateTracker(String name, String type, StyledText nextTask) {
         ActivityType trackedType = ActivityType.from(type);
         trackedActivity = new TrackedActivity(name, trackedType, nextTask);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
-                getTrackedLocation(), BeaconColor.fromActivityType(trackedType));
+        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(getTrackedLocation(), trackedType.getColor());
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
