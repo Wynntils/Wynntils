@@ -67,11 +67,12 @@ public final class ActivityModel extends Model {
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
     private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(.).À?§7 Quest Req: (.+)$");
-    private static final Pattern DISTANCE_PATTERN = Pattern.compile("^   §7Distance: §.([\\w\\s]*)(?:§8 \\((.+)\\))?$");
-    private static final Pattern LENGTH_PATTERN = Pattern.compile("^   §7Length: (\\w*)(?:§8 \\((.+)\\))?$");
-    private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^   §7Difficulty: (\\w*)$");
-    private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
-    private static final Pattern REWARD_PATTERN = Pattern.compile("^§d- §7\\+?(.*)$");
+    private static final Pattern DISTANCE_PATTERN =
+            Pattern.compile("^\uDB00\uDC0E§7Distance: §.([\\w\\s]*)(?:§8 \\((.+)\\))?$");
+    private static final Pattern LENGTH_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Length: (\\w*)(?:§8 \\((.+)\\))?$");
+    private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Difficulty: (\\w*)$");
+    private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^\uDB00\uDC0E§dRewards:$");
+    private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(?<newline>- )?§7\\+?(?<reward>.+)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
     private static final Pattern OVERALL_PROGRESS_PATTERN =
             Pattern.compile("^\uDB00\uDC1F*§7(\\d+) of (\\d+) completed$");
@@ -216,7 +217,12 @@ public final class ActivityModel extends Model {
 
             Matcher rewardMatcher = line.getMatcher(REWARD_PATTERN);
             if (rewardMatcher.matches()) {
-                rewards.add(rewardMatcher.group(1));
+                boolean extendLastLine = rewardMatcher.group("newline") == null;
+                if (extendLastLine && !rewards.isEmpty()) {
+                    rewards.set(rewards.size() - 1, rewards.getLast() + " " + rewardMatcher.group("reward"));
+                } else {
+                    rewards.add(rewardMatcher.group("reward"));
+                }
                 continue;
             }
 
