@@ -1,3 +1,18 @@
+## [2.0.0-beta.9](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2024-07-19)
+
+
+### New Features
+
+* Improve chat tab switching hotkeys [skip ci] ([#2664](https://github.com/Wynntils/Artemis/issues/2664)) ([3660b84](https://github.com/Wynntils/Artemis/commit/3660b8444576e41b7eedd1dc85a56942eb596b1c))
+* Make the Wynncraft health and mana bars the default [skip ci] ([#2666](https://github.com/Wynntils/Artemis/issues/2666)) ([9c8ea7b](https://github.com/Wynntils/Artemis/commit/9c8ea7bada2e7653a91de5e52035ce9be580994c))
+
+
+### Bug Fixes
+
+* Fix everything lootrun related for 2.1 ([#2665](https://github.com/Wynntils/Artemis/issues/2665)) ([7b51ae4](https://github.com/Wynntils/Artemis/commit/7b51ae47f3cf1e3bde421371870ff3f9abad3fd3))
+* Fix time spent in raid stats [skip ci] ([#2663](https://github.com/Wynntils/Artemis/issues/2663)) ([441b8f4](https://github.com/Wynntils/Artemis/commit/441b8f463ab5d191afd753726a2a89eebbd41cec))
+* Parse activities correctly (after 2.1 patch [#1](https://github.com/Wynntils/Artemis/issues/1)) [skip ci] ([#2667](https://github.com/Wynntils/Artemis/issues/2667)) ([3858321](https://github.com/Wynntils/Artemis/commit/3858321a830ae566e9aa44811640ba20926ac104))
+
 ## [2.0.0-beta.8](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2024-07-13)
 
 
@@ -21,6 +36,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.0.0-beta.8 [skip ci] ([f8edc20](https://github.com/Wynntils/Artemis/commit/f8edc2013116be658b6c7ca3a0e234b194614f8a))
 * Update dependency versions [skip ci] ([d70a1fd](https://github.com/Wynntils/Artemis/commit/d70a1fd78ae53b12984e328fad6fb96ba89dccaf))
 
 ## [2.0.0-beta.7](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2024-07-10)
@@ -67,26 +83,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.0-beta.5 [skip ci] ([aac8612](https://github.com/Wynntils/Artemis/commit/aac8612141eef8a36cb1099317977a3484be1468))
-
-## [2.0.0-beta.4](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2024-07-09)
-
-
-### New Features
-
-* Rework custom bank page names and quick jumps for 2.1 ([#2637](https://github.com/Wynntils/Artemis/issues/2637)) ([28c5dc1](https://github.com/Wynntils/Artemis/commit/28c5dc1ea4d7e9d6861f4d08e96abb41cda56c13))
-
-
-### Bug Fixes
-
-* Fix custom seaskipper screen [skip ci] ([#2639](https://github.com/Wynntils/Artemis/issues/2639)) ([69a64d5](https://github.com/Wynntils/Artemis/commit/69a64d50add051b1afc102cf2c2fa51ec74e9dec))
-* Fix emerald pouch annotator [skip ci] ([#2640](https://github.com/Wynntils/Artemis/issues/2640)) ([3e6e4ed](https://github.com/Wynntils/Artemis/commit/3e6e4edbed864cf20f1bb85337347b6b8d965103))
-* Fix skill point annotator [skip ci] ([#2638](https://github.com/Wynntils/Artemis/issues/2638)) ([a7923ea](https://github.com/Wynntils/Artemis/commit/a7923ea9bb2cbc6a291b51edd0ebb155706be943))
-* Horse keybind no longer relies on soul point item [skip ci] ([#2641](https://github.com/Wynntils/Artemis/issues/2641)) ([46fa447](https://github.com/Wynntils/Artemis/commit/46fa447429a52b7c055f3b2248b82c4d2f916758))
-* Teleport scroll annotator beta port [skip ci] ([#2642](https://github.com/Wynntils/Artemis/issues/2642)) ([e220265](https://github.com/Wynntils/Artemis/commit/e22026590e89e65d516119737b581e87ae872464))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.4 [skip ci] ([b9b1437](https://github.com/Wynntils/Artemis/commit/b9b143705b433862a30693ab762bf2c3a31ea2b1))
-* remove (almost) everything related to soul points [skip ci] ([#2643](https://github.com/Wynntils/Artemis/issues/2643)) ([d4a15b6](https://github.com/Wynntils/Artemis/commit/d4a15b6d45e6d25edbf2ed6d85786f88ce5bbfbd))
 
