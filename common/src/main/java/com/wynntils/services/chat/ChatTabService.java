@@ -81,6 +81,11 @@ public final class ChatTabService extends Service {
         return (getTabIndex(getFocusedTab()) + 1) % getTabCount();
     }
 
+    public int getPreviousFocusedTab() {
+        int tabIndex = getTabIndex(getFocusedTab());
+        return (tabIndex - 1 + getTabCount()) % getTabCount();
+    }
+
     public void refocusFirstTab() {
         if (!isTabListEmpty()) {
             setFocusedTab(0);

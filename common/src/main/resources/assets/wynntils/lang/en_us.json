@@ -239,6 +239,8 @@
   "feature.wynntils.chatRedirect.unusedPoints.notificationSkill": "You have %s unused skill points",
   "feature.wynntils.chatTabs.description": "Adds the ability to create separate chats for different message types.",
   "feature.wynntils.chatTabs.name": "Chat Tabs",
+  "feature.wynntils.chatTabs.oldTabHotkey.description": "Should the tab cycling hotkey be Shift+Tab instead of Ctrl+Tab/Ctrl+Shift+Tab?",
+  "feature.wynntils.chatTabs.oldTabHotkey.name": "Old Tab Cycling Hotkey",
   "feature.wynntils.chatTimestamp.description": "Adds timestamps to chat messages.",
   "feature.wynntils.chatTimestamp.formatPattern.description": "How should the timestamp look like in chat?",
   "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
