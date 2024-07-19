@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
@@ -133,11 +134,20 @@ public class ItemHandler extends Handler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onEntitySpawn(SetEntityDataEvent event) {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
-        if (!(entity instanceof ItemEntity itemEntity)) return;
+
+        int itemId = -1;
+        if (entity instanceof ItemEntity) {
+            itemId = ItemEntity.DATA_ITEM.id();
+        } else if (entity instanceof Display.ItemDisplay) {
+            itemId = Display.ItemDisplay.DATA_ITEM_STACK_ID.id();
+        }
+
+        // No item on this entity
+        if (itemId == -1) return;
 
         // Item entities can have an item that needs to be annotated
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
-            if (packedItem.id() == ItemEntity.DATA_ITEM.id()) {
+            if (packedItem.id() == itemId) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
                 annotate(itemStack);

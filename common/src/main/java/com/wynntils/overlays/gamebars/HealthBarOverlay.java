@@ -36,6 +36,7 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
 
     protected HealthBarOverlay(OverlayPosition overlayPosition, OverlaySize overlaySize) {
         super(overlayPosition, overlaySize, CommonColors.RED);
+        this.userEnabled.store(false);
     }
 
     @Override
