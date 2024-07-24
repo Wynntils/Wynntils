@@ -16,8 +16,6 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.spells.event.SpellEvent;
-import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,24 +38,14 @@ public class ShamanTotemModel extends Model {
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
     private final Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
 
-    private long totemCastTimestamp = 0;
     private int nextTotemSlot = 1;
 
     // §c21s\n+290❤§7/s
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
-    private static final double TOTEM_SEARCH_RADIUS = 1.0;
-    private static final int CAST_DELAY_MAX_MS = 450;
+    private static final double TOTEM_SEARCH_RADIUS = 1;
 
     public ShamanTotemModel() {
         super(List.of());
-    }
-
-    @SubscribeEvent
-    public void onTotemSpellCast(SpellEvent.Completed e) {
-        if (e.getSpell() != SpellType.TOTEM) return;
-
-        totemCastTimestamp = System.currentTimeMillis() - 40; // 40 == 2 ticks
-        // The -2 ticks is required so that the #onTotemSpawn event does not occasionally fail the cast timestamp check
     }
 
     @SubscribeEvent
@@ -65,7 +53,7 @@ public class ShamanTotemModel extends Model {
         Entity entity = getBufferedEntity(e.getId());
         if (!(entity instanceof ArmorStand totemAS)) return;
 
-        if (Math.abs(totemCastTimestamp - System.currentTimeMillis()) > CAST_DELAY_MAX_MS) return;
+        if (!isClose(totemAS.position(), McUtils.mc().player.position())) return;
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
@@ -102,14 +90,13 @@ public class ShamanTotemModel extends Model {
     public void onTimerSpawn(AddEntityEvent e) {
         // We aren't looking for a new timer, skip
         if (Arrays.stream(pendingTotemVisibleIds).allMatch(Objects::isNull)) return;
-
         int entityId = e.getId();
 
         // This timer is already bound to a totem but got respawned? skip
         if (getBoundTotem(entityId) != null) return;
 
         Entity possibleTimer = getBufferedEntity(entityId);
-        if (!(possibleTimer instanceof ArmorStand)) return;
+        if (!(possibleTimer instanceof Display.TextDisplay)) return;
 
         // Given timerId is not a totem, make a new totem
         List<ArmorStand> toCheck = McUtils.mc()
@@ -119,7 +106,8 @@ public class ShamanTotemModel extends Model {
                         new AABB(
                                 possibleTimer.position().x - TOTEM_SEARCH_RADIUS,
                                 possibleTimer.position().y
-                                        - 0.3, // Don't modify this unless you are certain it is causing issues
+                                        - TOTEM_SEARCH_RADIUS, // Don't modify this unless you are certain it is causing
+                                // issues
                                 possibleTimer.position().z - TOTEM_SEARCH_RADIUS,
                                 possibleTimer.position().x + TOTEM_SEARCH_RADIUS,
                                 // (a LOT) more vertical radius required for totems casted off high places
@@ -158,7 +146,6 @@ public class ShamanTotemModel extends Model {
 
         StyledText name = event.getText();
         if (name.isEmpty()) return;
-
         Matcher m = name.getMatcher(SHAMAN_TOTEM_TIMER);
         if (!m.find()) return;
 
@@ -267,6 +254,12 @@ public class ShamanTotemModel extends Model {
         }
 
         return null;
+    }
+
+    private boolean isClose(Position pos1, Position pos2) {
+        return Math.abs(pos1.x() - pos2.x()) < TOTEM_SEARCH_RADIUS
+                && Math.abs(pos1.y() - pos2.y()) < TOTEM_SEARCH_RADIUS
+                && Math.abs(pos1.z() - pos2.z()) < TOTEM_SEARCH_RADIUS;
     }
 
     public List<ShamanTotem> getActiveTotems() {
