@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -38,12 +39,12 @@ public class ShamanTotemModel extends Model {
     private static final int MAX_TOTEM_COUNT = 3;
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
     private static final double TOTEM_SEARCH_RADIUS = 1;
-    private static final int CAST_DELAY_MAX_TICKS = 4;
+    private static final int CAST_DELAY_MAX_TICKS = 3;
 
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
     private final Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
     private int nextTotemSlot = 1;
-    private boolean waitingForCastConfirmation = false;
+    private long totemCastTimestamp = 0;
 
     public ShamanTotemModel() {
         super(List.of());
@@ -52,22 +53,22 @@ public class ShamanTotemModel extends Model {
     @SubscribeEvent
     public void onTotemSpellCast(SpellEvent.Cast e) {
         if (e.getSpellType() != SpellType.TOTEM) return;
-        waitingForCastConfirmation = false;
+        totemCastTimestamp = System.currentTimeMillis();
     }
 
     @SubscribeEvent
     public void onTotemSpawn(AddEntityEvent e) {
-        waitingForCastConfirmation = true;
-
         Entity entity = getBufferedEntity(e.getId());
         if (!(entity instanceof ArmorStand totemAS)) return;
 
         if (!isClose(totemAS.position(), McUtils.mc().player.position())) return;
+        System.out.println("passed isClose check");
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    // didn't receive a cast within the delay, probably not casted by the player
-                    if (waitingForCastConfirmation) return;
+                    // didn't come from a cast within the delay, probably not casted by the player
+                    System.out.println(System.currentTimeMillis() - totemCastTimestamp);
+                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_DELAY_MAX_TICKS * 4 * 20) return;
 
                     // Checks to verify this is a totem
                     // These must be ran with a delay,
@@ -269,9 +270,16 @@ public class ShamanTotemModel extends Model {
     }
 
     private boolean isClose(Position pos1, Position pos2) {
-        return Math.abs(pos1.x() - pos2.x()) < TOTEM_SEARCH_RADIUS
-                && Math.abs(pos1.y() - pos2.y()) < TOTEM_SEARCH_RADIUS
-                && Math.abs(pos1.z() - pos2.z()) < TOTEM_SEARCH_RADIUS;
+        LocalPlayer player = McUtils.player();
+        double dX = player.getX() - player.xOld;
+        double dZ = player.getZ() - player.zOld;
+        double dY = player.getY() - player.yOld;
+        double speedMultiplier = Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
+        if (speedMultiplier < 1) speedMultiplier = 1; // wynn never casts perfectly aligned totems
+
+        return Math.abs(pos1.x() - pos2.x()) < speedMultiplier
+                && Math.abs(pos1.y() - pos2.y()) < speedMultiplier
+                && Math.abs(pos1.z() - pos2.z()) < speedMultiplier;
     }
 
     public List<ShamanTotem> getActiveTotems() {
