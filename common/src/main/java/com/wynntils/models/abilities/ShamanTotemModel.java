@@ -62,12 +62,10 @@ public class ShamanTotemModel extends Model {
         if (!(entity instanceof ArmorStand totemAS)) return;
 
         if (!isClose(totemAS.position(), McUtils.mc().player.position())) return;
-        System.out.println("passed isClose check");
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
                     // didn't come from a cast within the delay, probably not casted by the player
-                    System.out.println(System.currentTimeMillis() - totemCastTimestamp);
                     if (System.currentTimeMillis() - totemCastTimestamp > CAST_DELAY_MAX_TICKS * 4 * 20) return;
 
                     // Checks to verify this is a totem
