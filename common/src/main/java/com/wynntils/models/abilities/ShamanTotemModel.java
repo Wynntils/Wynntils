@@ -16,6 +16,8 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,22 +36,29 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
     private static final int MAX_TOTEM_COUNT = 3;
+    private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
+    private static final double TOTEM_SEARCH_RADIUS = 1;
+    private static final int CAST_DELAY_MAX_TICKS = 4;
 
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
     private final Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
-
     private int nextTotemSlot = 1;
-
-    // §c21s\n+290❤§7/s
-    private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
-    private static final double TOTEM_SEARCH_RADIUS = 1;
+    private boolean waitingForCastConfirmation = false;
 
     public ShamanTotemModel() {
         super(List.of());
     }
 
     @SubscribeEvent
+    public void onTotemSpellCast(SpellEvent.Cast e) {
+        if (e.getSpellType() != SpellType.TOTEM) return;
+        waitingForCastConfirmation = false;
+    }
+
+    @SubscribeEvent
     public void onTotemSpawn(AddEntityEvent e) {
+        waitingForCastConfirmation = true;
+
         Entity entity = getBufferedEntity(e.getId());
         if (!(entity instanceof ArmorStand totemAS)) return;
 
@@ -57,9 +66,12 @@ public class ShamanTotemModel extends Model {
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
+                    // didn't receive a cast within the delay, probably not casted by the player
+                    if (waitingForCastConfirmation) return;
+
                     // Checks to verify this is a totem
-                    // These must be ran with a delay, as inventory contents are set a couple ticks after the totem
-                    // actually spawns
+                    // These must be ran with a delay,
+                    // inventory contents are set a couple ticks after the totem actually spawns
                     List<ItemStack> inv = new ArrayList<>();
                     totemAS.getArmorSlots().forEach(inv::add);
 
@@ -83,7 +95,7 @@ public class ShamanTotemModel extends Model {
                     totems[totemNumber - 1] = newTotem;
                     pendingTotemVisibleIds[totemNumber - 1] = totemAS.getId();
                 },
-                3);
+                CAST_DELAY_MAX_TICKS);
     }
 
     @SubscribeEvent
