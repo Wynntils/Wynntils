@@ -39,7 +39,10 @@ public class ShamanTotemModel extends Model {
     private static final int MAX_TOTEM_COUNT = 3;
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
     private static final double TOTEM_SEARCH_RADIUS = 1;
-    private static final int CAST_DELAY_MAX_TICKS = 3;
+    private static final int TOTEM_DATA_DELAY = 2;
+    private static final int CAST_MAX_DELAY = 240;
+    // TODO: CAST_MAX_DELAY could be a config when model configs eventually exist
+    // it kind of depends on ping and server lag
 
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
     private final Integer[] pendingTotemVisibleIds = new Integer[MAX_TOTEM_COUNT];
@@ -66,7 +69,8 @@ public class ShamanTotemModel extends Model {
         Managers.TickScheduler.scheduleLater(
                 () -> {
                     // didn't come from a cast within the delay, probably not casted by the player
-                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_DELAY_MAX_TICKS * 4 * 20) return;
+                    // this check needs to be ran with a delay, the cast/spawn order is not guaranteed
+                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY) return;
 
                     // Checks to verify this is a totem
                     // These must be ran with a delay,
@@ -94,7 +98,7 @@ public class ShamanTotemModel extends Model {
                     totems[totemNumber - 1] = newTotem;
                     pendingTotemVisibleIds[totemNumber - 1] = totemAS.getId();
                 },
-                CAST_DELAY_MAX_TICKS);
+                TOTEM_DATA_DELAY);
     }
 
     @SubscribeEvent
