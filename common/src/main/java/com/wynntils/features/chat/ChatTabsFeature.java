@@ -50,6 +50,9 @@ public class ChatTabsFeature extends Feature {
             new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
             new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
 
+    @Persisted
+    public final Config<Boolean> oldTabHotkey = new Config<>(false);
+
     // We do this here, and not in Services.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
@@ -125,13 +128,38 @@ public class ChatTabsFeature extends Feature {
 
     @SubscribeEvent
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
-        // We can't use keybinds here to not conflict with TAB key's other behaviours.
-        if (event.getKeyCode() != GLFW.GLFW_KEY_TAB) return;
         if (!(McUtils.mc().screen instanceof ChatScreen)) return;
-        if (!KeyboardUtils.isShiftDown()) return;
 
-        event.setCanceled(true);
-        Services.ChatTab.setFocusedTab(Services.ChatTab.getNextFocusedTab());
+        int keyCode = event.getKeyCode();
+        if (keyCode == GLFW.GLFW_KEY_TAB) {
+            int newTab = -1;
+            if (oldTabHotkey.get()) {
+                if (KeyboardUtils.isShiftDown()) {
+                    newTab = Services.ChatTab.getNextFocusedTab();
+                }
+            } else {
+                if (KeyboardUtils.isControlDown()) {
+                    newTab = KeyboardUtils.isShiftDown()
+                            ? Services.ChatTab.getPreviousFocusedTab()
+                            : Services.ChatTab.getNextFocusedTab();
+                }
+            }
+
+            if (newTab == -1) return;
+
+            Services.ChatTab.setFocusedTab(newTab);
+            event.setCanceled(true);
+            return;
+        }
+
+        if (KeyboardUtils.isControlDown() && keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
+            ChatTab newTab = Services.ChatTab.getTab(keyCode - GLFW.GLFW_KEY_1);
+            if (newTab != null) {
+                Services.ChatTab.setFocusedTab(newTab);
+            }
+            event.setCanceled(true);
+            return;
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

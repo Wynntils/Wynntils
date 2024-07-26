@@ -5,7 +5,6 @@
 package com.wynntils.models.beacons.event;
 
 import com.wynntils.models.beacons.type.Beacon;
-import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.Event;
 
@@ -21,15 +20,15 @@ public abstract class BeaconEvent extends Event {
     }
 
     public static class Added extends BeaconEvent {
-        private final List<Entity> entities;
+        private final Entity entity;
 
-        public Added(Beacon verifiedBeacon, List<Entity> entities) {
+        public Added(Beacon verifiedBeacon, Entity entities) {
             super(verifiedBeacon);
-            this.entities = entities;
+            this.entity = entities;
         }
 
-        public List<Entity> getEntities() {
-            return entities;
+        public Entity getEntity() {
+            return entity;
         }
     }
 

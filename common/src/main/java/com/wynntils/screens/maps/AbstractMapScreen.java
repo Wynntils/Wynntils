@@ -44,6 +44,9 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractMapScreen extends WynntilsScreen {
+    protected static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
+
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
     private static final int MAP_CENTER_X = -400;
@@ -370,8 +373,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
 
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
@@ -379,7 +380,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
-                    bufferSource,
+                    BUFFER_SOURCE,
                     centerX,
                     centerZ,
                     textureX,
@@ -389,7 +390,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                     1f / zoomRenderScale);
         }
 
-        bufferSource.endBatch();
+        BUFFER_SOURCE.endBatch();
 
         RenderUtils.disableScissor();
     }

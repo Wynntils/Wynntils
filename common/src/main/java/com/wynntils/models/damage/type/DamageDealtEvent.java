@@ -14,13 +14,13 @@ import net.neoforged.bus.api.Event;
  * spell attack from the current player.
  */
 public final class DamageDealtEvent extends Event {
-    private final Map<DamageType, Integer> damages;
+    private final Map<DamageType, Long> damages;
 
-    public DamageDealtEvent(Map<DamageType, Integer> damages) {
+    public DamageDealtEvent(Map<DamageType, Long> damages) {
         this.damages = damages;
     }
 
-    public Map<DamageType, Integer> getDamages() {
+    public Map<DamageType, Long> getDamages() {
         return damages;
     }
 }
