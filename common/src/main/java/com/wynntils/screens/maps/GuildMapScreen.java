@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -15,7 +15,6 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
-import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
@@ -24,7 +23,6 @@ import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -33,6 +31,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +41,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
@@ -84,7 +82,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.name")),
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")))));
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description2")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable("screens.wynntils.guildMap.help.description3")))));
 
         this.addRenderableWidget(
                 hybridModeButton = new BasicTexturedButton(
@@ -162,7 +166,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (firstInit) {
             // When outside of the main map, center to the middle of the map
             if (!isPlayerInsideMainArea()) {
-                centerMap();
+                centerMapOnWorld();
             }
 
             firstInit = false;
@@ -234,8 +238,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         for (Poi poi : filteredPois) {
             if (!(poi instanceof TerritoryPoi territoryPoi)) continue;
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
             for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
                 Optional<Poi> routePoi = filteredPois.stream()
@@ -244,8 +248,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
                 // Only render connection if the other poi is also in the filtered pois
                 if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
-                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, currentZoom);
-                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, currentZoom);
+                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, zoomRenderScale);
+                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, zoomRenderScale);
 
                     RenderUtils.drawLine(poseStack, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 0, 1);
                 }
@@ -259,10 +263,19 @@ public final class GuildMapScreen extends AbstractMapScreen {
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
             Poi poi = filteredPois.get(i);
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
+            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
 
-            poi.renderAt(poseStack, bufferSource, poiRenderX, poiRenderZ, hovered == poi, poiScale, currentZoom);
+            poi.renderAt(
+                    poseStack,
+                    bufferSource,
+                    poiRenderX,
+                    poiRenderZ,
+                    hovered == poi,
+                    poiScale,
+                    zoomRenderScale,
+                    zoomLevel,
+                    true);
         }
 
         bufferSource.endBatch();
@@ -281,19 +294,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            Handlers.Command.sendCommand("gu territory " + territoryPoi.getName());
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
-            Location location = new Location(gameX, 0, gameZ);
-
+            Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
-                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(location);
+                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
+                        hovered.getLocation().asLocation());
                 return true;
             }
-
-            McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location);
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            setCompassToMouseCoords(mouseX, mouseY, !KeyboardUtils.isShiftDown());
             return true;
         }
 
@@ -348,7 +357,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderPois(
                 renderedPois,
                 poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 1,
                 mouseX,
                 mouseY);
@@ -400,7 +409,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         for (GuildResource value : GuildResource.values()) {
             int generation = territoryInfo.getGeneration(value);
-            TerritoryStorage storage = territoryInfo.getStorage(value);
+            CappedValue storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
                 StyledText formattedGenerated = StyledText.fromString(

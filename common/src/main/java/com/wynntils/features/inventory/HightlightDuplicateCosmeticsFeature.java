@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -10,13 +10,13 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.models.containers.containers.ScrapMenuContainer;
+import com.wynntils.models.containers.type.SearchableContainerProperty;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
@@ -49,33 +49,31 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     private static final int RETURN_SLOT = 18;
     private static final List<Integer> SELECTED_COSMETIC_SLOTS = List.of(1, 2, 3, 4, 5);
 
-    private boolean onScrapMenu = false;
     private Component hoveredCosmetic;
     private Set<Component> selectedCosmetics = new HashSet<>();
+    private SearchableContainerProperty scrapMenu = null;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(screen.getMenu() instanceof ChestMenu)) return;
 
-        StyledText title = StyledText.fromComponent(screen.getTitle());
-
-        SearchableContainerType searchableContainerType = SearchableContainerType.getContainerType(title);
-        if (searchableContainerType != SearchableContainerType.SCRAP_MENU) return;
-
-        onScrapMenu = true;
+        if (Models.Container.getCurrentContainer() instanceof ScrapMenuContainer scrapMenuContainer) {
+            scrapMenu = scrapMenuContainer;
+        }
     }
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
         selectedCosmetics = new HashSet<>();
-        onScrapMenu = false;
         hoveredCosmetic = null;
+        scrapMenu = null;
     }
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        if (!onScrapMenu) return;
+        if (scrapMenu == null) return;
+
         // No need to get hovered cosmetic if only displaying selected cosmetics
         if (highlightCondition.get() == HighlightCondition.SELECTED) return;
 
@@ -96,10 +94,10 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!onScrapMenu) return;
+        if (scrapMenu == null) return;
 
         // Don't highlight the cosmetics in the selected slots
-        if (SearchableContainerType.SCRAP_MENU.getBounds().getSlots().contains(e.getSlot().index)) {
+        if (scrapMenu.getBounds().getSlots().contains(e.getSlot().index)) {
             Component hoverName = e.getSlot().getItem().getHoverName();
             boolean isSelected = selectedCosmetics.contains(hoverName);
             boolean isHovered = hoverName.equals(hoveredCosmetic);
@@ -115,10 +113,10 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
-        if (!onScrapMenu) return;
+        if (scrapMenu == null) return;
 
         // Silverbull subscribers have the first 2 slots filled automatically
-        List<Integer> selectedSlots = Models.Character.silverbullSubscriber.get()
+        List<Integer> selectedSlots = Models.Character.isSilverbullSubscriber()
                 ? SELECTED_COSMETIC_SLOTS.subList(2, 5)
                 : SELECTED_COSMETIC_SLOTS;
 

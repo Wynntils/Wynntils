@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -13,8 +13,10 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
+import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -227,13 +229,9 @@ public class InventoryEmeraldCountFeature extends Feature {
     }
 
     private boolean isExcludedContainer(Screen screen) {
-        if (screen instanceof GearViewerScreen) return true;
-
-        if (StyledText.fromComponent(screen.getTitle())
-                .getStringWithoutFormatting()
-                .equals("Character Info")) return true;
-
-        return false;
+        return Models.Container.getCurrentContainer() instanceof CharacterInfoContainer
+                || screen instanceof GearViewerScreen
+                || screen instanceof SavedItemsScreen;
     }
 
     public enum EmeraldCountType {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -12,24 +12,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public enum GearType {
-    SPEAR(ClassType.WARRIOR, Items.IRON_SHOVEL, 0),
-    WAND(ClassType.MAGE, Items.STICK, 0, List.of(Items.WOODEN_SHOVEL)),
-    DAGGER(ClassType.ASSASSIN, Items.SHEARS, 0),
-    BOW(ClassType.ARCHER, Items.BOW, 0),
-    RELIK(ClassType.SHAMAN, Items.STONE_SHOVEL, 7),
+    SPEAR(ClassType.WARRIOR, Items.IRON_SHOVEL, 0, 0),
+    WAND(ClassType.MAGE, Items.STICK, 0, List.of(Items.WOODEN_SHOVEL), 1),
+    DAGGER(ClassType.ASSASSIN, Items.SHEARS, 0, 2),
+    BOW(ClassType.ARCHER, Items.BOW, 0, 3),
+    RELIK(ClassType.SHAMAN, Items.STONE_SHOVEL, 7, 4),
     // This is a fallback for signed, crafted gear with a skin
-    WEAPON(null, Items.DIAMOND_SHOVEL, 0),
+    WEAPON(null, Items.DIAMOND_SHOVEL, 0, 12),
     // FIXME: We need a complete mapping of damage values for ring, bracelet and necklace to be able
     // to get rid of this (needed for crafted and unknown gear)
-    ACCESSORY(null, Items.FLINT_AND_STEEL, 0),
-    RING(null, Items.FLINT_AND_STEEL, 2),
-    BRACELET(null, Items.FLINT_AND_STEEL, 19),
-    NECKLACE(null, Items.FLINT_AND_STEEL, 36),
+    ACCESSORY(null, Items.FLINT_AND_STEEL, 0, 13),
+    RING(null, Items.FLINT_AND_STEEL, 2, 5),
+    BRACELET(null, Items.FLINT_AND_STEEL, 19, 6),
+    NECKLACE(null, Items.FLINT_AND_STEEL, 36, 7),
     HELMET(
             null,
             Items.LEATHER_HELMET,
             0,
-            List.of(Items.CHAINMAIL_HELMET, Items.IRON_HELMET, Items.GOLDEN_HELMET, Items.DIAMOND_HELMET)),
+            List.of(Items.CHAINMAIL_HELMET, Items.IRON_HELMET, Items.GOLDEN_HELMET, Items.DIAMOND_HELMET),
+            8),
     CHESTPLATE(
             null,
             Items.LEATHER_CHESTPLATE,
@@ -38,34 +39,39 @@ public enum GearType {
                     Items.CHAINMAIL_CHESTPLATE,
                     Items.IRON_CHESTPLATE,
                     Items.GOLDEN_CHESTPLATE,
-                    Items.DIAMOND_CHESTPLATE)),
+                    Items.DIAMOND_CHESTPLATE),
+            9),
     LEGGINGS(
             null,
             Items.LEATHER_LEGGINGS,
             0,
-            List.of(Items.CHAINMAIL_LEGGINGS, Items.IRON_LEGGINGS, Items.GOLDEN_LEGGINGS, Items.DIAMOND_LEGGINGS)),
+            List.of(Items.CHAINMAIL_LEGGINGS, Items.IRON_LEGGINGS, Items.GOLDEN_LEGGINGS, Items.DIAMOND_LEGGINGS),
+            10),
     BOOTS(
             null,
             Items.LEATHER_BOOTS,
             0,
-            List.of(Items.CHAINMAIL_BOOTS, Items.IRON_BOOTS, Items.GOLDEN_BOOTS, Items.DIAMOND_BOOTS)),
-    MASTERY_TOME(null, Items.ENCHANTED_BOOK, 0),
-    CHARM(null, Items.CLAY_BALL, 0);
+            List.of(Items.CHAINMAIL_BOOTS, Items.IRON_BOOTS, Items.GOLDEN_BOOTS, Items.DIAMOND_BOOTS),
+            11),
+    MASTERY_TOME(null, Items.ENCHANTED_BOOK, 0, -1),
+    CHARM(null, Items.CLAY_BALL, 0, -1);
 
     private final ClassType classReq;
     private final Item defaultItem;
     private final int defaultDamage;
     private final List<Item> otherItems;
+    private final int encodingId;
 
-    GearType(ClassType classReq, Item defaultItem, int defaultDamage, List<Item> otherItems) {
+    GearType(ClassType classReq, Item defaultItem, int defaultDamage, List<Item> otherItems, int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
         this.defaultDamage = defaultDamage;
         this.otherItems = otherItems;
+        this.encodingId = encodingId;
     }
 
-    GearType(ClassType classReq, Item defaultItem, int defaultDamage) {
-        this(classReq, defaultItem, defaultDamage, List.of());
+    GearType(ClassType classReq, Item defaultItem, int defaultDamage, int encodingId) {
+        this(classReq, defaultItem, defaultDamage, List.of(), encodingId);
     }
 
     public static GearType fromString(String typeStr) {
@@ -95,6 +101,13 @@ public enum GearType {
         return null;
     }
 
+    public static GearType fromEncodingId(int id) {
+        for (GearType gearType : values()) {
+            if (gearType.encodingId == id) return gearType;
+        }
+        return null;
+    }
+
     public ClassType getClassReq() {
         return classReq;
     }
@@ -105,6 +118,10 @@ public enum GearType {
 
     public int getDefaultDamage() {
         return defaultDamage;
+    }
+
+    public int getEncodingId() {
+        return encodingId;
     }
 
     public boolean isReward() {

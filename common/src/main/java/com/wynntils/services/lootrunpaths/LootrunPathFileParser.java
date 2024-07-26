@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
@@ -15,9 +15,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -121,10 +124,12 @@ public final class LootrunPathFileParser {
             }
             json.add("notes", notes);
 
-            json.addProperty(
-                    "date",
-                    DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
-                            .format(new Date()));
+            ZonedDateTime time = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+
+            DateTimeFormatter formatter =
+                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.US);
+
+            json.addProperty("date", time.format(formatter));
             FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8);
             WynntilsMod.GSON.toJson(json, writer);
             writer.close();

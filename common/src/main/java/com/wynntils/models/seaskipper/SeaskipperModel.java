@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.seaskipper;
@@ -13,12 +13,12 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
-import com.wynntils.screens.maps.SeaskipperDepartureBoardScreen;
-import com.wynntils.screens.maps.SeaskipperMapScreen;
+import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -50,10 +50,10 @@ public final class SeaskipperModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre event) {
-        if (!Models.Container.isSeaskipper(event.getTitle())) return;
+    public void onScreenInit(ScreenInitEvent e) {
+        if (!(Models.Container.getCurrentContainer() instanceof SeaskipperContainer seaskipperContainer)) return;
 
-        containerId = event.getContainerId();
+        containerId = seaskipperContainer.getContainerId();
         availableDestinations = new ArrayList<>();
     }
 
@@ -88,10 +88,8 @@ public final class SeaskipperModel extends Model {
 
         // We added a new destination, reload the map
         // (This reloads the pois for every item parsed, but performance is not an issue here)
-        if (McUtils.mc().screen instanceof SeaskipperMapScreen seaskipperMapScreen) {
-            seaskipperMapScreen.reloadDestinationPois();
-        } else if (McUtils.mc().screen instanceof SeaskipperDepartureBoardScreen seaskipperDepartureBoardScreen) {
-            seaskipperDepartureBoardScreen.reloadDestinationPois();
+        if (McUtils.mc().screen instanceof CustomSeaskipperScreen customSeaskipperScreen) {
+            customSeaskipperScreen.reloadDestinationPois();
         }
     }
 

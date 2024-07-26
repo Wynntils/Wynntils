@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CharmItem extends GameItem
-        implements GearTierItemProperty, IdentifiableItemProperty<CharmInfo, CharmInstance> {
+        implements GearTierItemProperty, RerollableItemProperty, IdentifiableItemProperty<CharmInfo, CharmInstance> {
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
 
@@ -38,7 +39,8 @@ public class CharmItem extends GameItem
         return Optional.ofNullable(charmInstance);
     }
 
-    public int getRerolls() {
+    @Override
+    public int getRerollCount() {
         return charmInstance != null ? charmInstance.rerolls() : 0;
     }
 

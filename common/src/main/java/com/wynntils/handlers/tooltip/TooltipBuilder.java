@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -83,7 +83,7 @@ public abstract class TooltipBuilder {
             StyledText codedLine = StyledText.fromComponent(loreLine).getNormalized();
 
             if (!footerStarted) {
-                if (codedLine.matches(WynnItemParser.SET_BONUS_PATTEN)) {
+                if (codedLine.matches(WynnItemParser.SET_BONUS_PATTERN)) {
                     headerEnded = true;
                     footerStarted = true;
                 } else {

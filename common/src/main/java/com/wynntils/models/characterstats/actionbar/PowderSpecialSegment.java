@@ -1,18 +1,21 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
+import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PowderSpecialSegment implements ActionBarSegment {
-    // https://regexr.com/7kfrv
-    private static final Pattern POWDER_SPECIAL_PATTERN = Pattern.compile("§.([✤✦❉✹❋]) (\\d+)%");
+    // Test in PowderSpecialSegment_POWDER_SPECIAL_PATTERN
+    private static final Pattern POWDER_SPECIAL_PATTERN = Pattern.compile(
+            "§.([" + Arrays.stream(Element.values()).map(Element::getSymbol).reduce("", String::concat) + "]) (\\d+)%");
 
     private float powderSpecialCharge = 0;
     private Powder powderSpecialType = null;
@@ -59,6 +62,11 @@ public class PowderSpecialSegment implements ActionBarSegment {
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public void fullyCharged(Powder powder) {
+        powderSpecialType = powder;
+        powderSpecialCharge = 100;
     }
 
     public void replaced() {

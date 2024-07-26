@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.json;
@@ -15,6 +15,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.crowdsource.CrowdSourcedData;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.services.itemrecord.type.SavedItem;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -38,6 +39,7 @@ public final class JsonManager extends Manager {
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapter(StyledText.class, new StyledText.StyledTextSerializer())
             .registerTypeAdapter(CrowdSourcedData.class, new CrowdSourcedData.CrowdSourceDataSerializer())
+            .registerTypeAdapter(SavedItem.class, new SavedItem.SavedItemSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
@@ -74,6 +76,7 @@ public final class JsonManager extends Manager {
         try (OutputStreamWriter fileWriter =
                 new OutputStreamWriter(new FileOutputStream(jsonFile), StandardCharsets.UTF_8)) {
             GSON.toJson(jsonObject, fileWriter);
+            fileWriter.flush();
         } catch (IOException e) {
             WynntilsMod.error("Failed to save json file " + jsonFile, e);
         }

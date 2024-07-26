@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -14,10 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class SkillPointAnnotator implements ItemAnnotator {
-    // Test suite: https://regexr.com/7h0tl
+public final class SkillPointAnnotator implements GuiItemAnnotator {
+    // Test in SkillPointAnnotator_SKILL_POINT_PATTERN
     private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
-    // Test suite: https://regexr.com/7h0to
+    // Test in SkillPointAnnotator_LORE_PATTERN
     private static final Pattern LORE_PATTERN = Pattern.compile("^[ À]+§7(-?\\d+) points?§r[ À]+§6-?\\d+ points?$");
 
     @Override

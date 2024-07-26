@@ -1,19 +1,19 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.SoulPointItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class SoulPointAnnotator implements ItemAnnotator {
+public final class SoulPointAnnotator implements GuiItemAnnotator {
     private static final Pattern SOUL_POINTS_PATTERN = Pattern.compile("^§l(\\d+)§b Soul Points$");
 
     @Override

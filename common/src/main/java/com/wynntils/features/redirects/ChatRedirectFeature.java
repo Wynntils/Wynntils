@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.redirects;
@@ -80,6 +80,15 @@ public class ChatRedirectFeature extends Feature {
     @Persisted
     public final Config<RedirectAction> unusedPoints = new Config<>(RedirectAction.REDIRECT);
 
+    @Persisted
+    public final Config<RedirectAction> guildBank = new Config<>(RedirectAction.REDIRECT);
+
+    @Persisted
+    public final Config<RedirectAction> guildRewards = new Config<>(RedirectAction.REDIRECT);
+
+    @Persisted
+    public final Config<RedirectAction> merchant = new Config<>(RedirectAction.REDIRECT);
+
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
@@ -87,19 +96,22 @@ public class ChatRedirectFeature extends Feature {
         register(new EmptyManaBankRedirector());
         register(new FriendJoinRedirector());
         register(new FriendLeaveRedirector());
+        register(new GuildBankRedirector());
+        register(new GuildRewardRedirector());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
         register(new HorseScaredRedirector());
         register(new HorseSpawnFailRedirector());
-        register(new HousingTeleportArrivalRedirector());
         register(new HousingTeleportArrivalCooldownRedirector());
-        register(new HousingTeleportDepartureRedirector());
+        register(new HousingTeleportArrivalRedirector());
         register(new HousingTeleportDepartureCooldownRedirector());
+        register(new HousingTeleportDepartureRedirector());
         register(new IngredientPouchSellRedirector());
         register(new LoginRedirector());
         register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
+        register(new MerchantRedirector());
         register(new NoTotemRedirector());
         register(new PotionAlreadyActiveRedirector());
         register(new PotionsMaxRedirector());
@@ -531,14 +543,15 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
-    private class LoginRedirector extends SimpleRedirector {
-        // Test suite: https://regexr.com/7khdo
+    public class LoginRedirector extends SimpleRedirector {
         private static final String RANK_STRING =
                 Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^(?<rank>[" + RANK_STRING + "]) §#[0-9a-f]{6,8}(?:§o)?(?<name>[\\w ]{1,20})§. has just logged in!$");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>["
-                + RANK_STRING + "]) §#[0-9a-f]{6,8}(?:§o)?(?<name>[\\w ]{1,20})§. has just logged in!$");
+        // Test in ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^(?<rank>[" + RANK_STRING
+                + "]) §(?:#[0-9a-f]{6,8}|.)(?:§o)?(?:§<\\d>)?(?<name>[\\w ]{1,20})§. has just logged in!$");
+        private static final Pattern BACKGROUND_PATTERN =
+                Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[" + RANK_STRING
+                        + "]) §(?:#[0-9a-f]{6,8}|.)(?:§o)?(?:§<\\d>)?(?<name>[\\w ]{1,20})§. has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -973,6 +986,85 @@ public class ChatRedirectFeature extends Feature {
             return StyledText.fromComponent(
                     Component.translatable("feature.wynntils.chatRedirect.unusedPoints.notificationSkill", pointsString)
                             .withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
+    private final class GuildBankRedirector extends SimpleRedirector {
+        private static final String DEPOSIT_SYMBOL = "←";
+        private static final String WITHDRAW_SYMBOL = "→";
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§3\\[INFO\\]§b (?<player>.+) (?<transactiontype>withdrew|deposited) (?<count>\\d+)x (?<item>.+) (?:from|to) the Guild Bank \\((?<banktype>Everyone|High Ranked)\\)$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return guildBank.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            String player = matcher.group("player");
+            String transactionType = matcher.group("transactiontype");
+            String count = matcher.group("count");
+            String item = matcher.group("item");
+            String bankType = matcher.group("banktype");
+
+            return StyledText.fromString(ChatFormatting.AQUA
+                    + (transactionType.equals("withdrew") ? WITHDRAW_SYMBOL : DEPOSIT_SYMBOL) + ChatFormatting.DARK_AQUA
+                    + " " + player + " " + count + "x " + item + " (" + bankType + ") ");
+        }
+    }
+
+    private final class GuildRewardRedirector extends SimpleRedirector {
+        private static final String REWARD_SYMBOL = "→";
+
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§3\\[INFO\\]§b (?<sender>.+) rewarded §3(?<reward>.+)§b to (?<recipient>.+)\\.\\n§3Rewards can be claimed in the Member Menu\\.$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return guildRewards.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            String sender = matcher.group("sender");
+            String reward = matcher.group("reward");
+            String recipient = matcher.group("recipient");
+
+            return StyledText.fromString(ChatFormatting.AQUA + sender + ChatFormatting.DARK_AQUA + " " + REWARD_SYMBOL
+                    + " " + ChatFormatting.AQUA + recipient + ChatFormatting.DARK_AQUA + ": " + reward);
+        }
+    }
+
+    private final class MerchantRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§5(?<merchant>.*): §dThank you for your business\\. Come again!$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.chatRedirect.merchant.notification", matcher.group("merchant"))
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return merchant.get();
         }
     }
 }

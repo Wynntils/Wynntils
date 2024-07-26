@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -12,9 +12,11 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
+import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MythicFoundFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
+import com.wynntils.features.chat.BombBellRelayFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
 import com.wynntils.features.chat.ChatItemFeature;
 import com.wynntils.features.chat.ChatMentionFeature;
@@ -25,8 +27,8 @@ import com.wynntils.features.chat.DialogueOptionOverrideFeature;
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
+import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
-import com.wynntils.features.combat.CombatXpGainMessageFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -41,7 +43,6 @@ import com.wynntils.features.combat.RangeVisualizerFeature;
 import com.wynntils.features.combat.ShamanTotemTrackingFeature;
 import com.wynntils.features.combat.SpellCastVignetteFeature;
 import com.wynntils.features.combat.TokenTrackerBellFeature;
-import com.wynntils.features.combat.TowerAuraVignetteFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -53,6 +54,7 @@ import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
@@ -62,6 +64,7 @@ import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
+import com.wynntils.features.inventory.GuildBankHotkeyFeature;
 import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
@@ -79,6 +82,7 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
+import com.wynntils.features.overlays.BombBellOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
@@ -88,10 +92,12 @@ import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
-import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
+import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
+import com.wynntils.features.overlays.RaidProgressFeature;
+import com.wynntils.features.overlays.ServerUptimeInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
@@ -99,7 +105,8 @@ import com.wynntils.features.overlays.StatusEffectsOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
-import com.wynntils.features.overlays.TowerAuraTimerOverlayFeature;
+import com.wynntils.features.overlays.TowerEffectOverlayFeature;
+import com.wynntils.features.overlays.TowerStatsFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -124,11 +131,14 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
+import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
+import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
+import com.wynntils.features.ui.ProfessionHighlightFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
@@ -137,8 +147,10 @@ import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
+import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
+import com.wynntils.features.utilities.XpGainMessageFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
@@ -146,6 +158,7 @@ import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
+import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -191,6 +204,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new LootrunFeature());
 
         // region chat
+        registerFeature(new BombBellRelayFeature());
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new ChatMentionFeature());
@@ -201,11 +215,11 @@ public final class FeatureManager extends Manager {
         registerFeature(new GuildRankReplacementFeature());
         registerFeature(new InputTranscriptionFeature());
         registerFeature(new MessageFilterFeature());
+        registerFeature(new RevealNicknamesFeature());
         // endregion
 
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
-        registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
@@ -220,7 +234,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SpellCastVignetteFeature());
         registerFeature(new TokenTrackerBellFeature());
-        registerFeature(new TowerAuraVignetteFeature());
         // endregion
 
         // region commands
@@ -231,6 +244,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
+        registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
         // endregion
@@ -243,6 +257,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
+        registerFeature(new GuildBankHotkeyFeature());
         registerFeature(new HightlightDuplicateCosmeticsFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
@@ -266,6 +281,7 @@ public final class FeatureManager extends Manager {
 
         // region overlays
         registerFeature(new ArrowShieldTrackerOverlayFeature());
+        registerFeature(new BombBellOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
@@ -275,10 +291,12 @@ public final class FeatureManager extends Manager {
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
-        registerFeature(new NpcDialogueOverlayFeature());
+        registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
+        registerFeature(new RaidProgressFeature());
+        registerFeature(new ServerUptimeInfoOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
         registerFeature(new ShamanTotemTimerOverlayFeature());
         registerFeature(new SpellCastMessageOverlayFeature());
@@ -286,7 +304,8 @@ public final class FeatureManager extends Manager {
         registerFeature(new StopwatchFeature());
         registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
-        registerFeature(new TowerAuraTimerOverlayFeature());
+        registerFeature(new TowerEffectOverlayFeature());
+        registerFeature(new TowerStatsFeature());
         // endregion
 
         // region players
@@ -326,11 +345,14 @@ public final class FeatureManager extends Manager {
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerScrollFeature());
         registerFeature(new CosmeticsPreviewFeature());
+        registerFeature(new CraftingProfessionLevelProgressBarFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
+        registerFeature(new CustomTerritoryManagementScreenFeature());
         registerFeature(new CustomTradeMarketResultScreenFeature());
         registerFeature(new LobbyUptimeFeature());
+        registerFeature(new ProfessionHighlightFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
@@ -342,8 +364,10 @@ public final class FeatureManager extends Manager {
         registerFeature(new GammabrightFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
+        registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new XpGainMessageFeature());
         // endregion
 
         // region wynntils
@@ -354,10 +378,12 @@ public final class FeatureManager extends Manager {
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
+        registerFeature(new WeeklyConfigBackupFeature());
         // endregion
 
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
+        registerFeature(new ExtendedSeasonLeaderboardFeature());
         registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         // endregion

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -10,6 +10,7 @@ import com.wynntils.models.items.WynnItem;
 import java.lang.reflect.ParameterizedType;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class ItemStatProvider<T extends Comparable<T>> implements Translatable, Comparator<WynnItem> {
@@ -21,14 +22,22 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
     }
 
     /**
-     * Returns the value of the stat for the given item.
-     * If there is a single value, it is returned as a singleton list.
-     * Some stats may have multiple values, in which case a list is returned.
+     * Returns the value of the stat for the given item, as an optional.
      *
      * @param wynnItem The item to get the stat value for
      * @return The value of the stat for the given item
      */
-    public abstract List<T> getValue(WynnItem wynnItem);
+    public abstract Optional<T> getValue(WynnItem wynnItem);
+
+    public List<String> getValidInputs() {
+        return List.of();
+    }
+
+    /**
+     * Returns the type of filter this stat provider is for.
+     * @return The type of filter this stat provider is for
+     */
+    public abstract List<ItemProviderType> getFilterTypes();
 
     public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -40,6 +49,10 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
 
     public String getName() {
         return name;
+    }
+
+    public String getDisplayName() {
+        return getTranslation("name");
     }
 
     protected String getTranslationKey() {
@@ -62,13 +75,13 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
 
     @Override
     public int compare(WynnItem wynnItem1, WynnItem wynnItem2) {
-        List<T> itemValues1 = this.getValue(wynnItem1);
-        List<T> itemValues2 = this.getValue(wynnItem2);
+        Optional<T> itemValue1 = this.getValue(wynnItem1);
+        Optional<T> itemValue2 = this.getValue(wynnItem2);
 
-        if (itemValues1.isEmpty() && !itemValues2.isEmpty()) return 1;
-        if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;
-        if (itemValues1.isEmpty() && itemValues2.isEmpty()) return 0;
+        if (itemValue1.isEmpty() && itemValue2.isPresent()) return 1;
+        if (itemValue1.isPresent() && itemValue2.isEmpty()) return -1;
+        if (itemValue1.isEmpty() && itemValue2.isEmpty()) return 0;
 
-        return -itemValues1.get(0).compareTo(itemValues2.get(0));
+        return -itemValue1.get().compareTo(itemValue2.get());
     }
 }

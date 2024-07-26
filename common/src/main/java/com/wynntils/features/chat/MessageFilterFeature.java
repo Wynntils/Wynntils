@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -15,6 +15,7 @@ import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
@@ -46,11 +47,10 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^§8\\[§7!§8\\] §7Congratulations to (§r)?.* for reaching (combat )?§flevel .*!$"),
                     Pattern.compile("^(§8)?\\[!\\] Congratulations to (§r)?.* for reaching (combat )?§7level .*!$")));
 
-    // Test suite: https://regexr.com/7j9u6
-    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(
-            Pattern.compile(
-                    "^§5Party Finder:§d Hey [\\w ]{1,20}, over here! Join the [a-zA-Z'§ ]+ queue and match up with §e\\d{1,2} other players?§d!$"),
-            null));
+    // Test in MessageFilterFeature_PARTY_FINDER
+    private static final Pattern PARTY_FINDER_FG = Pattern.compile(
+            "^§5Party Finder:§d Hey [\\w ]{1,20}, over here! Join the [a-zA-Z'§ ]+ queue and match up with §e\\d{1,2} other players?§d!$");
+    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(PARTY_FINDER_FG, null));
 
     @Persisted
     public final Config<Boolean> hideWelcome = new Config<>(false);
@@ -64,7 +64,7 @@ public class MessageFilterFeature extends Feature {
     @Persisted
     public final Config<Boolean> hidePartyFinder = new Config<>(false);
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMessage(ChatMessageReceivedEvent e) {
         StyledText msg = e.getOriginalStyledText();
         MessageType messageType = e.getMessageType();

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -17,6 +18,7 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,16 +28,21 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    // If you modify please test with link below
-    // If you pass the tests and it still doesn't work, please resync tests with the game and update the link here
-    // https://regexr.com/76ijo
+    // Test in SpellModel_SPELL_TITLE_PATTERN
     private static final Pattern SPELL_TITLE_PATTERN = Pattern.compile(
             "§a([LR]|Right|Left)§7-§[a7](?:§n)?([LR?]|Right|Left)§7-§r§[a7](?:§n)?([LR?]|Right|Left)§r");
     private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\]$");
+    private static final int SPELL_COST_RESET_TICKS = 60;
 
     private final SpellSegment spellSegment = new SpellSegment();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+    private String lastBurstSpellName = "";
+    private String lastSpellName = "";
+    private int repeatedBurstSpellCount = 0;
+    private int repeatedSpellCount = 0;
+    private int ticksSinceCastBurst = 0;
+    private int ticksSinceCast = 0;
 
     public SpellModel() {
         super(List.of());
@@ -106,6 +113,76 @@ public class SpellModel extends Model {
             WynntilsMod.postEvent(
                     new SpellEvent.Completed(spell, partialSpellSource, SpellType.fromSpellDirectionArray(spell)));
         }
+    }
+
+    @SubscribeEvent
+    public void onSpellCast(SpellEvent.Cast e) {
+        ticksSinceCastBurst = 0;
+        ticksSinceCast = 0;
+
+        if (e.getSpellType().getName().equals(lastBurstSpellName)) {
+            repeatedBurstSpellCount++;
+        } else {
+            repeatedBurstSpellCount = 1;
+        }
+        if (e.getSpellType().getName().equals(lastSpellName)) {
+            repeatedSpellCount++;
+        } else {
+            repeatedSpellCount = 1;
+        }
+
+        lastBurstSpellName = e.getSpellType().getName();
+        lastSpellName = e.getSpellType().getName();
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (!lastBurstSpellName.isEmpty()) {
+            ticksSinceCastBurst++;
+        }
+        if (!lastSpellName.isEmpty()) {
+            ticksSinceCast++;
+        }
+
+        if (ticksSinceCastBurst >= SPELL_COST_RESET_TICKS) {
+            lastBurstSpellName = "";
+            repeatedBurstSpellCount = 0;
+            ticksSinceCastBurst = 0;
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent e) {
+        lastBurstSpellName = "";
+        lastSpellName = "";
+        repeatedBurstSpellCount = 0;
+        repeatedSpellCount = 0;
+        ticksSinceCastBurst = 0;
+        ticksSinceCast = 0;
+    }
+
+    public String getLastBurstSpellName() {
+        return lastBurstSpellName;
+    }
+
+    public String getLastSpellName() {
+        return lastSpellName;
+    }
+
+    public int getRepeatedBurstSpellCount() {
+        return repeatedBurstSpellCount;
+    }
+
+    public int getRepeatedSpellCount() {
+        return repeatedSpellCount;
+    }
+
+    public int getTicksSinceCastBurst() {
+        return ticksSinceCastBurst;
+    }
+
+    public int getTicksSinceCast() {
+        return ticksSinceCast;
     }
 
     private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {

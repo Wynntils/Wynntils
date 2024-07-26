@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.wynntilsmenu;
@@ -18,6 +18,7 @@ import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
+import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
@@ -57,7 +58,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private boolean firstInit = true;
 
-    // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
+    // This makes sure we "save" our status on the settings & overlay screen, and we reopen it in the same state
+    private static final Screen overlayScreenInstance = OverlaySelectionScreen.create();
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
 
     private WynntilsMenuScreen() {
@@ -249,6 +251,23 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
 
+        buttons.get(2)
+                .add(new WynntilsMenuButton(
+                        Texture.ITEM_LOCK,
+                        false,
+                        SavedItemsScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable("screens.wynntils.savedItems.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.savedItems.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+
         // endregion
 
         // region Row 4: Wynntils
@@ -272,7 +291,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .add(new WynntilsMenuButton(
                         Texture.OVERLAYS_ICON,
                         true,
-                        OverlaySelectionScreen.create(),
+                        overlayScreenInstance,
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)

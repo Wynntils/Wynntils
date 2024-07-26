@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -92,6 +92,12 @@ public class GameNotificationOverlay extends Overlay {
                         timedMessageContainer -> timedMessageContainer.resetRemainingTime(getMessageDisplayLength()));
     }
 
+    @SubscribeEvent
+    public void onGameNotification(NotificationEvent.Remove event) {
+        messageQueue.removeIf(timedMessageContainer ->
+                timedMessageContainer.getMessageContainer().equals(event.getMessageContainer()));
+    }
+
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         List<TimedMessageContainer> toRender = new ArrayList<>();
@@ -154,7 +160,9 @@ public class GameNotificationOverlay extends Overlay {
                                                 .getRenderTask()
                                                 .getSetting()
                                                 .customColor()
-                                                .withAlpha(messageContainer.getRemainingTime() / 1000f))))
+                                                // A minimum alpha is required, otherwise too small values render with
+                                                // max alpha
+                                                .withAlpha(messageContainer.getRemainingTime() / 1000f + 0.01f))))
                                 .toList(),
                         this.getWidth(),
                         this.getHeight(),

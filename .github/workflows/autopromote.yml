@@ -7,32 +7,32 @@ on:
       - development
 
 jobs:
-  update-pre-alpha:
+  update-beta:
     if: github.ref == 'refs/heads/development'
-    name: Merge development into pre-alpha after a PR is merged
+    name: Merge development into beta after a PR is merged
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: merge
         uses: mtanzi/action-automerge@v1
         id: merge
         with:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'development'
-          target: 'pre-alpha'
+          target: 'beta'
 
-  update-alpha:
+  update-release:
     if: github.ref == 'refs/heads/main'
-    name: Merge main into beta after a PR is merged
+    name: Merge main into release after a PR is merged
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: merge
         uses: mtanzi/action-automerge@v1
         id: merge
         with:
           github_token: ${{ secrets.PRIVATE_TOKEN }}
           source: 'main'
-          target: 'beta'
+          target: 'release'

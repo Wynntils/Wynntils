@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -44,7 +44,9 @@ public class TerritoryAttackTimerOverlay extends Overlay {
                         VerticalAlignment.TOP,
                         HorizontalAlignment.RIGHT,
                         OverlayPosition.AnchorSection.TOP_RIGHT),
-                new OverlaySize(200, 110));
+                new OverlaySize(250, 110),
+                HorizontalAlignment.RIGHT,
+                VerticalAlignment.TOP);
 
         updateTextRenderSetting();
     }
@@ -85,7 +87,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
                         this.getRenderX(),
                         this.getRenderY(),
                         new TextRenderTask(
-                                ChatFormatting.GRAY + "Detlas" + ChatFormatting.YELLOW + " (High)" + ChatFormatting.AQUA
+                                ChatFormatting.GRAY + "Detlas" + ChatFormatting.RED + " (High)" + ChatFormatting.AQUA
                                         + " 02:31",
                                 textRenderSetting),
                         this.getWidth(),

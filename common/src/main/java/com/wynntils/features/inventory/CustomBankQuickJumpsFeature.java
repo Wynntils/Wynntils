@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -15,7 +15,8 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
+import com.wynntils.models.containers.type.PersonalStorageType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent e) {
-        if (Models.Bank.getCurrentContainer() == null) return;
+        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
 
         lastPage = Models.Bank.getFinalPage();
 
@@ -85,7 +86,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Pre e) {
-        if (Models.Bank.getCurrentContainer() == null) return;
+        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
         if (e.getContainer() instanceof Inventory) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot())) {
@@ -135,10 +136,9 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
-        SearchableContainerType currentContainer = Models.Bank.getCurrentContainer();
-        if (currentContainer == null) return;
+        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
 
-        if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
+        if (Models.Bank.isItemIndicatingLastBankPage(e.getItems().get(Models.Bank.LAST_BANK_PAGE_SLOT))) {
             Models.Bank.updateFinalPage();
 
             lastPage = currentPage;
@@ -147,7 +147,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (Models.Bank.getCurrentContainer() == null) return;
+        if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer)) return;
 
         int slotIndex = e.getSlotNum();
 
@@ -166,20 +166,20 @@ public class CustomBankQuickJumpsFeature extends Feature {
     protected void onConfigUpdate(Config<?> unknownConfig) {
         String fieldName = unknownConfig.getFieldName();
 
-        SearchableContainerType containerType;
+        PersonalStorageType containerType;
         int maxValue;
 
         switch (fieldName) {
             case "accountBankDestinations" -> {
-                containerType = SearchableContainerType.ACCOUNT_BANK;
+                containerType = PersonalStorageType.ACCOUNT_BANK;
                 maxValue = MAX_ACCOUNT_BANK_PAGES;
             }
             case "blockBankDestinations" -> {
-                containerType = SearchableContainerType.BLOCK_BANK;
+                containerType = PersonalStorageType.BLOCK_BANK;
                 maxValue = MAX_BLOCK_BANK_PAGES;
             }
             case "bookshelfDestinations", "miscBucketDestinations", "characterBankDestinations" -> {
-                containerType = SearchableContainerType.BOOKSHELF;
+                containerType = PersonalStorageType.BOOKSHELF;
                 maxValue = MAX_DEFAULT_PAGES;
             }
             default -> {
@@ -208,7 +208,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
         }
     }
 
-    private List<Integer> parseStringToDestinations(String destinationsStr, SearchableContainerType containerType) {
+    private List<Integer> parseStringToDestinations(String destinationsStr, PersonalStorageType containerType) {
         String[] destinationStrings = destinationsStr.split(",");
 
         try {
@@ -329,7 +329,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
     private void getCustomJumpDestinations() {
         String configDestinations;
 
-        switch (Models.Bank.getCurrentContainer()) {
+        switch (Models.Bank.getStorageContainerType()) {
             case ACCOUNT_BANK -> configDestinations = accountBankDestinations.get();
             case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
             case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
@@ -340,7 +340,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
             }
         }
 
-        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getCurrentContainer());
+        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getStorageContainerType());
 
         if (customJumpDestinations == null) {
             customJumpDestinations = getDefaultJumpDestinations();
@@ -348,7 +348,7 @@ public class CustomBankQuickJumpsFeature extends Feature {
     }
 
     private List<Integer> getDefaultJumpDestinations() {
-        return switch (Models.Bank.getCurrentContainer()) {
+        return switch (Models.Bank.getStorageContainerType()) {
             case ACCOUNT_BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
             default -> DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default

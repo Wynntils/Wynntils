@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.profile;
@@ -10,20 +10,16 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.utils.SimpleDateFormatter;
+import com.wynntils.utils.DateFormatter;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.Instant;
+import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 
 public class TerritoryProfile {
-    private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT);
+    private static final DateFormatter DATE_FORMATTER = new DateFormatter(false);
 
     private final String name;
     private final String friendlyName;
@@ -32,10 +28,14 @@ public class TerritoryProfile {
 
     private final GuildInfo guildInfo;
 
-    private final Date acquired;
+    private final Instant acquired;
 
     public TerritoryProfile(
-            String name, String friendlyName, TerritoryLocation territoryLocation, GuildInfo guildInfo, Date acquired) {
+            String name,
+            String friendlyName,
+            TerritoryLocation territoryLocation,
+            GuildInfo guildInfo,
+            Instant acquired) {
         this.name = name;
         this.friendlyName = friendlyName;
         this.territoryLocation = territoryLocation;
@@ -79,7 +79,7 @@ public class TerritoryProfile {
         return guildInfo.prefix();
     }
 
-    public Date getAcquired() {
+    public Instant getAcquired() {
         return acquired;
     }
 
@@ -97,11 +97,7 @@ public class TerritoryProfile {
     }
 
     private long getTimeHeldInMillis() {
-        return new Date().getTime() - this.getAcquired().getTime() + getTimezoneOffset();
-    }
-
-    private long getTimezoneOffset() {
-        return ((long) new Date().getTimezoneOffset() * 60 * 1000);
+        return System.currentTimeMillis() - acquired.toEpochMilli();
     }
 
     public boolean isOnCooldown() {
@@ -169,18 +165,17 @@ public class TerritoryProfile {
             String friendlyName = territoryName.replace('’', '\'');
 
             GuildInfo guild;
-            if (territory.get("guild").isJsonNull()) {
+            JsonElement guildJson = territory.get("guild");
+            if (guildJson.isJsonNull()
+                    || !guildJson.isJsonObject()
+                    || guildJson.getAsJsonObject().get("name").isJsonNull()
+                    || guildJson.getAsJsonObject().get("prefix").isJsonNull()) {
                 guild = GuildInfo.NONE;
             } else {
-                guild = context.deserialize(territory.get("guild"), GuildInfo.class);
+                guild = context.deserialize(guildJson, GuildInfo.class);
             }
 
-            Date acquired = null;
-            try {
-                acquired = DATE_FORMAT.parse(territory.get("acquired").getAsString());
-            } catch (ParseException e) {
-                WynntilsMod.error("Error when trying to parse territory profile data.", e);
-            }
+            Instant acquired = Instant.parse(territory.get("acquired").getAsString());
 
             return new TerritoryProfile(territoryName, friendlyName, territoryLocation, guild, acquired);
         }
@@ -191,4 +186,21 @@ public class TerritoryProfile {
     }
 
     public record TerritoryLocation(int startX, int startZ, int endX, int endZ) {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TerritoryProfile that = (TerritoryProfile) o;
+        return Objects.equals(name, that.name)
+                && Objects.equals(friendlyName, that.friendlyName)
+                && Objects.equals(territoryLocation, that.territoryLocation)
+                && Objects.equals(guildInfo, that.guildInfo)
+                && Objects.equals(acquired, that.acquired);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, friendlyName, territoryLocation, guildInfo, acquired);
+    }
 }

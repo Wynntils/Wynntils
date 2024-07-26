@@ -41,7 +41,7 @@ public class TradeMarketModel extends Model {
     private static final int TRADE_MARKET_PRICE_LINE = 1;
     private static final Pattern PRICE_STR = Pattern.compile("§6Price:");
 
-    // Test suite: https://regexr.com/7lh2b
+    // Test in TradeMarketModel_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 

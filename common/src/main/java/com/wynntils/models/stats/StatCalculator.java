@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -135,6 +135,25 @@ public final class StatCalculator {
         }
 
         return 0;
+    }
+
+    public static int calculateStatValue(int internalRoll, StatPossibleValues possibleValues) {
+        StatCalculationInfo statCalculationInfo =
+                possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
+        RoundingMode roundingMode = statCalculationInfo.roundingMode();
+
+        int value = new BigDecimal(possibleValues.baseValue())
+                .multiply(BigDecimal.valueOf(internalRoll))
+                .divide(BigDecimal.valueOf(100), roundingMode)
+                .setScale(0, roundingMode)
+                .intValue();
+
+        if (value == 0) {
+            // If we get to 0, use 1 or -1 instead
+            value = (int) Math.signum(possibleValues.baseValue());
+        }
+
+        return value;
     }
 
     public static Pair<Integer, Integer> getDisplayRange(

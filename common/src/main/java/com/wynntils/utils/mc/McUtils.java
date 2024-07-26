@@ -1,20 +1,23 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.extension.ChatComponentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -65,7 +68,26 @@ public final class McUtils {
     }
 
     public static void playSoundAmbient(SoundEvent sound) {
-        mc().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(sound, 1.0F, 1.0F));
+        playSoundAmbient(sound, 1.0F, 1.0F);
+    }
+
+    public static void playSoundAmbient(SoundEvent sound, float volume, float pitch) {
+        // Pitch and volume are switched in the convenience method for creating this instance,
+        // so use the fully qualified method with the correct order
+        mc().getSoundManager()
+                .play(new SimpleSoundInstance(
+                        sound.getLocation(),
+                        SoundSource.AMBIENT,
+                        volume,
+                        pitch,
+                        SoundInstance.createUnseededRandom(),
+                        false,
+                        0,
+                        SoundInstance.Attenuation.NONE,
+                        0.0,
+                        0.0,
+                        0.0,
+                        true));
     }
 
     public static void sendMessageToClient(Component component) {
@@ -75,6 +97,10 @@ public final class McUtils {
             return;
         }
         player().sendSystemMessage(component);
+    }
+
+    public static void removeMessageFromChat(Component component) {
+        ((ChatComponentExtension) mc().gui.getChat()).deleteMessage(component);
     }
 
     public static void sendErrorToClient(String errorMsg) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -13,6 +13,7 @@ import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatValue;
 import com.wynntils.utils.type.Pair;
@@ -33,12 +34,29 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     }
 
     @Override
+    public String getDisplayName() {
+        // A few overrides for clearer names
+        // and to show units for non raw stats
+        if (statType.getKey().equals("MISC_LEVELED_XP_BONUS")) {
+            return "XP From Lv. Content";
+        } else if (statType.getKey().equals("MISC_LEVELED_LOOT_BONUS")) {
+            return "Loot From Lv. Content";
+        } else {
+            return switch (statType.getUnit()) {
+                case PERCENT, PER_3_S, PER_5_S -> statType.getDisplayName() + "("
+                        + statType.getUnit().getDisplayName() + ")";
+                default -> statType.getDisplayName();
+            };
+        }
+    }
+
+    @Override
     public String getDescription() {
         return getTranslation("description", statType.getDisplayName());
     }
 
     @Override
-    public List<StatValue> getValue(WynnItem wynnItem) {
+    public Optional<StatValue> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             return handleGearItem(gearItem);
         }
@@ -47,14 +65,19 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
             return handleIngredientItem(ingredientItem);
         }
 
-        return List.of();
+        return Optional.empty();
     }
 
-    private List<StatValue> handleIngredientItem(IngredientItem ingredientItem) {
+    @Override
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR, ItemProviderType.GEAR_INSTANCE, ItemProviderType.INGREDIENT);
+    }
+
+    private Optional<StatValue> handleIngredientItem(IngredientItem ingredientItem) {
         IngredientInfo ingredientInfo = ingredientItem.getIngredientInfo();
 
         if (ingredientInfo == null) {
-            return List.of();
+            return Optional.empty();
         }
 
         List<Pair<StatType, RangedValue>> stats = ingredientInfo.variableStats();
@@ -62,43 +85,31 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
         return stats.stream()
                 .filter(pair -> pair.key().equals(statType))
                 .map(pair -> new StatValue(new StatPossibleValues(pair.key(), pair.value(), 0, false), null))
-                .toList();
+                .findFirst();
     }
 
-    private List<StatValue> handleGearItem(GearItem gearItem) {
+    private Optional<StatValue> handleGearItem(GearItem gearItem) {
         GearInfo gearInfo = gearItem.getItemInfo();
         StatPossibleValues possibleValues = gearInfo.getPossibleValues(statType);
 
         if (possibleValues == null) {
-            return List.of();
+            return Optional.empty();
         }
 
         Optional<GearInstance> gearInstanceOpt = gearItem.getItemInstance();
 
         if (gearInstanceOpt.isEmpty()) {
             // Item guide item
-            return List.of(new StatValue(possibleValues, null));
+            return Optional.of(new StatValue(possibleValues, null));
         }
 
         StatActualValue actualValue = gearInstanceOpt.get().getActualValue(statType);
 
         // The item is revealed, no actual stats yet
         if (actualValue == null) {
-            return List.of(new StatValue(possibleValues, null));
+            return Optional.of(new StatValue(possibleValues, null));
         }
 
-        return List.of(new StatValue(possibleValues, actualValue));
-    }
-
-    @Override
-    public int compare(WynnItem wynnItem1, WynnItem wynnItem2) {
-        List<StatValue> itemValues1 = this.getValue(wynnItem1);
-        List<StatValue> itemValues2 = this.getValue(wynnItem2);
-
-        if (itemValues1.isEmpty() && !itemValues2.isEmpty()) return 1;
-        if (!itemValues1.isEmpty() && itemValues2.isEmpty()) return -1;
-        if (itemValues1.isEmpty() && itemValues2.isEmpty()) return 0;
-
-        return -itemValues1.get(0).compareTo(itemValues2.get(0));
+        return Optional.of(new StatValue(possibleValues, actualValue));
     }
 }

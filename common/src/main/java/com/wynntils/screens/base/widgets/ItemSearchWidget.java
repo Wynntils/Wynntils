@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -8,21 +8,27 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ItemSearchWidget extends SearchWidget {
+    private final List<ItemProviderType> supportedProviderTypes;
     private final boolean supportsSorting;
+    private final ItemSearchHelperWidget helperWidget;
 
     private ItemSearchQuery searchQuery;
 
@@ -33,13 +39,43 @@ public class ItemSearchWidget extends SearchWidget {
             int y,
             int width,
             int height,
+            List<ItemProviderType> supportedProviderTypes,
             boolean supportsSorting,
             Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
+        this.supportedProviderTypes = supportedProviderTypes;
+        this.helperWidget = new ItemSearchHelperWidget(
+                x + width - 14,
+                y + 6,
+                Texture.INFO.width() / 3,
+                Texture.INFO.height() / 3,
+                Texture.INFO,
+                true,
+                supportedProviderTypes);
         this.supportsSorting = supportsSorting;
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting);
+        this.searchQuery = Services.ItemFilter.createSearchQuery("", supportsSorting, supportedProviderTypes);
+    }
+
+    @Override
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+
+        helperWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (helperWidget.isMouseOver(mouseX, mouseY)) {
+            guiGraphics.renderComponentTooltip(
+                    FontRenderer.getInstance().getFont(), helperWidget.getTooltipLines(), mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (helperWidget.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -155,7 +191,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting);
+        searchQuery = Services.ItemFilter.createSearchQuery(text, supportsSorting, supportedProviderTypes);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
         if (searchQuery.errors().isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
@@ -7,35 +7,42 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
-import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
+import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
-    protected WynntilsGuideScreen(Component component) {
+    private List<ItemProviderType> supportedProviderTypes;
+
+    protected WynntilsGuideScreen(Component component, List<ItemProviderType> supportedProviderTypes) {
         super(component);
+
+        this.supportedProviderTypes = supportedProviderTypes;
 
         // Override the search widget with our own
         this.searchWidget = new ItemSearchWidget(
-                0, -22, Texture.CONTENT_BOOK_BACKGROUND.width(), 20, true, q -> reloadElements(), this);
+                0,
+                -22,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 24,
+                20,
+                supportedProviderTypes,
+                true,
+                q -> reloadElements(),
+                this);
     }
 
     @Override
     protected void doInit() {
         super.doInit();
 
-        WynntilsButton helperButton = new ItemSearchHelperWidget(
-                Texture.CONTENT_BOOK_BACKGROUND.width() - 17,
-                -19,
-                (int) (Texture.INFO.width() / 1.7f),
-                (int) (Texture.INFO.height() / 1.7f),
-                Texture.INFO,
-                true);
-        this.addRenderableWidget(helperButton);
+        this.addRenderableWidget(new ItemFilterUIButton(
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 20, -22, searchWidget, this, true, supportedProviderTypes));
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),

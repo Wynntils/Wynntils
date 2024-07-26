@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
@@ -26,6 +26,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -40,9 +41,18 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         List<Component> header = new ArrayList<>();
 
         // name
-        String prefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + gearInfo.name())
-                .withStyle(gearInfo.tier().getChatFormatting()));
+        String unidentifiedPrefix = gearInstance == null && !hideUnidentified ? "Unidentified " : "";
+        Component shinyPrefix = gearInstance != null && gearInstance.shinyStat().isPresent()
+                ? Component.literal("⬡ ")
+                        .withStyle(ChatFormatting.WHITE)
+                        .append(Component.literal("Shiny ")
+                                .withStyle(gearInfo.tier().getChatFormatting()))
+                : Component.empty();
+        header.add(Component.empty()
+                .withStyle(gearInfo.tier().getChatFormatting())
+                .append(Component.literal(unidentifiedPrefix)
+                        .append(shinyPrefix)
+                        .append(Component.literal(gearInfo.name()))));
 
         // attack speed
         if (gearInfo.fixedStats().attackSpeed().isPresent())
@@ -128,11 +138,21 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
             header.add(Component.literal(""));
         }
 
+        if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
+            header.add(Component.literal(
+                            "⬡ " + gearInstance.shinyStat().get().statType().displayName() + ": ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(String.valueOf(
+                                    gearInstance.shinyStat().get().value()))
+                            .withStyle(ChatFormatting.WHITE)));
+            header.add(Component.literal(""));
+        }
+
         return header;
     }
 
     @Override
-    public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance) {
+    public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean showItemType) {
         List<Component> footer = new ArrayList<>();
 
         // major ids
@@ -162,7 +182,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                 if (!gearInstance.powders().isEmpty()) {
                     MutableComponent powderList = Component.literal("[");
                     for (Powder p : gearInstance.powders()) {
-                        String symbol = p.getColoredSymbol();
+                        String symbol = p.getColoredSymbol().getString();
                         if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                         powderList.append(Component.literal(symbol));
                     }
@@ -175,7 +195,14 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
 
         // tier & rerolls
         GearTier gearTier = gearInfo.tier();
-        MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
+        MutableComponent itemTypeName = showItemType
+                ? Component.literal(
+                        StringUtils.capitalizeFirst(gearInfo.type().name().toLowerCase(Locale.ROOT)))
+                : Component.literal("Item");
+        MutableComponent tier = Component.literal(gearTier.getName())
+                .withStyle(gearTier.getChatFormatting())
+                .append(" ")
+                .append(itemTypeName);
         if (gearInstance != null && gearInstance.rerolls() > 1) {
             tier.append(" [" + gearInstance.rerolls() + "]");
         }

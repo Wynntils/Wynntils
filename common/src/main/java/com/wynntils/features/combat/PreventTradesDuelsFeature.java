@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -30,6 +30,9 @@ public class PreventTradesDuelsFeature extends Feature {
     @Persisted
     public final Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
 
+    @Persisted
+    public final Config<Boolean> whenHoldingGatheringTool = new Config<>(false);
+
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
         handlePlayerClick(event, event.getPlayer(), event.getItemStack(), event.getTarget());
@@ -41,25 +44,23 @@ public class PreventTradesDuelsFeature extends Feature {
     }
 
     private void handlePlayerClick(Event event, Player player, ItemStack itemStack, Entity target) {
+        if (!player.isShiftKeyDown() || !(target instanceof Player p) || !Models.Player.isLocalPlayer(p)) return;
+
         int timeSinceLastFight =
                 (int) ((System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp()) / 1000);
-        if (onlyWhileFighting.get() && timeSinceLastFight >= fightingTimeCutoff.get()) return;
 
-        if (!shouldBlockClick(player, itemStack, target)) return;
+        if (ItemUtils.isWeapon(itemStack) && onlyWhileFighting.get() && timeSinceLastFight < fightingTimeCutoff.get()) {
+            // stops interact packet from going out
+            event.setCanceled(true);
 
-        // stops interact packet from going out
-        event.setCanceled(true);
-
-        if (onlyWhileFighting.get()) {
             Managers.Notification.queueMessage(StyledText.fromString(ChatFormatting.BLUE + "Trade/Duel blocked for "
                     + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
-        }
-    }
+        } else if (ItemUtils.isGatheringTool(itemStack) && whenHoldingGatheringTool.get()) {
+            // stops interact packet from going out
+            event.setCanceled(true);
 
-    private boolean shouldBlockClick(Player player, ItemStack itemStack, Entity target) {
-        return player.isShiftKeyDown()
-                && ItemUtils.isWeapon(itemStack)
-                && target instanceof Player p
-                && Models.Player.isLocalPlayer(p);
+            Managers.Notification.queueMessage(
+                    StyledText.fromString(ChatFormatting.BLUE + "Trade/Duel blocked whilst holding gathering tool"));
+        }
     }
 }

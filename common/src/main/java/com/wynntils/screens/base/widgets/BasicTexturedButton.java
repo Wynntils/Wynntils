@@ -1,19 +1,23 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class BasicTexturedButton extends WynntilsButton implements TooltipProvider {
+    protected static final int TOOLTIP_WIDTH = 200;
+
     private final Texture texture;
 
     private final Consumer<Integer> onClick;
@@ -66,6 +70,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
         onClick.accept(button);
 
         return true;
@@ -75,7 +80,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     public void onPress() {}
 
     public void setTooltip(List<Component> newTooltip) {
-        tooltip = newTooltip;
+        tooltip = ComponentUtils.wrapTooltips(newTooltip, TOOLTIP_WIDTH);
     }
 
     @Override

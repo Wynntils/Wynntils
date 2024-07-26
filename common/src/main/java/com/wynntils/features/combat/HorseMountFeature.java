@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -19,6 +19,7 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -45,12 +46,13 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
-    private static final StyledText MSG_NO_SPACE = StyledText.fromString("§4There is no room for a horse.");
-    private static final StyledText MSG_TOO_MANY_MOBS =
-            StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
-    private static final StyledText MSG_HORSE_UNAVAILABLE =
-            StyledText.fromString("§4You cannot interact with your horse at the moment.");
-    private static final StyledText MSG_HORSE_NOT_ALLOWED = StyledText.fromString("§4You cannot use your horse here!");
+    private static final List<StyledText> HORSE_ERROR_MESSAGES = List.of(
+            StyledText.fromString("§4There is no room for a horse."),
+            StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby."),
+            StyledText.fromString("§4You cannot interact with your horse at the moment."),
+            StyledText.fromString("§4You cannot use your horse here!"),
+            StyledText.fromString("§4Your horse spawn was disabled (in vanish)!"),
+            StyledText.fromString("§4You can not use a horse while in war."));
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -81,10 +83,7 @@ public class HorseMountFeature extends Feature {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         StyledText message = e.getOriginalStyledText();
 
-        if (message.equals(MSG_NO_SPACE)
-                || message.equals(MSG_TOO_MANY_MOBS)
-                || message.equals(MSG_HORSE_UNAVAILABLE)
-                || message.equals(MSG_HORSE_NOT_ALLOWED)) {
+        if (HORSE_ERROR_MESSAGES.contains(message)) {
             cancelMountingHorse = true;
         }
     }

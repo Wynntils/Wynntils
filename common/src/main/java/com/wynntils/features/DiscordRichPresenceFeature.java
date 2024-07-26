@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -17,6 +17,7 @@ import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -34,13 +35,17 @@ public class DiscordRichPresenceFeature extends Feature {
     @Persisted
     public final Config<Boolean> displayWorld = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> disableInStream = new Config<>(true);
+
     private static final int TERRITORY_TICKS_DELAY = 10;
 
-    private boolean stopTerritoryCheck = false;
+    private boolean territoryChecking = false;
     private TerritoryProfile lastTerritoryProfile = null;
 
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
+        if (!Services.Discord.isReady()) return;
         if (!Models.WorldState.onWorld()) return;
 
         if (displayCharacterInfo.get()) {
@@ -50,6 +55,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onXpChange(SetXpEvent event) {
+        if (!Services.Discord.isReady()) return;
         if (!Models.WorldState.onWorld()) return;
 
         if (displayCharacterInfo.get()) {
@@ -59,16 +65,19 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
+        if (!Services.Discord.isReady()) return;
+
         if (displayWorld.get()) {
             switch (event.getNewState()) {
                 case WORLD -> {
                     Services.Discord.setState(Models.WorldState.getCurrentWorldName());
-                    checkTerritory();
+                    startTerritoryCheck();
                 }
                 case HUB, CONNECTING -> {
                     Services.Discord.setDetails("");
                     Services.Discord.setState("In Hub");
                     Services.Discord.setWynncraftLogo();
+                    stopTerritoryCheck();
                 }
                 case CHARACTER_SELECTION -> {
                     if (displayLocation.get()) {
@@ -76,16 +85,94 @@ public class DiscordRichPresenceFeature extends Feature {
                     }
                     Services.Discord.setState("");
                     Services.Discord.setWynncraftLogo();
+                    stopTerritoryCheck();
                 }
             }
         } else {
             Services.Discord.setState("");
+            stopTerritoryCheck();
+        }
+    }
+
+    @SubscribeEvent
+    public void onStreamToggle(StreamModeEvent e) {
+        if (disableInStream.get() && e.isEnabled()) {
+            disableRichPresence();
+        } else if (!e.isEnabled()) {
+            enableRichPresence();
         }
     }
 
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
+        disableRichPresence();
+    }
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        if (config == disableInStream && Models.WorldState.isInStream()) {
+            if (disableInStream.get()) {
+                disableRichPresence();
+            } else {
+                enableRichPresence();
+            }
+        } else {
+            tryUpdateDisplayedInfo();
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        enableRichPresence();
+    }
+
+    @Override
+    public void onDisable() {
+        disableRichPresence();
+    }
+
+    private void enableRichPresence() {
+        // This isReady() check is required for Linux to not crash on config change.
+        if (!Services.Discord.isReady()) {
+            // Load the Discord SDK
+            if (!Services.Discord.load()) {
+                // happens when wrong version of GLIBC is installed and Discord SDK fails to load
+                Managers.Feature.crashFeature(this);
+                return;
+            }
+        }
+
+        tryUpdateDisplayedInfo();
+    }
+
+    private void disableRichPresence() {
         Services.Discord.unload();
+        stopTerritoryCheck();
+    }
+
+    private void tryUpdateDisplayedInfo() {
+        if (!Services.Discord.isReady()) return;
+        if (!Models.WorldState.onWorld()) return;
+
+        if (displayLocation.get()) {
+            startTerritoryCheck();
+        } else {
+            // Most likely it was already stopped, but just in case
+            stopTerritoryCheck();
+            Services.Discord.setDetails("");
+        }
+
+        if (displayCharacterInfo.get()) {
+            displayCharacterDetails();
+        } else {
+            Services.Discord.setWynncraftLogo();
+        }
+
+        if (displayWorld.get()) {
+            Services.Discord.setState(Models.WorldState.getCurrentWorldName());
+        } else {
+            Services.Discord.setState("");
+        }
     }
 
     private void displayCharacterDetails() {
@@ -101,15 +188,33 @@ public class DiscordRichPresenceFeature extends Feature {
         Services.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
     }
 
-    private void checkTerritory() {
-        if (stopTerritoryCheck || !Models.WorldState.onWorld()) {
-            lastTerritoryProfile = null;
-            stopTerritoryCheck = false;
+    private void startTerritoryCheck() {
+        if (territoryChecking) {
+            // Already checking, no need to start again
             return;
         }
 
-        // Player is not on world, skip territory check
-        if (McUtils.player() == null) return;
+        territoryChecking = true;
+        checkTerritory();
+    }
+
+    private void stopTerritoryCheck() {
+        lastTerritoryProfile = null;
+        territoryChecking = false;
+    }
+
+    private void checkTerritory() {
+        if (!territoryChecking) return;
+
+        // Player is not on world, or the feature is disabled, skip territory check, and stop scheduling
+        if (!Models.WorldState.onWorld()) {
+            stopTerritoryCheck();
+            return;
+        }
+        if (McUtils.player() == null) {
+            stopTerritoryCheck();
+            return;
+        }
 
         Position position = McUtils.player().position();
         if (position != null) {
@@ -122,46 +227,7 @@ public class DiscordRichPresenceFeature extends Feature {
             }
         }
 
+        // Schedule next check
         Managers.TickScheduler.scheduleLater(this::checkTerritory, TERRITORY_TICKS_DELAY);
-    }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {
-        if (this.isEnabled()) {
-            // This isReady() check is required for Linux to not crash on config change.
-            if (!Services.Discord.isReady()) {
-                // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
-                if (!Services.Discord.load()) {
-                    // happens when wrong version of GLIBC is installed and Discord SDK fails to load
-                    Managers.Feature.crashFeature(this);
-                }
-            }
-
-            if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
-
-            if (displayLocation.get()) {
-                if (lastTerritoryProfile == null) {
-                    stopTerritoryCheck = false;
-                    checkTerritory();
-                }
-            } else {
-                stopTerritoryCheck = true;
-                Services.Discord.setDetails("");
-            }
-
-            if (displayCharacterInfo.get()) {
-                displayCharacterDetails();
-            } else {
-                Services.Discord.setWynncraftLogo();
-            }
-
-            if (displayWorld.get()) {
-                Services.Discord.setState(Models.WorldState.getCurrentWorldName());
-            } else {
-                Services.Discord.setState("");
-            }
-        } else {
-            Services.Discord.unload();
-        }
     }
 }

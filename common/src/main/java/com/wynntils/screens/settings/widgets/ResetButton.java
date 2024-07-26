@@ -1,12 +1,15 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -15,14 +18,18 @@ public class ResetButton extends GeneralSettingsButton {
     private final Config<?> config;
     private final Runnable onClick;
 
-    ResetButton(Config<?> config, Runnable onClick, int x, int y) {
+    ResetButton(Config<?> config, Runnable onClick, int x, int y, int maskTopY, int maskBottomY) {
         super(
                 x,
                 y,
                 35,
-                12,
+                FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.translatable("screens.wynntils.settingsScreen.reset.name"),
-                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
+                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")),
+                maskTopY,
+                maskBottomY,
+                0,
+                0);
         this.config = config;
         this.onClick = onClick;
     }
@@ -48,5 +55,10 @@ public class ResetButton extends GeneralSettingsButton {
         if (!config.valueChanged()) return;
         config.reset();
         onClick.run();
+
+        // Reload configurables to update checkbox
+        if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+            bookSettingsScreen.populateConfigurables();
+        }
     }
 }

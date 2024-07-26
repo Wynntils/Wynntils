@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2018-2023.
+ * Copyright © Wynntils 2018-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.translation;
@@ -80,7 +80,7 @@ public abstract class CachingTranslationProvider implements TranslationProvider 
         try {
             String json = FileUtils.readFileToString(f, "UTF-8");
 
-            Type type = new TypeToken<HashMap<String, ConcurrentHashMap<String, String>>>() {}.getType();
+            Type type = new TypeToken<HashMap<String, ConcurrentHashMap<String, List<String>>>>() {}.getType();
             translationCaches = WynntilsMod.GSON.fromJson(json, type);
         } catch (IOException e) {
             WynntilsMod.error("Error when trying to load translation cache.", e);

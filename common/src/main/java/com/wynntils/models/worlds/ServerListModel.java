@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -20,20 +20,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ServerListModel extends Model {
+    private static final int SERVER_UPDATE_MS = 15000;
+
     private static final List<String> SERVER_TYPES = List.of("WC", "lobby", "GM", "DEV", "WAR", "HB", "YT");
+
+    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     private Map<String, ServerProfile> availableServers = new HashMap<>();
 
     public ServerListModel() {
         super(List.of());
 
-        updateServerList();
+        timerExecutor.scheduleWithFixedDelay(this::updateServerList, 0, SERVER_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public List<String> getWynnServerTypes() {
@@ -44,9 +48,17 @@ public final class ServerListModel extends Model {
         return availableServers.keySet();
     }
 
+    public String getNewestServer() {
+        return availableServers.entrySet().stream()
+                .max(Comparator.comparingLong(entry -> entry.getValue().getFirstSeen()))
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
     public List<String> getServersSortedOnUptime() {
-        return getServers().stream()
-                .sorted(Comparator.comparing(profile -> getServer(profile).getUptime()))
+        return availableServers.entrySet().stream()
+                .sorted(Comparator.comparingLong(entry -> -entry.getValue().getFirstSeen()))
+                .map(Map.Entry::getKey)
                 .toList();
     }
 
@@ -64,17 +76,6 @@ public final class ServerListModel extends Model {
 
     public ServerProfile getServer(String worldId) {
         return availableServers.get(worldId);
-    }
-
-    public boolean forceUpdate(int timeOutMs) {
-        CompletableFuture<Boolean> future = updateServerList();
-        try {
-            future.get(timeOutMs, TimeUnit.MILLISECONDS);
-            return true;
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            // if timeout is reached, return false
-            return false;
-        }
     }
 
     @SubscribeEvent
@@ -98,6 +99,16 @@ public final class ServerListModel extends Model {
 
             long serverTime = dl.getResponseTimestamp();
             for (Map.Entry<String, JsonElement> entry : servers.entrySet()) {
+                JsonElement serverElement = entry.getValue();
+
+                if (!serverElement.isJsonObject()) {
+                    WynntilsMod.warn("Server element is not a JsonObject: " + serverElement);
+                    continue;
+                }
+
+                // Inject the server name into the server profile
+                serverElement.getAsJsonObject().addProperty("serverName", entry.getKey());
+
                 ServerProfile profile = WynntilsMod.GSON.fromJson(entry.getValue(), ServerProfile.class);
                 profile.matchTime(serverTime);
 

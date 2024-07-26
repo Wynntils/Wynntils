@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
@@ -10,11 +10,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.DiscoveryType;
+import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -33,10 +33,13 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
 
     private final DiscoveryInfo discoveryInfo;
+    private final WynntilsDiscoveriesScreen discoveriesScreen;
 
-    public DiscoveryButton(int x, int y, int width, int height, DiscoveryInfo discoveryInfo) {
+    public DiscoveryButton(
+            int x, int y, int width, int height, DiscoveryInfo discoveryInfo, WynntilsDiscoveriesScreen screen) {
         super(x, y, width, height, Component.literal("Discovery Button"));
         this.discoveryInfo = discoveryInfo;
+        this.discoveriesScreen = screen;
     }
 
     @Override
@@ -47,21 +50,20 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
 
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
-        int maxTextWidth = this.width - 10 - 11;
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                discoveryInfo.getName(),
-                                maxTextWidth,
-                                FontRenderer.getInstance().getFont())),
+                        StyledText.fromString(discoveryInfo.getName()),
                         this.getX() + 14,
                         this.getY() + 1,
-                        0,
+                        this.width - 15,
+                        discoveriesScreen.getTranslationX(),
+                        discoveriesScreen.getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        1f);
 
         Texture stateTexture = discoveryInfo.isDiscovered()
                 ? switch (discoveryInfo.getType()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients;
@@ -16,7 +16,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
@@ -35,7 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class IngredientInfoRegistry {
     private List<IngredientInfo> ingredientInfoRegistry = List.of();
@@ -43,15 +41,11 @@ public class IngredientInfoRegistry {
     private Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
 
     public IngredientInfoRegistry() {
-        WynntilsMod.registerEventListener(this);
-
         loadData();
     }
 
     public void loadData() {
-        // We do not explicitly load the ingredient DB here,
-        // but when all of it's dependencies are loaded,
-        // the NetResultProcessedEvent will trigger the load.
+        loadIngredients();
     }
 
     public IngredientInfo getFromDisplayName(String ingredientName) {
@@ -62,20 +56,10 @@ public class IngredientInfoRegistry {
         return ingredientInfoRegistry.stream();
     }
 
-    @SubscribeEvent
-    public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
-        UrlId urlId = event.getUrlId();
-        if (urlId == UrlId.DATA_STATIC_ITEM_OBTAIN || urlId == UrlId.DATA_STATIC_MATERIAL_CONVERSION) {
-            // We need both material conversio  and obtain info to be able to load the ingredient DB
-            if (!Models.WynnItem.hasObtainInfo()) return;
-            if (!Models.WynnItem.hasMaterialConversionInfo()) return;
-
-            loadIngredients();
-            return;
-        }
-    }
-
     private void loadIngredients() {
+        if (!Models.WynnItem.hasObtainInfo()) return;
+        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+
         // Download and parse the ingredient DB
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS_ADVANCED);
         dl.handleJsonObject(json -> {
@@ -241,7 +225,7 @@ public class IngredientInfoRegistry {
             JsonObject identificationsJson = JsonUtils.getNullableJsonObject(json, "identifications");
 
             for (Map.Entry<String, JsonElement> entry : identificationsJson.entrySet()) {
-                StatType statType = Models.Stat.fromApiRollId(entry.getKey());
+                StatType statType = Models.Stat.fromApiName(entry.getKey());
 
                 if (statType == null) {
                     WynntilsMod.warn("Ingredient DB contains invalid stat type " + entry.getKey());

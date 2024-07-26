@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 
-public final class TeleportScrollAnnotator implements ItemAnnotator {
+public final class TeleportScrollAnnotator implements GameItemAnnotator {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("^§b(.*) Teleport Scroll$");
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- §7Teleports to: §f(.*)");
 
@@ -42,7 +43,7 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
                     .toUpperCase(Locale.ROOT);
             return new TeleportScrollItem(destination, true);
         } else {
-            String destination = scrollName.substring(0, 2);
+            String destination = Services.Destination.getAbbreviation(scrollName);
             return new TeleportScrollItem(destination, false);
         }
     }

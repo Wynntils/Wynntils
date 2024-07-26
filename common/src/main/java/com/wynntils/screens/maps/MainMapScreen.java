@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -17,7 +17,6 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
-import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
@@ -215,14 +214,14 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         if (firstInit) {
             BoundingBox textureBoundingBox =
-                    BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
+                    BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
 
             // When in an unmapped area, center to the middle of the map if the feature is enabled
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                             .centerWhenUnmapped
                             .get()
                     && Services.Map.getMapsForBoundingBox(textureBoundingBox).isEmpty()) {
-                centerMap();
+                centerMapOnWorld();
             }
 
             firstInit = false;
@@ -279,7 +278,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     centerZ,
                     mapCenterX,
                     mapCenterZ,
-                    currentZoom,
+                    zoomRenderScale,
                     CommonColors.LIGHT_BLUE.asInt(),
                     CommonColors.BLACK.asInt());
         }
@@ -289,6 +288,8 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         renderCoordinates(poseStack, mouseX, mouseY);
+
+        renderZoomWidget(poseStack, mouseX, mouseY);
 
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -305,18 +306,13 @@ public final class MainMapScreen extends AbstractMapScreen {
         pois = Stream.concat(pois, Models.Marker.getAllPois());
         pois = Stream.concat(
                 pois,
-                Services.Hades.getHadesUsers()
-                        .filter(
-                                hadesUser -> (hadesUser.isPartyMember()
-                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                                        .renderRemotePartyPlayers
-                                                        .get())
-                                        || (hadesUser.isMutualFriend()
-                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                                        .renderRemoteFriendPlayers
-                                                        .get())
-                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
-                        .map(PlayerMainMapPoi::new));
+                Services.Hades.getPlayerPois(
+                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                .renderRemotePartyPlayers
+                                .get(),
+                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                .renderRemoteFriendPlayers
+                                .get()));
 
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
@@ -325,7 +321,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderPois(
                 pois.collect(Collectors.toList()),
                 poseStack,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .poiScale
                         .get(),
@@ -373,7 +369,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             List<MarkerInfo> markers =
                     Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-            if (McUtils.player().isShiftKeyDown() && !markers.isEmpty()) {
+            if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
                 // -1 is fine as the index since we always increment it by 1
                 int index = markers.indexOf(focusedMarker);
                 MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
@@ -394,7 +390,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-                // If shift is not held down, clear all waypoints to only add have the new one
+                // If shift is not held down, clear all waypoints to only have the new one
                 if (!KeyboardUtils.isShiftDown()) {
                     Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
                 }
@@ -426,8 +422,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, customPoi));
                 } else {
-                    int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-                    int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+                    int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
+                    int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
                     McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
                 }
@@ -439,21 +435,12 @@ public final class MainMapScreen extends AbstractMapScreen {
                     customPois.touched();
                 }
             } else {
-                setCompassToMouseCoords(mouseX, mouseY);
+                setCompassToMouseCoords(mouseX, mouseY, true);
+                return true;
             }
         }
 
         return super.doMouseClicked(mouseX, mouseY, button);
-    }
-
-    private void setCompassToMouseCoords(double mouseX, double mouseY) {
-        double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
-        double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
-        Location compassLocation = Location.containing(gameX, 0, gameZ);
-        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
-
-        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {

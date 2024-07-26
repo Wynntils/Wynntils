@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.item;
@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.items.WynnItem;
@@ -23,10 +24,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -124,6 +130,22 @@ public class ItemHandler extends Handler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntitySpawn(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+        if (!(entity instanceof ItemEntity itemEntity)) return;
+
+        // Item entities can have an item that needs to be annotated
+        for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
+            if (packedItem.id() == ItemEntity.DATA_ITEM.getId()) {
+                if (!(packedItem.value() instanceof ItemStack itemStack)) return;
+
+                annotate(itemStack);
+                return;
+            }
+        }
+    }
+
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
@@ -218,10 +240,16 @@ public class ItemHandler extends Handler {
      * It might have additional lines added, but these are not checked.
      */
     private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
-        List<StyledText> firstLines = LoreUtils.getLore(firstItem);
-        List<StyledText> secondLines = LoreUtils.getLore(secondItem);
-        int firstLinesLen = firstLines.size();
-        int secondLinesLen = secondLines.size();
+        ListTag firstLoreTags = LoreUtils.getLoreTag(firstItem);
+        ListTag secondLoreTags = LoreUtils.getLoreTag(secondItem);
+
+        // Tags implement equals, so we can use this to check if the lore is identical
+        // This is the most common short-circuit case
+        if (Objects.equals(firstLoreTags, secondLoreTags)) return true;
+
+        // Continue, as we allow 3 lines to differ
+        int firstLinesLen = firstLoreTags.size();
+        int secondLinesLen = secondLoreTags.size();
 
         // Only allow a maximum number of additional lines in the longer tooltip
         if (Math.abs(firstLinesLen - secondLinesLen) > 3) return false;
@@ -231,8 +259,8 @@ public class ItemHandler extends Handler {
         if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
 
         for (int i = 0; i < linesToCheck; i++) {
-            StyledText firstLine = firstLines.get(i);
-            StyledText secondLine = secondLines.get(i);
+            StyledText firstLine = StyledText.fromJson(firstLoreTags.get(i).getAsString());
+            StyledText secondLine = StyledText.fromJson(secondLoreTags.get(i).getAsString());
 
             if (!firstLine.equals(secondLine)) return false;
         }
@@ -335,5 +363,9 @@ public class ItemHandler extends Handler {
     public void resetProfiling() {
         profilingTimes.clear();
         profilingCounts.clear();
+    }
+
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
     }
 }

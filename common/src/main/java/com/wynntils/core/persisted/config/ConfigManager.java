@@ -1,12 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.mojang.util.UndashedUuid;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
@@ -18,13 +20,16 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.UpfixerType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -37,19 +42,19 @@ public final class ConfigManager extends Manager {
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
 
-    private final File userConfig;
+    private final File userConfigFile;
     private JsonObject configObject;
 
     public ConfigManager() {
         super(List.of());
 
-        userConfig = new File(
+        userConfigFile = new File(
                 CONFIG_DIR, UndashedUuid.toString(McUtils.mc().getUser().getProfileId()) + FILE_SUFFIX);
     }
 
     public void init() {
         // First, we load the config file
-        configObject = Managers.Json.loadPreciousJson(userConfig);
+        configObject = Managers.Json.loadPreciousJson(userConfigFile);
 
         // Register all features and overlays
         Managers.Feature.getFeatures().forEach(this::registerFeature);
@@ -57,8 +62,8 @@ public final class ConfigManager extends Manager {
         // Now, we have to apply upfixers, before any config loading happens
         // FIXME: Solve generics type issue
         Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
-        if (Managers.Upfixer.runUpfixers(configObject, workaround)) {
-            Managers.Json.savePreciousJson(userConfig, configObject);
+        if (Managers.Upfixer.runUpfixers(configObject, workaround, UpfixerType.CONFIG)) {
+            Managers.Json.savePreciousJson(userConfigFile, configObject);
         }
 
         // Finish off the config init process
@@ -95,7 +100,7 @@ public final class ConfigManager extends Manager {
     }
 
     public void reloadConfiguration() {
-        configObject = Managers.Json.loadPreciousJson(userConfig);
+        configObject = Managers.Json.loadPreciousJson(userConfigFile);
         loadConfigOptions(true, true);
     }
 
@@ -204,7 +209,11 @@ public final class ConfigManager extends Manager {
 
         configJson.add(OVERLAY_GROUPS_JSON_KEY, overlayGroups);
 
-        Managers.Json.savePreciousJson(userConfig, configJson);
+        Managers.Json.savePreciousJson(userConfigFile, configJson);
+    }
+
+    public File getUserConfigFile() {
+        return userConfigFile;
     }
 
     private void saveDefaultConfig() {
@@ -261,5 +270,67 @@ public final class ConfigManager extends Manager {
     public Stream<Config<?>> getConfigsForOwner(PersistedOwner owner) {
         return getConfigs()
                 .filter(config -> Managers.Persisted.getMetadata(config).owner() == owner);
+    }
+
+    public boolean importConfig(String jsonInput, List<Configurable> configsToImport) {
+        try {
+            Map<String, Object> configData =
+                    Managers.Json.GSON.fromJson(jsonInput, new TypeToken<HashMap<String, Object>>() {}.getType());
+
+            if (configData == null) {
+                WynntilsMod.warn("Unable to import config due to invalid input");
+                return false;
+            }
+
+            // Loop through all features chosen to import to
+            for (Configurable feature : configsToImport) {
+                // Loop through the visible configs only as they are the only configs to be imported
+                for (Config<?> configOption : feature.getVisibleConfigOptions()) {
+                    String configOptionName = configOption.getJsonName();
+
+                    // If the config data contains this config option, then it can be imported
+                    if (configData.containsKey(configOptionName)) {
+                        Object configOptionValue = configData.get(configOptionName);
+                        setConfigValue(configOption, configOptionValue);
+                    }
+                }
+            }
+
+            return true;
+        } catch (JsonSyntaxException ex) {
+            WynntilsMod.warn("Failed to import config ", ex);
+            return false;
+        }
+    }
+
+    public String exportConfig(List<Configurable> featuresToExport) {
+        Map<String, Object> configData = new HashMap<>();
+
+        // Loop through all features to be exported
+        for (Configurable feature : featuresToExport) {
+            List<Config<?>> visibleConfigOptions = feature.getVisibleConfigOptions();
+
+            // Loop through visible config options, as we don't want this to export
+            // hidden configs since they should be exportable in their
+            // own features, like favorites and waypoints
+            for (Config<?> configOption : visibleConfigOptions) {
+                String configOptionName = configOption.getJsonName();
+                Object configOptionValue = configOption.get();
+
+                // Save the config option to the map
+                configData.put(configOptionName, configOptionValue);
+            }
+        }
+
+        // Return the json string of the exported settings
+        return Managers.Json.GSON.toJson(configData);
+    }
+
+    private <T> void setConfigValue(Config<T> config, Object value) {
+        T typedValue = config.tryParseStringValue(value.toString());
+
+        if (typedValue != null) {
+            config.setValue(typedValue);
+        }
     }
 }

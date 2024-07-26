@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -18,20 +18,26 @@ public record GearInstance(
         List<Powder> powders,
         int rerolls,
         Optional<Float> overallQuality,
-        Optional<ShinyStat> shinyStat) {
+        Optional<ShinyStat> shinyStat,
+        boolean meetsRequirements,
+        Optional<SetInstance> setInstance) {
     public static GearInstance create(
             GearInfo gearInfo,
             List<StatActualValue> identifications,
             List<Powder> powders,
             int rerolls,
-            Optional<ShinyStat> shinyStat) {
+            Optional<ShinyStat> shinyStat,
+            boolean meetsRequirements,
+            Optional<SetInstance> setInstance) {
         return new GearInstance(
                 identifications,
                 powders,
                 rerolls,
                 StatCalculator.calculateOverallQuality(
                         gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
-                shinyStat);
+                shinyStat,
+                meetsRequirements,
+                setInstance);
     }
 
     public boolean hasOverallValue() {
@@ -47,7 +53,7 @@ public record GearInstance(
     }
 
     public boolean isDefective() {
-        return overallQuality.orElse(0.0f) <= 0.0f;
+        return overallQuality.isPresent() && overallQuality.orElse(0.0f) <= 0.0f;
     }
 
     public StatActualValue getActualValue(StatType statType) {

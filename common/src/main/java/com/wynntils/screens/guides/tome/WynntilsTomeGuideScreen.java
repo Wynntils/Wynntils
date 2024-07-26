@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.tome;
@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -29,7 +30,9 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
     private List<GuideTomeItemStack> allTomeItems = List.of();
 
     private WynntilsTomeGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.tomeGuide.name"));
+        super(
+                Component.translatable("screens.wynntils.wynntilsGuides.tomeGuide.name"),
+                List.of(ItemProviderType.GENERIC, ItemProviderType.GEAR));
     }
 
     public static Screen create() {
@@ -49,6 +52,11 @@ public final class WynntilsTomeGuideScreen extends WynntilsGuideScreen<GuideTome
         poseStack.translate(translationX, translationY, 1f);
 
         renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.tomeGuide.name"));
+
+        renderDescription(
+                poseStack,
+                I18n.get("screens.wynntils.wynntilsGuides.guideDescription"),
+                I18n.get("screens.wynntils.wynntilsGuides.filterHelper"));
 
         renderVersion(poseStack);
 

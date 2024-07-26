@@ -16,25 +16,31 @@ jobs:
       changelog: ${{ steps.changelog.outputs.changelog }}
       release_id: ${{ steps.release.outputs.id }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 16
-      - run: npm install conventional-changelog-conventionalcommits
+      - run: |
+          npm install conventional-changelog-conventionalcommits@7.0.2
+          npm install conventional-recommended-bump@9.0.0
+
+      - name: Set up version.json
+        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
 
       - name: Create changelog
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v4.1.1
+        uses: TriPSs/conventional-changelog-action@v5.2.1
         with:
           github-token: ${{ secrets.PRIVATE_TOKEN }}
           git-user-name: 'WynntilsBot'
           git-user-email: 'admin@wynntils.com'
           pre-commit: ./.github/.pre-commit.js
           config-file-path: ./.github/.config.js
+          version-file: ./version.json
           skip-version-file: true
           skip-git-pull: true
           pre-release: true
@@ -44,7 +50,7 @@ jobs:
       - name: Create release
         if: ${{ steps.changelog.outputs.skipped != 'true' }}
         id: release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.changelog }}
@@ -52,42 +58,43 @@ jobs:
           prerelease: true
 
       - name: Upload version information
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: build.gradle
+          overwrite: true
 
   build:
     name: Build
-    needs: [changelog] # Build needs the new version number
+    needs: [ changelog ] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache Gradle data
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
-      - uses: actions/download-artifact@v3 # Download version information from changelog
+      - uses: actions/download-artifact@v4 # Download version information from changelog
         with:
           name: build
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 21
           cache: "gradle"
 
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: buildDependents -x spotlessCheck
+          arguments: buildDependents -x spotlessCheck -x test
 
       - name: Upload files to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: ${{ needs.changelog.outputs.skipped != 'true' }}
         with:
           tag_name: ${{ needs.changelog.outputs.tag }}
@@ -97,59 +104,14 @@ jobs:
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-forge+MC-*.jar
 
-      - name: Upload build
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: |
-            **/build/libs/*-fabric+MC-*.jar
-            **/build/libs/*-forge+MC-*.jar
-          if-no-files-found: error
-
-  release:
-    name: Release to Modrinth and CurseForge
-    if: ${{ needs.changelog.outputs.skipped != 'true' }}
-    strategy:
-      matrix:
-        modloader: [fabric, forge]
-    runs-on: ubuntu-latest
-    needs: [build, changelog]
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-
-      - uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          modrinth-id: dU5Gb9Ab
-          modrinth-featured: true
-          modrinth-unfeature-mode: subset
-          modrinth-token: ${{ secrets.MODRINTH_API_TOKEN }}
-
-          curseforge-id: 303451
-          curseforge-token: ${{ secrets.CF_API_TOKEN }}
-
-          files-primary: "**/build/libs/*-${{ matrix.modloader }}*.jar"
-          files-secondary: ""
-
-          name: Wynntils Artemis (${{ matrix.modloader }}) ${{ needs.changelog.outputs.tag }}
-          version: ${{ needs.changelog.outputs.tag }}
-          version-type: beta
-          game-versions: 1.20.2
-          changelog: ${{ needs.changelog.outputs.changelog }}
-
-          loaders: ${{ matrix.modloader }}
-          java: 17
-
-
   release-gh:
     name: Release Github
     if: ${{ needs.changelog.outputs.skipped != 'true' }}
     runs-on: ubuntu-latest
-    needs: [build, changelog]
+    needs: [ build, changelog ]
     steps:
       - name: Publish Release
-        uses: eregon/publish-release@v1
+        uses: eregon/publish-release@v1.0.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

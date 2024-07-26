@@ -1,26 +1,28 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnalphabet;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.activities.discoveries.DiscoveryInfo;
-import com.wynntils.models.activities.type.ActivitySortOrder;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -41,14 +43,17 @@ public class WynnAlphabetModel extends Model {
             '⒱', '⒲', '⒳', '⒴', '⒵', '０', '１', '２');
     private static final List<Character> wynnicNumbers =
             List.of('⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
+
+    private static final Pattern WYNNIC_CHARACTER_PATTERN = Pattern.compile("[⒜-⒵０-２]+");
+    private static final Pattern WYNNIC_NUMBER_PATTERN = Pattern.compile("[⑴-⑿]+");
+    private static final Pattern GAVELLIAN_CHARACTER_PATTERN = Pattern.compile("[ⓐ-ⓩ]+");
+
     private static final Map<Character, Character> englishToGavellianMap = new HashMap<>();
     private static final Map<Character, Character> englishToWynnicMap = new HashMap<>();
     private static final Map<Character, Character> gavellianToEnglishMap = new HashMap<>();
     private static final Map<Character, Character> wynnicToEnglishMap = new HashMap<>();
     private static final Pattern BRACKET_PATTERN = Pattern.compile("(\\[\\[.*\\]\\])|(<<.*>>)");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
-    private static final String GAVELLIAN_TRANSCRIBER_DISCOVERY = "Ne du Valeos du Ellach";
-    private static final String WYNNIC_TRANSCRIBER_DISCOVERY = "Wynn Plains Monument";
     private static final StyledText GAVELLIAN_TRANSCRIBER = StyledText.fromString("§rHigh Gavellian Transcriber");
     private static final StyledText WYNNIC_TRANSCRIBER = StyledText.fromString("§fAncient Wynnic Transcriber");
 
@@ -60,49 +65,48 @@ public class WynnAlphabetModel extends Model {
         createTranscribableMaps();
     }
 
-    private void createTranscribableMaps() {
-        for (int i = 0; i < gavellianCharacters.size(); i++) {
-            gavellianToEnglishMap.put(gavellianCharacters.get(i), englishCharacters.get(i));
-        }
-
-        for (int i = 0; i < wynnicCharacters.size(); i++) {
-            wynnicToEnglishMap.put(wynnicCharacters.get(i), englishCharacters.get(i));
-        }
-
-        for (int i = 0; i < gavellianCharacters.size(); i++) {
-            englishToGavellianMap.put(englishCharacters.get(i), gavellianCharacters.get(i));
-        }
-
-        for (int i = 0; i < wynnicCharacters.size(); i++) {
-            englishToWynnicMap.put(englishCharacters.get(i), wynnicCharacters.get(i));
-        }
-    }
-
-    public String transcribeMessageFromWynnAlphabet(
-            String original,
+    public StyledTextPart transcribeMessageFromWynnAlphabet(
+            StyledTextPart originalPart,
             WynnAlphabet alphabet,
             boolean useColors,
             ChatFormatting colorToUse,
-            ChatFormatting defaultColor) {
-        String transcripted = original;
+            boolean originalTextAsTooltip) {
+        String originalString = originalPart.getString(null, PartStyle.StyleType.NONE);
+        StringBuilder transcriptedStringBuilder = new StringBuilder(originalString.length());
 
-        for (char character : original.toCharArray()) {
-            Character replacement = alphabet == WynnAlphabet.GAVELLIAN
-                    ? Models.WynnAlphabet.transcribeGavellianToEnglish(character)
-                    : Models.WynnAlphabet.transcribeWynnicToEnglish(character);
+        // If the message is a wynnic number, we transribe it to an english number
+        if (WYNNIC_NUMBER_PATTERN.matcher(originalString).matches()) {
+            transcriptedStringBuilder.append(wynnicNumToInt(originalString));
+        } else {
+            // Otherwise, we transcribe the message to the selected alphabet
+            for (char character : originalString.toCharArray()) {
+                Character replacement = alphabet == WynnAlphabet.GAVELLIAN
+                        ? Models.WynnAlphabet.transcribeGavellianToEnglish(character)
+                        : Models.WynnAlphabet.transcribeWynnicToEnglish(character);
 
-            if (!replacement.equals(character)) {
-                if (useColors) {
-                    transcripted = transcripted.replace(
-                            Character.valueOf(character).toString(),
-                            colorToUse + replacement.toString() + defaultColor);
-                } else {
-                    transcripted = transcripted.replace(character, replacement);
-                }
+                transcriptedStringBuilder.append(replacement);
             }
         }
 
-        return transcripted;
+        PartStyle partStyle = originalPart.getPartStyle();
+
+        if (useColors && !originalTextAsTooltip) {
+            partStyle = partStyle.withColor(colorToUse);
+        }
+
+        String transcriptedString = transcriptedStringBuilder.toString();
+
+        // Add the hover event to the transcribed message
+        Component hoverComponent = originalTextAsTooltip
+                ? Component.literal(transcriptedString)
+                : Component.translatable(
+                        "feature.wynntils.transcribeMessages.transcribedFrom",
+                        StringUtils.capitalizeFirst(alphabet.toString().toLowerCase(Locale.ROOT)),
+                        originalString);
+        partStyle = partStyle.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
+
+        return new StyledTextPart(
+                originalTextAsTooltip ? originalString : transcriptedString, partStyle.getStyle(), null, Style.EMPTY);
     }
 
     public String transcribeBracketedText(String message) {
@@ -244,9 +248,6 @@ public class WynnAlphabetModel extends Model {
             case TRANSCRIBER -> alphabet == WynnAlphabet.WYNNIC
                     ? hasTranscriber(WynnAlphabet.WYNNIC)
                     : hasTranscriber(WynnAlphabet.GAVELLIAN);
-            case DISCOVERY -> alphabet == WynnAlphabet.WYNNIC
-                    ? hasCompletedDiscovery(WynnAlphabet.WYNNIC)
-                    : hasCompletedDiscovery(WynnAlphabet.GAVELLIAN);
             default -> true;
         };
     }
@@ -265,6 +266,36 @@ public class WynnAlphabetModel extends Model {
 
     public boolean containsBrackets(String message) {
         return BRACKET_PATTERN.matcher(message).find();
+    }
+
+    public Matcher getWynnicCharacterMatcher(String message) {
+        return WYNNIC_CHARACTER_PATTERN.matcher(message);
+    }
+
+    public Matcher getWynnicNumberMatcher(String message) {
+        return WYNNIC_NUMBER_PATTERN.matcher(message);
+    }
+
+    public Matcher getGavellianCharacterMatcher(String message) {
+        return GAVELLIAN_CHARACTER_PATTERN.matcher(message);
+    }
+
+    private void createTranscribableMaps() {
+        for (int i = 0; i < gavellianCharacters.size(); i++) {
+            gavellianToEnglishMap.put(gavellianCharacters.get(i), englishCharacters.get(i));
+        }
+
+        for (int i = 0; i < wynnicCharacters.size(); i++) {
+            wynnicToEnglishMap.put(wynnicCharacters.get(i), englishCharacters.get(i));
+        }
+
+        for (int i = 0; i < gavellianCharacters.size(); i++) {
+            englishToGavellianMap.put(englishCharacters.get(i), gavellianCharacters.get(i));
+        }
+
+        for (int i = 0; i < wynnicCharacters.size(); i++) {
+            englishToWynnicMap.put(englishCharacters.get(i), wynnicCharacters.get(i));
+        }
     }
 
     private void replaceTranscribed(StringBuilder stringBuilder, String original, String replacement) {
@@ -310,21 +341,6 @@ public class WynnAlphabetModel extends Model {
         }
 
         return false;
-    }
-
-    private boolean hasCompletedDiscovery(WynnAlphabet discoveryToCheck) {
-        Stream<DiscoveryInfo> discoveryInfoStream =
-                Models.Discovery.getAllCompletedDiscoveries(ActivitySortOrder.ALPHABETIC);
-
-        String nameToFind = discoveryToCheck == WynnAlphabet.WYNNIC
-                ? WYNNIC_TRANSCRIBER_DISCOVERY
-                : GAVELLIAN_TRANSCRIBER_DISCOVERY;
-
-        Optional<DiscoveryInfo> foundDiscoveryInfo = discoveryInfoStream
-                .filter(discoveryInfo -> discoveryInfo.getName().equals(nameToFind))
-                .findFirst();
-
-        return foundDiscoveryInfo.map(DiscoveryInfo::isDiscovered).orElse(false);
     }
 
     public void setSelectedAlphabet(WynnAlphabet selectedAlphabet) {

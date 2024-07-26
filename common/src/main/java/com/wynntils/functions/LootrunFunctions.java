@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -11,6 +11,7 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +38,18 @@ public class LootrunFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("dry_b", "dry_boxes_count");
+        }
+    }
+
+    public static class DryPullsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.dryPulls.get();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("dry_p", "dry_pulls_count");
         }
     }
 
@@ -109,6 +122,23 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunMissionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int missionIndex = arguments.getArgument("index").getIntegerValue();
+            boolean colored = arguments.getArgument("colored").getBooleanValue();
+
+            return Models.Lootrun.getMissionStatus(missionIndex, colored);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("index", Integer.class, null),
+                    new FunctionArguments.Argument<>("colored", Boolean.class, null)));
+        }
+    }
+
     public static class LootrunTaskNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
@@ -121,6 +151,27 @@ public class LootrunFunctions {
             if (taskLocation == null) return "";
 
             return taskLocation.name();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+        }
+    }
+
+    public static class LootrunTaskLocationFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            String color = arguments.getArgument("color").getStringValue();
+
+            BeaconColor beaconColor = BeaconColor.fromName(color);
+            if (beaconColor == null) return new Location(0, 0, 0);
+
+            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(beaconColor);
+            if (taskLocation == null) return new Location(0, 0, 0);
+
+            return taskLocation.location();
         }
 
         @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -24,7 +24,7 @@ public class CombatXpModel extends Model {
      * Note that the last value is the sum of all preceding values
      */
     private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
-        140, 290, 450, 610, 760, 870, 1070, 1130, 1320, 1640, 1880, 2160, 2510, 2760, 3130, 3560, 3960, 4560, 2380,
+        140, 290, 450, 610, 760, 870, 1070, 1130, 1320, 1640, 1880, 2160, 2510, 2760, 3130, 3560, 3960, 4560, 5280,
         5560, 6190, 6750, 7750, 8450, 9700, 10500, 12000, 13700, 15400, 16600, 18800, 21200, 24000, 25200, 28400, 30000,
         33500, 35000, 39000, 43000, 48000, 57300, 63500, 75000, 83000, 92000, 101000, 119000, 131000, 145000, 160000,
         185000, 205000, 225000, 246000, 285000, 313000, 340000, 375000, 432200, 472300, 515800, 562800, 613700, 668600,

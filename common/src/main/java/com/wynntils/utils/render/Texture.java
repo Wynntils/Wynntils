@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -26,6 +26,10 @@ public enum Texture {
     CONTENT_BOOK_BACKGROUND("content_book/content_book.png", 339, 220),
     CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 133, 23),
     CONTENT_BOOK_TITLE("content_book/content_book_title.png", 168, 33),
+    TAG_BLUE("content_book/tag_blue.png", 44, 22),
+    TAG_RED("content_book/tag_red.png", 22, 44),
+    TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
+    TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
     // region Icons
@@ -37,6 +41,29 @@ public enum Texture {
     ACTIVITY_FINISHED("icons/activities/activity_finished_icon.png", 11, 7),
     ACTIVITY_STARTED("icons/activities/activity_started_icon.png", 7, 7),
     CAVE_AVALIABLE_ICON("icons/activities/cave_avaliable_icon.png", 7, 7),
+
+    // Config Categories
+    ALL_CONFIG_ICON("icons/config_categories/all_config_icon.png", 16, 16),
+    CHAT_CONFIG_ICON("icons/config_categories/chat_config_icon.png", 16, 16),
+    COMBAT_CONFIG_ICON("icons/config_categories/combat_config_icon.png", 16, 16),
+    COMMANDS_CONFIG_ICON("icons/config_categories/commands_config_icon.png", 16, 16),
+    DEBUG_CONFIG_ICON("icons/config_categories/debug_config_icon.png", 16, 16),
+    EMBELLISHMENTS_CONFIG_ICON("icons/config_categories/embellishments_config_icon.png", 16, 16),
+    INVENTORY_CONFIG_ICON("icons/config_categories/inventory_config_icon.png", 16, 16),
+    MAP_CONFIG_ICON("icons/config_categories/map_config_icon.png", 16, 16),
+    OVERLAYS_CONFIG_ICON("icons/config_categories/overlays_config_icon.png", 16, 16),
+    PLAYERS_CONFIG_ICON("icons/config_categories/players_config_icon.png", 16, 16),
+    REDIRECTS_CONFIG_ICON("icons/config_categories/redirects_config_icon.png", 16, 16),
+    TOOLTIPS_CONFIG_ICON("icons/config_categories/tooltips_config_icon.png", 16, 16),
+    TRADE_MARKET_CONFIG_ICON("icons/config_categories/trade_market_config_icon.png", 16, 16),
+    UI_CONFIG_ICON("icons/config_categories/ui_config_icon.png", 16, 16),
+    UNCATEGORIZED_CONFIG_ICON("icons/config_categories/uncategorized_config_icon.png", 16, 16),
+    UTILITIES_CONFIG_ICON("icons/config_categories/utilities_config_icon.png", 16, 16),
+    WYNNTILS_CONFIG_ICON("icons/config_categories/wynntils_config_icon.png", 16, 16),
+    APPLY_SETTINGS_ICON("icons/config_categories/apply_settings_icon.png", 16, 16),
+    DISCARD_SETTINGS_ICON("icons/config_categories/discard_settings_icon.png", 16, 16),
+    EXPORT_SETTINGS_ICON("icons/config_categories/export_settings_icon.png", 16, 16),
+    IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
 
     // Content Book
     DIALOGUE_ICON("icons/content_book/dialogue_icon.png", 14, 11),
@@ -73,15 +100,22 @@ public enum Texture {
     ARROW_LEFT_ICON("icons/generic/arrow_left_icon.png", 16, 16),
     BOAT_ICON("icons/generic/boat_icon.png", 15, 14),
     CHALLENGES_ICON("icons/generic/challenges_icon.png", 9, 14),
+    CHECKMARK_GRAY("icons/generic/check_gray.png", 16, 16),
+    CHECKMARK_GREEN("icons/generic/check_green.png", 16, 16),
+    CHECKMARK_YELLOW("icons/generic/check_yellow.png", 16, 16),
+    CLOSE("icons/generic/close.png", 16, 16),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
-    INFO("info.png", 25, 25),
+    INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
+    NEXT("icons/generic/next.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
-    QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
+    PREVIOUS("icons/generic/previous.png", 16, 16),
     QUESTION_MARK("icons/generic/question_mark.png", 4, 7),
+    QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
+    SAVE("icons/generic/save.png", 16, 16),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
@@ -151,6 +185,17 @@ public enum Texture {
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
     // endregion
 
+    // region Item Storage
+    ITEM_RECORD("item_storage/record.png", 171, 167),
+    ITEM_RECORD_ADD("item_storage/record_add.png", 9, 18),
+    ITEM_RECORD_BUTTON_LEFT("item_storage/record_button_left.png", 11, 20),
+    ITEM_RECORD_BUTTON_RIGHT("item_storage/record_button_right.png", 11, 20),
+    ITEM_RECORD_CONFIRM("item_storage/record_confirm.png", 9, 18),
+    ITEM_RECORD_DELETE("item_storage/record_delete.png", 9, 18),
+    ITEM_RECORD_HELP("item_storage/record_help.png", 9, 18),
+    ITEM_RECORD_SCROLL("item_storage/record_scroll_button.png", 7, 8),
+    // endregion
+
     // region Lootrun
     LOOTRUN_LINE("lootrun/path_arrow.png", 16, 16),
 
@@ -181,12 +226,12 @@ public enum Texture {
     PLAYER_LIST_OVERLAY("overlays/player_list_overlay.png", 385, 229),
 
     // Bars
-    BUBBLE_BAR("overlays/bars/bars_bubbles.png", 256, 256),
-    EXPERIENCE_BAR("overlays/bars/bars_exp.png", 256, 256),
-    HEALTH_BAR("overlays/bars/bars_health.png", 256, 256),
-    HEALTH_BAR_OVERFLOW("overlays/bars/bars_health_overflow.png", 256, 256),
-    MANA_BAR("overlays/bars/bars_mana.png", 256, 256),
-    MANA_BAR_OVERFLOW("overlays/bars/bars_mana_overflow.png", 256, 256),
+    BUBBLE_BAR("overlays/bars/bars_bubbles.png", 182, 60),
+    EXPERIENCE_BAR("overlays/bars/bars_exp.png", 182, 60),
+    HEALTH_BAR("overlays/bars/bars_health.png", 81, 164),
+    HEALTH_BAR_OVERFLOW("overlays/bars/bars_health_overflow.png", 81, 164),
+    MANA_BAR("overlays/bars/bars_mana.png", 81, 180),
+    MANA_BAR_OVERFLOW("overlays/bars/bars_mana_overflow.png", 81, 180),
     UNIVERSAL_BAR("overlays/bars/universal_bar.png", 81, 16),
     // endregion
 
@@ -195,11 +240,18 @@ public enum Texture {
     // endregion
 
     // region Seaskipper
-    BOAT_BUTTON("seaskipper/boat_button.png", 39, 76),
-    DESTINATION_BUTTON("seaskipper/destination_button.png", 66, 40),
-    DESTINATION_LIST("seaskipper/destination_list_background.png", 143, 205),
-    TRAVEL_BUTTON("seaskipper/travel_button.png", 100, 76),
+    DESTINATION_BUTTON("seaskipper/destination_button.png", 135, 40),
+    DESTINATION_LIST("seaskipper/destination_list_background.png", 151, 226),
+    TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
+
+    // region Territory Magagement Background
+    TERRITORY_MANAGEMENT_BACKGROUND("territory_management/territory_management_background.png", 256, 136),
+    TERRITORY_ITEM("territory_management/territory.png", 16, 16),
+    TERRITORY_ITEM_HQ("territory_management/territory_hq.png", 16, 16),
+    TERRITORY_ITEM_ALERT("territory_management/territory_alert.png", 16, 16),
+    TERRITORY_SIDEBAR("territory_management/territory_sidebar.png", 20, 136),
+    TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
@@ -209,7 +261,13 @@ public enum Texture {
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
-    OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
+    ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
+    ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
+    OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
+    PAPER_BUTTON_BOTTOM("ui_components/paper_button_bottom.png", 64, 60),
+    PAPER_BUTTON_LEFT("ui_components/paper_button_left.png", 48, 56),
+    PAPER_BUTTON_RIGHT("ui_components/paper_button_right.png", 48, 56),
+    PAPER_BUTTON_TOP("ui_components/paper_button_top.png", 128, 60),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),

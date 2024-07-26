@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
@@ -87,7 +87,7 @@ public final class MapService extends Service {
                         WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                     }
                 },
-                onError -> WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError));
+                onError -> WynntilsMod.warn("Error occurred while downloading map image of " + mapPart.name, onError));
     }
 
     private static final class MapPartProfile {

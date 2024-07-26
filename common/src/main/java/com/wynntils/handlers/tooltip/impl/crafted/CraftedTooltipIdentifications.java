@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
@@ -90,7 +91,8 @@ public final class CraftedTooltipIdentifications {
                         + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
-        if (style.showMaxValue()) {
+        // Consumables don't have show max value
+        if (style.showMaxValue() && !(craftedItem instanceof CraftedConsumableItem)) {
             craftedItem.getPossibleValues().stream()
                     .filter(possibleValues -> possibleValues.statType() == statType)
                     .findFirst()

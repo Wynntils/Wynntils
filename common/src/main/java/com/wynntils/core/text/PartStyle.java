@@ -1,20 +1,29 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
 
 import com.wynntils.utils.colors.CustomColor;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
+    private static final Int2ObjectMap<ChatFormatting> INTEGER_TO_CHATFORMATTING_MAP = Arrays.stream(
+                    ChatFormatting.values())
+            .filter(ChatFormatting::isColor)
+            .collect(
+                    () -> new Int2ObjectOpenHashMap<>(ChatFormatting.values().length),
+                    (map, cf) -> map.put(cf.getColor(), cf),
+                    Int2ObjectMap::putAll);
 
     private final StyledTextPart owner;
 
@@ -111,7 +120,7 @@ public final class PartStyle {
         // If the current color is NONE, we NEED to try to construct a difference,
         // since there will be no color formatting resetting the formatting afterwards.
         if (previousStyle != null && (color == CustomColor.NONE || previousStyle.color.equals(color))) {
-            String differenceString = this.tryConstructDifference(previousStyle);
+            String differenceString = this.tryConstructDifference(previousStyle, type == StyleType.INCLUDE_EVENTS);
 
             if (differenceString != null) {
                 styleString.append(differenceString);
@@ -124,13 +133,10 @@ public final class PartStyle {
         if (!skipFormatting) {
             // 1. Color
             if (color != CustomColor.NONE) {
-                Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
-                        .filter(ChatFormatting::isColor)
-                        .filter(c -> c.getColor() == color.asInt())
-                        .findFirst();
+                ChatFormatting chatFormatting = INTEGER_TO_CHATFORMATTING_MAP.get(color.asInt());
 
-                if (chatFormatting.isPresent()) {
-                    styleString.append(STYLE_PREFIX).append(chatFormatting.get().getChar());
+                if (chatFormatting != null) {
+                    styleString.append(STYLE_PREFIX).append(chatFormatting.getChar());
                 } else {
                     styleString.append(STYLE_PREFIX).append(color.toHexString());
                 }
@@ -152,25 +158,25 @@ public final class PartStyle {
             if (italic) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
             }
-        }
 
-        if (type == StyleType.INCLUDE_EVENTS) {
-            // 3. Click event
-            if (clickEvent != null) {
-                styleString
-                        .append(STYLE_PREFIX)
-                        .append("[")
-                        .append(owner.getParent().addClickEvent(clickEvent))
-                        .append("]");
-            }
+            if (type == StyleType.INCLUDE_EVENTS) {
+                // 3. Click event
+                if (clickEvent != null) {
+                    styleString
+                            .append(STYLE_PREFIX)
+                            .append("[")
+                            .append(owner.getParent().getClickEventIndex(clickEvent))
+                            .append("]");
+                }
 
-            // 4. Hover event
-            if (hoverEvent != null) {
-                styleString
-                        .append(STYLE_PREFIX)
-                        .append("<")
-                        .append(owner.getParent().addHoverEvent(hoverEvent))
-                        .append(">");
+                // 4. Hover event
+                if (hoverEvent != null) {
+                    styleString
+                            .append(STYLE_PREFIX)
+                            .append("<")
+                            .append(owner.getParent().getHoverEventIndex(hoverEvent))
+                            .append(">");
+                }
             }
         }
 
@@ -178,18 +184,10 @@ public final class PartStyle {
     }
 
     public Style getStyle() {
-        Style reconstructedStyle = Style.EMPTY
-                .withObfuscated(obfuscated)
-                .withBold(bold)
-                .withStrikethrough(strikethrough)
-                .withUnderlined(underlined)
-                .withItalic(italic)
-                .withClickEvent(clickEvent)
-                .withHoverEvent(hoverEvent);
-
-        if (color != CustomColor.NONE) {
-            reconstructedStyle = reconstructedStyle.withColor(color.asInt());
-        }
+        // Optimization: Use raw Style constructor, instead of the builder.
+        TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt());
+        Style reconstructedStyle = new Style(
+                textColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent, null, null);
 
         return reconstructedStyle;
     }
@@ -225,6 +223,14 @@ public final class PartStyle {
         return italic;
     }
 
+    public ClickEvent getClickEvent() {
+        return clickEvent;
+    }
+
+    public HoverEvent getHoverEvent() {
+        return hoverEvent;
+    }
+
     public PartStyle withBold(boolean bold) {
         return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
@@ -253,7 +259,7 @@ public final class PartStyle {
         return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
-    private String tryConstructDifference(PartStyle oldStyle) {
+    private String tryConstructDifference(PartStyle oldStyle, boolean includeEvents) {
         StringBuilder add = new StringBuilder();
 
         int oldColorInt = oldStyle.color.asInt();
@@ -284,6 +290,30 @@ public final class PartStyle {
 
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
+
+        if (includeEvents) {
+            // If there is a click event in the old style, but not in the new one, we can't construct a difference.
+            // Otherwise, if the old style and the new style has different events, add the new event.
+            // This can happen in two cases:
+            // - The old style has an event, but the new one has one as well.
+            // - The old style doesn't have an event, but the new does.
+
+            if (oldStyle.clickEvent != null && this.clickEvent == null) return null;
+            if (oldStyle.clickEvent != this.clickEvent) {
+                add.append(STYLE_PREFIX)
+                        .append("[")
+                        .append(owner.getParent().getClickEventIndex(clickEvent))
+                        .append("]");
+            }
+
+            if (oldStyle.hoverEvent != null && this.hoverEvent == null) return null;
+            if (oldStyle.hoverEvent != this.hoverEvent) {
+                add.append(STYLE_PREFIX)
+                        .append("<")
+                        .append(owner.getParent().getHoverEventIndex(hoverEvent))
+                        .append(">");
+            }
+        }
 
         return add.toString();
     }

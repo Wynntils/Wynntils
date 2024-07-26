@@ -1,36 +1,44 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperDestinationButton extends WynntilsButton {
-    private final boolean selected;
     private final SeaskipperDestinationPoi destination;
+    private final CustomSeaskipperScreen seaskipperScreen;
 
     public SeaskipperDestinationButton(
-            int x, int y, int width, int height, boolean selected, SeaskipperDestinationPoi destination) {
+            int x,
+            int y,
+            int width,
+            int height,
+            SeaskipperDestinationPoi destination,
+            CustomSeaskipperScreen seaskipperScreen) {
         super(x, y, width, height, Component.literal("Destination Button"));
-        this.selected = selected;
         this.destination = destination;
+        this.seaskipperScreen = seaskipperScreen;
     }
 
     @Override
@@ -46,7 +54,9 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                 this.width,
                 this.height,
                 0,
-                this.isHovered || selected ? Texture.DESTINATION_BUTTON.height() / 2 : 0,
+                this.isHovered || seaskipperScreen.getSelectedDestination() == destination
+                        ? Texture.DESTINATION_BUTTON.height() / 2
+                        : 0,
                 Texture.DESTINATION_BUTTON.width(),
                 Texture.DESTINATION_BUTTON.height() / 2,
                 Texture.DESTINATION_BUTTON.width(),
@@ -57,16 +67,15 @@ public class SeaskipperDestinationButton extends WynntilsButton {
         float scale = this.height * 0.032f;
         poseStack.scale(scale, scale, 0f);
 
-        int maxTextWidth = 90;
-        String destinationName =
-                RenderedStringUtils.getMaxFittingText(destination.getName(), maxTextWidth, McUtils.mc().font);
-
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(destinationName),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.customSeaskipperScreen.destination",
+                                destination.getName(),
+                                destination.getLevel())),
                         0,
-                        0,
+                        1,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -84,16 +93,33 @@ public class SeaskipperDestinationButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString("Cost: %d²"
-                                .formatted(destination.getDestination().item().getPrice())),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.customSeaskipperScreen.cost",
+                                destination.getDestination().item().getPrice())),
                         0,
-                        10f,
+                        13,
                         priceColor,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         poseStack.popPose();
+
+        if (isHovered) {
+            List<Component> tooltip;
+
+            if (seaskipperScreen.getSelectedDestination() == destination) {
+                tooltip = List.of(Component.translatable(
+                                "screens.wynntils.customSeaskipperScreen.travelToDestination", destination.getName())
+                        .withStyle(ChatFormatting.GRAY));
+            } else {
+                tooltip = List.of(
+                        Component.translatable("screens.wynntils.customSeaskipperScreen.select", destination.getName())
+                                .withStyle(ChatFormatting.GRAY));
+            }
+
+            McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
+        }
     }
 
     @Override
