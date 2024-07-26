@@ -36,11 +36,11 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
-    private static final int MAX_TOTEM_COUNT = 3;
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
+    private static final int MAX_TOTEM_COUNT = 4;
     private static final double TOTEM_SEARCH_RADIUS = 1;
-    private static final int TOTEM_DATA_DELAY = 2;
-    private static final int CAST_MAX_DELAY = 240;
+    private static final int TOTEM_DATA_DELAY_TICKS = 2;
+    private static final int CAST_MAX_DELAY_MS = 240;
     // TODO: CAST_MAX_DELAY could be a config when model configs eventually exist
     // it kind of depends on ping and server lag
 
@@ -70,7 +70,7 @@ public class ShamanTotemModel extends Model {
                 () -> {
                     // didn't come from a cast within the delay, probably not casted by the player
                     // this check needs to be ran with a delay, the cast/spawn order is not guaranteed
-                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY) return;
+                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY_MS) return;
 
                     // Checks to verify this is a totem
                     // These must be ran with a delay,
@@ -98,7 +98,7 @@ public class ShamanTotemModel extends Model {
                     totems[totemNumber - 1] = newTotem;
                     pendingTotemVisibleIds[totemNumber - 1] = totemAS.getId();
                 },
-                TOTEM_DATA_DELAY);
+                TOTEM_DATA_DELAY_TICKS);
     }
 
     @SubscribeEvent
