@@ -87,8 +87,16 @@ public class CustomColor {
         return fromInt(cf.getColor() | 0xFF000000);
     }
 
-    /** 0xAARRGGBB format */
+    /**
+     * This method takes a color in the format 0x(AA)RRGGBB.
+     * If the alpha is not set, it will be set to 255.
+     * If the alpha is set to 0, it will be set to 255. If 0 is desired, use {@link CustomColor#withAlpha(int)}
+     * @param num the color
+     * @return the color
+     */
     public static CustomColor fromInt(int num) {
+        // if alpha is not set, set it to 255
+        if ((num & 0xFF000000) == 0) num |= 0xFF000000;
         return new CustomColor(num >> 16 & 255, num >> 8 & 255, num & 255, num >> 24 & 255);
     }
 
