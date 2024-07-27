@@ -14,7 +14,6 @@ jobs:
       skipped: ${{ steps.changelog.outputs.skipped }}
       clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
       changelog: ${{ steps.changelog.outputs.changelog }}
-      release_id: ${{ steps.release.outputs.id }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,16 +45,6 @@ jobs:
           pre-release: true
           pre-release-identifier: beta
           release-count: 5
-
-      - name: Create release
-        if: ${{ steps.changelog.outputs.skipped != 'true' }}
-        id: release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.changelog }}
-          draft: true
-          prerelease: true
 
       - name: Upload version information
         uses: actions/upload-artifact@v4
@@ -93,26 +82,15 @@ jobs:
         with:
           arguments: buildDependents -x spotlessCheck -x test
 
-      - name: Upload files to release
-        uses: softprops/action-gh-release@v2
+      - name: Create release and upload files
         if: ${{ needs.changelog.outputs.skipped != 'true' }}
+        id: release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.changelog.outputs.tag }}
-          draft: true
+          body: ${{ needs.changelog.outputs.changelog }}
+          draft: false
           prerelease: true
           files: |
             **/build/libs/*-fabric+MC-*.jar
             **/build/libs/*-neoforge+MC-*.jar
-
-  release-gh:
-    name: Release Github
-    if: ${{ needs.changelog.outputs.skipped != 'true' }}
-    runs-on: ubuntu-latest
-    needs: [ build, changelog ]
-    steps:
-      - name: Publish Release
-        uses: eregon/publish-release@v1.0.6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ needs.changelog.outputs.release_id }}
