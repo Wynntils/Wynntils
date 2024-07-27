@@ -14,6 +14,8 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
@@ -97,6 +99,17 @@ public final class ContainerQueryHandler extends Handler {
         // Cancel all queued queries
         for (ContainerQueryStep queuedQuery : queuedQueries) {
             queuedQuery.onError("Container query interrupted by user");
+        }
+        queuedQueries.clear();
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (event.getNewState() == WorldState.WORLD) return;
+
+        // Cancel all queued queries when world state changes
+        for (ContainerQueryStep queuedQuery : queuedQueries) {
+            queuedQuery.onError("Container query interrupted by world state change");
         }
         queuedQueries.clear();
     }
@@ -306,6 +319,12 @@ public final class ContainerQueryHandler extends Handler {
         }
         currentStep.onError(errorMsg);
         endQuery();
+
+        // Try to start next query in queue, if any
+        // This may very well fail, but we can't do much about it, we trust error handling in the queries
+        if (!queuedQueries.isEmpty()) {
+            runQuery(queuedQueries.pop());
+        }
     }
 
     private void endQuery() {

@@ -290,7 +290,8 @@ public class GuildModel extends Model {
                         QueryStep.clickOnSlot(CharacterModel.GUILD_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(this::parseGuildContainer))
-                .then(
+                .conditionalThen(
+                        container -> !guildName.isEmpty(),
                         // We always check diplomacy in case its changed while we weren't looking (ex. in /class or
                         // switching accounts)
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
