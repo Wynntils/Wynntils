@@ -105,7 +105,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
         editInput = new TextInputBoxWidget(
                 getX() + 2,
-                getY() + 3,
+                getY() + 10,
                 getWidth() - 18,
                 FontRenderer.getInstance().getFont().lineHeight + 2,
                 null,
