@@ -63,7 +63,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
     public void onAttackSound(SoundPlayedEvent event) {
         if (queuedTerritories.isEmpty()
                 || !event.getSoundInstance().getLocation().equals(ATTACK_SOUND)) {
-                return;
+            return;
         }
 
         while (!queuedTerritories.isEmpty()) {
