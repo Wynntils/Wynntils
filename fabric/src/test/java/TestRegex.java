@@ -289,21 +289,10 @@ public class TestRegex {
     @Test
     public void GuildAttackTimerModel_WAR_MESSAGE_PATTERN() {
         PatternTester p = new PatternTester(GuildAttackTimerModel.class, "WAR_MESSAGE_PATTERN");
-        p.shouldMatch("""
-§c󏿼󐀆 The war for Detlas Close Suburbs will\s
-󏿼󐀆 start in 30 seconds.""");
-        p.shouldMatch("""
-§c󏿼󏿿󏿾 The war for Detlas Close Suburbs will\s
-󏿼󐀆 start in 30 seconds.""");
-        p.shouldMatch("""
-§c󏿼󏿿󏿾 The war for Detlas will start in 2
-󏿼󐀆 minutes.""");
-        p.shouldMatch("""
-§c󏿼󏿿󏿾 The war for Detlas will start in 30\s
-󏿼󐀆 seconds.""");
-        p.shouldMatch("""
-§c󏿼󏿿󏿾 The war for Detlas Close Suburbs will\s
-󏿼󐀆 start in 2 minutes.""");
+        p.shouldMatch("§cThe war for Detlas Close Suburbs will start in 30 seconds.");
+        p.shouldMatch("§cThe war for Detlas Close Suburbs will start in 2 minutes.");
+        p.shouldMatch("§cThe war for Detlas Close Suburbs will start in 1 minute.");
+        p.shouldMatch("§cThe war for Detlas Close Suburbs will start in 1 minute and 30 seconds.");
     }
 
     @Test

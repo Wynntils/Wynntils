@@ -52,7 +52,7 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
     // Test in GuildAttackTimerModel_WAR_MESSAGE_PATTERN
     private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
-            "§c(?:\uDAFF\uDFFC\uE006\uDAFF\uDFFF\uE002\uDAFF\uDFFE|\uDAFF\uDFFC\uE001\uDB00\uDC06) The war for (?<territory>.+)(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? will(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? start(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? in(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? ((?<minutes>\\d+)(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? minute(?:s)?)?(?:(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? and )?((?<seconds>\\d+)(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? second(?:s)?)?\\.");
+            "§cThe war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
     private static final Pattern CAPTURED_PATTERN =
             Pattern.compile("§3\\[WAR\\]§c \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
@@ -75,7 +75,7 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        Matcher matcher = event.getOriginalStyledText().getMatcher(WAR_MESSAGE_PATTERN);
+        Matcher matcher = event.getStyledText().getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();
             if (matcher.group("minutes") != null) timerEnd += Long.parseLong(matcher.group("minutes")) * 60 * 1000;
