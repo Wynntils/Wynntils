@@ -36,6 +36,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanTotemModel extends Model {
+    // Test in ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
     private static final int MAX_TOTEM_COUNT = 4;
     private static final double TOTEM_SEARCH_RADIUS = 1;
@@ -278,7 +279,8 @@ public class ShamanTotemModel extends Model {
         double dZ = player.getZ() - player.zOld;
         double dY = player.getY() - player.yOld;
         double speedMultiplier = Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
-        if (speedMultiplier < 1) speedMultiplier = 1; // wynn never casts perfectly aligned totems
+        // wynn never casts perfectly aligned totems
+        speedMultiplier = Math.min(speedMultiplier, 1);
 
         return Math.abs(pos1.x() - pos2.x()) < speedMultiplier
                 && Math.abs(pos1.y() - pos2.y()) < speedMultiplier
