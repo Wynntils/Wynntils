@@ -126,6 +126,7 @@ public final class ContainerQueryHandler extends Handler {
                     // Return true iff taking the next step succeeded
                     if (currentStep.startStep(currentContent)) return;
                 } catch (Throwable t) {
+                    McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
                     raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
                     return;
                 }
@@ -145,6 +146,7 @@ public final class ContainerQueryHandler extends Handler {
         ticksRemaining--;
 
         if (ticksRemaining <= 0) {
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Container reply timed out");
         }
     }
@@ -161,6 +163,7 @@ public final class ContainerQueryHandler extends Handler {
             resetTimer();
             e.setCanceled(true);
         } else {
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Unexpected container opened: '" + e.getTitle().getString() + "'");
         }
     }
@@ -224,6 +227,7 @@ public final class ContainerQueryHandler extends Handler {
                 processContainer(currentContent);
             }
         } catch (Throwable t) {
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
         } finally {
             e.setCanceled(true);
@@ -273,6 +277,7 @@ public final class ContainerQueryHandler extends Handler {
                 processContainer(currentContent);
             }
         } catch (Throwable t) {
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
             raiseError("Error while processing set slot for " + firstStepName + ": " + t.getMessage());
         } finally {
             e.setCanceled(true);
