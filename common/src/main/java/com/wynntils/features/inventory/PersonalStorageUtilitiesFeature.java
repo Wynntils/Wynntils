@@ -76,6 +76,10 @@ public class PersonalStorageUtilitiesFeature extends Feature {
         currentPage = Models.Bank.getCurrentPage();
         lastPage = Models.Bank.getFinalPage();
 
+        // Mods such as Flow still render the widget after we close the screen so name has to be
+        // set here instead of being retrieved in the widgets render method
+        widget.updatePageName();
+
         if (!quickJumping) return;
 
         if (pageDestination > lastPage) {

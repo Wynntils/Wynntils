@@ -60,7 +60,7 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_LIST_ALL = Pattern.compile(PARTY_PREFIX_REGEX + "Party members: (.*)");
     private static final Pattern PARTY_LIST_LEADER = Pattern.compile("§b(\\w{1,16})");
     private static final Pattern PARTY_LIST_SELF_FAILED =
-            Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to list\\.");
+            Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to use this\\.");
 
     private static final Pattern PARTY_LEAVE_OTHER =
             Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has left the party\\.");
