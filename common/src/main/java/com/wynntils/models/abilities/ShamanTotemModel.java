@@ -114,7 +114,7 @@ public class ShamanTotemModel extends Model {
         if (!(possibleTimer instanceof Display.TextDisplay)) return;
 
         // Given timerId is not a totem, make a new totem
-        List<ArmorStand> toCheck = McUtils.mc()
+        List<ArmorStand> possibleTotems = McUtils.mc()
                 .level
                 .getEntitiesOfClass(
                         ArmorStand.class,
@@ -131,12 +131,13 @@ public class ShamanTotemModel extends Model {
                                 possibleTimer.position().y + TOTEM_SEARCH_RADIUS * 5,
                                 possibleTimer.position().z + TOTEM_SEARCH_RADIUS));
 
-        for (ArmorStand armorStand : toCheck) {
+        for (ArmorStand possibleTotem : possibleTotems) {
             // Recreate position for each ArmorStand checked for most accurate coordinates
-            Position position = armorStand.position();
+            Position position = possibleTotem.position();
 
             for (int i = 0; i < pendingTotemVisibleIds.length; i++) {
-                if (pendingTotemVisibleIds[i] != null && armorStand.getId() == pendingTotemVisibleIds[i]) {
+                if (pendingTotemVisibleIds[i] != null && possibleTotem.getId() == pendingTotemVisibleIds[i]) {
+                    // we found the totem that this timer belongs to, bind it
                     ShamanTotem totem = totems[i];
 
                     totem.setTimerEntityId(entityId);
@@ -147,7 +148,7 @@ public class ShamanTotemModel extends Model {
 
                     pendingTotemVisibleIds[i] = null;
 
-                    break;
+                    return;
                 }
             }
         }
