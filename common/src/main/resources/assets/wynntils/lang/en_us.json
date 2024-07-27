@@ -2047,6 +2047,8 @@
   "overlay.wynntils.textOverlay.fontScale.name": "Font Scale",
   "overlay.wynntils.textOverlay.textShadow.description": "Should the text be drawn with a shadow?",
   "overlay.wynntils.textOverlay.textShadow.name": "Text Shadow",
+  "screens.wynntils.additionalContent.description": "See all the additional, repeatable content, in the Wynncraft content menu.",
+  "screens.wynntils.additionalContent.name": "Additional Content",
   "screens.wynntils.changelog.name": "Changelog",
   "screens.wynntils.characterSelection.add.discussion": "Clicking here will open the GUI to create a new character.",
   "screens.wynntils.characterSelection.add.name": "[>] Click here to add a new character",
