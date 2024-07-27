@@ -10,17 +10,17 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.models.territories.GuildAttackTimerModel;
+import com.wynntils.mc.event.SoundPlayedEvent;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,9 +30,11 @@ public class TerritoryDefenseMessageFeature extends Feature {
     private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
     private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
     private static final String DEFENSE_MESSAGE = "g %s defense is %s";
-    // 3 seconds for the server to respond to an attack command
-    private static final long MESSAGE_TIMEOUT = 3000;
-    private final Map<String, QueuedTerritory> queuedTerritories = new HashMap<>();
+    private static final ResourceLocation ATTACK_SOUND =
+            ResourceLocation.fromNamespaceAndPath("minecraft", "entity.ender_dragon.growl");
+    // 2 seconds for the server to respond to an attack command
+    private static final long MESSAGE_TIMEOUT = 2000;
+    private final Queue<QueuedTerritory> queuedTerritories = new LinkedList<>();
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
@@ -48,33 +50,31 @@ public class TerritoryDefenseMessageFeature extends Feature {
                     .getMatcher(TERRITORY_DEFENSE_PATTERN, PartStyle.StyleType.NONE);
             if (matcher.matches()) {
                 // intentionally not localized to match Wynncraft language
-                queuedTerritories.put(
+                queuedTerritories.add(new QueuedTerritory(
                         titleMatcher.group(1),
-                        new QueuedTerritory(
-                                System.currentTimeMillis(), GuildResourceValues.fromString(matcher.group(1))));
+                        System.currentTimeMillis(),
+                        GuildResourceValues.fromString(matcher.group(1))));
                 return;
             }
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatMessage(ChatMessageReceivedEvent e) {
-        Matcher matcher =
-                StyledText.fromComponent(e.getMessage()).getMatcher(GuildAttackTimerModel.WAR_MESSAGE_PATTERN);
-        if (!matcher.matches()) return;
+    public void onAttackSound(SoundPlayedEvent event) {
+        if (queuedTerritories.isEmpty()
+                || event == null
+                || !event.getSoundInstance().getLocation().equals(ATTACK_SOUND)) return;
 
-        // remove all expired messages
-        queuedTerritories
-                .entrySet()
-                .removeIf(entry -> System.currentTimeMillis() - entry.getValue().timestamp() > MESSAGE_TIMEOUT);
-
-        String territory = matcher.group(1);
-        if (!queuedTerritories.containsKey(territory)) return;
-
-        Handlers.Command.sendCommandImmediately(DEFENSE_MESSAGE.formatted(
-                territory, queuedTerritories.get(territory).defense().getAsString()));
-        queuedTerritories.remove(territory);
+        while (!queuedTerritories.isEmpty()) {
+            // remove all expired messages, then send the first one
+            QueuedTerritory queuedTerritory = queuedTerritories.poll();
+            if (System.currentTimeMillis() - queuedTerritory.timestamp() < MESSAGE_TIMEOUT) {
+                Handlers.Command.sendCommandImmediately(DEFENSE_MESSAGE.formatted(
+                        queuedTerritory.territory(), queuedTerritory.defense().getAsString()));
+                break;
+            }
+        }
     }
 
-    private record QueuedTerritory(long timestamp, GuildResourceValues defense) {}
+    private record QueuedTerritory(String territory, long timestamp, GuildResourceValues defense) {}
 }

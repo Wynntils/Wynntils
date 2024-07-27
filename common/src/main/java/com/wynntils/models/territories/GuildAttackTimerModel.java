@@ -50,8 +50,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
-    public static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
-            "§3\\[WAR\\]§c The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
+    // Test in GuildAttackTimerModel_WAR_MESSAGE_PATTERN
+    private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
+            "§c(?:\uDAFF\uDFFC\uE006\uDAFF\uDFFF\uE002\uDAFF\uDFFE|\uDAFF\uDFFC\uE001\uDB00\uDC06) The war for (?<territory>.+)(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? will(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? start(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? in(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? ((?<minutes>\\d+)(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? minute(?:s)?)?(?:(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? and )?((?<seconds>\\d+)(?: ?\\n\uDAFF\uDFFC\uE001\uDB00\uDC06)? second(?:s)?)?\\.");
     private static final Pattern CAPTURED_PATTERN =
             Pattern.compile("§3\\[WAR\\]§c \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
