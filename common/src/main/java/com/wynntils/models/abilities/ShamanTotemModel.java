@@ -280,7 +280,7 @@ public class ShamanTotemModel extends Model {
         double dY = player.getY() - player.yOld;
         double speedMultiplier = Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
         // wynn never casts perfectly aligned totems
-        speedMultiplier = Math.min(speedMultiplier, 1);
+        speedMultiplier = Math.max(speedMultiplier, 1);
 
         return Math.abs(pos1.x() - pos2.x()) < speedMultiplier
                 && Math.abs(pos1.y() - pos2.y()) < speedMultiplier
