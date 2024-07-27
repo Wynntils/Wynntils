@@ -48,14 +48,15 @@ public enum LootrunBeaconKind {
         PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
         if (potionContents == null) return null;
 
-        Integer customColor = potionContents.customColor().orElse(null);
-        if (customColor == null) return null;
-
         // Extract custom model data from potion
         CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (customModelData == null) return null;
 
         int customModel = customModelData.value();
+
+        // Extract custom color from potion
+        // If there is no custom color, assume it's white
+        int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
         // Find the corresponding beacon kind
         for (LootrunBeaconKind color : values()) {
