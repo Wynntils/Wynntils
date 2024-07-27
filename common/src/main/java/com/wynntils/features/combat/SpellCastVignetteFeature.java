@@ -45,6 +45,9 @@ public class SpellCastVignetteFeature extends Feature {
             return;
         }
 
+        // If the spell costs no mana, don't show the vignette
+        if (event.getManaCost() == 0) return;
+
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost =
                 (float) event.getManaCost() / Models.CharacterStats.getMana().current();
