@@ -360,6 +360,33 @@ public class TestStyledText {
     }
 
     @Test
+    public void alignedStringStripping_shouldProduceCorrectString() {
+        final String badText =
+                "§c\uDAFF\uDFFC\uDB00\uDC06The war for Detlas Close Suburbs will \uDAFF\uDFFC\uDB00\uDC06start in 30 seconds.";
+        final String expected = "§cThe war for Detlas Close Suburbs will start in 30 seconds.";
+
+        StyledText styledText = StyledText.fromString(badText);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.stripAlignment().getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.stripAlignment().getString() returned an unexpected value.");
+    }
+
+    @Test
+    public void normalStringStripping_shouldHaveNoEffect() {
+        final String badText = "Hello, World!";
+        final String expected = "Hello, World!";
+
+        StyledText styledText = StyledText.fromString(badText);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.stripAlignment().getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.stripAlignment().getString() returned an unexpected value.");
+    }
+
+    @Test
     public void untrimmedText_shouldProduceTrimmedString() {
         final String badText = "   Hello, World!  ";
         final String expected = "Hello, World!";

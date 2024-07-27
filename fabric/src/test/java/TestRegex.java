@@ -10,6 +10,7 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
@@ -607,6 +608,14 @@ public class TestRegex {
         p.shouldMatch("§4Nii Rune");
         p.shouldMatch("§3Uth Rune");
         p.shouldMatch("§2Tol Rune");
+    }
+
+    @Test
+    public void ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN() {
+        PatternTester p = new PatternTester(ShamanTotemModel.class, "SHAMAN_TOTEM_TIMER");
+        p.shouldMatch("§c21s\n+290❤§7/s");
+        p.shouldMatch("§c1s\n+36❤§7/s");
+        p.shouldMatch("§c35s");
     }
 
     @Test
