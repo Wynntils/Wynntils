@@ -62,8 +62,9 @@ public class TerritoryDefenseMessageFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackSound(SoundPlayedEvent event) {
         if (queuedTerritories.isEmpty()
-                || event == null
-                || !event.getSoundInstance().getLocation().equals(ATTACK_SOUND)) return;
+                || !event.getSoundInstance().getLocation().equals(ATTACK_SOUND)) {
+                return;
+        }
 
         while (!queuedTerritories.isEmpty()) {
             // remove all expired messages, then send the first one
