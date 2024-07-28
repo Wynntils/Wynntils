@@ -1,3 +1,15 @@
+## [2.0.0-beta.11](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2024-07-28)
+
+
+### New Features
+
+* Annotate aspects ([#2686](https://github.com/Wynntils/Artemis/issues/2686)) ([be5a1c9](https://github.com/Wynntils/Artemis/commit/be5a1c92b7049e985e90e95e56dd0b9ef3592fb9))
+
+
+### Bug Fixes
+
+* Fix scrolling in content book [skip ci] ([#2685](https://github.com/Wynntils/Artemis/issues/2685)) ([7f2e31a](https://github.com/Wynntils/Artemis/commit/7f2e31a4ccdf79b7c608d578645837f8c55709f9))
+
 ## [2.0.0-beta.10](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2024-07-27)
 
 
@@ -28,6 +40,7 @@
 * Add StyledText[#strip](https://github.com/Wynntils/Artemis/issues/strip)Alignment for handling 2.1 aligned texts [skip ci] ([#2673](https://github.com/Wynntils/Artemis/issues/2673)) ([cff0c39](https://github.com/Wynntils/Artemis/commit/cff0c397d95ddd80ac5bd663f6cb65bed6840603))
 * Bump dependency versions (mainly MixinExtras 0.4.0) [skip ci] ([#2671](https://github.com/Wynntils/Artemis/issues/2671)) ([493b9c6](https://github.com/Wynntils/Artemis/commit/493b9c6ecb600a62f42c8feb7eddfb9d234f2c5c))
 * Don't always verify calculated rolls in development [skip ci] ([#2672](https://github.com/Wynntils/Artemis/issues/2672)) ([8a48c5e](https://github.com/Wynntils/Artemis/commit/8a48c5e3cd05aa50f8d9804a74c0f0c3e9df94c5))
+* **release:** v2.0.0-beta.10 [skip ci] ([bbc2881](https://github.com/Wynntils/Artemis/commit/bbc2881e5227eb3875bafe5f9f6d7c6b3b27de2b))
 
 ## [2.0.0-beta.9](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2024-07-19)
 
@@ -89,22 +102,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.0-beta.7 [skip ci] ([d388fcc](https://github.com/Wynntils/Artemis/commit/d388fccffd035d41a31197c570459b4ec67b7d1c))
-
-## [2.0.0-beta.6](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2024-07-09)
-
-
-### New Features
-
-* Add ability tree reset and aspects containers [skip ci] ([#2645](https://github.com/Wynntils/Artemis/issues/2645)) ([ce453d2](https://github.com/Wynntils/Artemis/commit/ce453d26a126ae4f85ee50e3419e7f4c0ed074a6))
-
-
-### Bug Fixes
-
-* Fix crashing in character selection screen ([#2646](https://github.com/Wynntils/Artemis/issues/2646)) ([b97bc8a](https://github.com/Wynntils/Artemis/commit/b97bc8adf1f4e0c613fd227c059586ccc4235c96))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.6 [skip ci] ([39070f1](https://github.com/Wynntils/Artemis/commit/39070f12bf8ed0d6cf1444ee8cb6887fea9c4a5f))
-* Update bank textures [skip ci] ([#2644](https://github.com/Wynntils/Artemis/issues/2644)) ([24df868](https://github.com/Wynntils/Artemis/commit/24df86851f74251089e2e2a680623ff889fca305))
 
