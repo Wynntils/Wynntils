@@ -135,9 +135,7 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
           embed-color: "9498256"
-          embed-author-name: ${{format('Wynntils Artemis {0}', needs.changelog.outputs.tag)}}
-          embed-author-url: ${{ steps.release.outputs.url }}
-          embed-title: ${{format('{0} {1}', needs.changelog.outputs.tag, steps.date.outputs.short)}}
+          embed-title: ${{format('Wynntils Artemis {0}', needs.changelog.outputs.tag)}}
           embed-description: ${{ needs.changelog.outputs.changelog }}
           embed-url: ${{ steps.release.outputs.url }}
           embed-timestamp: ${{ steps.date.outputs.long }}
