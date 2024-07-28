@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
@@ -46,12 +47,18 @@ public class AspectAnnotator implements GameItemAnnotator {
             }
         }
 
-        if (classType == null || tier == 0) return null;
+        if (classType == null || tier == 0) {
+            WynntilsMod.warn("Failed to get class/tier from aspect: " + LoreUtils.getLore(itemStack));
+            return null;
+        }
 
         char colorChar = matcher.group(1).charAt(0);
         GearTier gearTier = GearTier.fromChatFormatting(ChatFormatting.getByCode(colorChar));
 
-        if (gearTier == null) return null;
+        if (gearTier == null) {
+            WynntilsMod.warn("Failed to get GearTier from aspect: " + name);
+            return null;
+        }
 
         return new AspectItem(classType, gearTier, tier);
     }
