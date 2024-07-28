@@ -94,7 +94,8 @@ public final class ChatHandler extends Handler {
     private String oneBeforeLastRealChat = null;
 
     private long lastSlowdownApplied = 0;
-    private List<StyledText> lastScreenNpcDialog = List.of();
+    private List<StyledText> lastScreenNpcDialogue = List.of();
+    private StyledText lastConfirmationlessDialogue = null;
     private List<StyledText> delayedDialogue;
     private NpcDialogueType delayedType;
     private long chatScreenTicks = 0;
@@ -108,7 +109,8 @@ public final class ChatHandler extends Handler {
         lastRealChat = null;
         oneBeforeLastRealChat = null;
         lastSlowdownApplied = 0;
-        lastScreenNpcDialog = List.of();
+        lastScreenNpcDialogue = List.of();
+        lastConfirmationlessDialogue = null;
         delayedDialogue = null;
         delayedType = NpcDialogueType.NONE;
     }
@@ -259,16 +261,63 @@ public final class ChatHandler extends Handler {
             return;
         }
 
+        boolean expectedConfirmationlessDialogue = false;
+
         if (newLines.getLast().getString().isEmpty()) {
+            if (newLines.size() == 2) {
+                // This should happen as a frequent case. It is a confirmationless dialogue.
+                // Two new lines are supposed to be received:
+                // - One empty line
+                // - One line with a (confirmationless) dialogue
+                // The dialogue line itself still can be full of À characters (aka. match EMPTY_LINE_PATTERN).
+                // In this case, it is a "preparation" screen for the dialog,
+                // that should be sent in place of the empty line, in the upcoming packets.
+                // Currently, we just ignore this line.
+
+                if (newLines.getFirst().matches(EMPTY_LINE_PATTERN)) {
+                    // Both the first and the last line are empty, we expect a dialogue screen in the next packet batch
+                    WynntilsMod.info("[NPC] - Confirmationless dialogue preparation screen detected");
+                    // Nothing to do here, as both lines are empty
+                    return;
+                }
+
+                WynntilsMod.info("[NPC] - Line expected to be a confirmationless dialogue: " + newLines.getFirst());
+                expectedConfirmationlessDialogue = true;
+            } else if (newLines.size() == 4) {
+                // This should happen as a special case.
+                // Receiving 4 lines can result in two different scenarios:
+                // - We received a normal dialogue, with the last line being the control message
+                //   (Press SHIFT/Select an option to continue)
+                // - We received a **temporary** confirmationless dialogue,
+                //   with the last line being the control message, but it not being sent yet, making the line empty
+                //   In this case, we will soon receive the control message, as a single line
+
+                // If the first and second line is empty, the third line is a dialogue, and the fourth line is empty,
+                // we can assume that the fourth line is the control message,
+                // and the third line is a temporary confirmationless dialogue
+                if (newLines.get(0).matches(EMPTY_LINE_PATTERN)
+                        && newLines.get(1).matches(EMPTY_LINE_PATTERN)
+                        && !newLines.get(2).matches(EMPTY_LINE_PATTERN)
+                        && newLines.get(3).matches(EMPTY_LINE_PATTERN)) {
+                    // The third line is a temporary confirmationless dialogue
+                    WynntilsMod.info("[NPC] - Temporary confirmationless dialogue detected");
+                    expectedConfirmationlessDialogue = true;
+
+                    // Remove the first two empty lines
+                    newLines.removeFirst();
+                    newLines.removeFirst();
+                }
+            }
+
             // Wynncraft add an empty line before the NPC dialog; remove it
             newLines.removeLast();
         }
 
         // Now what to do with the new lines we found?
-        processNewLines(newLines);
+        processNewLines(newLines, expectedConfirmationlessDialogue);
     }
 
-    private void processNewLines(LinkedList<StyledText> newLines) {
+    private void processNewLines(LinkedList<StyledText> newLines, boolean expectedConfirmationlessDialogue) {
         // We have new lines added to the bottom of the chat screen. They are either a dialogue,
         // or new background chat messages. Separate them in two parts
         LinkedList<StyledText> newChatLines = new LinkedList<>();
@@ -282,6 +331,16 @@ public final class ChatHandler extends Handler {
             // This is an NPC dialogue screen.
             // First remove the "Press SHIFT/Select an option to continue" trailer.
             newLines.removeFirst();
+
+            // If this happens, the "Press SHIFT/Select an option to continue" got appended to the last dialogue
+            // NOTE: Currently, we do nothing in this case, as it seems to work without any issues
+            //       In the future, additional handling for converting temporary confirmationless dialogues
+            //       to normal dialogues may be needed
+            if (newLines.isEmpty()) {
+                WynntilsMod.info("[NPC] - Control message appended to the last dialogue");
+                return;
+            }
+
             if (newLines.getFirst().getString().isEmpty()) {
                 // After this we assume a blank line
                 newLines.removeFirst();
@@ -315,15 +374,83 @@ public final class ChatHandler extends Handler {
                     }
                 }
             }
+        } else if (expectedConfirmationlessDialogue) {
+            if (newLines.size() != 1) {
+                WynntilsMod.warn("New lines has an unexpected dialogue count [#1]: " + newLines);
+            }
+
+            // This is a confirmationless dialogue
+            handleNpcDialogue(List.of(newLines.getFirst()), NpcDialogueType.CONFIRMATIONLESS, false);
+
+            // If we expect a confirmationless dialogue, we should only have one line,
+            // so we don't have to do any separation logic
+            return;
         } else {
-            // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
+            // After a NPC dialogue screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty() && newLines.getFirst().find(EMPTY_LINE_PATTERN)) {
                 newLines.removeFirst();
             }
 
-            // What remains, if any, are new chat lines
-            newLines.forEach(newChatLines::push);
+            // But we may also handle new messages during the NPC dialogue screen here
+            // If so, we need to separate the repeated dialogue and the new chat lines
+            // The repeated dialogue starts with an empty line, followed by the actual dialogue
+
+            // Reverse back the list, so it's in the order it was received
+            Collections.reverse(newLines);
+
+            // Add the lines to the new chat lines, until we find an empty line
+            // If an empty line is found, check to see if it's followed by
+            // either a confirmationless or a normal dialogue
+            // If so, the rest of the lines are dialogues, so ignore them
+            // If not, continue adding the lines to the new chat lines, and check for empty lines again,
+            // if any are found
+            while (!newLines.isEmpty()) {
+                StyledText line = newLines.removeFirst();
+                if (line.find(EMPTY_LINE_PATTERN)) {
+                    if (newLines.isEmpty()) {
+                        // If there are no more lines, we can't do anything
+                        break;
+                    }
+
+                    StyledText nextLine = newLines.getFirst();
+                    if (nextLine.equals(lastConfirmationlessDialogue)) {
+                        // The rest of the lines is a re-sent confirmationless dialogue
+                        if (newLines.size() > 1) {
+                            // There should not be any more lines after this
+                            WynntilsMod.warn("Unexpected lines after a confirmationless dialogue: " + newLines);
+                        }
+
+                        break;
+                    }
+
+                    // Check if the following lines match the last NPC screen dialogue
+                    // Otherwise, treat them as new chat lines
+                    for (StyledText dialogueLine : lastScreenNpcDialogue) {
+                        if (newLines.isEmpty()) {
+                            // If there are no more lines, we can't do anything
+                            break;
+                        }
+
+                        StyledText nextDialogueLine = newLines.getFirst();
+                        if (!nextDialogueLine.equals(dialogueLine)) {
+                            // If the next line does not match the dialogue line, it's a new chat line
+                            break;
+                        }
+
+                        // If the next line matches the dialogue line, remove it
+                        newLines.removeFirst();
+                    }
+
+                    // If we have removed all the lines, we don't need to do anything more
+                    if (newLines.isEmpty()) {
+                        break;
+                    }
+                }
+
+                // This was not found to be a dialogue line, so add it to the new chat lines
+                newChatLines.addLast(line);
+            }
         }
 
         // Register all new chat lines
@@ -428,10 +555,18 @@ public final class ChatHandler extends Handler {
         }
 
         // Confirmationless dialogues bypass the lastScreenNpcDialogue check
-        if (type != NpcDialogueType.CONFIRMATIONLESS) {
-            if (lastScreenNpcDialog.equals(dialogue)) return;
+        if (type == NpcDialogueType.CONFIRMATIONLESS) {
+            if (dialogue.size() != 1) {
+                WynntilsMod.warn("Confirmationless dialogues should only have one line: " + dialogue);
+            }
 
-            lastScreenNpcDialog = dialogue;
+            // Store the last confirmationless dialogue, but it may be repeated,
+            // so we need to check that it's not duplicated when a message is sent during the dialogue
+            lastConfirmationlessDialogue = dialogue.get(0);
+        } else {
+            if (lastScreenNpcDialogue.equals(dialogue)) return;
+
+            lastScreenNpcDialogue = dialogue;
         }
 
         Models.NpcDialogue.handleDialogue(dialogue, isProtected, type);
