@@ -43,12 +43,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends Feature {
     @Persisted
-    public final Config<Boolean> aspectEnabled = new Config<>(true);
-
-    @Persisted
-    public final Config<TextShadow> aspectShadow = new Config<>(TextShadow.OUTLINE);
-
-    @Persisted
     public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
     @Persisted
@@ -56,6 +50,12 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     public final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    public final Config<Boolean> aspectEnabled = new Config<>(true);
+
+    @Persisted
+    public final Config<TextShadow> aspectShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     public final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
