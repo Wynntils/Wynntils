@@ -1,3 +1,10 @@
+## [2.0.0-beta.12](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2024-08-01)
+
+
+### Bug Fixes
+
+* Fix character ID parsing for 2.1 ([#2688](https://github.com/Wynntils/Artemis/issues/2688)) ([fd021eb](https://github.com/Wynntils/Artemis/commit/fd021ebfb6c48ae62578a9c3af155c5d0878ff69))
+
 ## [2.0.0-beta.11](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2024-07-28)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * Fix scrolling in content book [skip ci] ([#2685](https://github.com/Wynntils/Artemis/issues/2685)) ([7f2e31a](https://github.com/Wynntils/Artemis/commit/7f2e31a4ccdf79b7c608d578645837f8c55709f9))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.0-beta.11 [skip ci] ([281f6a8](https://github.com/Wynntils/Artemis/commit/281f6a88421b8e25b7b13461767ceb998123c20f))
 
 ## [2.0.0-beta.10](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2024-07-27)
 
@@ -87,19 +99,4 @@
 
 * **release:** v2.0.0-beta.8 [skip ci] ([f8edc20](https://github.com/Wynntils/Artemis/commit/f8edc2013116be658b6c7ca3a0e234b194614f8a))
 * Update dependency versions [skip ci] ([d70a1fd](https://github.com/Wynntils/Artemis/commit/d70a1fd78ae53b12984e328fad6fb96ba89dccaf))
-
-## [2.0.0-beta.7](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2024-07-10)
-
-
-### Bug Fixes
-
-* Fix BufferSource memory leaks ([#2650](https://github.com/Wynntils/Artemis/issues/2650)) ([d3a1f99](https://github.com/Wynntils/Artemis/commit/d3a1f998184c4ca5fc40ebf01a7c78c1e96e1674))
-* Fix health bar parsing when health is "critical" [skip ci] ([#2647](https://github.com/Wynntils/Artemis/issues/2647)) ([1bc634c](https://github.com/Wynntils/Artemis/commit/1bc634cff085bae2ac7efdc0b33fd914de3c551b))
-* Fix MaterialAnnotator crashing when trying to look up "Unprocessed" items [skip ci] ([#2648](https://github.com/Wynntils/Artemis/issues/2648)) ([2d6b789](https://github.com/Wynntils/Artemis/commit/2d6b789214e7121db8ff04a404a9b8a7b334f822))
-* SkillPointModel port to beta ([#2649](https://github.com/Wynntils/Artemis/issues/2649)) ([94ea9dc](https://github.com/Wynntils/Artemis/commit/94ea9dc061576ffadaa415d8e1a9b3ef1a8bfc40))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.7 [skip ci] ([d388fcc](https://github.com/Wynntils/Artemis/commit/d388fccffd035d41a31197c570459b4ec67b7d1c))
 
