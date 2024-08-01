@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -36,7 +36,7 @@ public class ChatCoordinatesFeature extends Feature {
         // No changes were made, there were no coordinates.
         if (styledText.equals(modified)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -50,7 +50,7 @@ public class ChatCoordinatesFeature extends Feature {
         // No changes were made, there were no coordinates.
         if (styledText.equals(modified)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {

@@ -70,7 +70,7 @@ public class TranscribeMessagesFeature extends Feature {
 
         if (styledText.equals(modified)) return;
 
-        event.setMessage(modified.getComponent());
+        event.setMessage(modified);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
