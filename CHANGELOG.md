@@ -1,9 +1,26 @@
+## [1.2.32](https://github.com/Wynntils/Artemis/compare/v1.2.31...v1.2.32) (2024-08-01)
+
+
+### New Features
+
+* Add better support for confirmationless dialogues ([#2687](https://github.com/Wynntils/Artemis/issues/2687)) ([5c74f7e](https://github.com/Wynntils/Artemis/commit/5c74f7ecd8f95f7c14cbde24107ff21b88a96dc0))
+
+
+### Code Refactoring
+
+* Move ChatMessageReceivedEvent and ClientsideMessageEvent to StyledText (only) [skip ci] ([#2684](https://github.com/Wynntils/Artemis/issues/2684)) ([c18dcf6](https://github.com/Wynntils/Artemis/commit/c18dcf65c8a2647c491ad4fd44b18c9fb591b2f2))
+
 ## [1.2.31](https://github.com/Wynntils/Artemis/compare/v1.2.30...v1.2.31) (2024-07-01)
 
 
 ### Bug Fixes
 
 * Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Artemis/issues/2619)) ([ed596da](https://github.com/Wynntils/Artemis/commit/ed596da994778a428181b5d6dd0890e1cd22be69))
+
+
+### Miscellaneous Chores
+
+* **release:** v1.2.31 [skip ci] ([8ac1266](https://github.com/Wynntils/Artemis/commit/8ac126664c8391a3f9a4141a4bad43768da27b66))
 
 ## [1.2.30](https://github.com/Wynntils/Artemis/compare/v1.2.29...v1.2.30) (2024-07-01)
 
@@ -57,16 +74,4 @@
 ### Code Refactoring
 
 * Introduce overlay ticking [skip ci] ([#2608](https://github.com/Wynntils/Artemis/issues/2608)) ([a59f9fd](https://github.com/Wynntils/Artemis/commit/a59f9fdaaa7df7a8e4f3fcd802526bf7478b27dc))
-
-## [1.2.27](https://github.com/Wynntils/Artemis/compare/v1.2.26...v1.2.27) (2024-06-19)
-
-
-### Bug Fixes
-
-* Don't load pre-loadable resource packs on Forge ([e5c755c](https://github.com/Wynntils/Artemis/commit/e5c755caabbe427c4c126fa2a3423ce984d02d4f))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.27 [skip ci] ([7ed5f3c](https://github.com/Wynntils/Artemis/commit/7ed5f3cdb54989ca9398121d03c12506ffdb3e3a))
 
