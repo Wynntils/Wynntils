@@ -45,16 +45,6 @@ jobs:
           pre-release: false
           release-count: 5
 
-      - name: Create release
-        if: ${{ steps.changelog.outputs.skipped != 'true' }}
-        id: release
-        uses: softprops/action-gh-release@v2.0.7
-        with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-          draft: true
-          prerelease: false
-
       - name: Upload version information
         uses: actions/upload-artifact@v4
         with:

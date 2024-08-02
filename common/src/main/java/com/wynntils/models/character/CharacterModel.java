@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
@@ -36,13 +35,13 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterModel extends Model {
+    private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
     // Test in CharacterModel_SILVERBULL_PATTERN
@@ -296,20 +295,16 @@ public final class CharacterModel extends Model {
 
     private void updateCharacterId() {
         ItemStack compassItem = McUtils.inventory().items.get(CHARACTER_INFO_SLOT);
-
         List<StyledText> compassLore = LoreUtils.getLore(compassItem);
+        StyledText idLine = compassLore.getFirst();
 
-        String id = "";
-        for (StyledText line : compassLore) {
-            if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
-                id = line.getString(PartStyle.StyleType.NONE);
-                break;
-            }
+        if (idLine == null || !idLine.matches(CHARACTER_ID_PATTERN)) {
+            WynntilsMod.warn("Compass item had unexpected character ID line: " + idLine);
+            return;
         }
 
+        id = idLine.getString();
         WynntilsMod.info("Selected character: " + id);
-
-        this.id = id;
     }
 
     private String getCharacterString() {
