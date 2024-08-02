@@ -76,10 +76,8 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        StyledText cleaned = StyledTextUtils.joinAllLines(event.getStyledText()
-                .stripAlignment()
-                .combineParts()
-                .replaceAll("\uE001 ", ""));
+        StyledText cleaned = StyledTextUtils.joinAllLines(
+                event.getStyledText().stripAlignment().combineParts().replaceAll("\uE001 ", ""));
         Matcher matcher = cleaned.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();
