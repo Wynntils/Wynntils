@@ -273,34 +273,8 @@ public final class StyledText implements Iterable<StyledTextPart> {
         });
     }
 
-    /**
-     * Cleans a StyledText into a single-line string, preserving only ascii, formatting codes, and single whitespaces.
-     * @return a new cleaned {@link StyledText}
-     */
-    public StyledText clean() {
-        StringBuilder cleanedText = new StringBuilder();
-        String text = this.stripAlignment().getString();
-        boolean lastWasWhitespace = false;
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-
-            if (ch == '§') {
-                cleanedText.append(ch);
-                // we can assume the next character is a formatting code since we're parsing a decomposed StyledText
-                i++;
-                cleanedText.append(text.charAt(i));
-                lastWasWhitespace = true; // don't allow formatting codes to be followed by whitespace
-            } else if ((ch == '\n' || Character.isWhitespace(ch)) && !lastWasWhitespace) {
-                cleanedText.append(' ');
-                lastWasWhitespace = true;
-            } else if (ch >= 0x21 && ch <= 0xFF) { // standard characters excluding space, including extended encoding
-                cleanedText.append(ch);
-                lastWasWhitespace = false;
-            }
-        }
-
-        // Create a new StyledText with the cleaned content
-        return StyledText.fromString(cleanedText.toString().trim());
+    public StyledText combineParts() {
+        return StyledText.fromString(getString());
     }
 
     public StyledText trim() {

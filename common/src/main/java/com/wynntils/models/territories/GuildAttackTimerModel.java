@@ -20,6 +20,7 @@ import com.wynntils.models.territories.markers.GuildAttackMarkerProvider;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
     // Test in GuildAttackTimerModel_WAR_MESSAGE_PATTERN
     private static final Pattern WAR_MESSAGE_PATTERN = Pattern.compile(
-            "§cThe war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
+            "§c\uE006\uE002 The war for (?<territory>.+) will start in ((?<minutes>\\d+) minute(?:s)?)?(?: and )?((?<seconds>\\d+) second(?:s)?)?\\.");
     private static final Pattern CAPTURED_PATTERN =
             Pattern.compile("§3\\[WAR\\]§c \\[(?<guild>.+)\\] (?:has )?captured the territory (?<territory>.+)\\.");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
@@ -75,7 +76,11 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        Matcher matcher = event.getStyledText().clean().getMatcher(WAR_MESSAGE_PATTERN);
+        StyledText cleaned = StyledTextUtils.joinAllLines(event.getStyledText()
+                .stripAlignment()
+                .combineParts()
+                .replaceAll("\uE001 ", ""));
+        Matcher matcher = cleaned.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();
             if (matcher.group("minutes") != null) timerEnd += Long.parseLong(matcher.group("minutes")) * 60 * 1000;
