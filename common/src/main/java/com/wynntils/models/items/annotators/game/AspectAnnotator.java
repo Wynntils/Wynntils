@@ -19,7 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public class AspectAnnotator implements GameItemAnnotator {
-    private static final Pattern ASPECT_PATTERN = Pattern.compile("^§(.*)(?:Aspect|Embodiment) of .*$");
+    private static final Pattern ASPECT_PATTERN = Pattern.compile("^§(.)(?:(?:(.+) Embodiment)|(?:Aspect)) of .*$");
     private static final Pattern CLASS_PATTERN = Pattern.compile("^§(?:c✖|a✔) §7Class Req: §f(?<name>.+)$");
     // TODO: Check tier 4 aspects as this pattern may not match those
     private static final Pattern TIER_PATTERN = Pattern.compile("§7Tier ([IV]+).*");
