@@ -10,6 +10,7 @@ import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
@@ -24,6 +25,7 @@ import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
+import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
@@ -588,6 +590,14 @@ public class TestRegex {
     }
 
     @Test
+    public void ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN() {
+        PatternTester p = new PatternTester(ShamanTotemModel.class, "SHAMAN_TOTEM_TIMER");
+        p.shouldMatch("§c21s\n+290❤§7/s");
+        p.shouldMatch("§c1s\n+36❤§7/s");
+        p.shouldMatch("§c35s");
+    }
+
+    @Test
     public void SkillPointAnnotator_SKILL_POINT_PATTERN() {
         PatternTester p = new PatternTester(SkillPointAnnotator.class, "SKILL_POINT_PATTERN");
         p.shouldMatch("§dUpgrade your §2✤ Strength§d skill");
@@ -809,5 +819,12 @@ public class TestRegex {
         p.shouldMatch("§e- §7Class: §6\uE029§5\uE028§r §fAssassin");
         p.shouldMatch("§e- §7Class: §c\uE027§b\uE083§3\uE026§r §fKnight");
         p.shouldMatch("§e- §7Class: §fWarrior");
+    }
+
+    @Test
+    public void NpcLabelParser_NPC_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(NpcLabelParser.class, "NPC_LABEL_PATTERN");
+
+        p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
     }
 }

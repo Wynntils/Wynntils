@@ -90,4 +90,26 @@ public class TestCustomColor {
 
         Assertions.assertEquals(expected, color.asInt(), "CustomColor#init() did not return the expected value");
     }
+
+    @Test
+    public void customColor_fromIntWithoutAlphaWorks() {
+        final int color = 0x00aabb;
+
+        final CustomColor expected = new CustomColor(0, 170, 187, 255);
+
+        CustomColor result = CustomColor.fromInt(color);
+
+        Assertions.assertEquals(expected, result, "CustomColor#fromInt() did not return the expected value");
+    }
+
+    @Test
+    public void customColor_fromIntWithAlphaWorks() {
+        final int color = 0xcc00aabb;
+
+        final CustomColor expected = new CustomColor(0, 170, 187, 204);
+
+        CustomColor result = CustomColor.fromInt(color);
+
+        Assertions.assertEquals(expected, result, "CustomColor#fromInt() did not return the expected value");
+    }
 }

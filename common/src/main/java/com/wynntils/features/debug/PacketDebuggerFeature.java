@@ -29,6 +29,7 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundLightUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSetChunkCacheCenterPacket;
@@ -97,6 +98,17 @@ public class PacketDebuggerFeature extends Feature {
 
     private static final Class<? extends Packet<?>> PARTICLE_PACKET_CLASS = ClientboundLevelParticlesPacket.class;
 
+    private static final List<Class<? extends Packet<?>>> ENTITY_PACKETS = List.of(
+            ClientboundAddEntityPacket.class,
+            ClientboundRemoveEntitiesPacket.class,
+            ClientboundMoveEntityPacket.Pos.class,
+            ClientboundMoveEntityPacket.PosRot.class,
+            ClientboundMoveEntityPacket.Rot.class,
+            ClientboundRotateHeadPacket.class,
+            ClientboundSetEntityDataPacket.class,
+            ClientboundSetEntityMotionPacket.class,
+            ClientboundTeleportEntityPacket.class);
+
     @Persisted
     private final Config<PacketFilterType> packetFilterType = new Config<>(PacketFilterType.FILTERED);
 
@@ -125,7 +137,8 @@ public class PacketDebuggerFeature extends Feature {
         ALL(packetClass -> false),
         FILTERED(IGNORE_LIST::contains),
         CONTAINER_ONLY(packetClass -> !CONTAINER_PACKETS.contains(packetClass)),
-        PARTICLE_ONLY(packetClass -> !PARTICLE_PACKET_CLASS.equals(packetClass));
+        PARTICLE_ONLY(packetClass -> !PARTICLE_PACKET_CLASS.equals(packetClass)),
+        ENTITY_ONLY(packetClass -> !ENTITY_PACKETS.contains(packetClass));
 
         private final Predicate<Class<? extends Packet>> filterPredicate;
 

@@ -35,6 +35,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     private final PersonalStorageUtilitiesFeature feature;
     private final AbstractContainerScreen<?> screen;
 
+    private String pageName;
     private TextInputBoxWidget editInput;
 
     public PersonalStorageUtilitiesWidget(
@@ -51,6 +52,8 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
         editButton = new PersonalStorageEditNameButton(x + 86, y + 9, 14, 14, this);
 
+        updatePageName();
+
         addJumpButtons();
     }
 
@@ -62,7 +65,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
             FontRenderer.getInstance()
                     .renderScrollingText(
                             guiGraphics.pose(),
-                            StyledText.fromString(Models.Bank.getPageName(Models.Bank.getCurrentPage())),
+                            StyledText.fromString(pageName),
                             getX() + 4,
                             getY() + 11,
                             getWidth() - 18,
@@ -102,7 +105,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
         editInput = new TextInputBoxWidget(
                 getX() + 2,
-                getY() + 3,
+                getY() + 10,
                 getWidth() - 18,
                 FontRenderer.getInstance().getFont().lineHeight + 2,
                 null,
@@ -117,6 +120,10 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
 
         screen.removeWidget(editInput);
         editInput = null;
+    }
+
+    public void updatePageName() {
+        pageName = Models.Bank.getPageName(Models.Bank.getCurrentPage());
     }
 
     public String getName() {

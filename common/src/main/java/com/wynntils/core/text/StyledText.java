@@ -35,6 +35,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class StyledText implements Iterable<StyledTextPart> {
+    // High surrogate characters for the positive and negative space characters
+    // These can be used to trim unicode spacers from StyledTexts
+    private static final char POSITIVE_SPACE_HIGH_SURROGATE = '\uDB00';
+    private static final char NEGATIVE_SPACE_HIGH_SURROGATE = '\uDAFF';
+
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
 
     private final List<StyledTextPart> parts;
@@ -227,6 +232,44 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     public StyledText getNormalized() {
         return fromParts(parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()));
+    }
+
+    /**
+     * Strips all of Wynncraft's unicode alignment characters from this {@link StyledText}.
+     * @return the stripped {@link StyledText}
+     */
+    public StyledText stripAlignment() {
+        return iterate((part, functionParts) -> {
+            String text = part.getString(null, PartStyle.StyleType.NONE);
+
+            // If the text contains the positive or negative space characters,
+            // then we need to strip them, and the following character
+            if (text.contains(String.valueOf(POSITIVE_SPACE_HIGH_SURROGATE))
+                    || text.contains(String.valueOf(NEGATIVE_SPACE_HIGH_SURROGATE))) {
+                StringBuilder builder = new StringBuilder();
+
+                for (int i = 0; i < text.length(); i++) {
+                    char ch = text.charAt(i);
+
+                    if (Character.isHighSurrogate(ch)
+                            && (ch == POSITIVE_SPACE_HIGH_SURROGATE || ch == NEGATIVE_SPACE_HIGH_SURROGATE)) {
+                        // Skip the surrogate pair (high and low surrogate)
+                        if (i + 1 < text.length() && Character.isLowSurrogate(text.charAt(i + 1))) {
+                            i++; // Skip the low surrogate
+                        }
+                    } else {
+                        builder.append(ch);
+                    }
+                }
+
+                functionParts.set(
+                        0,
+                        new StyledTextPart(
+                                builder.toString(), part.getPartStyle().getStyle(), null, Style.EMPTY));
+            }
+
+            return IterationDecision.CONTINUE;
+        });
     }
 
     public StyledText trim() {

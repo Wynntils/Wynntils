@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
 
 public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
-    private static final Pattern NPC_LABEL_PATTERN = Pattern.compile("^§d([^§]+)$");
+    private static final Pattern NPC_LABEL_PATTERN =
+            Pattern.compile("^§d(?<name>[^§]+)(?<description>\n.+)?$", Pattern.DOTALL);
 
     // Special cases
     private static final Pattern TRADE_MARKET_LABEL_PATTERN = Pattern.compile("^§cTrade Market$");

@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
@@ -103,5 +104,24 @@ public abstract class LevelRendererMixin {
             @Local PoseStack poseStack) {
         MixinHelper.post(new RenderTileLevelLastEvent(
                 this.minecraft.levelRenderer, poseStack, deltaTracker, projectionMatrix, camera));
+    }
+
+    @Inject(
+            at = @At("HEAD"),
+            method =
+                    "renderEntity(Lnet/minecraft/world/entity/Entity;DDDFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;)V",
+            cancellable = true)
+    public void renderEntity(
+            Entity entity,
+            double camX,
+            double camY,
+            double camZ,
+            float partialTick,
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            CallbackInfo ci) {
+        if (!((EntityExtension) entity).isRendered()) {
+            ci.cancel();
+        }
     }
 }

@@ -36,6 +36,7 @@ public class ManaBarOverlay extends OverflowableBarOverlay {
 
     protected ManaBarOverlay(OverlayPosition overlayPosition, OverlaySize overlaySize) {
         super(overlayPosition, overlaySize, CommonColors.LIGHT_BLUE);
+        this.userEnabled.store(false);
     }
 
     @Override
