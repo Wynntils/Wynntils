@@ -18,8 +18,8 @@ public enum RaidKind {
             Pattern.compile("^Save him.$")),
     THE_CANYON_COLOSSUS(
             "The Canyon Colossus",
-            StyledText.fromString("§3§kThe Canyon Colossus"),
-            Pattern.compile("^$")), // TCC not yet enabled in beta
+            StyledText.fromString("§#5f968bffThe Canyon Colossus"),
+            Pattern.compile("^$")), // Currently bugged in beta, says "Unknown"
     THE_NAMELESS_ANOMALY(
             "The Nameless Anomaly",
             StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly"),
