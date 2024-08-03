@@ -41,7 +41,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
     private static final char NEGATIVE_SPACE_HIGH_SURROGATE = '\uDAFF';
 
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
-    private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
 
     private final List<StyledTextPart> parts;
 
@@ -271,10 +270,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
             return IterationDecision.CONTINUE;
         });
-    }
-
-    public StyledText combineParts() {
-        return StyledText.fromString(getString());
     }
 
     public StyledText trim() {

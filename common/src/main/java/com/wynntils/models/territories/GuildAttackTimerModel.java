@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.mc.event.TickEvent;
@@ -74,15 +73,21 @@ public final class GuildAttackTimerModel extends Model {
 
     @SubscribeEvent
     public void onMessage(ChatMessageReceivedEvent event) {
-        if (event.getRecipientType() != RecipientType.GUILD) return;
+        // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
-        StyledText cleaned = StyledTextUtils.joinAllLines(
-                event.getStyledText().stripAlignment().combineParts().replaceAll("\uE001 ", ""));
-        Matcher matcher = cleaned.getMatcher(WAR_MESSAGE_PATTERN);
+        String cleanMessage = StyledTextUtils.joinAllLines(event.getStyledText().stripAlignment())
+                .getString()
+                .replaceAll("\uE001 ", "");
+        Matcher matcher = WAR_MESSAGE_PATTERN.matcher(cleanMessage);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();
-            if (matcher.group("minutes") != null) timerEnd += Long.parseLong(matcher.group("minutes")) * 60 * 1000;
-            if (matcher.group("seconds") != null) timerEnd += Long.parseLong(matcher.group("seconds")) * 1000;
+
+            if (matcher.group("minutes") != null) {
+                timerEnd += Long.parseLong(matcher.group("minutes")) * 60 * 1000;
+            }
+            if (matcher.group("seconds") != null) {
+                timerEnd += Long.parseLong(matcher.group("seconds")) * 1000;
+            }
 
             String territory = matcher.group("territory");
             TerritoryAttackTimer scoreboardTimer = scoreboardAttackTimers.remove(territory);
@@ -94,6 +99,7 @@ public final class GuildAttackTimerModel extends Model {
             if (oldTimer == null && scoreboardTimer == null) {
                 WynntilsMod.postEvent(new GuildWarQueuedEvent(attackTimer));
             }
+
             return;
         }
 
