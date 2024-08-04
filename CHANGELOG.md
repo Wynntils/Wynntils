@@ -1,9 +1,37 @@
+## [2.0.0-beta.13](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2024-08-04)
+
+
+### New Features
+
+* Aspect container scrolling [skip ci] ([#2691](https://github.com/Wynntils/Artemis/issues/2691)) ([a60869f](https://github.com/Wynntils/Artemis/commit/a60869f9c5648d2bac0036a87537394be8903747))
+
+
+### Bug Fixes
+
+* 2.1 attack timer fixes and don't send defence levels on failed attacks [skip ci] ([#2621](https://github.com/Wynntils/Artemis/issues/2621)) ([d691030](https://github.com/Wynntils/Artemis/commit/d691030e63f03cc6eb855f634dd8b1c04d540a77))
+* Annotate mythic aspects [skip ci] ([#2690](https://github.com/Wynntils/Artemis/issues/2690)) ([910c928](https://github.com/Wynntils/Artemis/commit/910c928e483b96ff35cfeec4338e96b414877575))
+* Don't spam tracker update sound when tracking world events [skip ci] ([#2692](https://github.com/Wynntils/Artemis/issues/2692)) ([06e3c2c](https://github.com/Wynntils/Artemis/commit/06e3c2c9c605bc2fd7ab0f495b5629ab59d68d30))
+* Fix fallback recognition for gears (fix 2.1 items not getting recognized) [skip ci] ([#2697](https://github.com/Wynntils/Artemis/issues/2697)) ([87fe079](https://github.com/Wynntils/Artemis/commit/87fe0791c129cd583d58da20e9d593c2e2deb36d))
+* Fix NPC crowdsourcing, bump crowdsourcing version [skip ci] ([#2696](https://github.com/Wynntils/Artemis/issues/2696)) ([5b9f47b](https://github.com/Wynntils/Artemis/commit/5b9f47bd197726209405c472c5c92861e909a553))
+* Fix player nametags rendering incorrectly [skip ci] ([#2693](https://github.com/Wynntils/Artemis/issues/2693)) ([0be513a](https://github.com/Wynntils/Artemis/commit/0be513a0be909023a2aee837231182df61b9104d))
+* Parse health/mana values with "k/b/t" shorthands in them [skip ci] ([#2695](https://github.com/Wynntils/Artemis/issues/2695)) ([2258524](https://github.com/Wynntils/Artemis/commit/22585243211c468e7f9cf560ee1b4fc9c03e1626))
+
+
+### Miscellaneous Chores
+
+* Make StyledText[#from](https://github.com/Wynntils/Artemis/issues/from)String support hex color codes [skip ci] ([#2694](https://github.com/Wynntils/Artemis/issues/2694)) ([51f76b2](https://github.com/Wynntils/Artemis/commit/51f76b26e00e9d1d5930788ea32df64d314d5b23))
+
 ## [2.0.0-beta.12](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2024-08-01)
 
 
 ### Bug Fixes
 
 * Fix character ID parsing for 2.1 ([#2688](https://github.com/Wynntils/Artemis/issues/2688)) ([fd021eb](https://github.com/Wynntils/Artemis/commit/fd021ebfb6c48ae62578a9c3af155c5d0878ff69))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.0-beta.12 [skip ci] ([e8d76b9](https://github.com/Wynntils/Artemis/commit/e8d76b9c75591ac737e5cd3ad7f7d247ca43f1aa))
 
 ## [2.0.0-beta.11](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2024-07-28)
 
@@ -73,30 +101,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.0-beta.9 [skip ci] ([7dde5cf](https://github.com/Wynntils/Artemis/commit/7dde5cfd2821f19d016d277486bbe68962279f55))
-
-## [2.0.0-beta.8](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2024-07-13)
-
-
-### New Features
-
-* Change the "purpose" of EntityLabelEvent to no longer do label matching [skip ci] ([#2659](https://github.com/Wynntils/Artemis/issues/2659)) ([9ec4990](https://github.com/Wynntils/Artemis/commit/9ec499028cfbdea6868d62f1fa9e35f18504873a))
-* Port DamageModel to TextDisplay labels [skip ci] ([#2654](https://github.com/Wynntils/Artemis/issues/2654)) ([9ffef5e](https://github.com/Wynntils/Artemis/commit/9ffef5eeaf7a0c22a022ef3570d25849162ee37d))
-* Port ExtendedSeasonLeaderboardFeature to TextDisplay (+ pass LabelInfo in TextDisplayChangedEvent) [skip ci] ([#2655](https://github.com/Wynntils/Artemis/issues/2655)) ([937c18a](https://github.com/Wynntils/Artemis/commit/937c18a2ced5a5981950ca46a8b316ca70c98e4a))
-* Port LabelHandler to TextDisplay (without porting usages) [skip ci] ([#2653](https://github.com/Wynntils/Artemis/issues/2653)) ([4bc1410](https://github.com/Wynntils/Artemis/commit/4bc14106e9a52303803df903f300bcb5d889a9c3))
-* Port MobTotemModel to TextDisplay [skip ci] ([#2658](https://github.com/Wynntils/Artemis/issues/2658)) ([531ceb6](https://github.com/Wynntils/Artemis/commit/531ceb68e7b48f964cf7701023b8fa710104eabb))
-* Port ProfessionModel to TextDisplay [skip ci] ([#2656](https://github.com/Wynntils/Artemis/issues/2656)) ([27140f5](https://github.com/Wynntils/Artemis/commit/27140f507f15ea5b980274ab863b29ef980c409c))
-* Port ShamanTotemModel to TextDisplay (tracking still broken) [skip ci] ([#2657](https://github.com/Wynntils/Artemis/issues/2657)) ([d3f5c18](https://github.com/Wynntils/Artemis/commit/d3f5c18af5ecf297cf5bac75414f1b56dcce2bd7))
-
-
-### Bug Fixes
-
-* Fix quick jump issues [skip ci] ([#2651](https://github.com/Wynntils/Artemis/issues/2651)) ([6a1b85c](https://github.com/Wynntils/Artemis/commit/6a1b85cc7f049eb6e0461eeeef6b3a5084ae32a6))
-* Improve reliability of diplomacy tracking [skip ci] ([#2652](https://github.com/Wynntils/Artemis/issues/2652)) ([4eca9fd](https://github.com/Wynntils/Artemis/commit/4eca9fd3bb9e08406d3e50157b1be0b95f45dbcb))
-* Update all friend and party regexes ([#2660](https://github.com/Wynntils/Artemis/issues/2660)) ([70db660](https://github.com/Wynntils/Artemis/commit/70db660c09b16c70795d6fe5b1cc17d4a9a101b9))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.8 [skip ci] ([f8edc20](https://github.com/Wynntils/Artemis/commit/f8edc2013116be658b6c7ca3a0e234b194614f8a))
-* Update dependency versions [skip ci] ([d70a1fd](https://github.com/Wynntils/Artemis/commit/d70a1fd78ae53b12984e328fad6fb96ba89dccaf))
 
