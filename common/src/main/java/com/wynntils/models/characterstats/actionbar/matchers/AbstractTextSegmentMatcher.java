@@ -9,6 +9,7 @@ import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,12 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
     // The translation of the display characters to the actual values
     private static final List<String> DISPLAY_CHARACTER_TRANSLATION =
             List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "k", "m", "b", "t", ".", "/");
+
+    private static final Map<Character, Long> NUMBER_SHORT_MULTIPLIERS = Map.of(
+            'k', 1_000L,
+            'm', 1_000_000L,
+            'b', 1_000_000_000L,
+            't', 1_000_000_000_000L);
 
     private static final Pattern VALUE_PATTERN = Pattern.compile("(?<current>\\d+)/(?<max>\\d+)");
 
@@ -109,8 +116,47 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
             return CappedValue.EMPTY;
         }
 
+        long current = parseShortNumber(matcher.group("current"));
+        long max = parseShortNumber(matcher.group("max"));
+
+        if (current > Integer.MAX_VALUE) {
+            WynntilsMod.warn("Current health/mana value is too large: " + current);
+            return CappedValue.EMPTY;
+        }
+
+        if (max > Integer.MAX_VALUE) {
+            WynntilsMod.warn("Max health/mana value is too large: " + max);
+            return CappedValue.EMPTY;
+        }
+
         // The value is capped at 100
-        return new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("max")));
+        return new CappedValue((int) current, (int) max);
+    }
+
+    /**
+     * Parses a possibly short number from a string. If the string is not a valid short number, returns 0.
+     * @param value The string to parse
+     * @return The parsed short number
+     */
+    private static long parseShortNumber(String value) {
+        if (value.isEmpty()) return 0;
+
+        char lastChar = value.charAt(value.length() - 1);
+        long multiplier = NUMBER_SHORT_MULTIPLIERS.getOrDefault(lastChar, 1L);
+
+        if (multiplier == 1) {
+            try {
+                return Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+
+        try {
+            return Long.parseLong(value.substring(0, value.length() - 1)) * multiplier;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     protected record SegmentSeparators(char segmentStart, char segmentEnd) {}
