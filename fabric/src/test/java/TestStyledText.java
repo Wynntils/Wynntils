@@ -6,6 +6,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -859,7 +860,25 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledText_inheritesHoverEvents() {
+    public void styledText_fromStringWithNonChatFormattingColors() {
+        final CustomColor color = new CustomColor(36, 12, 42).withAlpha(255);
+        final StyledText styledText = StyledText.fromComponent(Component.literal("test"))
+                .iterate((part, changes) -> {
+                    changes.remove(part);
+                    changes.add(part.withStyle(style -> style.withColor(color)));
+                    return IterationDecision.CONTINUE;
+                });
+
+        StyledTextPart firstPart = styledText.getFirstPart();
+        Assertions.assertNotNull(firstPart, "StyledText.fromString() did not produce a part.");
+
+        CustomColor textColor = firstPart.getPartStyle().getColor();
+
+        Assertions.assertEquals(color, textColor, "StyledText.fromString() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_inheritsHoverEvents() {
         final Component component = Component.empty()
                 .withStyle(style ->
                         style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("hover"))))
