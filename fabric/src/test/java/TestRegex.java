@@ -836,5 +836,6 @@ public class TestRegex {
         PatternTester p = new PatternTester(NpcLabelParser.class, "NPC_LABEL_PATTERN");
 
         p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
+        p.shouldMatch("§f\uE003\n§dItem Identifier\n§7NPC");
     }
 }
