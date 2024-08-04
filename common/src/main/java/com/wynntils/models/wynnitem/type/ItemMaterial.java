@@ -18,6 +18,7 @@ import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.Unbreakable;
 
@@ -55,7 +56,7 @@ public record ItemMaterial(ItemStack itemStack) {
 
     public static ItemMaterial fromGearType(GearType gearType) {
         // Material is missing, so just give generic icon for this type of gear (weapon or accessory)
-        ItemStack itemStack = createItemStack(gearType.getDefaultItem(), gearType.getDefaultDamage());
+        ItemStack itemStack = createItemStack(gearType.getDefaultItem(), gearType.getDefaultModel());
 
         return new ItemMaterial(itemStack);
     }
@@ -83,10 +84,10 @@ public record ItemMaterial(ItemStack itemStack) {
         return fromItemId(itemId, damageCode);
     }
 
-    private static ItemStack createItemStack(Item item, int damageValue) {
+    private static ItemStack createItemStack(Item item, int modelValue) {
         ItemStack itemStack = new ItemStack(item);
 
-        itemStack.setDamageValue(damageValue);
+        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(modelValue));
         itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
         return itemStack;
     }

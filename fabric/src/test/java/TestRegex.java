@@ -30,6 +30,7 @@ import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.statuseffects.StatusEffectModel;
+import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.worlds.BombModel;
@@ -283,6 +284,15 @@ public class TestRegex {
         PatternTester p = new PatternTester(FriendsModel.class, "LEAVE_PATTERN");
         p.shouldMatch("§a\uDAFF\uDFFC\uE001\uDB00\uDC06 Mirvun left the game.");
         p.shouldMatch("§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Mirvun left the game.");
+    }
+
+    @Test
+    public void GuildAttackTimerModel_WAR_MESSAGE_PATTERN() {
+        PatternTester p = new PatternTester(GuildAttackTimerModel.class, "WAR_MESSAGE_PATTERN");
+        p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 1 minute.");
+        p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 2 minutes.");
+        p.shouldMatch("§c\uE006\uE002 The war for Detlas will start in 1 minute and 30 seconds.");
+        p.shouldMatch("§c\uE006\uE002 The war for Detlas Close Suburbs will start in 30 seconds.");
     }
 
     @Test
@@ -826,5 +836,6 @@ public class TestRegex {
         PatternTester p = new PatternTester(NpcLabelParser.class, "NPC_LABEL_PATTERN");
 
         p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
+        p.shouldMatch("§f\uE003\n§dItem Identifier\n§7NPC");
     }
 }

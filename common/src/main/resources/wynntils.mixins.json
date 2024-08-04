@@ -43,6 +43,7 @@
     "ScoreboardMixin",
     "ScreenMixin",
     "SlotMixin",
+    "SoundManagerMixin",
     "accessors.ChatScreenAccessor",
     "accessors.ClientboundBossEventPacketAccessor",
     "accessors.ClientboundSetPlayerTeamPacketAccessor",

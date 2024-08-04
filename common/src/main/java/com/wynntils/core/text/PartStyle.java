@@ -207,6 +207,11 @@ public final class PartStyle {
                 owner, newColor, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, font);
     }
 
+    public PartStyle withColor(CustomColor color) {
+        return new PartStyle(
+                owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent, font);
+    }
+
     public boolean isBold() {
         return bold;
     }
