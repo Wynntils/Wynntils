@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.marker.type.DynamicLocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
@@ -252,6 +253,11 @@ public final class MainMapScreen extends AbstractMapScreen {
                         mapHeight);
 
         renderPois(poseStack, mouseX, mouseY);
+
+        if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
+            renderChunkBorders(poseStack);
+            BUFFER_SOURCE.endBatch();
+        }
 
         // Cursor
         renderCursor(

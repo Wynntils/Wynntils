@@ -895,6 +895,8 @@
   "feature.wynntils.mainMap.renderRemotePartyPlayers.name": "Render Remote Party Players",
   "feature.wynntils.mainMap.servicePoiMinZoom.description": "At what zoom level should service pois show? Set this to -1 to always show without fading.",
   "feature.wynntils.mainMap.servicePoiMinZoom.name": "Service Poi Min Zoom",
+  "feature.wynntils.mappingProgress.description": "Adds the ability to track how much of the map you have explored/mapped.",
+  "feature.wynntils.mappingProgress.name": "Mapping Progress",
   "feature.wynntils.messageFilter.description": "Filter specific messages from chat.",
   "feature.wynntils.messageFilter.hideLevelUp.description": "Should level up messages be hidden?",
   "feature.wynntils.messageFilter.hideLevelUp.name": "Hide Level Up Messages",

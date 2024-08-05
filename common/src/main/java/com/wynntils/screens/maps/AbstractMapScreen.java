@@ -7,10 +7,12 @@ package com.wynntils.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
@@ -33,6 +35,7 @@ import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.BoundingShape;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
@@ -393,6 +396,37 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         BUFFER_SOURCE.endBatch();
 
         RenderUtils.disableScissor();
+    }
+
+    protected void renderChunkBorders(PoseStack poseStack) {
+        BoundingBox textureBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
+
+        // If the user is holding shift, only render close-by pois
+        float pX = (float) McUtils.player().getX();
+        float pZ = (float) McUtils.player().getZ();
+
+        BoundingBox chunkBoundingBox = KeyboardUtils.isShiftDown()
+                ? textureBoundingBox
+                : BoundingBox.centered(
+                        pX,
+                        pZ,
+                        McUtils.options().renderDistance().get() * 16,
+                        McUtils.options().renderDistance().get() * 16);
+
+        Set<Long> mappedChunks = Managers.Feature.getFeatureInstance(MappingProgressFeature.class)
+                .getMappedChunks();
+
+        MapRenderer.renderChunks(
+                poseStack,
+                BUFFER_SOURCE,
+                chunkBoundingBox,
+                mappedChunks,
+                mapCenterX,
+                centerX,
+                mapCenterZ,
+                centerZ,
+                zoomRenderScale);
     }
 
     protected void centerMapAroundPlayer() {
