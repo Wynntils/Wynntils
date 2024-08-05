@@ -6,6 +6,7 @@ package com.wynntils.neoforge;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import java.io.File;
 import java.nio.file.Path;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(WynntilsMod.MOD_ID)
 public class WynntilsModForge {
@@ -37,6 +39,11 @@ public class WynntilsModForge {
                 modFile);
 
         WynntilsMod.registerEventListener(this);
+
+        ModLoadingContext.get()
+                .registerExtensionPoint(
+                        IConfigScreenFactory.class,
+                        () -> (mc, parent) -> WynntilsBookSettingsScreen.create(parent));
     }
 
     // This is slightly hacky to do this, but it works
