@@ -19,7 +19,7 @@ public enum RaidKind {
     THE_CANYON_COLOSSUS(
             "The Canyon Colossus",
             StyledText.fromString("§#5f968bffThe Canyon Colossus"),
-            Pattern.compile("^$")), // Currently bugged in beta, says "Unknown"
+            Pattern.compile("^Unknown$")), // FIXME: When this is fixed on Wynn, change this
     THE_NAMELESS_ANOMALY(
             "The Nameless Anomaly",
             StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly"),

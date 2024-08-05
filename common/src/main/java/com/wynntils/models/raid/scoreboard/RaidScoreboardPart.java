@@ -27,7 +27,6 @@ public class RaidScoreboardPart extends ScoreboardPart {
     private static final Pattern FAILED_PATTERN = Pattern.compile("^Too many players have$");
     // Sometimes this will show between challenges so we don't want this change to trigger a new challenge
     private static final Pattern PREPARE_PATTERN = Pattern.compile("^Prepare for the next$");
-    private static final Pattern RAID_ENDED_PATTERN = Pattern.compile("^This raid has ended$");
     private static final Pattern TIMER_PATTERN = Pattern.compile(
             "^[-—] Time Left: (?<hours>\\d+:)?(?<minutes>\\d+):(?<seconds>\\d+)(?: \\[\\+\\d+[msMS]\\])?$");
 
@@ -53,8 +52,6 @@ public class RaidScoreboardPart extends ScoreboardPart {
             Models.Raid.completeChallenge();
         } else if (currentStateLine.matches(BUFF_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.enterBuffRoom();
-        } else if (currentStateLine.matches(RAID_ENDED_PATTERN, PartStyle.StyleType.NONE)) {
-            Models.Raid.completeRaid();
         } else if (currentStateLine.matches(FAILED_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.failedRaid();
         } else if (Models.Raid.getCurrentRaid() != null

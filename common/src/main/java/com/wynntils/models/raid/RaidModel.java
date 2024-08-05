@@ -26,6 +26,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -33,6 +34,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class RaidModel extends Model {
     public static final int MAX_CHALLENGES = 3;
     public static final int ROOM_TIMERS_COUNT = 5;
+    private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -57,18 +59,22 @@ public class RaidModel extends Model {
 
     @SubscribeEvent
     public void onTitle(TitleSetTextEvent event) {
-        if (currentRaid != null) return;
-
         Component component = event.getComponent();
         StyledText styledText = StyledText.fromComponent(component);
 
-        currentRaid = RaidKind.fromTitle(styledText);
+        if (currentRaid == null) {
+            currentRaid = RaidKind.fromTitle(styledText);
 
-        if (currentRaid != null) {
-            // In a raid, set to intro room and start timer
-            currentRoom = RaidRoomType.INTRO;
-            raidStartTime = System.currentTimeMillis();
-            completedCurrentChallenge = false;
+            if (currentRaid != null) {
+                // In a raid, set to intro room and start timer
+                currentRoom = RaidRoomType.INTRO;
+                raidStartTime = System.currentTimeMillis();
+                completedCurrentChallenge = false;
+            }
+        } else {
+            if (styledText.matches(RAID_COMPLETED_PATTERN)) {
+                completeRaid();
+            }
         }
     }
 
