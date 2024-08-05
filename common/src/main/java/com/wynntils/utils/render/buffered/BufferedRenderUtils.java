@@ -17,7 +17,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 public final class BufferedRenderUtils {
-    private static void drawLine(
+    public static void drawLine(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             CustomColor color,
