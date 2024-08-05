@@ -62,7 +62,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     // This makes sure we "save" our status on the settings & overlay screen, and we reopen it in the same state
     private static final Screen overlayScreenInstance = OverlaySelectionScreen.create();
-    private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
+    private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create(null);
 
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));

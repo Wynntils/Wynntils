@@ -21,6 +21,9 @@
   "entrypoints": {
     "client": [
       "com.wynntils.fabric.WynntilsModFabric"
+    ],
+    "modmenu": [
+      "com.wynntils.fabric.config.ModMenuIntegration"
     ]
   },
   "environment": "*",
