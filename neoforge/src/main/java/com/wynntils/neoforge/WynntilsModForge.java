@@ -42,8 +42,7 @@ public class WynntilsModForge {
 
         ModLoadingContext.get()
                 .registerExtensionPoint(
-                        IConfigScreenFactory.class,
-                        () -> (mc, parent) -> WynntilsBookSettingsScreen.create(parent));
+                        IConfigScreenFactory.class, () -> (mc, parent) -> WynntilsBookSettingsScreen.create(parent));
     }
 
     // This is slightly hacky to do this, but it works
