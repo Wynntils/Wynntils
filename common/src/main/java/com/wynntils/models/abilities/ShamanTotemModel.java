@@ -226,7 +226,7 @@ public class ShamanTotemModel extends Model {
 
     /**
      * Removes the given totem from the list of totems.
-     * @param totem The totem to remove. Must be 1, 2, or 3
+     * @param totem The totem to remove. Must be 1, 2, 3 or 4
      */
     private void removeTotem(int totem) {
         WynntilsMod.postEvent(new TotemEvent.Removed(totem, totems[totem - 1]));
@@ -249,7 +249,7 @@ public class ShamanTotemModel extends Model {
     private int getNextTotemSlot() {
         int toReturn = nextTotemSlot;
 
-        if (nextTotemSlot == 3) {
+        if (nextTotemSlot == MAX_TOTEM_COUNT) {
             nextTotemSlot = 1;
         } else {
             nextTotemSlot += 1;
