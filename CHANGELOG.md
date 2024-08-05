@@ -1,3 +1,23 @@
+## [2.0.0-beta.14](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.13...v2.0.0-beta.14) (2024-08-05)
+
+
+### New Features
+
+* Add MappingProgressFeature (for development purposes) [skip ci] ([#2701](https://github.com/Wynntils/Artemis/issues/2701)) ([1ac6bab](https://github.com/Wynntils/Artemis/commit/1ac6bab01c5fe437e23fd544aa73976344e4e665))
+
+
+### Bug Fixes
+
+* Fix annotating tier 4 aspects [skip ci] ([#2699](https://github.com/Wynntils/Artemis/issues/2699)) ([ebbb755](https://github.com/Wynntils/Artemis/commit/ebbb7552f8e330c91ea4efe455cc0f039c65f176))
+* Fix Ophanim bar overlay with mythic aspects and add tracking for 4th shaman totem [skip ci] ([#2700](https://github.com/Wynntils/Artemis/issues/2700)) ([7831ba8](https://github.com/Wynntils/Artemis/commit/7831ba8d79104a716f26a8a3ad67f61a70785068))
+* Fix raid tracking for 2.1 ([#2662](https://github.com/Wynntils/Artemis/issues/2662)) ([f40f626](https://github.com/Wynntils/Artemis/commit/f40f626694eb79f3b47d8aab7c37b82b48277742))
+
+
+### Miscellaneous Chores
+
+* Require Fabric Loader 0.16.0+ and stable NeoForge [skip ci] ([#2698](https://github.com/Wynntils/Artemis/issues/2698)) ([950cd56](https://github.com/Wynntils/Artemis/commit/950cd56956c6125739f70f305867b13b68e4d7f1))
+* update urls.json for lr tasks [skip ci] ([1e78b75](https://github.com/Wynntils/Artemis/commit/1e78b7551f14472804df94c9300bf5ff08b7b31d))
+
 ## [2.0.0-beta.13](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2024-08-04)
 
 
@@ -20,6 +40,7 @@
 ### Miscellaneous Chores
 
 * Make StyledText[#from](https://github.com/Wynntils/Artemis/issues/from)String support hex color codes [skip ci] ([#2694](https://github.com/Wynntils/Artemis/issues/2694)) ([51f76b2](https://github.com/Wynntils/Artemis/commit/51f76b26e00e9d1d5930788ea32df64d314d5b23))
+* **release:** v2.0.0-beta.13 [skip ci] ([86be0ad](https://github.com/Wynntils/Artemis/commit/86be0adf0e0cca422c5bab691c3632691f3281ce))
 
 ## [2.0.0-beta.12](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.11...v2.0.0-beta.12) (2024-08-01)
 
@@ -81,24 +102,4 @@
 * Bump dependency versions (mainly MixinExtras 0.4.0) [skip ci] ([#2671](https://github.com/Wynntils/Artemis/issues/2671)) ([493b9c6](https://github.com/Wynntils/Artemis/commit/493b9c6ecb600a62f42c8feb7eddfb9d234f2c5c))
 * Don't always verify calculated rolls in development [skip ci] ([#2672](https://github.com/Wynntils/Artemis/issues/2672)) ([8a48c5e](https://github.com/Wynntils/Artemis/commit/8a48c5e3cd05aa50f8d9804a74c0f0c3e9df94c5))
 * **release:** v2.0.0-beta.10 [skip ci] ([bbc2881](https://github.com/Wynntils/Artemis/commit/bbc2881e5227eb3875bafe5f9f6d7c6b3b27de2b))
-
-## [2.0.0-beta.9](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2024-07-19)
-
-
-### New Features
-
-* Improve chat tab switching hotkeys [skip ci] ([#2664](https://github.com/Wynntils/Artemis/issues/2664)) ([3660b84](https://github.com/Wynntils/Artemis/commit/3660b8444576e41b7eedd1dc85a56942eb596b1c))
-* Make the Wynncraft health and mana bars the default [skip ci] ([#2666](https://github.com/Wynntils/Artemis/issues/2666)) ([9c8ea7b](https://github.com/Wynntils/Artemis/commit/9c8ea7bada2e7653a91de5e52035ce9be580994c))
-
-
-### Bug Fixes
-
-* Fix everything lootrun related for 2.1 ([#2665](https://github.com/Wynntils/Artemis/issues/2665)) ([7b51ae4](https://github.com/Wynntils/Artemis/commit/7b51ae47f3cf1e3bde421371870ff3f9abad3fd3))
-* Fix time spent in raid stats [skip ci] ([#2663](https://github.com/Wynntils/Artemis/issues/2663)) ([441b8f4](https://github.com/Wynntils/Artemis/commit/441b8f463ab5d191afd753726a2a89eebbd41cec))
-* Parse activities correctly (after 2.1 patch [#1](https://github.com/Wynntils/Artemis/issues/1)) [skip ci] ([#2667](https://github.com/Wynntils/Artemis/issues/2667)) ([3858321](https://github.com/Wynntils/Artemis/commit/3858321a830ae566e9aa44811640ba20926ac104))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.9 [skip ci] ([7dde5cf](https://github.com/Wynntils/Artemis/commit/7dde5cfd2821f19d016d277486bbe68962279f55))
 
