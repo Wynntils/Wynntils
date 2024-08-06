@@ -54,7 +54,7 @@ public class QuestButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(questInfo.getName()),
+                        StyledText.fromString(questInfo.name()),
                         this.getX() + 14,
                         this.getY() + 1,
                         this.width - 15,
@@ -67,7 +67,7 @@ public class QuestButton extends WynntilsButton {
                         1f);
 
         Texture stateTexture =
-                switch (questInfo.getStatus()) {
+                switch (questInfo.status()) {
                     case STARTED -> Texture.ACTIVITY_STARTED;
                     case COMPLETED -> Texture.ACTIVITY_FINISHED;
                     case AVAILABLE -> Texture.ACTIVITY_CAN_START;
@@ -108,7 +108,7 @@ public class QuestButton extends WynntilsButton {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             trackQuest();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Optional<Location> nextLocation = this.questInfo.getNextLocation();
+            Optional<Location> nextLocation = this.questInfo.nextLocation();
 
             nextLocation.ifPresent(location -> McUtils.mc().setScreen(MainMapScreen.create(location.x, location.z)));
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
@@ -119,7 +119,7 @@ public class QuestButton extends WynntilsButton {
     }
 
     private void trackQuest() {
-        if (this.questInfo.isTrackable()) {
+        if (this.questInfo.trackable()) {
             McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
             if (this.questInfo.equals(Models.Activity.getTrackedQuestInfo())) {
                 Models.Quest.stopTracking();

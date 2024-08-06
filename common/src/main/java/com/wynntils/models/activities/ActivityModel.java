@@ -136,15 +136,29 @@ public final class ActivityModel extends Model {
         String specialInfo;
         String statusMessage;
 
-        if (statusLineParts.length == 1) {
-            specialInfo = null;
-            statusMessage = statusLineParts[0].getString();
+        ActivityStatus status;
+
+        if (type == ActivityType.WORLD_EVENT) {
+            // World events have a slightly different format,
+            // with the first description line being the region,
+            // and the second being the status line.
+            specialInfo = statusLine.getString();
+            statusMessage = lore.pop().getString();
+
+            status = ActivityStatus.fromWorldEvent(statusMessage);
         } else {
-            specialInfo = statusLineParts[0].getString();
-            statusMessage = statusLineParts[1].getString();
+            // Handle every other activity type
+            if (statusLineParts.length == 1) {
+                specialInfo = null;
+                statusMessage = statusLineParts[0].getString();
+            } else {
+                specialInfo = statusLineParts[0].getString();
+                statusMessage = statusLineParts[1].getString();
+            }
+
+            status = ActivityStatus.from(statusMessage);
         }
 
-        ActivityStatus status = ActivityStatus.from(statusMessage);
         if (status == null) return null;
 
         if (!lore.pop().isBlank()) return null;
