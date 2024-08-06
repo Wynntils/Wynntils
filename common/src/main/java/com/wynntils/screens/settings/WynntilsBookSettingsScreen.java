@@ -259,7 +259,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         PoseStack poseStack = guiGraphics.pose();
 
         poseStack.pushPose();
@@ -352,6 +352,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         renderTooltips(guiGraphics, adjustedMouseX, adjustedMouseY);
 
         poseStack.popPose();
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (McUtils.mc().level == null) {
+            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
     }
 
     @Override
