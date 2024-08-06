@@ -347,19 +347,19 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         // We need to filter duplicates
         elements.addAll(Stream.concat(
                         Models.Discovery.getAllDiscoveries(activitySortOrder)
-                                .filter(discoveryInfo -> !discoveryInfo.isDiscovered())
-                                .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                                .filter(discoveryInfo -> !discoveryInfo.discovered())
+                                .filter(discoveryInfo -> switch (discoveryInfo.type()) {
                                     case TERRITORY -> isShowingUndiscoveredTerritory();
                                     case WORLD -> isShowingUndiscoveredWorld();
                                     case SECRET -> isShowingUndiscoveredSecrets();
                                 }),
                         Models.Discovery.getAllCompletedDiscoveries(activitySortOrder)
-                                .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                                .filter(discoveryInfo -> switch (discoveryInfo.type()) {
                                     case TERRITORY -> isShowingTerritory();
                                     case WORLD -> isShowingWorld();
                                     case SECRET -> isShowingSecrets();
                                 }))
-                .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
+                .filter(info -> StringUtils.partialMatch(info.name(), searchTerm))
                 .toList());
     }
 

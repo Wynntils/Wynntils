@@ -17,14 +17,20 @@ import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.VectorUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.render.type.PointerType;
+import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
 import org.joml.Matrix4f;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
@@ -51,6 +57,8 @@ public final class MapRenderer {
     // and are cached for performance.
     private static final double MIN_ZOOM_LOG = Math.log(MIN_ZOOM);
     private static final double MAX_ZOOM_LOG = Math.log(MAX_ZOOM);
+
+    private static final float CHUNK_LINE_WIDTH = 1.0f;
 
     // Zoom is calculated using exponential interpolation between MIN_ZOOM and MAX_ZOOM.
     // The result is that the zoom increases uniformly for all levels, no matter the current zoom.
@@ -188,6 +196,73 @@ public final class MapRenderer {
                 Texture.MAP_POINTERS.height());
 
         poseStack.popPose();
+    }
+
+    public static void renderChunks(
+            PoseStack poseStack,
+            MultiBufferSource.BufferSource bufferSource,
+            BoundingBox renderedWorldBoundingBox,
+            Set<Long> mappedChunks,
+            float mapCenterX,
+            float centerX,
+            float mapCenterZ,
+            float centerZ,
+            float zoomRenderScale) {
+        ChunkPos topLeft =
+                new ChunkPos(new BlockPos((int) renderedWorldBoundingBox.x1(), 0, (int) renderedWorldBoundingBox.z1()));
+        ChunkPos bottomRight =
+                new ChunkPos(new BlockPos((int) renderedWorldBoundingBox.x2(), 0, (int) renderedWorldBoundingBox.z2()));
+
+        // Render the chunk grid, with a 1px border around each chunk.
+        for (int x = topLeft.x; x <= bottomRight.x; x++) {
+            for (int z = topLeft.z; z <= bottomRight.z; z++) {
+                ChunkPos chunkPos = new ChunkPos(x, z);
+
+                float worldX1 = chunkPos.getMinBlockX() - 1;
+                float worldX2 = chunkPos.getMaxBlockX() + 1;
+                float worldZ1 = chunkPos.getMinBlockZ() - 1;
+                float worldZ2 = chunkPos.getMaxBlockZ() + 1;
+
+                float x1 = getRenderX((int) worldX1, mapCenterX, centerX, zoomRenderScale);
+                float x2 = getRenderX((int) worldX2, mapCenterX, centerX, zoomRenderScale);
+                float z1 = getRenderZ((int) worldZ1, mapCenterZ, centerZ, zoomRenderScale);
+                float z2 = getRenderZ((int) worldZ2, mapCenterZ, centerZ, zoomRenderScale);
+
+                CustomColor renderColor =
+                        mappedChunks.contains(chunkPos.toLong()) ? CommonColors.GREEN : CommonColors.RED;
+
+                CustomColor topRenderColor =
+                        mappedChunks.contains(new ChunkPos(x, z - 1).toLong()) ? CommonColors.GREEN : renderColor;
+                CustomColor leftRenderColor =
+                        mappedChunks.contains(new ChunkPos(x - 1, z).toLong()) ? CommonColors.GREEN : renderColor;
+
+                // Render the top and left borders of the chunk
+                BufferedRenderUtils.drawLine(
+                        poseStack, bufferSource, topRenderColor, x1, z1, x2, z1, 0, CHUNK_LINE_WIDTH);
+                BufferedRenderUtils.drawLine(
+                        poseStack, bufferSource, leftRenderColor, x1, z1, x1, z2, 0, CHUNK_LINE_WIDTH);
+
+                // Render the right border, if the chunk is the rightmost chunk
+                if (x == bottomRight.x) {
+                    // Check if the chunk on the right is mapped, if it is, render with the correct color
+                    CustomColor rightRenderColor =
+                            mappedChunks.contains(new ChunkPos(x + 1, z).toLong()) ? CommonColors.GREEN : renderColor;
+
+                    BufferedRenderUtils.drawLine(
+                            poseStack, bufferSource, rightRenderColor, x2, z1, x2, z2, 0, CHUNK_LINE_WIDTH);
+                }
+
+                // Render the bottom border, if the chunk is the bottommost chunk
+                if (z == bottomRight.z) {
+                    // Check if the chunk on the top is mapped, if it is, render with the correct color
+                    CustomColor bottomRenderColor =
+                            mappedChunks.contains(new ChunkPos(x, z + 1).toLong()) ? CommonColors.GREEN : renderColor;
+
+                    BufferedRenderUtils.drawLine(
+                            poseStack, bufferSource, bottomRenderColor, x1, z2, x2, z2, 0, CHUNK_LINE_WIDTH);
+                }
+            }
+        }
     }
 
     public static void renderLootrunLine(

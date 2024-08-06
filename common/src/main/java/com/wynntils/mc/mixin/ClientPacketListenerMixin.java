@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
+import com.wynntils.mc.event.ChunkReceivedEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -52,13 +54,13 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MessageSignatureCache;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
@@ -107,11 +109,11 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private RegistryAccess.Frozen registryAccess;
 
     @Shadow
-    private MessageSignatureCache messageSignatureCache;
-
-    @Shadow
     @Final
     private FeatureFlagSet enabledFeatures;
+
+    @Shadow
+    protected abstract ParseResults<SharedSuggestionProvider> parseCommand(String command);
 
     protected ClientPacketListenerMixin(
             Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
@@ -643,5 +645,16 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         MixinHelper.post(new ParticleAddedEvent(packet));
+    }
+
+    @Inject(
+            method =
+                    "handleLevelChunkWithLight(Lnet/minecraft/network/protocol/game/ClientboundLevelChunkWithLightPacket;)V",
+            at = @At("RETURN"))
+    private void handleLevelChunkWithLight(ClientboundLevelChunkWithLightPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        MixinHelper.post(
+                new ChunkReceivedEvent(packet.getX(), packet.getZ(), packet.getChunkData(), packet.getLightData()));
     }
 }
