@@ -1,3 +1,20 @@
+## [2.0.0-beta.15](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.14...v2.0.0-beta.15) (2024-08-06)
+
+
+### New Features
+
+* Add better support for confirmationless dialogues ([#2687](https://github.com/Wynntils/Artemis/issues/2687)) ([5c74f7e](https://github.com/Wynntils/Artemis/commit/5c74f7ecd8f95f7c14cbde24107ff21b88a96dc0))
+
+
+### Miscellaneous Chores
+
+* Fix comment typos [skip ci] ([#2704](https://github.com/Wynntils/Artemis/issues/2704)) ([4c0226f](https://github.com/Wynntils/Artemis/commit/4c0226f60239bb6bda806d3109da5721f20ff0df))
+
+
+### Code Refactoring
+
+* Move ChatMessageReceivedEvent and ClientsideMessageEvent to StyledText (only) [skip ci] ([#2684](https://github.com/Wynntils/Artemis/issues/2684)) ([c18dcf6](https://github.com/Wynntils/Artemis/commit/c18dcf65c8a2647c491ad4fd44b18c9fb591b2f2))
+
 ## [2.0.0-beta.14](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.13...v2.0.0-beta.14) (2024-08-05)
 
 
@@ -15,6 +32,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.0.0-beta.14 [skip ci] ([fefdae6](https://github.com/Wynntils/Artemis/commit/fefdae60cb66a3dcad43987b4c0acb44fbfc216b))
 * Require Fabric Loader 0.16.0+ and stable NeoForge [skip ci] ([#2698](https://github.com/Wynntils/Artemis/issues/2698)) ([950cd56](https://github.com/Wynntils/Artemis/commit/950cd56956c6125739f70f305867b13b68e4d7f1))
 * update urls.json for lr tasks [skip ci] ([1e78b75](https://github.com/Wynntils/Artemis/commit/1e78b7551f14472804df94c9300bf5ff08b7b31d))
 
@@ -70,36 +88,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.0-beta.11 [skip ci] ([281f6a8](https://github.com/Wynntils/Artemis/commit/281f6a88421b8e25b7b13461767ceb998123c20f))
-
-## [2.0.0-beta.10](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.9...v2.0.0-beta.10) (2024-07-27)
-
-
-### New Features
-
-* Add a button to access repeatable content from the Wynntils Menu [skip ci] ([#2680](https://github.com/Wynntils/Artemis/issues/2680)) ([0322bc7](https://github.com/Wynntils/Artemis/commit/0322bc78529db213353a8197abcefb98ef4a2ba2))
-* Bump crowd-sourced data version [skip ci] ([#2683](https://github.com/Wynntils/Artemis/issues/2683)) ([9d8ca72](https://github.com/Wynntils/Artemis/commit/9d8ca72ce8ded084456fff982856d8120388e4c5))
-
-
-### Bug Fixes
-
-* Fix activity parsing (by changing CustomColor[#from](https://github.com/Wynntils/Artemis/issues/from)Int alpha behavior) ([#2681](https://github.com/Wynntils/Artemis/issues/2681)) ([daa721e](https://github.com/Wynntils/Artemis/commit/daa721e8d12fadd7081eb05f1e81805f062a7f94))
-* Fix bank name edit input alignment [skip ci] ([#2678](https://github.com/Wynntils/Artemis/issues/2678)) ([d17dc79](https://github.com/Wynntils/Artemis/commit/d17dc79212ae5b82835ddf7295fcf44cb0321e79))
-* Fix ChatTabEditingScreen adding new chat tabs twice [skip ci] ([#2682](https://github.com/Wynntils/Artemis/issues/2682)) ([7ca4044](https://github.com/Wynntils/Artemis/commit/7ca4044591b1c188d07daa78e33133c57d18c2f3))
-* Fix flow mod crashing banks [skip ci] ([#2668](https://github.com/Wynntils/Artemis/issues/2668)) ([de9f715](https://github.com/Wynntils/Artemis/commit/de9f715e9b53315131a073537420294861878557))
-* Fix Github Action release duplicating the release ([4f26a5d](https://github.com/Wynntils/Artemis/commit/4f26a5df75b64e6b9e97a93ff0baa2add757c303))
-* Fix GuildModel container query timing out if the user is not in guild, refine ContainerQueryHandler queue behavior [skip ci] ([#2679](https://github.com/Wynntils/Artemis/issues/2679)) ([19610fe](https://github.com/Wynntils/Artemis/commit/19610fe0c308b732ce766d9065ae7dc78276fe10))
-* Fix SpellCastVignetteFeature bugging out when a spell's mana cost is 0 [skip ci] ([#2676](https://github.com/Wynntils/Artemis/issues/2676)) ([e9abe9b](https://github.com/Wynntils/Artemis/commit/e9abe9b118a2fd3a7c5ceb903bf8b971edaca3ac))
-* Fix white and rainbow beacon tracking, adapt beacon count overlay for unlimited rainbows [skip ci] ([#2675](https://github.com/Wynntils/Artemis/issues/2675)) ([e6e5816](https://github.com/Wynntils/Artemis/commit/e6e581604ea40ac81d45d71e0a2f04c67207ee7a))
-* Math.max for totem area check [skip ci] ([#2674](https://github.com/Wynntils/Artemis/issues/2674)) ([30ed5d9](https://github.com/Wynntils/Artemis/commit/30ed5d997b0b6081e79ae3112fae96106b90453c))
-* Party list fail regex [skip ci] ([#2670](https://github.com/Wynntils/Artemis/issues/2670)) ([4de5900](https://github.com/Wynntils/Artemis/commit/4de5900baf935f0e98cd9b0788782007edf14c0d))
-* Shaman totem tracking for 2.1 [skip ci] ([#2669](https://github.com/Wynntils/Artemis/issues/2669)) ([a6c54ff](https://github.com/Wynntils/Artemis/commit/a6c54ff429891878ae3e1837e0a63a69f0bcd839))
-* Try to close the background container when a container query fails [skip ci] ([#2677](https://github.com/Wynntils/Artemis/issues/2677)) ([df9da11](https://github.com/Wynntils/Artemis/commit/df9da11b155af96d593f2e8a8e05140ca318260a))
-
-
-### Miscellaneous Chores
-
-* Add StyledText[#strip](https://github.com/Wynntils/Artemis/issues/strip)Alignment for handling 2.1 aligned texts [skip ci] ([#2673](https://github.com/Wynntils/Artemis/issues/2673)) ([cff0c39](https://github.com/Wynntils/Artemis/commit/cff0c397d95ddd80ac5bd663f6cb65bed6840603))
-* Bump dependency versions (mainly MixinExtras 0.4.0) [skip ci] ([#2671](https://github.com/Wynntils/Artemis/issues/2671)) ([493b9c6](https://github.com/Wynntils/Artemis/commit/493b9c6ecb600a62f42c8feb7eddfb9d234f2c5c))
-* Don't always verify calculated rolls in development [skip ci] ([#2672](https://github.com/Wynntils/Artemis/issues/2672)) ([8a48c5e](https://github.com/Wynntils/Artemis/commit/8a48c5e3cd05aa50f8d9804a74c0f0c3e9df94c5))
-* **release:** v2.0.0-beta.10 [skip ci] ([bbc2881](https://github.com/Wynntils/Artemis/commit/bbc2881e5227eb3875bafe5f9f6d7c6b3b27de2b))
 
