@@ -143,7 +143,7 @@ public final class ChatTabService extends Service {
             if (!chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getComponent());
+                addMessageToTab(chatTab, event.getStyledText().getComponent());
                 return;
             }
         }
@@ -153,7 +153,7 @@ public final class ChatTabService extends Service {
             if (chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getComponent());
+                addMessageToTab(chatTab, event.getStyledText().getComponent());
             }
         }
     }
@@ -164,7 +164,7 @@ public final class ChatTabService extends Service {
             if (!chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getMessage());
+                addMessageToTab(chatTab, event.getStyledText().getComponent());
                 return;
             }
         }
@@ -174,7 +174,7 @@ public final class ChatTabService extends Service {
             if (chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getMessage());
+                addMessageToTab(chatTab, event.getStyledText().getComponent());
             }
         }
     }

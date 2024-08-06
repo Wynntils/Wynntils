@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ public class ChatTimestampFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent event) {
         if (formatter == null) return;
 
-        Component message = event.getMessage();
+        StyledText message = event.getStyledText();
 
         LocalDateTime date = LocalDateTime.now();
         MutableComponent timestamp = Component.empty()
@@ -54,8 +55,8 @@ public class ChatTimestampFeature extends Feature {
                 .append(Component.literal(date.format(formatter)).withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY));
 
-        timestamp.append(message);
+        message = message.prepend(StyledText.fromComponent(timestamp));
 
-        event.setMessage(timestamp);
+        event.setMessage(message);
     }
 }

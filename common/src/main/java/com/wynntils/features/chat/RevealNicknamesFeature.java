@@ -119,7 +119,7 @@ public class RevealNicknamesFeature extends Feature {
             return IterationDecision.CONTINUE;
         });
 
-        event.setMessage(styledText.getComponent());
+        event.setMessage(styledText);
     }
 
     public enum NicknameReplaceOption {

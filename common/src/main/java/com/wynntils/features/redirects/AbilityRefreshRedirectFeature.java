@@ -22,7 +22,7 @@ public class AbilityRefreshRedirectFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent event) {
         if (event.getOriginalStyledText().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
             event.setCanceled(true);
-            Managers.Notification.queueMessage(event.getOriginalMessage());
+            Managers.Notification.queueMessage(event.getOriginalStyledText());
         }
     }
 }

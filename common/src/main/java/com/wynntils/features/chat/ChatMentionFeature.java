@@ -136,7 +136,7 @@ public class ChatMentionFeature extends Feature {
         if (styledText.equals(modified)) return;
 
         if (markMention.get()) {
-            e.setMessage(modified.getComponent());
+            e.setMessage(modified);
         }
 
         if (dingMention.get()) {

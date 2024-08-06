@@ -59,7 +59,8 @@ public class BlacksmithRedirectFeature extends Feature {
         // This is for selling items for emeralds.
         if (messageMatcher.group(1).equals("sold me")) {
             // Tally up the items that we sold.
-            for (Component sibling : event.getOriginalMessage().getSiblings()) {
+            for (Component sibling :
+                    event.getOriginalStyledText().getComponent().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
                 Matcher itemMatcher =
                         StyledText.fromComponent(sibling).getMatcher(ITEM_PATTERN); // Second group contains the items.

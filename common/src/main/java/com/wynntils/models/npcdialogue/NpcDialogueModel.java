@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class NpcDialogueModel extends Model {
@@ -83,20 +82,17 @@ public class NpcDialogueModel extends Model {
         return List.copyOf(confirmationlessDialogues);
     }
 
-    public void handleDialogue(List<Component> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
-        List<StyledText> msg =
-                chatMessage.stream().map(StyledText::fromComponent).toList();
-
+    public void handleDialogue(List<StyledText> chatMessage, boolean protectedDialogue, NpcDialogueType type) {
         // Print dialogue to the system log
-        WynntilsMod.info(
-                "[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (protectedDialogue ? "<protected> " : "") + type);
-        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
+        WynntilsMod.info("[NPC] Type: " + (chatMessage.isEmpty() ? "<empty> " : "")
+                + (protectedDialogue ? "<protected> " : "") + type);
+        chatMessage.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
 
         // The same message can be repeating before we have finished removing the old
         // Just remove the old and add the new with an updated remove time
         // It can also happen that a confirmationless dialogue turn into a normal
         // dialogue after a while (the "Press SHIFT..." text do not appear immediately)
-        confirmationlessDialogues.removeIf(d -> d.currentDialogue().equals(msg));
+        confirmationlessDialogues.removeIf(d -> d.currentDialogue().equals(chatMessage));
 
         // If the message is "NONE", set an empty dialogue
         if (type == NpcDialogueType.NONE) {
@@ -109,14 +105,14 @@ public class NpcDialogueModel extends Model {
         // If the message is the same as the current one, and the mode is "normal", don't update it
         // (ChatHandler already filters duplicates, but there are rare cases where the same dialogue is refreshed after
         // a while)
-        if (type == NpcDialogueType.NORMAL && currentDialogue.currentDialogue().equals(msg)) return;
+        if (type == NpcDialogueType.NORMAL && currentDialogue.currentDialogue().equals(chatMessage)) return;
 
         NpcDialogue dialogue = new NpcDialogue(
-                msg,
+                chatMessage,
                 type,
                 protectedDialogue,
                 System.currentTimeMillis(),
-                System.currentTimeMillis() + calculateMessageReadTime(msg));
+                System.currentTimeMillis() + calculateMessageReadTime(chatMessage));
 
         if (type == NpcDialogueType.CONFIRMATIONLESS) {
             confirmationlessDialogues.add(dialogue);
@@ -124,10 +120,11 @@ public class NpcDialogueModel extends Model {
             currentDialogue = dialogue;
         }
 
-        if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
+        if (!chatMessage.isEmpty()
+                && chatMessage.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
-            Managers.Notification.queueMessage(msg.get(0));
+            Managers.Notification.queueMessage(chatMessage.get(0));
         }
 
         NpcDialogueProcessingEvent.Pre event = new NpcDialogueProcessingEvent.Pre(dialogue);
@@ -140,19 +137,16 @@ public class NpcDialogueModel extends Model {
                 return;
             }
 
-            // Capture the old dialogue from the method
-            final NpcDialogue oldDialogue = dialogue;
-
             // Should never happen, but just in case
             if (styledTexts.isEmpty()) {
                 WynntilsMod.warn("Dialogue processing returned an empty list.");
-                WynntilsMod.postEvent(new NpcDialogueProcessingEvent.Post(oldDialogue, oldDialogue.currentDialogue()));
+                WynntilsMod.postEvent(new NpcDialogueProcessingEvent.Post(dialogue, dialogue.currentDialogue()));
                 return;
             }
 
             // If the dialogue is the same as the old one, don't do anything
-            if (oldDialogue.currentDialogue().equals(styledTexts)) {
-                WynntilsMod.postEvent(new NpcDialogueProcessingEvent.Post(oldDialogue, styledTexts));
+            if (dialogue.currentDialogue().equals(styledTexts)) {
+                WynntilsMod.postEvent(new NpcDialogueProcessingEvent.Post(dialogue, styledTexts));
                 return;
             }
 
@@ -161,17 +155,17 @@ public class NpcDialogueModel extends Model {
             // Update the dialogue with the new one
             NpcDialogue newDialogue = new NpcDialogue(
                     styledTexts,
-                    oldDialogue.dialogueType(),
-                    oldDialogue.isProtected(),
-                    oldDialogue.addTime(),
-                    oldDialogue.removeTime());
+                    dialogue.dialogueType(),
+                    dialogue.isProtected(),
+                    dialogue.addTime(),
+                    dialogue.removeTime());
 
             // Update the current dialogue
-            if (oldDialogue == currentDialogue) {
+            if (dialogue == currentDialogue) {
                 currentDialogue = newDialogue;
             } else {
                 // Update the confirmationless dialogues, if the old dialogue is still in the list
-                if (confirmationlessDialogues.remove(oldDialogue)) {
+                if (confirmationlessDialogues.remove(dialogue)) {
                     confirmationlessDialogues.add(newDialogue);
                 }
             }
