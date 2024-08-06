@@ -58,7 +58,7 @@ public class GuildRankReplacementFeature extends Feature {
 
         if (originalStyledText.equals(modified)) return; // no changes
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     private StyledText modifyByRemovingRank(StyledText styledText) {

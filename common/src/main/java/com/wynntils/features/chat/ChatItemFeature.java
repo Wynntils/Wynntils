@@ -164,7 +164,7 @@ public class ChatItemFeature extends Feature {
 
         if (modified.equals(styledText)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     private void shareItem(Slot hoveredSlot, boolean share) {

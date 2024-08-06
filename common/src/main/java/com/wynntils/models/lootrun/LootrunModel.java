@@ -398,7 +398,7 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onWorldStateChanged(WorldStateEvent event) {
         // The world state event is sometimes late compared to lootrun events (beacons, scoreboard)
-        // Resting once when leaving the class is enough
+        // Resetting once when leaving the class is enough
         if (event.getNewState() == WorldState.WORLD) return;
 
         lootrunCompletedBuilder = null;

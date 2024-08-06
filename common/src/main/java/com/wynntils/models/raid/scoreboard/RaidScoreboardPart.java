@@ -100,7 +100,7 @@ public class RaidScoreboardPart extends ScoreboardPart {
 
     @Override
     public void reset() {
-        // Do nothing here, we will know when the raid is over fro patterns
+        // Do nothing here, we will know when the raid is over from patterns
     }
 
     @Override

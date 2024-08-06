@@ -36,7 +36,7 @@ public class ChatCoordinatesFeature extends Feature {
         // No changes were made, there were no coordinates.
         if (styledText.equals(modified)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -50,7 +50,7 @@ public class ChatCoordinatesFeature extends Feature {
         // No changes were made, there were no coordinates.
         if (styledText.equals(modified)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
