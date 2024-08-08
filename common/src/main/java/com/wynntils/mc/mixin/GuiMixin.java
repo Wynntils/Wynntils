@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -78,20 +79,22 @@ public abstract class GuiMixin {
         MixinHelper.post(new HotbarSlotRenderEvent.Post(guiGraphics, itemStack, x, y));
     }
 
-    // This does not work on Forge. See ForgeGuiMixin for replacement.
     @Inject(
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
     private void onRenderGuiPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
+        if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Pre(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
     }
 
-    // This does not work on Forge. See ForgeGuiMixin for replacement.
     @Inject(
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("RETURN"))
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
+        if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Post(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
     }

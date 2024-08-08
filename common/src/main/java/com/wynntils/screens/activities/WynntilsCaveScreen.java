@@ -268,7 +268,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(Models.Cave.getSortedCaves(activitySortOrder).stream()
-                .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
+                .filter(info -> StringUtils.partialMatch(info.name(), searchTerm))
                 .toList());
     }
 

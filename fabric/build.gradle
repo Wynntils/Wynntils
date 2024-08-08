@@ -25,11 +25,16 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
+    maven {
+        url "https://maven.terraformersmc.com/"
+    }
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabric_version)))
+
+    modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
 
     testImplementation(common(project(path: ":common", configuration: "namedElements"))) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
