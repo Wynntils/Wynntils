@@ -58,8 +58,6 @@ public class QuestButton extends WynntilsButton {
                         this.getX() + 14,
                         this.getY() + 1,
                         this.width - 15,
-                        questBookScreen.getTranslationX(),
-                        questBookScreen.getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
