@@ -1,10 +1,10 @@
-Artemis
+Wynntils
 ========
 [![Discord](https://discordapp.com/api/guilds/394189072635133952/widget.png)](https://discord.gg/ve49m9J)
 [![CurseForge](https://cf.way2muchnoise.eu/short_wynntils.svg)](https://www.curseforge.com/minecraft/mc-mods/wynntils)
 [![Modrinth](https://img.shields.io/modrinth/dt/Wynntils?label=modrinth)](https://modrinth.com/mod/wynntils)
 [![GitHub](https://img.shields.io/github/downloads/Wynntils/Artemis/total?logo=github)](https://github.com/Wynntils/Artemis/releases)
-[![License](https://img.shields.io/badge/license-LGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-LGPL%203.0-green.svg)](https://github.com/Wynntils/Wynntils/blob/main/LICENSE)
 
 <div align="center">
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=20%>
@@ -14,11 +14,11 @@ Artemis
 
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-Artemis is a rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.21 using Architectury, to support **Fabric** and **NeoForge**.
+Wynntils is a rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.21 using Architectury, to support **Fabric** and **NeoForge**. Artemis was a codename used for the rewrite of Wynntils.
 
 Downloading a release
 ========
-You can download the latest build from our [releases page](https://github.com/Wynntils/Artemis/releases). You can also download the latest build from our [Modrinth Page](https://modrinth.com/mod/wynntils) and [CurseForge](https://www.curseforge.com/minecraft/mc-mods/wynntils).
+You can download the latest build from our [releases page](https://github.com/Wynntils/Wynntils/releases). You can also download the latest build from our [Modrinth Page](https://modrinth.com/mod/wynntils) and [CurseForge](https://www.curseforge.com/minecraft/mc-mods/wynntils).
 
 Pull Requests
 ========
@@ -70,6 +70,6 @@ The project has [Vineflower for Loom](https://github.com/Juuxel/loom-vineflower)
 License
 ========
 
-Artemis is licensed under the license [GNU Lesser General Public License v3.0](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
+Wynntils is licensed under the license [GNU Lesser General Public License v3.0](https://github.com/Wynntils/Wynntils/blob/main/LICENSE)
 
 Unless specified otherwise, All the assets **are over Wynntils domain © Wynntils**.
