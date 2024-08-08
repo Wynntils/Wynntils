@@ -1,3 +1,18 @@
+## [2.0.0-beta.16](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.15...v2.0.0-beta.16) (2024-08-08)
+
+
+### New Features
+
+* Add ModMenu support for Fabric and configuration screen for NeoForge [skip ci] ([#2703](https://github.com/Wynntils/Artemis/issues/2703)) ([ab79a4d](https://github.com/Wynntils/Artemis/commit/ab79a4d3071fb3acdcf42d5defc4c0620740bb92))
+* Localize Wynntils to 13 languages using GPT4-o (hu, nl, pl, es, fr, de, it, pt, ru, ja, ko, zh_CN, zh_TW) ([#2709](https://github.com/Wynntils/Artemis/issues/2709)) ([227f1df](https://github.com/Wynntils/Artemis/commit/227f1df79ca89f3bc1db9f69e50c080da99907f4))
+* Parse World Event items as activities, prepare WorldEventModel/WorldEventInfo [skip ci] ([#2706](https://github.com/Wynntils/Artemis/issues/2706)) ([925feb6](https://github.com/Wynntils/Artemis/commit/925feb65ebabfa431943bed6c82c28264f288261))
+
+
+### Bug Fixes
+
+* Don't render overlays when F1/Hide Gui is enabled [skip ci] ([#2710](https://github.com/Wynntils/Artemis/issues/2710)) ([f5e44a5](https://github.com/Wynntils/Artemis/commit/f5e44a58884da78f21db82efceb57f75287c9dc8))
+* Try to parse a crafted items' name from the item, if it's not in the lore [skip ci] ([#2708](https://github.com/Wynntils/Artemis/issues/2708)) ([8d74aea](https://github.com/Wynntils/Artemis/commit/8d74aeacd9fdd16b499d6f756ccb9c6de0d26713))
+
 ## [2.0.0-beta.15](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.14...v2.0.0-beta.15) (2024-08-06)
 
 
@@ -9,6 +24,7 @@
 ### Miscellaneous Chores
 
 * Fix comment typos [skip ci] ([#2704](https://github.com/Wynntils/Artemis/issues/2704)) ([4c0226f](https://github.com/Wynntils/Artemis/commit/4c0226f60239bb6bda806d3109da5721f20ff0df))
+* **release:** v2.0.0-beta.15 [skip ci] ([9ccfa67](https://github.com/Wynntils/Artemis/commit/9ccfa6790be11656639d2d30a6692cbd58129451))
 
 
 ### Code Refactoring
@@ -71,21 +87,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.0-beta.12 [skip ci] ([e8d76b9](https://github.com/Wynntils/Artemis/commit/e8d76b9c75591ac737e5cd3ad7f7d247ca43f1aa))
-
-## [2.0.0-beta.11](https://github.com/Wynntils/Artemis/compare/v2.0.0-beta.10...v2.0.0-beta.11) (2024-07-28)
-
-
-### New Features
-
-* Annotate aspects ([#2686](https://github.com/Wynntils/Artemis/issues/2686)) ([be5a1c9](https://github.com/Wynntils/Artemis/commit/be5a1c92b7049e985e90e95e56dd0b9ef3592fb9))
-
-
-### Bug Fixes
-
-* Fix scrolling in content book [skip ci] ([#2685](https://github.com/Wynntils/Artemis/issues/2685)) ([7f2e31a](https://github.com/Wynntils/Artemis/commit/7f2e31a4ccdf79b7c608d578645837f8c55709f9))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.11 [skip ci] ([281f6a8](https://github.com/Wynntils/Artemis/commit/281f6a88421b8e25b7b13461767ceb998123c20f))
 
