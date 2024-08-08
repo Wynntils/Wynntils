@@ -68,8 +68,6 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
                         this.getX() + 14,
                         this.getY() + 1,
                         this.width - 15,
-                        caveScreen.getTranslationX(),
-                        caveScreen.getTranslationY(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
