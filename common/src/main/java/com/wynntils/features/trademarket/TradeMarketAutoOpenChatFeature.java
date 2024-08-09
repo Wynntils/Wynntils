@@ -21,7 +21,8 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     // Type the price in emeralds or type 'cancel' to cancel:
     // Type the amount you wish to buy or type 'cancel' to cancel:
     // Type the item name or type 'cancel' to cancel:
-    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile("^§6Type the .* or type 'cancel' to cancel:$");
+    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile(
+            "^§5\uE00A\uE002 \n\uE001 Type the item name or type 'cancel' to \n\uE001 cancel:\n\uE001\\s+$");
 
     private boolean openChatWhenContainerClosed = false;
 
@@ -29,7 +30,7 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        if (event.getOriginalStyledText().matches(TYPE_TO_CHAT_PATTERN)) {
+        if (event.getOriginalStyledText().stripAlignment().matches(TYPE_TO_CHAT_PATTERN)) {
             openChatWhenContainerClosed = true;
         }
     }
