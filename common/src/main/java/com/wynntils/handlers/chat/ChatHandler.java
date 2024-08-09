@@ -150,7 +150,7 @@ public final class ChatHandler extends Handler {
     public void onStatusEffectUpdate(MobEffectEvent.Update event) {
         if (event.getEntity() != McUtils.player()) return;
 
-        if (event.getEffect() == MobEffects.MOVEMENT_SLOWDOWN
+        if (event.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN.value())
                 && event.getEffectAmplifier() == 3
                 && event.getEffectDurationTicks() == 32767) {
             if (delayedDialogue != null) {
@@ -168,7 +168,7 @@ public final class ChatHandler extends Handler {
     public void onStatusEffectRemove(MobEffectEvent.Remove event) {
         if (event.getEntity() != McUtils.player()) return;
 
-        if (event.getEffect() == MobEffects.MOVEMENT_SLOWDOWN) {
+        if (event.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN.value())) {
             lastSlowdownApplied = 0;
         }
     }
@@ -569,7 +569,7 @@ public final class ChatHandler extends Handler {
 
             // Store the last confirmationless dialogue, but it may be repeated,
             // so we need to check that it's not duplicated when a message is sent during the dialogue
-            lastConfirmationlessDialogue = dialogue.get(0);
+            lastConfirmationlessDialogue = dialogue.getFirst();
         } else {
             if (lastScreenNpcDialogue.equals(dialogue)) return;
 

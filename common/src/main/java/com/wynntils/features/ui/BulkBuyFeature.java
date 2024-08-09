@@ -101,7 +101,7 @@ public class BulkBuyFeature extends Feature {
             break;
         }
         if (returnable == oldLore) {
-            WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString());
+            WynntilsMod.warn("Could not find price for " + oldLore.getFirst().getString());
         }
         return returnable;
     }

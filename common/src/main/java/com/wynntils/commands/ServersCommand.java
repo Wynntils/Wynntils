@@ -126,7 +126,7 @@ public class ServersCommand extends Command {
                             StringUtils.capitalizeFirst(serverType) + " (" + currentTypeServers.size() + "):\n")
                     .withStyle(ChatFormatting.GOLD));
 
-            String lastServer = currentTypeServers.get(currentTypeServers.size() - 1);
+            String lastServer = currentTypeServers.getLast();
             for (String server : currentTypeServers) {
                 message.append(getServerComponent(server).withStyle(ChatFormatting.AQUA));
 

@@ -133,7 +133,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
 
             if (selectedCosmetic.equals(ADD_REWARD_TEXT)) {
                 // If the first slot does not have a cosmetic then none are selected
-                if (slot == selectedSlots.get(0)) {
+                if (slot == selectedSlots.getFirst()) {
                     selectedCosmetics = new HashSet<>();
                 }
 

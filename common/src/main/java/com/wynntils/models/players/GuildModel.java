@@ -203,7 +203,7 @@ public class GuildModel extends Model {
         }
 
         if (message.matches(MSG_NEW_OBJECTIVES)) {
-            objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
+            objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.getFirst());
             return;
         }
 

@@ -28,7 +28,7 @@ public abstract class PackRepositoryMixin {
     private void onInit(CallbackInfo ci) {
         // WynntilsResourceProvider is directly injected, as this called really early in the game initialization
         // See WynntilsResourceProvider and ResourcePackService for more information
-        LinkedHashSet<RepositorySource> repositorySources = new LinkedHashSet<>(this.sources);
+        Set<RepositorySource> repositorySources = new LinkedHashSet<>(this.sources);
         repositorySources.add(new WynntilsResourceProvider());
         this.sources = repositorySources;
     }

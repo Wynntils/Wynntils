@@ -234,13 +234,13 @@ public class TestStyledText {
                         .withStyle(ChatFormatting.RED)
                         .append(Component.literal("blue")
                                 .withStyle(ChatFormatting.BLUE)
-                                .withStyle(style -> style.withHoverEvent(hoverEvents.get(0))))
+                                .withStyle(style -> style.withHoverEvent(hoverEvents.getFirst())))
                         .append(Component.literal("nonitalic").withStyle(Style.EMPTY.withItalic(false)))
                         .append(Component.literal("inherited")
                                 .append(Component.literal("bold")
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(style -> style.withHoverEvent(hoverEvents.get(1))))))
-                .append(Component.literal("after").withStyle(style -> style.withClickEvent(clickEvents.get(0)))));
+                .append(Component.literal("after").withStyle(style -> style.withClickEvent(clickEvents.getFirst()))));
 
         StyledText styledText = StyledText.fromModifiedString(stringWithEvents, originalText);
 
@@ -888,7 +888,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 component.getStyle().getHoverEvent(),
-                styledText.getComponent().toFlatList().get(0).getStyle().getHoverEvent(),
+                styledText.getComponent().toFlatList().getFirst().getStyle().getHoverEvent(),
                 "StyledText.fromComponent() did not inherit the correct hover event.");
     }
 }

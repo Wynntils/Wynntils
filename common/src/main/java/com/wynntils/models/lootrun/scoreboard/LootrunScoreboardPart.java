@@ -48,7 +48,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             return;
         }
 
-        StyledText currentStateLine = content.get(0);
+        StyledText currentStateLine = content.getFirst();
 
         if (currentStateLine.matches(CHOOSE_BEACON_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.CHOOSING_BEACON, null);

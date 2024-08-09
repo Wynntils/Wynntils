@@ -134,7 +134,8 @@ public final class BufferedRenderUtils {
             float externalLineWidth,
             float internalLineWidth) {
         if (colors.size() == 1) {
-            drawRectBorders(poseStack, bufferSource, colors.get(0), x, y, x + width, y + height, z, externalLineWidth);
+            drawRectBorders(
+                    poseStack, bufferSource, colors.getFirst(), x, y, x + width, y + height, z, externalLineWidth);
             return;
         }
         float splitX = width / (colors.size() - 1);
@@ -187,7 +188,7 @@ public final class BufferedRenderUtils {
             float width,
             float height) {
         if (colors.size() == 1) {
-            drawRect(poseStack, bufferSource, colors.get(0), x, y, z, width, height);
+            drawRect(poseStack, bufferSource, colors.getFirst(), x, y, z, width, height);
             return;
         }
         Matrix4f matrix = poseStack.last().pose();

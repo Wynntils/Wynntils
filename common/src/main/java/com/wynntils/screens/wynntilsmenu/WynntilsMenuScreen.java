@@ -93,7 +93,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
 
         // region Row 1: Content / Activities
-        buttons.get(0)
+        buttons.getFirst()
                 .add(new WynntilsMenuButton(
                         Texture.QUEST_BOOK_ICON,
                         true,
@@ -109,7 +109,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                         .withStyle(ChatFormatting.GREEN))));
-        buttons.get(0)
+        buttons.getFirst()
                 .add(new WynntilsMenuButton(
                         Texture.DISCOVERIES_ICON,
                         true,

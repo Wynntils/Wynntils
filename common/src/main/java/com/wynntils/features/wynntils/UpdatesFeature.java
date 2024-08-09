@@ -84,7 +84,7 @@ public class UpdatesFeature extends Feature {
                 .withUnderlined(true)
                 .withBold(true));
 
-        McUtils.sendMessageToClient(Component.literal("[Wynntils/Artemis]: ")
+        McUtils.sendMessageToClient(Component.literal("[Wynntils]: ")
                 .withStyle(ChatFormatting.GREEN)
                 .append(Component.translatable(
                                 "feature.wynntils.updates.reminder", WynntilsMod.getVersion(), newVersion)

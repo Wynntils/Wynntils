@@ -48,7 +48,7 @@ public record QuestInfo(
     public int sortLevel() {
         return !isMiniQuest || additionalRequirements.level().a() != 0
                 ? level
-                : additionalRequirements.professionLevels().get(0).a().b();
+                : additionalRequirements.professionLevels().getFirst().a().b();
     }
 
     public static List<Component> generateTooltipForQuest(QuestInfo questInfo) {
