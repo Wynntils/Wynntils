@@ -14,7 +14,7 @@ Wynntils
 
 > Artemis is the greek goddess of hunting and the moon, born of Zeus and Leto, twin of Apollo.
 
-Wynntils is a rewrite of **[Wynntils](https://github.com/Wynntils/Wynntils)** (informally referred to as "Legacy") in 1.21 using Architectury, to support **Fabric** and **NeoForge**. Artemis was a codename used for the rewrite of Wynntils.
+Wynntils is based on Minecraft 1.21 using Architectury, and supports **Fabric** and **NeoForge**. This repository contains a rewrite (originally codenamed Artemis) of the original Wynntils mod, now known as [Wynntils Legacy](https://github.com/Wynntils/Wynntils-Legacy) .
 
 Downloading a release
 ========
