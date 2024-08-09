@@ -31,7 +31,6 @@ import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@SuppressWarnings("rawtypes")
 public class LabelHandler extends Handler {
     private final List<LabelParser> parsers = new ArrayList<>();
 
