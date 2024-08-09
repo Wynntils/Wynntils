@@ -4,6 +4,7 @@
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
+import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
@@ -837,5 +838,13 @@ public class TestRegex {
 
         p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
         p.shouldMatch("§f\uE003\n§dItem Identifier\n§7NPC");
+    }
+
+    @Test
+    public void RevealNicknamesFeature_NICKNAME_PATTERN() {
+        PatternTester p = new PatternTester(RevealNicknamesFeature.class, "NICKNAME_PATTERN");
+
+        p.shouldMatch("§fbol§7's real username is §fbolyai");
+        p.shouldMatch("§fbol's§7 real username is §fbolyai");
     }
 }
