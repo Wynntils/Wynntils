@@ -99,7 +99,7 @@ public class ItemGuessFeature extends Feature {
             guesses.append(StyledText.fromString("§7: ").getComponent());
 
             MutableComponent itemsComponent = Component.empty();
-            itemsComponent.append(itemsForLevel.get(0));
+            itemsComponent.append(itemsForLevel.getFirst());
             itemsForLevel.stream().skip(1).forEach(i -> itemsComponent
                     .append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
                     .append(i));

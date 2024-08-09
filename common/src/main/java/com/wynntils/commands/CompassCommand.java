@@ -126,7 +126,7 @@ public class CompassCommand extends Command {
 
         String target = StringArgumentType.getString(context, "target");
 
-        LocationUtils.shareCompass(target, markers.get(0).location());
+        LocationUtils.shareCompass(target, markers.getFirst().location());
 
         return 1;
     }
@@ -235,7 +235,7 @@ public class CompassCommand extends Command {
             }
             place = exactMatch.get();
         } else {
-            place = places.get(0);
+            place = places.getFirst();
         }
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();

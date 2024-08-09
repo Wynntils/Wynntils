@@ -850,7 +850,7 @@ public final class RenderUtils {
     public static void drawMulticoloredRect(
             PoseStack poseStack, List<CustomColor> colors, float x, float y, float z, float width, float height) {
         if (colors.size() == 1) {
-            drawRect(poseStack, colors.get(0), x, y, z, width, height);
+            drawRect(poseStack, colors.getFirst(), x, y, z, width, height);
             return;
         }
         Matrix4f matrix = poseStack.last().pose();
@@ -998,19 +998,19 @@ public final class RenderUtils {
     }
 
     public static void renderDebugGrid(
-            PoseStack poseStack, float GRID_DIVISIONS, float dividedWidth, float dividedHeight) {
-        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
+            PoseStack poseStack, float gridDivisions, float dividedWidth, float dividedHeight) {
+        for (int i = 1; i <= gridDivisions - 1; i++) {
             double x = dividedWidth * i;
             double y = dividedHeight * i;
-            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, dividedHeight * GRID_DIVISIONS);
-            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, dividedWidth * GRID_DIVISIONS, 1);
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, dividedHeight * gridDivisions);
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, dividedWidth * gridDivisions, 1);
             if (i % 2 == 0) continue; // reduce clutter
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             StyledText.fromString(String.valueOf(i)),
                             (float) x,
-                            dividedHeight * (GRID_DIVISIONS / 2),
+                            dividedHeight * (gridDivisions / 2),
                             CommonColors.RED,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
@@ -1019,7 +1019,7 @@ public final class RenderUtils {
                     .renderText(
                             poseStack,
                             StyledText.fromString(String.valueOf(i)),
-                            dividedWidth * (GRID_DIVISIONS / 2),
+                            dividedWidth * (gridDivisions / 2),
                             (float) y,
                             CommonColors.CYAN,
                             HorizontalAlignment.CENTER,

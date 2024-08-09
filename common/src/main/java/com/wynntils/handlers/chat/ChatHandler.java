@@ -569,7 +569,7 @@ public final class ChatHandler extends Handler {
 
             // Store the last confirmationless dialogue, but it may be repeated,
             // so we need to check that it's not duplicated when a message is sent during the dialogue
-            lastConfirmationlessDialogue = dialogue.get(0);
+            lastConfirmationlessDialogue = dialogue.getFirst();
         } else {
             if (lastScreenNpcDialogue.equals(dialogue)) return;
 

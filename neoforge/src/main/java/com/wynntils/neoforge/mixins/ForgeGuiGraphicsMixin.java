@@ -44,7 +44,7 @@ public abstract class ForgeGuiGraphicsMixin {
             int mouseX,
             int mouseY,
             Operation<Void> operation,
-            @Local ItemStack itemStack) {
+            @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
                 (GuiGraphics) (Object) this,
                 itemStack,

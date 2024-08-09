@@ -226,7 +226,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // Add hovered poi as first
         if (hovered != null) {
             filteredPois.remove(hovered);
-            filteredPois.add(0, hovered);
+            filteredPois.addFirst(hovered);
         }
 
         return filteredPois;

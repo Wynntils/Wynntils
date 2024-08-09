@@ -206,7 +206,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             VerticalAlignment.TOP,
                             TextShadow.NONE);
 
-            Position start = currentLootrun.path().points().get(0);
+            Position start = currentLootrun.path().points().getFirst();
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
@@ -219,10 +219,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             VerticalAlignment.TOP,
                             TextShadow.NONE);
 
-            Position end = currentLootrun
-                    .path()
-                    .points()
-                    .get(currentLootrun.path().points().size() - 1);
+            Position end = currentLootrun.path().points().getLast();
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,

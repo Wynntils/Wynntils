@@ -272,6 +272,6 @@ public class QuestCommand extends Command {
             return null;
         }
 
-        return matchingQuests.get(0);
+        return matchingQuests.getFirst();
     }
 }

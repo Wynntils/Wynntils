@@ -70,7 +70,7 @@ public class LootrunFunctions {
 
             if (mythicFinds.isEmpty()) return 0;
 
-            return mythicFinds.get(mythicFinds.size() - 1).dryCount();
+            return mythicFinds.getLast().dryCount();
         }
     }
 
@@ -81,7 +81,7 @@ public class LootrunFunctions {
 
             if (mythicFinds.isEmpty()) return "";
 
-            return mythicFinds.get(mythicFinds.size() - 1).itemName();
+            return mythicFinds.getLast().itemName();
         }
     }
 
