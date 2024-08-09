@@ -4,8 +4,10 @@
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
+import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
+import com.wynntils.features.trademarket.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
@@ -837,5 +839,20 @@ public class TestRegex {
 
         p.shouldMatch("§dLootrun Master\n§7Start a Lootrun");
         p.shouldMatch("§f\uE003\n§dItem Identifier\n§7NPC");
+    }
+
+    @Test
+    public void RevealNicknamesFeature_NICKNAME_PATTERN() {
+        PatternTester p = new PatternTester(RevealNicknamesFeature.class, "NICKNAME_PATTERN");
+
+        p.shouldMatch("§fbol§7's real username is §fbolyai");
+        p.shouldMatch("§fbol's§7 real username is §fbolyai");
+    }
+
+    @Test
+    public void TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketAutoOpenChatFeature.class, "TYPE_TO_CHAT_PATTERN");
+
+        p.shouldMatch("§5\uE00A\uE002 \n\uE001 Type the item name or type 'cancel' to \n\uE001 cancel:\n\uE001 ");
     }
 }

@@ -8,16 +8,15 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RecipeBookOpenEvent;
-import com.wynntils.screens.base.WynntilsMenuScreenBase;
-import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import net.neoforged.bus.api.SubscribeEvent;
 
+/**
+ * Disables the recipe book as the Wynncraft texture pack hides it, but has no way to disable it.
+ */
 @ConfigCategory(Category.INVENTORY)
-public class ReplaceRecipeBookFeature extends Feature {
+public class DisableRecipeBookFeature extends Feature {
     @SubscribeEvent
     public void onRecipeBookOpen(RecipeBookOpenEvent event) {
         event.setCanceled(true);
-
-        WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create());
     }
 }
