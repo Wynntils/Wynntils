@@ -10,9 +10,9 @@ Wynntils
 
 <img src="http://cdn.wynntils.com/wynntils%20logo%20-%20w%20paintstroke.png" width=15% alt="Wynntils Logo">
 
-Wynntils is a Wynncraft mod that seeks to enhance the user's gameplay with a variety of customizable options and additions.
-
 </div>
+
+Wynntils is a Wynncraft mod that seeks to enhance the user's gameplay with a variety of customizable options and additions.
 
 Wynntils is based on Minecraft 1.21 using Architectury, and supports **Fabric** and **NeoForge**. This repository contains a rewrite (originally codenamed Artemis) of the original Wynntils mod, now known as [Wynntils Legacy](https://github.com/Wynntils/Wynntils-Legacy) .
 
