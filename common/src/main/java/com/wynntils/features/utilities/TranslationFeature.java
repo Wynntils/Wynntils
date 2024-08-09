@@ -63,7 +63,7 @@ public class TranslationFeature extends Feature {
                 .translate(List.of(codedString), languageName.get(), translatedMsgList -> {
                     StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
-                        String result = translatedMsgList.get(0);
+                        String result = translatedMsgList.getFirst();
                         messageToSend = unwrapCoding(result, originalText);
                     } else {
                         if (keepOriginal.get()) return;

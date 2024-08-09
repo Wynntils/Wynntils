@@ -214,7 +214,7 @@ public class ProfessionHighlightFeature extends Feature {
             // Left click increases the profession type
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 if (profession == null) {
-                    profession = ProfessionType.craftingProfessionTypes().get(0);
+                    profession = ProfessionType.craftingProfessionTypes().getFirst();
                 } else {
                     int nextIndex = (ProfessionType.craftingProfessionTypes().indexOf(profession) + 1)
                             % ProfessionType.craftingProfessionTypes().size();
@@ -233,8 +233,7 @@ public class ProfessionHighlightFeature extends Feature {
             // Right click decreases the profession type
             if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 if (profession == null) {
-                    profession = ProfessionType.craftingProfessionTypes()
-                            .get(ProfessionType.craftingProfessionTypes().size() - 1);
+                    profession = ProfessionType.craftingProfessionTypes().getLast();
                 } else {
                     int nextIndex = (ProfessionType.craftingProfessionTypes().indexOf(profession) - 1)
                             % ProfessionType.craftingProfessionTypes().size();

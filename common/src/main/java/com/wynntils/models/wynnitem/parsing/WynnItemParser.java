@@ -134,7 +134,7 @@ public final class WynnItemParser {
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
-        lore.remove(0); // remove item name
+        lore.removeFirst(); // remove item name
 
         for (Component loreLine : lore) {
             StyledText coded = StyledText.fromComponent(loreLine);

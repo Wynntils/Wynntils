@@ -309,9 +309,9 @@ public final class MapRenderer {
 
         for (int i = 0; i < points.size() - 1; i++) {
             if (i == 0) {
-                middlePoints.add(points.get(0));
+                middlePoints.add(points.getFirst());
             } else if (i == points.size() - 2) {
-                middlePoints.add(points.get(points.size() - 1));
+                middlePoints.add(points.getLast());
             } else {
                 middlePoints.add(
                         new Vector2f(points.get(i)).add(points.get(i + 1)).mul(0.5f));
@@ -409,19 +409,19 @@ public final class MapRenderer {
             addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
             addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
 
-            Vector2f _p0 = new Vector2f(p1).add(t0);
-            Vector2f _p1 = new Vector2f(p1).add(t2);
-            Vector2f _p2 = new Vector2f(p1).sub(anchor);
+            Vector2f rP0 = new Vector2f(p1).add(t0);
+            Vector2f rP1 = new Vector2f(p1).add(t2);
+            Vector2f rP2 = new Vector2f(p1).sub(anchor);
 
-            addVertex(bufferBuilder, _p0, color, poseStack);
+            addVertex(bufferBuilder, rP0, color, poseStack);
             addVertex(bufferBuilder, p1, color, poseStack);
-            addVertex(bufferBuilder, _p2, color, poseStack);
+            addVertex(bufferBuilder, rP2, color, poseStack);
 
-            drawRoundJoint(p1, _p0, _p1, _p2, bufferBuilder, color, poseStack);
+            drawRoundJoint(p1, rP0, rP1, rP2, bufferBuilder, color, poseStack);
 
             addVertex(bufferBuilder, p1, color, poseStack);
-            addVertex(bufferBuilder, _p1, color, poseStack);
-            addVertex(bufferBuilder, _p2, color, poseStack);
+            addVertex(bufferBuilder, rP1, color, poseStack);
+            addVertex(bufferBuilder, rP2, color, poseStack);
 
             addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
             addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);

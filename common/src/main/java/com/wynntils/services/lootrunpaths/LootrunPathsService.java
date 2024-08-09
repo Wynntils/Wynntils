@@ -265,7 +265,7 @@ public final class LootrunPathsService extends Service {
 
         if (activeLootrun.path() == null || activeLootrun.path().points().isEmpty()) return null;
 
-        return activeLootrun.path().points().get(0);
+        return activeLootrun.path().points().getFirst();
     }
 
     public LootrunSaveResult saveCurrentLootrun(String name) {

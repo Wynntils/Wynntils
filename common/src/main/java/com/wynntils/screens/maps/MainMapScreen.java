@@ -467,7 +467,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         if (shareCompass) {
             // FIXME: Find an intuitive way to share compasses with multiple waypoints
-            LocationUtils.shareCompass(target, markers.get(0).location());
+            LocationUtils.shareCompass(target, markers.getFirst().location());
         } else {
             LocationUtils.shareLocation(target);
         }

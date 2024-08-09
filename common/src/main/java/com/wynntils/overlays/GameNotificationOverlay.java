@@ -76,7 +76,7 @@ public class GameNotificationOverlay extends Overlay {
         messageQueue.add(new TimedMessageContainer(event.getMessageContainer(), getMessageDisplayLength()));
 
         if (overrideNewMessages.get() && messageQueue.size() > messageLimit.get()) {
-            messageQueue.remove(0);
+            messageQueue.removeFirst();
         }
     }
 
@@ -143,8 +143,8 @@ public class GameNotificationOverlay extends Overlay {
 
         if (this.invertGrowth.get()) {
             while (renderedValues.size() < messageLimit.get()) {
-                renderedValues.add(0, new TimedMessageContainer(new MessageContainer(""), (long)
-                        (this.messageTimeLimit.get() * 1000)));
+                renderedValues.addFirst(new TimedMessageContainer(
+                        new MessageContainer(""), (long) (this.messageTimeLimit.get() * 1000)));
             }
         }
 

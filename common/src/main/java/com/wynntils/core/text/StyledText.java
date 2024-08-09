@@ -278,7 +278,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
         }
 
         List<StyledTextPart> newParts = new ArrayList<>(parts);
-        newParts.set(0, newParts.get(0).stripLeading());
+        newParts.set(0, newParts.getFirst().stripLeading());
 
         int lastIndex = newParts.size() - 1;
         newParts.set(lastIndex, newParts.get(lastIndex).stripTrailing());
@@ -390,7 +390,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     public StyledText prependPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
-        newParts.add(0, part);
+        newParts.addFirst(part);
         return fromParts(newParts);
     }
 
@@ -697,7 +697,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             return null;
         }
 
-        return parts.get(0);
+        return parts.getFirst();
     }
 
     public StyledTextPart getLastPart() {
@@ -705,7 +705,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             return null;
         }
 
-        return parts.get(parts.size() - 1);
+        return parts.getLast();
     }
 
     public int getPartCount() {

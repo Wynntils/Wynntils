@@ -99,7 +99,7 @@ public class LootrunPathButton extends WynntilsButton {
             }
 
             LootrunPath path = lootrun.path();
-            Position start = path.points().get(0);
+            Position start = path.points().getFirst();
 
             McUtils.mc().setScreen(MainMapScreen.create((float) start.x(), (float) start.z()));
             return true;

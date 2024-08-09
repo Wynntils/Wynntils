@@ -93,7 +93,7 @@ public class LocateCommand extends Command {
         }
 
         // Got exactly one match
-        return matchedKinds.get(0);
+        return matchedKinds.getFirst();
     }
 
     private int locateService(CommandContext<CommandSourceStack> context) {

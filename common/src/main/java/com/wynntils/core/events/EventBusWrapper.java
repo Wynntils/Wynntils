@@ -43,7 +43,7 @@ public class EventBusWrapper extends EventBus {
         super.register(target);
     }
 
-    private static class DevelopmentEnvironment extends EventBusWrapper {
+    private static final class DevelopmentEnvironment extends EventBusWrapper {
         private DevelopmentEnvironment(BusBuilderImpl busBuilder) {
             super(busBuilder);
         }

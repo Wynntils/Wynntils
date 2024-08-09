@@ -121,10 +121,10 @@ public class NpcDialogueModel extends Model {
         }
 
         if (!chatMessage.isEmpty()
-                && chatMessage.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
+                && chatMessage.getFirst().getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
-            Managers.Notification.queueMessage(chatMessage.get(0));
+            Managers.Notification.queueMessage(chatMessage.getFirst());
         }
 
         NpcDialogueProcessingEvent.Pre event = new NpcDialogueProcessingEvent.Pre(dialogue);

@@ -200,8 +200,6 @@ public class MainMapFeature extends Feature {
 
     public void updateWaypoints() {
         WaypointsProvider.resetFeatures();
-        customPois.get().forEach(customPoi -> {
-            WaypointsProvider.registerFeature(customPoi);
-        });
+        customPois.get().forEach(WaypointsProvider::registerFeature);
     }
 }

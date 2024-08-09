@@ -11,7 +11,7 @@ public abstract class ScoreboardEvent extends Event {
     private final StyledText owner;
     private final String objectiveName;
 
-    public ScoreboardEvent(StyledText owner, String objectiveName) {
+    protected ScoreboardEvent(StyledText owner, String objectiveName) {
         this.owner = owner;
         this.objectiveName = objectiveName;
     }
