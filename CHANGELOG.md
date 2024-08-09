@@ -1,3 +1,12 @@
+## [2.0.0-beta.19](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.18...v2.0.0-beta.19) (2024-08-09)
+
+
+### Bug Fixes
+
+* Change ReplaceRecipeBookFeature to DisableRecipeBookFeature [skip ci] ([#2718](https://github.com/Wynntils/Wynntils/issues/2718)) ([2bf815c](https://github.com/Wynntils/Wynntils/commit/2bf815c758e3d4af1d3515fa4dd2ebaf54de442e))
+* Fix RevealNicknamesFeature by accounting for Wynn's inconsistent behavior [skip ci] ([#2716](https://github.com/Wynntils/Wynntils/issues/2716)) ([18667a5](https://github.com/Wynntils/Wynntils/commit/18667a592a9427ebc793d15b8105784095c8d123))
+* Fix TradeMarketAutoOpenChatFeature (as 2.1 changed its chat message) [skip ci] ([#2717](https://github.com/Wynntils/Wynntils/issues/2717)) ([0adb694](https://github.com/Wynntils/Wynntils/commit/0adb6941fa7c55eb71da4ae66b8be44438fc6b8d))
+
 ## [2.0.0-beta.18](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2024-08-09)
 
 
@@ -10,6 +19,7 @@
 
 * rawtypes need not be suppressed in LabelHandler [skip ci] ([#2712](https://github.com/Wynntils/Wynntils/issues/2712)) ([54d1f72](https://github.com/Wynntils/Wynntils/commit/54d1f72df972cf64eb24da458708ca430a83ffec))
 * Rebrand to Wynntils (move away from using the Artemis codename) ([#2711](https://github.com/Wynntils/Wynntils/issues/2711)) ([8f3f081](https://github.com/Wynntils/Wynntils/commit/8f3f0819f7fcce1fd90611a223f42b583dfcc977))
+* **release:** v2.0.0-beta.18 [skip ci] ([eb020e4](https://github.com/Wynntils/Wynntils/commit/eb020e490af28273fb285502ecef55a1b9f58aeb))
 * Sunset the old gear chat encoding [skip ci] ([#2713](https://github.com/Wynntils/Wynntils/issues/2713)) ([2aa5694](https://github.com/Wynntils/Wynntils/commit/2aa5694eeb3ee5645ea8b3e535bbd0f2f1131b54))
 
 
@@ -62,25 +72,4 @@
 ### Code Refactoring
 
 * Move ChatMessageReceivedEvent and ClientsideMessageEvent to StyledText (only) [skip ci] ([#2684](https://github.com/Wynntils/Wynntils/issues/2684)) ([c18dcf6](https://github.com/Wynntils/Wynntils/commit/c18dcf65c8a2647c491ad4fd44b18c9fb591b2f2))
-
-## [2.0.0-beta.14](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.13...v2.0.0-beta.14) (2024-08-05)
-
-
-### New Features
-
-* Add MappingProgressFeature (for development purposes) [skip ci] ([#2701](https://github.com/Wynntils/Wynntils/issues/2701)) ([1ac6bab](https://github.com/Wynntils/Wynntils/commit/1ac6bab01c5fe437e23fd544aa73976344e4e665))
-
-
-### Bug Fixes
-
-* Fix annotating tier 4 aspects [skip ci] ([#2699](https://github.com/Wynntils/Wynntils/issues/2699)) ([ebbb755](https://github.com/Wynntils/Wynntils/commit/ebbb7552f8e330c91ea4efe455cc0f039c65f176))
-* Fix Ophanim bar overlay with mythic aspects and add tracking for 4th shaman totem [skip ci] ([#2700](https://github.com/Wynntils/Wynntils/issues/2700)) ([7831ba8](https://github.com/Wynntils/Wynntils/commit/7831ba8d79104a716f26a8a3ad67f61a70785068))
-* Fix raid tracking for 2.1 ([#2662](https://github.com/Wynntils/Wynntils/issues/2662)) ([f40f626](https://github.com/Wynntils/Wynntils/commit/f40f626694eb79f3b47d8aab7c37b82b48277742))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.0-beta.14 [skip ci] ([fefdae6](https://github.com/Wynntils/Wynntils/commit/fefdae60cb66a3dcad43987b4c0acb44fbfc216b))
-* Require Fabric Loader 0.16.0+ and stable NeoForge [skip ci] ([#2698](https://github.com/Wynntils/Wynntils/issues/2698)) ([950cd56](https://github.com/Wynntils/Wynntils/commit/950cd56956c6125739f70f305867b13b68e4d7f1))
-* update urls.json for lr tasks [skip ci] ([1e78b75](https://github.com/Wynntils/Wynntils/commit/1e78b7551f14472804df94c9300bf5ff08b7b31d))
 
