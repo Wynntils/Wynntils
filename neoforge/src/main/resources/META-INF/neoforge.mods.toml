@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "${loader_version_range}"
-issueTrackerURL = "https://github.com/Wynntils/Artemis/issues"
+issueTrackerURL = "https://github.com/Wynntils/Wynntils/issues"
 license = "LGPL-3.0-only"
 
 [[mods]]
