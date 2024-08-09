@@ -1,9 +1,29 @@
+## [2.0.0-beta.18](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.17...v2.0.0-beta.18) (2024-08-09)
+
+
+### Bug Fixes
+
+* Fix ChatHandler not detecting slowdown effect correctly [skip ci] ([#2715](https://github.com/Wynntils/Wynntils/issues/2715)) ([02c2000](https://github.com/Wynntils/Wynntils/commit/02c200060b3ce80ba1c8c70cc107fe462fdcec5a))
+
+
+### Miscellaneous Chores
+
+* rawtypes need not be suppressed in LabelHandler [skip ci] ([#2712](https://github.com/Wynntils/Wynntils/issues/2712)) ([54d1f72](https://github.com/Wynntils/Wynntils/commit/54d1f72df972cf64eb24da458708ca430a83ffec))
+* Rebrand to Wynntils (move away from using the Artemis codename) ([#2711](https://github.com/Wynntils/Wynntils/issues/2711)) ([8f3f081](https://github.com/Wynntils/Wynntils/commit/8f3f0819f7fcce1fd90611a223f42b583dfcc977))
+* Sunset the old gear chat encoding [skip ci] ([#2713](https://github.com/Wynntils/Wynntils/issues/2713)) ([2aa5694](https://github.com/Wynntils/Wynntils/commit/2aa5694eeb3ee5645ea8b3e535bbd0f2f1131b54))
+
+
+### Code Refactoring
+
+* Java 21 related refactors [skip ci] ([#2714](https://github.com/Wynntils/Wynntils/issues/2714)) ([2e283fa](https://github.com/Wynntils/Wynntils/commit/2e283fa28502f8f8e4a34d8a24db281449c807da))
+
 ## [2.0.0-beta.17](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.16...v2.0.0-beta.17) (2024-08-09)
 
 
 ### Miscellaneous Chores
 
 * rawtypes need not be suppressed in LabelHandler ([adf02d6](https://github.com/Wynntils/Wynntils/commit/adf02d6f0343e676fd1090cbd7bb591e17f7ec15))
+* **release:** v2.0.0-beta.17 [skip ci] ([63c92e0](https://github.com/Wynntils/Wynntils/commit/63c92e0fec78cf29092d4afd5955401f843a35d6))
 
 ## [2.0.0-beta.16](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.15...v2.0.0-beta.16) (2024-08-08)
 
@@ -63,28 +83,4 @@
 * **release:** v2.0.0-beta.14 [skip ci] ([fefdae6](https://github.com/Wynntils/Wynntils/commit/fefdae60cb66a3dcad43987b4c0acb44fbfc216b))
 * Require Fabric Loader 0.16.0+ and stable NeoForge [skip ci] ([#2698](https://github.com/Wynntils/Wynntils/issues/2698)) ([950cd56](https://github.com/Wynntils/Wynntils/commit/950cd56956c6125739f70f305867b13b68e4d7f1))
 * update urls.json for lr tasks [skip ci] ([1e78b75](https://github.com/Wynntils/Wynntils/commit/1e78b7551f14472804df94c9300bf5ff08b7b31d))
-
-## [2.0.0-beta.13](https://github.com/Wynntils/Wynntils/compare/v2.0.0-beta.12...v2.0.0-beta.13) (2024-08-04)
-
-
-### New Features
-
-* Aspect container scrolling [skip ci] ([#2691](https://github.com/Wynntils/Wynntils/issues/2691)) ([a60869f](https://github.com/Wynntils/Wynntils/commit/a60869f9c5648d2bac0036a87537394be8903747))
-
-
-### Bug Fixes
-
-* 2.1 attack timer fixes and don't send defence levels on failed attacks [skip ci] ([#2621](https://github.com/Wynntils/Wynntils/issues/2621)) ([d691030](https://github.com/Wynntils/Wynntils/commit/d691030e63f03cc6eb855f634dd8b1c04d540a77))
-* Annotate mythic aspects [skip ci] ([#2690](https://github.com/Wynntils/Wynntils/issues/2690)) ([910c928](https://github.com/Wynntils/Wynntils/commit/910c928e483b96ff35cfeec4338e96b414877575))
-* Don't spam tracker update sound when tracking world events [skip ci] ([#2692](https://github.com/Wynntils/Wynntils/issues/2692)) ([06e3c2c](https://github.com/Wynntils/Wynntils/commit/06e3c2c9c605bc2fd7ab0f495b5629ab59d68d30))
-* Fix fallback recognition for gears (fix 2.1 items not getting recognized) [skip ci] ([#2697](https://github.com/Wynntils/Wynntils/issues/2697)) ([87fe079](https://github.com/Wynntils/Wynntils/commit/87fe0791c129cd583d58da20e9d593c2e2deb36d))
-* Fix NPC crowdsourcing, bump crowdsourcing version [skip ci] ([#2696](https://github.com/Wynntils/Wynntils/issues/2696)) ([5b9f47b](https://github.com/Wynntils/Wynntils/commit/5b9f47bd197726209405c472c5c92861e909a553))
-* Fix player nametags rendering incorrectly [skip ci] ([#2693](https://github.com/Wynntils/Wynntils/issues/2693)) ([0be513a](https://github.com/Wynntils/Wynntils/commit/0be513a0be909023a2aee837231182df61b9104d))
-* Parse health/mana values with "k/b/t" shorthands in them [skip ci] ([#2695](https://github.com/Wynntils/Wynntils/issues/2695)) ([2258524](https://github.com/Wynntils/Wynntils/commit/22585243211c468e7f9cf560ee1b4fc9c03e1626))
-
-
-### Miscellaneous Chores
-
-* Make StyledText[#from](https://github.com/Wynntils/Wynntils/issues/from)String support hex color codes [skip ci] ([#2694](https://github.com/Wynntils/Wynntils/issues/2694)) ([51f76b2](https://github.com/Wynntils/Wynntils/commit/51f76b26e00e9d1d5930788ea32df64d314d5b23))
-* **release:** v2.0.0-beta.13 [skip ci] ([86be0ad](https://github.com/Wynntils/Wynntils/commit/86be0adf0e0cca422c5bab691c3632691f3281ce))
 
