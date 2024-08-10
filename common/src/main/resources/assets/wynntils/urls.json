@@ -90,7 +90,7 @@
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "8d329a3c3d31d2c05cf594d2dd016609",
+    "md5": "143dd6cadb8967214da630ec3168c3bc",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
   },
   {
@@ -105,7 +105,7 @@
   },
   {
     "id": "dataStaticCombatMapFeatures",
-    "md5": "4f08f016de175c11a5ddc899f5bf6d53",
+    "md5": "30d11707b9819c0271a661120f904369",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/combat_mapfeatures.json"
   },
   {
@@ -155,7 +155,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamed",
-    "md5": "bf06122a51398fa8093c881a1c095689",
+    "md5": "c147221c93bfe0771cf0cd81c4d929c1",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/lootrun_tasks_named.json"
   },
   {
@@ -165,7 +165,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "3d1825eee8011ca34fce25a5a3597fc0",
+    "md5": "0165174c3c0b042468ecc65d5c42b5d5",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/maps.json"
   },
   {
