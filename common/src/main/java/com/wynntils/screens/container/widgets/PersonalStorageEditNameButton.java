@@ -76,6 +76,8 @@ public class PersonalStorageEditNameButton extends WynntilsButton {
             Models.Bank.toggleEditingName(!Models.Bank.isEditingName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
             Models.Bank.resetCurrentPageName();
+
+            parent.updatePageName();
         }
 
         return true;
