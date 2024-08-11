@@ -1,3 +1,18 @@
+## [2.0.1](https://github.com/Wynntils/Wynntils/compare/v2.0.0...v2.0.1) (2024-08-11)
+
+
+### New Features
+
+* Allow 1.21.1 to be used with Wynntils ([#2726](https://github.com/Wynntils/Wynntils/issues/2726)) ([567b1c9](https://github.com/Wynntils/Wynntils/commit/567b1c9e0431d20debabeb7c97017f946c4179f9))
+
+
+### Bug Fixes
+
+* Don't allow weapons as a valid item for mounting horses [skip ci] ([#2722](https://github.com/Wynntils/Wynntils/issues/2722)) ([6154cf9](https://github.com/Wynntils/Wynntils/commit/6154cf9d0452e032dc3b3fd21bed77cea434dd63))
+* Fix gathering tool annotator [skip ci] ([#2721](https://github.com/Wynntils/Wynntils/issues/2721)) ([4b76b86](https://github.com/Wynntils/Wynntils/commit/4b76b86c573b845deaa982e4d19832e1b15f9cda))
+* Fix ItemHighlightFeature crashing/spamming logs [skip ci] ([#2725](https://github.com/Wynntils/Wynntils/issues/2725)) ([22dc3c6](https://github.com/Wynntils/Wynntils/commit/22dc3c6e0f3541b5b7e90bd9371b356a15c78aea))
+* Fix player swimming in character selection screen [skip ci] ([#2724](https://github.com/Wynntils/Wynntils/issues/2724)) ([2483ab2](https://github.com/Wynntils/Wynntils/commit/2483ab2c2c4fd26520a74d2b14927af6be54c0ae))
+
 ## [2.0.0](https://github.com/Wynntils/Wynntils/compare/v1.2.32...v2.0.0) (2024-08-10)
 
 
@@ -9,6 +24,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2720](https://github.com/Wynntils/Wynntils/issues/2720)) ([f2aae55](https://github.com/Wynntils/Wynntils/commit/f2aae55bc53ad706126408254acdadb1927bad1e))
+* **release:** v2.0.0 [skip ci] ([c6abc9a](https://github.com/Wynntils/Wynntils/commit/c6abc9a020d8fb245f06b7f8e6ff289c3bc3a2af))
 
 ## [1.2.32](https://github.com/Wynntils/Wynntils/compare/v1.2.31...v1.2.32) (2024-08-01)
 
@@ -57,16 +73,4 @@
 ### Code Refactoring
 
 * rewrite GammabrightFeature ([#2618](https://github.com/Wynntils/Wynntils/issues/2618)) ([748aaf7](https://github.com/Wynntils/Wynntils/commit/748aaf7ed373f8965554aefdcaa44aa1fab9864d))
-
-## [1.2.29](https://github.com/Wynntils/Wynntils/compare/v1.2.28...v1.2.29) (2024-06-29)
-
-
-### Bug Fixes
-
-* Pre-load Wynncraft resource pack above all required resource packs ([#2613](https://github.com/Wynntils/Wynntils/issues/2613)) ([09f7b50](https://github.com/Wynntils/Wynntils/commit/09f7b50452654c5fd6c488e30694b883378f42de))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.29 [skip ci] ([cf0c55b](https://github.com/Wynntils/Wynntils/commit/cf0c55badfbf72f06adb86678ab92546f2eb765d))
 
