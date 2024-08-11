@@ -22,7 +22,7 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     // Type the amount you wish to buy or type 'cancel' to cancel:
     // Type the item name or type 'cancel' to cancel:
     private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile(
-            "^§5\uE00A\uE002 \n\uE001 Type the item name or type 'cancel' to \n\uE001 cancel:\n\uE001\\s+$");
+            "^§5(\uE00A\uE002|\uE001) \n\uE001 Type the .* or type (\n\uE001 'cancel' to|'cancel' to \n\uE001) cancel:\n\uE001 ");
 
     private boolean openChatWhenContainerClosed = false;
 
