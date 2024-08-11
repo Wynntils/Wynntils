@@ -64,7 +64,7 @@ test {
 processResources {
     var replaceProperties = [
         mod_version                : rootProject.version,
-        minecraft_version          : minecraft_version,
+        minecraft_version          : fabric_minecraft_version_range,
         fabric_loader_version      : fabric_loader_version,
         mod_id                     : mod_id
     ]

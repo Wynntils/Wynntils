@@ -42,7 +42,7 @@ dependencies {
 processResources {
     var replaceProperties = [
         mod_version                : rootProject.version,
-        minecraft_version          : minecraft_version,
+        minecraft_version          : neoforge_minecraft_version_range,
         neoforge_version_range     : neoforge_version_range,
         loader_version_range       : neoforge_loader_version_range,
         mod_id                     : mod_id

@@ -36,6 +36,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Pose;
 import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
@@ -369,8 +370,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
-        McUtils.player().resetFallDistance();
-        McUtils.player().setSwimming(false);
+        McUtils.player().setPose(Pose.STANDING);
 
         int scale = (int) (this.height / 4.5f);
 
