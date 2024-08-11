@@ -853,6 +853,9 @@ public class TestRegex {
     public void TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketAutoOpenChatFeature.class, "TYPE_TO_CHAT_PATTERN");
 
+        p.shouldMatch(
+                "§5\uE00A\uE002 \n\uE001 Type the amount you wish to buy or type \n\uE001 'cancel' to cancel:\n\uE001 ");
+        p.shouldMatch("§5\uE001 \n\uE001 Type the price in emeralds or type \n\uE001 'cancel' to cancel:\n\uE001 ");
         p.shouldMatch("§5\uE00A\uE002 \n\uE001 Type the item name or type 'cancel' to \n\uE001 cancel:\n\uE001 ");
     }
 }
