@@ -119,6 +119,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
 
         Models.Bank.saveCurrentPageName(widget.getName());
         widget.removeEditInput();
+        widget.updatePageName();
     }
 
     @SubscribeEvent
