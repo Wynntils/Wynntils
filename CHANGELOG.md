@@ -1,3 +1,13 @@
+## [2.0.2](https://github.com/Wynntils/Wynntils/compare/v2.0.1...v2.0.2) (2024-08-11)
+
+
+### Bug Fixes
+
+* Fix ReplayMod causing container features to not work [skip ci] ([#2729](https://github.com/Wynntils/Wynntils/issues/2729)) ([7856d2f](https://github.com/Wynntils/Wynntils/commit/7856d2fb8f4bcc0eb644f90fcb3fac0cc4083b0e))
+* Fix TradeMarketAutoOpenChatFeature [skip ci] ([#2727](https://github.com/Wynntils/Wynntils/issues/2727)) ([417b9f2](https://github.com/Wynntils/Wynntils/commit/417b9f2b22b241c48e288c0b8187988e2e315152))
+* Fix tutorial content book ([#2730](https://github.com/Wynntils/Wynntils/issues/2730)) ([721e8c6](https://github.com/Wynntils/Wynntils/commit/721e8c6a32604d102b2a9c947b01e17176131ee1))
+* Update bank page names after setting/resetting [skip ci] ([#2728](https://github.com/Wynntils/Wynntils/issues/2728)) ([86feb4e](https://github.com/Wynntils/Wynntils/commit/86feb4ee7c9b94937d375b543f1ff3aaf139dbea))
+
 ## [2.0.1](https://github.com/Wynntils/Wynntils/compare/v2.0.0...v2.0.1) (2024-08-11)
 
 
@@ -12,6 +22,11 @@
 * Fix gathering tool annotator [skip ci] ([#2721](https://github.com/Wynntils/Wynntils/issues/2721)) ([4b76b86](https://github.com/Wynntils/Wynntils/commit/4b76b86c573b845deaa982e4d19832e1b15f9cda))
 * Fix ItemHighlightFeature crashing/spamming logs [skip ci] ([#2725](https://github.com/Wynntils/Wynntils/issues/2725)) ([22dc3c6](https://github.com/Wynntils/Wynntils/commit/22dc3c6e0f3541b5b7e90bd9371b356a15c78aea))
 * Fix player swimming in character selection screen [skip ci] ([#2724](https://github.com/Wynntils/Wynntils/issues/2724)) ([2483ab2](https://github.com/Wynntils/Wynntils/commit/2483ab2c2c4fd26520a74d2b14927af6be54c0ae))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.1 [skip ci] ([f9da82a](https://github.com/Wynntils/Wynntils/commit/f9da82a000b06ba5c8be60a47cc3324cedc1bd6f))
 
 ## [2.0.0](https://github.com/Wynntils/Wynntils/compare/v1.2.32...v2.0.0) (2024-08-10)
 
@@ -54,23 +69,4 @@
 ### Miscellaneous Chores
 
 * **release:** v1.2.31 [skip ci] ([8ac1266](https://github.com/Wynntils/Wynntils/commit/8ac126664c8391a3f9a4141a4bad43768da27b66))
-
-## [1.2.30](https://github.com/Wynntils/Wynntils/compare/v1.2.29...v1.2.30) (2024-07-01)
-
-
-### New Features
-
-* Lootrun Task Name Force Coordinates option [skip ci] ([#2617](https://github.com/Wynntils/Wynntils/issues/2617)) ([6cc3990](https://github.com/Wynntils/Wynntils/commit/6cc3990853e21854e97bd5d7a9fe5728b57b8bae))
-
-
-### Miscellaneous Chores
-
-* Bump workflows from alpha to beta [skip ci] ([#2615](https://github.com/Wynntils/Wynntils/issues/2615)) ([ab30808](https://github.com/Wynntils/Wynntils/commit/ab30808b898bcfefede738403dfcc3b61e113535))
-* **release:** v1.2.30 [skip ci] ([326a78e](https://github.com/Wynntils/Wynntils/commit/326a78ede2e8a10164aefc3a930356e898a71681))
-* Update beta messages [skip ci] ([#2614](https://github.com/Wynntils/Wynntils/issues/2614)) ([3404758](https://github.com/Wynntils/Wynntils/commit/3404758939f40fdd4bb070b0f30da593f75ad2a0))
-
-
-### Code Refactoring
-
-* rewrite GammabrightFeature ([#2618](https://github.com/Wynntils/Wynntils/issues/2618)) ([748aaf7](https://github.com/Wynntils/Wynntils/commit/748aaf7ed373f8965554aefdcaa44aa1fab9864d))
 
