@@ -15,7 +15,7 @@ logoFile = "assets/wynntils/logo.png"
 [[dependencies.wynntils]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[${minecraft_version}]"
+versionRange = "${minecraft_version}"
 
 [[dependencies.wynntils]]
 modId = "neoforge"
