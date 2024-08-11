@@ -155,12 +155,17 @@ public class WynntilsContentBookFeature extends Feature {
 
     private void tryCancelQuestBookOpen(ICancellableEvent event) {
         // Tutorial safeguard, don't replace the content book if the player hasn't completed the tutorial
-        if (McUtils.inventory()
-                        .getItem(TUTORIAL_HIGHLIGHT_SLOT)
-                        .getComponents()
-                        .get(DataComponents.CUSTOM_MODEL_DATA)
-                        .value()
-                == TUTORIAL_CUSTOM_MODEL_DATA_VALUE) return;
+        ItemStack contentBookItem = McUtils.inventory().getItem(TUTORIAL_HIGHLIGHT_SLOT);
+
+        if (contentBookItem != null && contentBookItem.getComponents().has(DataComponents.CUSTOM_MODEL_DATA)) {
+            if (contentBookItem
+                            .getComponents()
+                            .get(DataComponents.CUSTOM_MODEL_DATA)
+                            .value()
+                    == TUTORIAL_CUSTOM_MODEL_DATA_VALUE) {
+                return;
+            }
+        }
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
