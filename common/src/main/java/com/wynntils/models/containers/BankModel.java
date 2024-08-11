@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -73,10 +72,8 @@ public class BankModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onScreenInit(ScreenInitEvent e) {
-        storageContainerType = null;
-
-        if (!(e.getScreen() instanceof AbstractContainerScreen<?>)) return;
         if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer container)) {
+            storageContainerType = null;
             return;
         }
 

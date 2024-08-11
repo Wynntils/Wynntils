@@ -68,8 +68,6 @@ public final class ContainerModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenInit(ScreenInitEvent e) {
-        currentContainer = null;
-
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
         for (Container container : containerTypes) {
