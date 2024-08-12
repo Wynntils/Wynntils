@@ -5,6 +5,7 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -29,6 +30,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
@@ -39,6 +41,7 @@ public class BulkBuyFeature extends Feature {
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
     private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
+    private static final int TICKS_DELAY = 4;
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
@@ -48,9 +51,20 @@ public class BulkBuyFeature extends Feature {
 
         if (!isBulkBuyable(container, e.getItemStack())) return;
 
-        if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left Click
-            for (int i = 1; i < bulkBuyAmount.get(); i++) {
-                ContainerUtils.clickOnSlot(e.getSlotNum(), container.containerId, 10, container.getItems());
+        if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left/Right Click
+            // shift + left clicks have a longer cooldown for some reason, we do this to guarantee the right click
+            e.setCanceled(true);
+
+            for (int i = 0; i < bulkBuyAmount.get(); i++) {
+                Managers.TickScheduler.scheduleLater(
+                        () -> {
+                            ContainerUtils.clickOnSlot(
+                                    e.getSlotNum(),
+                                    container.containerId,
+                                    GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                                    container.getItems());
+                        },
+                        TICKS_DELAY * i);
             }
         }
     }
