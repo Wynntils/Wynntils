@@ -70,6 +70,8 @@ public final class ContainerModel extends Model {
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
+        currentContainer = null;
+
         for (Container container : containerTypes) {
             if (container.isScreen(screen)) {
                 currentContainer = container;

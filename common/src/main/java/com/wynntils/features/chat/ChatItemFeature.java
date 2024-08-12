@@ -34,6 +34,7 @@ import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -131,14 +132,18 @@ public class ChatItemFeature extends Feature {
 
         StyledText styledText = e.getStyledText();
 
+        StyledText unwrapped = StyledTextUtils.unwrap(styledText);
+
         // Decode old chat item encoding
-        StyledText modified = styledText.iterate((part, changes) -> {
+        StyledText modified = unwrapped.iterate((part, changes) -> {
             decodeChatEncoding(changes, part);
             return IterationDecision.CONTINUE;
         });
 
-        if (modified.equals(styledText)) return;
+        if (modified.equals(unwrapped)) return;
 
+        // If the message had any chat items, we use our unwrapped version
+        // FIXME: This edited message could be re-wrapped if it is too long, to match the original message's style
         e.setMessage(modified);
     }
 
