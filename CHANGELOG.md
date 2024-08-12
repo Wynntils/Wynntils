@@ -1,3 +1,17 @@
+## [2.0.3](https://github.com/Wynntils/Wynntils/compare/v2.0.2...v2.0.3) (2024-08-12)
+
+
+### New Features
+
+* Add RemoveWynncraftChatWrapFeature and fix ChatItemFeature not working in party/guild/private chat ([#2734](https://github.com/Wynntils/Wynntils/issues/2734)) ([725781a](https://github.com/Wynntils/Wynntils/commit/725781a1facf8c33ca81ba73229954236fcb75af))
+
+
+### Bug Fixes
+
+* Correctly set game version requirement tags on Modrinth and CurseForge [skip ci] ([#2732](https://github.com/Wynntils/Wynntils/issues/2732)) ([5838da2](https://github.com/Wynntils/Wynntils/commit/5838da29f7d990bfeaa91d5f37d4c845206aa434))
+* Fix CustomSeaskipperScreenFeature crashing the game [skip ci] ([#2733](https://github.com/Wynntils/Wynntils/issues/2733)) ([d3bfd88](https://github.com/Wynntils/Wynntils/commit/d3bfd887b04c44049e2874037e1698b9a6e2c943))
+* Reset current container if on a container screen [skip ci] ([#2731](https://github.com/Wynntils/Wynntils/issues/2731)) ([a7950c3](https://github.com/Wynntils/Wynntils/commit/a7950c35b4e6827a053874627c4c78cba7b1ca70))
+
 ## [2.0.2](https://github.com/Wynntils/Wynntils/compare/v2.0.1...v2.0.2) (2024-08-11)
 
 
@@ -7,6 +21,11 @@
 * Fix TradeMarketAutoOpenChatFeature [skip ci] ([#2727](https://github.com/Wynntils/Wynntils/issues/2727)) ([417b9f2](https://github.com/Wynntils/Wynntils/commit/417b9f2b22b241c48e288c0b8187988e2e315152))
 * Fix tutorial content book ([#2730](https://github.com/Wynntils/Wynntils/issues/2730)) ([721e8c6](https://github.com/Wynntils/Wynntils/commit/721e8c6a32604d102b2a9c947b01e17176131ee1))
 * Update bank page names after setting/resetting [skip ci] ([#2728](https://github.com/Wynntils/Wynntils/issues/2728)) ([86feb4e](https://github.com/Wynntils/Wynntils/commit/86feb4ee7c9b94937d375b543f1ff3aaf139dbea))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.2 [skip ci] ([60e0998](https://github.com/Wynntils/Wynntils/commit/60e0998937a3253f1ce20a41c1a57656680dfcee))
 
 ## [2.0.1](https://github.com/Wynntils/Wynntils/compare/v2.0.0...v2.0.1) (2024-08-11)
 
@@ -57,16 +76,4 @@
 ### Code Refactoring
 
 * Move ChatMessageReceivedEvent and ClientsideMessageEvent to StyledText (only) [skip ci] ([#2684](https://github.com/Wynntils/Wynntils/issues/2684)) ([c18dcf6](https://github.com/Wynntils/Wynntils/commit/c18dcf65c8a2647c491ad4fd44b18c9fb591b2f2))
-
-## [1.2.31](https://github.com/Wynntils/Wynntils/compare/v1.2.30...v1.2.31) (2024-07-01)
-
-
-### Bug Fixes
-
-* Change beta warning message, beta builds can run on normal Wynn ([#2619](https://github.com/Wynntils/Wynntils/issues/2619)) ([ed596da](https://github.com/Wynntils/Wynntils/commit/ed596da994778a428181b5d6dd0890e1cd22be69))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.31 [skip ci] ([8ac1266](https://github.com/Wynntils/Wynntils/commit/8ac126664c8391a3f9a4141a4bad43768da27b66))
 
