@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.EventThread;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /** Fired on connection to a server */
 public abstract class ConnectionEvent extends Event {

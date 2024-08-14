@@ -17,7 +17,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomSeaskipperScreenFeature extends Feature {
@@ -30,6 +30,7 @@ public class CustomSeaskipperScreenFeature extends Feature {
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
         if (!(Models.Container.getCurrentContainer() instanceof SeaskipperContainer)) return;
+        if (McUtils.mc().screen instanceof CustomSeaskipperScreen) return;
         if (McUtils.player().isShiftKeyDown()) return;
 
         if (!Models.Seaskipper.isProfileLoaded()) {

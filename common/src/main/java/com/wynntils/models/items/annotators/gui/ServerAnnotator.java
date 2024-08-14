@@ -13,7 +13,8 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class ServerAnnotator implements GuiItemAnnotator {
-    private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
+    private static final Pattern SERVER_ITEM_PATTERN =
+            Pattern.compile("§[baec](?:§l)?World (\\d+)(§3 \\(Recommended\\))?");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

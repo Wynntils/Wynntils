@@ -27,8 +27,8 @@ import com.wynntils.utils.render.Texture;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
@@ -245,30 +245,33 @@ public class ItemHighlightFeature extends Feature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightEnabled.get();
-                case UNIQUE -> uniqueHighlightEnabled.get();
-                case RARE -> rareHighlightEnabled.get();
-                case SET -> setHighlightEnabled.get();
-                case LEGENDARY -> legendaryHighlightEnabled.get();
-                case FABLED -> fabledHighlightEnabled.get();
-                case MYTHIC -> mythicHighlightEnabled.get();
-                case CRAFTED -> craftedHighlightEnabled.get();
-            };
+            return item.getGearTier() != null
+                    && switch (item.getGearTier()) {
+                        case NORMAL -> normalHighlightEnabled.get();
+                        case UNIQUE -> uniqueHighlightEnabled.get();
+                        case RARE -> rareHighlightEnabled.get();
+                        case SET -> setHighlightEnabled.get();
+                        case LEGENDARY -> legendaryHighlightEnabled.get();
+                        case FABLED -> fabledHighlightEnabled.get();
+                        case MYTHIC -> mythicHighlightEnabled.get();
+                        case CRAFTED -> craftedHighlightEnabled.get();
+                    };
         }
 
         @Override
         public CustomColor getHighlightColor() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightColor.get();
-                case UNIQUE -> uniqueHighlightColor.get();
-                case RARE -> rareHighlightColor.get();
-                case SET -> setHighlightColor.get();
-                case LEGENDARY -> legendaryHighlightColor.get();
-                case FABLED -> fabledHighlightColor.get();
-                case MYTHIC -> mythicHighlightColor.get();
-                case CRAFTED -> craftedHighlightColor.get();
-            };
+            return item.getGearTier() == null
+                    ? CustomColor.NONE
+                    : switch (item.getGearTier()) {
+                        case NORMAL -> normalHighlightColor.get();
+                        case UNIQUE -> uniqueHighlightColor.get();
+                        case RARE -> rareHighlightColor.get();
+                        case SET -> setHighlightColor.get();
+                        case LEGENDARY -> legendaryHighlightColor.get();
+                        case FABLED -> fabledHighlightColor.get();
+                        case MYTHIC -> mythicHighlightColor.get();
+                        case CRAFTED -> craftedHighlightColor.get();
+                    };
         }
     }
 
