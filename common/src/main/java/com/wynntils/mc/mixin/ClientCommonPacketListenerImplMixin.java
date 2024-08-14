@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.google.common.hash.Hashing;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ConnectionEvent;
