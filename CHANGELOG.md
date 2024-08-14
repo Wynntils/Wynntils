@@ -1,3 +1,17 @@
+## [2.0.4](https://github.com/Wynntils/Wynntils/compare/v2.0.3...v2.0.4) (2024-08-14)
+
+
+### New Features
+
+* Add world event container as a reward container [skip ci] ([#2737](https://github.com/Wynntils/Wynntils/issues/2737)) ([052bb5b](https://github.com/Wynntils/Wynntils/commit/052bb5ba21c0e0721360d0d3c774096ddc410291))
+
+
+### Bug Fixes
+
+* 2.1 Server annotator pattern [skip ci] ([#2739](https://github.com/Wynntils/Wynntils/issues/2739)) ([8cb53cb](https://github.com/Wynntils/Wynntils/commit/8cb53cb504964d62d58d927ed5ef4ac9fb9275a1))
+* Accessories not detected properly by GearType [skip ci] ([#2736](https://github.com/Wynntils/Wynntils/issues/2736)) ([a8847e2](https://github.com/Wynntils/Wynntils/commit/a8847e2495525c1092d7e59cef6c428cfe97b6f5))
+* Don't send unexpected disconnect on IO thread ([#2492](https://github.com/Wynntils/Wynntils/issues/2492)) ([bd798b1](https://github.com/Wynntils/Wynntils/commit/bd798b10a9fa9691f48d3e27d5fbf6c086e0d11f))
+
 ## [2.0.3](https://github.com/Wynntils/Wynntils/compare/v2.0.2...v2.0.3) (2024-08-12)
 
 
@@ -11,6 +25,11 @@
 * Correctly set game version requirement tags on Modrinth and CurseForge [skip ci] ([#2732](https://github.com/Wynntils/Wynntils/issues/2732)) ([5838da2](https://github.com/Wynntils/Wynntils/commit/5838da29f7d990bfeaa91d5f37d4c845206aa434))
 * Fix CustomSeaskipperScreenFeature crashing the game [skip ci] ([#2733](https://github.com/Wynntils/Wynntils/issues/2733)) ([d3bfd88](https://github.com/Wynntils/Wynntils/commit/d3bfd887b04c44049e2874037e1698b9a6e2c943))
 * Reset current container if on a container screen [skip ci] ([#2731](https://github.com/Wynntils/Wynntils/issues/2731)) ([a7950c3](https://github.com/Wynntils/Wynntils/commit/a7950c35b4e6827a053874627c4c78cba7b1ca70))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.3 [skip ci] ([a498c63](https://github.com/Wynntils/Wynntils/commit/a498c632e98b4308dd06dd0a9d454b454fe01196))
 
 ## [2.0.2](https://github.com/Wynntils/Wynntils/compare/v2.0.1...v2.0.2) (2024-08-11)
 
@@ -59,21 +78,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2720](https://github.com/Wynntils/Wynntils/issues/2720)) ([f2aae55](https://github.com/Wynntils/Wynntils/commit/f2aae55bc53ad706126408254acdadb1927bad1e))
 * **release:** v2.0.0 [skip ci] ([c6abc9a](https://github.com/Wynntils/Wynntils/commit/c6abc9a020d8fb245f06b7f8e6ff289c3bc3a2af))
-
-## [1.2.32](https://github.com/Wynntils/Wynntils/compare/v1.2.31...v1.2.32) (2024-08-01)
-
-
-### New Features
-
-* Add better support for confirmationless dialogues ([#2687](https://github.com/Wynntils/Wynntils/issues/2687)) ([5c74f7e](https://github.com/Wynntils/Wynntils/commit/5c74f7ecd8f95f7c14cbde24107ff21b88a96dc0))
-
-
-### Miscellaneous Chores
-
-* **release:** v1.2.32 [skip ci] ([a3af5a4](https://github.com/Wynntils/Wynntils/commit/a3af5a497bb8f3414fcbe8e2ad7122609f99ba3a))
-
-
-### Code Refactoring
-
-* Move ChatMessageReceivedEvent and ClientsideMessageEvent to StyledText (only) [skip ci] ([#2684](https://github.com/Wynntils/Wynntils/issues/2684)) ([c18dcf6](https://github.com/Wynntils/Wynntils/commit/c18dcf65c8a2647c491ad4fd44b18c9fb591b2f2))
 
