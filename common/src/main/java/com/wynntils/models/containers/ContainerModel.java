@@ -36,6 +36,7 @@ import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
 import com.wynntils.models.containers.containers.personal.PersonalBlockBankContainer;
 import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer;
 import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
+import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
@@ -102,6 +103,7 @@ public final class ContainerModel extends Model {
         registerContainer(new CharacterInfoContainer());
         registerContainer(new ContentBookContainer());
         registerContainer(new DailyRewardContainer());
+        registerContainer(new EventContainer());
         registerContainer(new FlyingChestContainer());
         registerContainer(new GuildBankContainer());
         registerContainer(new GuildManagementContainer());

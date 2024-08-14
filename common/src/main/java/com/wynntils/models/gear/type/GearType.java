@@ -156,7 +156,8 @@ public enum GearType {
     }
 
     public boolean isAccessory() {
-        return defaultItem == Items.FLINT_AND_STEEL;
+        // Flint and steel is used for crafted items, normal items are horse armor
+        return defaultItem == Items.FLINT_AND_STEEL || defaultItem == Items.IRON_HORSE_ARMOR;
     }
 
     public boolean isArmor() {
