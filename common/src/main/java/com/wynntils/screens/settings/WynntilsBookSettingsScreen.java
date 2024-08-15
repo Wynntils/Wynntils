@@ -912,13 +912,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void renderConfigurables(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.createRectMask(guiGraphics.pose(), 12, 21, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
+        RenderUtils.enableScissor(
+                (int) (12 + translationX), (int) (21 + translationY), 170, CONFIGURABLES_PER_PAGE * 12 - 3);
 
         for (WynntilsButton configurable : configurables) {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor();
     }
 
     private void renderConfigurableScroll(PoseStack poseStack) {
@@ -948,14 +949,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void renderConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.createRectMask(
-                guiGraphics.pose(), Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10, 21, 160, CONFIGS_PER_PAGE * 46);
+        RenderUtils.enableScissor(
+                (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + translationX),
+                (int) (21 + translationY),
+                160,
+                CONFIGS_PER_PAGE * 46);
 
         for (WynntilsButton config : configs) {
             config.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor();
     }
 
     private void renderConfigScroll(PoseStack poseStack) {

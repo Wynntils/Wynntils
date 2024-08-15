@@ -154,13 +154,14 @@ public class ProviderFilterListWidget extends AbstractWidget {
             return;
         }
 
-        RenderUtils.createRectMask(guiGraphics.pose(), getX() + 4, getY() + 1, 177, getScrollbarHeight() + 1);
+        RenderUtils.enableScissor((int) (getX() + 4 + translationX), (int) (getY() + 1 + translationY), 177, (int)
+                (getScrollbarHeight() + 1));
 
         for (GeneralFilterWidget widget : widgets) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor();
 
         if (isScrollable()) {
             renderScrollBar(guiGraphics.pose());
