@@ -1,3 +1,12 @@
+## [2.0.6](https://github.com/Wynntils/Wynntils/compare/v2.0.5...v2.0.6) (2024-08-15)
+
+
+### Bug Fixes
+
+* Add /party lobby to command autocompletion [skip ci] ([#2748](https://github.com/Wynntils/Wynntils/issues/2748)) ([9044c74](https://github.com/Wynntils/Wynntils/commit/9044c746c351a664992d662ab62f6611564caa8b))
+* Fix ItemFavoriteFeature and ItemLockFeature overlapping tooltips [skip ci] ([#2747](https://github.com/Wynntils/Wynntils/issues/2747)) ([e22e216](https://github.com/Wynntils/Wynntils/commit/e22e21619934fd50146a484ea2743e6e914e1044))
+* Make RecipientType work with multiline messages [skip ci] ([#2749](https://github.com/Wynntils/Wynntils/issues/2749)) ([00bd563](https://github.com/Wynntils/Wynntils/commit/00bd563a96fcc84decaaf3afc0b02e8ffc98b9d3))
+
 ## [2.0.5](https://github.com/Wynntils/Wynntils/compare/v2.0.4...v2.0.5) (2024-08-15)
 
 
@@ -15,6 +24,11 @@
 * Fix widgets with scrolling text not being masked [skip ci] ([#2723](https://github.com/Wynntils/Wynntils/issues/2723)) ([f689655](https://github.com/Wynntils/Wynntils/commit/f68965552df01b1503273fbc9869da7001539b34))
 * Move emeralds higher to avoid clipping [skip ci] ([#2740](https://github.com/Wynntils/Wynntils/issues/2740)) ([6f99858](https://github.com/Wynntils/Wynntils/commit/6f99858bf0a1d5c1c8402b1a2a990f6f84313044))
 * Refine crafted item parsing, handle more edge-cases [skip ci] ([#2742](https://github.com/Wynntils/Wynntils/issues/2742)) ([f7cbe72](https://github.com/Wynntils/Wynntils/commit/f7cbe7283170b748a84d8f86a1fde6020f89cb20))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.5 [skip ci] ([04e5dbf](https://github.com/Wynntils/Wynntils/commit/04e5dbff0977c9deeaf50a59fde88ed4b61dc526))
 
 ## [2.0.4](https://github.com/Wynntils/Wynntils/compare/v2.0.3...v2.0.4) (2024-08-14)
 
@@ -68,24 +82,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.2 [skip ci] ([60e0998](https://github.com/Wynntils/Wynntils/commit/60e0998937a3253f1ce20a41c1a57656680dfcee))
-
-## [2.0.1](https://github.com/Wynntils/Wynntils/compare/v2.0.0...v2.0.1) (2024-08-11)
-
-
-### New Features
-
-* Allow 1.21.1 to be used with Wynntils ([#2726](https://github.com/Wynntils/Wynntils/issues/2726)) ([567b1c9](https://github.com/Wynntils/Wynntils/commit/567b1c9e0431d20debabeb7c97017f946c4179f9))
-
-
-### Bug Fixes
-
-* Don't allow weapons as a valid item for mounting horses [skip ci] ([#2722](https://github.com/Wynntils/Wynntils/issues/2722)) ([6154cf9](https://github.com/Wynntils/Wynntils/commit/6154cf9d0452e032dc3b3fd21bed77cea434dd63))
-* Fix gathering tool annotator [skip ci] ([#2721](https://github.com/Wynntils/Wynntils/issues/2721)) ([4b76b86](https://github.com/Wynntils/Wynntils/commit/4b76b86c573b845deaa982e4d19832e1b15f9cda))
-* Fix ItemHighlightFeature crashing/spamming logs [skip ci] ([#2725](https://github.com/Wynntils/Wynntils/issues/2725)) ([22dc3c6](https://github.com/Wynntils/Wynntils/commit/22dc3c6e0f3541b5b7e90bd9371b356a15c78aea))
-* Fix player swimming in character selection screen [skip ci] ([#2724](https://github.com/Wynntils/Wynntils/issues/2724)) ([2483ab2](https://github.com/Wynntils/Wynntils/commit/2483ab2c2c4fd26520a74d2b14927af6be54c0ae))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.1 [skip ci] ([f9da82a](https://github.com/Wynntils/Wynntils/commit/f9da82a000b06ba5c8be60a47cc3324cedc1bd6f))
 
