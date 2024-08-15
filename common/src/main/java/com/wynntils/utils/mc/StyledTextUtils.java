@@ -191,6 +191,11 @@ public final class StyledTextUtils {
             newParts.add(part);
         }
 
+        // If there is a part that turned out not to be wrapped, we add it to the new parts
+        if (lastWrappedPart != null) {
+            newParts.add(lastWrappedPart);
+        }
+
         return StyledText.fromParts(newParts);
     }
 }
