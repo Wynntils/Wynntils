@@ -410,6 +410,7 @@ public class AddCommandExpansionFeature extends Feature {
                 .then(literal("kick")
                         .then(argument("player", EntityArgument.players()).suggests(PARTY_NAME_SUGGESTION_PROVIDER)))
                 .then(literal("leave"))
+                .then(literal("lobby"))
                 .then(literal("list"))
                 .then(literal("promote")
                         .then(argument("player", EntityArgument.players()).suggests(PARTY_NAME_SUGGESTION_PROVIDER)))

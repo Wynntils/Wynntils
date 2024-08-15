@@ -40,8 +40,10 @@ public enum RecipientType {
     private final String name;
 
     RecipientType(String foregroundPattern, String backgroundPattern, String name) {
-        this.foregroundPattern = (foregroundPattern == null ? null : Pattern.compile(foregroundPattern));
-        this.backgroundPattern = (backgroundPattern == null ? null : Pattern.compile(backgroundPattern));
+        this.foregroundPattern =
+                (foregroundPattern == null ? null : Pattern.compile(foregroundPattern, Pattern.DOTALL));
+        this.backgroundPattern =
+                (backgroundPattern == null ? null : Pattern.compile(backgroundPattern, Pattern.DOTALL));
 
         this.name = name;
     }
