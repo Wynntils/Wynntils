@@ -431,8 +431,15 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
+        registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
+        registerFunction(new CharacterFunctions.CappedCorruptedFunction());
+        registerFunction(new CharacterFunctions.CappedFocusFunction());
+        registerFunction(new CharacterFunctions.CappedFocusFunction());
         registerFunction(new CharacterFunctions.CappedHealthFunction());
+        registerFunction(new CharacterFunctions.CappedManaBankFunction());
         registerFunction(new CharacterFunctions.CappedManaFunction());
+        registerFunction(new CharacterFunctions.CappedOphanimFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
