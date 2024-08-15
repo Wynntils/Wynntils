@@ -1,3 +1,21 @@
+## [2.0.5](https://github.com/Wynntils/Wynntils/compare/v2.0.4...v2.0.5) (2024-08-15)
+
+
+### New Features
+
+* Functions for different resources [skip ci] ([#2741](https://github.com/Wynntils/Wynntils/issues/2741)) ([7e65d67](https://github.com/Wynntils/Wynntils/commit/7e65d67447cbb6845f7ee3ba292ac3fc27a2e504))
+
+
+### Bug Fixes
+
+* Correctly categorize 2.1 messages in chat tabs (RecipientType fixes) ([#2745](https://github.com/Wynntils/Wynntils/issues/2745)) ([1b5b965](https://github.com/Wynntils/Wynntils/commit/1b5b9659e5ce83eeb1100ae369ec4d527029057e))
+* Fix pack preloading getting users stuck in class selection [skip ci] ([#2744](https://github.com/Wynntils/Wynntils/issues/2744)) ([faf09d3](https://github.com/Wynntils/Wynntils/commit/faf09d3ef859f0e335d38577afd4c5e00edd5873))
+* Fix TradeMarketPriceConversionFeature [skip ci] ([#2738](https://github.com/Wynntils/Wynntils/issues/2738)) ([b2f76f0](https://github.com/Wynntils/Wynntils/commit/b2f76f06787739f33ad04cb94b27afb3471fbc7d))
+* Fix unwrapping related message bugs (in RemoveWynncraftChatWrapFeature) [skip ci] ([#2743](https://github.com/Wynntils/Wynntils/issues/2743)) ([7cfac52](https://github.com/Wynntils/Wynntils/commit/7cfac52b93c0c65000c24dc435c92e5903d1a163))
+* Fix widgets with scrolling text not being masked [skip ci] ([#2723](https://github.com/Wynntils/Wynntils/issues/2723)) ([f689655](https://github.com/Wynntils/Wynntils/commit/f68965552df01b1503273fbc9869da7001539b34))
+* Move emeralds higher to avoid clipping [skip ci] ([#2740](https://github.com/Wynntils/Wynntils/issues/2740)) ([6f99858](https://github.com/Wynntils/Wynntils/commit/6f99858bf0a1d5c1c8402b1a2a990f6f84313044))
+* Refine crafted item parsing, handle more edge-cases [skip ci] ([#2742](https://github.com/Wynntils/Wynntils/issues/2742)) ([f7cbe72](https://github.com/Wynntils/Wynntils/commit/f7cbe7283170b748a84d8f86a1fde6020f89cb20))
+
 ## [2.0.4](https://github.com/Wynntils/Wynntils/compare/v2.0.3...v2.0.4) (2024-08-14)
 
 
@@ -11,6 +29,11 @@
 * 2.1 Server annotator pattern [skip ci] ([#2739](https://github.com/Wynntils/Wynntils/issues/2739)) ([8cb53cb](https://github.com/Wynntils/Wynntils/commit/8cb53cb504964d62d58d927ed5ef4ac9fb9275a1))
 * Accessories not detected properly by GearType [skip ci] ([#2736](https://github.com/Wynntils/Wynntils/issues/2736)) ([a8847e2](https://github.com/Wynntils/Wynntils/commit/a8847e2495525c1092d7e59cef6c428cfe97b6f5))
 * Don't send unexpected disconnect on IO thread ([#2492](https://github.com/Wynntils/Wynntils/issues/2492)) ([bd798b1](https://github.com/Wynntils/Wynntils/commit/bd798b10a9fa9691f48d3e27d5fbf6c086e0d11f))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.4 [skip ci] ([83a2b14](https://github.com/Wynntils/Wynntils/commit/83a2b14b0ec1bcbc49821547a5fd01be411945ba))
 
 ## [2.0.3](https://github.com/Wynntils/Wynntils/compare/v2.0.2...v2.0.3) (2024-08-12)
 
@@ -65,17 +88,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.1 [skip ci] ([f9da82a](https://github.com/Wynntils/Wynntils/commit/f9da82a000b06ba5c8be60a47cc3324cedc1bd6f))
-
-## [2.0.0](https://github.com/Wynntils/Wynntils/compare/v1.2.32...v2.0.0) (2024-08-10)
-
-
-### New Features
-
-* **major:** Release Wynntils 2.0 (Wynncraft 2.1 + MC 1.21 - Fabric/NeoForge) ([#2705](https://github.com/Wynntils/Wynntils/issues/2705)) ([bd71ab1](https://github.com/Wynntils/Wynntils/commit/bd71ab19ec9bb936daaa5442d45ada09812a9230))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2720](https://github.com/Wynntils/Wynntils/issues/2720)) ([f2aae55](https://github.com/Wynntils/Wynntils/commit/f2aae55bc53ad706126408254acdadb1927bad1e))
-* **release:** v2.0.0 [skip ci] ([c6abc9a](https://github.com/Wynntils/Wynntils/commit/c6abc9a020d8fb245f06b7f8e6ff289c3bc3a2af))
 
