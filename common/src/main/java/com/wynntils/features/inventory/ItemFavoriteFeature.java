@@ -115,7 +115,7 @@ public class ItemFavoriteFeature extends Feature {
                 Texture.FAVORITE_ICON.resource(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
-                400,
+                399,
                 9,
                 9,
                 Texture.FAVORITE_ICON.width(),
