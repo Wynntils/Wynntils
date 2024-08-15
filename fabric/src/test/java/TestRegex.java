@@ -790,6 +790,7 @@ public class TestRegex {
         PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
         p.shouldMatch("§3§otest item§b§o [24%]À");
         p.shouldMatch("§3§oAbsorbant Skirt of the Skyraider§b§o [100%]À");
+        p.shouldMatch("§3Corkian finger choker III§b [100%]À");
     }
 
     @Test

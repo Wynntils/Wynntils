@@ -120,6 +120,12 @@ public final class GearModel extends Model {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, possibleValuesMap);
 
         CraftedItemParseResults craftedResults = WynnItemParser.parseCraftedItem(itemStack);
+
+        if (craftedResults == null) return null;
+
+        // If the item doesn't have an effect strength, it's not a crafted gear item
+        if (craftedResults.effectStrength() == -1) return null;
+
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         GearType gearType;
         // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
