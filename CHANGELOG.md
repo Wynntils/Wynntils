@@ -1,3 +1,12 @@
+## [2.0.7](https://github.com/Wynntils/Wynntils/compare/v2.0.6...v2.0.7) (2024-08-16)
+
+
+### Bug Fixes
+
+* Fix party list parsing ([#2752](https://github.com/Wynntils/Wynntils/issues/2752)) ([ff9b7b2](https://github.com/Wynntils/Wynntils/commit/ff9b7b2e21df96b4be3142ee18c5f13f15f8ae80))
+* Fix raid tracking not detecting failure from running out of time [skip ci] ([#2751](https://github.com/Wynntils/Wynntils/issues/2751)) ([900285b](https://github.com/Wynntils/Wynntils/commit/900285ba38f3ba4e175cf0cbdeaf57b03510d1e0))
+* Totem tracking doesn't bind timers [skip ci] ([#2750](https://github.com/Wynntils/Wynntils/issues/2750)) ([d373d64](https://github.com/Wynntils/Wynntils/commit/d373d6495ed11fcca3213afe216781f4b410d367))
+
 ## [2.0.6](https://github.com/Wynntils/Wynntils/compare/v2.0.5...v2.0.6) (2024-08-15)
 
 
@@ -6,6 +15,11 @@
 * Add /party lobby to command autocompletion [skip ci] ([#2748](https://github.com/Wynntils/Wynntils/issues/2748)) ([9044c74](https://github.com/Wynntils/Wynntils/commit/9044c746c351a664992d662ab62f6611564caa8b))
 * Fix ItemFavoriteFeature and ItemLockFeature overlapping tooltips [skip ci] ([#2747](https://github.com/Wynntils/Wynntils/issues/2747)) ([e22e216](https://github.com/Wynntils/Wynntils/commit/e22e21619934fd50146a484ea2743e6e914e1044))
 * Make RecipientType work with multiline messages [skip ci] ([#2749](https://github.com/Wynntils/Wynntils/issues/2749)) ([00bd563](https://github.com/Wynntils/Wynntils/commit/00bd563a96fcc84decaaf3afc0b02e8ffc98b9d3))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.6 [skip ci] ([736d29c](https://github.com/Wynntils/Wynntils/commit/736d29c6ca02cb2a7277ce8575d7dcf8cf2d5416))
 
 ## [2.0.5](https://github.com/Wynntils/Wynntils/compare/v2.0.4...v2.0.5) (2024-08-15)
 
@@ -67,19 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.3 [skip ci] ([a498c63](https://github.com/Wynntils/Wynntils/commit/a498c632e98b4308dd06dd0a9d454b454fe01196))
-
-## [2.0.2](https://github.com/Wynntils/Wynntils/compare/v2.0.1...v2.0.2) (2024-08-11)
-
-
-### Bug Fixes
-
-* Fix ReplayMod causing container features to not work [skip ci] ([#2729](https://github.com/Wynntils/Wynntils/issues/2729)) ([7856d2f](https://github.com/Wynntils/Wynntils/commit/7856d2fb8f4bcc0eb644f90fcb3fac0cc4083b0e))
-* Fix TradeMarketAutoOpenChatFeature [skip ci] ([#2727](https://github.com/Wynntils/Wynntils/issues/2727)) ([417b9f2](https://github.com/Wynntils/Wynntils/commit/417b9f2b22b241c48e288c0b8187988e2e315152))
-* Fix tutorial content book ([#2730](https://github.com/Wynntils/Wynntils/issues/2730)) ([721e8c6](https://github.com/Wynntils/Wynntils/commit/721e8c6a32604d102b2a9c947b01e17176131ee1))
-* Update bank page names after setting/resetting [skip ci] ([#2728](https://github.com/Wynntils/Wynntils/issues/2728)) ([86feb4e](https://github.com/Wynntils/Wynntils/commit/86feb4ee7c9b94937d375b543f1ff3aaf139dbea))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.2 [skip ci] ([60e0998](https://github.com/Wynntils/Wynntils/commit/60e0998937a3253f1ce20a41c1a57656680dfcee))
 
