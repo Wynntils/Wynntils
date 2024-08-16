@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector;
@@ -36,6 +36,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Pose;
 import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
@@ -293,33 +294,6 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         poseStack.pushPose();
         poseStack.translate(renderWidth * 0.08f, renderHeight * 0.15f, 0);
 
-        RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.SOUL_POINT_ICON.resource(),
-                0,
-                0,
-                0,
-                Texture.SOUL_POINT_ICON.width() * currentTextureScale,
-                Texture.SOUL_POINT_ICON.height() * currentTextureScale,
-                Texture.SOUL_POINT_ICON.width(),
-                Texture.SOUL_POINT_ICON.height());
-
-        poseStack.pushPose();
-        poseStack.scale(scale, scale, 0f);
-        poseStack.translate(renderWidth * 0.125f / scale, 0, 0);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(
-                                String.valueOf(this.selected.getClassInfo().soulPoints())),
-                        0,
-                        0,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NONE);
-        poseStack.popPose();
-
         poseStack.translate(renderWidth * 0.27f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -396,8 +370,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
-        McUtils.player().resetFallDistance();
-        McUtils.player().setSwimming(false);
+        McUtils.player().setPose(Pose.STANDING);
 
         int scale = (int) (this.height / 4.5f);
 

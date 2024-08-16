@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.mod;
@@ -15,7 +15,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ConnectionManager extends Manager {
     private static final Pattern WYNNCRAFT_SERVER_PATTERN =
@@ -39,12 +40,13 @@ public final class ConnectionManager extends Manager {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onDisconnected(DisconnectedEvent e) {
+        if (!isConnected) return;
         disconnect();
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onConnected(ConnectedEvent e) {
         if (isConnected) {
             WynntilsMod.error("Got connected event while already connected to server: " + e);

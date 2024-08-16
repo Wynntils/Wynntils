@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
@@ -68,11 +69,15 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return "Overlay";
     }
 
-    public abstract void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window);
+    public abstract void render(
+            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window);
 
-    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-        this.render(poseStack, bufferSource, partialTicks, window);
+    public void renderPreview(
+            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+        this.render(poseStack, bufferSource, deltaTracker, window);
     }
+
+    public void tick() {}
 
     @Override
     public final void updateConfigOption(Config<?> config) {

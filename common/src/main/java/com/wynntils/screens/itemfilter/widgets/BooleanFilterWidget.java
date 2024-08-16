@@ -10,7 +10,6 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class BooleanFilterWidget extends GeneralFilterWidget {
     private final WynntilsCheckbox trueCheckbox;
@@ -25,12 +24,11 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
                 getX() + 10,
                 getY() + 35,
                 20,
-                20,
                 Component.translatable("screens.wynntils.itemFilter.booleanTrue"),
                 this.state == ConfirmedBoolean.TRUE,
                 150,
-                (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                (checkbox, b) -> {
+                    if (b) {
                         toggleState(ConfirmedBoolean.TRUE);
                     }
                 });
@@ -39,12 +37,11 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
                 getX() + 10,
                 getY() + 90,
                 20,
-                20,
                 Component.translatable("screens.wynntils.itemFilter.booleanFalse"),
                 this.state == ConfirmedBoolean.FALSE,
                 150,
-                (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                (checkbox, b) -> {
+                    if (b) {
                         toggleState(ConfirmedBoolean.FALSE);
                     }
                 });

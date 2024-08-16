@@ -45,8 +45,8 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
 
         used = filterPair.isPresent();
 
-        this.usedCheckbox = new WynntilsCheckbox(
-                x + width - 16, y + 2, 16, 16, Component.literal(""), used, 0, (b -> toggleUsed()));
+        this.usedCheckbox =
+                new WynntilsCheckbox(x + width - 16, y + 2, 16, Component.literal(""), used, 0, (c, b) -> toggleUsed());
     }
 
     @Override
@@ -65,8 +65,6 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
                         getX() + 2,
                         getY() + (height / 2f),
                         width - 4,
-                        parent.getTranslationX(),
-                        parent.getTranslationY(),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
@@ -89,7 +87,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     public void updateY(int y) {
         setY(y);
 
-        usedCheckbox.setY(y);
+        usedCheckbox.setY(y + 2);
     }
 
     @Override

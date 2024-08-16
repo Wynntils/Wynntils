@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class LeaderboardService extends Service {
     private Map<UUID, List<LeaderboardBadge>> leaderboard = new HashMap<>();

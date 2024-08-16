@@ -13,7 +13,6 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -32,6 +31,7 @@ import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -107,7 +108,8 @@ public final class WynnItemParser {
 
     // Crafted items
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
-    private static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile("^§3§o(.+)§b§o \\[(\\d+)%\\]À*$");
+    public static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile(
+            "^§3(?:§o)?(?<name>.+)§b(?:§o)? \\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -134,7 +136,7 @@ public final class WynnItemParser {
 
         // Parse lore for identifications, powders and rerolls
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
-        lore.remove(0); // remove item name
+        lore.removeFirst(); // remove item name
 
         for (Component loreLine : lore) {
             StyledText coded = StyledText.fromComponent(loreLine);
@@ -445,8 +447,8 @@ public final class WynnItemParser {
         List<Component> lore = ComponentUtils.stripDuplicateBlank(LoreUtils.getTooltipLines(itemStack));
 
         String name = "";
-        ConsumableType consumableType = null;
-        int effectStrength = 0;
+        int effectStrength = -1;
+        CappedValue uses = null;
         GearAttackSpeed attackSpeed = null;
         List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
         List<Pair<Element, Integer>> defences = new ArrayList<>();
@@ -456,10 +458,37 @@ public final class WynnItemParser {
         ClassType classReq = null;
 
         if (!lore.isEmpty()) {
-            Matcher nameMatcher = StyledText.fromComponent(lore.get(0)).getMatcher(CRAFTED_ITEM_NAME_PATTERN);
+            Matcher nameMatcher = StyledText.fromComponent(lore.getFirst()).getMatcher(CRAFTED_ITEM_NAME_PATTERN);
             if (nameMatcher.matches()) {
                 name = nameMatcher.group(1);
-                effectStrength = Integer.parseInt(nameMatcher.group(2));
+                if (nameMatcher.group("effectStrength") != null) {
+                    effectStrength = Integer.parseInt(nameMatcher.group("effectStrength"));
+                } else {
+                    int currentUses = Integer.parseInt(nameMatcher.group("currentUses"));
+                    int maxUses = Integer.parseInt(nameMatcher.group("maxUses"));
+                    uses = new CappedValue(currentUses, maxUses);
+                }
+            } else {
+                nameMatcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CRAFTED_ITEM_NAME_PATTERN);
+                if (nameMatcher.matches()) {
+                    name = nameMatcher.group(1);
+                    if (nameMatcher.group("effectStrength") != null) {
+                        effectStrength = Integer.parseInt(nameMatcher.group("effectStrength"));
+                    } else {
+                        int currentUses = Integer.parseInt(nameMatcher.group("currentUses"));
+                        int maxUses = Integer.parseInt(nameMatcher.group("maxUses"));
+                        uses = new CappedValue(currentUses, maxUses);
+                    }
+                } else {
+                    WynntilsMod.warn("Crafted item "
+                            + StyledText.fromComponent(itemStack.getHoverName()).getString()
+                            + " has no parsable name in lore, or as a custom name: "
+                            + lore.stream()
+                                    .map(StyledText::fromComponent)
+                                    .map(StyledText::getString)
+                                    .collect(Collectors.joining("\n")));
+                    return null;
+                }
             }
         }
 
@@ -529,6 +558,7 @@ public final class WynnItemParser {
         return new CraftedItemParseResults(
                 name,
                 effectStrength,
+                uses,
                 attackSpeed,
                 damages,
                 defences,

@@ -28,6 +28,7 @@ import com.wynntils.services.athena.event.AthenaLoginEvent;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.services.map.pois.PlayerMainMapPoi;
+import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.utils.mc.McUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -43,7 +44,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class HadesService extends Service {
     private static final int TICKS_PER_UPDATE = 2;
@@ -65,6 +66,14 @@ public final class HadesService extends Service {
                 .filter(hadesUser -> (hadesUser.isPartyMember() && renderRemotePartyPlayers)
                         || (hadesUser.isMutualFriend() && renderRemoteFriendPlayers))
                 .map(PlayerMainMapPoi::new);
+    }
+
+    public Stream<PlayerMiniMapPoi> getMiniPlayerPois(
+            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
+        return getHadesUsers()
+                .filter(hadesUser -> (hadesUser.isPartyMember() && renderRemotePartyPlayers)
+                        || (hadesUser.isMutualFriend() && renderRemoteFriendPlayers))
+                .map(PlayerMiniMapPoi::new);
     }
 
     public Stream<HadesUser> getHadesUsers() {

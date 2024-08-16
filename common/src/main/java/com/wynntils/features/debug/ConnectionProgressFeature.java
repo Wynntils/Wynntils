@@ -1,24 +1,26 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.ResourcePackEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class ConnectionProgressFeature extends Feature {
     @SubscribeEvent
-    public void onResourcePack(ResourcePackEvent e) {
+    public void onResourcePack(ServerResourcePackEvent.Load e) {
+        if (!Managers.Connection.onServer()) return;
         WynntilsMod.info("Connection confirmed");
     }
 

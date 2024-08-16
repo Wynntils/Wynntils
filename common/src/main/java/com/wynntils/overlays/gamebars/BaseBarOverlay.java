@@ -6,6 +6,8 @@ package com.wynntils.overlays.gamebars;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -16,15 +18,14 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.TextShadow;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class BaseBarOverlay extends Overlay {
     @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
@@ -48,6 +49,7 @@ public abstract class BaseBarOverlay extends Overlay {
     protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
         super(position, size);
         this.textColor.store(textColor);
+        WynntilsMod.registerListener(this::onBossBarAdd);
     }
 
     protected float textureHeight() {
@@ -60,8 +62,9 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected abstract boolean isActive();
 
-    @SubscribeEvent
-    public void onBossBarAdd(BossBarAddedEvent event) {
+    // As this is an abstract class, this event was subscribed to manually in ctor
+    protected void onBossBarAdd(BossBarAddedEvent event) {
+        if (!Managers.Overlay.isEnabled(this)) return;
         if (!event.getTrackedBar().getClass().equals(getTrackedBarClass())) return;
 
         if (!shouldDisplayOriginal.get()) {
@@ -69,8 +72,8 @@ public abstract class BaseBarOverlay extends Overlay {
         }
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
+    @Override
+    public void tick() {
         if (!Models.WorldState.onWorld() || !isActive()) return;
 
         if (animationTime.get() == 0) {
@@ -83,7 +86,7 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!Models.WorldState.onWorld() || !isActive()) return;
 
         float barHeight = textureHeight() * (this.getWidth() / 81);

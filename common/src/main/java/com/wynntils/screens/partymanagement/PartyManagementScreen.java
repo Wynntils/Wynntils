@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement;
@@ -68,7 +68,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 36),
                 (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1,
                 (int) ((dividedWidth * 57) - (dividedWidth * 36)) - 1,
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 null,
                 this,
                 inviteInput);
@@ -78,7 +78,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> inviteFromField())
                 .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
-                .size((int) (dividedWidth * 3) - 1, BUTTON_HEIGHT)
+                .size((int) (dividedWidth * 3) - 1, BUTTON_SIZE)
                 .build();
         this.addRenderableWidget(inviteButton);
         // endregion
@@ -89,7 +89,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                                 .withStyle(ChatFormatting.GREEN),
                         (button) -> refreshAll())
                 .pos((int) (dividedWidth * 36) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
-                .size(mgmtButtonWidth, BUTTON_HEIGHT)
+                .size(mgmtButtonWidth, BUTTON_SIZE)
                 .build());
 
         kickOfflineButton = new Button.Builder(
@@ -97,7 +97,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                                 .withStyle(ChatFormatting.RED),
                         (button) -> Models.Party.partyKickOffline())
                 .pos((int) (dividedWidth * 44) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
-                .size(mgmtButtonWidth, BUTTON_HEIGHT)
+                .size(mgmtButtonWidth, BUTTON_SIZE)
                 .build();
         this.addRenderableWidget(kickOfflineButton);
         // endregion
@@ -291,7 +291,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 52) + 1,
                 (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT),
                 mgmtButtonWidth,
-                BUTTON_HEIGHT);
+                BUTTON_SIZE);
     }
 
     /**
@@ -310,7 +310,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     dividedWidth * 4,
                     dividedHeight * (9 + i * 3),
                     (int) (dividedWidth * 28) - (int) (dividedWidth * 2),
-                    BUTTON_HEIGHT,
+                    BUTTON_SIZE,
                     playerName,
                     Models.Party.getOfflineMembers().contains(playerName),
                     28 - 2));
@@ -337,7 +337,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     dividedWidth * 36,
                     dividedHeight * (23 + i * 3),
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
-                    BUTTON_HEIGHT,
+                    BUTTON_SIZE,
                     playerName,
                     60 - 36));
         }
