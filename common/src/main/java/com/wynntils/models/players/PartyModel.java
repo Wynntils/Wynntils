@@ -21,6 +21,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -57,8 +58,8 @@ public final class PartyModel extends Model {
     - OTHER should be used if the action affects another player(s), but not ALL players
     DETAIL (optional) should be a descriptor if necessary
     */
+    // Test in PartyModel_PARTY_LIST_ALL
     private static final Pattern PARTY_LIST_ALL = Pattern.compile(PARTY_PREFIX_REGEX + "Party members: (.*)");
-    private static final Pattern PARTY_LIST_LEADER = Pattern.compile("§b(\\w{1,16})");
     private static final Pattern PARTY_LIST_SELF_FAILED =
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to use this\\.");
 
@@ -150,8 +151,8 @@ public final class PartyModel extends Model {
         }
     }
 
-    private boolean tryParsePartyMessages(StyledText chatMessage) {
-        if (chatMessage.matches(PARTY_CREATE_SELF)) {
+    private boolean tryParsePartyMessages(StyledText styledText) {
+        if (styledText.matches(PARTY_CREATE_SELF)) {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
@@ -163,23 +164,23 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        if (chatMessage.matches(PARTY_DISBAND_ALL)
-                || chatMessage.matches(PARTY_LEAVE_SELF_KICK)
-                || chatMessage.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
-                || chatMessage.matches(PARTY_DISBAND_SELF)) {
+        if (styledText.matches(PARTY_DISBAND_ALL)
+                || styledText.matches(PARTY_LEAVE_SELF_KICK)
+                || styledText.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
+                || styledText.matches(PARTY_DISBAND_SELF)) {
             WynntilsMod.info("Player left the party.");
 
             resetData(); // (!) resetData() already posts events for both HadesRelationsUpdateEvent and PartyEvent
             return true;
         }
 
-        if (chatMessage.matches(PARTY_JOIN_SELF)) {
+        if (styledText.matches(PARTY_JOIN_SELF)) {
             WynntilsMod.info("Player joined a party.");
             requestData();
             return true;
         }
 
-        Matcher matcher = chatMessage.getMatcher(PARTY_JOIN_OTHER);
+        Matcher matcher = styledText.getMatcher(PARTY_JOIN_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -192,7 +193,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = chatMessage.getMatcher(PARTY_JOIN_OTHER_SWITCH);
+        matcher = styledText.getMatcher(PARTY_JOIN_OTHER_SWITCH);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -205,7 +206,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = chatMessage.getMatcher(PARTY_LEAVE_OTHER);
+        matcher = styledText.getMatcher(PARTY_LEAVE_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -218,7 +219,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = chatMessage.getMatcher(PARTY_PROMOTE_OTHER);
+        matcher = styledText.getMatcher(PARTY_PROMOTE_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -228,7 +229,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = chatMessage.getMatcher(PARTY_PROMOTE_SELF);
+        matcher = styledText.getMatcher(PARTY_PROMOTE_SELF);
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
@@ -236,7 +237,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = chatMessage.getMatcher(PARTY_INVITED);
+        matcher = styledText.getMatcher(PARTY_INVITED);
         if (matcher.matches()) {
             String inviter = matcher.group(1);
             WynntilsMod.info("Player has been invited to party by " + inviter);
@@ -245,7 +246,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = chatMessage.getMatcher(PARTY_KICK_OTHER);
+        matcher = styledText.getMatcher(PARTY_KICK_OTHER);
         if (matcher.matches()) {
             WynntilsMod.info("Other player was kicked from player's party");
 
@@ -275,8 +276,8 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParseNoPartyMessage(StyledText coded) {
-        if (coded.matches(PARTY_LIST_SELF_FAILED)) {
+    private boolean tryParseNoPartyMessage(StyledText styledText) {
+        if (styledText.matches(PARTY_LIST_SELF_FAILED)) {
             resetData();
             WynntilsMod.info("Player is not in a party.");
             return true;
@@ -285,20 +286,24 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParsePartyList(StyledText coded) {
-        Matcher matcher = coded.getMatcher(PARTY_LIST_ALL);
+    private boolean tryParsePartyList(StyledText styledText) {
+        Matcher matcher = StyledTextUtils.unwrap(styledText).getMatcher(PARTY_LIST_ALL);
         if (!matcher.matches()) return false;
 
-        String[] partyList = matcher.group(1).split(", ");
+        String[] partyList = StyledText.fromString(matcher.group(1))
+                .getStringWithoutFormatting()
+                .split("(, | and )");
         List<String> newPartyMembers = new ArrayList<>();
 
+        boolean firstMember = true;
+
         for (String member : partyList) {
-            Matcher m = PARTY_LIST_LEADER.matcher(member);
-            if (m.matches()) {
-                partyLeader = m.group(1);
+            if (firstMember) {
+                partyLeader = member;
+                firstMember = false;
             }
 
-            newPartyMembers.add(StyledText.fromString(member).getStringWithoutFormatting());
+            newPartyMembers.add(member);
         }
 
         // Sort the party members by the order they appear in the old party list, to preserve the order
