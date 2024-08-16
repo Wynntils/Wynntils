@@ -25,7 +25,7 @@ public enum LeaderboardType {
     // Total Combat
     COMBAT_GLOBAL("combatGlobalLevel"),
     COMBAT_SOLO("combatSoloLevel"),
-    // Total Overall
+    // Total Overall (currently no difference between their badge texture)
     TOTAL_GLOBAL("totalGlobalLevel"),
     TOTAL_SOLO("totalSoloLevel"),
     // Content Completion (currently no difference between their badge texture)
