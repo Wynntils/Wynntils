@@ -14,16 +14,15 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.ContainerUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -32,10 +31,18 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
     @Persisted
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
+
+    public final boolean continuePurchasingWithoutFunds = false;
 
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
@@ -43,30 +50,52 @@ public class BulkBuyFeature extends Feature {
     private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
     private static final int TICKS_DELAY = 4;
 
+    private final LinkedHashMap<Integer, BulkBoughtItem> bulkBuyQueue = new LinkedHashMap<>();
+
+    @SubscribeEvent
+    public void onShopOpened(SetSlotEvent.Pre e) {
+        // Warning - for some reason this is triggered randomly while the shop is open as well
+        if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
+        // Shop titles are in slot 4, eg. §aScroll Shop
+        // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
+
+        // Now we can do all the screen checks, since this event doesn't give us a way to access a screen
+        if (!(McUtils.mc().screen instanceof ContainerScreen screen)) return;
+        if (!(screen.getMenu() instanceof AbstractContainerMenu)) return;
+
+        String title = e.getItemStack().getHoverName().getString();
+        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(" Shop")) return;
+
+        screen.addRenderableWidget(new BulkBuyWidget(screen.leftPos - 98, screen.topPos, 100, 110, bulkBuyQueue));
+    }
+
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         AbstractContainerMenu container = e.getContainerMenu();
+        ItemStack itemStack = e.getItemStack();
+        if (!isBulkBuyable(container, itemStack)) return;
 
-        if (!isBulkBuyable(container, e.getItemStack())) return;
-
-        if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left/Right Click
-            // shift + left clicks have a longer cooldown for some reason, we do this to guarantee the right click
-            e.setCanceled(true);
-
-            for (int i = 0; i < bulkBuyAmount.get(); i++) {
-                Managers.TickScheduler.scheduleLater(
-                        () -> {
-                            ContainerUtils.clickOnSlot(
-                                    e.getSlotNum(),
-                                    container.containerId,
-                                    GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                                    container.getItems());
-                        },
-                        TICKS_DELAY * i);
+        if (e.getClickType() == ClickType.QUICK_MOVE) {
+            if (!bulkBuyQueue.containsKey(e.getSlotNum())) {
+                // This event returns the ItemStack in the slot *after* the click happens, which is usually air
+                // So we need this external storage so we can get accurate ItemStack icons/names
+                bulkBuyQueue.put(e.getSlotNum(), new BulkBoughtItem(e.getSlotNum(), itemStack, bulkBuyAmount.get(), 0));
+            } else {
+                bulkBuyQueue.get(e.getSlotNum()).incrementAmount();
             }
+            // TODO get rid of sthis
+            McUtils.sendMessageToClient(Component.literal("Slot number " + e.getSlotNum() + " " +
+                    bulkBuyQueue.get(e.getSlotNum()).getItemStack().getHoverName().getString() + " has " +
+                    bulkBuyQueue.get(e.getSlotNum()).getAmount() + " items queued"));
         }
+        e.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onShopClosed(ContainerCloseEvent.Pre e) {
+        bulkBuyQueue.clear();
     }
 
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
@@ -126,5 +155,43 @@ public class BulkBuyFeature extends Feature {
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
                 && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
+    }
+
+    public final class BulkBoughtItem {
+        private final int slotNumber;
+        private final ItemStack itemStack;
+        private int amount;
+        private int price;
+
+        private BulkBoughtItem(int slotNumber, ItemStack itemStack, int amount, int price) {
+            this.slotNumber = slotNumber;
+            this.itemStack = itemStack;
+            this.amount = amount;
+            this.price = price;
+        }
+
+        public int getSlotNumber() {
+            return slotNumber;
+        }
+
+        public ItemStack getItemStack() {
+            return itemStack;
+        }
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public void incrementAmount() {
+            this.amount += bulkBuyAmount.get();
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(int price) {
+            this.price = price;
+        }
     }
 }
