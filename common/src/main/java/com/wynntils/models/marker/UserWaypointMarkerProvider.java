@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.marker;
@@ -24,7 +24,13 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor, CustomColor textColor) {
         addLocation(new MarkerInfo(
-                "Waypoint", new StaticLocationSupplier(location), texture, beaconColor, textColor, CommonColors.WHITE));
+                "Waypoint",
+                new StaticLocationSupplier(location),
+                texture,
+                beaconColor,
+                textColor,
+                CommonColors.WHITE,
+                ""));
     }
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor) {
@@ -34,17 +40,19 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 texture,
                 beaconColor,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                null));
     }
 
-    public void addLocation(Location location, Texture texture) {
+    public void addLocation(Location location, Texture texture, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
                 texture,
                 CustomColor.NONE,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                additionalText));
     }
 
     public void addLocation(Location location) {
@@ -54,7 +62,8 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 Texture.WAYPOINT,
                 CustomColor.NONE,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                null));
     }
 
     public void addLocation(LocationSupplier locationSupplier) {
@@ -64,7 +73,8 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 Texture.WAYPOINT,
                 CustomColor.NONE,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                null));
     }
 
     public void addLocation(MarkerInfo markerInfo) {

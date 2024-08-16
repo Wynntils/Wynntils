@@ -5,6 +5,7 @@
 package com.wynntils.models.activities.markers;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
@@ -35,7 +36,8 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 Texture.QUESTS_SCROLL_ICON,
                                 CommonColors.WHITE,
                                 CommonColors.WHITE,
-                                CommonColors.WHITE),
+                                CommonColors.WHITE,
+                                null),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(spawnLocation),
                                 ACTIVITY_LOCATION_NAME,
@@ -57,7 +59,13 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 Texture.QUESTS_SCROLL_ICON,
                                 activityColor,
                                 CommonColors.WHITE,
-                                CommonColors.WHITE),
+                                CommonColors.WHITE,
+                                // FIXME: Feature-Model dependency
+                                Managers.Feature.getFeatureInstance(ContentTrackerFeature.class)
+                                                .showAdditionalTextInWorld
+                                                .get()
+                                        ? Models.Activity.getTrackedName()
+                                        : null),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(trackedActivityLocation),
                                 ACTIVITY_LOCATION_NAME,

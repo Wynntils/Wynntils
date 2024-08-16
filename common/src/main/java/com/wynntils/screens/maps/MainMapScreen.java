@@ -12,6 +12,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.models.marker.type.DynamicLocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
@@ -411,7 +412,13 @@ public final class MainMapScreen extends AbstractMapScreen {
                                     customPoi.getColor());
                         } else {
                             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                    new Location(hovered.getLocation()), iconPoi.getIcon());
+                                    new Location(hovered.getLocation()),
+                                    iconPoi.getIcon(),
+                                    Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                                    .showAdditionalTextInWorld
+                                                    .get()
+                                            ? hovered.getName()
+                                            : null);
                         }
                     } else {
                         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(hovered.getLocation()));
