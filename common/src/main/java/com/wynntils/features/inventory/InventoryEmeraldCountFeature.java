@@ -97,7 +97,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                 && showInventoryEmeraldCount.get()
                 && bottomEmeralds != 0;
         if (topEmeralds != 0) {
-            int y = containerScreen.topPos;
+            int y = isInventory ? containerScreen.topPos - 9 : containerScreen.topPos;
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
                 case TEXTURE -> {
