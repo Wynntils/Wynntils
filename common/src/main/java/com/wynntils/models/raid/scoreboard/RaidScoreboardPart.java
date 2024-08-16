@@ -58,7 +58,7 @@ public class RaidScoreboardPart extends ScoreboardPart {
             Models.Raid.failedRaid();
         } else if (Models.Raid.getCurrentRaid() != null
                 && currentStateLine.matches(
-                Models.Raid.getCurrentRaid().getBossScoreboardPattern(), PartStyle.StyleType.NONE)) {
+                        Models.Raid.getCurrentRaid().getBossScoreboardPattern(), PartStyle.StyleType.NONE)) {
             Models.Raid.startBossFight();
         } else if (!currentStateLine.matches(PREPARE_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.tryStartChallenge();
