@@ -12,6 +12,10 @@ public class ShamanTotem {
     private int timerEntityId;
     private int time;
     private TotemState state;
+    /**
+     * Our internal representation of the totem/timer's position. Not guaranteed to match the position of either the
+     * totem or the timer.
+     * */
     private Position position;
 
     public ShamanTotem(
