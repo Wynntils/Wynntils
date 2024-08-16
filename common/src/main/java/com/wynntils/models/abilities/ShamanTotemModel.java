@@ -172,7 +172,8 @@ public class ShamanTotemModel extends Model {
                 totem.setTime(parsedTime);
                 totem.setPosition(textDisplay.position());
 
-                WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, textDisplay.position()));
+                WynntilsMod.postEvent(
+                        new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, textDisplay.position()));
                 break;
             }
         }
