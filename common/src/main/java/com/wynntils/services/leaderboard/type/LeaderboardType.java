@@ -5,8 +5,6 @@
 package com.wynntils.services.leaderboard.type;
 
 public enum LeaderboardType {
-    // FIXME: Order and keys need to be updated when Athena adds the new leaderboards.
-    //  Texture may also need adjusting if order is different
     // Gathering Professions
     WOODCUTTING("woodcuttingLevel"),
     MINING("miningLevel"),
@@ -21,7 +19,7 @@ public enum LeaderboardType {
     TAILORING("tailoringLevel"),
     WEAPONSMITHING("weaponsmithingLevel"),
     WOODWORKING("woodworkingLevel"),
-    // Total Professions
+    // Total Professions (currently no difference between their badge texture)
     PROFESSIONS_GLOBAL("professionsGlobalLevel"),
     PROFESSIONS_SOLO("professionsSoloLevel"),
     // Total Combat
@@ -30,7 +28,7 @@ public enum LeaderboardType {
     // Total Overall
     TOTAL_GLOBAL("totalGlobalLevel"),
     TOTAL_SOLO("totalSoloLevel"),
-    // Content Completion
+    // Content Completion (currently no difference between their badge texture)
     CONTENT_SOLO("playerContent"),
     CONTENT_GLOBAL("globalPlayerContent"),
     // Raids
