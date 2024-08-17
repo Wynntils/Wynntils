@@ -35,6 +35,7 @@ public class RaidModel extends Model {
     public static final int MAX_CHALLENGES = 3;
     public static final int ROOM_TIMERS_COUNT = 5;
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
+    private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -71,10 +72,10 @@ public class RaidModel extends Model {
                 raidStartTime = System.currentTimeMillis();
                 completedCurrentChallenge = false;
             }
-        } else {
-            if (styledText.matches(RAID_COMPLETED_PATTERN)) {
-                completeRaid();
-            }
+        } else if (styledText.matches(RAID_COMPLETED_PATTERN)) {
+            completeRaid();
+        } else if (styledText.matches(RAID_FAILED_PATTERN)) {
+            failedRaid();
         }
     }
 
