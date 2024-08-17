@@ -70,7 +70,7 @@ public class WorldWaypointDistanceFeature extends Feature {
     public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     @Persisted
-    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(false);
+    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showAdditonalTextAbove = new Config<>(false);

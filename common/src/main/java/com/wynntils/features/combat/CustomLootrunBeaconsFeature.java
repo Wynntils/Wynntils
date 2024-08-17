@@ -16,5 +16,5 @@ public class CustomLootrunBeaconsFeature extends Feature {
     public final Config<Boolean> removeOriginalBeacons = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(false);
+    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 }

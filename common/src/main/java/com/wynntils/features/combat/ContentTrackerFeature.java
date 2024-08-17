@@ -29,7 +29,7 @@ public class ContentTrackerFeature extends Feature {
     public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(false);
+    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     @SubscribeEvent
     public void onTrackerUpdate(ActivityTrackerUpdatedEvent event) {
