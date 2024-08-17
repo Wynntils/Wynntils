@@ -42,7 +42,8 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
                     Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class)
                                     .showAdditionalTextInWorld
                                     .get()
-                            ? entry.getValue().beacon().color().name()
+                            ? entry.getValue().taskLocation().name() + " - "
+                                    + entry.getValue().beacon().color().name()
                             : null));
         }
         taskMarkers = newTaskMarkers;
