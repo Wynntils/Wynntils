@@ -1368,6 +1368,8 @@
   "feature.wynntils.worldWaypointDistance.scale.name": "Scale",
   "feature.wynntils.worldWaypointDistance.showAdditionalTextInWorld.description": "Whether the name of compass target should be displayed",
   "feature.wynntils.worldWaypointDistance.showAdditionalTextInWorld.name": "Show name in world",
+  "feature.wynntils.worldWaypointDistance.showAdditonalTextAbove.description": "Whether the additional text should be displayed above the icon instead of bottom",
+  "feature.wynntils.worldWaypointDistance.showAdditonalTextAbove.name": "Show Additional Text Above",
   "feature.wynntils.worldWaypointDistance.textColor.description": "What color should distance text be?",
   "feature.wynntils.worldWaypointDistance.textColor.name": "Distance Text Color",
   "feature.wynntils.worldWaypointDistance.textShadow.description": "What should the text shadow look like?",
