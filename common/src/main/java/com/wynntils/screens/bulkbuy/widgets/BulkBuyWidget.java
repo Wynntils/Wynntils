@@ -39,10 +39,11 @@ public class BulkBuyWidget extends AbstractWidget {
                 VerticalAlignment.BOTTOM,
                 TextShadow.NORMAL);
         if (bulkBuyQueue.firstEntry() == null) return;
-        FontRenderer.getInstance().renderText(guiGraphics.pose(),
+        FontRenderer.getInstance().renderScrollingText(guiGraphics.pose(),
                 StyledText.fromString(bulkBuyQueue.firstEntry().getValue().getItemStack().getDisplayName().getString()),
                 getX() + 52,
                 getY() + 30,
+                getWidth() - 20,
                 CommonColors.WHITE,
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.BOTTOM,

@@ -138,6 +138,8 @@
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Click to buy %d times",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "How many items should be bought at once?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Bulk Buy Amount",
+  "feature.wynntils.bulkBuy.bulkBuySpeed.description": "At what speed should the mod attempt to bulk buy items at?",
+  "feature.wynntils.bulkBuy.bulkBuySpeed.name": "Bulk Buy Speed",
   "feature.wynntils.bulkBuy.bulkBuyNormal": "Click to buy",
   "feature.wynntils.bulkBuy.description": "Adds the ability to buy items in bulk.",
   "feature.wynntils.bulkBuy.name": "Bulk Buy",

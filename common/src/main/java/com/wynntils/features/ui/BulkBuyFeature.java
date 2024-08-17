@@ -5,7 +5,6 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -17,10 +16,12 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -42,13 +43,13 @@ public class BulkBuyFeature extends Feature {
     @Persisted
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
-    public final boolean continuePurchasingWithoutFunds = false;
+    @Persisted
+    public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED_5);
 
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
     private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
-    private static final int TICKS_DELAY = 4;
 
     private final LinkedHashMap<Integer, BulkBoughtItem> bulkBuyQueue = new LinkedHashMap<>();
 
@@ -79,16 +80,10 @@ public class BulkBuyFeature extends Feature {
 
         if (e.getClickType() == ClickType.QUICK_MOVE) {
             if (!bulkBuyQueue.containsKey(e.getSlotNum())) {
-                // This event returns the ItemStack in the slot *after* the click happens, which is usually air
-                // So we need this external storage so we can get accurate ItemStack icons/names
-                bulkBuyQueue.put(e.getSlotNum(), new BulkBoughtItem(e.getSlotNum(), itemStack, bulkBuyAmount.get(), 0));
+                bulkBuyQueue.put(e.getSlotNum(), new BulkBoughtItem(e.getSlotNum(), itemStack, container, bulkBuyAmount.get()));
             } else {
                 bulkBuyQueue.get(e.getSlotNum()).incrementAmount();
             }
-            // TODO get rid of sthis
-            McUtils.sendMessageToClient(Component.literal("Slot number " + e.getSlotNum() + " " +
-                    bulkBuyQueue.get(e.getSlotNum()).getItemStack().getHoverName().getString() + " has " +
-                    bulkBuyQueue.get(e.getSlotNum()).getAmount() + " items queued"));
         }
         e.setCanceled(true);
     }
@@ -96,6 +91,26 @@ public class BulkBuyFeature extends Feature {
     @SubscribeEvent
     public void onShopClosed(ContainerCloseEvent.Pre e) {
         bulkBuyQueue.clear();
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (bulkBuyQueue.isEmpty()) return;
+        if (McUtils.mc().level.getGameTime() % bulkBuySpeed.get().getTicksDelay() != 0) return;
+
+        BulkBoughtItem item = bulkBuyQueue.firstEntry().getValue();
+        if (Models.Emerald.getAmountInInventory() < item.getPrice()) {
+            // TODO i18n
+            McUtils.sendErrorToClient("You do not have enough emeralds to purchase the requested amount.");
+            bulkBuyQueue.clear();
+            return;
+        }
+        ContainerUtils.clickOnSlot(item.getSlotNumber(), item.getContainer().containerId, GLFW.GLFW_MOUSE_BUTTON_RIGHT, item.getContainer().getItems());
+        bulkBuyQueue.get(item.getSlotNumber()).decrementAmount();
+
+        if (item.getAmount() == 0) {
+            bulkBuyQueue.remove(item.getSlotNumber());
+        }
     }
 
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
@@ -111,6 +126,19 @@ public class BulkBuyFeature extends Feature {
                         .withStyle(BULK_BUY_ACTIVE_COLOR));
 
         event.setTooltips(LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), tooltips));
+    }
+
+    private int findItemPrice(List<StyledText> lore) {
+        // Go backwards since prices are usually at the bottoms of the tooltips
+        for (int i = lore.size() - 1; i >= 0; i--) {
+            Matcher priceMatcher = lore.get(i).getMatcher(PRICE_PATTERN);
+            if (priceMatcher.find()) {
+                return Integer.parseInt(priceMatcher.group(1));
+            }
+        }
+
+        WynntilsMod.warn("Bulk Buy could not find price for " + lore.getFirst().getString());
+        return -1;
     }
 
     /**
@@ -157,17 +185,36 @@ public class BulkBuyFeature extends Feature {
                 && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
     }
 
-    public final class BulkBoughtItem {
-        private final int slotNumber;
-        private final ItemStack itemStack;
-        private int amount;
-        private int price;
+    public enum BulkBuySpeed {
+        FAST_4(4),
+        BALANCED_5(5),
+        SAFE_6(6),
+        VERY_SAFE_8(8);
 
-        private BulkBoughtItem(int slotNumber, ItemStack itemStack, int amount, int price) {
+        private final int ticksDelay;
+
+        BulkBuySpeed(int ticksDelay) {
+            this.ticksDelay = ticksDelay;
+        }
+
+        private int getTicksDelay() {
+            return ticksDelay;
+        }
+    }
+
+    public final class BulkBoughtItem {
+        private final int slotNumber; // Slot number of the thing we're buying
+        private final ItemStack itemStack; // ItemStack of the thing we're buying
+        private final AbstractContainerMenu container; // Shop container
+        private int amount; // Amount remaining that we need to buy
+        private int price; // Price of a single item
+
+        private BulkBoughtItem(int slotNumber, ItemStack itemStack, AbstractContainerMenu container, int amount) {
             this.slotNumber = slotNumber;
             this.itemStack = itemStack;
+            this.container = container;
             this.amount = amount;
-            this.price = price;
+            this.price = findItemPrice(LoreUtils.getLore(itemStack));
         }
 
         public int getSlotNumber() {
@@ -178,12 +225,22 @@ public class BulkBuyFeature extends Feature {
             return itemStack;
         }
 
+        public AbstractContainerMenu getContainer() {
+            return container;
+        }
+
         public int getAmount() {
             return amount;
         }
 
+        /** Used for adding a "block" of bulk buys when the user tries to buy more. */
         public void incrementAmount() {
             this.amount += bulkBuyAmount.get();
+        }
+
+        /** Used to subtract a single bulk buy when one buy is completed. */
+        public void decrementAmount() {
+            --this.amount;
         }
 
         public int getPrice() {
