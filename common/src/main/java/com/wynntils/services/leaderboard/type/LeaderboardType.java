@@ -22,7 +22,7 @@ public enum LeaderboardType {
     // Total Professions (currently no difference between their badge texture)
     PROFESSIONS_GLOBAL("professionsGlobalLevel"),
     PROFESSIONS_SOLO("professionsSoloLevel"),
-    // Total Combat
+    // Total Combat (currently no difference between their badge texture)
     COMBAT_GLOBAL("combatGlobalLevel"),
     COMBAT_SOLO("combatSoloLevel"),
     // Total Overall (currently no difference between their badge texture)
