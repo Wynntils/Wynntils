@@ -22,8 +22,14 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -31,12 +37,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
@@ -80,7 +80,8 @@ public class BulkBuyFeature extends Feature {
 
         if (e.getClickType() == ClickType.QUICK_MOVE) {
             if (!bulkBuyQueue.containsKey(e.getSlotNum())) {
-                bulkBuyQueue.put(e.getSlotNum(), new BulkBoughtItem(e.getSlotNum(), itemStack, container, bulkBuyAmount.get()));
+                bulkBuyQueue.put(
+                        e.getSlotNum(), new BulkBoughtItem(e.getSlotNum(), itemStack, container, bulkBuyAmount.get()));
             } else {
                 bulkBuyQueue.get(e.getSlotNum()).incrementAmount();
             }
@@ -94,18 +95,22 @@ public class BulkBuyFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent e) {
+    public void onTickPurchase(TickEvent e) {
+        if (true) return; // TODO for ui layout testing, remove this later
         if (bulkBuyQueue.isEmpty()) return;
         if (McUtils.mc().level.getGameTime() % bulkBuySpeed.get().getTicksDelay() != 0) return;
 
         BulkBoughtItem item = bulkBuyQueue.firstEntry().getValue();
         if (Models.Emerald.getAmountInInventory() < item.getPrice()) {
-            // TODO i18n
-            McUtils.sendErrorToClient("You do not have enough emeralds to purchase the requested amount.");
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyCannotAfford"));
             bulkBuyQueue.clear();
             return;
         }
-        ContainerUtils.clickOnSlot(item.getSlotNumber(), item.getContainer().containerId, GLFW.GLFW_MOUSE_BUTTON_RIGHT, item.getContainer().getItems());
+        ContainerUtils.clickOnSlot(
+                item.getSlotNumber(),
+                item.getContainer().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                item.getContainer().getItems());
         bulkBuyQueue.get(item.getSlotNumber()).decrementAmount();
 
         if (item.getAmount() == 0) {
