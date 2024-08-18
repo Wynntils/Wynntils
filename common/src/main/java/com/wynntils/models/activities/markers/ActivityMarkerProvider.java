@@ -37,7 +37,11 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 CommonColors.WHITE,
                                 CommonColors.WHITE,
                                 CommonColors.WHITE,
-                                null),
+                                Managers.Feature.getFeatureInstance(ContentTrackerFeature.class)
+                                                .showAdditionalTextInWorld
+                                                .get()
+                                        ? Models.Activity.getTrackedName()
+                                        : null),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(spawnLocation),
                                 ACTIVITY_LOCATION_NAME,

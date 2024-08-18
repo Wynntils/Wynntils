@@ -240,7 +240,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
         double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
         Location compassLocation = Location.containing(gameX, 0, gameZ);
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation, null);
 
         McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
