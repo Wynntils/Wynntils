@@ -261,36 +261,36 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         // region Filter type buttons
         allButton = new FilterOptionsButton(
-                -(Texture.PAPER_BUTTON_LEFT.width()) + 4,
+                -(Texture.BUTTON_LEFT.width()) + 4,
                 8,
-                Texture.PAPER_BUTTON_LEFT.width(),
-                Texture.PAPER_BUTTON_LEFT.height() / 2,
+                Texture.BUTTON_LEFT.width(),
+                Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.allFilter")),
                 (button) -> setSelectedFilter(FilterType.ALL),
                 List.of(Component.translatable("screens.wynntils.itemFilter.allFilterTooltip")),
-                Texture.PAPER_BUTTON_LEFT,
+                Texture.BUTTON_LEFT,
                 filterType == FilterType.ALL);
 
         usedButton = new FilterOptionsButton(
-                -(Texture.PAPER_BUTTON_LEFT.width()) + 4,
-                12 + Texture.PAPER_BUTTON_LEFT.height() / 2,
-                Texture.PAPER_BUTTON_LEFT.width(),
-                Texture.PAPER_BUTTON_LEFT.height() / 2,
+                -(Texture.BUTTON_LEFT.width()) + 4,
+                12 + Texture.BUTTON_LEFT.height() / 2,
+                Texture.BUTTON_LEFT.width(),
+                Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.usedFilter")),
                 (button) -> setSelectedFilter(FilterType.USED),
                 List.of(Component.translatable("screens.wynntils.itemFilter.usedFilterTooltip")),
-                Texture.PAPER_BUTTON_LEFT,
+                Texture.BUTTON_LEFT,
                 filterType == FilterType.USED);
 
         unusedButton = new FilterOptionsButton(
-                -(Texture.PAPER_BUTTON_LEFT.width()) + 4,
-                16 + (Texture.PAPER_BUTTON_LEFT.height() / 2) * 2,
-                Texture.PAPER_BUTTON_LEFT.width(),
-                Texture.PAPER_BUTTON_LEFT.height() / 2,
+                -(Texture.BUTTON_LEFT.width()) + 4,
+                16 + (Texture.BUTTON_LEFT.height() / 2) * 2,
+                Texture.BUTTON_LEFT.width(),
+                Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.itemFilter.unusedFilter")),
                 (button) -> setSelectedFilter(FilterType.UNUSED),
                 List.of(Component.translatable("screens.wynntils.itemFilter.unusedFilterTooltip")),
-                Texture.PAPER_BUTTON_LEFT,
+                Texture.BUTTON_LEFT,
                 filterType == FilterType.UNUSED);
 
         switch (filterType) {
@@ -469,8 +469,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
             if (MathUtils.isInside(
                     (int) adjustedMouseX,
                     (int) adjustedMouseY,
-                    132,
-                    132 + Texture.SCROLL_BUTTON.width(),
+                    133,
+                    133 + Texture.SCROLL_BUTTON.width(),
                     (int) providerScrollY,
                     (int) (providerScrollY + Texture.SCROLL_BUTTON.height()))) {
                 draggingProviderScroll = true;
@@ -807,7 +807,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         int yPos = 4;
 
         for (int i = 0; i < Math.min(MAX_PRESETS, presets.size()); i++) {
-            yPos += Texture.PAPER_BUTTON_RIGHT.height() / 2 + 6;
+            yPos += Texture.BUTTON_RIGHT.height() / 2 + 6;
             int presetIndex;
 
             if (i + presetsScrollOffset < 0) {
@@ -1086,7 +1086,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                         0,
                         177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 132, providerScrollY);
+        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 133, providerScrollY);
     }
 
     private void renderSortScroll(PoseStack poseStack) {

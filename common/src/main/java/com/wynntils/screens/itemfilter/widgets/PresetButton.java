@@ -36,9 +36,9 @@ public class PresetButton extends BasicTexturedButton {
         super(
                 x,
                 y,
-                Texture.PAPER_BUTTON_RIGHT.width(),
-                Texture.PAPER_BUTTON_RIGHT.height() / 2,
-                Texture.PAPER_BUTTON_RIGHT,
+                Texture.BUTTON_RIGHT.width(),
+                Texture.BUTTON_RIGHT.height() / 2,
+                Texture.BUTTON_RIGHT,
                 onClick,
                 tooltip);
 
@@ -65,7 +65,7 @@ public class PresetButton extends BasicTexturedButton {
         }
 
         // When selected or hovered it should use the alternate texture
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.PAPER_BUTTON_RIGHT, getX(), getY(), this.isHovered);
+        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.BUTTON_RIGHT, getX(), getY(), this.isHovered);
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(

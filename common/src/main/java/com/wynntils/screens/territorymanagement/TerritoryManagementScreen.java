@@ -359,7 +359,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 getRenderX()
                         + RENDER_AREA_POSITION.a()
                         + RENDER_AREA_SIZE.a()
-                        + 9f
+                        + 10f
                         - Texture.SCROLL_BUTTON.width() / 2f,
                 renderY - Texture.SCROLLBAR_BUTTON.height() / 2f);
     }
@@ -459,7 +459,7 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         float scrollX = getRenderX()
                 + RENDER_AREA_POSITION.a()
                 + RENDER_AREA_SIZE.a()
-                + 9f
+                + 10f
                 - Texture.SCROLL_BUTTON.width() / 2f;
         float scrollY = MathUtils.map(
                 scrollOffset,
