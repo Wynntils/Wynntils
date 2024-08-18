@@ -6,7 +6,7 @@ package com.wynntils.services.leaderboard.type;
 
 public record LeaderboardBadge(int uOffset, int vOffset) {
     public static final int WIDTH = 19;
-    public static final int HEIGHT = 17;
+    public static final int HEIGHT = 18;
 
     public static LeaderboardBadge from(LeaderboardType leaderboardType, int standing) {
         int uOffset = leaderboardType.ordinal() * WIDTH;

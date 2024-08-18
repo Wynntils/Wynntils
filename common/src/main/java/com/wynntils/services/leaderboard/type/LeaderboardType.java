@@ -19,18 +19,18 @@ public enum LeaderboardType {
     TAILORING("tailoringLevel"),
     WEAPONSMITHING("weaponsmithingLevel"),
     WOODWORKING("woodworkingLevel"),
-    // Total Professions (currently no difference between their badge texture)
+    // Total Professions
     PROFESSIONS_GLOBAL("professionsGlobalLevel"),
     PROFESSIONS_SOLO("professionsSoloLevel"),
-    // Total Combat (currently no difference between their badge texture)
+    // Total Combat
     COMBAT_GLOBAL("combatGlobalLevel"),
     COMBAT_SOLO("combatSoloLevel"),
-    // Total Overall (currently no difference between their badge texture)
+    // Total Overall
     TOTAL_GLOBAL("totalGlobalLevel"),
     TOTAL_SOLO("totalSoloLevel"),
-    // Content Completion (currently no difference between their badge texture)
-    CONTENT_SOLO("playerContent"),
+    // Content Completion
     CONTENT_GLOBAL("globalPlayerContent"),
+    CONTENT_SOLO("playerContent"),
     // Raids
     NEST_OF_THE_GROOTSLANGS("nogCompletion"),
     ORPHIONS_NEXUS_OF_LIGHT("nolCompletion"),
