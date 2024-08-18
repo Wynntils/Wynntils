@@ -40,6 +40,8 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 Managers.Feature.getFeatureInstance(ContentTrackerFeature.class)
                                                 .showAdditionalTextInWorld
                                                 .get()
+                                        // FIXME: Empty string is needed for now as it returns incorrect tracked task
+                                        // name
                                         ? ""
                                         : null),
                         new MarkerPoi(
