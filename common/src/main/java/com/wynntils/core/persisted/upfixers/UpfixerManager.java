@@ -23,6 +23,7 @@ import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMov
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesRenamedUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfixer;
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
@@ -58,6 +59,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new TowerAuraVignetteNameUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
+        registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

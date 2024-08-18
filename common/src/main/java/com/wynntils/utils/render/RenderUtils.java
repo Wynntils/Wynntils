@@ -810,7 +810,7 @@ public final class RenderUtils {
 
             poseStack.translate(0, entity.getBbHeight() + 0.25F + customOffset, 0);
             poseStack.mulPose(dispatcher.cameraOrientation());
-            poseStack.scale(-0.025F, -0.025F, 0.025F);
+            poseStack.scale(0.025F, -0.025F, -0.025F);
 
             Matrix4f matrix = poseStack.last().pose();
 
