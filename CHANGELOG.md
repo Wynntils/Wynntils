@@ -1,3 +1,17 @@
+## [2.0.8](https://github.com/Wynntils/Wynntils/compare/v2.0.7...v2.0.8) (2024-08-18)
+
+
+### New Features
+
+* Add badges for new leaderboards ([#2568](https://github.com/Wynntils/Wynntils/issues/2568)) ([3285e03](https://github.com/Wynntils/Wynntils/commit/3285e03193eedf4e63f5d2d233931d80f9ba545f))
+* Show waypoint names in world [skip ci] ([#2753](https://github.com/Wynntils/Wynntils/issues/2753)) ([1474aba](https://github.com/Wynntils/Wynntils/commit/1474abaed08bac651f58656b51dba340868029b6))
+* Update various "paper" textures with new Wynn style [skip ci] ([#2754](https://github.com/Wynntils/Wynntils/issues/2754)) ([35545fc](https://github.com/Wynntils/Wynntils/commit/35545fcc745c52a8367c19e46e619e729eb54227))
+
+
+### Bug Fixes
+
+* Use title to detect raid failure [skip ci] ([#2755](https://github.com/Wynntils/Wynntils/issues/2755)) ([c8baf56](https://github.com/Wynntils/Wynntils/commit/c8baf5693302c238ce1c7d71171bd34d3e22a535))
+
 ## [2.0.7](https://github.com/Wynntils/Wynntils/compare/v2.0.6...v2.0.7) (2024-08-16)
 
 
@@ -6,6 +20,11 @@
 * Fix party list parsing ([#2752](https://github.com/Wynntils/Wynntils/issues/2752)) ([ff9b7b2](https://github.com/Wynntils/Wynntils/commit/ff9b7b2e21df96b4be3142ee18c5f13f15f8ae80))
 * Fix raid tracking not detecting failure from running out of time [skip ci] ([#2751](https://github.com/Wynntils/Wynntils/issues/2751)) ([900285b](https://github.com/Wynntils/Wynntils/commit/900285ba38f3ba4e175cf0cbdeaf57b03510d1e0))
 * Totem tracking doesn't bind timers [skip ci] ([#2750](https://github.com/Wynntils/Wynntils/issues/2750)) ([d373d64](https://github.com/Wynntils/Wynntils/commit/d373d6495ed11fcca3213afe216781f4b410d367))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.7 [skip ci] ([d09d3d3](https://github.com/Wynntils/Wynntils/commit/d09d3d3811439985f0fc2901598b211d216eaaa2))
 
 ## [2.0.6](https://github.com/Wynntils/Wynntils/compare/v2.0.5...v2.0.6) (2024-08-15)
 
@@ -62,23 +81,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.4 [skip ci] ([83a2b14](https://github.com/Wynntils/Wynntils/commit/83a2b14b0ec1bcbc49821547a5fd01be411945ba))
-
-## [2.0.3](https://github.com/Wynntils/Wynntils/compare/v2.0.2...v2.0.3) (2024-08-12)
-
-
-### New Features
-
-* Add RemoveWynncraftChatWrapFeature and fix ChatItemFeature not working in party/guild/private chat ([#2734](https://github.com/Wynntils/Wynntils/issues/2734)) ([725781a](https://github.com/Wynntils/Wynntils/commit/725781a1facf8c33ca81ba73229954236fcb75af))
-
-
-### Bug Fixes
-
-* Correctly set game version requirement tags on Modrinth and CurseForge [skip ci] ([#2732](https://github.com/Wynntils/Wynntils/issues/2732)) ([5838da2](https://github.com/Wynntils/Wynntils/commit/5838da29f7d990bfeaa91d5f37d4c845206aa434))
-* Fix CustomSeaskipperScreenFeature crashing the game [skip ci] ([#2733](https://github.com/Wynntils/Wynntils/issues/2733)) ([d3bfd88](https://github.com/Wynntils/Wynntils/commit/d3bfd887b04c44049e2874037e1698b9a6e2c943))
-* Reset current container if on a container screen [skip ci] ([#2731](https://github.com/Wynntils/Wynntils/issues/2731)) ([a7950c3](https://github.com/Wynntils/Wynntils/commit/a7950c35b4e6827a053874627c4c78cba7b1ca70))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.3 [skip ci] ([a498c63](https://github.com/Wynntils/Wynntils/commit/a498c632e98b4308dd06dd0a9d454b454fe01196))
 
