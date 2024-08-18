@@ -37,7 +37,14 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
                     entry.getValue().taskLocation().taskType().getTexture(),
                     entry.getKey().getDisplayColor(),
                     CommonColors.WHITE,
-                    entry.getKey().getDisplayColor()));
+                    entry.getKey().getDisplayColor(),
+                    // FIXME: Feature-Model dependency
+                    Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class)
+                                    .showAdditionalTextInWorld
+                                    .get()
+                            ? entry.getValue().taskLocation().name() + " - "
+                                    + entry.getValue().beacon().color().name()
+                            : null));
         }
         taskMarkers = newTaskMarkers;
 

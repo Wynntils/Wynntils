@@ -65,7 +65,8 @@ public final class DiscoveryModel extends Model {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(centerX, 0, centerZ));
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                    new Location(centerX, 0, centerZ), guildTerritory.getName());
         }
     }
 
@@ -250,7 +251,7 @@ public final class DiscoveryModel extends Model {
                     // We can't run this is on request thread
                 case MAP -> Managers.TickScheduler.scheduleNextTick(
                         () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
-                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z));
+                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), name);
             }
         });
     }

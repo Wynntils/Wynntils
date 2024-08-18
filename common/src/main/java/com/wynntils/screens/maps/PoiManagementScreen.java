@@ -773,7 +773,7 @@ public final class PoiManagementScreen extends WynntilsGridLayoutScreen {
     private void toggleMarkers(boolean addMarkers) {
         if (addMarkers) {
             selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor()));
+                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName()));
         } else {
             selectedPois.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                     poi.getLocation().asLocation()));
