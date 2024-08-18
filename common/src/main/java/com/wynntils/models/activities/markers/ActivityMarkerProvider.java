@@ -40,7 +40,7 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 Managers.Feature.getFeatureInstance(ContentTrackerFeature.class)
                                                 .showAdditionalTextInWorld
                                                 .get()
-                                        ? Models.Activity.getTrackedName()
+                                        ? ""
                                         : null),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(spawnLocation),
