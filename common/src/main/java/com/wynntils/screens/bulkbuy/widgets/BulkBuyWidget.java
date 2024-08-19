@@ -7,52 +7,47 @@ package com.wynntils.screens.bulkbuy.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.LinkedHashMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class BulkBuyWidget extends AbstractWidget {
-    private final LinkedHashMap<Integer, BulkBuyFeature.BulkBoughtItem> bulkBuyQueue;
+    private final BulkBuyFeature.BulkBoughtItem bulkBoughtItem;
 
-    public BulkBuyWidget(
-            int x, int y, int width, int height, LinkedHashMap<Integer, BulkBuyFeature.BulkBoughtItem> bulkBuyQueue) {
+    public BulkBuyWidget(int x, int y, int width, int height, BulkBuyFeature.BulkBoughtItem bulkBoughtItem) {
         super(x, y, width, height, Component.literal("Bulk Buy Widget"));
-        this.bulkBuyQueue = bulkBuyQueue;
+        this.bulkBoughtItem = bulkBoughtItem;
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BANK_PANEL, getX(), getY());
+        RenderUtils.drawRect(
+                guiGraphics.pose(), CustomColor.fromHexString("#9c784b"), getX(), getY(), 0, getWidth(), getHeight());
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
                         StyledText.fromString("Currently Buying: "),
-                        getX() + 52,
+                        getX() + 102,
                         getY() + 20,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
-        if (bulkBuyQueue.firstEntry() == null) return;
+        if (bulkBoughtItem == null) return;
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
-                        StyledText.fromString(bulkBuyQueue
-                                .firstEntry()
-                                .getValue()
-                                .getItemStack()
-                                .getDisplayName()
-                                .getString()),
-                        getX() + 52,
+                        StyledText.fromString(
+                                bulkBoughtItem.getItemStack().getHoverName().getString()),
+                        getX() + 102,
                         getY() + 30,
                         getWidth() - 20,
                         CommonColors.WHITE,
@@ -62,14 +57,14 @@ public class BulkBuyWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
-                        StyledText.fromString("Amount: "
-                                + bulkBuyQueue.firstEntry().getValue().getAmount()),
-                        getX() + 52,
+                        StyledText.fromString("Amount: " + bulkBoughtItem.getAmount()),
+                        getX() + 102,
                         getY() + 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
+        guiGraphics.renderItem(bulkBoughtItem.getItemStack(), getX() + 50, getY() + 30);
     }
 
     @Override

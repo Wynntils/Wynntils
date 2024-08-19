@@ -23,7 +23,6 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +50,7 @@ public class BulkBuyFeature extends Feature {
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
     private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
 
-    private final LinkedHashMap<Integer, BulkBoughtItem> bulkBuyQueue = new LinkedHashMap<>();
+    private BulkBoughtItem bulkBoughtItem = null;
 
     @SubscribeEvent
     public void onShopOpened(SetSlotEvent.Pre e) {
@@ -67,7 +66,7 @@ public class BulkBuyFeature extends Feature {
         String title = e.getItemStack().getHoverName().getString();
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(" Shop")) return;
 
-        screen.addRenderableWidget(new BulkBuyWidget(screen.leftPos - 98, screen.topPos, 100, 110, bulkBuyQueue));
+        screen.addRenderableWidget(new BulkBuyWidget(screen.leftPos - 198, screen.topPos, 200, 110, bulkBoughtItem));
     }
 
     @SubscribeEvent
@@ -79,11 +78,10 @@ public class BulkBuyFeature extends Feature {
         if (!isBulkBuyable(container, itemStack)) return;
 
         if (e.getClickType() == ClickType.QUICK_MOVE) {
-            if (!bulkBuyQueue.containsKey(e.getSlotNum())) {
-                bulkBuyQueue.put(
-                        e.getSlotNum(), new BulkBoughtItem(e.getSlotNum(), itemStack, container, bulkBuyAmount.get()));
+            if (bulkBoughtItem != null) {
+                bulkBoughtItem.incrementAmount();
             } else {
-                bulkBuyQueue.get(e.getSlotNum()).incrementAmount();
+                bulkBoughtItem = new BulkBoughtItem(e.getSlotNum(), itemStack, container, bulkBuyAmount.get());
             }
         }
         e.setCanceled(true);
@@ -91,30 +89,29 @@ public class BulkBuyFeature extends Feature {
 
     @SubscribeEvent
     public void onShopClosed(ContainerCloseEvent.Pre e) {
-        bulkBuyQueue.clear();
+        bulkBoughtItem = null;
     }
 
     @SubscribeEvent
     public void onTickPurchase(TickEvent e) {
         if (true) return; // TODO for ui layout testing, remove this later
-        if (bulkBuyQueue.isEmpty()) return;
+        if (bulkBoughtItem == null) return;
         if (McUtils.mc().level.getGameTime() % bulkBuySpeed.get().getTicksDelay() != 0) return;
 
-        BulkBoughtItem item = bulkBuyQueue.firstEntry().getValue();
-        if (Models.Emerald.getAmountInInventory() < item.getPrice()) {
+        if (Models.Emerald.getAmountInInventory() < bulkBoughtItem.getPrice()) {
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyCannotAfford"));
-            bulkBuyQueue.clear();
+            bulkBoughtItem = null;
             return;
         }
         ContainerUtils.clickOnSlot(
-                item.getSlotNumber(),
-                item.getContainer().containerId,
+                bulkBoughtItem.getSlotNumber(),
+                bulkBoughtItem.getContainer().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                item.getContainer().getItems());
-        bulkBuyQueue.get(item.getSlotNumber()).decrementAmount();
+                bulkBoughtItem.getContainer().getItems());
+        bulkBoughtItem.decrementAmount();
 
-        if (item.getAmount() == 0) {
-            bulkBuyQueue.remove(item.getSlotNumber());
+        if (bulkBoughtItem.getAmount() <= 0) {
+            bulkBoughtItem = null;
         }
     }
 
