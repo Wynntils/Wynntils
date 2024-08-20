@@ -4,9 +4,13 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
@@ -68,6 +72,8 @@ public enum GearType {
     MASTERY_TOME(null, Items.IRON_HORSE_ARMOR, 76, 82, -1),
     CHARM(null, Items.CLAY_BALL, 0, 0, -1);
 
+    private static final Pattern SKINNED_GEAR_PATTERN = Pattern.compile("^§7\\[Active (.+) Skin: (.+)]$");
+
     private final ClassType classReq;
     private final Item defaultItem;
     private final List<Integer> models;
@@ -83,7 +89,9 @@ public enum GearType {
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
-        this.models = IntStream.rangeClosed(firstModel, lastModel).boxed().toList();
+        this.models = firstModel == 0 && lastModel == 0
+                ? List.of()
+                : IntStream.rangeClosed(firstModel, lastModel).boxed().toList();
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
@@ -106,14 +114,31 @@ public enum GearType {
             // We only want to match for proper gear, not rewards
             if (gearType.isReward()) continue;
 
-            boolean itemMatches = gearType.defaultItem.equals(item) || gearType.otherItems.contains(item);
-            if (!itemMatches) continue;
-
             CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-            if (customModelData != null && gearType.models.contains(customModelData.value())) {
+
+            // Special case for armor gear
+            // Only check for the models in case the item is the default item, otherwise accept any item
+            if (customModelData == null && (gearType.defaultItem.equals(item) && gearType.models.isEmpty())
+                    || gearType.otherItems.contains(item)) {
+                return gearType;
+            }
+
+            if (gearType.defaultItem.equals(item)
+                    && customModelData != null
+                    && gearType.models.contains(customModelData.value())) {
                 return gearType;
             }
         }
+
+        // Gears have a lot of different skinned items, checking for the string in lore is more reliable
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
+        if (!lore.isEmpty()) {
+            Matcher matcher = lore.getLast().getMatcher(SKINNED_GEAR_PATTERN);
+            if (matcher.matches()) {
+                return GearType.fromString(matcher.group(1));
+            }
+        }
+
         return null;
     }
 

@@ -1170,6 +1170,8 @@
   "feature.wynntils.spellCastMessageOverlay.name": "Spell Cast Message Overlay",
   "feature.wynntils.spellCastMessageOverlay.overlay.spellCastMessage.name": "Spell Cast Overlay",
   "feature.wynntils.spellCastVignette.description": "Adds the ability to render a vignette at spell casts.",
+  "feature.wynntils.spellCastVignette.maxItensityPercent.description": "Determines max intensity of the vignette. For example setting this to 50 will make it so the vignette won't get more intense after having less than half of your mana.",
+  "feature.wynntils.spellCastVignette.maxItensityPercent.name": "Max Intensity Percent",
   "feature.wynntils.spellCastVignette.name": "Spell Cast Vignette Render",
   "feature.wynntils.spellCastVignette.renderVignette.description": "Should we render a brief vignette when a spell is cast?",
   "feature.wynntils.spellCastVignette.renderVignette.name": "Render Vignette",
