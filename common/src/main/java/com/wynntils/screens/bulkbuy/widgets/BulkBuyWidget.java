@@ -18,12 +18,14 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
-public class BulkBuyWidget extends AbstractWidget {
-    private final BulkBuyFeature.BulkBoughtItem bulkBoughtItem;
+import java.util.function.Supplier;
 
-    public BulkBuyWidget(int x, int y, int width, int height, BulkBuyFeature.BulkBoughtItem bulkBoughtItem) {
+public class BulkBuyWidget extends AbstractWidget {
+    private final Supplier<BulkBuyFeature.BulkBoughtItem> bulkBoughtItemSupplier;
+
+    public BulkBuyWidget(int x, int y, int width, int height, Supplier<BulkBuyFeature.BulkBoughtItem> bulkBoughtItemSupplier) {
         super(x, y, width, height, Component.literal("Bulk Buy Widget"));
-        this.bulkBoughtItem = bulkBoughtItem;
+        this.bulkBoughtItemSupplier = bulkBoughtItemSupplier;
     }
 
     @Override
@@ -41,12 +43,12 @@ public class BulkBuyWidget extends AbstractWidget {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
-        if (bulkBoughtItem == null) return;
+        if (bulkBoughtItemSupplier.get() == null) return;
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
                         StyledText.fromString(
-                                bulkBoughtItem.getItemStack().getHoverName().getString()),
+                                bulkBoughtItemSupplier.get().getItemStack().getHoverName().getString()),
                         getX() + 102,
                         getY() + 30,
                         getWidth() - 20,
@@ -57,14 +59,14 @@ public class BulkBuyWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
-                        StyledText.fromString("Amount: " + bulkBoughtItem.getAmount()),
+                        StyledText.fromString("Amount: " + bulkBoughtItemSupplier.get().getAmount()),
                         getX() + 102,
                         getY() + 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
-        guiGraphics.renderItem(bulkBoughtItem.getItemStack(), getX() + 50, getY() + 30);
+        guiGraphics.renderItem(bulkBoughtItemSupplier.get().getItemStack(), getX() + 50, getY() + 30);
     }
 
     @Override

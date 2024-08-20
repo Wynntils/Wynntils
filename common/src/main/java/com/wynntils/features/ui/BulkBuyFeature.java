@@ -43,7 +43,7 @@ public class BulkBuyFeature extends Feature {
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     @Persisted
-    public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED_5);
+    public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
@@ -66,7 +66,7 @@ public class BulkBuyFeature extends Feature {
         String title = e.getItemStack().getHoverName().getString();
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(" Shop")) return;
 
-        screen.addRenderableWidget(new BulkBuyWidget(screen.leftPos - 198, screen.topPos, 200, 110, bulkBoughtItem));
+        screen.addRenderableWidget(new BulkBuyWidget(screen.leftPos - 198, screen.topPos, 200, 110, this::getBulkBoughtItem));
     }
 
     @SubscribeEvent
@@ -77,7 +77,7 @@ public class BulkBuyFeature extends Feature {
         ItemStack itemStack = e.getItemStack();
         if (!isBulkBuyable(container, itemStack)) return;
 
-        if (e.getClickType() == ClickType.QUICK_MOVE) {
+        if (e.getClickType() == ClickType.QUICK_MOVE && e.getItemStack().equals(bulkBoughtItem.getItemStack())) {
             if (bulkBoughtItem != null) {
                 bulkBoughtItem.incrementAmount();
             } else {
@@ -187,11 +187,15 @@ public class BulkBuyFeature extends Feature {
                 && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
     }
 
+    private BulkBoughtItem getBulkBoughtItem() {
+        return bulkBoughtItem;
+    }
+
     public enum BulkBuySpeed {
-        FAST_4(4),
-        BALANCED_5(5),
-        SAFE_6(6),
-        VERY_SAFE_8(8);
+        FAST(4),
+        BALANCED(5),
+        SAFE(6),
+        VERY_SAFE(8);
 
         private final int ticksDelay;
 
