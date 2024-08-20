@@ -4,26 +4,22 @@
  */
 package com.wynntils.models.character.type;
 
-import com.wynntils.models.gear.type.GearType;
-
 public enum ClassType {
-    MAGE("Mage", "Dark Wizard", GearType.WAND),
-    ARCHER("Archer", "Hunter", GearType.BOW),
-    WARRIOR("Warrior", "Knight", GearType.SPEAR),
-    ASSASSIN("Assassin", "Ninja", GearType.DAGGER),
-    SHAMAN("Shaman", "Skyseer", GearType.RELIK),
+    MAGE("Mage", "Dark Wizard"),
+    ARCHER("Archer", "Hunter"),
+    WARRIOR("Warrior", "Knight"),
+    ASSASSIN("Assassin", "Ninja"),
+    SHAMAN("Shaman", "Skyseer"),
 
     // This represents the class selection menu, or the generic spell
-    NONE("none", "none", null);
+    NONE("none", "none");
 
     private final String name;
     private final String reskinnedName;
-    private final GearType gearType;
 
-    ClassType(String name, String reskinnedName, GearType gearType) {
+    ClassType(String name, String reskinnedName) {
         this.name = name;
         this.reskinnedName = reskinnedName;
-        this.gearType = gearType;
     }
 
     public static ClassType fromName(String className) {
@@ -57,10 +53,6 @@ public enum ClassType {
 
     public String getFullName() {
         return name + "/" + reskinnedName;
-    }
-
-    public GearType getGearType() {
-        return gearType;
     }
 
     @Override

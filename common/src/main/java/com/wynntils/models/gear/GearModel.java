@@ -7,7 +7,6 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -171,7 +170,7 @@ public final class GearModel extends Model {
             // If the gear type is weapon, we can try to find the weapon type from the requirements
             gearType = result.requirements()
                     .classType()
-                    .map(ClassType::getGearType)
+                    .map(GearType::fromClassType)
                     .orElse(gearType);
         }
 
