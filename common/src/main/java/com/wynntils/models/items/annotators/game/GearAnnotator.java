@@ -13,17 +13,12 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearAnnotator implements GameItemAnnotator {
-    // Test in GearAnnotator_GEAR_PATTERN
-    private static final Pattern GEAR_PATTERN = Pattern.compile(
-            "^(?:(?<unidrarity>§[5abcdef])(?<unidentified>Unidentified ))?(?:§f⬡ )?(?<idrarity>§[5abcdef])?(?:Shiny )?(?<name>.+)$");
-
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.getMatcher(GEAR_PATTERN);
+        Matcher matcher = name.getMatcher(Models.Gear.GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
         // Lookup Gear Profile

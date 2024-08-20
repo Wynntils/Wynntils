@@ -19,7 +19,7 @@ import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.damage.label.DamageLabelParser;
-import com.wynntils.models.items.annotators.game.GearAnnotator;
+import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
@@ -823,6 +823,13 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_QUEST_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "QUEST_REQ_PATTERN");
+        p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
+        p.shouldMatch("§c✖§7 Quest Req: Realm of Light V - The Realm of Light");
+    }
+
+    @Test
     public void WynnItemParser_MISC_REQ_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "MISC_REQ_PATTERN");
         p.shouldMatch("§a✔§7 Quest Req: The Qira Hive");
@@ -864,8 +871,8 @@ public class TestRegex {
     }
 
     @Test
-    public void GearAnnotator_GEAR_PATTERN() {
-        PatternTester p = new PatternTester(GearAnnotator.class, "GEAR_PATTERN");
+    public void GearModel_GEAR_PATTERN() {
+        PatternTester p = new PatternTester(GearModel.class, "GEAR_PATTERN");
 
         // Unidentified
         p.shouldMatch("§5Unidentified §f⬡ §5Shiny Crusade Sabatons");
