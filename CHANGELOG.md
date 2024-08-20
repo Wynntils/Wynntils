@@ -1,3 +1,10 @@
+## [2.0.10](https://github.com/Wynntils/Wynntils/compare/v2.0.9...v2.0.10) (2024-08-20)
+
+
+### Bug Fixes
+
+* Fix weapon types not being counted as weapon ([#2764](https://github.com/Wynntils/Wynntils/issues/2764)) ([0a41a6a](https://github.com/Wynntils/Wynntils/commit/0a41a6a6d4bf7a7e2f2e6af251bdc1d4ec6a019c))
+
 ## [2.0.9](https://github.com/Wynntils/Wynntils/compare/v2.0.8...v2.0.9) (2024-08-20)
 
 
@@ -12,6 +19,11 @@
 * fix tracked activity not being parsed [skip ci] ([#2763](https://github.com/Wynntils/Wynntils/issues/2763)) ([0f64a75](https://github.com/Wynntils/Wynntils/commit/0f64a759f3984555f8c07a04001e86a7434cbdee))
 * Fix unknown gear not being annotated [skip ci] ([#2759](https://github.com/Wynntils/Wynntils/issues/2759)) ([5adc6a0](https://github.com/Wynntils/Wynntils/commit/5adc6a05db99b3aec1f1e2de3848c5eaeb52f97f))
 * Forgery scroll parsing [skip ci] ([#2761](https://github.com/Wynntils/Wynntils/issues/2761)) ([8269e6c](https://github.com/Wynntils/Wynntils/commit/8269e6c4998eae7e50bff5c4688b74a2f08ce041))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.9 [skip ci] ([6900e69](https://github.com/Wynntils/Wynntils/commit/6900e6969289c1d9a28a534e5fa12d9515e9b1dc))
 
 ## [2.0.8](https://github.com/Wynntils/Wynntils/compare/v2.0.7...v2.0.8) (2024-08-18)
 
@@ -59,27 +71,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.6 [skip ci] ([736d29c](https://github.com/Wynntils/Wynntils/commit/736d29c6ca02cb2a7277ce8575d7dcf8cf2d5416))
-
-## [2.0.5](https://github.com/Wynntils/Wynntils/compare/v2.0.4...v2.0.5) (2024-08-15)
-
-
-### New Features
-
-* Functions for different resources [skip ci] ([#2741](https://github.com/Wynntils/Wynntils/issues/2741)) ([7e65d67](https://github.com/Wynntils/Wynntils/commit/7e65d67447cbb6845f7ee3ba292ac3fc27a2e504))
-
-
-### Bug Fixes
-
-* Correctly categorize 2.1 messages in chat tabs (RecipientType fixes) ([#2745](https://github.com/Wynntils/Wynntils/issues/2745)) ([1b5b965](https://github.com/Wynntils/Wynntils/commit/1b5b9659e5ce83eeb1100ae369ec4d527029057e))
-* Fix pack preloading getting users stuck in class selection [skip ci] ([#2744](https://github.com/Wynntils/Wynntils/issues/2744)) ([faf09d3](https://github.com/Wynntils/Wynntils/commit/faf09d3ef859f0e335d38577afd4c5e00edd5873))
-* Fix TradeMarketPriceConversionFeature [skip ci] ([#2738](https://github.com/Wynntils/Wynntils/issues/2738)) ([b2f76f0](https://github.com/Wynntils/Wynntils/commit/b2f76f06787739f33ad04cb94b27afb3471fbc7d))
-* Fix unwrapping related message bugs (in RemoveWynncraftChatWrapFeature) [skip ci] ([#2743](https://github.com/Wynntils/Wynntils/issues/2743)) ([7cfac52](https://github.com/Wynntils/Wynntils/commit/7cfac52b93c0c65000c24dc435c92e5903d1a163))
-* Fix widgets with scrolling text not being masked [skip ci] ([#2723](https://github.com/Wynntils/Wynntils/issues/2723)) ([f689655](https://github.com/Wynntils/Wynntils/commit/f68965552df01b1503273fbc9869da7001539b34))
-* Move emeralds higher to avoid clipping [skip ci] ([#2740](https://github.com/Wynntils/Wynntils/issues/2740)) ([6f99858](https://github.com/Wynntils/Wynntils/commit/6f99858bf0a1d5c1c8402b1a2a990f6f84313044))
-* Refine crafted item parsing, handle more edge-cases [skip ci] ([#2742](https://github.com/Wynntils/Wynntils/issues/2742)) ([f7cbe72](https://github.com/Wynntils/Wynntils/commit/f7cbe7283170b748a84d8f86a1fde6020f89cb20))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.5 [skip ci] ([04e5dbf](https://github.com/Wynntils/Wynntils/commit/04e5dbff0977c9deeaf50a59fde88ed4b61dc526))
 
