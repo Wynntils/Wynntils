@@ -1,3 +1,18 @@
+## [2.0.9](https://github.com/Wynntils/Wynntils/compare/v2.0.8...v2.0.9) (2024-08-20)
+
+
+### New Features
+
+* Fully parse items without Wynn Item API (UnknownGear parsing) ([#2760](https://github.com/Wynntils/Wynntils/issues/2760)) ([56c0653](https://github.com/Wynntils/Wynntils/commit/56c06532ff04176f1c03f5bee27413283b48e328))
+* Max Intensity setting for Spell Cast Vignette [skip ci] ([#2762](https://github.com/Wynntils/Wynntils/issues/2762)) ([4889a06](https://github.com/Wynntils/Wynntils/commit/4889a06fa377044cebe8c44d7fcf16b70099afae))
+
+
+### Bug Fixes
+
+* fix tracked activity not being parsed [skip ci] ([#2763](https://github.com/Wynntils/Wynntils/issues/2763)) ([0f64a75](https://github.com/Wynntils/Wynntils/commit/0f64a759f3984555f8c07a04001e86a7434cbdee))
+* Fix unknown gear not being annotated [skip ci] ([#2759](https://github.com/Wynntils/Wynntils/issues/2759)) ([5adc6a0](https://github.com/Wynntils/Wynntils/commit/5adc6a05db99b3aec1f1e2de3848c5eaeb52f97f))
+* Forgery scroll parsing [skip ci] ([#2761](https://github.com/Wynntils/Wynntils/issues/2761)) ([8269e6c](https://github.com/Wynntils/Wynntils/commit/8269e6c4998eae7e50bff5c4688b74a2f08ce041))
+
 ## [2.0.8](https://github.com/Wynntils/Wynntils/compare/v2.0.7...v2.0.8) (2024-08-18)
 
 
@@ -11,6 +26,11 @@
 ### Bug Fixes
 
 * Use title to detect raid failure [skip ci] ([#2755](https://github.com/Wynntils/Wynntils/issues/2755)) ([c8baf56](https://github.com/Wynntils/Wynntils/commit/c8baf5693302c238ce1c7d71171bd34d3e22a535))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.8 [skip ci] ([3038c68](https://github.com/Wynntils/Wynntils/commit/3038c68d4808c4faafbd204a6d566b6da8758a9d))
 
 ## [2.0.7](https://github.com/Wynntils/Wynntils/compare/v2.0.6...v2.0.7) (2024-08-16)
 
@@ -62,23 +82,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.5 [skip ci] ([04e5dbf](https://github.com/Wynntils/Wynntils/commit/04e5dbff0977c9deeaf50a59fde88ed4b61dc526))
-
-## [2.0.4](https://github.com/Wynntils/Wynntils/compare/v2.0.3...v2.0.4) (2024-08-14)
-
-
-### New Features
-
-* Add world event container as a reward container [skip ci] ([#2737](https://github.com/Wynntils/Wynntils/issues/2737)) ([052bb5b](https://github.com/Wynntils/Wynntils/commit/052bb5ba21c0e0721360d0d3c774096ddc410291))
-
-
-### Bug Fixes
-
-* 2.1 Server annotator pattern [skip ci] ([#2739](https://github.com/Wynntils/Wynntils/issues/2739)) ([8cb53cb](https://github.com/Wynntils/Wynntils/commit/8cb53cb504964d62d58d927ed5ef4ac9fb9275a1))
-* Accessories not detected properly by GearType [skip ci] ([#2736](https://github.com/Wynntils/Wynntils/issues/2736)) ([a8847e2](https://github.com/Wynntils/Wynntils/commit/a8847e2495525c1092d7e59cef6c428cfe97b6f5))
-* Don't send unexpected disconnect on IO thread ([#2492](https://github.com/Wynntils/Wynntils/issues/2492)) ([bd798b1](https://github.com/Wynntils/Wynntils/commit/bd798b10a9fa9691f48d3e27d5fbf6c086e0d11f))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.4 [skip ci] ([83a2b14](https://github.com/Wynntils/Wynntils/commit/83a2b14b0ec1bcbc49821547a5fd01be411945ba))
 
