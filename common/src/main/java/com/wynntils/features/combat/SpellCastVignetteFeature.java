@@ -52,9 +52,7 @@ public class SpellCastVignetteFeature extends Feature {
         if (event.getManaCost() == 0) return;
 
         // Make sure the current mana is never 0 so the whole screen won't be covered in solid blue
-        int currentMana = Models.CharacterStats.getMana().current() == 0
-                ? Models.CharacterStats.getMana().current() + 1
-                : Models.CharacterStats.getMana().current();
+        int currentMana = Math.max(1, Models.CharacterStats.getMana().current());
 
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxItensityPercent.get() / 100);
