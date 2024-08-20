@@ -86,6 +86,9 @@ public final class WynnItemParser {
     private static final Pattern SKILL_REQ_PATTERN =
             Pattern.compile("^§(c✖|a✔)§7 (?<skill>[a-zA-Z]+) Min: (?<value>-?\\d+)$");
 
+    // Test in WynnItemParser_QUEST_REQ_PATTERN
+    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 Quest Req: (.+)$");
+
     // Test in WynnItemParser_MISC_REQ_PATTERN
     private static final Pattern MISC_REQ_PATTERN = Pattern.compile("^§(c✖|a✔)§7 (.+)$");
 
@@ -119,7 +122,13 @@ public final class WynnItemParser {
         List<Powder> powders = new ArrayList<>();
         int powderSlots = 0;
         int health = 0;
-        int level = 0;
+        GearAttackSpeed attackSpeed = null;
+        List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
+        List<Pair<Element, Integer>> defences = new ArrayList<>();
+        int levelReq = 0;
+        List<Pair<Skill, Integer>> skillReqs = new ArrayList<>();
+        ClassType classReq = null;
+        String questReq = null;
         int tierCount = 0;
         int durabilityMax = 0;
         GearTier tier = null;
@@ -217,17 +226,44 @@ public final class WynnItemParser {
                 continue;
             }
 
+            Matcher attackSpeedMatcher = coded.getMatcher(ITEM_ATTACK_SPEED_PATTERN);
+            if (attackSpeedMatcher.matches()) {
+                String speedName = attackSpeedMatcher.group(1);
+                attackSpeed = GearAttackSpeed.fromString(speedName.replaceAll(" ", "_"));
+            }
+
+            Matcher damageMatcher = coded.getMatcher(ITEM_DAMAGE_PATTERN);
+            if (damageMatcher.matches()) {
+                String symbol = damageMatcher.group("symbol");
+                RangedValue range = RangedValue.fromString(damageMatcher.group("range"));
+                damages.add(Pair.of(DamageType.fromSymbol(symbol), range));
+            }
+
+            Matcher defenceMatcher = coded.getMatcher(ITEM_DEFENCE_PATTERN);
+            if (defenceMatcher.matches()) {
+                String symbol = defenceMatcher.group("symbol");
+                int value = Integer.parseInt(defenceMatcher.group("value"));
+                defences.add(Pair.of(Element.fromSymbol(symbol), value));
+            }
+
             // Requirements
             // Combat level
             Matcher levelMatcher = normalizedCoded.getMatcher(MIN_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group("level"));
-                continue;
+                levelReq = Integer.parseInt(levelMatcher.group("level"));
+
+                String mark = levelMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
             }
 
             // Class
             Matcher classMatcher = normalizedCoded.getMatcher(CLASS_REQ_PATTERN);
             if (classMatcher.matches()) {
+                String className = classMatcher.group("name");
+                classReq = ClassType.fromName(className);
+
                 String mark = classMatcher.group(1);
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
@@ -237,7 +273,23 @@ public final class WynnItemParser {
             // Skills
             Matcher skillMatcher = normalizedCoded.getMatcher(SKILL_REQ_PATTERN);
             if (skillMatcher.matches()) {
+                String skillName = skillMatcher.group("skill");
+                Skill skill = Skill.fromString(skillName);
+                int value = Integer.parseInt(skillMatcher.group("value"));
+                skillReqs.add(Pair.of(skill, value));
+
                 String mark = skillMatcher.group(1);
+                if (mark.contains("✖")) {
+                    allRequirementsMet = false;
+                }
+            }
+
+            // Quests
+            Matcher questMatcher = normalizedCoded.getMatcher(QUEST_REQ_PATTERN);
+            if (questMatcher.matches()) {
+                questReq = questMatcher.group(2);
+
+                String mark = questMatcher.group(1);
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
                 }
@@ -366,7 +418,11 @@ public final class WynnItemParser {
                 tier,
                 itemType,
                 health,
-                level,
+                levelReq,
+                attackSpeed,
+                damages,
+                defences,
+                new GearRequirements(levelReq, Optional.ofNullable(classReq), skillReqs, Optional.ofNullable(questReq)),
                 identifications,
                 namedEffects,
                 effects,
@@ -425,22 +481,7 @@ public final class WynnItemParser {
                 : 0;
 
         // Shiny stats are not available from internal roll lore (on other players)
-        return new WynnItemParseResult(
-                gearInfo.tier(),
-                "",
-                0,
-                0,
-                identifications,
-                List.of(),
-                List.of(),
-                powders,
-                powders.size(),
-                rerolls,
-                0,
-                0,
-                Optional.empty(),
-                false,
-                Optional.empty());
+        return WynnItemParseResult.fromInternallRoll(identifications, powders);
     }
 
     public static CraftedItemParseResults parseCraftedItem(ItemStack itemStack) {
@@ -449,13 +490,6 @@ public final class WynnItemParser {
         String name = "";
         int effectStrength = -1;
         CappedValue uses = null;
-        GearAttackSpeed attackSpeed = null;
-        List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
-        List<Pair<Element, Integer>> defences = new ArrayList<>();
-        // requirements
-        int levelReq = 0;
-        List<Pair<Skill, Integer>> skillReqs = new ArrayList<>();
-        ClassType classReq = null;
 
         if (!lore.isEmpty()) {
             Matcher nameMatcher = StyledText.fromComponent(lore.getFirst()).getMatcher(CRAFTED_ITEM_NAME_PATTERN);
@@ -492,78 +526,7 @@ public final class WynnItemParser {
             }
         }
 
-        boolean allRequirementsMet = true;
-        for (Component loreLine : lore) {
-            StyledText coded = StyledText.fromComponent(loreLine);
-
-            Matcher attackSpeedMatcher = coded.getMatcher(ITEM_ATTACK_SPEED_PATTERN);
-            if (attackSpeedMatcher.matches()) {
-                String speedName = attackSpeedMatcher.group(1);
-                attackSpeed = GearAttackSpeed.fromString(speedName.replaceAll(" ", "_"));
-            }
-
-            Matcher damageMatcher = coded.getMatcher(ITEM_DAMAGE_PATTERN);
-            if (damageMatcher.matches()) {
-                String symbol = damageMatcher.group("symbol");
-                RangedValue range = RangedValue.fromString(damageMatcher.group("range"));
-                damages.add(Pair.of(DamageType.fromSymbol(symbol), range));
-            }
-
-            Matcher defenceMatcher = coded.getMatcher(ITEM_DEFENCE_PATTERN);
-            if (defenceMatcher.matches()) {
-                String symbol = defenceMatcher.group("symbol");
-                int value = Integer.parseInt(defenceMatcher.group("value"));
-                defences.add(Pair.of(Element.fromSymbol(symbol), value));
-            }
-
-            // Requirements
-            // Combat level
-            Matcher levelMatcher = coded.getMatcher(MIN_LEVEL_PATTERN);
-            if (levelMatcher.matches()) {
-                levelReq = Integer.parseInt(levelMatcher.group("level"));
-
-                String mark = levelMatcher.group(1);
-                if (mark.contains("✖")) {
-                    allRequirementsMet = false;
-                }
-            }
-
-            // Class
-            Matcher classMatcher = coded.getMatcher(CLASS_REQ_PATTERN);
-            if (classMatcher.matches()) {
-                String className = classMatcher.group("name");
-                classReq = ClassType.fromName(className);
-
-                String mark = classMatcher.group(1);
-                if (mark.contains("✖")) {
-                    allRequirementsMet = false;
-                }
-            }
-
-            // Skills
-            Matcher skillMatcher = coded.getMatcher(SKILL_REQ_PATTERN);
-            if (skillMatcher.matches()) {
-                String skillName = skillMatcher.group("skill");
-                Skill skill = Skill.fromString(skillName);
-                int value = Integer.parseInt(skillMatcher.group("value"));
-                skillReqs.add(Pair.of(skill, value));
-
-                String mark = skillMatcher.group(1);
-                if (mark.contains("✖")) {
-                    allRequirementsMet = false;
-                }
-            }
-        }
-
-        return new CraftedItemParseResults(
-                name,
-                effectStrength,
-                uses,
-                attackSpeed,
-                damages,
-                defences,
-                new GearRequirements(levelReq, Optional.ofNullable(classReq), skillReqs, Optional.empty()),
-                allRequirementsMet);
+        return new CraftedItemParseResults(name, effectStrength, uses);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
