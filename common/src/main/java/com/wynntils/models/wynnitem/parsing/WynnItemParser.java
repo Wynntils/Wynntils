@@ -230,6 +230,7 @@ public final class WynnItemParser {
             if (attackSpeedMatcher.matches()) {
                 String speedName = attackSpeedMatcher.group(1);
                 attackSpeed = GearAttackSpeed.fromString(speedName.replaceAll(" ", "_"));
+                continue;
             }
 
             Matcher damageMatcher = coded.getMatcher(ITEM_DAMAGE_PATTERN);
@@ -237,6 +238,7 @@ public final class WynnItemParser {
                 String symbol = damageMatcher.group("symbol");
                 RangedValue range = RangedValue.fromString(damageMatcher.group("range"));
                 damages.add(Pair.of(DamageType.fromSymbol(symbol), range));
+                continue;
             }
 
             Matcher defenceMatcher = coded.getMatcher(ITEM_DEFENCE_PATTERN);
@@ -244,6 +246,7 @@ public final class WynnItemParser {
                 String symbol = defenceMatcher.group("symbol");
                 int value = Integer.parseInt(defenceMatcher.group("value"));
                 defences.add(Pair.of(Element.fromSymbol(symbol), value));
+                continue;
             }
 
             // Requirements
@@ -256,6 +259,8 @@ public final class WynnItemParser {
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
                 }
+
+                continue;
             }
 
             // Class
@@ -268,6 +273,8 @@ public final class WynnItemParser {
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
                 }
+
+                continue;
             }
 
             // Skills
@@ -282,6 +289,8 @@ public final class WynnItemParser {
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
                 }
+
+                continue;
             }
 
             // Quests
@@ -293,6 +302,8 @@ public final class WynnItemParser {
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
                 }
+
+                continue;
             }
 
             // Misc requirements
@@ -302,6 +313,8 @@ public final class WynnItemParser {
                 if (mark.contains("✖")) {
                     allRequirementsMet = false;
                 }
+
+                continue;
             }
 
             Matcher setMatcher = normalizedCoded.getMatcher(SET_PATTERN);
@@ -309,6 +322,7 @@ public final class WynnItemParser {
                 String setName = setMatcher.group(1);
                 setInfo = Models.Set.getSetInfo(setName);
                 setWynnCount = Integer.parseInt(setMatcher.group(2));
+                continue;
             }
 
             Matcher setItemMatcher = normalizedCoded.getMatcher(SET_ITEM_PATTERN);
@@ -316,6 +330,7 @@ public final class WynnItemParser {
                 boolean active = setItemMatcher.group(1).equals("2");
                 String itemName = setItemMatcher.group(2);
                 activeItems.put(itemName, active);
+                continue;
             }
 
             Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTERN);
@@ -323,6 +338,7 @@ public final class WynnItemParser {
                 // Any stat lines that follow from now on belongs to the Set Bonus
                 // These are collected at the top of this loop for efficiency
                 setBonusStats = true;
+                continue;
             }
 
             // Look for effects (only on consumables)
