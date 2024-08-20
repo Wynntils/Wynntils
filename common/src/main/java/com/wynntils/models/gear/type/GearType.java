@@ -83,7 +83,9 @@ public enum GearType {
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
-        this.models = IntStream.rangeClosed(firstModel, lastModel).boxed().toList();
+        this.models = firstModel == 0 && lastModel == 0
+                ? List.of()
+                : IntStream.rangeClosed(firstModel, lastModel).boxed().toList();
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
@@ -110,6 +112,12 @@ public enum GearType {
             if (!itemMatches) continue;
 
             CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+
+            // Special case for armor gear
+            if (customModelData == null && gearType.models.isEmpty()) {
+                return gearType;
+            }
+
             if (customModelData != null && gearType.models.contains(customModelData.value())) {
                 return gearType;
             }
