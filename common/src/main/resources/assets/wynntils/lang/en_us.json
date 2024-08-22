@@ -1063,6 +1063,8 @@
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.name": "Powder Special Bar",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.onlyIfWeaponHeld.description": "Should the overlay be hidden if no weapon is held?",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.onlyIfWeaponHeld.name": "Only Show When Weapon Held",
+  "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.shouldDisplayOriginal.description": "Should the vanilla powder special bar be shown?",
+  "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.shouldDisplayOriginal.name": "Display Original Powder Bar",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.textShadow.name": "Text Shadow",
   "feature.wynntils.preventTradesDuels.description": "Prevents trades and duels while in combat.",
