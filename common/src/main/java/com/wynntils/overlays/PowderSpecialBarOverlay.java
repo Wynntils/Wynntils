@@ -6,6 +6,7 @@ package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -41,6 +42,9 @@ public class PowderSpecialBarOverlay extends Overlay {
     @Persisted
     public final Config<Boolean> hideIfNoCharge = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
+
     public PowderSpecialBarOverlay() {
         super(
                 new OverlayPosition(
@@ -71,7 +75,9 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(Config<?> config) {}
+    protected void onConfigUpdate(Config<?> config) {
+        Models.CharacterStats.setHidePowder(Managers.Overlay.isEnabled(this) && !this.shouldDisplayOriginal.get());
+    }
 
     private void renderWithSpecificSpecial(
             PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {

@@ -30,7 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class RevealNicknamesFeature extends Feature {
     // Note: Post Wynncraft 2.1, the hover text is inconsistent, sometimes "'s" is white, sometimes it's gray
     private static final Pattern NICKNAME_PATTERN =
-            Pattern.compile("§f(?<nick>.+?)(§7)?'s(§7)? real username is §f(?<username>.+)");
+            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real username is §f(?<username>.+)");
     private static final String NICKNAME_HOVER_TEXT = "§f%s§7's nickname is §f%s";
 
     @Persisted
