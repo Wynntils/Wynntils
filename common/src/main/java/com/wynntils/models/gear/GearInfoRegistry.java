@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -107,7 +108,33 @@ public class GearInfoRegistry {
             Map<String, GearInfo> lookupMap = new HashMap<>();
             Map<String, GearInfo> altLookupMap = new HashMap<>();
             for (GearInfo gearInfo : registry) {
-                lookupMap.put(gearInfo.name(), gearInfo);
+                if (GearMap.GEAR_INFO_MAP.containsKey(gearInfo.name())) {
+                    Map<StatType, StatPossibleValues> map = new HashMap<>();
+                    for (Map.Entry<StatType, StatPossibleValues> entry :
+                            GearMap.GEAR_INFO_MAP.get(gearInfo.name()).entrySet()) {
+                        map.put(entry.getKey(), entry.getValue());
+                    }
+                    for (Pair<StatType, StatPossibleValues> pair : gearInfo.variableStats()) {
+                        map.putIfAbsent(pair.a(), pair.b());
+                    }
+                    lookupMap.put(
+                            gearInfo.name(),
+                            new GearInfo(
+                                    gearInfo.name(),
+                                    gearInfo.type(),
+                                    gearInfo.tier(),
+                                    gearInfo.powderSlots(),
+                                    gearInfo.metaInfo(),
+                                    gearInfo.requirements(),
+                                    gearInfo.fixedStats(),
+                                    map.entrySet().stream()
+                                            .map(entry -> new Pair<>(
+                                                    (StatType) entry.getKey(), (StatPossibleValues) entry.getValue()))
+                                            .collect(Collectors.toList()),
+                                    gearInfo.setInfo()));
+                } else {
+                    lookupMap.put(gearInfo.name(), gearInfo);
+                }
                 if (gearInfo.metaInfo().apiName().isPresent()) {
                     altLookupMap.put(gearInfo.metaInfo().apiName().get(), gearInfo);
                 }

@@ -96,7 +96,7 @@ public final class TooltipIdentifications {
             MutableComponent line = buildIdentifiedLine(itemInfo, style, statActualValue, currentClass);
 
             StatPossibleValues possibleValues = itemInfo.getPossibleValues().stream()
-                    .filter(stat -> stat.statType() == statType)
+                    .filter(stat -> stat.statType().equals(statType))
                     .findFirst()
                     .orElse(null);
             // Normally this should not happen, but if our API data does not match the
