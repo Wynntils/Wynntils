@@ -1,9 +1,32 @@
+## [2.0.11](https://github.com/Wynntils/Wynntils/compare/v2.0.10...v2.0.11) (2024-08-23)
+
+
+### New Features
+
+* Add option to hide vanilla powder bar [skip ci] ([#2765](https://github.com/Wynntils/Wynntils/issues/2765)) ([761d22d](https://github.com/Wynntils/Wynntils/commit/761d22d2f2e67bbec4128a4fabd67e4249cd92f8))
+* Add Swedish translation from ChatGTP [skip ci] ([#2773](https://github.com/Wynntils/Wynntils/issues/2773)) ([7c0e581](https://github.com/Wynntils/Wynntils/commit/7c0e5819d9032d677042305e0dd97ea9aee8def7))
+
+
+### Bug Fixes
+
+* Fix auto progress NPC dialogue not releasing sneak [skip ci] ([#2770](https://github.com/Wynntils/Wynntils/issues/2770)) ([12e516a](https://github.com/Wynntils/Wynntils/commit/12e516ac50af3e956db1df22e7abb1443eda0b83))
+* Fix ghost player detection [skip ci] ([#2768](https://github.com/Wynntils/Wynntils/issues/2768)) ([24f60e2](https://github.com/Wynntils/Wynntils/commit/24f60e25f56635b319701d3fab69c3675080b358))
+* Fix hide player armor hiding new cosmetics [skip ci] ([#2775](https://github.com/Wynntils/Wynntils/issues/2775)) ([44f9766](https://github.com/Wynntils/Wynntils/commit/44f97669e16d217a8b6105261bcecad9c1b0c96f))
+* Fix ingredient pouch annotator [skip ci] ([#2766](https://github.com/Wynntils/Wynntils/issues/2766)) ([fc013dd](https://github.com/Wynntils/Wynntils/commit/fc013ddcf90b96aaab3feda3c786da0b799e442f))
+* Fix nicknames being changed by chat coordinates ([#2774](https://github.com/Wynntils/Wynntils/issues/2774)) ([67fd145](https://github.com/Wynntils/Wynntils/commit/67fd1457de883c9bfbadecba621829595d2ff8a4))
+* Fix reveal nicknames not working for nicknames ending with s [skip ci] ([#2767](https://github.com/Wynntils/Wynntils/issues/2767)) ([79df86c](https://github.com/Wynntils/Wynntils/commit/79df86cdc5b40476ef4a20df8c4765b1c1d85554))
+
 ## [2.0.10](https://github.com/Wynntils/Wynntils/compare/v2.0.9...v2.0.10) (2024-08-20)
 
 
 ### Bug Fixes
 
 * Fix weapon types not being counted as weapon ([#2764](https://github.com/Wynntils/Wynntils/issues/2764)) ([0a41a6a](https://github.com/Wynntils/Wynntils/commit/0a41a6a6d4bf7a7e2f2e6af251bdc1d4ec6a019c))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.10 [skip ci] ([fb5ef18](https://github.com/Wynntils/Wynntils/commit/fb5ef18e5013489ede895206212bdbb308186b2c))
 
 ## [2.0.9](https://github.com/Wynntils/Wynntils/compare/v2.0.8...v2.0.9) (2024-08-20)
 
@@ -57,18 +80,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.7 [skip ci] ([d09d3d3](https://github.com/Wynntils/Wynntils/commit/d09d3d3811439985f0fc2901598b211d216eaaa2))
-
-## [2.0.6](https://github.com/Wynntils/Wynntils/compare/v2.0.5...v2.0.6) (2024-08-15)
-
-
-### Bug Fixes
-
-* Add /party lobby to command autocompletion [skip ci] ([#2748](https://github.com/Wynntils/Wynntils/issues/2748)) ([9044c74](https://github.com/Wynntils/Wynntils/commit/9044c746c351a664992d662ab62f6611564caa8b))
-* Fix ItemFavoriteFeature and ItemLockFeature overlapping tooltips [skip ci] ([#2747](https://github.com/Wynntils/Wynntils/issues/2747)) ([e22e216](https://github.com/Wynntils/Wynntils/commit/e22e21619934fd50146a484ea2743e6e914e1044))
-* Make RecipientType work with multiline messages [skip ci] ([#2749](https://github.com/Wynntils/Wynntils/issues/2749)) ([00bd563](https://github.com/Wynntils/Wynntils/commit/00bd563a96fcc84decaaf3afc0b02e8ffc98b9d3))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.6 [skip ci] ([736d29c](https://github.com/Wynntils/Wynntils/commit/736d29c6ca02cb2a7277ce8575d7dcf8cf2d5416))
 
