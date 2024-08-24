@@ -1,3 +1,17 @@
+## [2.0.12](https://github.com/Wynntils/Wynntils/compare/v2.0.11...v2.0.12) (2024-08-24)
+
+
+### New Features
+
+* Add ironman and publicProfile toggle to command expansion [skip ci] ([#2776](https://github.com/Wynntils/Wynntils/issues/2776)) ([eb08cb5](https://github.com/Wynntils/Wynntils/commit/eb08cb52e10335b7c3e9e4359673fe5222f1d130))
+
+
+### Bug Fixes
+
+* Fix chat coordinates not being parsed ([#2779](https://github.com/Wynntils/Wynntils/issues/2779)) ([830c229](https://github.com/Wynntils/Wynntils/commit/830c229b08c1a1a2d89bac1139bd42b0152d29cc))
+* Fix durability arcs not rendering on all items in inventory [skip ci] ([#2780](https://github.com/Wynntils/Wynntils/issues/2780)) ([c47cd9b](https://github.com/Wynntils/Wynntils/commit/c47cd9b73c7d633b7f92d3658d95938f5a7038e3))
+* Unfocus search widget in containers after searching [skip ci] ([#2778](https://github.com/Wynntils/Wynntils/issues/2778)) ([c612efd](https://github.com/Wynntils/Wynntils/commit/c612efd43da9fd131dda67c9e5186e7c93eeb602))
+
 ## [2.0.11](https://github.com/Wynntils/Wynntils/compare/v2.0.10...v2.0.11) (2024-08-23)
 
 
@@ -15,6 +29,11 @@
 * Fix ingredient pouch annotator [skip ci] ([#2766](https://github.com/Wynntils/Wynntils/issues/2766)) ([fc013dd](https://github.com/Wynntils/Wynntils/commit/fc013ddcf90b96aaab3feda3c786da0b799e442f))
 * Fix nicknames being changed by chat coordinates ([#2774](https://github.com/Wynntils/Wynntils/issues/2774)) ([67fd145](https://github.com/Wynntils/Wynntils/commit/67fd1457de883c9bfbadecba621829595d2ff8a4))
 * Fix reveal nicknames not working for nicknames ending with s [skip ci] ([#2767](https://github.com/Wynntils/Wynntils/issues/2767)) ([79df86c](https://github.com/Wynntils/Wynntils/commit/79df86cdc5b40476ef4a20df8c4765b1c1d85554))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.11 [skip ci] ([4ccff42](https://github.com/Wynntils/Wynntils/commit/4ccff42ba1c965e09d7dd0f50a185a556b8718eb))
 
 ## [2.0.10](https://github.com/Wynntils/Wynntils/compare/v2.0.9...v2.0.10) (2024-08-20)
 
@@ -66,18 +85,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.8 [skip ci] ([3038c68](https://github.com/Wynntils/Wynntils/commit/3038c68d4808c4faafbd204a6d566b6da8758a9d))
-
-## [2.0.7](https://github.com/Wynntils/Wynntils/compare/v2.0.6...v2.0.7) (2024-08-16)
-
-
-### Bug Fixes
-
-* Fix party list parsing ([#2752](https://github.com/Wynntils/Wynntils/issues/2752)) ([ff9b7b2](https://github.com/Wynntils/Wynntils/commit/ff9b7b2e21df96b4be3142ee18c5f13f15f8ae80))
-* Fix raid tracking not detecting failure from running out of time [skip ci] ([#2751](https://github.com/Wynntils/Wynntils/issues/2751)) ([900285b](https://github.com/Wynntils/Wynntils/commit/900285ba38f3ba4e175cf0cbdeaf57b03510d1e0))
-* Totem tracking doesn't bind timers [skip ci] ([#2750](https://github.com/Wynntils/Wynntils/issues/2750)) ([d373d64](https://github.com/Wynntils/Wynntils/commit/d373d6495ed11fcca3213afe216781f4b410d367))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.7 [skip ci] ([d09d3d3](https://github.com/Wynntils/Wynntils/commit/d09d3d3811439985f0fc2901598b211d216eaaa2))
 
