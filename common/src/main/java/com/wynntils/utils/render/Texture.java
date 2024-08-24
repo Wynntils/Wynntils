@@ -12,11 +12,11 @@ public enum Texture {
     // region Character Selection
     CHANGE_WORLD_BUTTON("character_selection/change_world_button.png", 26, 52),
     CHARACTER_BUTTON("character_selection/character_button.png", 104, 64),
-    CHARACTER_INFO("character_selection/character_info.png", 123, 38),
+    CHARACTER_INFO("character_selection/character_info.png", 123, 52),
     CHARACTER_LIST_BACKGROUND("character_selection/character_list_background.png", 118, 254),
     DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 52),
     PLAY_BUTTON("character_selection/play_button.png", 79, 76),
-    XP_BAR("character_selection/xp_bar.png", 100, 12),
+    XP_BAR("character_selection/xp_bar.png", 77, 6),
     // endregion
 
     // region Content Book

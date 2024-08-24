@@ -64,15 +64,17 @@ public class ClassInfoButton extends WynntilsButton {
         poseStack.scale(scale, scale, 0f);
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
                         StyledText.fromString(classInfo.name()),
                         0,
                         0,
+                        this.width - this.width * 0.288f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -82,7 +84,8 @@ public class ClassInfoButton extends WynntilsButton {
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        0.8f);
 
         poseStack.popPose();
 
