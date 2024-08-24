@@ -26,7 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends Feature {
-    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatReceived(ChatMessageReceivedEvent e) {
