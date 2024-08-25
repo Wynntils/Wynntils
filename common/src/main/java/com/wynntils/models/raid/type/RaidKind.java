@@ -15,7 +15,7 @@ public enum RaidKind {
     ORPHIONS_NEXUS_OF_LIGHT(
             "Orphion's Nexus of Light",
             StyledText.fromString("§f§kOrphion's Nexus of §lLight"),
-            Pattern.compile("^Save him.$")),
+            Pattern.compile("^Save Him.$")),
     THE_CANYON_COLOSSUS(
             "The Canyon Colossus",
             StyledText.fromString("§#5f968bffThe Canyon Colossus"),
