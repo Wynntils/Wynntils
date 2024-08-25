@@ -395,7 +395,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HorseSpawnFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§4(?:\uE008\uE002|\uE001) There is no room for a horse\\.$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) There is no room for a horse\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -416,7 +417,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HousingTeleportArrivalRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§aYou have flown to your housing island\\.$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§aYou have flown to your housing island\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -617,7 +619,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class NoTotemRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§4(?:\uE008\uE002|\uE001) You have no active totems near you$");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) You have no active totems near you$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -659,8 +662,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class PotionsMaxRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§4(?:\uE008\uE002|\uE001) You already are holding the maximum amount of potions \\n\uE001 allowed\\.");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§4(?:\uE008\uE002|\uE001) You already are holding the maximum amount of potions \\n\uE001 allowed\\.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -961,8 +964,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private final class MerchantRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your \\n§5\uE001§d business\\. Come again!$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your \\n§5\uE001§d business\\. Come again!$");
 
         @Override
         protected Pattern getForegroundPattern() {
