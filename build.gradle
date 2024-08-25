@@ -65,7 +65,6 @@ allprojects {
     repositories {
         maven { url "https://maven.parchmentmc.org/" }
         maven { url "https://jitpack.io" }
-        maven { url "https://maven.fallenbreath.me/releases" }
     }
 
     tasks.withType(JavaCompile).configureEach {
