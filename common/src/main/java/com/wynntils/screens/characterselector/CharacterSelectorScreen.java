@@ -256,7 +256,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void renderCharacterInfo(PoseStack poseStack) {
         float renderWidth = Texture.CHARACTER_INFO.width() * currentTextureScale;
         float renderHeight = Texture.CHARACTER_INFO.height() * currentTextureScale;
-        float renderX = (this.width * 0.58f) - renderWidth / 2f;
+        float renderX = (this.width * 0.565f) - renderWidth / 2f;
         float renderY = this.height / 8f;
 
         poseStack.pushPose();
@@ -272,20 +272,6 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 renderHeight,
                 Texture.CHARACTER_INFO.width(),
                 Texture.CHARACTER_INFO.height());
-
-        String classType = this.selected.getClassInfo().classType().getName();
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(classType),
-                        renderWidth / 2.25f,
-                        10,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.OUTLINE,
-                        1.15f
-                );
 
         float offsetX = renderWidth * 0.028f;
         float offsetY = renderHeight * 0.02f;
