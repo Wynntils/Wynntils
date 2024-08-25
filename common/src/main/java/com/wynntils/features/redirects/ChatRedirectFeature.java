@@ -15,6 +15,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.players.type.PlayerRank;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -130,7 +131,7 @@ public class ChatRedirectFeature extends Feature {
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        StyledText message = e.getOriginalStyledText().stripAlignment();
+        StyledText message = StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
@@ -663,7 +664,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class PotionsMaxRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§4(?:\uE008\uE002|\uE001) You already are holding the maximum amount of potions \\n\uE001 allowed\\.");
+                "^§4(?:\uE008\uE002|\uE001) You already are holding the maximum amount of potions allowed\\.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -965,7 +966,7 @@ public class ChatRedirectFeature extends Feature {
 
     private final class MerchantRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your \\n§5\uE001§d business\\. Come again!$");
+                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your business\\. Come again!$");
 
         @Override
         protected Pattern getForegroundPattern() {
