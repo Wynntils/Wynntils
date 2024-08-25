@@ -81,7 +81,7 @@ public class RaidModel extends Model {
         }
     }
 
-    // One challenge is Nexus of Light does not display the scoreboard upon challenge completion
+    // One challenge in Nexus of Light does not display the scoreboard upon challenge completion
     // so we have to check for the chat message
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
