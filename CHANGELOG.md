@@ -1,3 +1,18 @@
+## [2.0.13](https://github.com/Wynntils/Wynntils/compare/v2.0.12...v2.0.13) (2024-08-25)
+
+
+### New Features
+
+* Add Annihilation Sun Overlay ([#2786](https://github.com/Wynntils/Wynntils/issues/2786)) ([6f7af33](https://github.com/Wynntils/Wynntils/commit/6f7af33a8432938181accbb24a933c21a5afb5bb))
+* overhaul the class selector screen textures [skip ci] ([#2787](https://github.com/Wynntils/Wynntils/issues/2787)) ([2ed430b](https://github.com/Wynntils/Wynntils/commit/2ed430b6885b6ed4b3237cbed9de96dfb6a261d7))
+
+
+### Bug Fixes
+
+* Fix flashback crashing when scoreboard is displayed [skip ci] ([#2785](https://github.com/Wynntils/Wynntils/issues/2785)) ([ea39a9e](https://github.com/Wynntils/Wynntils/commit/ea39a9e8ea7a7802e1152a604fbb05c24c39993e))
+* Fix guild chat not ignoring username in chat mentions [skip ci] ([#2781](https://github.com/Wynntils/Wynntils/issues/2781)) ([fc1e30b](https://github.com/Wynntils/Wynntils/commit/fc1e30be1873ca34aaee70f0ddb15b7f1b75712e))
+* Fix Nexus of Light tracking issues [skip ci] ([#2782](https://github.com/Wynntils/Wynntils/issues/2782)) ([10ae067](https://github.com/Wynntils/Wynntils/commit/10ae067873288b607d219bce7b6f60fed19b0e42))
+
 ## [2.0.12](https://github.com/Wynntils/Wynntils/compare/v2.0.11...v2.0.12) (2024-08-24)
 
 
@@ -11,6 +26,11 @@
 * Fix chat coordinates not being parsed ([#2779](https://github.com/Wynntils/Wynntils/issues/2779)) ([830c229](https://github.com/Wynntils/Wynntils/commit/830c229b08c1a1a2d89bac1139bd42b0152d29cc))
 * Fix durability arcs not rendering on all items in inventory [skip ci] ([#2780](https://github.com/Wynntils/Wynntils/issues/2780)) ([c47cd9b](https://github.com/Wynntils/Wynntils/commit/c47cd9b73c7d633b7f92d3658d95938f5a7038e3))
 * Unfocus search widget in containers after searching [skip ci] ([#2778](https://github.com/Wynntils/Wynntils/issues/2778)) ([c612efd](https://github.com/Wynntils/Wynntils/commit/c612efd43da9fd131dda67c9e5186e7c93eeb602))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.12 [skip ci] ([443df5e](https://github.com/Wynntils/Wynntils/commit/443df5ebc57b4f1b12cd5d3447bd9099b59891e2))
 
 ## [2.0.11](https://github.com/Wynntils/Wynntils/compare/v2.0.10...v2.0.11) (2024-08-23)
 
@@ -66,23 +86,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.9 [skip ci] ([6900e69](https://github.com/Wynntils/Wynntils/commit/6900e6969289c1d9a28a534e5fa12d9515e9b1dc))
-
-## [2.0.8](https://github.com/Wynntils/Wynntils/compare/v2.0.7...v2.0.8) (2024-08-18)
-
-
-### New Features
-
-* Add badges for new leaderboards ([#2568](https://github.com/Wynntils/Wynntils/issues/2568)) ([3285e03](https://github.com/Wynntils/Wynntils/commit/3285e03193eedf4e63f5d2d233931d80f9ba545f))
-* Show waypoint names in world [skip ci] ([#2753](https://github.com/Wynntils/Wynntils/issues/2753)) ([1474aba](https://github.com/Wynntils/Wynntils/commit/1474abaed08bac651f58656b51dba340868029b6))
-* Update various "paper" textures with new Wynn style [skip ci] ([#2754](https://github.com/Wynntils/Wynntils/issues/2754)) ([35545fc](https://github.com/Wynntils/Wynntils/commit/35545fcc745c52a8367c19e46e619e729eb54227))
-
-
-### Bug Fixes
-
-* Use title to detect raid failure [skip ci] ([#2755](https://github.com/Wynntils/Wynntils/issues/2755)) ([c8baf56](https://github.com/Wynntils/Wynntils/commit/c8baf5693302c238ce1c7d71171bd34d3e22a535))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.8 [skip ci] ([3038c68](https://github.com/Wynntils/Wynntils/commit/3038c68d4808c4faafbd204a6d566b6da8758a9d))
 
