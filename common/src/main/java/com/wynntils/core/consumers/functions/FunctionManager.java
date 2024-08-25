@@ -29,6 +29,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.StatisticFunctions;
 import com.wynntils.functions.WarFunctions;
+import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
@@ -609,6 +610,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.TowerTerritoryFunction());
         registerFunction(new WarFunctions.VolleyTimerFunction());
         registerFunction(new WarFunctions.WarsSinceFunction());
+
+        registerFunction(new WorldEventFunctions.AnnihilationSunProgressFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());

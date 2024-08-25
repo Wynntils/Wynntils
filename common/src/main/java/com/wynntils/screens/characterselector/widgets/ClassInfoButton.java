@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector.widgets;
@@ -58,33 +58,32 @@ public class ClassInfoButton extends WynntilsButton {
         RenderUtils.renderItem(guiGraphics, classInfo.itemStack(), 0, 0);
         poseStack.popPose();
 
-        poseStack.pushPose();
-        poseStack.translate(this.getX() + this.width * 0.25f, this.getY() + this.height * 0.16f, 0f);
-        float scale = this.height * 0.032f;
-        poseStack.scale(scale, scale, 0f);
+        float textScale = this.height * 0.032f;
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
                         StyledText.fromString(classInfo.name()),
-                        0,
-                        0,
+                        this.getX() + this.width * 0.25f,
+                        this.getY() + this.height * 0.16f,
+                        this.width - this.width * 0.288f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        textScale);
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString("Level " + classInfo.level()),
-                        0,
-                        10f,
+                        this.getX() + this.width * 0.25f,
+                        this.getY() + this.height * 0.45f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
-
-        poseStack.popPose();
+                        TextShadow.NONE,
+                        textScale * 0.8f);
 
         RenderUtils.drawProgressBar(
                 poseStack,
