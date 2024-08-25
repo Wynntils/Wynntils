@@ -10,6 +10,11 @@ dependencies {
     implementation("com.github.wynntils:antiope:v${antiope_version}")
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
+
+    // No common module for conditional mixin, using fabric instead
+    implementation("me.fallenbreath:conditional-mixin-fabric:${conditional_mixin_version}") {
+        exclude group: "net.fabricmc", module: "fabric-loader"
+    }
 }
 
 architectury {

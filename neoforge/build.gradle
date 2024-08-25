@@ -37,6 +37,9 @@ dependencies {
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-neoforge:${mixinextras_version}"))
+    implementation(include("me.fallenbreath:conditional-mixin-neoforge:${conditional_mixin_version}")) {
+        exclude group: "net.fabricmc", module: "fabric-loader"
+    }
 }
 
 processResources {
