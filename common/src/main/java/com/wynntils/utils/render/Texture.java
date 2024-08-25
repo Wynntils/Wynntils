@@ -254,7 +254,7 @@ public enum Texture {
     TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
 
     // region UI Components
-    BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
+    BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),
     BANK_PANEL("ui_components/bank_panel.png", 100, 117),
     BUTTON_BOTTOM("ui_components/button_bottom.png", 64, 60),
     BUTTON_LEFT("ui_components/button_left.png", 48, 56),
