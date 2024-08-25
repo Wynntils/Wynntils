@@ -4,10 +4,6 @@
  */
 package com.wynntils.mc.mixin.compat;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.events.MixinHelper;
@@ -16,6 +12,10 @@ import com.wynntils.utils.colors.CustomColor;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.client.player.AbstractClientPlayer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(targets = "dev.tr7zw.skinlayers.renderlayers.CustomLayerFeatureRenderer")
 @Restriction(require = @Condition("skinlayers3d"))
@@ -31,10 +31,11 @@ public class CustomLayerFeatureRendererMixin {
                             remap = false),
             index = 5,
             remap = false)
-    private int setTranslucentFor3DSkinLayer(int original, @Local(argsOnly = true) AbstractClientPlayer abstractClientPlayer) {
+    private int setTranslucentFor3DSkinLayer(
+            int original, @Local(argsOnly = true) AbstractClientPlayer abstractClientPlayer) {
         boolean isGhostPlayer = Models.Player.isPlayerGhost(abstractClientPlayer);
-        LivingEntityRenderTranslucentCheckEvent event =
-                new LivingEntityRenderTranslucentCheckEvent(isGhostPlayer, abstractClientPlayer, isGhostPlayer ? 0.15f : 1f);
+        LivingEntityRenderTranslucentCheckEvent event = new LivingEntityRenderTranslucentCheckEvent(
+                isGhostPlayer, abstractClientPlayer, isGhostPlayer ? 0.15f : 1f);
         MixinHelper.post(event);
         return CustomColor.fromInt(original).withAlpha(event.getTranslucence()).asInt();
     }
