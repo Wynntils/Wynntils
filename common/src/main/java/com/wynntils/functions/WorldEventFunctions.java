@@ -14,8 +14,8 @@ public class WorldEventFunctions {
     public static class AnnihilationSunProgressFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.annihilationSunBar.isActive()
-                    ? Models.BossBar.annihilationSunBar.getBarProgress().value()
+            return Models.WorldEvent.annihilationSunBar.isActive()
+                    ? Models.WorldEvent.annihilationSunBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
 

@@ -13,7 +13,6 @@ import com.wynntils.models.abilities.bossbars.CorruptedBar;
 import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
-import com.wynntils.models.activities.bossbars.AnnihilationSunBar;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,10 +29,8 @@ public final class BossBarModel extends Model {
 
     public static final OphanimBar ophanimBar = new OphanimBar();
 
-    public static final AnnihilationSunBar annihilationSunBar = new AnnihilationSunBar();
-
-    private static final List<TrackedBar> ALL_BARS = Arrays.asList(
-            manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar, annihilationSunBar);
+    private static final List<TrackedBar> ALL_BARS =
+            Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar);
 
     public BossBarModel() {
         super(List.of());
