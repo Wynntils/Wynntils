@@ -24,10 +24,8 @@ public class CustomLayerFeatureRendererMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "dev/tr7zw/skinlayers/api/Mesh.render(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V",
-                            remap = false),
-            index = 5,
-            remap = false)
+                                    "dev/tr7zw/skinlayers/api/Mesh.render(Lnet/minecraft/client/model/geom/ModelPart;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"),
+            index = 5)
     private int setTranslucentFor3DSkinLayer(
             int original, @Local(argsOnly = true) AbstractClientPlayer abstractClientPlayer) {
         boolean isGhostPlayer = Models.Player.isPlayerGhost(abstractClientPlayer);
