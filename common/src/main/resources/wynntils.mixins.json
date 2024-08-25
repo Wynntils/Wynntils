@@ -60,6 +60,5 @@
   "minVersion": "0.8.5",
   "mixins": [],
   "package": "com.wynntils.mc.mixin",
-  "plugin": "com.wynntils.core.WynntilsMixinConfigPlugin",
   "required": true
 }
