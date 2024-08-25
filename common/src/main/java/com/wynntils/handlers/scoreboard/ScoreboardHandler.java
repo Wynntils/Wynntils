@@ -342,7 +342,7 @@ public final class ScoreboardHandler extends Handler {
                 SCOREBOARD_TITLE_COMPONENT,
                 ObjectiveCriteria.RenderType.INTEGER,
                 true,
-                new BlankFormat());
+                BlankFormat.INSTANCE);
 
         if (scoreboardSegments.stream().map(Pair::value).noneMatch(ScoreboardSegment::isVisible)) return;
 
