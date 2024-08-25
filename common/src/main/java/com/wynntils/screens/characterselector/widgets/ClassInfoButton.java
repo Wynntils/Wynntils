@@ -78,7 +78,7 @@ public class ClassInfoButton extends WynntilsButton {
                         poseStack,
                         StyledText.fromString("Level " + classInfo.level()),
                         this.getX() + this.width * 0.25f,
-                        this.getY() + this.height * 0.4f,
+                        this.getY() + this.height * 0.45f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
