@@ -77,6 +77,8 @@ public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, P
         PlayerModelExtension playerModelExtension = (PlayerModelExtension) this.getParentModel();
         playerModelExtension.setTranslucenceCape(event.getTranslucence());
 
-        return event.getTranslucence() < 1.0f ? RenderType.itemEntityTranslucentCull(playerSkin.capeTexture()) : original;
+        return event.getTranslucence() < 1.0f
+                ? RenderType.itemEntityTranslucentCull(playerSkin.capeTexture())
+                : original;
     }
 }
