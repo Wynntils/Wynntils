@@ -20,8 +20,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class BulkBuyWidget extends AbstractWidget {
     private ItemStack bulkBoughtItemStack = null;
-    private int bulkBoughtAmount = -1;
-    private int bulkBoughtPrice = -1;
+    private int bulkBoughtAmount = 0;
+    private int bulkBoughtPrice = 0;
 
     public BulkBuyWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Bulk Buy Widget"));
@@ -36,7 +36,7 @@ public class BulkBuyWidget extends AbstractWidget {
                 .renderText(
                         guiGraphics.pose(),
                         StyledText.fromString("Currently Buying: "),
-                        getX() + 102,
+                        getX() + 75,
                         getY() + 20,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -45,13 +45,25 @@ public class BulkBuyWidget extends AbstractWidget {
 
         // bulkBoughtItemStack is null when there is no item being bulk bought
         if (bulkBoughtItemStack == null) return;
+        guiGraphics.renderItem(bulkBoughtItemStack, getX() + 67, getY() + 24);
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
                         StyledText.fromString(bulkBoughtItemStack.getHoverName().getString()),
-                        getX() + 102,
-                        getY() + 30,
+                        getX() + 75,
+                        getY() + 50,
                         getWidth() - 20,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics.pose(),
+                        StyledText.fromString("Amount: " + bulkBoughtAmount),
+                        getX() + 75,
+                        getY() + 70,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
@@ -59,14 +71,23 @@ public class BulkBuyWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
-                        StyledText.fromString("Amount: " + bulkBoughtAmount),
-                        getX() + 102,
-                        getY() + 40,
-                        CommonColors.WHITE,
+                        StyledText.fromString("Total Price: " + (bulkBoughtAmount * bulkBoughtPrice) + "²"),
+                        getX() + 75,
+                        getY() + 80,
+                        CommonColors.LIGHT_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
-        guiGraphics.renderItem(bulkBoughtItemStack, getX() + 50, getY() + 30);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics.pose(),
+                        StyledText.fromString("Close shop to cancel"),
+                        getX() + 75,
+                        getY() + 90,
+                        CommonColors.GRAY,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
     }
 
     public void setBulkBoughtItemStack(ItemStack bulkBoughtItemStack) {

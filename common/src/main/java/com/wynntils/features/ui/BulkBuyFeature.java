@@ -72,7 +72,7 @@ public class BulkBuyFeature extends Feature {
         String title = e.getItemStack().getHoverName().getString();
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
 
-        bulkBuyWidget = new BulkBuyWidget(screen.leftPos - 198, screen.topPos, 200, 110);
+        bulkBuyWidget = new BulkBuyWidget(screen.leftPos - 148, screen.topPos, 150, 110);
         System.out.println("made a new bulk buy widget");
         screen.addRenderableWidget(bulkBuyWidget);
     }
