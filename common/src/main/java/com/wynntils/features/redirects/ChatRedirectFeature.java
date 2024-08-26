@@ -30,6 +30,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends Feature {
     @Persisted
+    public final Config<RedirectAction> bloodPactHealth = new Config<>(RedirectAction.REDIRECT);
+
+    @Persisted
     public final Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
@@ -89,6 +92,7 @@ public class ChatRedirectFeature extends Feature {
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
+        register(new BloodPactHealthDeficitRedirector());
         register(new CraftedDurabilityRedirector());
         register(new EmptyManaBankRedirector());
         register(new FriendJoinRedirector());
@@ -191,6 +195,28 @@ public class ChatRedirectFeature extends Feature {
         }
 
         protected abstract StyledText getNotification(Matcher matcher);
+    }
+
+    private class BloodPactHealthDeficitRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) You don't have enough health to cast that spell!$");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return bloodPactHealth.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.bloodPactHealth.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
+        }
     }
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
