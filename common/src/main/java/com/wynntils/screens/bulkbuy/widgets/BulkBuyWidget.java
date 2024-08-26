@@ -17,15 +17,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
 public class BulkBuyWidget extends AbstractWidget {
-    private final Supplier<BulkBuyFeature.BulkBoughtItem> bulkBoughtItemSupplier;
+    private ItemStack bulkBoughtItemStack = null;
+    private int bulkBoughtAmount = -1;
+    private int bulkBoughtPrice = -1;
 
-    public BulkBuyWidget(int x, int y, int width, int height, Supplier<BulkBuyFeature.BulkBoughtItem> bulkBoughtItemSupplier) {
+    public BulkBuyWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Bulk Buy Widget"));
-        this.bulkBoughtItemSupplier = bulkBoughtItemSupplier;
     }
 
     @Override
@@ -43,12 +45,13 @@ public class BulkBuyWidget extends AbstractWidget {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
-        if (bulkBoughtItemSupplier.get() == null) return;
+
+        // bulkBoughtItemStack is null when there is no item being bulk bought
+        if (bulkBoughtItemStack == null) return;
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
-                        StyledText.fromString(
-                                bulkBoughtItemSupplier.get().getItemStack().getHoverName().getString()),
+                        StyledText.fromString(bulkBoughtItemStack.getHoverName().getString()),
                         getX() + 102,
                         getY() + 30,
                         getWidth() - 20,
@@ -59,19 +62,26 @@ public class BulkBuyWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
-                        StyledText.fromString("Amount: " + bulkBoughtItemSupplier.get().getAmount()),
+                        StyledText.fromString("Amount: " + bulkBoughtAmount),
                         getX() + 102,
                         getY() + 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
-        guiGraphics.renderItem(bulkBoughtItemSupplier.get().getItemStack(), getX() + 50, getY() + 30);
+        guiGraphics.renderItem(bulkBoughtItemStack, getX() + 50, getY() + 30);
     }
 
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        super.onClick(mouseX, mouseY);
+    public void setBulkBoughtItemStack(ItemStack bulkBoughtItemStack) {
+        this.bulkBoughtItemStack = bulkBoughtItemStack;
+    }
+
+    public void setBulkBoughtAmount(int bulkBoughtAmount) {
+        this.bulkBoughtAmount = bulkBoughtAmount;
+    }
+
+    public void setBulkBoughtPrice(int bulkBoughtPrice) {
+        this.bulkBoughtPrice = bulkBoughtPrice;
     }
 
     @Override

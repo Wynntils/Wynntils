@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -45,17 +46,23 @@ public class BulkBuyFeature extends Feature {
     @Persisted
     public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
+    private static final int SHOP_TITLE_SLOT = 4;
+    private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
     private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
 
-    private BulkBoughtItem bulkBoughtItem = null;
+    private BulkBuyWidget bulkBuyWidget;
+    private int bulkBoughtSlotNumber = -1; // Slot number of the thing we're buying
+    private AbstractContainerMenu bulkBoughtContainer = null; // Shop container we're buying from
+    private int bulkBoughtAmount = 0; // Amount remaining that we need to buy
+    private int bulkBoughtPrice = 0; // Price of a single item
 
     @SubscribeEvent
     public void onShopOpened(SetSlotEvent.Pre e) {
         // Warning - for some reason this is triggered randomly while the shop is open as well
-        if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
+        if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54 || bulkBoughtSlotNumber != -1) return;
         // Shop titles are in slot 4, eg. §aScroll Shop
         // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
 
@@ -64,55 +71,83 @@ public class BulkBuyFeature extends Feature {
         if (!(screen.getMenu() instanceof AbstractContainerMenu)) return;
 
         String title = e.getItemStack().getHoverName().getString();
-        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(" Shop")) return;
+        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
 
-        screen.addRenderableWidget(new BulkBuyWidget(screen.leftPos - 198, screen.topPos, 200, 110, this::getBulkBoughtItem));
+        bulkBuyWidget = new BulkBuyWidget(screen.leftPos - 198, screen.topPos, 200, 110);
+        System.out.println("made a new bulk buy widget");
+        screen.addRenderableWidget(bulkBuyWidget);
     }
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (!KeyboardUtils.isShiftDown()) return;
+        if (!KeyboardUtils.isShiftDown() || e.getClickType() != ClickType.QUICK_MOVE) return;
 
         AbstractContainerMenu container = e.getContainerMenu();
         ItemStack itemStack = e.getItemStack();
         if (!isBulkBuyable(container, itemStack)) return;
 
-        if (e.getClickType() == ClickType.QUICK_MOVE && e.getItemStack().equals(bulkBoughtItem.getItemStack())) {
-            if (bulkBoughtItem != null) {
-                bulkBoughtItem.incrementAmount();
-            } else {
-                bulkBoughtItem = new BulkBoughtItem(e.getSlotNum(), itemStack, container, bulkBuyAmount.get());
-            }
+        int itemPrice = findItemPrice(LoreUtils.getLore(itemStack));
+        if (itemPrice * (bulkBoughtAmount + bulkBuyAmount.get()) > Models.Emerald.getAmountInInventory()) {
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyCannotAfford"));
+            return;
         }
+
+        if (bulkBoughtSlotNumber == -1) {
+            // we're starting a new bulk buy
+            bulkBoughtSlotNumber = e.getSlotNum();
+            bulkBoughtContainer = container;
+            bulkBoughtAmount = bulkBuyAmount.get();
+            bulkBoughtPrice = itemPrice;
+
+            bulkBuyWidget.setBulkBoughtPrice(bulkBoughtPrice);
+            bulkBuyWidget.setBulkBoughtItemStack(itemStack);
+        } else if (bulkBoughtSlotNumber != e.getSlotNum()) {
+            // we're trying to buy a different item
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyDifferentItem"));
+            return;
+        } else {
+            // we're buying more of the same item
+            bulkBoughtAmount += bulkBuyAmount.get();
+        }
+        bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
+
         e.setCanceled(true);
     }
 
     @SubscribeEvent
     public void onShopClosed(ContainerCloseEvent.Pre e) {
-        bulkBoughtItem = null;
+        resetBulkBuy();
+        bulkBuyWidget = null;
     }
 
     @SubscribeEvent
     public void onTickPurchase(TickEvent e) {
-        if (true) return; // TODO for ui layout testing, remove this later
-        if (bulkBoughtItem == null) return;
+//        if (true) return; // TODO for ui layout testing, remove this later
+        if (bulkBoughtSlotNumber == -1) return;
         if (McUtils.mc().level.getGameTime() % bulkBuySpeed.get().getTicksDelay() != 0) return;
 
-        if (Models.Emerald.getAmountInInventory() < bulkBoughtItem.getPrice()) {
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyCannotAfford"));
-            bulkBoughtItem = null;
-            return;
-        }
         ContainerUtils.clickOnSlot(
-                bulkBoughtItem.getSlotNumber(),
-                bulkBoughtItem.getContainer().containerId,
+                bulkBoughtSlotNumber,
+                bulkBoughtContainer.containerId,
                 GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                bulkBoughtItem.getContainer().getItems());
-        bulkBoughtItem.decrementAmount();
+                bulkBoughtContainer.getItems());
+        --bulkBoughtAmount;
 
-        if (bulkBoughtItem.getAmount() <= 0) {
-            bulkBoughtItem = null;
+        if (bulkBoughtAmount <= 0) {
+            resetBulkBuy();
         }
+        bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
+    }
+
+    private void resetBulkBuy() {
+        bulkBoughtSlotNumber = -1;
+        bulkBoughtContainer = null;
+        bulkBoughtAmount = 0;
+        bulkBoughtPrice = 0;
+
+        bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
+        bulkBuyWidget.setBulkBoughtPrice(bulkBoughtPrice);
+        bulkBuyWidget.setBulkBoughtItemStack(null);
     }
 
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
@@ -187,10 +222,6 @@ public class BulkBuyFeature extends Feature {
                 && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
     }
 
-    private BulkBoughtItem getBulkBoughtItem() {
-        return bulkBoughtItem;
-    }
-
     public enum BulkBuySpeed {
         FAST(4),
         BALANCED(5),
@@ -205,56 +236,6 @@ public class BulkBuyFeature extends Feature {
 
         private int getTicksDelay() {
             return ticksDelay;
-        }
-    }
-
-    public final class BulkBoughtItem {
-        private final int slotNumber; // Slot number of the thing we're buying
-        private final ItemStack itemStack; // ItemStack of the thing we're buying
-        private final AbstractContainerMenu container; // Shop container
-        private int amount; // Amount remaining that we need to buy
-        private int price; // Price of a single item
-
-        private BulkBoughtItem(int slotNumber, ItemStack itemStack, AbstractContainerMenu container, int amount) {
-            this.slotNumber = slotNumber;
-            this.itemStack = itemStack;
-            this.container = container;
-            this.amount = amount;
-            this.price = findItemPrice(LoreUtils.getLore(itemStack));
-        }
-
-        public int getSlotNumber() {
-            return slotNumber;
-        }
-
-        public ItemStack getItemStack() {
-            return itemStack;
-        }
-
-        public AbstractContainerMenu getContainer() {
-            return container;
-        }
-
-        public int getAmount() {
-            return amount;
-        }
-
-        /** Used for adding a "block" of bulk buys when the user tries to buy more. */
-        public void incrementAmount() {
-            this.amount += bulkBuyAmount.get();
-        }
-
-        /** Used to subtract a single bulk buy when one buy is completed. */
-        public void decrementAmount() {
-            --this.amount;
-        }
-
-        public int getPrice() {
-            return price;
-        }
-
-        public void setPrice(int price) {
-            this.price = price;
         }
     }
 }
