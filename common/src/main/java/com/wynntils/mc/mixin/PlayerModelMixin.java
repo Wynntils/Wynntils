@@ -22,7 +22,7 @@ public class PlayerModelMixin implements PlayerModelExtension {
     private float wynntilsTranslucence;
 
     @WrapOperation(
-            method = "renderCloak",
+            method = "renderCloak(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V",
             at =
                     @At(
                             value = "INVOKE",

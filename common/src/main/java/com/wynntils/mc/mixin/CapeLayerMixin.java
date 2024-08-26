@@ -55,7 +55,7 @@ public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, P
     }
 
     @ModifyArg(
-            method = "render",
+            method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
             at =
                     @At(
                             value = "INVOKE",
