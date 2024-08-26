@@ -7,7 +7,7 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
+import com.wynntils.mc.event.PlayerFeatureRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.extension.PlayerModelExtension;
 import net.minecraft.client.Minecraft;
@@ -55,7 +55,8 @@ public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, P
     }
 
     @ModifyArg(
-            method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
+            method =
+                    "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -69,16 +70,10 @@ public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, P
         boolean isBodyVisible = !livingEntity.isInvisible();
         boolean translucent = !isBodyVisible && !livingEntity.isInvisibleTo(minecraft.player);
 
-        LivingEntityRenderTranslucentCheckEvent event =
-                new LivingEntityRenderTranslucentCheckEvent(translucent, livingEntity, translucent ? 0.15f : 1.0f);
+        PlayerFeatureRenderTranslucentCheckEvent.Cape event = new PlayerFeatureRenderTranslucentCheckEvent.Cape(
+                translucent, livingEntity, translucent ? 0.15f : 1.0f, (PlayerModelExtension) this.getParentModel());
         MixinHelper.post(event);
 
-        // Translucence value needs to pass into PlayerModel class, because renderCloak method has no 'color' argument
-        PlayerModelExtension playerModelExtension = (PlayerModelExtension) this.getParentModel();
-        playerModelExtension.setTranslucenceCape(event.getTranslucence());
-
-        return event.getTranslucence() < 1.0f
-                ? RenderType.itemEntityTranslucentCull(playerSkin.capeTexture())
-                : original;
+        return event.getTranslucence() < 1.0f ? RenderType.entityTranslucent(playerSkin.capeTexture()) : original;
     }
 }
