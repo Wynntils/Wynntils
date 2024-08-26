@@ -5,7 +5,6 @@
 package com.wynntils.screens.bulkbuy.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -18,8 +17,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.function.Supplier;
 
 public class BulkBuyWidget extends AbstractWidget {
     private ItemStack bulkBoughtItemStack = null;

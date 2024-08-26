@@ -14,7 +14,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -122,7 +121,7 @@ public class BulkBuyFeature extends Feature {
 
     @SubscribeEvent
     public void onTickPurchase(TickEvent e) {
-//        if (true) return; // TODO for ui layout testing, remove this later
+        //        if (true) return; // TODO for ui layout testing, remove this later
         if (bulkBoughtSlotNumber == -1) return;
         if (McUtils.mc().level.getGameTime() % bulkBuySpeed.get().getTicksDelay() != 0) return;
 
