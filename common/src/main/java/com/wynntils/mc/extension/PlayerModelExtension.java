@@ -5,5 +5,5 @@
 package com.wynntils.mc.extension;
 
 public interface PlayerModelExtension {
-    void setTranslucenceCape(float alpha);
+    void setTranslucenceCape(float translucence);
 }

@@ -6,11 +6,11 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.extension.PlayerModelExtension;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -61,17 +61,22 @@ public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, P
                             value = "INVOKE",
                             target =
                                     "net/minecraft/client/renderer/MultiBufferSource.getBuffer(Lnet/minecraft/client/renderer/RenderType;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
-    private RenderType setCapeRenderType(
+    private RenderType setTranslucenceCapeRenderType(
             RenderType original,
             @Local(argsOnly = true) AbstractClientPlayer livingEntity,
             @Local PlayerSkin playerSkin) {
-        boolean isGhostPlayer = Models.Player.isPlayerGhost(livingEntity);
+        Minecraft minecraft = Minecraft.getInstance();
+        boolean isBodyVisible = !livingEntity.isInvisible();
+        boolean translucent = !isBodyVisible && !livingEntity.isInvisibleTo(minecraft.player);
+
         LivingEntityRenderTranslucentCheckEvent event =
-                new LivingEntityRenderTranslucentCheckEvent(isGhostPlayer, livingEntity, isGhostPlayer ? 0.15f : 1f);
+                new LivingEntityRenderTranslucentCheckEvent(translucent, livingEntity, translucent ? 0.15f : 1.0f);
         MixinHelper.post(event);
 
-        ((PlayerModelExtension) this.getParentModel()).setTranslucenceCape(event.getTranslucence());
+        // Translucence value needs to pass into PlayerModel class, because renderCloak method has no 'color' argument
+        PlayerModelExtension playerModelExtension = (PlayerModelExtension) this.getParentModel();
+        playerModelExtension.setTranslucenceCape(event.getTranslucence());
 
-        return isGhostPlayer ? RenderType.entityTranslucent(playerSkin.capeTexture()) : original;
+        return event.getTranslucence() < 1.0f ? RenderType.itemEntityTranslucentCull(playerSkin.capeTexture()) : original;
     }
 }

@@ -28,13 +28,14 @@ public class PlayerModelMixin implements PlayerModelExtension {
                             value = "INVOKE",
                             target =
                                     "net/minecraft/client/model/geom/ModelPart.render(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V"))
-    private void setTransparentCape(
+    private void setTranslucenceCape(
             ModelPart part,
             PoseStack poseStack,
             VertexConsumer buffer,
             int packedLight,
             int packedOverlay,
             Operation<Void> original) {
+        // Add 'wynntilsTranslucence' into cloak model, original only call render() without 'color' argument.
         part.render(
                 poseStack,
                 buffer,
@@ -44,7 +45,7 @@ public class PlayerModelMixin implements PlayerModelExtension {
     }
 
     @Override
-    public void setTranslucenceCape(float alpha) {
-        this.wynntilsTranslucence = alpha;
+    public void setTranslucenceCape(float translucence) {
+        this.wynntilsTranslucence = translucence;
     }
 }
