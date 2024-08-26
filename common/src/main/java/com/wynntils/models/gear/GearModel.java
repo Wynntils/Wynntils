@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 
@@ -44,6 +45,10 @@ import net.minecraft.world.item.ItemStack;
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */
 public final class GearModel extends Model {
+    // Test in GearModel_GEAR_PATTERN
+    public static final Pattern GEAR_PATTERN = Pattern.compile(
+            "^(?:(?<unidrarity>§[5abcdef])(?<unidentified>Unidentified ))?(?:§f⬡ )?(?<idrarity>§[5abcdef])?(?:Shiny )?(?<name>.+)$");
+
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
     private final Map<GearBoxItem, List<GearInfo>> possibilitiesCache = new HashMap<>();
@@ -104,13 +109,7 @@ public final class GearModel extends Model {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(
-                gearInfo,
-                result.identifications(),
-                result.powders(),
-                result.rerolls(),
-                result.shinyStat(),
-                false,
-                Optional.empty());
+                gearInfo, result.identifications(), result.powders(), 0, Optional.empty(), false, Optional.empty());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
@@ -131,10 +130,9 @@ public final class GearModel extends Model {
         // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
         // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
         gearType = GearType.fromString(result.itemType());
-        if (gearType == null && craftedResults.requirements().classType().isPresent()) {
+        if (gearType == null && result.requirements().classType().isPresent()) {
             // If the item is signed, we can find the class type from the requirements
-            gearType = GearType.fromClassType(
-                    craftedResults.requirements().classType().get());
+            gearType = GearType.fromClassType(result.requirements().classType().get());
         }
 
         // If we still failed to find the gear type, try to find it from the item stack
@@ -151,11 +149,11 @@ public final class GearModel extends Model {
                 craftedResults.name(),
                 craftedResults.effectStrength(),
                 gearType,
-                craftedResults.attackSpeed(),
+                result.attackSpeed(),
                 result.health(),
-                craftedResults.damages(),
-                craftedResults.defences(),
-                craftedResults.requirements(),
+                result.damages(),
+                result.defences(),
+                result.requirements(),
                 possibleValuesMap.values().stream().toList(),
                 result.identifications(),
                 result.powders(),
@@ -168,17 +166,31 @@ public final class GearModel extends Model {
             String name, GearType gearType, GearTier gearTier, ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
 
-        // FIXME: Damages and requirements are not yet parsed
+        if (gearType == GearType.WEAPON) {
+            // If the gear type is weapon, we can try to find the weapon type from the requirements
+            gearType = result.requirements()
+                    .classType()
+                    .map(GearType::fromClassType)
+                    .orElse(gearType);
+        }
+
         return new UnknownGearItem(
                 name,
                 gearType,
                 gearTier,
                 result.level(),
-                List.of(),
-                List.of(),
+                result.attackSpeed(),
+                result.health(),
+                result.damages(),
+                result.defences(),
+                result.requirements(),
+                result.allRequirementsMet(),
                 result.identifications(),
                 result.powders(),
-                result.rerolls());
+                result.powderSlots(),
+                result.rerolls(),
+                result.setInstance().orElse(null),
+                result.shinyStat().orElse(null));
     }
 
     public GearInfo getGearInfoFromDisplayName(String gearName) {

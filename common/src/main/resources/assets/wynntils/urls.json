@@ -236,6 +236,13 @@
   },
   {
     "arguments": [
+      "type"
+    ],
+    "id": "dataWynncraftLeaderboard",
+    "url": "https://api.wynncraft.com/v3/leaderboards/%{type}?resultLimit=9"
+  },
+  {
+    "arguments": [
       "username"
     ],
     "id": "dataWynncraftPlayer",

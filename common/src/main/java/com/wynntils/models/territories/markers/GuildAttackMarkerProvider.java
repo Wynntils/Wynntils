@@ -49,7 +49,8 @@ public class GuildAttackMarkerProvider implements MarkerProvider<MarkerPoi> {
                             lowestTimer == attackTimer.asSeconds() ? Texture.STAR : Texture.WALL,
                             beaconColor,
                             CommonColors.WHITE,
-                            beaconColor);
+                            beaconColor,
+                            attackTimer.territoryName());
                 })
                 .filter(Objects::nonNull);
     }

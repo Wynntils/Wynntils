@@ -194,6 +194,14 @@ public final class CharacterStatsModel extends Model {
         }
     }
 
+    public void setHidePowder(boolean shouldHide) {
+        if (shouldHide) {
+            hiddenSegments.add(PowderSpecialSegment.class);
+        } else {
+            hiddenSegments.remove(PowderSpecialSegment.class);
+        }
+    }
+
     private void updateLevel(LevelSegment segment) {
         level = segment.getLevel();
     }

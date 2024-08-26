@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
@@ -34,7 +35,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class RaidModel extends Model {
     public static final int MAX_CHALLENGES = 3;
     public static final int ROOM_TIMERS_COUNT = 5;
+    private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
+    private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -71,10 +74,21 @@ public class RaidModel extends Model {
                 raidStartTime = System.currentTimeMillis();
                 completedCurrentChallenge = false;
             }
-        } else {
-            if (styledText.matches(RAID_COMPLETED_PATTERN)) {
-                completeRaid();
-            }
+        } else if (styledText.matches(RAID_COMPLETED_PATTERN)) {
+            completeRaid();
+        } else if (styledText.matches(RAID_FAILED_PATTERN)) {
+            failedRaid();
+        }
+    }
+
+    // One challenge in Nexus of Light does not display the scoreboard upon challenge completion
+    // so we have to check for the chat message
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageReceivedEvent event) {
+        if (!inChallengeRoom()) return;
+
+        if (event.getStyledText().matches(CHALLENGE_COMPLETED_PATTERN)) {
+            completeChallenge();
         }
     }
 

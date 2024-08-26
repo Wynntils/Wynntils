@@ -1,9 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.marker;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
+import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.models.marker.type.LocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
@@ -22,49 +25,85 @@ import java.util.stream.Stream;
 public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
     private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new CopyOnWriteArraySet<>();
 
-    public void addLocation(Location location, Texture texture, CustomColor beaconColor, CustomColor textColor) {
+    public void addLocation(
+            Location location, Texture texture, CustomColor beaconColor, CustomColor textColor, String additonalText) {
         addLocation(new MarkerInfo(
-                "Waypoint", new StaticLocationSupplier(location), texture, beaconColor, textColor, CommonColors.WHITE));
+                "Waypoint",
+                new StaticLocationSupplier(location),
+                texture,
+                beaconColor,
+                textColor,
+                CommonColors.WHITE,
+                // FIXME: Feature-Model dependency
+                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                .showAdditionalTextInWorld
+                                .get()
+                        ? additonalText
+                        : null));
     }
 
-    public void addLocation(Location location, Texture texture, CustomColor beaconColor) {
+    public void addLocation(Location location, Texture texture, CustomColor beaconColor, String additonalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
                 texture,
                 beaconColor,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                // FIXME: Feature-Model dependency
+                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                .showAdditionalTextInWorld
+                                .get()
+                        ? Models.Activity.getTrackedName()
+                        : null));
     }
 
-    public void addLocation(Location location, Texture texture) {
+    public void addLocation(Location location, Texture texture, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
                 texture,
                 CustomColor.NONE,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                // FIXME: Feature-Model dependency
+                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                .showAdditionalTextInWorld
+                                .get()
+                        ? additionalText
+                        : null));
     }
 
-    public void addLocation(Location location) {
+    public void addLocation(Location location, String additonalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
                 Texture.WAYPOINT,
                 CustomColor.NONE,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                // FIXME: Feature-Model dependency
+                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                .showAdditionalTextInWorld
+                                .get()
+                        ? additonalText
+                        : null));
     }
 
-    public void addLocation(LocationSupplier locationSupplier) {
+    public void addLocation(LocationSupplier locationSupplier, String additonalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 locationSupplier,
                 Texture.WAYPOINT,
                 CustomColor.NONE,
                 CommonColors.WHITE,
-                CommonColors.WHITE));
+                CommonColors.WHITE,
+                // FIXME: Feature-Model dependency
+                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                .showAdditionalTextInWorld
+                                .get()
+                        ? additonalText
+                        : null));
     }
 
     public void addLocation(MarkerInfo markerInfo) {
