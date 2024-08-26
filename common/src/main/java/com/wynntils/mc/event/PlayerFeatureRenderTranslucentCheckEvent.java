@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import com.wynntils.mc.extension.PlayerModelExtension;
 import net.minecraft.world.entity.LivingEntity;
 
-public abstract class PlayerFeatureRenderTranslucentCheckEvent extends LivingEntityRenderTranslucentCheckEvent {
+public class PlayerFeatureRenderTranslucentCheckEvent extends LivingEntityRenderTranslucentCheckEvent {
     private final PlayerModelExtension playerModelExtension;
 
     protected PlayerFeatureRenderTranslucentCheckEvent(
