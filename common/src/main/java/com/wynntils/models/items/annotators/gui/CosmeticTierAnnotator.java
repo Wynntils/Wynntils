@@ -10,6 +10,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.CosmeticItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
+import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -31,8 +32,11 @@ public final class CosmeticTierAnnotator implements GuiItemAnnotator {
     }
 
     private static boolean isCosmetic(ItemStack itemStack) {
-        for (Component c : LoreUtils.getTooltipLines(itemStack)) {
-            if (COSMETIC_PATTERN.matcher(c.getString()).matches()) return true;
+        List<Component> lore = LoreUtils.getTooltipLines(itemStack);
+        for (int i = lore.size() - 1; i >= 0; i--) { // Reverse iteration is slightly faster for most users
+            if (COSMETIC_PATTERN
+                    .matcher(StyledText.fromComponent(lore.get(i)).getStringWithoutFormatting())
+                    .matches()) return true;
         }
         return false;
     }
