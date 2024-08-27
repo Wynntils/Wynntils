@@ -11,12 +11,10 @@ import com.wynntils.mc.event.PlayerFeatureRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.extension.PlayerModelExtension;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.resources.PlayerSkin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,11 +23,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CapeLayer.class)
-public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    CapeLayerMixin() {
-        super(null);
-    }
-
+public abstract class CapeLayerMixin {
     @Inject(
             method =
                     "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
@@ -71,7 +65,8 @@ public abstract class CapeLayerMixin extends RenderLayer<AbstractClientPlayer, P
         boolean translucent = !isBodyVisible && !livingEntity.isInvisibleTo(minecraft.player);
 
         PlayerFeatureRenderTranslucentCheckEvent.Cape event = new PlayerFeatureRenderTranslucentCheckEvent.Cape(
-                translucent, livingEntity, translucent ? 0.15f : 1.0f, (PlayerModelExtension) this.getParentModel());
+                translucent, livingEntity, translucent ? 0.15f : 1.0f, ((PlayerModelExtension)
+                        ((CapeLayer) (Object) this).getParentModel()));
         MixinHelper.post(event);
 
         return event.getTranslucence() < 1.0f ? RenderType.entityTranslucent(playerSkin.capeTexture()) : original;

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlayerModel.class)
-public class PlayerModelMixin implements PlayerModelExtension {
+public abstract class PlayerModelMixin implements PlayerModelExtension {
     @Unique
     private float wynntilsTranslucence;
 
