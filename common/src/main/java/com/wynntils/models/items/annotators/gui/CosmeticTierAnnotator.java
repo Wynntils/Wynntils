@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
@@ -32,11 +33,8 @@ public final class CosmeticTierAnnotator implements GuiItemAnnotator {
     }
 
     private static boolean isCosmetic(ItemStack itemStack) {
-        List<Component> lore = LoreUtils.getTooltipLines(itemStack);
-        for (int i = lore.size() - 1; i >= 0; i--) { // Reverse iteration is slightly faster for most users
-            if (COSMETIC_PATTERN
-                    .matcher(StyledText.fromComponent(lore.get(i)).getStringWithoutFormatting())
-                    .matches()) return true;
+        for (Component c : LoreUtils.getTooltipLines(itemStack)) {
+            if (StyledText.fromComponent(c).matches(COSMETIC_PATTERN, PartStyle.StyleType.NONE)) return true;
         }
         return false;
     }
