@@ -12,11 +12,11 @@ public enum Texture {
     // region Character Selection
     CHANGE_WORLD_BUTTON("character_selection/change_world_button.png", 26, 52),
     CHARACTER_BUTTON("character_selection/character_button.png", 104, 64),
-    CHARACTER_INFO("character_selection/character_info.png", 123, 38),
+    CHARACTER_INFO("character_selection/character_info.png", 123, 52),
     CHARACTER_LIST_BACKGROUND("character_selection/character_list_background.png", 118, 254),
-    DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 52),
-    PLAY_BUTTON("character_selection/play_button.png", 79, 76),
-    XP_BAR("character_selection/xp_bar.png", 100, 12),
+    DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 54),
+    PLAY_BUTTON("character_selection/play_button.png", 79, 78),
+    XP_BAR("character_selection/xp_bar.png", 77, 6),
     // endregion
 
     // region Content Book
@@ -254,7 +254,7 @@ public enum Texture {
     TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
 
     // region UI Components
-    BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
+    BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),
     BANK_PANEL("ui_components/bank_panel.png", 100, 117),
     BUTTON_BOTTOM("ui_components/button_bottom.png", 64, 60),
     BUTTON_LEFT("ui_components/button_left.png", 48, 56),
