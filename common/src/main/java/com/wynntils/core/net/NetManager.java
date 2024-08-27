@@ -53,16 +53,19 @@ public final class NetManager extends Manager {
         return callApi(urlId, Map.of());
     }
 
+    // Use DownloadManager instead. Only use this method if you are sure about what you are doing.
     public Download download(URI uri, String localFileName) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, new NetResultProcessedEvent.ForLocalFile(localFileName));
     }
 
+    // Use DownloadManager instead. Only use this method if you are sure about what you are doing.
     public Download download(URI uri, String localFileName, String expectedHash) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, expectedHash, new NetResultProcessedEvent.ForLocalFile(localFileName));
     }
 
+    // Use DownloadManager instead. Only use this method if you are sure about what you are doing.
     public Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());
