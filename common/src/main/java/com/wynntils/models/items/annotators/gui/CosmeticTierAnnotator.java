@@ -11,7 +11,6 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.CosmeticItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
-import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
