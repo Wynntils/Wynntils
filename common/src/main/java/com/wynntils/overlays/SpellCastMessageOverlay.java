@@ -53,8 +53,14 @@ public class SpellCastMessageOverlay extends Overlay {
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {
         int manaCost = event.getManaCost();
-        spellMessage = StyledText.fromString(
-                "§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]");
+        int healthCost = event.getHealthCost();
+        if (healthCost > 0) {
+            spellMessage = StyledText.fromString(
+                    "§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3] §4[§c-" + healthCost + " ❤§4]");
+        } else {
+            spellMessage = StyledText.fromString(
+                    "§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]");
+        }
 
         spellMessageTimer = SPELL_MESSAGE_TICKS;
     }
