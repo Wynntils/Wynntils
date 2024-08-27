@@ -27,7 +27,8 @@ import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
-    private static final Pattern SPELL_CAST = Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
+    private static final Pattern SPELL_CAST =
+            Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
     private static final int SPELL_COST_RESET_TICKS = 60;
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
@@ -67,7 +68,8 @@ public class SpellModel extends Model {
         if (spellMatcher.matches()) {
             SpellType spellType = SpellType.fromName(spellMatcher.group(1));
             int manaCost = Integer.parseInt(spellMatcher.group(2));
-            int healthCost = Integer.parseInt(Optional.ofNullable(spellMatcher.group(3)).orElse("0"));
+            int healthCost =
+                    Integer.parseInt(Optional.ofNullable(spellMatcher.group(3)).orElse("0"));
             WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost, healthCost));
         }
     }
