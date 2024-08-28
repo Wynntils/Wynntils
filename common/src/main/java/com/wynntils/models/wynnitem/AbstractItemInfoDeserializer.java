@@ -150,7 +150,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     protected ItemMaterial parseMaterial(JsonObject json, GearType type) {
-        return type.isArmor() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
+        boolean parseAsArmor = type.isArmor() && json.has("armourMaterial");
+        return parseAsArmor ? parseArmorType(json, type) : parseOtherMaterial(json);
     }
 
     protected List<ItemObtainType> parseObtainTypes(JsonObject json) {
@@ -204,7 +205,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return ItemMaterial.fromArmorType(armourMaterial, gearType, color);
     }
 
-    protected ItemMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
+    protected ItemMaterial parseOtherMaterial(JsonObject json) {
         JsonObject icon = json.getAsJsonObject("icon");
 
         String iconFormat = icon.get("format").getAsString();
@@ -301,10 +302,23 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         JsonObject majorIdsJson = JsonUtils.getNullableJsonObject(json, "majorIds");
         if (majorIdsJson == null || majorIdsJson.isJsonNull() || majorIdsJson.isEmpty()) return Optional.empty();
 
-        return Optional.of(new GearMajorId(
-                majorIdsJson.get("name").getAsString(),
-                StyledText.fromString(
-                        majorIdsJson.get("description").getAsString().replaceAll("&", "§"))));
+        Map<String, JsonElement> majorIdMap = majorIdsJson.asMap();
+
+        if (majorIdMap.size() > 1) {
+            WynntilsMod.warn("Item DB contains multiple major IDs for "
+                    + json.get("name").getAsString());
+        }
+
+        if (majorIdMap.isEmpty()) return Optional.empty();
+
+        Map.Entry<String, JsonElement> majorIdElement =
+                majorIdMap.entrySet().iterator().next();
+
+        // Wynncraft API now ships HTML tags in the description (as they have a custom markup language internally)
+        StyledText description =
+                StyledText.fromString(majorIdElement.getValue().getAsString().replaceAll("<[^>]*>", ""));
+
+        return Optional.of(new GearMajorId(majorIdElement.getKey(), description));
     }
 
     protected List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {

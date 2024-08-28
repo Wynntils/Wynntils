@@ -48,7 +48,7 @@ public class RewardsModel extends Model {
     public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
         UrlId urlId = event.getUrlId();
         if (urlId == UrlId.DATA_STATIC_ITEM_OBTAIN || urlId == UrlId.DATA_STATIC_MATERIAL_CONVERSION) {
-            // We need both material conversio  and obtain info to be able to load the ingredient DB
+            // We need both material conversion and obtain info to be able to load the ingredient DB
             if (!Models.WynnItem.hasObtainInfo()) return;
             if (!Models.WynnItem.hasMaterialConversionInfo()) return;
 

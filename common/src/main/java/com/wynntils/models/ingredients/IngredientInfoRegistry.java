@@ -61,7 +61,7 @@ public class IngredientInfoRegistry {
         if (!Models.WynnItem.hasMaterialConversionInfo()) return;
 
         // Download and parse the ingredient DB
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS_ADVANCED);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS);
         dl.handleJsonObject(json -> {
             Gson gson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
@@ -111,7 +111,11 @@ public class IngredientInfoRegistry {
 
             Optional<String> internalNameOpt = Optional.ofNullable(internalName);
 
-            int tier = JsonUtils.getNullableJsonInt(json, "tier");
+            // The tier field was renamed to rarity in API v3.3, but it really does not make sense, so
+            // I'll keep parsing both tier and rarity for now (as they may change it back)
+            int tier = json.has("tier")
+                    ? JsonUtils.getNullableJsonInt(json, "tier")
+                    : JsonUtils.getNullableJsonInt(json, "rarity");
 
             JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
             int level = requirements.get("level").getAsInt();
@@ -166,26 +170,14 @@ public class IngredientInfoRegistry {
         }
 
         private ItemMaterial parseMaterial(JsonObject json, String name) {
-            String material = JsonUtils.getNullableJsonString(json, "material");
-            if (material == null || material.isEmpty()) {
+            ItemMaterial material = parseOtherMaterial(json);
+
+            if (material == null) {
                 WynntilsMod.warn("Ingredient DB is missing material for " + name);
                 return ItemMaterial.fromItemId("minecraft:air", 0);
             }
 
-            String[] materialParts = material.split(":");
-
-            int id = Integer.parseInt(materialParts[0]);
-            int damage = Integer.parseInt(materialParts[1]);
-
-            if (id == 397) {
-                // This is a player head. Check if we got a skin for it instead!
-                String skinTexture = JsonUtils.getNullableJsonString(json, "skin");
-                if (skinTexture != null) {
-                    return ItemMaterial.fromPlayerHeadUUID(skinTexture);
-                }
-            }
-
-            return ItemMaterial.fromItemTypeCode(id, damage);
+            return material;
         }
 
         private List<Pair<Skill, Integer>> getSkillRequirements(JsonObject itemIdsJson) {

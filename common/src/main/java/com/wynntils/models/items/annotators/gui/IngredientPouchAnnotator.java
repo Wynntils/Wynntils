@@ -47,7 +47,8 @@ public final class IngredientPouchAnnotator implements GuiItemAnnotator {
             if (ingredientInfo == null) continue;
 
             if (ingredientInfo.tier() != tier) {
-                WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
+                WynntilsMod.warn("Incorrect tier (pouch) in ingredient database: " + ingredientName + " is currently "
+                        + tier + " vs API " + ingredientInfo.tier());
             }
 
             ingredients.add(Pair.of(ingredientInfo, count));
