@@ -7,10 +7,9 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.PlayerFeatureRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
+import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.PlayerModelExtension;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -48,6 +47,11 @@ public abstract class CapeLayerMixin {
         }
     }
 
+    /**
+     * Translucence value needs to pass into {@link net.minecraft.client.model.PlayerModel} class,
+     * because {@link net.minecraft.client.model.PlayerModel#renderCloak(PoseStack, VertexConsumer, int, int)} method does not accept {@code color}
+     * argument
+     */
     @ModifyArg(
             method =
                     "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V",
@@ -60,15 +64,15 @@ public abstract class CapeLayerMixin {
             RenderType original,
             @Local(argsOnly = true) AbstractClientPlayer livingEntity,
             @Local PlayerSkin playerSkin) {
-        Minecraft minecraft = Minecraft.getInstance();
-        boolean isBodyVisible = !livingEntity.isInvisible();
-        boolean translucent = !isBodyVisible && !livingEntity.isInvisibleTo(minecraft.player);
-
-        PlayerFeatureRenderTranslucentCheckEvent.Cape event = new PlayerFeatureRenderTranslucentCheckEvent.Cape(
-                translucent, livingEntity, translucent ? 0.15f : 1.0f, ((PlayerModelExtension)
-                        ((CapeLayer) (Object) this).getParentModel()));
+        // Always set default translucence value to 1.0f, because cape layer doesn't rendered same as ghost player.
+        // It hidden by checking if player is invisible or cape model part is turned off
+        RenderTranslucentCheckEvent.Cape event = new RenderTranslucentCheckEvent.Cape(false, livingEntity, 1.0f);
         MixinHelper.post(event);
 
-        return event.getTranslucence() < 1.0f ? RenderType.entityTranslucent(playerSkin.capeTexture()) : original;
+        float translucence = event.getTranslucence();
+
+        ((PlayerModelExtension) ((CapeLayer) (Object) this).getParentModel()).setTranslucenceCape(translucence);
+
+        return event.isTranslucent() ? RenderType.entityTranslucent(playerSkin.capeTexture()) : original;
     }
 }

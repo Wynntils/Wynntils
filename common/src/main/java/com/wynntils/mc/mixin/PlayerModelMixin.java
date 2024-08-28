@@ -28,7 +28,7 @@ public abstract class PlayerModelMixin implements PlayerModelExtension {
                             value = "INVOKE",
                             target =
                                     "net/minecraft/client/model/geom/ModelPart.render(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V"))
-    private void setTranslucenceCape(
+    private void renderCloakWithTransparency(
             ModelPart part,
             PoseStack poseStack,
             VertexConsumer buffer,

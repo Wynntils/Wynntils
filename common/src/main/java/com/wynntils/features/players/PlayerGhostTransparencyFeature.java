@@ -10,9 +10,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
-import com.wynntils.mc.event.PlayerFeatureRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
+import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -25,7 +24,7 @@ public class PlayerGhostTransparencyFeature extends Feature {
     public final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
 
     @SubscribeEvent
-    public void onTranslucentCheck(LivingEntityRenderTranslucentCheckEvent e) {
+    public void onTranslucentCheck(RenderTranslucentCheckEvent.Body e) {
         if (!(e.getEntity() instanceof Player player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
@@ -34,7 +33,7 @@ public class PlayerGhostTransparencyFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTranslucentCheckForCape(PlayerFeatureRenderTranslucentCheckEvent.Cape e) {
+    public void onTranslucentCheckForCape(RenderTranslucentCheckEvent.Cape e) {
         if (!(e.getEntity() instanceof Player player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
