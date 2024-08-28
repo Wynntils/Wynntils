@@ -64,6 +64,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new CharmAnnotator());
         Handlers.Item.registerAnnotator(new IngredientAnnotator());
         Handlers.Item.registerAnnotator(new MaterialAnnotator());
+        Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
 
         // Then alphabetically
         Handlers.Item.registerAnnotator(new AmplifierAnnotator());
@@ -101,7 +102,6 @@ public class ItemModel extends Model {
 
         // ItemAnnotators
         // This must be done last
-        Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
         Handlers.Item.registerAnnotator(new MiscAnnotator());
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }

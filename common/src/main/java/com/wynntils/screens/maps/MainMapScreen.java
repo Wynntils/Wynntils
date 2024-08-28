@@ -408,18 +408,22 @@ public final class MainMapScreen extends AbstractMapScreen {
                                     new Location(hovered.getLocation()),
                                     iconPoi.getIcon(),
                                     customPoi.getColor(),
-                                    customPoi.getColor());
+                                    customPoi.getColor(),
+                                    hovered.getName());
                         } else {
                             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                    new Location(hovered.getLocation()), iconPoi.getIcon());
+                                    new Location(hovered.getLocation()), iconPoi.getIcon(), hovered.getName());
                         }
                     } else {
-                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(hovered.getLocation()));
+                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                                new Location(hovered.getLocation()), hovered.getName());
                     }
                 } else {
                     final Poi finalHovered = hovered;
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new DynamicLocationSupplier(
-                            () -> finalHovered.getLocation().asLocation()));
+                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                            new DynamicLocationSupplier(
+                                    () -> finalHovered.getLocation().asLocation()),
+                            finalHovered.getName());
                 }
                 return true;
             }

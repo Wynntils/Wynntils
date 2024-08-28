@@ -19,12 +19,15 @@ import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends Feature {
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!Models.WorldState.onWorld()) return;
@@ -54,7 +57,13 @@ public class ChatCoordinatesFeature extends Feature {
     }
 
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
-        return styledText.iterate((part, changes) -> {
+        return styledText.iterateBackwards((part, changes) -> {
+            if (END_OF_HEADER_PATTERN
+                    .matcher(part.getString(null, PartStyle.StyleType.NONE))
+                    .matches()) {
+                return IterationDecision.BREAK;
+            }
+
             StyledTextPart partToReplace = part;
             Matcher matcher =
                     LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));

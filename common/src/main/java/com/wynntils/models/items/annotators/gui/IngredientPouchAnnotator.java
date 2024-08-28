@@ -21,15 +21,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class IngredientPouchAnnotator implements GuiItemAnnotator {
-    private static final StyledText INGREDIENT_POUCH_NAME = StyledText.fromString("§6Ingredient Pouch");
+    private static final Pattern INGREDIENT_POUCH_PATTERN = Pattern.compile("§6[a-zA-Z0-9]+(?:'s)? Pouch");
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN =
             Pattern.compile("^§f(\\d+) x §7([^§]*)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        // DIAMOND_AXE when not empty, SNOW when empty
-        if (itemStack.getItem() != Items.DIAMOND_AXE && itemStack.getItem() != Items.SNOW) return null;
-        if (!name.equals(INGREDIENT_POUCH_NAME)) return null;
+        if (itemStack.getItem() != Items.IRON_HORSE_ARMOR) return null;
+        if (!name.matches(INGREDIENT_POUCH_PATTERN)) return null;
 
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
         List<StyledText> lore = LoreUtils.getLore(itemStack);

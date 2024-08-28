@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -14,4 +14,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 public class CustomLootrunBeaconsFeature extends Feature {
     @Persisted
     public final Config<Boolean> removeOriginalBeacons = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 }

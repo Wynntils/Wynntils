@@ -52,6 +52,7 @@ public enum UrlId {
     DATA_WYNNCRAFT_GUILD("dataWynncraftGuild"),
     DATA_WYNNCRAFT_PLAYER("dataWynncraftPlayer"),
     DATA_WYNNCRAFT_TERRITORY_LIST("dataWynncraftTerritoryListV3"),
+    DATA_WYNNCRAFT_LEADERBOARD("dataWynncraftLeaderboard"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
     LINK_WYNNDATA_ITEM_LOOKUP("linkWynndataItemLookup"),

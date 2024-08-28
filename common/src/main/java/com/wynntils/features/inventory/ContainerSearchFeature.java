@@ -40,6 +40,7 @@ import com.wynntils.models.containers.containers.personal.PersonalStorageContain
 import com.wynntils.models.containers.type.SearchableContainerProperty;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -219,6 +220,11 @@ public class ContainerSearchFeature extends Feature {
                     || currentContainer == null
                     || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                     || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
+
+            // Set widget as unfocused so number input actions can be performed after searching
+            abstractContainerScreen.clearFocus();
+            TextboxScreen textboxScreen = (TextboxScreen) abstractContainerScreen;
+            textboxScreen.setFocusedTextInput(null);
 
             // Default to forwards
             direction = 1;

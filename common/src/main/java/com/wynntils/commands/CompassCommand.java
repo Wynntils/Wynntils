@@ -9,9 +9,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.services.map.pois.Poi;
@@ -143,7 +145,7 @@ public class CompassCommand extends Command {
         Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location);
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location, null);
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
@@ -160,7 +162,7 @@ public class CompassCommand extends Command {
         }
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.get());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.get(), null);
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.get().toString()).withStyle(ChatFormatting.WHITE));
@@ -193,7 +195,13 @@ public class CompassCommand extends Command {
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
                 closestService.getLocation().asLocation(),
-                closestServiceOptional.get().getIcon());
+                closestServiceOptional.get().getIcon(),
+                // FIXME: Feature-Model dependency
+                Managers.Feature.getFeatureInstance(WorldWaypointDistanceFeature.class)
+                                .showAdditionalTextInWorld
+                                .get()
+                        ? closestServiceOptional.get().getName()
+                        : null);
 
         MutableComponent response = Component.literal("Compass set to " + selectedKind.getName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
@@ -239,7 +247,7 @@ public class CompassCommand extends Command {
         }
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(place.getLocation().asLocation());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(place.getLocation().asLocation(), place.getName());
 
         MutableComponent response =
                 Component.literal("Compass set to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
@@ -264,7 +272,7 @@ public class CompassCommand extends Command {
         PoiLocation location = territoryProfile.getCenterLocation();
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.asLocation());
+        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.asLocation(), null);
 
         MutableComponent response = Component.literal(
                         "Compass set to middle of " + territoryProfile.getFriendlyName() + " at ")

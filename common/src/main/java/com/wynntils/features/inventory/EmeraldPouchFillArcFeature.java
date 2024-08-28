@@ -37,7 +37,7 @@ public class EmeraldPouchFillArcFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
+    public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!renderFillArcInventory.get()) return;
         drawFilledArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }

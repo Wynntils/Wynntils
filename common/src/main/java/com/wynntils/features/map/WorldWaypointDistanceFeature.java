@@ -69,6 +69,12 @@ public class WorldWaypointDistanceFeature extends Feature {
     @Persisted
     public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
+    @Persisted
+    public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showAdditonalTextAbove = new Config<>(false);
+
     private final List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
 
     @SubscribeEvent
@@ -116,7 +122,11 @@ public class WorldWaypointDistanceFeature extends Feature {
             }
 
             this.renderedMarkers.add(new RenderedMarkerInfo(
-                    distance, distanceText, marker, worldToScreen(new Vector3f(dx, dy, dz), projection)));
+                    distance,
+                    distanceText,
+                    marker,
+                    worldToScreen(new Vector3f(dx, dy, dz), projection),
+                    marker.additionalText()));
         }
     }
 
@@ -125,7 +135,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
             if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) continue;
 
-            float backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.distanceText);
+            float backgroundWidth;
             float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
 
             float displayPositionX;
@@ -152,11 +162,41 @@ public class WorldWaypointDistanceFeature extends Feature {
                         icon.width(),
                         icon.height());
                 RenderSystem.setShaderColor(1, 1, 1, 1);
+
+                if (!showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
+                    backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
+                    RenderUtils.drawRect(
+                            event.getPoseStack(),
+                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                            displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
+                            displayPositionY - scale.get() * (backgroundHeight / 2),
+                            0,
+                            scale.get() * (backgroundWidth + 3),
+                            scale.get() * (backgroundHeight + 2));
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    event.getPoseStack(),
+                                    StyledText.fromString(renderedMarker.additionalText),
+                                    displayPositionX - scale.get() * backgroundWidth,
+                                    displayPositionX + scale.get() * backgroundWidth,
+                                    displayPositionY - scale.get() * backgroundHeight + 2 * scale.get(),
+                                    displayPositionY + scale.get() * backgroundHeight + 2 * scale.get(),
+                                    0,
+                                    renderedMarker.markerInfo.textColor(),
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.MIDDLE,
+                                    textShadow.get(),
+                                    scale.get());
+                    displayPositionY += scale.get() * backgroundHeight + 2 * scale.get();
+                }
+
+                backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.distanceText);
+
                 RenderUtils.drawRect(
                         event.getPoseStack(),
                         CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
                         displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
-                        displayPositionY - scale.get() * (backgroundHeight / 2 + 2),
+                        displayPositionY - scale.get() * (backgroundHeight / 2),
                         0,
                         scale.get() * (backgroundWidth + 3),
                         scale.get() * (backgroundHeight + 2));
@@ -166,14 +206,40 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 StyledText.fromString(renderedMarker.distanceText),
                                 displayPositionX - scale.get() * backgroundWidth,
                                 displayPositionX + scale.get() * backgroundWidth,
-                                displayPositionY - scale.get() * backgroundHeight,
-                                displayPositionY + scale.get() * backgroundHeight,
+                                displayPositionY - scale.get() * backgroundHeight + 2 * scale.get(),
+                                displayPositionY + scale.get() * backgroundHeight + 2 * scale.get(),
                                 0,
                                 renderedMarker.markerInfo.textColor(),
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 textShadow.get(),
                                 scale.get());
+
+                if (showAdditonalTextAbove.get() && renderedMarker.additionalText != null) {
+                    backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
+                    RenderUtils.drawRect(
+                            event.getPoseStack(),
+                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                            displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
+                            displayPositionY - scale.get() * (backgroundHeight / 2) - 35 * scale.get(),
+                            0,
+                            scale.get() * (backgroundWidth + 2),
+                            scale.get() * (backgroundHeight + 2));
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    event.getPoseStack(),
+                                    StyledText.fromString(renderedMarker.additionalText),
+                                    displayPositionX - scale.get() * backgroundWidth,
+                                    displayPositionX + scale.get() * backgroundWidth,
+                                    displayPositionY - scale.get() * backgroundHeight - 33 * scale.get(),
+                                    displayPositionY + scale.get() * backgroundHeight - 33 * scale.get(),
+                                    0,
+                                    renderedMarker.markerInfo.textColor(),
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.MIDDLE,
+                                    textShadow.get(),
+                                    scale.get());
+                }
             } else {
                 displayPositionX = intersectPoint.x;
                 displayPositionY = intersectPoint.y;
@@ -326,5 +392,9 @@ public class WorldWaypointDistanceFeature extends Feature {
     }
 
     private record RenderedMarkerInfo(
-            double distance, String distanceText, MarkerInfo markerInfo, Vec3 screenCoordinates) {}
+            double distance,
+            String distanceText,
+            MarkerInfo markerInfo,
+            Vec3 screenCoordinates,
+            String additionalText) {}
 }

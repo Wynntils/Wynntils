@@ -377,6 +377,8 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, renamepetNode);
 
         addAlias(root, renamepetNode, "renamepets", AliasCommandLevel.ALL);
+
+        addNode(root, literal("ironman").build());
     }
 
     private void addParticlesCommandNode(RootCommandNode<SharedSuggestionProvider> root) {
@@ -470,6 +472,7 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("popups"))
                         .then(literal("pouchmsg"))
                         .then(literal("pouchpickup"))
+                        .then(literal("publicProfile"))
                         .then(literal("queststartbeacon"))
                         .then(literal("rpwarning"))
                         .then(literal("sb"))

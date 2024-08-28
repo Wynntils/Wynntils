@@ -51,7 +51,7 @@ public class TranscribeMessagesFeature extends Feature {
     @Persisted
     public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
-    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
