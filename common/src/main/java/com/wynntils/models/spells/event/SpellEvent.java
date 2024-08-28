@@ -51,10 +51,16 @@ public abstract class SpellEvent extends Event {
     public static final class Cast extends SpellEvent {
         private final SpellType spellType;
         private final int manaCost;
+        private final int healthCost;
 
         public Cast(SpellType spellType, int manaCost) {
+            this(spellType, manaCost, 0);
+        }
+
+        public Cast(SpellType spellType, int manaCost, int healthCost) {
             this.spellType = spellType;
             this.manaCost = manaCost;
+            this.healthCost = healthCost;
         }
 
         public SpellType getSpellType() {
@@ -63,6 +69,10 @@ public abstract class SpellEvent extends Event {
 
         public int getManaCost() {
             return manaCost;
+        }
+
+        public int getHealthCost() {
+            return healthCost;
         }
     }
 
