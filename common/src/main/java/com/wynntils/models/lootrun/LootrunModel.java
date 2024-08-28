@@ -10,7 +10,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -54,6 +54,7 @@ import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -190,16 +191,13 @@ public class LootrunModel extends Model {
     }
 
     @Override
-    public void reloadData() {
-        loadLootrunTaskLocations();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED).handleReader(this::handleLootrunTaskLocations);
     }
 
-    private void loadLootrunTaskLocations() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
-            taskLocations = Managers.Json.GSON.fromJson(reader, type);
-        });
+    private void handleLootrunTaskLocations(Reader reader) {
+        Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
+        taskLocations = Managers.Json.GSON.fromJson(reader, type);
     }
 
     @SubscribeEvent

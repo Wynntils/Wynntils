@@ -5,6 +5,7 @@
 package com.wynntils.core.components;
 
 import com.google.common.base.CaseFormat;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.storage.Storageable;
 import java.util.Locale;
 
@@ -16,7 +17,7 @@ public abstract class CoreComponent implements Storageable {
         return getTypeName().toLowerCase(Locale.ROOT) + "." + nameCamelCase;
     }
 
-    public void registerDownloads() {
-        // Override this method to register downloads for this component.
+    public void registerDownloads(DownloadRegistry registry) {
+        // Override this method to register downloads for this component.\
     }
 }

@@ -48,8 +48,6 @@ public abstract class Dependency {
 
         @Override
         public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            assert finishedDownloads.stream().allMatch(download -> download.status() == QueuedDownload.Status.FINISHED);
-
             return finishedDownloads.stream()
                     .filter(download -> download.callerComponent() == component)
                     .anyMatch(download -> download.urlId() == urlId);
@@ -70,8 +68,6 @@ public abstract class Dependency {
 
         @Override
         public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            assert finishedDownloads.stream().allMatch(download -> download.status() == QueuedDownload.Status.FINISHED);
-
             return finishedDownloads.stream()
                     .filter(download -> download.callerComponent() == component)
                     .map(QueuedDownload::urlId)
@@ -91,8 +87,6 @@ public abstract class Dependency {
 
         @Override
         public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            assert finishedDownloads.stream().allMatch(download -> download.status() == QueuedDownload.Status.FINISHED);
-
             return dependencies.stream().allMatch(dependency -> dependency.isSatisfied(finishedDownloads));
         }
     }

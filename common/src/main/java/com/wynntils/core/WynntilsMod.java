@@ -204,6 +204,9 @@ public final class WynntilsMod {
         // Init storage for loaded components immediately
         Managers.Storage.initComponents();
 
+        // Ask every component about their data dependencies and register them
+        Managers.Download.initComponents(componentMap);
+
         addCrashCallbacks();
     }
 

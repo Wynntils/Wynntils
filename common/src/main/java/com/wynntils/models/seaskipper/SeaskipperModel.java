@@ -6,10 +6,9 @@ package com.wynntils.models.seaskipper;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -22,6 +21,7 @@ import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,8 @@ public final class SeaskipperModel extends Model {
     }
 
     @Override
-    public void reloadData() {
-        loadSeaskipperPois();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS).handleReader(this::handleSeaskipperPois);
     }
 
     @SubscribeEvent
@@ -147,16 +147,12 @@ public final class SeaskipperModel extends Model {
         return !allDestinations.isEmpty();
     }
 
-    private void loadSeaskipperPois() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS);
+    private void handleSeaskipperPois(Reader reader) {
+        Type type = new TypeToken<ArrayList<SeaskipperDestinationProfile>>() {}.getType();
+        List<SeaskipperDestinationProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
 
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<ArrayList<SeaskipperDestinationProfile>>() {}.getType();
-            List<SeaskipperDestinationProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
-
-            allDestinations = profiles.stream()
-                    .map(profile -> new SeaskipperDestination(profile, null, -1))
-                    .toList();
-        });
+        allDestinations = profiles.stream()
+                .map(profile -> new SeaskipperDestination(profile, null, -1))
+                .toList();
     }
 }

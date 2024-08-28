@@ -6,12 +6,27 @@ package com.wynntils.core.net;
 
 import com.wynntils.core.components.CoreComponent;
 
-public record QueuedDownload(
-        Download download, UrlId urlId, CoreComponent callerComponent, Dependency dependency, Status status) {
-    public enum Status {
-        QUEUED,
-        DOWNLOADING,
-        FINISHED,
-        FAILED
+public class QueuedDownload extends Download {
+    private final CoreComponent callerComponent;
+    private final UrlId urlId;
+    private final Dependency dependency;
+
+    public QueuedDownload(Download download, CoreComponent callerComponent, UrlId urlId, Dependency dependency) {
+        super(download.desc, download.localFile, download.request, download.processedEvent);
+        this.callerComponent = callerComponent;
+        this.urlId = urlId;
+        this.dependency = dependency;
+    }
+
+    public CoreComponent callerComponent() {
+        return callerComponent;
+    }
+
+    public UrlId urlId() {
+        return urlId;
+    }
+
+    public Dependency dependency() {
+        return dependency;
     }
 }

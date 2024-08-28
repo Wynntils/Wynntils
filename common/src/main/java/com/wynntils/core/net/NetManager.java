@@ -53,19 +53,24 @@ public final class NetManager extends Manager {
         return callApi(urlId, Map.of());
     }
 
-    // Use DownloadManager instead. Only use this method if you are sure about what you are doing.
     public Download download(URI uri, String localFileName) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, new NetResultProcessedEvent.ForLocalFile(localFileName));
     }
 
-    // Use DownloadManager instead. Only use this method if you are sure about what you are doing.
     public Download download(URI uri, String localFileName, String expectedHash) {
         File localFile = new File(CACHE_DIR, localFileName);
         return download(uri, localFile, expectedHash, new NetResultProcessedEvent.ForLocalFile(localFileName));
     }
 
-    // Use DownloadManager instead. Only use this method if you are sure about what you are doing.
+    /**
+     * Download a file from the given URL and save it to the cache directory.
+     * <p><b>This method should only be used when file needs to be downloaded dynamically.
+     * If you want to download a file in a {@link com.wynntils.core.components.CoreComponent} and use it,
+     * you may want to use {@link DownloadManager}'s download dependency system.</b></p>
+     * @param urlId The url id to download from
+     * @return The download object
+     */
     public Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
         URI uri = URI.create(urlInfo.url());

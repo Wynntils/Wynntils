@@ -25,8 +25,8 @@ public abstract class NetResult {
             (exception) -> WynntilsMod.error("Error while processing network request; ignored");
 
     protected final HttpRequest request;
-    private final String desc;
-    private final NetResultProcessedEvent processedEvent;
+    protected final String desc;
+    protected final NetResultProcessedEvent processedEvent;
 
     protected NetResult(String desc, HttpRequest request, NetResultProcessedEvent processedEvent) {
         this.request = request;

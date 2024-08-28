@@ -7,6 +7,7 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
@@ -57,6 +58,11 @@ public final class GearModel extends Model {
         super(List.of());
     }
 
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        gearInfoRegistry.registerDownloads(registry);
+    }
+
     public List<GearInfo> getPossibleGears(GearBoxItem gearBoxItem) {
         List<GearInfo> possibilities = possibilitiesCache.get(gearBoxItem);
         if (possibilities != null) return possibilities;
@@ -80,11 +86,6 @@ public final class GearModel extends Model {
         return !gear.metaInfo().preIdentified()
                 && gear.metaInfo().obtainInfo().stream()
                         .anyMatch(x -> ItemObtainType.BOXED_ITEMS.contains(x.sourceType()));
-    }
-
-    @Override
-    public void reloadData() {
-        gearInfoRegistry.loadData();
     }
 
     // For "real" gear items eg. from the inventory

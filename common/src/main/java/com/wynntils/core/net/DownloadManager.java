@@ -9,13 +9,14 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Manages downloading files from the internet. This manager acts as a middle layer between the caller components
  * and {@link NetManager}. It's main purpose is to provide the components a well regulated and managed way
  * of downloading dependency files.
- * <p><b>This manager should not be used for spontainous downloads. Use one {@link NetManager}'s download methods
+ * <p><b>This manager should not be used for spontaneous downloads. Use one {@link NetManager}'s download methods
  * if you want to download files during running, and not in a pre-planned fashion.</b></p>
  * <p>This component provides multiple tools to ease the development of other components:</p>
  * - The manager can handle dependency resoltion, allowing components to depend on other component's data files, without
@@ -42,19 +43,11 @@ public class DownloadManager extends Manager {
         super(List.of());
     }
 
-    public QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent) {
-        return queueDownload(urlId, callerComponent, Dependency.empty());
-    }
-
-    public QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {
-        if (queueLock) {
-            throw new IllegalStateException("Cannot queue downloads after the first download request.");
-        }
-
-        QueuedDownload queuedDownload = new QueuedDownload(
-                Managers.Net.download(urlId), urlId, callerComponent, dependency, QueuedDownload.Status.QUEUED);
-        downloadQueue.add(queuedDownload);
-        return queuedDownload;
+    public void initComponents(Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap) {
+        componentMap.forEach((componentClass, coreComponents) -> {
+            coreComponents.forEach(
+                    coreComponent -> coreComponent.registerDownloads(new DownloadRegistry(this, coreComponent)));
+        });
     }
 
     public CompletableFuture<Void> downloadAll() {
@@ -62,6 +55,17 @@ public class DownloadManager extends Manager {
         queueLock = true;
 
         return CompletableFuture.runAsync(() -> {});
+    }
+
+    QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {
+        if (queueLock) {
+            throw new IllegalStateException("Cannot queue downloads after the first download request.");
+        }
+
+        QueuedDownload queuedDownload =
+                new QueuedDownload(Managers.Net.download(urlId), callerComponent, urlId, dependency);
+        downloadQueue.add(queuedDownload);
+        return queuedDownload;
     }
 
     private void createQueueTree() {
