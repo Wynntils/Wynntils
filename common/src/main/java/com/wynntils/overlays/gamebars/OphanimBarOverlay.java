@@ -31,7 +31,7 @@ public class OphanimBarOverlay extends BaseBarOverlay {
 
     @Override
     protected BossBarProgress progress() {
-        return Models.BossBar.ophanimBar.getBarProgress();
+        return Models.Ability.ophanimBar.getBarProgress();
     }
 
     @Override
@@ -41,13 +41,13 @@ public class OphanimBarOverlay extends BaseBarOverlay {
 
     @Override
     protected boolean isActive() {
-        return Models.BossBar.ophanimBar.isActive();
+        return Models.Ability.ophanimBar.isActive();
     }
 
     @Override
     protected String text() {
-        return Models.BossBar.ophanimBar.getHealed() + "% ❤ - "
-                + Models.BossBar.ophanimBar.getOrbs().stream()
+        return Models.Ability.ophanimBar.getHealed() + "% ❤ - "
+                + Models.Ability.ophanimBar.getOrbs().stream()
                         .map(OphanimOrb::getString)
                         .collect(Collectors.joining());
     }
