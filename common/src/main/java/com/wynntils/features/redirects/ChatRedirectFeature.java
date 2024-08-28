@@ -824,7 +824,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class ToolDurabilityRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§4Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith\\.$");
+                "^§4(?:\uE008\uE002|\uE001) Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith\\.$");
 
         @Override
         public Pattern getForegroundPattern() {
