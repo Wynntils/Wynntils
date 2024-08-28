@@ -1,6 +1,6 @@
 [
   {
-    "version": 11
+    "version": 12
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -105,17 +105,17 @@
   },
   {
     "id": "dataStaticCombatMapFeatures",
-    "md5": "30d11707b9819c0271a661120f904369",
+    "md5": "af45124a2370cf65db36dfbb33e0a499",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/combat_mapfeatures.json"
   },
   {
     "id": "dataStaticDestinations",
-    "md5": "6c68932a8cacb3d1a1469bb8b3d35665",
+    "md5": "8021e388b6c8ec682d3323fd7d2672f6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/destinations.json"
   },
   {
     "id": "dataStaticGear",
-    "md5": "43752a252ba67b8491945ad648dea931",
+    "md5": "34ea35f18453ffb25d3b398069ab2cf6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/gear.json"
   },
   {
@@ -150,7 +150,7 @@
   },
   {
     "id": "dataStaticItemSets",
-    "md5": "75813c52995e7a1e1881359b47f57827",
+    "md5": "43af7d54dce316efcd3c0833cdf912db",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/item_sets.json"
   },
   {
@@ -221,7 +221,7 @@
   {
     "id": "dataStaticTools",
     "md5": "da5c6b5f3d1d44033e13a93e2dd8ca6e",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tomes.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/tools.json"
   },
   {
     "id": "dataStaticUrls",
