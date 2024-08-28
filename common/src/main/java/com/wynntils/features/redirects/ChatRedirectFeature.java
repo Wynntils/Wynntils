@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
-import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
@@ -133,8 +132,6 @@ public class ChatRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        if (e.getRecipientType() != RecipientType.INFO) return;
-
         StyledText message = StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
         MessageType messageType = e.getMessageType();
 
@@ -937,7 +934,7 @@ public class ChatRedirectFeature extends Feature {
         private static final String DEPOSIT_SYMBOL = "←";
         private static final String WITHDRAW_SYMBOL = "→";
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§3\\[INFO\\]§b (?<player>.+) (?<transactiontype>withdrew|deposited) (?<count>\\d+)x (?<item>.+) (?:from|to) the Guild Bank \\((?<banktype>Everyone|High Ranked)\\)$");
+                "^§b(?:\uE006\uE002|\uE001) §3(?<player>.+)§b (?<transactiontype>withdrew|deposited) §e(?<count>\\d+)x (?<item>.+)§b (?:from|to) the Guild Bank \\(§3(?<banktype>Everyone|High Ranked)§b\\)$");
 
         @Override
         protected Pattern getForegroundPattern() {
