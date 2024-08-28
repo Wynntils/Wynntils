@@ -1,3 +1,30 @@
+## [2.0.14](https://github.com/Wynntils/Wynntils/compare/v2.0.13...v2.0.14) (2024-08-28)
+
+
+### New Features
+
+* Make SpellCastMessageOverlay support Blood Pact ([#2800](https://github.com/Wynntils/Wynntils/issues/2800)) ([e118478](https://github.com/Wynntils/Wynntils/commit/e118478f618ef973f3ac320dbe42029f64316e8f))
+
+
+### Bug Fixes
+
+* Don't use formatting codes for cosmetic annotator [skip ci] ([#2796](https://github.com/Wynntils/Wynntils/issues/2796)) ([5dc73c9](https://github.com/Wynntils/Wynntils/commit/5dc73c9dd273d97fbaa033028c29b15c7bccde2b))
+* fix chat redirects for 2.1 [skip ci] ([#2791](https://github.com/Wynntils/Wynntils/issues/2791)) ([616b092](https://github.com/Wynntils/Wynntils/commit/616b0925b22082d91b1cca446467d5d8dd557024))
+* fix GuildBankRedirector pattern [skip ci] ([#2801](https://github.com/Wynntils/Wynntils/issues/2801)) ([9ba10b5](https://github.com/Wynntils/Wynntils/commit/9ba10b50701d0344425fb2df09feb623409330a7))
+* Parse health when over 100k [skip ci] ([#2798](https://github.com/Wynntils/Wynntils/issues/2798)) ([5f4051a](https://github.com/Wynntils/Wynntils/commit/5f4051aaa1d6837d8f9c97208425968a5027b840))
+* Update ToolDurabilityRedirector [skip ci] ([#2799](https://github.com/Wynntils/Wynntils/issues/2799)) ([5f9a66e](https://github.com/Wynntils/Wynntils/commit/5f9a66e156b7124e702594218b69dfd7d7b9bbf9))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2756](https://github.com/Wynntils/Wynntils/issues/2756)) ([b152657](https://github.com/Wynntils/Wynntils/commit/b15265772a9a96cf12a08a6e8b0f5ea99e83d6a4))
+* Don't stretch background texture on character selection and loading screen [skip ci] ([#2789](https://github.com/Wynntils/Wynntils/issues/2789)) ([29655fe](https://github.com/Wynntils/Wynntils/commit/29655fe0fa5c763d797dc24256a043bd014b217d))
+
+
+### Code Refactoring
+
+* Rename BossBarModel to AbilityModel and move AnnihilationSunBar to WorldEventModel [skip ci] ([#2793](https://github.com/Wynntils/Wynntils/issues/2793)) ([269707e](https://github.com/Wynntils/Wynntils/commit/269707ecdac795b5b8f82ff407883568438c24e9))
+
 ## [2.0.13](https://github.com/Wynntils/Wynntils/compare/v2.0.12...v2.0.13) (2024-08-25)
 
 
@@ -12,6 +39,11 @@
 * Fix flashback crashing when scoreboard is displayed [skip ci] ([#2785](https://github.com/Wynntils/Wynntils/issues/2785)) ([ea39a9e](https://github.com/Wynntils/Wynntils/commit/ea39a9e8ea7a7802e1152a604fbb05c24c39993e))
 * Fix guild chat not ignoring username in chat mentions [skip ci] ([#2781](https://github.com/Wynntils/Wynntils/issues/2781)) ([fc1e30b](https://github.com/Wynntils/Wynntils/commit/fc1e30be1873ca34aaee70f0ddb15b7f1b75712e))
 * Fix Nexus of Light tracking issues [skip ci] ([#2782](https://github.com/Wynntils/Wynntils/issues/2782)) ([10ae067](https://github.com/Wynntils/Wynntils/commit/10ae067873288b607d219bce7b6f60fed19b0e42))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.13 [skip ci] ([2688f81](https://github.com/Wynntils/Wynntils/commit/2688f8140caef753e30f64349a474def1cfd074b))
 
 ## [2.0.12](https://github.com/Wynntils/Wynntils/compare/v2.0.11...v2.0.12) (2024-08-24)
 
@@ -66,24 +98,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.10 [skip ci] ([fb5ef18](https://github.com/Wynntils/Wynntils/commit/fb5ef18e5013489ede895206212bdbb308186b2c))
-
-## [2.0.9](https://github.com/Wynntils/Wynntils/compare/v2.0.8...v2.0.9) (2024-08-20)
-
-
-### New Features
-
-* Fully parse items without Wynn Item API (UnknownGear parsing) ([#2760](https://github.com/Wynntils/Wynntils/issues/2760)) ([56c0653](https://github.com/Wynntils/Wynntils/commit/56c06532ff04176f1c03f5bee27413283b48e328))
-* Max Intensity setting for Spell Cast Vignette [skip ci] ([#2762](https://github.com/Wynntils/Wynntils/issues/2762)) ([4889a06](https://github.com/Wynntils/Wynntils/commit/4889a06fa377044cebe8c44d7fcf16b70099afae))
-
-
-### Bug Fixes
-
-* fix tracked activity not being parsed [skip ci] ([#2763](https://github.com/Wynntils/Wynntils/issues/2763)) ([0f64a75](https://github.com/Wynntils/Wynntils/commit/0f64a759f3984555f8c07a04001e86a7434cbdee))
-* Fix unknown gear not being annotated [skip ci] ([#2759](https://github.com/Wynntils/Wynntils/issues/2759)) ([5adc6a0](https://github.com/Wynntils/Wynntils/commit/5adc6a05db99b3aec1f1e2de3848c5eaeb52f97f))
-* Forgery scroll parsing [skip ci] ([#2761](https://github.com/Wynntils/Wynntils/issues/2761)) ([8269e6c](https://github.com/Wynntils/Wynntils/commit/8269e6c4998eae7e50bff5c4688b74a2f08ce041))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.9 [skip ci] ([6900e69](https://github.com/Wynntils/Wynntils/commit/6900e6969289c1d9a28a534e5fa12d9515e9b1dc))
 
