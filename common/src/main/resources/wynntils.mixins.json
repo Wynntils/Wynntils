@@ -36,6 +36,7 @@
     "MultiPlayerGameModeMixin",
     "PackRepositoryMixin",
     "PlayerMixin",
+    "PlayerModelMixin",
     "PlayerRendererMixin",
     "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
