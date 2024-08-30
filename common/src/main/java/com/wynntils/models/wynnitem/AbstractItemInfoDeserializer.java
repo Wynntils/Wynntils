@@ -206,6 +206,12 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     protected ItemMaterial parseOtherMaterial(JsonObject json) {
+        if (!json.has("icon")) {
+            WynntilsMod.warn(
+                    "Item DB does not contain an icon for " + json.get("name").getAsString());
+            return ItemMaterial.fromItemId("minecraft:air", 0);
+        }
+
         JsonObject icon = json.getAsJsonObject("icon");
 
         String iconFormat = icon.get("format").getAsString();
