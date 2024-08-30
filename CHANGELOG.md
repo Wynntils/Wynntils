@@ -1,3 +1,18 @@
+## [2.0.15](https://github.com/Wynntils/Wynntils/compare/v2.0.14...v2.0.15) (2024-08-30)
+
+
+### New Features
+
+* Add CorruptedCacheAnnotator [skip ci] ([#2804](https://github.com/Wynntils/Wynntils/issues/2804)) ([dd4cd57](https://github.com/Wynntils/Wynntils/commit/dd4cd57f631d421fd0697a0938430a45e849817c))
+* Update the visuals of the custom player list ([#2803](https://github.com/Wynntils/Wynntils/issues/2803)) ([897302d](https://github.com/Wynntils/Wynntils/commit/897302df1bceff80fb9a73c7f4037c6efd258dc3))
+
+
+### Bug Fixes
+
+* Fix incorrect pixel on Nexus of Light badges [skip ci] ([#2805](https://github.com/Wynntils/Wynntils/issues/2805)) ([da72453](https://github.com/Wynntils/Wynntils/commit/da7245369d814635507df7c1d588a79e7d688ff5))
+* fix transparent cape for ghost players [skip ci] ([#2790](https://github.com/Wynntils/Wynntils/issues/2790)) ([75d1249](https://github.com/Wynntils/Wynntils/commit/75d1249a2e4af6c6dd2c2e03a7a5a1970d40320c))
+* Make (Buffered)FontRenderer support custom color rendering [skip ci] ([#2806](https://github.com/Wynntils/Wynntils/issues/2806)) ([4935992](https://github.com/Wynntils/Wynntils/commit/49359929ac8571b72365cb8389c6125f50095a1d))
+
 ## [2.0.14](https://github.com/Wynntils/Wynntils/compare/v2.0.13...v2.0.14) (2024-08-28)
 
 
@@ -19,6 +34,7 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2756](https://github.com/Wynntils/Wynntils/issues/2756)) ([b152657](https://github.com/Wynntils/Wynntils/commit/b15265772a9a96cf12a08a6e8b0f5ea99e83d6a4))
 * Don't stretch background texture on character selection and loading screen [skip ci] ([#2789](https://github.com/Wynntils/Wynntils/issues/2789)) ([29655fe](https://github.com/Wynntils/Wynntils/commit/29655fe0fa5c763d797dc24256a043bd014b217d))
+* **release:** v2.0.14 [skip ci] ([f970e0e](https://github.com/Wynntils/Wynntils/commit/f970e0ed47655d443358ae209de2cfd1718039a4))
 
 
 ### Code Refactoring
@@ -86,16 +102,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.11 [skip ci] ([4ccff42](https://github.com/Wynntils/Wynntils/commit/4ccff42ba1c965e09d7dd0f50a185a556b8718eb))
-
-## [2.0.10](https://github.com/Wynntils/Wynntils/compare/v2.0.9...v2.0.10) (2024-08-20)
-
-
-### Bug Fixes
-
-* Fix weapon types not being counted as weapon ([#2764](https://github.com/Wynntils/Wynntils/issues/2764)) ([0a41a6a](https://github.com/Wynntils/Wynntils/commit/0a41a6a6d4bf7a7e2f2e6af251bdc1d4ec6a019c))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.10 [skip ci] ([fb5ef18](https://github.com/Wynntils/Wynntils/commit/fb5ef18e5013489ede895206212bdbb308186b2c))
 
