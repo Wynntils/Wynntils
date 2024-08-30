@@ -122,10 +122,10 @@ public class CustomPlayerListOverlay extends Overlay {
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
-        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 10 - HALF_WIDTH * animation), 0);
+        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
         renderRoll(
                 poseStack,
-                (float) (middle - 10 + HALF_WIDTH * animation),
+                (float) (middle - 11 + HALF_WIDTH * animation),
                 Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
 
         RenderSystem.enableDepthTest();
