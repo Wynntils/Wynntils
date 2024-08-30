@@ -61,9 +61,8 @@ public record ItemMaterial(ItemStack itemStack) {
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial fromItemId(String itemId, int damageCode) {
-        ItemStack itemStack = createItemStack(getItem(itemId), damageCode);
-
+    public static ItemMaterial fromItemId(String itemId, int customModelData) {
+        ItemStack itemStack = createItemStack(getItem(itemId), customModelData);
         return new ItemMaterial(itemStack);
     }
 

@@ -11,9 +11,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.rewards.type.TomeRequirements;
-import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -37,21 +35,6 @@ public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo,
         if (level != 0) {
             boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
             header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            header.add(Component.empty());
-        }
-
-        // Add the special tome stats
-        for (Pair<StatType, Integer> staticBaseStat : tomeInfo.staticBaseStats()) {
-            header.add(Component.literal("Add ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("+" + staticBaseStat.b()
-                                    + staticBaseStat.a().getUnit().getDisplayName() + " "
-                                    + staticBaseStat.a().getDisplayName())
-                            .withStyle(ChatFormatting.WHITE)));
-            header.add(Component.literal("to your character when used").withStyle(ChatFormatting.GRAY));
-        }
-
-        if (!tomeInfo.staticBaseStats().isEmpty()) {
             header.add(Component.empty());
         }
 
