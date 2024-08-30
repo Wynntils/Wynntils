@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FileUtils;
 
 public class Download extends NetResult {
-    protected final File localFile;
+    private final File localFile;
 
     // Saved since we might need to get timestamps from the HttpResponse
     private CompletableFuture<HttpResponse<Path>> httpResponse = null;

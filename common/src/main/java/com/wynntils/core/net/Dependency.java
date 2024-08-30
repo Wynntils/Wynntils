@@ -5,18 +5,23 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.components.CoreComponent;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Set;
 
 public abstract class Dependency {
     private static final Dependency EMPTY = new Dependency() {
         @Override
-        public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            return true;
+        public List<Pair<CoreComponent, UrlId>> dependencies() {
+            return List.of();
         }
     };
 
-    public abstract boolean isSatisfied(List<QueuedDownload> finishedDownloads);
+    public abstract List<Pair<CoreComponent, UrlId>> dependencies();
+
+    public final boolean dependsOn(CoreComponent component, UrlId urlId) {
+        return dependencies().stream().anyMatch(pair -> pair.a() == component && pair.b() == urlId);
+    }
 
     public static Dependency empty() {
         return EMPTY;
@@ -47,10 +52,8 @@ public abstract class Dependency {
         }
 
         @Override
-        public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            return finishedDownloads.stream()
-                    .filter(download -> download.callerComponent() == component)
-                    .anyMatch(download -> download.urlId() == urlId);
+        public List<Pair<CoreComponent, UrlId>> dependencies() {
+            return List.of(Pair.of(component, urlId));
         }
     }
 
@@ -67,11 +70,8 @@ public abstract class Dependency {
         }
 
         @Override
-        public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            return finishedDownloads.stream()
-                    .filter(download -> download.callerComponent() == component)
-                    .map(QueuedDownload::urlId)
-                    .allMatch(urlIds::contains);
+        public List<Pair<CoreComponent, UrlId>> dependencies() {
+            return urlIds.stream().map(urlId -> Pair.of(component, urlId)).toList();
         }
     }
 
@@ -86,8 +86,10 @@ public abstract class Dependency {
         }
 
         @Override
-        public boolean isSatisfied(List<QueuedDownload> finishedDownloads) {
-            return dependencies.stream().allMatch(dependency -> dependency.isSatisfied(finishedDownloads));
+        public List<Pair<CoreComponent, UrlId>> dependencies() {
+            return dependencies.stream()
+                    .flatMap(dependency -> dependency.dependencies().stream())
+                    .toList();
         }
     }
 }
