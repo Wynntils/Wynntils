@@ -33,7 +33,8 @@ public final class IngredientAnnotator implements GameItemAnnotator {
         if (ingredientInfo == null) return null;
 
         if (ingredientInfo.tier() != tier) {
-            WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
+            WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is currently " + tier
+                    + " vs API " + ingredientInfo.tier());
         }
 
         return new IngredientItem(ingredientInfo);
