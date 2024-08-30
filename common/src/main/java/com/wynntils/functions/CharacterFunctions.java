@@ -165,8 +165,8 @@ public class CharacterFunctions {
     public static class CappedAwakenedProgressFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.awakenedBar.isActive()
-                    ? Models.BossBar.awakenedBar.getBarProgress().value()
+            return Models.Ability.awakenedBar.isActive()
+                    ? Models.Ability.awakenedBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
     }
@@ -174,8 +174,8 @@ public class CharacterFunctions {
     public static class CappedBloodPoolFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.bloodPoolBar.isActive()
-                    ? Models.BossBar.bloodPoolBar.getBarProgress().value()
+            return Models.Ability.bloodPoolBar.isActive()
+                    ? Models.Ability.bloodPoolBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
     }
@@ -183,8 +183,8 @@ public class CharacterFunctions {
     public static class CappedCorruptedFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.corruptedBar.isActive()
-                    ? Models.BossBar.corruptedBar.getBarProgress().value()
+            return Models.Ability.corruptedBar.isActive()
+                    ? Models.Ability.corruptedBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
     }
@@ -192,8 +192,8 @@ public class CharacterFunctions {
     public static class CappedFocusFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.focusBar.isActive()
-                    ? Models.BossBar.focusBar.getBarProgress().value()
+            return Models.Ability.focusBar.isActive()
+                    ? Models.Ability.focusBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
     }
@@ -201,8 +201,8 @@ public class CharacterFunctions {
     public static class CappedManaBankFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.manaBankBar.isActive()
-                    ? Models.BossBar.manaBankBar.getBarProgress().value()
+            return Models.Ability.manaBankBar.isActive()
+                    ? Models.Ability.manaBankBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
     }
@@ -210,8 +210,8 @@ public class CharacterFunctions {
     public static class CappedOphanimFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.BossBar.ophanimBar.isActive()
-                    ? Models.BossBar.ophanimBar.getBarProgress().value()
+            return Models.Ability.ophanimBar.isActive()
+                    ? Models.Ability.ophanimBar.getBarProgress().value()
                     : CappedValue.EMPTY;
         }
     }

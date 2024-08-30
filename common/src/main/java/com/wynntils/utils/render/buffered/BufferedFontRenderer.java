@@ -65,12 +65,14 @@ public final class BufferedFontRenderer {
         renderX = switch (horizontalAlignment) {
             case LEFT -> x;
             case CENTER -> x - (font.width(text.getString()) / 2f * textScale);
-            case RIGHT -> x - font.width(text.getString()) * textScale;};
+            case RIGHT -> x - font.width(text.getString()) * textScale;
+        };
 
         renderY = switch (verticalAlignment) {
             case TOP -> y;
             case MIDDLE -> y - (font.lineHeight / 2f * textScale);
-            case BOTTOM -> y - font.lineHeight * textScale;};
+            case BOTTOM -> y - font.lineHeight * textScale;
+        };
 
         poseStack.pushPose();
         poseStack.translate(renderX, renderY, 0);
@@ -78,7 +80,7 @@ public final class BufferedFontRenderer {
 
         switch (shadow) {
             case NONE -> font.drawInBatch(
-                    text.getString(),
+                    text.getComponent(),
                     0,
                     0,
                     customColor.asInt(),
@@ -87,10 +89,9 @@ public final class BufferedFontRenderer {
                     bufferSource,
                     Font.DisplayMode.SEE_THROUGH,
                     0,
-                    0xF000F0,
-                    font.isBidirectional());
+                    0xF000F0);
             case NORMAL -> font.drawInBatch(
-                    text.getString(),
+                    text.getComponent(),
                     0,
                     0,
                     customColor.asInt(),
@@ -99,19 +100,18 @@ public final class BufferedFontRenderer {
                     bufferSource,
                     Font.DisplayMode.SEE_THROUGH,
                     0,
-                    0xF000F0,
-                    font.isBidirectional());
+                    0xF000F0);
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                String strippedText = text.iterate((part, changes) -> {
+                Component strippedComponent = text.iterate((part, changes) -> {
                             changes.remove(part);
                             changes.add(part.withStyle(partStyle -> partStyle.withColor(ChatFormatting.BLACK)));
                             return IterationDecision.CONTINUE;
                         })
-                        .getString();
+                        .getComponent();
 
                 font.drawInBatch(
-                        strippedText,
+                        strippedComponent,
                         -1,
                         0,
                         shadowColor,
@@ -120,10 +120,9 @@ public final class BufferedFontRenderer {
                         bufferSource,
                         Font.DisplayMode.NORMAL,
                         0,
-                        0xF000F0,
-                        font.isBidirectional());
+                        0xF000F0);
                 font.drawInBatch(
-                        strippedText,
+                        strippedComponent,
                         1,
                         0,
                         shadowColor,
@@ -132,10 +131,9 @@ public final class BufferedFontRenderer {
                         bufferSource,
                         Font.DisplayMode.NORMAL,
                         0,
-                        0xF000F0,
-                        font.isBidirectional());
+                        0xF000F0);
                 font.drawInBatch(
-                        strippedText,
+                        strippedComponent,
                         0,
                         -1,
                         shadowColor,
@@ -144,10 +142,9 @@ public final class BufferedFontRenderer {
                         bufferSource,
                         Font.DisplayMode.NORMAL,
                         0,
-                        0xF000F0,
-                        font.isBidirectional());
+                        0xF000F0);
                 font.drawInBatch(
-                        strippedText,
+                        strippedComponent,
                         0,
                         1,
                         shadowColor,
@@ -156,11 +153,10 @@ public final class BufferedFontRenderer {
                         bufferSource,
                         Font.DisplayMode.NORMAL,
                         0,
-                        0xF000F0,
-                        font.isBidirectional());
+                        0xF000F0);
 
                 font.drawInBatch(
-                        text.getString(),
+                        text.getComponent(),
                         0,
                         0,
                         customColor.asInt(),
@@ -169,8 +165,7 @@ public final class BufferedFontRenderer {
                         bufferSource,
                         Font.DisplayMode.NORMAL,
                         0,
-                        0xF000F0,
-                        font.isBidirectional());
+                        0xF000F0);
             }
         }
 
