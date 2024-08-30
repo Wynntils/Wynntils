@@ -1,3 +1,19 @@
+## [2.1.0](https://github.com/Wynntils/Wynntils/compare/v2.0.16...v2.1.0) (2024-08-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Add support for Wynncraft 2.1 items (#2757)
+
+### New Features
+
+* Add support for Wynncraft 2.1 items ([#2757](https://github.com/Wynntils/Wynntils/issues/2757)) ([98645de](https://github.com/Wynntils/Wynntils/commit/98645deb80d42f659db304d1ef1cb630651de765))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2807](https://github.com/Wynntils/Wynntils/issues/2807)) ([08abd47](https://github.com/Wynntils/Wynntils/commit/08abd4721f8c57bc17209efa5334cafd42f828d1))
+
 ## [2.0.16](https://github.com/Wynntils/Wynntils/compare/v2.0.15...v2.0.16) (2024-08-30)
 
 
@@ -9,6 +25,11 @@
 ### Bug Fixes
 
 * Fix lootruns not recording chests since 2.0 ([#2810](https://github.com/Wynntils/Wynntils/issues/2810)) ([5311173](https://github.com/Wynntils/Wynntils/commit/531117368500cc8cc1e933d4f8dcad61aabe389f))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.16 [skip ci] ([d4ad11e](https://github.com/Wynntils/Wynntils/commit/d4ad11ef3bbd1fcfd19b2746304a1a1acf5dbaa7))
 
 ## [2.0.15](https://github.com/Wynntils/Wynntils/compare/v2.0.14...v2.0.15) (2024-08-30)
 
@@ -77,23 +98,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.13 [skip ci] ([2688f81](https://github.com/Wynntils/Wynntils/commit/2688f8140caef753e30f64349a474def1cfd074b))
-
-## [2.0.12](https://github.com/Wynntils/Wynntils/compare/v2.0.11...v2.0.12) (2024-08-24)
-
-
-### New Features
-
-* Add ironman and publicProfile toggle to command expansion [skip ci] ([#2776](https://github.com/Wynntils/Wynntils/issues/2776)) ([eb08cb5](https://github.com/Wynntils/Wynntils/commit/eb08cb52e10335b7c3e9e4359673fe5222f1d130))
-
-
-### Bug Fixes
-
-* Fix chat coordinates not being parsed ([#2779](https://github.com/Wynntils/Wynntils/issues/2779)) ([830c229](https://github.com/Wynntils/Wynntils/commit/830c229b08c1a1a2d89bac1139bd42b0152d29cc))
-* Fix durability arcs not rendering on all items in inventory [skip ci] ([#2780](https://github.com/Wynntils/Wynntils/issues/2780)) ([c47cd9b](https://github.com/Wynntils/Wynntils/commit/c47cd9b73c7d633b7f92d3658d95938f5a7038e3))
-* Unfocus search widget in containers after searching [skip ci] ([#2778](https://github.com/Wynntils/Wynntils/issues/2778)) ([c612efd](https://github.com/Wynntils/Wynntils/commit/c612efd43da9fd131dda67c9e5186e7c93eeb602))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.12 [skip ci] ([443df5e](https://github.com/Wynntils/Wynntils/commit/443df5ebc57b4f1b12cd5d3447bd9099b59891e2))
 
