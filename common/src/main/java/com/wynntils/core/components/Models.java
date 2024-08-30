@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.components;
 
+import com.wynntils.models.abilities.AbilityModel;
 import com.wynntils.models.abilities.ArrowShieldModel;
-import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
@@ -65,12 +65,12 @@ import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
+    public static final AbilityModel Ability = new AbilityModel();
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
     public static final BombModel Bomb = new BombModel();
-    public static final BossBarModel BossBar = new BossBarModel();
     public static final CaveModel Cave = new CaveModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();

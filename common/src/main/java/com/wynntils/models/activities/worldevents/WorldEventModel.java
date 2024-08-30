@@ -4,8 +4,10 @@
  */
 package com.wynntils.models.activities.worldevents;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.bossbars.AnnihilationSunBar;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
 import com.wynntils.models.activities.type.ActivityInfo;
@@ -13,11 +15,15 @@ import com.wynntils.models.activities.type.ActivityLength;
 import java.util.List;
 
 public class WorldEventModel extends Model {
+    public static final AnnihilationSunBar annihilationSunBar = new AnnihilationSunBar();
+
     public WorldEventModel() {
         super(List.of());
+
+        Handlers.BossBar.registerBar(annihilationSunBar);
     }
 
-    private WorldEventInfo getCaveInfoFromActivity(ActivityInfo activity) {
+    private WorldEventInfo getWorldEventInfoFromActivity(ActivityInfo activity) {
         return new WorldEventInfo(
                 activity.name(),
                 activity.specialInfo().orElse(""),
