@@ -1,3 +1,15 @@
+## [2.0.16](https://github.com/Wynntils/Wynntils/compare/v2.0.15...v2.0.16) (2024-08-30)
+
+
+### New Features
+
+* recolor the player list overlay texture [skip ci] ([#2809](https://github.com/Wynntils/Wynntils/issues/2809)) ([a493a8b](https://github.com/Wynntils/Wynntils/commit/a493a8bd0998cb7294d2e14ab080063786e138f9))
+
+
+### Bug Fixes
+
+* Fix lootruns not recording chests since 2.0 ([#2810](https://github.com/Wynntils/Wynntils/issues/2810)) ([5311173](https://github.com/Wynntils/Wynntils/commit/531117368500cc8cc1e933d4f8dcad61aabe389f))
+
 ## [2.0.15](https://github.com/Wynntils/Wynntils/compare/v2.0.14...v2.0.15) (2024-08-30)
 
 
@@ -12,6 +24,11 @@
 * Fix incorrect pixel on Nexus of Light badges [skip ci] ([#2805](https://github.com/Wynntils/Wynntils/issues/2805)) ([da72453](https://github.com/Wynntils/Wynntils/commit/da7245369d814635507df7c1d588a79e7d688ff5))
 * fix transparent cape for ghost players [skip ci] ([#2790](https://github.com/Wynntils/Wynntils/issues/2790)) ([75d1249](https://github.com/Wynntils/Wynntils/commit/75d1249a2e4af6c6dd2c2e03a7a5a1970d40320c))
 * Make (Buffered)FontRenderer support custom color rendering [skip ci] ([#2806](https://github.com/Wynntils/Wynntils/issues/2806)) ([4935992](https://github.com/Wynntils/Wynntils/commit/49359929ac8571b72365cb8389c6125f50095a1d))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.0.15 [skip ci] ([bcec812](https://github.com/Wynntils/Wynntils/commit/bcec812691cad0362eae0117128eff13782a3b47))
 
 ## [2.0.14](https://github.com/Wynntils/Wynntils/compare/v2.0.13...v2.0.14) (2024-08-28)
 
@@ -79,27 +96,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.12 [skip ci] ([443df5e](https://github.com/Wynntils/Wynntils/commit/443df5ebc57b4f1b12cd5d3447bd9099b59891e2))
-
-## [2.0.11](https://github.com/Wynntils/Wynntils/compare/v2.0.10...v2.0.11) (2024-08-23)
-
-
-### New Features
-
-* Add option to hide vanilla powder bar [skip ci] ([#2765](https://github.com/Wynntils/Wynntils/issues/2765)) ([761d22d](https://github.com/Wynntils/Wynntils/commit/761d22d2f2e67bbec4128a4fabd67e4249cd92f8))
-* Add Swedish translation from ChatGTP [skip ci] ([#2773](https://github.com/Wynntils/Wynntils/issues/2773)) ([7c0e581](https://github.com/Wynntils/Wynntils/commit/7c0e5819d9032d677042305e0dd97ea9aee8def7))
-
-
-### Bug Fixes
-
-* Fix auto progress NPC dialogue not releasing sneak [skip ci] ([#2770](https://github.com/Wynntils/Wynntils/issues/2770)) ([12e516a](https://github.com/Wynntils/Wynntils/commit/12e516ac50af3e956db1df22e7abb1443eda0b83))
-* Fix ghost player detection [skip ci] ([#2768](https://github.com/Wynntils/Wynntils/issues/2768)) ([24f60e2](https://github.com/Wynntils/Wynntils/commit/24f60e25f56635b319701d3fab69c3675080b358))
-* Fix hide player armor hiding new cosmetics [skip ci] ([#2775](https://github.com/Wynntils/Wynntils/issues/2775)) ([44f9766](https://github.com/Wynntils/Wynntils/commit/44f97669e16d217a8b6105261bcecad9c1b0c96f))
-* Fix ingredient pouch annotator [skip ci] ([#2766](https://github.com/Wynntils/Wynntils/issues/2766)) ([fc013dd](https://github.com/Wynntils/Wynntils/commit/fc013ddcf90b96aaab3feda3c786da0b799e442f))
-* Fix nicknames being changed by chat coordinates ([#2774](https://github.com/Wynntils/Wynntils/issues/2774)) ([67fd145](https://github.com/Wynntils/Wynntils/commit/67fd1457de883c9bfbadecba621829595d2ff8a4))
-* Fix reveal nicknames not working for nicknames ending with s [skip ci] ([#2767](https://github.com/Wynntils/Wynntils/issues/2767)) ([79df86c](https://github.com/Wynntils/Wynntils/commit/79df86cdc5b40476ef4a20df8c4765b1c1d85554))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.11 [skip ci] ([4ccff42](https://github.com/Wynntils/Wynntils/commit/4ccff42ba1c965e09d7dd0f50a185a556b8718eb))
 
