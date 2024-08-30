@@ -111,11 +111,7 @@ public class IngredientInfoRegistry {
 
             Optional<String> internalNameOpt = Optional.ofNullable(internalName);
 
-            // The tier field was renamed to rarity in API v3.3, but it really does not make sense, so
-            // I'll keep parsing both tier and rarity for now (as they may change it back)
-            int tier = json.has("tier")
-                    ? JsonUtils.getNullableJsonInt(json, "tier")
-                    : JsonUtils.getNullableJsonInt(json, "rarity");
+            int tier = JsonUtils.getNullableJsonInt(json, "tier");
 
             JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
             int level = requirements.get("level").getAsInt();
