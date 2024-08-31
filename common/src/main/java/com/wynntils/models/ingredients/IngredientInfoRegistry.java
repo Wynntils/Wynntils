@@ -47,7 +47,7 @@ public class IngredientInfoRegistry {
 
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(
-                        UrlId.DATA_STATIC_INGREDIENTS_ADVANCED,
+                        UrlId.DATA_STATIC_INGREDIENTS,
                         Dependency.multi(
                                 Models.WynnItem,
                                 Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))

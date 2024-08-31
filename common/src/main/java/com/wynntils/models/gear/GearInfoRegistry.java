@@ -39,8 +39,7 @@ public class GearInfoRegistry {
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(
-                        UrlId.DATA_STATIC_GEAR_ADVANCED, Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS))
+        registry.registerDownload(UrlId.DATA_STATIC_GEAR, Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS))
                 .handleJsonObject(this::handleGearInfo);
     }
 
