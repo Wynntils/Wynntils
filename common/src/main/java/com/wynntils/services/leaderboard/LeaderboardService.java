@@ -9,8 +9,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.leaderboard.type.LeaderboardBadge;
 import com.wynntils.services.leaderboard.type.LeaderboardType;
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public class LeaderboardService extends Service {
     private Map<UUID, List<LeaderboardBadge>> leaderboard = new HashMap<>();
@@ -27,13 +24,6 @@ public class LeaderboardService extends Service {
         super(List.of());
 
         reloadData();
-    }
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.HUB && event.getNewState() != WorldState.CONNECTING) return;
-
-        updateLeaderboards();
     }
 
     @Override
