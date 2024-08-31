@@ -50,7 +50,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin = (playerInfo == null)
-                ? ResourceLocation.withDefaultNamespace("textures/entity/steve.png")
+                ? ResourceLocation.withDefaultNamespace("textures/entity/player/wide/steve.png")
                 : playerInfo.getSkin().texture();
         // head rendering
         RenderUtils.drawTexturedRect(

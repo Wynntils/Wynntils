@@ -63,13 +63,14 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_LIST_SELF_FAILED =
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to use this\\.");
 
+    // This message has no period unlike the others. Add a period here when Wynn adds one.
+    private static final Pattern PARTY_LEAVE_SELF =
+            Pattern.compile(PARTY_PREFIX_REGEX + "You have left your current party");
     private static final Pattern PARTY_LEAVE_OTHER =
             Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has left the party\\.");
     private static final Pattern PARTY_LEAVE_SELF_ALREADYLEFT =
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to leave\\.");
-
-    // This is a special case; Wynn sends the same message for when we leave a party or get kicked from a party
-    private static final Pattern PARTY_LEAVE_SELF_KICK =
+    private static final Pattern PARTY_LEAVE_KICK =
             Pattern.compile(PARTY_PREFIX_REGEX + "You have been removed from the party\\.");
 
     private static final Pattern PARTY_JOIN_OTHER =
@@ -165,7 +166,8 @@ public final class PartyModel extends Model {
         }
 
         if (styledText.matches(PARTY_DISBAND_ALL)
-                || styledText.matches(PARTY_LEAVE_SELF_KICK)
+                || styledText.matches(PARTY_LEAVE_SELF)
+                || styledText.matches(PARTY_LEAVE_KICK)
                 || styledText.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
                 || styledText.matches(PARTY_DISBAND_SELF)) {
             WynntilsMod.info("Player left the party.");
@@ -292,7 +294,7 @@ public final class PartyModel extends Model {
 
         String[] partyList = StyledText.fromString(matcher.group(1))
                 .getStringWithoutFormatting()
-                .split("(, | and )");
+                .split("(?:,(?: and)? )");
         List<String> newPartyMembers = new ArrayList<>();
 
         boolean firstMember = true;
