@@ -15,6 +15,11 @@ public abstract class Dependency {
         public List<Pair<CoreComponent, UrlId>> dependencies() {
             return List.of();
         }
+
+        @Override
+        public String toString() {
+            return "EmptyDependency{}";
+        }
     };
 
     public abstract List<Pair<CoreComponent, UrlId>> dependencies();
@@ -55,6 +60,11 @@ public abstract class Dependency {
         public List<Pair<CoreComponent, UrlId>> dependencies() {
             return List.of(Pair.of(component, urlId));
         }
+
+        @Override
+        public String toString() {
+            return "SimpleComponentDataDependency{" + "component=" + component + ", urlId=" + urlId + '}';
+        }
     }
 
     /**
@@ -73,6 +83,11 @@ public abstract class Dependency {
         public List<Pair<CoreComponent, UrlId>> dependencies() {
             return urlIds.stream().map(urlId -> Pair.of(component, urlId)).toList();
         }
+
+        @Override
+        public String toString() {
+            return "SingleComponentMultiDataDependency{" + "component=" + component + ", urlIds=" + urlIds + '}';
+        }
     }
 
     /**
@@ -90,6 +105,11 @@ public abstract class Dependency {
             return dependencies.stream()
                     .flatMap(dependency -> dependency.dependencies().stream())
                     .toList();
+        }
+
+        @Override
+        public String toString() {
+            return "ComplexDependency{" + "dependencies=" + dependencies + '}';
         }
     }
 }

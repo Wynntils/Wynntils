@@ -155,7 +155,7 @@ public class DownloadManager extends Manager {
             return;
         }
 
-        throw new IllegalStateException(
+        WynntilsMod.error(
                 "Finished, but not yet replaced download not found in the current downloads: " + toBeReplaced);
     }
 
