@@ -51,7 +51,7 @@ public final class DownloadDependencyGraph {
 
     // region Processing
 
-    public QueuedDownload nextDownload() {
+    public synchronized QueuedDownload nextDownload() {
         Node nextNode = nodeMap.entrySet().stream()
                 .filter(entry -> entry.getValue() == NodeState.QUEUED)
                 .map(Map.Entry::getKey)
