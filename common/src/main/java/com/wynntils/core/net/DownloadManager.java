@@ -58,7 +58,7 @@ public class DownloadManager extends Manager {
 
     private DownloadDependencyGraph graph = null;
 
-    private Pair<QueuedDownload, Download>[] currentDownloads = new Pair[MAX_PARALLEL_DOWNLOADS];
+    private Pair<QueuedDownload, Download>[] currentDownloads;
 
     public DownloadManager() {
         super(List.of());
@@ -82,7 +82,11 @@ public class DownloadManager extends Manager {
         }
     }
 
-    public void startDownloads() {
+    public void download() {
+        // Reset the state of the manager, as the downloads are being started
+        graph.resetState();
+        currentDownloads = new Pair[MAX_PARALLEL_DOWNLOADS];
+
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
         for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {

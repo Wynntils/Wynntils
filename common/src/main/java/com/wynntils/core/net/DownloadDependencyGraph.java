@@ -94,6 +94,11 @@ public final class DownloadDependencyGraph {
         node.dependents.forEach(dependent -> nodeMap.put(dependent, NodeState.ERROR));
     }
 
+    public void resetState() {
+        nodeMap.replaceAll(
+                (node, state) -> node.dependencies.isEmpty() ? NodeState.QUEUED : NodeState.WAITING_ON_DEPENDENCY);
+    }
+
     // endregion
 
     // region State and Progress
