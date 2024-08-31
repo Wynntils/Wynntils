@@ -87,6 +87,7 @@ public final class Models {
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HorseModel Horse = new HorseModel();
+    public static final IngredientModel Ingredient = new IngredientModel();
     public static final InventoryModel Inventory = new InventoryModel();
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
@@ -101,6 +102,7 @@ public final class Models {
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();
     public static final RaidModel Raid = new RaidModel();
+    public static final RewardsModel Rewards = new RewardsModel();
     public static final SeaskipperModel Seaskipper = new SeaskipperModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final SetModel Set = new SetModel();
@@ -124,6 +126,4 @@ public final class Models {
     public static final ActivityModel Activity = new ActivityModel(Marker);
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
     public static final LootrunModel Lootrun = new LootrunModel(Marker);
-    public static final RewardsModel Rewards = new RewardsModel(WynnItem);
-    public static final IngredientModel Ingredient = new IngredientModel(WynnItem);
 }

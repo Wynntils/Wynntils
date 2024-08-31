@@ -18,6 +18,6 @@ public abstract class CoreComponent implements Storageable {
     }
 
     public void registerDownloads(DownloadRegistry registry) {
-        // Override this method to register downloads for this component.\
+        // Override this method to register downloads for this component.
     }
 }

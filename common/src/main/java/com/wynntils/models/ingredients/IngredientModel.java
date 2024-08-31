@@ -8,7 +8,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.ingredients.type.IngredientInfo;
-import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import java.util.List;
@@ -26,8 +25,8 @@ public class IngredientModel extends Model {
 
     private final IngredientInfoRegistry ingredientInfoRegistry = new IngredientInfoRegistry();
 
-    public IngredientModel(WynnItemModel wynnItem) {
-        super(List.of(wynnItem));
+    public IngredientModel() {
+        super(List.of());
     }
 
     @Override
