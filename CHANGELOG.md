@@ -1,3 +1,11 @@
+## [2.1.1](https://github.com/Wynntils/Wynntils/compare/v2.1.0...v2.1.1) (2024-08-31)
+
+
+### Bug Fixes
+
+* Add all missing stats to legacy stat ordering and add a warning log for missing stats ([#2813](https://github.com/Wynntils/Wynntils/issues/2813)) ([3bb995c](https://github.com/Wynntils/Wynntils/commit/3bb995c5200ccbee3b889a6402e870586dc83888))
+* Don't update leaderboards on world switch [skip ci] ([#2811](https://github.com/Wynntils/Wynntils/issues/2811)) ([0c7d5b1](https://github.com/Wynntils/Wynntils/commit/0c7d5b1d94501ed0cd010d2f6f338b1bd0d2b9d0))
+
 ## [2.1.0](https://github.com/Wynntils/Wynntils/compare/v2.0.16...v2.1.0) (2024-08-30)
 
 
@@ -13,6 +21,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2807](https://github.com/Wynntils/Wynntils/issues/2807)) ([08abd47](https://github.com/Wynntils/Wynntils/commit/08abd4721f8c57bc17209efa5334cafd42f828d1))
+* **release:** v2.1.0 [skip ci] ([9d73c0d](https://github.com/Wynntils/Wynntils/commit/9d73c0dabc7d2c9aba766c2f82190b727b7d9734))
 
 ## [2.0.16](https://github.com/Wynntils/Wynntils/compare/v2.0.15...v2.0.16) (2024-08-30)
 
@@ -78,24 +87,4 @@
 ### Code Refactoring
 
 * Rename BossBarModel to AbilityModel and move AnnihilationSunBar to WorldEventModel [skip ci] ([#2793](https://github.com/Wynntils/Wynntils/issues/2793)) ([269707e](https://github.com/Wynntils/Wynntils/commit/269707ecdac795b5b8f82ff407883568438c24e9))
-
-## [2.0.13](https://github.com/Wynntils/Wynntils/compare/v2.0.12...v2.0.13) (2024-08-25)
-
-
-### New Features
-
-* Add Annihilation Sun Overlay ([#2786](https://github.com/Wynntils/Wynntils/issues/2786)) ([6f7af33](https://github.com/Wynntils/Wynntils/commit/6f7af33a8432938181accbb24a933c21a5afb5bb))
-* overhaul the class selector screen textures [skip ci] ([#2787](https://github.com/Wynntils/Wynntils/issues/2787)) ([2ed430b](https://github.com/Wynntils/Wynntils/commit/2ed430b6885b6ed4b3237cbed9de96dfb6a261d7))
-
-
-### Bug Fixes
-
-* Fix flashback crashing when scoreboard is displayed [skip ci] ([#2785](https://github.com/Wynntils/Wynntils/issues/2785)) ([ea39a9e](https://github.com/Wynntils/Wynntils/commit/ea39a9e8ea7a7802e1152a604fbb05c24c39993e))
-* Fix guild chat not ignoring username in chat mentions [skip ci] ([#2781](https://github.com/Wynntils/Wynntils/issues/2781)) ([fc1e30b](https://github.com/Wynntils/Wynntils/commit/fc1e30be1873ca34aaee70f0ddb15b7f1b75712e))
-* Fix Nexus of Light tracking issues [skip ci] ([#2782](https://github.com/Wynntils/Wynntils/issues/2782)) ([10ae067](https://github.com/Wynntils/Wynntils/commit/10ae067873288b607d219bce7b6f60fed19b0e42))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.13 [skip ci] ([2688f81](https://github.com/Wynntils/Wynntils/commit/2688f8140caef753e30f64349a474def1cfd074b))
 
