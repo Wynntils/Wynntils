@@ -186,8 +186,6 @@ public class LootrunModel extends Model {
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
-
-        reloadData();
     }
 
     @Override

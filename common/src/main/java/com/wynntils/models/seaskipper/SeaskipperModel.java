@@ -41,8 +41,6 @@ public final class SeaskipperModel extends Model {
 
     public SeaskipperModel() {
         super(List.of());
-
-        reloadData();
     }
 
     @Override

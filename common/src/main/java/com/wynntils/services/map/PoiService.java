@@ -79,8 +79,8 @@ public class PoiService extends Service {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_PLACES).handleReader(this::handlePlaces);
-        registry.registerDownload(UrlId.DATA_STATIC_SERVICES).handleReader(this::loadServices);
-        registry.registerDownload(UrlId.DATA_STATIC_COMBAT_LOCATIONS).handleReader(this::loadCombat);
+        registry.registerDownload(UrlId.DATA_STATIC_SERVICES).handleReader(this::handleServices);
+        registry.registerDownload(UrlId.DATA_STATIC_COMBAT_LOCATIONS).handleReader(this::handleCombat);
         registry.registerDownload(UrlId.DATA_STATIC_CAVE_INFO).handleReader(this::handleCaves);
     }
 
@@ -144,7 +144,7 @@ public class PoiService extends Service {
         }
     }
 
-    private void loadServices(Reader reader) {
+    private void handleServices(Reader reader) {
         Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
         List<ServiceProfile> serviceList = GSON.fromJson(reader, type);
@@ -161,7 +161,7 @@ public class PoiService extends Service {
         }
     }
 
-    private void loadCombat(Reader reader) {
+    private void handleCombat(Reader reader) {
         Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
         List<CombatProfileList> combatProfileLists = GSON.fromJson(reader, type);
