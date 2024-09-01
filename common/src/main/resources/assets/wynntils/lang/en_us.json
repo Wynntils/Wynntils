@@ -2330,6 +2330,7 @@
   "screens.wynntils.partyManagementGui.leavePartyButton": "Leave Party",
   "screens.wynntils.partyManagementGui.legend": "Legend:",
   "screens.wynntils.partyManagementGui.name": "Name",
+  "screens.wynntils.partyManagementGui.notInParty": "You're not in a party.",
   "screens.wynntils.partyManagementGui.offline": "Offline",
   "screens.wynntils.partyManagementGui.priority": "Priority",
   "screens.wynntils.partyManagementGui.promote": "Promote",

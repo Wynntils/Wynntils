@@ -85,8 +85,9 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_PROMOTE_SELF = Pattern.compile(
             PARTY_PREFIX_REGEX + "You are now the leader of this party! Type /party for a list of commands\\.");
 
+    // This message has no period unlike the others. Add a period here when Wynn adds one.
     private static final Pattern PARTY_DISBAND_ALL =
-            Pattern.compile(PARTY_PREFIX_REGEX + "Your party has been disbanded\\.");
+            Pattern.compile(PARTY_PREFIX_REGEX + "Your party has been disbanded");
     private static final Pattern PARTY_DISBAND_SELF = Pattern.compile(
             PARTY_PREFIX_REGEX + "Your party has been disbanded since you were the only member remaining\\.");
 

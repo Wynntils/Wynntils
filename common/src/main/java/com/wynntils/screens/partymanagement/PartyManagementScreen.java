@@ -14,6 +14,7 @@ import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -141,20 +142,24 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
 
         // region Invite field header
+        String inviteFieldHeader = I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
+                + ChatFormatting.GRAY
+                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2");
+
         FontRenderer.getInstance()
-                .renderText(
+                .renderAlignedTextInBox(
                         poseStack,
-                        // Yes this is kind of abusive of the formatting system, and I should probably do
-                        // another .renderText call, but this makes aligning these two texts significantly easier
-                        // (especially with changing gui scales and resolutions)
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
-                                + ChatFormatting.GRAY
-                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2")),
+                        StyledText.fromString(inviteFieldHeader),
                         dividedWidth * 36,
+                        dividedWidth * 60,
+                        dividedHeight * PARTY_LIST_DIV_HEIGHT
+                                - FontRenderer.getInstance().calculateRenderHeight(
+                                        StyledText.fromString(inviteFieldHeader), dividedWidth * 24),
                         dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
+                        dividedWidth * 24,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         // endregion
 
@@ -166,7 +171,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     dividedWidth * 4,
                     dividedHeight * PARTY_LIST_DIV_HEIGHT,
                     0,
-                    dividedWidth * 30 - dividedWidth * 4,
+                    dividedWidth * 30 - dividedWidth * 2,
                     1);
             FontRenderer.getInstance()
                     .renderText(
@@ -220,6 +225,21 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             TextShadow.NORMAL);
 
             partyMembersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        } else {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.notInParty")),
+                            dividedWidth * 4,
+                            dividedWidth * 30,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
+                            dividedWidth * 30 - dividedWidth * 4,
+                            CustomColor.NONE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            2);
         }
         // endregion
 
