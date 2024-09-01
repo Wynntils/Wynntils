@@ -38,17 +38,17 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
-    private static final int PARTY_LIST_DIV_HEIGHT = 8;
+    private static final int START_HEIGHT = 8;
+    private static final int PARTY_LIST_DIV_HEIGHT = 14;
     private static final int SUGGESTION_LIST_DIV_HEIGHT = 22;
     private static final int MGMT_ROW_DIV_HEIGHT = 14;
     private int mgmtButtonWidth;
-
     private TextInputBoxWidget inviteInput;
     private Button inviteButton;
     private Button kickOfflineButton;
     private CreateLeaveButton createLeaveButton;
-    private List<AbstractWidget> suggestedPlayersWidgets = new ArrayList<>();
-    private List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
+    private List<SuggestionPlayerWidget> suggestedPlayersWidgets = new ArrayList<>();
+    private List<PartyMemberWidget> partyMembersWidgets = new ArrayList<>();
 
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
@@ -67,7 +67,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         // region Invite input and button
         inviteInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 36),
-                (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1,
+                (int) (dividedHeight * START_HEIGHT) + 1,
                 (int) ((dividedWidth * 57) - (dividedWidth * 36)) - 1,
                 BUTTON_SIZE,
                 null,
@@ -78,7 +78,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> inviteFromField())
-                .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
+                .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * START_HEIGHT) + 1)
                 .size((int) (dividedWidth * 3) - 1, BUTTON_SIZE)
                 .build();
         this.addRenderableWidget(inviteButton);
@@ -152,11 +152,11 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                         StyledText.fromString(inviteFieldHeader),
                         dividedWidth * 36,
                         dividedWidth * 60,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT
+                        dividedHeight * START_HEIGHT
                                 - FontRenderer.getInstance()
                                         .calculateRenderHeight(
                                                 StyledText.fromString(inviteFieldHeader), dividedWidth * 24),
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
+                        dividedHeight * START_HEIGHT, // should be lined up with the party member count header
                         dividedWidth * 24,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -166,6 +166,20 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
 
         // region Party list
         if (inParty) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get(
+                                    "screens.wynntils.partyManagementGui.members",
+                                    Models.Party.getPartyMembers().size(),
+                                    Models.Party.MAX_PARTY_MEMBER_COUNT)),
+                            dividedWidth * 4,
+                            dividedHeight * START_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            2);
             RenderUtils.drawRect(
                     poseStack,
                     CommonColors.WHITE,
@@ -234,11 +248,11 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                             dividedWidth * 4,
                             dividedWidth * 30,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                            dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
+                            height - (dividedHeight * PARTY_LIST_DIV_HEIGHT),
                             dividedWidth * 30 - dividedWidth * 4,
                             CustomColor.NONE,
                             HorizontalAlignment.CENTER,
-                            VerticalAlignment.TOP,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL,
                             2);
         }
@@ -331,7 +345,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
 
             partyMembersWidgets.add(new PartyMemberWidget(
                     dividedWidth * 4,
-                    dividedHeight * (9 + i * 3),
+                    dividedHeight * (PARTY_LIST_DIV_HEIGHT + 2) + i * BUTTON_SIZE,
                     (int) (dividedWidth * 28) - (int) (dividedWidth * 2),
                     BUTTON_SIZE,
                     playerName,
@@ -354,6 +368,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         suggestedPlayersWidgets = new ArrayList<>();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
             String playerName = suggestedPlayers.get(i);
+            boolean isOffline = !Models.Friends.getOnlineFriends().containsKey(playerName);
             if (playerName == null) continue;
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
@@ -362,6 +377,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
                     BUTTON_SIZE,
                     playerName,
+                    isOffline,
                     60 - 36));
         }
     }
