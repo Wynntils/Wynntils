@@ -260,6 +260,7 @@ public enum Texture {
     BUTTON_LEFT("ui_components/button_left.png", 48, 56),
     BUTTON_RIGHT("ui_components/button_right.png", 48, 56),
     BUTTON_TOP("ui_components/button_top.png", 128, 60),
+    COLOR_PICKER_BACKGROUND("ui_components/color_picker_background.png", 442, 208),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),

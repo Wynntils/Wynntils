@@ -2130,6 +2130,8 @@
   "screens.wynntils.chatTabsGui.save": "Save",
   "screens.wynntils.chatTabsGui.saveAndClose": "Save and Close",
   "screens.wynntils.chatTabsGui.types": "Message Types",
+  "screens.wynntils.colorPicker.cancel": "Cancel",
+  "screens.wynntils.colorPicker.save": "Save",
   "screens.wynntils.containers.cancel.description": "Hit enter to save.",
   "screens.wynntils.containers.cancel.name": "[X] Cancel name change",
   "screens.wynntils.containers.edit.description": "Right-click to reset to default.",
