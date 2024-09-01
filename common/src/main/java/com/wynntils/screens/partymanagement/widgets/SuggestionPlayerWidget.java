@@ -19,8 +19,8 @@ import net.minecraft.network.chat.Component;
 public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
     private final Button inviteButton;
 
-    public SuggestionPlayerWidget(float x, float y, int width, int height,
-                                  String playerName, boolean isOffline, float gridDivisions) {
+    public SuggestionPlayerWidget(
+            float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
         super((int) x, (int) y, width, height, playerName, isOffline, gridDivisions);
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),

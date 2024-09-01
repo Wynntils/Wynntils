@@ -26,8 +26,8 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
     private final Button moveUpButton;
     private final Button moveDownButton;
 
-    public PartyMemberWidget(float x, float y, int width, int height,
-                             String playerName, boolean isOffline, float gridDivisions) {
+    public PartyMemberWidget(
+            float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
         super((int) x, (int) y, width, height, playerName, isOffline, gridDivisions);
         int baseButtonWidth = (int) (this.width / gridDivisions);
 

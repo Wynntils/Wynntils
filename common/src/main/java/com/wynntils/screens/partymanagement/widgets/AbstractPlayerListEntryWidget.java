@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.partymanagement.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,8 +20,8 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
     protected final boolean isOffline;
     protected final float gridDivisions;
 
-    protected AbstractPlayerListEntryWidget(int x, int y, int width, int height,
-                                    String playerName, boolean isOffline, float gridDivisions) {
+    protected AbstractPlayerListEntryWidget(
+            int x, int y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
         super(x, y, width, height, Component.literal(playerName));
         this.playerName = playerName;
         this.isOffline = false;
