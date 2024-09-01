@@ -153,8 +153,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                         dividedWidth * 36,
                         dividedWidth * 60,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT
-                                - FontRenderer.getInstance().calculateRenderHeight(
-                                        StyledText.fromString(inviteFieldHeader), dividedWidth * 24),
+                                - FontRenderer.getInstance()
+                                        .calculateRenderHeight(
+                                                StyledText.fromString(inviteFieldHeader), dividedWidth * 24),
                         dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
                         dividedWidth * 24,
                         CommonColors.WHITE,
