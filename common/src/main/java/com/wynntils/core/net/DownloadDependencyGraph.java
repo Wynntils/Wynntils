@@ -35,7 +35,7 @@ public final class DownloadDependencyGraph {
         // 1. Check for duplicate downloads
         checkDuplicateDownloads(downloads);
 
-        // 2. Check for missign dependencies
+        // 2. Check for missing dependencies
         checkMissingDependencies(downloads);
 
         // Now, let's build a directed graph of the download dependencies
