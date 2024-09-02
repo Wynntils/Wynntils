@@ -82,7 +82,7 @@ public class GearInfoRegistry {
     }
 
     private void loadGearRegistry() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR_ADVANCED);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_GEAR);
         dl.handleJsonObject(json -> {
             Gson gson = new GsonBuilder()
                     .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
@@ -135,7 +135,7 @@ public class GearInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
             }
 
-            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
+            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear tier");
             }

@@ -1,21 +1,21 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
 
 public enum TomeType {
-    DUNGEON_XP,
-    GATHERING_XP,
     GUILD_TOME,
-    LOOTRUN,
-    MOB_DAMAGE,
-    MOB_DEFENCE,
-    SLAYING_XP;
+    WEAPON_TOME,
+    ARMOUR_TOME,
+    MYSTICISM_TOME,
+    MARATHON_TOME,
+    LOOTRUN_TOME,
+    EXPERTISE_TOME;
 
     public static TomeType fromString(String str) {
         for (TomeType value : TomeType.values()) {
-            if (value.name().replaceAll("_", "").equalsIgnoreCase(str)) {
+            if (value.name().equalsIgnoreCase(str)) {
                 return value;
             }
         }

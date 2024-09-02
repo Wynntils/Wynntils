@@ -40,8 +40,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -300,14 +299,14 @@ public final class LootrunPathsService extends Service {
     }
 
     @SubscribeEvent
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+    public void onRightClick(PlayerInteractEvent.InteractAt event) {
         if (state != LootrunState.RECORDING) return;
 
-        BlockState block = event.getWorld().getBlockState(event.getPos());
-        if (!block.is(Blocks.CHEST)) return;
-
-        BlockPos pos = event.getPos();
-        recordingInformation.setLastChest(pos);
+        Entity entity = event.getEntityHitResult().getEntity();
+        if (entity != null && entity.getType() == EntityType.SLIME) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            recordingInformation.setLastChest(entity.blockPosition());
+        }
     }
 
     @SubscribeEvent

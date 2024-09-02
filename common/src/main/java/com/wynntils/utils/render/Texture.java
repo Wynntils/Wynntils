@@ -223,7 +223,7 @@ public enum Texture {
     // endregion
 
     // region Overlays
-    PLAYER_LIST_OVERLAY("overlays/player_list_overlay.png", 385, 229),
+    PLAYER_LIST_OVERLAY("overlays/player_list_overlay.png", 531, 248),
 
     // Bars
     BUBBLE_BAR("overlays/bars/bars_bubbles.png", 182, 60),

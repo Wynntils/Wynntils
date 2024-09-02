@@ -64,6 +64,10 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         String typeString;
         if (json.has("accessoryType")) {
             typeString = json.get("accessoryType").getAsString();
+        } else if (json.has("weaponType")) {
+            typeString = json.get("weaponType").getAsString();
+        } else if (json.has("armourType")) {
+            typeString = json.get("armourType").getAsString();
         } else {
             typeString = json.get("type").getAsString();
         }
@@ -73,6 +77,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
         ItemMaterial material = parseMaterial(json, type);
+
+        if (material == null || material.itemStack().isEmpty()) {
+            WynntilsMod.warn("Failed to parse material for " + json.get("name").getAsString());
+            material = ItemMaterial.fromItemId("minecraft:air", 0);
+        }
 
         List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
@@ -141,7 +150,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     protected ItemMaterial parseMaterial(JsonObject json, GearType type) {
-        return type.isArmor() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
+        boolean parseAsArmor = type.isArmor() && json.has("armourMaterial");
+        return parseAsArmor ? parseArmorType(json, type) : parseOtherMaterial(json);
     }
 
     protected List<ItemObtainType> parseObtainTypes(JsonObject json) {
@@ -173,23 +183,12 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     protected ItemMaterial parseArmorType(JsonObject json, GearType gearType) {
-        // We might have a specified material (like a carved pumpkin or mob head),
-        // if so this takes precedence
-        String material = JsonUtils.getNullableJsonString(json, "material");
-        if (material != null) {
-            return parseOtherMaterial(json, gearType);
-        }
+        String armourMaterial =
+                JsonUtils.getNullableJsonString(json, "armourMaterial").toLowerCase(Locale.ROOT);
 
-        // Some helmets are player heads
-        String skin = JsonUtils.getNullableJsonString(json, "skin");
-        if (skin != null) {
-            return ItemMaterial.fromPlayerHeadUUID(skin);
-        }
-
-        String materialType = JsonUtils.getNullableJsonString(json, "armorType").toLowerCase(Locale.ROOT);
-
+        // FIXME: As of writing, v3.3 API forgot to add armor colors to leather armor
         CustomColor color = null;
-        if (materialType.equals("leather")) {
+        if (armourMaterial.equals("leather")) {
             String colorStr = JsonUtils.getNullableJsonString(json, "armorColor");
             // Oddly enough a lot of items has a "dummy" color value of "160,101,64"; ignore them
             if (colorStr != null && !colorStr.equals("160,101,64")) {
@@ -203,21 +202,45 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             }
         }
 
-        return ItemMaterial.fromArmorType(materialType, gearType, color);
+        return ItemMaterial.fromArmorType(armourMaterial, gearType, color);
     }
 
-    protected ItemMaterial parseOtherMaterial(JsonObject json, GearType gearType) {
-        String material = JsonUtils.getNullableJsonString(json, "material");
-        if (material == null) {
-            // We're screwed. The best we can do is to give a generic default representation
-            // for this gear type
-            return ItemMaterial.fromGearType(gearType);
+    protected ItemMaterial parseOtherMaterial(JsonObject json) {
+        if (!json.has("icon")) {
+            WynntilsMod.warn(
+                    "Item DB does not contain an icon for " + json.get("name").getAsString());
+            return ItemMaterial.fromItemId("minecraft:air", 0);
         }
 
-        String[] materialArray = material.split(":");
-        int itemTypeCode = Integer.parseInt(materialArray[0]);
-        int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-        return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+        JsonObject icon = json.getAsJsonObject("icon");
+
+        String iconFormat = icon.get("format").getAsString();
+
+        switch (iconFormat) {
+            case "attribute" -> {
+                JsonObject value = icon.get("value").getAsJsonObject();
+                JsonElement customModelData = value.get("customModelData");
+
+                // The API is inconsistent, and sometimes returns a string instead of an int
+                int customModelDataInt = customModelData.isJsonPrimitive()
+                        ? customModelData.getAsInt()
+                        : Integer.parseInt(customModelData.getAsString());
+
+                return ItemMaterial.fromItemId(value.get("id").getAsString(), customModelDataInt);
+            }
+            case "skin" -> {
+                return ItemMaterial.fromPlayerHeadUUID(icon.get("value").getAsString());
+            }
+            case "legacy" -> {
+                String material = icon.get("value").getAsString();
+                String[] materialArray = material.split(":");
+                int itemTypeCode = Integer.parseInt(materialArray[0]);
+                int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
+                return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+            }
+        }
+
+        return null;
     }
 
     protected GearRequirements parseRequirements(JsonObject json, GearType type) {
@@ -285,10 +308,23 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         JsonObject majorIdsJson = JsonUtils.getNullableJsonObject(json, "majorIds");
         if (majorIdsJson == null || majorIdsJson.isJsonNull() || majorIdsJson.isEmpty()) return Optional.empty();
 
-        return Optional.of(new GearMajorId(
-                majorIdsJson.get("name").getAsString(),
-                StyledText.fromString(
-                        majorIdsJson.get("description").getAsString().replaceAll("&", "§"))));
+        Map<String, JsonElement> majorIdMap = majorIdsJson.asMap();
+
+        if (majorIdMap.size() > 1) {
+            WynntilsMod.warn("Item DB contains multiple major IDs for "
+                    + json.get("name").getAsString());
+        }
+
+        if (majorIdMap.isEmpty()) return Optional.empty();
+
+        Map.Entry<String, JsonElement> majorIdElement =
+                majorIdMap.entrySet().iterator().next();
+
+        // Wynncraft API now ships HTML tags in the description (as they have a custom markup language internally)
+        StyledText description =
+                StyledText.fromString(majorIdElement.getValue().getAsString().replaceAll("<[^>]*>", ""));
+
+        return Optional.of(new GearMajorId(majorIdElement.getKey(), description));
     }
 
     protected List<Pair<DamageType, RangedValue>> parseDamages(JsonObject json) {
@@ -383,8 +419,14 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 baseValue = JsonUtils.getNullableJsonInt(statObject, "raw");
                 preIdentified = false;
 
-                apiRange = RangedValue.of(
-                        statObject.get("min").getAsInt(), statObject.get("max").getAsInt());
+                if (statObject.has("min") && statObject.has("max")) {
+                    apiRange = RangedValue.of(
+                            statObject.get("min").getAsInt(),
+                            statObject.get("max").getAsInt());
+                } else {
+                    // Sometimes, the api does not return min or max values, so we can't do verification
+                    apiRange = RangedValue.NONE;
+                }
             }
 
             // If the base value is 0, this stat is not present on the item
@@ -405,9 +447,12 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
             RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
 
             // Verify that the calculated range matches the API's range
-            if (!apiRange.equals(range)) {
-                WynntilsMod.warn(
-                        "Stat " + statType.getApiName() + " has a range mismatch: " + apiRange + " vs " + range);
+            if (apiRange.equals(RangedValue.NONE)) {
+                WynntilsMod.warn(json.get("name").getAsString() + "'s stat " + statType.getApiName()
+                        + " has it's min-max range missing in the API");
+            } else if (!apiRange.equals(range)) {
+                WynntilsMod.warn(json.get("name").getAsString() + "'s stat " + statType.getApiName()
+                        + " has a range mismatch: API " + apiRange + " vs calculated " + range);
             }
 
             StatPossibleValues possibleValues = new StatPossibleValues(statType, range, baseValue, preIdentified);

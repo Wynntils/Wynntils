@@ -7,7 +7,6 @@ package com.wynntils.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.persisted.Persisted;
@@ -39,18 +38,18 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class CustomPlayerListOverlay extends Overlay {
     private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
             Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
-    private static final int DISTANCE_BETWEEN_CATEGORIES = 87;
-    private static final int ROLL_WIDTH = 27;
-    private static final int HALF_WIDTH = 178;
+    private static final int DISTANCE_BETWEEN_CATEGORIES = 114;
+    private static final int ROLL_WIDTH = 32;
+    private static final int HALF_WIDTH = 233;
     private static final int WIDTH = HALF_WIDTH * 2;
     private static final int TOTAL_WIDTH = WIDTH + ROLL_WIDTH * 2;
-    private static final int MAX_WIDTH = 73;
+    private static final int MAX_WIDTH = 100;
 
     @Persisted
     public final Config<Integer> openingDuration = new Config<>(125);
 
     @Persisted
-    public final Config<Boolean> showWorldInStream = new Config<>(false);
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
     private final AnimationPercentage animationPercentage = new AnimationPercentage(
             McUtils.options().keyPlayerList::isDown, Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
@@ -96,10 +95,9 @@ public class CustomPlayerListOverlay extends Overlay {
                 .limit(80)
                 .map(defaultTabList::getNameForDisplay)
                 .map(StyledText::fromComponent)
-                .filter(styledText -> !styledText.contains(ChatFormatting.BOLD.toString()))
+                .map(StyledText::trim)
                 .map(StyledText::getString)
                 .map(styledText -> RenderedStringUtils.substringMaxWidth(styledText, MAX_WIDTH))
-                .map(styledText -> styledText.replace(ChatFormatting.GRAY.toString(), ChatFormatting.BLACK.toString()))
                 .map(StyledText::fromString)
                 .toList();
     }
@@ -117,38 +115,23 @@ public class CustomPlayerListOverlay extends Overlay {
 
         renderBackground(poseStack);
 
-        float currentDist = getRenderX() + ROLL_WIDTH + 55;
-        float categoryStart = getRenderY() + 18;
-        renderCategoryTitle(poseStack, "Friends", currentDist, categoryStart);
-        currentDist += DISTANCE_BETWEEN_CATEGORIES;
-        String worldCategory = Models.WorldState.onHousing()
-                ? Models.WorldState.getCurrentHousingName()
-                : Models.WorldState.getCurrentWorldName();
-
-        if (!showWorldInStream.get() && Models.WorldState.isInStream()) {
-            worldCategory = "-";
-        }
-
-        renderCategoryTitle(poseStack, worldCategory, currentDist, categoryStart);
-        currentDist += DISTANCE_BETWEEN_CATEGORIES;
-        renderCategoryTitle(poseStack, "Party", currentDist, categoryStart);
-        currentDist += DISTANCE_BETWEEN_CATEGORIES;
-        renderCategoryTitle(poseStack, "Guild", currentDist, categoryStart);
-
-        renderPlayerNames(poseStack, categoryStart, availablePlayers.get());
+        renderPlayerNames(poseStack, availablePlayers.get());
 
         if (animation < 1) {
             RenderUtils.disableScissor();
         }
 
         float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
-        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 2 - HALF_WIDTH * animation));
-        renderRoll(poseStack, (float) (middle - 2 + HALF_WIDTH * animation));
+        renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 11 - HALF_WIDTH * animation), 0);
+        renderRoll(
+                poseStack,
+                (float) (middle - 11 + HALF_WIDTH * animation),
+                Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
 
         RenderSystem.enableDepthTest();
     }
 
-    private void renderRoll(PoseStack poseStack, float xPos) {
+    private void renderRoll(PoseStack poseStack, float xPos, int uOffset) {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.PLAYER_LIST_OVERLAY.resource(),
@@ -157,7 +140,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 0,
                 ROLL_WIDTH,
                 Texture.PLAYER_LIST_OVERLAY.height(),
-                0,
+                uOffset,
                 0,
                 ROLL_WIDTH,
                 Texture.PLAYER_LIST_OVERLAY.height(),
@@ -165,13 +148,20 @@ public class CustomPlayerListOverlay extends Overlay {
                 Texture.PLAYER_LIST_OVERLAY.height());
     }
 
-    private void renderPlayerNames(PoseStack poseStack, float categoryStart, List<StyledText> players) {
+    private void renderPlayerNames(PoseStack poseStack, List<StyledText> players) {
         for (int i = 0; i < players.size(); i++) {
-            int x = i / 19;
-            int y = i % 19;
+            int x = i / 20;
+            int y = i % 20;
 
-            float xPos = getRenderX() + ROLL_WIDTH + 12 + (DISTANCE_BETWEEN_CATEGORIES * x);
-            float yPos = categoryStart + 14 + (10 * y);
+            float xPos = getRenderX() + ROLL_WIDTH + (i % 20 == 0 ? 30 : 12) + (DISTANCE_BETWEEN_CATEGORIES * x);
+            float yPos;
+
+            if (i % 20 == 0) {
+                yPos = getRenderY() + 16;
+            } else {
+                yPos = getRenderY() + 18 + 14 + (11 * (y - 1));
+            }
+
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
@@ -181,21 +171,8 @@ public class CustomPlayerListOverlay extends Overlay {
                             CustomColor.fromChatFormatting(ChatFormatting.BLACK),
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
-                            TextShadow.NONE);
+                            textShadow.get());
         }
-    }
-
-    private void renderCategoryTitle(PoseStack poseStack, String name, float currentDist, float categoryStart) {
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(name),
-                        currentDist,
-                        categoryStart,
-                        CustomColor.fromChatFormatting(ChatFormatting.BLACK),
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NONE);
     }
 
     private void renderBackground(PoseStack poseStack) {
