@@ -21,6 +21,7 @@ import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,6 @@ public class BulkBuyFeature extends Feature {
     @Persisted
     public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
-    private static final int SHOP_TITLE_SLOT = 4;
     private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
@@ -72,8 +72,11 @@ public class BulkBuyFeature extends Feature {
         String title = e.getItemStack().getHoverName().getString();
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
 
-        bulkBuyWidget = new BulkBuyWidget(screen.leftPos - 148, screen.topPos, 150, 110);
-        System.out.println("made a new bulk buy widget");
+        bulkBuyWidget = new BulkBuyWidget(
+                screen.leftPos - Texture.BULK_BUY_PANEL.width(),
+                screen.topPos - 5,
+                Texture.BULK_BUY_PANEL.width(),
+                Texture.BULK_BUY_PANEL.height());
         screen.addRenderableWidget(bulkBuyWidget);
     }
 
@@ -121,7 +124,6 @@ public class BulkBuyFeature extends Feature {
 
     @SubscribeEvent
     public void onTickPurchase(TickEvent e) {
-        //        if (true) return; // TODO for ui layout testing, remove this later
         if (bulkBoughtSlotNumber == -1) return;
         if (McUtils.mc().level.getGameTime() % bulkBuySpeed.get().getTicksDelay() != 0) return;
 
