@@ -147,7 +147,7 @@ public final class DownloadDependencyGraph {
                     + " downloaded the same data twice: " + duplicatedInSameComponent.urlId());
         }
 
-        // Downloading the same resouce in different core components is not a direct confirmation of a schematic issue,
+        // Downloading the same resource in different core components is not a direct confirmation of a schematic issue,
         // but is likely to be a mistake. Mark it as a warning and continue with the graph building
         List<QueuedDownload> duplicatedDownloadsInSeparateComponenets = downloads.stream()
                 .filter(download ->
