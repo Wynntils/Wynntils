@@ -293,7 +293,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         JsonObject baseStats = JsonUtils.getNullableJsonObject(json, "base");
         JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
 
-        int healthBuff = JsonUtils.getNullableJsonInt(baseStats, "health");
+        int healthBuff = JsonUtils.getNullableJsonInt(baseStats, "baseHealth");
         String attackSpeedStr = JsonUtils.getNullableJsonString(json, "attackSpeed");
         Optional<GearAttackSpeed> attackSpeed = Optional.ofNullable(GearAttackSpeed.fromString(attackSpeedStr));
 
