@@ -232,10 +232,10 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     .renderText(
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.priority")),
-                            dividedWidth * 28,
+                            dividedWidth * 30,
                             dividedHeight * PARTY_LIST_DIV_HEIGHT,
                             CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
+                            HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
 
