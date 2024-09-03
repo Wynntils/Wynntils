@@ -1,3 +1,22 @@
+## [2.1.2](https://github.com/Wynntils/Wynntils/compare/v2.1.1...v2.1.2) (2024-09-03)
+
+
+### New Features
+
+* Add additional links to Mod Menu entry [skip ci] ([#2819](https://github.com/Wynntils/Wynntils/issues/2819)) ([b514230](https://github.com/Wynntils/Wynntils/commit/b514230dbfb5c48939193c913690b0cf2c018c84))
+
+
+### Bug Fixes
+
+* Don't crash guild map when a territory has no resources [skip ci] ([#2814](https://github.com/Wynntils/Wynntils/issues/2814)) ([2553cc7](https://github.com/Wynntils/Wynntils/commit/2553cc71793932ca13066d4b399bd347f7d97b49))
+* Fix base health stat not being set on gear items ([#2820](https://github.com/Wynntils/Wynntils/issues/2820)) ([1d4baa0](https://github.com/Wynntils/Wynntils/commit/1d4baa0cd72a0ba200a7b0ed03be992942cd13e8))
+* Various party management screen fixes [skip ci] ([#2812](https://github.com/Wynntils/Wynntils/issues/2812)) ([083e094](https://github.com/Wynntils/Wynntils/commit/083e0942d98395b60d3988ec47763cdc53d8a973))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2815](https://github.com/Wynntils/Wynntils/issues/2815)) ([59102ea](https://github.com/Wynntils/Wynntils/commit/59102eaf78e0eb56cf4e7fac4849c3bd6283c3b4))
+
 ## [2.1.1](https://github.com/Wynntils/Wynntils/compare/v2.1.0...v2.1.1) (2024-08-31)
 
 
@@ -5,6 +24,11 @@
 
 * Add all missing stats to legacy stat ordering and add a warning log for missing stats ([#2813](https://github.com/Wynntils/Wynntils/issues/2813)) ([3bb995c](https://github.com/Wynntils/Wynntils/commit/3bb995c5200ccbee3b889a6402e870586dc83888))
 * Don't update leaderboards on world switch [skip ci] ([#2811](https://github.com/Wynntils/Wynntils/issues/2811)) ([0c7d5b1](https://github.com/Wynntils/Wynntils/commit/0c7d5b1d94501ed0cd010d2f6f338b1bd0d2b9d0))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.1.1 [skip ci] ([81a0a2d](https://github.com/Wynntils/Wynntils/commit/81a0a2db298383bf960ae90a51bd462c8e44e6bd))
 
 ## [2.1.0](https://github.com/Wynntils/Wynntils/compare/v2.0.16...v2.1.0) (2024-08-30)
 
@@ -59,32 +83,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.15 [skip ci] ([bcec812](https://github.com/Wynntils/Wynntils/commit/bcec812691cad0362eae0117128eff13782a3b47))
-
-## [2.0.14](https://github.com/Wynntils/Wynntils/compare/v2.0.13...v2.0.14) (2024-08-28)
-
-
-### New Features
-
-* Make SpellCastMessageOverlay support Blood Pact ([#2800](https://github.com/Wynntils/Wynntils/issues/2800)) ([e118478](https://github.com/Wynntils/Wynntils/commit/e118478f618ef973f3ac320dbe42029f64316e8f))
-
-
-### Bug Fixes
-
-* Don't use formatting codes for cosmetic annotator [skip ci] ([#2796](https://github.com/Wynntils/Wynntils/issues/2796)) ([5dc73c9](https://github.com/Wynntils/Wynntils/commit/5dc73c9dd273d97fbaa033028c29b15c7bccde2b))
-* fix chat redirects for 2.1 [skip ci] ([#2791](https://github.com/Wynntils/Wynntils/issues/2791)) ([616b092](https://github.com/Wynntils/Wynntils/commit/616b0925b22082d91b1cca446467d5d8dd557024))
-* fix GuildBankRedirector pattern [skip ci] ([#2801](https://github.com/Wynntils/Wynntils/issues/2801)) ([9ba10b5](https://github.com/Wynntils/Wynntils/commit/9ba10b50701d0344425fb2df09feb623409330a7))
-* Parse health when over 100k [skip ci] ([#2798](https://github.com/Wynntils/Wynntils/issues/2798)) ([5f4051a](https://github.com/Wynntils/Wynntils/commit/5f4051aaa1d6837d8f9c97208425968a5027b840))
-* Update ToolDurabilityRedirector [skip ci] ([#2799](https://github.com/Wynntils/Wynntils/issues/2799)) ([5f9a66e](https://github.com/Wynntils/Wynntils/commit/5f9a66e156b7124e702594218b69dfd7d7b9bbf9))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2756](https://github.com/Wynntils/Wynntils/issues/2756)) ([b152657](https://github.com/Wynntils/Wynntils/commit/b15265772a9a96cf12a08a6e8b0f5ea99e83d6a4))
-* Don't stretch background texture on character selection and loading screen [skip ci] ([#2789](https://github.com/Wynntils/Wynntils/issues/2789)) ([29655fe](https://github.com/Wynntils/Wynntils/commit/29655fe0fa5c763d797dc24256a043bd014b217d))
-* **release:** v2.0.14 [skip ci] ([f970e0e](https://github.com/Wynntils/Wynntils/commit/f970e0ed47655d443358ae209de2cfd1718039a4))
-
-
-### Code Refactoring
-
-* Rename BossBarModel to AbilityModel and move AnnihilationSunBar to WorldEventModel [skip ci] ([#2793](https://github.com/Wynntils/Wynntils/issues/2793)) ([269707e](https://github.com/Wynntils/Wynntils/commit/269707ecdac795b5b8f82ff407883568438c24e9))
 
