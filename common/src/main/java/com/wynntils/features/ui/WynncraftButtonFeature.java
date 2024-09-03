@@ -56,7 +56,7 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (!(event.getScreen() instanceof TitleScreen titleScreen)) return;
 
         if (firstTitleScreenInit && autoConnect.get()) {

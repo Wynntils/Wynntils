@@ -15,6 +15,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -59,25 +61,41 @@ public class BulkBuyFeature extends Feature {
     private int bulkBoughtPrice = 0; // Price of a single item
 
     @SubscribeEvent
-    public void onShopOpened(SetSlotEvent.Pre e) {
-        // Warning - for some reason this is triggered randomly while the shop is open as well
-        if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54 || bulkBoughtSlotNumber != -1) return;
+    public void onShopOpened(SetSlotEvent.Post e) {
+        // This event handles the first init of the shop, we cannot use ScreenInitEvent for this as
+        // it will be fired before the shop contents are sent by the server
+
         // Shop titles are in slot 4, eg. §aScroll Shop
         // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
+        if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
 
-        // Now we can do all the screen checks, since this event doesn't give us a way to access a screen
-        if (!(McUtils.mc().screen instanceof ContainerScreen screen)) return;
-        if (!(screen.getMenu() instanceof AbstractContainerMenu)) return;
+        initBulkBuyWidget(McUtils.mc().screen);
+    }
 
-        String title = e.getItemStack().getHoverName().getString();
+    @SubscribeEvent
+    public void onContainerOpened(ScreenInitEvent.Post e) {
+        // This event handles any reinit required, eg window resize
+        // It will not make a widget on first init
+        initBulkBuyWidget(e.getScreen());
+    }
+
+    private void initBulkBuyWidget(Screen screen) {
+        // Neither event guarantees that they do not re-fire on the same screen
+        if (bulkBoughtSlotNumber != -1) return;
+
+        if (!(screen instanceof ContainerScreen containerScreen)) return;
+        if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)
+                || acm.getItems().size() != 90) return;
+
+        String title = acm.getSlot(4).getItem().getHoverName().getString();
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
 
         bulkBuyWidget = new BulkBuyWidget(
-                screen.leftPos - Texture.BULK_BUY_PANEL.width(),
-                screen.topPos - 5,
+                containerScreen.leftPos - Texture.BULK_BUY_PANEL.width(),
+                containerScreen.topPos - 5,
                 Texture.BULK_BUY_PANEL.width(),
                 Texture.BULK_BUY_PANEL.height());
-        screen.addRenderableWidget(bulkBuyWidget);
+        containerScreen.addRenderableWidget(bulkBuyWidget);
     }
 
     @SubscribeEvent
@@ -118,7 +136,7 @@ public class BulkBuyFeature extends Feature {
 
     @SubscribeEvent
     public void onShopClosed(ContainerCloseEvent.Pre e) {
-        resetBulkBuy();
+        resetBulkBuy(false);
         bulkBuyWidget = null;
     }
 
@@ -135,17 +153,18 @@ public class BulkBuyFeature extends Feature {
         --bulkBoughtAmount;
 
         if (bulkBoughtAmount <= 0) {
-            resetBulkBuy();
+            resetBulkBuy(true);
         }
         bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
     }
 
-    private void resetBulkBuy() {
+    private void resetBulkBuy(boolean resetWidget) {
         bulkBoughtSlotNumber = -1;
         bulkBoughtContainer = null;
         bulkBoughtAmount = 0;
         bulkBoughtPrice = 0;
 
+        if (!resetWidget) return;
         bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
         bulkBuyWidget.setBulkBoughtPrice(bulkBoughtPrice);
         bulkBuyWidget.setBulkBoughtItemStack(null);
