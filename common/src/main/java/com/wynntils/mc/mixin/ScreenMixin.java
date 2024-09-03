@@ -60,7 +60,7 @@ public abstract class ScreenMixin implements ScreenExtension {
 
     @Inject(method = "rebuildWidgets()V", at = @At("RETURN"))
     private void onScreenInitPost(CallbackInfo ci) {
-        MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, false));
+        MixinHelper.postAlways(new ScreenInitEvent.Post((Screen) (Object) this, false));
     }
 
     @Inject(
