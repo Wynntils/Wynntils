@@ -1,3 +1,21 @@
+## [2.1.3](https://github.com/Wynntils/Wynntils/compare/v2.1.2...v2.1.3) (2024-09-04)
+
+
+### New Features
+
+* Add colour picker for colour inputs [skip ci] ([#2818](https://github.com/Wynntils/Wynntils/issues/2818)) ([10262a7](https://github.com/Wynntils/Wynntils/commit/10262a7303c6b4879f8136ba08b11d9b841eb477))
+* Add raid score leaderboard badges [skip ci] ([#2823](https://github.com/Wynntils/Wynntils/issues/2823)) ([10c867b](https://github.com/Wynntils/Wynntils/commit/10c867bb9b0d1b0aaef4f635c0ec84a7e1625471))
+
+
+### Bug Fixes
+
+* Fix damage stats not being set on gear items ([#2822](https://github.com/Wynntils/Wynntils/issues/2822)) ([dba1561](https://github.com/Wynntils/Wynntils/commit/dba1561d1244c5c57df4215f090fe3c9617e4066))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2821](https://github.com/Wynntils/Wynntils/issues/2821)) ([7d92705](https://github.com/Wynntils/Wynntils/commit/7d92705623925e37b30d802f63c4ddd4d8721c15))
+
 ## [2.1.2](https://github.com/Wynntils/Wynntils/compare/v2.1.1...v2.1.2) (2024-09-03)
 
 
@@ -16,6 +34,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2815](https://github.com/Wynntils/Wynntils/issues/2815)) ([59102ea](https://github.com/Wynntils/Wynntils/commit/59102eaf78e0eb56cf4e7fac4849c3bd6283c3b4))
+* **release:** v2.1.2 [skip ci] ([cf19965](https://github.com/Wynntils/Wynntils/commit/cf19965a89b0fa7c36d0a045ae260706c9fdddc8))
 
 ## [2.1.1](https://github.com/Wynntils/Wynntils/compare/v2.1.0...v2.1.1) (2024-08-31)
 
@@ -63,24 +82,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.0.16 [skip ci] ([d4ad11e](https://github.com/Wynntils/Wynntils/commit/d4ad11ef3bbd1fcfd19b2746304a1a1acf5dbaa7))
-
-## [2.0.15](https://github.com/Wynntils/Wynntils/compare/v2.0.14...v2.0.15) (2024-08-30)
-
-
-### New Features
-
-* Add CorruptedCacheAnnotator [skip ci] ([#2804](https://github.com/Wynntils/Wynntils/issues/2804)) ([dd4cd57](https://github.com/Wynntils/Wynntils/commit/dd4cd57f631d421fd0697a0938430a45e849817c))
-* Update the visuals of the custom player list ([#2803](https://github.com/Wynntils/Wynntils/issues/2803)) ([897302d](https://github.com/Wynntils/Wynntils/commit/897302df1bceff80fb9a73c7f4037c6efd258dc3))
-
-
-### Bug Fixes
-
-* Fix incorrect pixel on Nexus of Light badges [skip ci] ([#2805](https://github.com/Wynntils/Wynntils/issues/2805)) ([da72453](https://github.com/Wynntils/Wynntils/commit/da7245369d814635507df7c1d588a79e7d688ff5))
-* fix transparent cape for ghost players [skip ci] ([#2790](https://github.com/Wynntils/Wynntils/issues/2790)) ([75d1249](https://github.com/Wynntils/Wynntils/commit/75d1249a2e4af6c6dd2c2e03a7a5a1970d40320c))
-* Make (Buffered)FontRenderer support custom color rendering [skip ci] ([#2806](https://github.com/Wynntils/Wynntils/issues/2806)) ([4935992](https://github.com/Wynntils/Wynntils/commit/49359929ac8571b72365cb8389c6125f50095a1d))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.15 [skip ci] ([bcec812](https://github.com/Wynntils/Wynntils/commit/bcec812691cad0362eae0117128eff13782a3b47))
 
