@@ -32,10 +32,14 @@ public enum LeaderboardType {
     CONTENT_GLOBAL("globalPlayerContent"),
     CONTENT_SOLO("playerContent"),
     // Raids
-    NEST_OF_THE_GROOTSLANGS("nogCompletion"),
-    ORPHIONS_NEXUS_OF_LIGHT("nolCompletion"),
-    THE_CANYON_COLOSSUS("tccCompletion"),
-    THE_NAMELESS_ANOMALY("tnaCompletion"),
+    NOG_SCORE("nogSrPlayers"),
+    NOG_COMPLETION("nogCompletion"),
+    NOL_SCORE("nolSrPlayers"),
+    NOL_COMPLETION("nolCompletion"),
+    TCC_SCORE("tccSrPlayers"),
+    TCC_COMPLETION("tccCompletion"),
+    TNA_SCORE("tnaSrPlayers"),
+    TNA_COMPLETION("tnaCompletion"),
     // Solo Gamemodes
     IRONMAN("ironmanContent"),
     ULTIMATE_IRONMAN("ultimateIronmanContent"),
