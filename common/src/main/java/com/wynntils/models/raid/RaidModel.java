@@ -16,17 +16,22 @@ import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
+import com.wynntils.models.raid.type.RaidBuffs;
 import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.colors.ColorUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -39,12 +44,16 @@ public class RaidModel extends Model {
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
+    private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile("(\\w+) has chosen the (\\w+ \\w+) buff!");
+
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
     @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
     private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
+
+    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
     private boolean completedCurrentChallenge = false;
     private CappedValue challenges = CappedValue.EMPTY;
@@ -85,6 +94,23 @@ public class RaidModel extends Model {
     // so we have to check for the chat message
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
+        if (inBuffRoom()) {
+            WynntilsMod.info("In Buff Room Chat Received");
+            WynntilsMod.info(ColorUtils.stripColors(event.getStyledText().getString()));
+            Matcher matcher = RAID_CHOOSE_BUFF_PATTERN.matcher(
+                    ColorUtils.stripColors(event.getStyledText().getString()));
+            if (matcher.find()) {
+                String playerName = matcher.group(1);
+                String buff = matcher.group(2);
+
+                WynntilsMod.info("Player " + playerName + " chose buff " + buff);
+
+                partyRaidBuffs
+                        .computeIfAbsent(playerName, k -> new ArrayList<>())
+                        .add(buff);
+            }
+        }
+
         if (!inChallengeRoom()) return;
 
         if (event.getStyledText().matches(CHALLENGE_COMPLETED_PATTERN)) {
@@ -219,6 +245,22 @@ public class RaidModel extends Model {
 
     public RaidKind getCurrentRaid() {
         return currentRaid;
+    }
+
+    public List<String> getMajorIdRaidBuffs(String playerName) {
+        List<String> buffNames = partyRaidBuffs.getOrDefault(playerName, Collections.emptyList());
+        if (buffNames.isEmpty()) return buffNames;
+
+        List<String> majorIds = new ArrayList<>();
+
+        for (String buffName : buffNames) {
+            String majorId = RaidBuffs.majorIdFromName(buffName);
+            if (majorId == null) continue;
+
+            majorIds.add(majorId);
+        }
+
+        return majorIds;
     }
 
     public RaidRoomType getCurrentRoom() {

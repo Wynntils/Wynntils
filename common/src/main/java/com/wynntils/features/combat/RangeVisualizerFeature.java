@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -120,19 +121,34 @@ public class RangeVisualizerFeature extends Feature {
         // Offset the radius slightly so multiple circles can be shown for each player
         // Only a few major IDs can actually be applied at the same time, but we make this general
         List<Pair<CustomColor, Float>> circles = validGear.stream()
-                .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
-                    case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
-                    case "Saviour’s Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
-                    case "Heart of the Pack" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
-                    case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
-                    default -> null;
-                }))
+                .flatMap(gearInfo ->
+                        gearInfo.fixedStats().majorIds().stream().map(majorId -> circleFromMajorId(majorId.name())))
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toList());
+
+        // add circles gained from raid major id buffs
+        if (Models.Raid.getCurrentRaid() != null) {
+            for (String buff : Models.Raid.getMajorIdRaidBuffs(player.getName().getString())) {
+                Pair<CustomColor, Float> circle = circleFromMajorId(buff);
+                if (circle != null) {
+                    circles.add(circle);
+                }
+            }
+        }
 
         if (!circles.isEmpty()) {
             circlesToRender.put(player, circles);
         }
+    }
+
+    private Pair<CustomColor, Float> circleFromMajorId(String majorIdName) {
+        return switch (majorIdName) {
+            case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
+            case "Saviour’s Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
+            case "Heart of the Pack" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
+            case "Guardian" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
+            default -> null;
+        };
     }
 
     private GearInfo getOtherPlayerGearInfo(ItemStack itemStack) {
