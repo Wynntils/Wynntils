@@ -10,7 +10,7 @@ import java.util.Map;
 
 public final class RaidBuffs {
     // Map of raid buff names to a list of the major ids they provide
-    private static Map<String, Map<Integer, String>> staticRaidBuffs = new HashMap<String, Map<Integer, String>>() {
+    private static final Map<String, Map<Integer, String>> staticRaidBuffs = new HashMap<>() {
         {
             // NOTG
             put("Beserk", Map.of(1, "Explosive Impact"));
