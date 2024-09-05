@@ -109,10 +109,20 @@ public class TestRegex {
     @Test
     public void ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME() {
         PatternTester p = new PatternTester(ArchetypeAbilitiesAnnotator.class, "ARCHETYPE_NAME");
-        p.shouldMatch("§e§lBoltslinger Archetype");
-        p.shouldMatch("§d§lSharpshooter Archetype");
-        p.shouldMatch("§2§lTrapper Archetype");
-        p.shouldMatch("§d§lLight Bender Archetype");
+        p.shouldMatch("§#eb3dfeff§lSharpshooter Archetype");
+        p.shouldMatch("§#dae069ff§lBoltslinger Archetype");
+        p.shouldMatch("§#87dd47ff§lTrapper Archetype");
+        p.shouldMatch("§#60c5cdff§lRiftwalker Archetype");
+        p.shouldMatch("§#eb3dfeff§lArcanist Archetype");
+        p.shouldMatch("§#f0c435ff§lSummoner Archetype");
+        p.shouldMatch("§#87dd47ff§lRitualist Archetype");
+        p.shouldMatch("§#ffa057ff§lAcolyte Archetype");
+        p.shouldMatch("§#ffa057ff§lFallen Archetype");
+        p.shouldMatch("§#dae069ff§lBattle Monk Archetype");
+        p.shouldMatch("§#60c5cdff§lPaladin Archetype");
+        p.shouldMatch("§#ffa057ff§lShadestepper Archetype");
+        p.shouldMatch("§#eb3dfeff§lTrickster Archetype");
+        p.shouldMatch("§#b8b0b0ff§lAcrobat Archetype");
     }
 
     @Test
