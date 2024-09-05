@@ -4,26 +4,42 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<CustomColor> {
+    private final ColorPickerWidget colorPickerWidget;
+
     public CustomColorSettingsButton(
             int x, int y, Config<CustomColor> config, TextboxScreen textboxScreen, int maskTopY, int maskBottomY) {
         super(x, y, config, textboxScreen, maskTopY, maskBottomY);
+
+        colorPickerWidget = new ColorPickerWidget(getX() + getWidth() + 4, getY(), 20, 20, this);
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
+        colorPickerWidget.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    }
 
-        CustomColor value = config.get();
-        RenderUtils.drawRect(poseStack, value, getX() + getWidth() + 4, getY(), 0, height, height);
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (colorPickerWidget.isMouseOver(mouseX, mouseY)) {
+            return colorPickerWidget.mouseClicked(mouseX, mouseY, button);
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        colorPickerWidget.setY(y);
     }
 }
