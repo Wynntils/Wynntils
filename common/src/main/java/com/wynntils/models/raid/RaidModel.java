@@ -95,15 +95,11 @@ public class RaidModel extends Model {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
         if (inBuffRoom()) {
-            WynntilsMod.info("In Buff Room Chat Received");
-            WynntilsMod.info(ColorUtils.stripColors(event.getStyledText().getString()));
             Matcher matcher = RAID_CHOOSE_BUFF_PATTERN.matcher(
                     ColorUtils.stripColors(event.getStyledText().getString()));
             if (matcher.find()) {
                 String playerName = matcher.group(1);
                 String buff = matcher.group(2);
-
-                WynntilsMod.info("Player " + playerName + " chose buff " + buff);
 
                 partyRaidBuffs
                         .computeIfAbsent(playerName, k -> new ArrayList<>())
@@ -128,6 +124,7 @@ public class RaidModel extends Model {
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
             roomTimers.clear();
+            partyRaidBuffs.clear();
 
             McUtils.sendMessageToClient(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
@@ -208,6 +205,7 @@ public class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        partyRaidBuffs.clear();
     }
 
     public void failedRaid() {
@@ -221,6 +219,7 @@ public class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        partyRaidBuffs.clear();
     }
 
     public void setTimeLeft(int seconds) {
