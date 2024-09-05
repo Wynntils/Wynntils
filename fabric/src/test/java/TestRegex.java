@@ -37,6 +37,7 @@ import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.worlds.BombModel;
+import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.lang.reflect.Field;
@@ -929,5 +930,12 @@ public class TestRegex {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
         p.shouldMatch(
                 "§e󏿼󏿿󏿾 Party members: §bbolyai, §fMrRickroll, Talkair, Angel_Pup, wluma, LaMDaKiS, Tanoranko, GebutterteWurst, kristof345, §eand §fSpeedtart");
+    }
+
+    @Test
+    public void WorldStateModel_HOUSING_NAME() {
+        PatternTester p = new PatternTester(WorldStateModel.class, "HOUSING_NAME");
+        p.shouldMatch("§f  §lChiefs Of Corkus' HQ");
+        p.shouldMatch("§f  §lShadow's Home");
     }
 }
