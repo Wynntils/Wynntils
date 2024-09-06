@@ -15,8 +15,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.type.IterationDecision;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -121,6 +123,40 @@ public class RevealNicknamesFeature extends Feature {
         });
 
         event.setMessage(styledText);
+    }
+
+    public static Pair<String, String> getNameAndNick(ChatMessageReceivedEvent event) {
+        AtomicReference<String> username = new AtomicReference<>();
+        AtomicReference<String> nickname = new AtomicReference<>();
+        event.getStyledText().iterate((currentPart, changes) -> {
+            HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
+
+            // If the hover event doesn't exist or it is not SHOW_TEXT event, it's not a nickname text part
+            if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
+                return IterationDecision.CONTINUE;
+            }
+
+            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
+                    .split("\n");
+
+            for (StyledText partText : partTexts) {
+                Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
+
+                if (nicknameMatcher.matches()) {
+                    nickname.set(nicknameMatcher.group("nick"));
+                    username.set(nicknameMatcher.group("username"));
+                }
+            }
+
+            // If the nickname or username is null, it's not a nickname text part
+            if (nickname.get() == null && username.get() == null) {
+                return IterationDecision.CONTINUE;
+            }
+
+            return IterationDecision.BREAK;
+        });
+
+        return new Pair<>(username.get(), nickname.get());
     }
 
     public enum NicknameReplaceOption {

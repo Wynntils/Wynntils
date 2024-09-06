@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -128,7 +129,7 @@ public class RangeVisualizerFeature extends Feature {
 
         // add circles gained from raid major id buffs
         if (Models.Raid.getCurrentRaid() != null) {
-            for (String buff : Models.Raid.getMajorIdRaidBuffs(player.getName().getString())) {
+            for (String buff : Models.Raid.getRaidBuffMajorIds(player.getName().getString())) {
                 Pair<CustomColor, Float> circle = circleFromMajorId(buff);
                 if (circle != null) {
                     circles.add(circle);

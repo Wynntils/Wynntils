@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
@@ -43,7 +44,7 @@ public class RaidModel extends Model {
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
-            "§#d6401effó\u008F¿¼î€\u0081ó\u0090€† §(#fa7f63ff|e)(\\w+)§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
+            "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff(\\w+)§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -94,10 +95,14 @@ public class RaidModel extends Model {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
         if (inBuffRoom()) {
-            WynntilsMod.info(event.getStyledText().getString());
-            Matcher matcher = event.getStyledText().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
                 String playerName = matcher.group(2);
+                // if the player is nicknamed
+                if (playerName.startsWith("§o")) {
+                    playerName = RevealNicknamesFeature.getNameAndNick(event).a();
+                }
+
                 String buff = matcher.group(3);
 
                 partyRaidBuffs
@@ -245,7 +250,7 @@ public class RaidModel extends Model {
         return currentRaid;
     }
 
-    public List<String> getMajorIdRaidBuffs(String playerName) {
+    public List<String> getRaidBuffMajorIds(String playerName) {
         List<String> buffNames = partyRaidBuffs.getOrDefault(playerName, Collections.emptyList());
         if (buffNames.isEmpty()) return buffNames;
 
