@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "type": "reference",
+      "id": "chat"
+    },
+    {
+      "type": "bitmap",
+      "file": "wynntils:font/chat_banner.png",
+      "ascent": 8,
+      "height": 9,
+      "chars": [
+        "\uE100"
+      ]
+    }
+  ]
+}
