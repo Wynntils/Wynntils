@@ -122,7 +122,8 @@ public final class LootrunPathFileParser {
                 locationJson.addProperty("z", position.z());
                 noteJson.add("location", locationJson);
 
-                String noteString = Component.Serializer.toJson(note.component(), McUtils.mc().player.registryAccess());
+                String noteString = Component.Serializer.toJson(
+                        note.component(), McUtils.mc().player.registryAccess());
 
                 // Parse the JSON string back into a JSON object
                 JsonObject noteObject = JsonParser.parseString(noteString).getAsJsonObject();
