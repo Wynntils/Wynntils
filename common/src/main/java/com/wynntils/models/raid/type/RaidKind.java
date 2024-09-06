@@ -6,7 +6,6 @@ package com.wynntils.models.raid.type;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
-
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -19,9 +18,7 @@ public enum RaidKind {
                     "Beserk", Map.of(1, "Explosive Impact"),
                     "Lightbearer", Map.of(3, "Transcendence"),
                     "Pestilent", Map.of(3, "Plague"),
-                    "Bedrock", Map.of(3, "Heart of the Pack")
-            )
-    ),
+                    "Bedrock", Map.of(3, "Heart of the Pack"))),
     ORPHIONS_NEXUS_OF_LIGHT(
             "Orphion's Nexus of Light",
             StyledText.fromString("§f§kOrphion's Nexus of §lLight"),
@@ -30,9 +27,7 @@ public enum RaidKind {
                     "Seraphim", Map.of(3, "Sorcery"),
                     "Ophanim", Map.of(3, "Guardian"),
                     "Throne", Map.of(3, "Transcendence"),
-                    "Anti", Map.of(3, "Explosive Impact")
-            )
-    ),
+                    "Anti", Map.of(3, "Explosive Impact"))),
     THE_CANYON_COLOSSUS(
             "The Canyon Colossus",
             StyledText.fromString("§#5f968bffThe Canyon Colossus"),
@@ -43,9 +38,7 @@ public enum RaidKind {
                                     1, "Heart of the Pack",
                                     2, "Greed",
                                     3, "Guardian"),
-                    "StoneWalker", Map.of(3, "Explosive Impact")
-            )
-    ),
+                    "StoneWalker", Map.of(3, "Explosive Impact"))),
     THE_NAMELESS_ANOMALY(
             "The Nameless Anomaly",
             StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly"),
@@ -55,9 +48,7 @@ public enum RaidKind {
                     "Hollowed", Map.of(2, "Guardian"),
                     "Sojourner", Map.of(2, "Freerunner"),
                     "Hopeless", Map.of(2, "Fission"),
-                    "Insidious", Map.of(3, "Sorcery")
-            )
-    );
+                    "Insidious", Map.of(3, "Sorcery")));
 
     private final String name;
     private final StyledText entryTitle;
@@ -65,7 +56,11 @@ public enum RaidKind {
 
     private final Map<String, Map<Integer, String>> majorIdBuffs;
 
-    RaidKind(String name, StyledText entryTitle, Pattern bossScoreboardPattern, Map<String, Map<Integer, String>> majorIdBuffs) {
+    RaidKind(
+            String name,
+            StyledText entryTitle,
+            Pattern bossScoreboardPattern,
+            Map<String, Map<Integer, String>> majorIdBuffs) {
         this.name = name;
         this.entryTitle = entryTitle;
         this.bossScoreboardPattern = bossScoreboardPattern;

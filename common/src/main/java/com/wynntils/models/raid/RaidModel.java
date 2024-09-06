@@ -16,12 +16,10 @@ import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
-import com.wynntils.models.raid.type.RaidBuffs;
 import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.colors.ColorUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
@@ -44,7 +42,8 @@ public class RaidModel extends Model {
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
-    private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile("(\\w+) has chosen the (\\w+ \\w+) buff!");
+    private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
+            "§#d6401effó\u008F¿¼î€\u0081ó\u0090€† §(#fa7f63ff|e)(\\w+)§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -95,11 +94,11 @@ public class RaidModel extends Model {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
         if (inBuffRoom()) {
-            Matcher matcher = RAID_CHOOSE_BUFF_PATTERN.matcher(
-                    ColorUtils.stripColors(event.getStyledText().getString()));
-            if (matcher.find()) {
-                String playerName = matcher.group(1);
-                String buff = matcher.group(2);
+            WynntilsMod.info(event.getStyledText().getString());
+            Matcher matcher = event.getStyledText().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            if (matcher.matches()) {
+                String playerName = matcher.group(2);
+                String buff = matcher.group(3);
 
                 partyRaidBuffs
                         .computeIfAbsent(playerName, k -> new ArrayList<>())
@@ -253,7 +252,7 @@ public class RaidModel extends Model {
         List<String> majorIds = new ArrayList<>();
 
         for (String buffName : buffNames) {
-            String majorId = RaidBuffs.majorIdFromName(buffName);
+            String majorId = this.currentRaid.majorIdFromBuff(buffName);
             if (majorId == null) continue;
 
             majorIds.add(majorId);
