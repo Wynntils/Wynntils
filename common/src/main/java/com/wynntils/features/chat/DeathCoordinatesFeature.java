@@ -13,21 +13,17 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
-    // Lowest as this will always cancel the event
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent
     public void onCharacterDeath(CharacterDeathEvent e) {
         StyledText deathMessage =
                 StyledText.fromComponent(Component.translatable("feature.wynntils.deathCoordinates.diedAt")
                         .withStyle(ChatFormatting.DARK_RED));
         deathMessage = deathMessage.appendPart(StyledTextUtils.createLocationPart(e.getLocation()));
 
-        McUtils.player().sendSystemMessage(deathMessage.getComponent());
-
-        e.setCanceled(true);
+        McUtils.sendMessageToClient(deathMessage.getComponent());
     }
 }
