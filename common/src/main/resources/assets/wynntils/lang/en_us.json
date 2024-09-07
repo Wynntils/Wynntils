@@ -103,6 +103,8 @@
   "feature.wynntils.arrowShieldTrackerOverlay.overlay.arrowShieldTracker.textShadow.name": "Text Shadow",
   "feature.wynntils.autoApplyResourcePack.description": "Adds the ability to automatically apply the Wynntils resource pack on startup.",
   "feature.wynntils.autoApplyResourcePack.name": "Auto Apply Resource Pack",
+  "feature.wynntils.autoAttack.description": "Automatically continues attacking while holding down the attack key.",
+  "feature.wynntils.autoAttack.name": "Auto Attack",
   "feature.wynntils.autoJoinParty.description": "Adds the ability to automatically join a party when a friend invites you.",
   "feature.wynntils.autoJoinParty.name": "Auto Join Parties",
   "feature.wynntils.autoJoinParty.onlyFriends.description": "Should we only auto join party invites from friends?",

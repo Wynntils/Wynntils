@@ -30,6 +30,7 @@ import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
+import com.wynntils.features.combat.AutoAttackFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -229,6 +230,7 @@ public final class FeatureManager extends Manager {
 
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
+        registerFeature(new AutoAttackFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
