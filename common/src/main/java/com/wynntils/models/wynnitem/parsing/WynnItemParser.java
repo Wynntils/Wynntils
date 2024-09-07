@@ -96,12 +96,12 @@ public final class WynnItemParser {
 
     private static final Pattern POWDER_MARKERS = Pattern.compile("[^✹✦❋❉✤]");
 
-    private static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
+    public static final Pattern SET_PATTERN = Pattern.compile("§a(.+) Set §7\\((\\d)/\\d\\)");
 
     public static final Pattern SET_BONUS_PATTERN = Pattern.compile("^§aSet Bonus:$");
 
     // Checks for items eg. "- Morph-Emerald" to determine if item is equipped from color
-    private static final Pattern SET_ITEM_PATTERN = Pattern.compile("^§[a7]- §([28])(.+)");
+    public static final Pattern SET_ITEM_PATTERN = Pattern.compile("^§[a7]- §([28])(.+)");
 
     private static final Pattern SET_BONUS_IDENTIFICATION_PATTERN =
             Pattern.compile("§[ac]([-+]\\d+)(%| tier|/[35]s)? ?§7 ?(.*)");
