@@ -25,7 +25,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class AutoAttackFeature extends Feature {
     static final int TICKS_PER_ATTACK = 2;
 
-    int attackCooldown = 0;
     int lastSelectedSlot;
     boolean preventWrongCast = false;
 
@@ -63,13 +62,8 @@ public class AutoAttackFeature extends Feature {
         for (StyledText lore : LoreUtils.getLore(heldItem)) {
             if (lore.contains("✖")) return;
         }
-
-        if (attackCooldown != 0) {
-            attackCooldown -= 1;
-            return;
-        }
+        if (player.tickCount % TICKS_PER_ATTACK == 0) return;
 
         player.swing(InteractionHand.MAIN_HAND);
-        attackCooldown = TICKS_PER_ATTACK - 1;
     }
 }
