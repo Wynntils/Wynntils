@@ -21,6 +21,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
+    static final int TICKS_PER_ATTACK = 2;
+
+    int attackCooldown = 0;
+
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
@@ -36,6 +40,12 @@ public class AutoAttackFeature extends Feature {
             if (lore.contains("✖")) return;
         }
 
+        if (attackCooldown != 0) {
+            attackCooldown -= 1;
+            return;
+        }
+
         player.swing(InteractionHand.MAIN_HAND);
+        attackCooldown = TICKS_PER_ATTACK - 1;
     }
 }
