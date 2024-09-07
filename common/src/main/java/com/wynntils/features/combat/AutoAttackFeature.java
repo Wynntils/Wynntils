@@ -10,7 +10,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
@@ -24,10 +26,32 @@ public class AutoAttackFeature extends Feature {
     static final int TICKS_PER_ATTACK = 2;
 
     int attackCooldown = 0;
+    int lastSelectedSlot;
+    boolean preventWrongCast = false;
+
+    @SubscribeEvent
+    public void onUseItem(UseItemEvent event) {
+        lastSelectedSlot = McUtils.inventory().selected;
+        preventWrongCast = true;
+    }
+
+    @SubscribeEvent
+    public void onSpellCastCompleted(SpellEvent.Completed event) {
+        preventWrongCast = false;
+    }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
+
+        int currentSelectedSlot = McUtils.inventory().selected;
+        if (currentSelectedSlot == lastSelectedSlot) {
+            if (preventWrongCast) return;
+        } else {
+            lastSelectedSlot = currentSelectedSlot;
+            preventWrongCast = false;
+        }
+
         if (!McUtils.options().keyAttack.isDown()) return;
         if (Models.Character.getClassType() == ClassType.ARCHER) return;
 
