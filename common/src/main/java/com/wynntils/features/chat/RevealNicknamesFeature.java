@@ -14,6 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -30,9 +31,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class RevealNicknamesFeature extends Feature {
-    // Note: Post Wynncraft 2.1, the hover text is inconsistent, sometimes "'s" is white, sometimes it's gray
-    private static final Pattern NICKNAME_PATTERN =
-            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real username is §f(?<username>.+)");
     private static final String NICKNAME_HOVER_TEXT = "§f%s§7's nickname is §f%s";
 
     @Persisted
@@ -56,7 +54,7 @@ public class RevealNicknamesFeature extends Feature {
             String nickname = null;
             String username = null;
             for (StyledText partText : partTexts) {
-                Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
+                Matcher nicknameMatcher = partText.getMatcher(StyledTextUtils.NICKNAME_PATTERN);
 
                 if (nicknameMatcher.matches()) {
                     nickname = nicknameMatcher.group("nick");
@@ -123,40 +121,6 @@ public class RevealNicknamesFeature extends Feature {
         });
 
         event.setMessage(styledText);
-    }
-
-    public static Pair<String, String> getNameAndNick(ChatMessageReceivedEvent event) {
-        AtomicReference<String> username = new AtomicReference<>();
-        AtomicReference<String> nickname = new AtomicReference<>();
-        event.getStyledText().iterate((currentPart, changes) -> {
-            HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
-
-            // If the hover event doesn't exist or it is not SHOW_TEXT event, it's not a nickname text part
-            if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
-                return IterationDecision.CONTINUE;
-            }
-
-            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
-                    .split("\n");
-
-            for (StyledText partText : partTexts) {
-                Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
-
-                if (nicknameMatcher.matches()) {
-                    nickname.set(nicknameMatcher.group("nick"));
-                    username.set(nicknameMatcher.group("username"));
-                }
-            }
-
-            // If the nickname or username is null, it's not a nickname text part
-            if (nickname.get() == null && username.get() == null) {
-                return IterationDecision.CONTINUE;
-            }
-
-            return IterationDecision.BREAK;
-        });
-
-        return new Pair<>(username.get(), nickname.get());
     }
 
     public enum NicknameReplaceOption {
