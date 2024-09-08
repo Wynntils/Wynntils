@@ -4,7 +4,6 @@
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
-import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.trademarket.TradeMarketAutoOpenChatFeature;
@@ -39,6 +38,7 @@ import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 import net.minecraft.SharedConstants;
@@ -907,8 +907,8 @@ public class TestRegex {
     }
 
     @Test
-    public void RevealNicknamesFeature_NICKNAME_PATTERN() {
-        PatternTester p = new PatternTester(RevealNicknamesFeature.class, "NICKNAME_PATTERN");
+    public void StyledTextUtils_NICKNAME_PATTERN() {
+        PatternTester p = new PatternTester(StyledTextUtils.class, "NICKNAME_PATTERN");
 
         p.shouldMatch("§fbol§7's real username is §fbolyai");
         p.shouldMatch("§fbol's§7 real username is §fbolyai");
