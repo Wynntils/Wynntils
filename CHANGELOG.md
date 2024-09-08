@@ -1,3 +1,25 @@
+## [2.2.0](https://github.com/Wynntils/Wynntils/compare/v2.1.4...v2.2.0) (2024-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* Bump development version to 1.21.1 (and maintain 1.21 compatibility) (#2840)
+
+### New Features
+
+* Bump development version to 1.21.1 (and maintain 1.21 compatibility) ([#2840](https://github.com/Wynntils/Wynntils/issues/2840)) ([bc3d9ba](https://github.com/Wynntils/Wynntils/commit/bc3d9baf21b623bb5207f9ea16bba9490a25f144))
+
+
+### Bug Fixes
+
+* Fix custom territory management screen [skip ci] ([#2837](https://github.com/Wynntils/Wynntils/issues/2837)) ([6ed05ad](https://github.com/Wynntils/Wynntils/commit/6ed05ade533f55a19ddba8046308263929341b93))
+* Fix issues with slot rendering [skip ci] ([#2839](https://github.com/Wynntils/Wynntils/issues/2839)) ([9923a69](https://github.com/Wynntils/Wynntils/commit/9923a69f8e6de2a2653cc76aaf84908988aa9b6e))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2838](https://github.com/Wynntils/Wynntils/issues/2838)) ([7437500](https://github.com/Wynntils/Wynntils/commit/7437500f34509054f5e6e5ca7534b08632b50b31))
+
 ## [2.1.4](https://github.com/Wynntils/Wynntils/compare/v2.1.3...v2.1.4) (2024-09-08)
 
 
@@ -9,6 +31,11 @@
 * Fix lootrun notes not rendering and saving incorrectly [skip ci] ([#2829](https://github.com/Wynntils/Wynntils/issues/2829)) ([720ada9](https://github.com/Wynntils/Wynntils/commit/720ada91dab3b4d5ca9e1e840be630fad39d7acb))
 * Fix outline text shadow not rendering around vanilla hud elements [skip ci] ([#2830](https://github.com/Wynntils/Wynntils/issues/2830)) ([7a5ab6b](https://github.com/Wynntils/Wynntils/commit/7a5ab6b10c3dd5dffbdb584545bcdf2cc5748e0c))
 * Fix some more chat redirects [skip ci] ([#2825](https://github.com/Wynntils/Wynntils/issues/2825)) ([f2ce337](https://github.com/Wynntils/Wynntils/commit/f2ce33751e4617a8396f6a8fb406dcaa18650244))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.1.4 [skip ci] ([73d02c2](https://github.com/Wynntils/Wynntils/commit/73d02c20f959724c5a4225f264089fd0f9f06515))
 
 ## [2.1.3](https://github.com/Wynntils/Wynntils/compare/v2.1.2...v2.1.3) (2024-09-04)
 
@@ -61,21 +88,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.1.1 [skip ci] ([81a0a2d](https://github.com/Wynntils/Wynntils/commit/81a0a2db298383bf960ae90a51bd462c8e44e6bd))
-
-## [2.1.0](https://github.com/Wynntils/Wynntils/compare/v2.0.16...v2.1.0) (2024-08-30)
-
-
-### ⚠ BREAKING CHANGES
-
-* Add support for Wynncraft 2.1 items (#2757)
-
-### New Features
-
-* Add support for Wynncraft 2.1 items ([#2757](https://github.com/Wynntils/Wynntils/issues/2757)) ([98645de](https://github.com/Wynntils/Wynntils/commit/98645deb80d42f659db304d1ef1cb630651de765))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2807](https://github.com/Wynntils/Wynntils/issues/2807)) ([08abd47](https://github.com/Wynntils/Wynntils/commit/08abd4721f8c57bc17209efa5334cafd42f828d1))
-* **release:** v2.1.0 [skip ci] ([9d73c0d](https://github.com/Wynntils/Wynntils/commit/9d73c0dabc7d2c9aba766c2f82190b727b7d9734))
 
