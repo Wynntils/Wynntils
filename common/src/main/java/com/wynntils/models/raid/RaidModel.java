@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
@@ -25,7 +24,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +99,8 @@ public class RaidModel extends Model {
                 String playerName = matcher.group(3);
                 // if the player is nicknamed
                 if (matcher.group(2) != null) {
-                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText()).a();
+                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
+                            .a();
                 }
 
                 String buff = matcher.group(3);
