@@ -6,9 +6,8 @@ package com.wynntils.models.character.event;
 
 import com.wynntils.utils.mc.type.Location;
 import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
 
-public class CharacterDeathEvent extends Event implements ICancellableEvent {
+public class CharacterDeathEvent extends Event {
     private final Location location;
 
     public CharacterDeathEvent(Location location) {

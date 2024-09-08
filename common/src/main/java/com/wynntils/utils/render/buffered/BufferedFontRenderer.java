@@ -118,7 +118,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0);
                 font.drawInBatch(
@@ -129,7 +129,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0);
                 font.drawInBatch(
@@ -140,7 +140,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0);
                 font.drawInBatch(
@@ -151,7 +151,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0);
 
@@ -163,7 +163,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0);
             }

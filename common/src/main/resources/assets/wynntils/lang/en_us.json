@@ -230,7 +230,6 @@
   "feature.wynntils.chatRedirect.scrollTeleport.description": "How should messages about failing to teleport (with a scroll) appear?",
   "feature.wynntils.chatRedirect.scrollTeleport.name": "Scroll Teleport Message Filtering",
   "feature.wynntils.chatRedirect.scrollTeleport.notificationHousing": "Can't teleport on a housing island!",
-  "feature.wynntils.chatRedirect.scrollTeleport.notificationMobs": "Nearby mobs prevent scroll teleportation!",
   "feature.wynntils.chatRedirect.shaman.description": "How should shaman-specific messages appear?",
   "feature.wynntils.chatRedirect.shaman.name": "Shaman Message Filtering",
   "feature.wynntils.chatRedirect.shaman.notification": "No totems nearby!",

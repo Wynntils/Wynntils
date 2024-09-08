@@ -118,7 +118,6 @@ public class ChatRedirectFeature extends Feature {
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
         register(new ScrollTeleportationHousingFailRedirector());
-        register(new ScrollTeleportationMobFailRedirector());
         register(new SpeedBoostRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
@@ -218,7 +217,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§cYour items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+                "^§4(?:\uE008\uE002|\uE001) Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -464,7 +463,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class HousingTeleportArrivalCooldownRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cYou need to wait a bit before joining another house\\.$");
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) You need to wait before joining another house\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -599,8 +598,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class MageTeleportationFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cSorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§4(?:\uE008\uE002|\uE001) Sorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -709,7 +708,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class PotionsMovedRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank\\.$");
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your Character Bank\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -769,28 +768,6 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText getNotification(Matcher matcher) {
             return StyledText.fromComponent(
                     Component.translatable("feature.wynntils.chatRedirect.scrollTeleport.notificationHousing")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
-    private class ScrollTeleportationMobFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("§cThere are aggressive mobs nearby\\.\\.\\.$");
-
-        @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return scrollTeleport.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.scrollTeleport.notificationMobs")
                             .withStyle(ChatFormatting.DARK_RED));
         }
     }

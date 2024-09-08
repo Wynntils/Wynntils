@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class ArchetypeAbilitiesAnnotator implements GuiItemAnnotator {
     // Test in ArchetypeAbilitiesAnnotator_ARCHETYPE_NAME
-    private static final Pattern ARCHETYPE_NAME = Pattern.compile("^§([a-r0-9])§l[A-Za-z ]+ Archetype$");
+    private static final Pattern ARCHETYPE_NAME = Pattern.compile("^§#([a-f0-9]{8})§l[A-Za-z ]+ Archetype$");
     // Test in ArchetypeAbilitiesAnnotator_ARCHETYPE_PATTERN
     private static final Pattern ARCHETYPE_PATTERN = Pattern.compile("^§a✔ §7Unlocked Abilities: §f(\\d+)§7/(\\d+)$");
 
@@ -31,7 +31,6 @@ public final class ArchetypeAbilitiesAnnotator implements GuiItemAnnotator {
 
         int count = Integer.parseInt(loreMatcher.group(1));
         int max = Integer.parseInt(loreMatcher.group(2));
-        char colorCode = nameMatcher.group(1).charAt(0);
-        return new ArchetypeAbilitiesItem(new CappedValue(count, max), colorCode);
+        return new ArchetypeAbilitiesItem(new CappedValue(count, max));
     }
 }
