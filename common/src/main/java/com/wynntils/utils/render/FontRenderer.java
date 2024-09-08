@@ -46,7 +46,7 @@ public final class FontRenderer {
         return font;
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
             StyledText text,
             float x,
@@ -55,7 +55,8 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
-            float textScale) {
+            float textScale,
+            Font.DisplayMode displayMode) {
         BufferedFontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -67,9 +68,33 @@ public final class FontRenderer {
                         horizontalAlignment,
                         verticalAlignment,
                         shadow,
-                        textScale);
+                        textScale,
+                        displayMode);
 
         BUFFER_SOURCE.endBatch();
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            StyledText text,
+            float x,
+            float y,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow,
+            float textScale) {
+        renderText(
+                poseStack,
+                text,
+                x,
+                y,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                textScale,
+                Font.DisplayMode.SEE_THROUGH);
     }
 
     public void renderText(
@@ -268,11 +293,22 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
-            float textScale) {
+            float textScale,
+            Font.DisplayMode displayMode) {
         if (text == null) return;
 
         if (maxWidth == 0 || font.width(text.getString()) / textScale < maxWidth) {
-            renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
+            renderText(
+                    poseStack,
+                    text,
+                    x,
+                    y,
+                    customColor,
+                    horizontalAlignment,
+                    verticalAlignment,
+                    shadow,
+                    textScale,
+                    displayMode);
             return;
         }
 
@@ -297,8 +333,59 @@ public final class FontRenderer {
                     horizontalAlignment,
                     verticalAlignment,
                     shadow,
-                    textScale);
+                    textScale,
+                    displayMode);
         }
+    }
+
+    private void renderText(
+            PoseStack poseStack,
+            StyledText text,
+            float x,
+            float y,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow,
+            float textScale) {
+        renderText(
+                poseStack,
+                text,
+                x,
+                y,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                textScale,
+                Font.DisplayMode.SEE_THROUGH);
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            StyledText text,
+            float x,
+            float y,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow,
+            Font.DisplayMode displayMode) {
+        renderText(
+                poseStack,
+                text,
+                x,
+                y,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                1f,
+                displayMode);
     }
 
     public void renderText(
@@ -311,7 +398,17 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow) {
-        renderText(poseStack, text, x, y, maxWidth, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
+        renderText(
+                poseStack,
+                text,
+                x,
+                y,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                Font.DisplayMode.SEE_THROUGH);
     }
 
     public void renderScrollingText(
@@ -454,7 +551,7 @@ public final class FontRenderer {
                 1f);
     }
 
-    public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
+    public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line, Font.DisplayMode displayMode) {
         renderText(
                 poseStack,
                 line.getText(),
@@ -464,7 +561,12 @@ public final class FontRenderer {
                 line.getSetting().customColor(),
                 line.getSetting().horizontalAlignment(),
                 line.getSetting().verticalAlignment(),
-                line.getSetting().shadow());
+                line.getSetting().shadow(),
+                displayMode);
+    }
+
+    public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
+        renderText(poseStack, x, y, line, Font.DisplayMode.SEE_THROUGH);
     }
 
     public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
