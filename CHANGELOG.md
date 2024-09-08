@@ -1,3 +1,15 @@
+## [2.1.4](https://github.com/Wynntils/Wynntils/compare/v2.1.3...v2.1.4) (2024-09-08)
+
+
+### Bug Fixes
+
+* Fix ability tree annotators [skip ci] ([#2824](https://github.com/Wynntils/Wynntils/issues/2824)) ([7c7690a](https://github.com/Wynntils/Wynntils/commit/7c7690ae9aef3aebea4cecf96a5b55d855daedd7))
+* Fix death coordinates [skip ci] ([#2831](https://github.com/Wynntils/Wynntils/issues/2831)) ([90e55d8](https://github.com/Wynntils/Wynntils/commit/90e55d82bf6756ad7fb36c6bfba831ea0b4aec10))
+* Fix getting stuck in interim state when changing world via housing join [skip ci] ([#2826](https://github.com/Wynntils/Wynntils/issues/2826)) ([a21c793](https://github.com/Wynntils/Wynntils/commit/a21c793ffac52e044e96e09b918e786240dc5092))
+* Fix lootrun notes not rendering and saving incorrectly [skip ci] ([#2829](https://github.com/Wynntils/Wynntils/issues/2829)) ([720ada9](https://github.com/Wynntils/Wynntils/commit/720ada91dab3b4d5ca9e1e840be630fad39d7acb))
+* Fix outline text shadow not rendering around vanilla hud elements [skip ci] ([#2830](https://github.com/Wynntils/Wynntils/issues/2830)) ([7a5ab6b](https://github.com/Wynntils/Wynntils/commit/7a5ab6b10c3dd5dffbdb584545bcdf2cc5748e0c))
+* Fix some more chat redirects [skip ci] ([#2825](https://github.com/Wynntils/Wynntils/issues/2825)) ([f2ce337](https://github.com/Wynntils/Wynntils/commit/f2ce33751e4617a8396f6a8fb406dcaa18650244))
+
 ## [2.1.3](https://github.com/Wynntils/Wynntils/compare/v2.1.2...v2.1.3) (2024-09-04)
 
 
@@ -15,6 +27,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2821](https://github.com/Wynntils/Wynntils/issues/2821)) ([7d92705](https://github.com/Wynntils/Wynntils/commit/7d92705623925e37b30d802f63c4ddd4d8721c15))
+* **release:** v2.1.3 [skip ci] ([c7d1800](https://github.com/Wynntils/Wynntils/commit/c7d18006caa84dbaa402ef6646821a4c12e7a8d2))
 
 ## [2.1.2](https://github.com/Wynntils/Wynntils/compare/v2.1.1...v2.1.2) (2024-09-03)
 
@@ -65,21 +78,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2807](https://github.com/Wynntils/Wynntils/issues/2807)) ([08abd47](https://github.com/Wynntils/Wynntils/commit/08abd4721f8c57bc17209efa5334cafd42f828d1))
 * **release:** v2.1.0 [skip ci] ([9d73c0d](https://github.com/Wynntils/Wynntils/commit/9d73c0dabc7d2c9aba766c2f82190b727b7d9734))
-
-## [2.0.16](https://github.com/Wynntils/Wynntils/compare/v2.0.15...v2.0.16) (2024-08-30)
-
-
-### New Features
-
-* recolor the player list overlay texture [skip ci] ([#2809](https://github.com/Wynntils/Wynntils/issues/2809)) ([a493a8b](https://github.com/Wynntils/Wynntils/commit/a493a8bd0998cb7294d2e14ab080063786e138f9))
-
-
-### Bug Fixes
-
-* Fix lootruns not recording chests since 2.0 ([#2810](https://github.com/Wynntils/Wynntils/issues/2810)) ([5311173](https://github.com/Wynntils/Wynntils/commit/531117368500cc8cc1e933d4f8dcad61aabe389f))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.0.16 [skip ci] ([d4ad11e](https://github.com/Wynntils/Wynntils/commit/d4ad11ef3bbd1fcfd19b2746304a1a1acf5dbaa7))
 
