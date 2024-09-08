@@ -37,6 +37,7 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -153,7 +154,7 @@ public class ItemTextOverlayFeature extends Feature {
         poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task());
+        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
         poseStack.popPose();
     }
 
