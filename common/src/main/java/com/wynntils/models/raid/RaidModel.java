@@ -252,9 +252,9 @@ public class RaidModel extends Model {
     }
 
     public List<String> getRaidBuffMajorIds(String playerName) {
-        List<String> buffNames = partyRaidBuffs.getOrDefault(playerName, Collections.emptyList());
-        if (buffNames.isEmpty()) return buffNames;
+        if (!partyRaidBuffs.containsKey(playerName)) return List.of();
 
+        List<String> buffNames = partyRaidBuffs.get(playerName);
         List<String> majorIds = new ArrayList<>();
 
         for (String buffName : buffNames) {

@@ -38,7 +38,7 @@ public enum RaidKind {
                                     1, "Heart of the Pack",
                                     2, "Greed",
                                     3, "Guardian"),
-                    "StoneWalker", Map.of(3, "Explosive Impact"))),
+                    "Stonewalker", Map.of(3, "Explosive Impact"))),
     THE_NAMELESS_ANOMALY(
             "The Nameless Anomaly",
             StyledText.fromString("§9§lThe §1§k§lNameless§9§l Anomaly"),
