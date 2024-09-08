@@ -22,6 +22,7 @@ import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +45,7 @@ public class RaidModel extends Model {
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
-            "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff(\\w+)§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
+            "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
@@ -97,10 +98,10 @@ public class RaidModel extends Model {
         if (inBuffRoom()) {
             Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
-                String playerName = matcher.group(2);
+                String playerName = matcher.group(3);
                 // if the player is nicknamed
-                if (playerName.startsWith("§o")) {
-                    playerName = RevealNicknamesFeature.getNameAndNick(event).a();
+                if (matcher.group(2) != null) {
+                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText()).a();
                 }
 
                 String buff = matcher.group(3);
