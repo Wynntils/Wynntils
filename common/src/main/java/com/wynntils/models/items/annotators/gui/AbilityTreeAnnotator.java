@@ -19,7 +19,7 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     private static final Pattern COMPASS_ABILITY_POINTS_PATTERN = Pattern.compile("^§3✦ Unused Points: §f(\\d+)$");
 
     // Deals with the reset button in the ability tree screen
-    private static final StyledText TREE_ABILITY_POINTS_NAME = StyledText.fromString("§3§lAbility Points");
+    private static final StyledText TREE_ABILITY_POINTS_NAME = StyledText.fromString("§#82eff4ff§lAbility Points");
     // Test in AbilityTreeAnnotator_TREE_ABILITY_POINTS_PATTERN
     private static final Pattern TREE_ABILITY_POINTS_PATTERN =
             Pattern.compile("^§b✦ Available Points: §f(\\d+)§7/\\d+$");
