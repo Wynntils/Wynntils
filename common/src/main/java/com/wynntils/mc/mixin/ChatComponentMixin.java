@@ -9,7 +9,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.RenderChatTimestampEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
