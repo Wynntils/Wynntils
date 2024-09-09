@@ -20,6 +20,7 @@ import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -253,11 +254,17 @@ public class RaidModel extends Model {
     public List<String> getRaidMajorIds(String playerName) {
         if (!partyRaidBuffs.containsKey(playerName)) return List.of();
 
-        List<String> buffNames = partyRaidBuffs.get(playerName);
+        List<String> rawBuffNames = partyRaidBuffs.get(playerName);
         List<String> majorIds = new ArrayList<>();
 
-        for (String buffName : buffNames) {
-            String majorId = this.currentRaid.majorIdFromBuff(buffName);
+        for (String rawBuffName : rawBuffNames) {
+            String[] buffParts = rawBuffName.split(" ");
+            if (buffParts.length < 2) continue;
+
+            String buffName = buffParts[0];
+            int buffTier = MathUtils.integerFromRoman(buffParts[1]);
+
+            String majorId = this.currentRaid.majorIdFromBuff(buffName, buffTier);
             if (majorId == null) continue;
 
             majorIds.add(majorId);

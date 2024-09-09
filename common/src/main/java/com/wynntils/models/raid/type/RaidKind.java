@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.raid.type;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.raid.RaidModel;
 import com.wynntils.utils.MathUtils;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -87,15 +89,9 @@ public enum RaidKind {
         return null;
     }
 
-    public String majorIdFromBuff(String name) {
-        String[] split = name.split(" ");
-        if (split.length == 1) return null;
-
-        if (majorIdBuffs.containsKey(split[0])) {
-            return majorIdBuffs.get(split[0]).get(MathUtils.integerFromRoman(split[1]));
-        }
-
-        return null;
+    public String majorIdFromBuff(String buff, int tier) {
+        if (!majorIdBuffs.containsKey(buff)) return null;
+        return majorIdBuffs.get(buff).get(tier);
     }
 
     public String getName() {
