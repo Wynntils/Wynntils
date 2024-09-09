@@ -8,7 +8,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
@@ -123,18 +122,16 @@ public class RangeVisualizerFeature extends Feature {
         // Only a few major IDs can actually be applied at the same time, but we make this general
         List<Pair<CustomColor, Float>> circles = validGear.stream()
                 .flatMap(gearInfo ->
-                        gearInfo.fixedStats().majorIds().stream().map(majorId -> circleFromMajorId(majorId.name())))
+                        gearInfo.fixedStats().majorIds().stream().map(majorId -> getCircleFromMajorId(majorId.name())))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         // add circles gained from raid major id buffs
         if (Models.Raid.getCurrentRaid() != null) {
-            for (String buff : Models.Raid.getRaidBuffMajorIds(player.getName().getString())) {
-                Pair<CustomColor, Float> circle = circleFromMajorId(buff);
-                if (circle != null) {
-                    circles.add(circle);
-                }
-            }
+            Models.Raid.getRaidMajorIds(player.getName().getString()).stream()
+                    .map(this::getCircleFromMajorId)
+                    .filter(Objects::nonNull)
+                    .forEach(circles::add);
         }
 
         if (!circles.isEmpty()) {
@@ -142,7 +139,7 @@ public class RangeVisualizerFeature extends Feature {
         }
     }
 
-    private Pair<CustomColor, Float> circleFromMajorId(String majorIdName) {
+    private Pair<CustomColor, Float> getCircleFromMajorId(String majorIdName) {
         return switch (majorIdName) {
             case "Taunt" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
             case "Saviour’s Sacrifice" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);

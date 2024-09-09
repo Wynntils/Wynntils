@@ -31,6 +31,7 @@ import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
+import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -858,6 +859,13 @@ public class TestRegex {
         p.shouldNotMatch("§f⬡ §7Mobs Killed: §f");
         p.shouldMatch("§f⬡ §7Wars Won: §f164");
         p.shouldMatch("§f⬡ §7Raids Won: §f0");
+    }
+
+    @Test
+    public void RaidModel_RAID_BUFF_PATTERN() {
+        PatternTester p = new PatternTester(RaidModel.class, "RAID_CHOOSE_BUFF_PATTERN");
+        p.shouldMatch(
+                "§#d6401eff\uE009\uE002 §#fa7f63ffDanzxms§#d6401eff has chosen the §#fa7f63ffStonewalker III§#d6401eff buff!");
     }
 
     @Test

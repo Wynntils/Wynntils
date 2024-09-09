@@ -96,14 +96,14 @@ public class RaidModel extends Model {
         if (inBuffRoom()) {
             Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
-                String playerName = matcher.group(3);
+                String playerName = matcher.group(4);
                 // if the player is nicknamed
-                if (matcher.group(2) != null) {
+                if (matcher.group(3) != null) {
                     playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
                             .a();
                 }
 
-                String buff = matcher.group(3);
+                String buff = matcher.group(5);
 
                 partyRaidBuffs
                         .computeIfAbsent(playerName, k -> new ArrayList<>())
@@ -250,7 +250,7 @@ public class RaidModel extends Model {
         return currentRaid;
     }
 
-    public List<String> getRaidBuffMajorIds(String playerName) {
+    public List<String> getRaidMajorIds(String playerName) {
         if (!partyRaidBuffs.containsKey(playerName)) return List.of();
 
         List<String> buffNames = partyRaidBuffs.get(playerName);
