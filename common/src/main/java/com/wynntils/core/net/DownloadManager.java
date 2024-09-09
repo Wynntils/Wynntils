@@ -11,13 +11,11 @@ import com.wynntils.core.components.CoreComponent;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.Pair;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -58,7 +56,8 @@ public class DownloadManager extends Manager {
 
     private DownloadDependencyGraph graph = null;
 
-    private Pair<QueuedDownload, Download>[] currentDownloads;
+    private Object downloadsLock = new Object();
+    private Map<QueuedDownload, Download> currentDownloads;
 
     public DownloadManager() {
         super(List.of());
@@ -85,20 +84,23 @@ public class DownloadManager extends Manager {
     public void download() {
         // Reset the state of the manager, as the downloads are being started
         graph.resetState();
-        currentDownloads = new Pair[MAX_PARALLEL_DOWNLOADS];
+        currentDownloads = new LinkedHashMap<>();
 
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
-        for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {
-            QueuedDownload queuedDownload = graph.nextDownload();
+        synchronized (downloadsLock) {
+            for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {
+                QueuedDownload queuedDownload = graph.nextDownload();
 
-            if (queuedDownload == null) {
-                // This may not be an issue, but it can be a sign of a bug, or a bad configuration
-                WynntilsMod.warn("Max parallel downloads was not reached, but there are no more downloads to start.");
-                return;
+                if (queuedDownload == null) {
+                    // This may not be an issue, but it can be a sign of a bug, or a bad configuration
+                    WynntilsMod.warn(
+                            "Max parallel downloads was not reached, but there are no more downloads to start.");
+                    return;
+                }
+
+                currentDownloads.put(queuedDownload, getDownload(queuedDownload));
             }
-
-            currentDownloads[i] = new Pair<>(queuedDownload, getDownload(queuedDownload));
         }
     }
 
@@ -142,21 +144,28 @@ public class DownloadManager extends Manager {
     private void queueNextDownload(QueuedDownload finishedDownload) {
         QueuedDownload nextDownload = graph.nextDownload();
 
-        for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {
-            if (currentDownloads[i] == null) continue;
-            if (!currentDownloads[i].key().equals(finishedDownload)) continue;
+        synchronized (downloadsLock) {
+            for (Map.Entry<QueuedDownload, Download> entry : currentDownloads.entrySet()) {
+                if (!entry.getKey().equals(finishedDownload)) continue;
 
-            if (nextDownload == null) {
-                currentDownloads[i] = null;
-            } else {
-                currentDownloads[i] = new Pair<>(nextDownload, getDownload(nextDownload));
+                if (DEBUG_LOGS) {
+                    WynntilsMod.info(entry.getKey() + " -> " + nextDownload);
+                }
+
+                // Remove the finished download from the current downloads
+                currentDownloads.remove(entry.getKey());
+
+                // Queue the next download, if there is one
+                if (nextDownload != null) {
+                    currentDownloads.put(nextDownload, getDownload(nextDownload));
+                }
+
+                return;
             }
 
-            return;
+            WynntilsMod.error(
+                    "Finished, but not yet replaced download not found in the current downloads: " + finishedDownload);
         }
-
-        WynntilsMod.error(
-                "Finished, but not yet replaced download not found in the current downloads: " + finishedDownload);
     }
 
     private <T> Consumer<T> wrapDownloadHandler(Consumer<T> handler, QueuedDownload download) {
@@ -199,7 +208,7 @@ public class DownloadManager extends Manager {
 
     private void checkDownloadsFinished() {
         if (!graph.isFinished()) return;
-        if (!Arrays.stream(currentDownloads).allMatch(Objects::isNull)) return;
+        if (!currentDownloads.isEmpty()) return;
 
         // All downloads are finished, and there are no more downloads to start
         // Display statistics from the graph
