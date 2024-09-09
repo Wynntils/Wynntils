@@ -101,7 +101,8 @@ public class RaidModel extends Model {
                 // if the player is nicknamed
                 if (matcher.group(3) != null) {
                     playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
-                            .a();
+                            .key();
+                    if (playerName == null) return;
                 }
 
                 String buff = matcher.group(5);

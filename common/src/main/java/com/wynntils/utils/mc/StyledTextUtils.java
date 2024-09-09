@@ -8,17 +8,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.type.IterationDecision;
-import com.wynntils.utils.type.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -209,14 +205,15 @@ public final class StyledTextUtils {
     }
 
     public static Pair<String, String> extractNameAndNick(StyledText styledText) {
-        for (StyledTextPart part : styledText){
+        for (StyledTextPart part : styledText) {
             HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
 
             if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
                 continue;
             }
 
-            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT)).split("\n");
+            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
+                    .split("\n");
 
             for (StyledText partText : partTexts) {
                 Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
@@ -227,6 +224,6 @@ public final class StyledTextUtils {
             }
         }
 
-        return new Pair<>(null, null);
+        return null;
     }
 }
