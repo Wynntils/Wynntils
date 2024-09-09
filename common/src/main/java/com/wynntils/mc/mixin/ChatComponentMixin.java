@@ -11,6 +11,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
+import com.wynntils.mc.event.RenderChatTimestampEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
 import com.wynntils.mc.extension.GuiMessageExtension;
 import com.wynntils.mc.extension.GuiMessageLineExtension;
@@ -89,7 +90,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             GuiGraphics guiGraphics, int tickCount, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
         timestampWidth = 0;
 
-        ChatTimestampFeature.RenderEvent event = new ChatTimestampFeature.RenderEvent();
+        RenderChatTimestampEvent event = new RenderChatTimestampEvent();
         WynntilsMod.postEvent(event);
 
         if (!event.isRendered()) return;

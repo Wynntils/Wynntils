@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
+import com.wynntils.mc.event.RenderChatTimestampEvent;
 import com.wynntils.mc.extension.GuiMessageLineExtension;
 import com.wynntils.utils.mc.McUtils;
 import java.time.format.DateTimeFormatter;
@@ -56,19 +57,7 @@ public class ChatTimestampFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTimestampRender(RenderEvent event) {
+    public void onTimestampRender(RenderChatTimestampEvent event) {
         event.setRendered(true);
-    }
-
-    public static class RenderEvent extends Event {
-        private boolean rendered = false;
-
-        public boolean isRendered() {
-            return rendered;
-        }
-
-        public void setRendered(boolean rendered) {
-            this.rendered = rendered;
-        }
     }
 }
