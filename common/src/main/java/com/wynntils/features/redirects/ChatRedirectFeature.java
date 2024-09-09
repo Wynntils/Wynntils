@@ -14,6 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.type.PlayerRank;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends Feature {
+    @Persisted
+    public final Config<RedirectAction> blacksmith = new Config<>(RedirectAction.REDIRECT);
+
     @Persisted
     public final Config<RedirectAction> bloodPactHealth = new Config<>(RedirectAction.REDIRECT);
 
@@ -91,6 +95,7 @@ public class ChatRedirectFeature extends Feature {
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
+        register(new BlacksmithRedirector());
         register(new BloodPactHealthDeficitRedirector());
         register(new CraftedDurabilityRedirector());
         register(new EmptyManaBankRedirector());
@@ -191,6 +196,29 @@ public class ChatRedirectFeature extends Feature {
         }
 
         protected abstract StyledText getNotification(Matcher matcher);
+    }
+
+    private class BlacksmithRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§5(\uE00A\uE002|\uE001) Blacksmith: §dYou have (sold|repaired) (.*)§d for §(a|3)(.*)");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return blacksmith.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(
+                    ChatFormatting.LIGHT_PURPLE + StringUtils.capitalizeFirst(matcher.group(2)) + " "
+                            + matcher.group(3)
+                            + ChatFormatting.LIGHT_PURPLE + " for §" + matcher.group(4) + matcher.group(5));
+        }
     }
 
     private class BloodPactHealthDeficitRedirector extends SimpleRedirector {
