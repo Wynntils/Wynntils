@@ -85,7 +85,9 @@ public class BulkBuyFeature extends Feature {
 
         if (!(screen instanceof ContainerScreen containerScreen)) return;
         if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)
-                || acm.getItems().size() != 90) return;
+                || acm.getItems().size() != 90) {
+            return;
+        }
 
         String title = acm.getSlot(4).getItem().getHoverName().getString();
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
