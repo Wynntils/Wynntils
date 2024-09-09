@@ -1,3 +1,24 @@
+## [2.2.1](https://github.com/Wynntils/Wynntils/compare/v2.2.0...v2.2.1) (2024-09-09)
+
+
+### New Features
+
+* Add Range Visualizer for Raid Buff Major Ids [skip ci] ([#2827](https://github.com/Wynntils/Wynntils/issues/2827)) ([edc39f7](https://github.com/Wynntils/Wynntils/commit/edc39f75db77411c45c54a0ef9c0374452a4be64))
+
+
+### Bug Fixes
+
+* Fix certain ingredients using API name not being annotated [skip ci] ([#2842](https://github.com/Wynntils/Wynntils/issues/2842)) ([24637da](https://github.com/Wynntils/Wynntils/commit/24637da6be6ab4ba1693e423abaf74a0e6c0ae7e))
+* Fix info bar territory pattern ([#2848](https://github.com/Wynntils/Wynntils/issues/2848)) ([d246ce5](https://github.com/Wynntils/Wynntils/commit/d246ce5ef125c1fb5a4562c28ee8e51a4cba7b85))
+* Fix lootrun challenge count [skip ci] ([#2841](https://github.com/Wynntils/Wynntils/issues/2841)) ([2c9ca74](https://github.com/Wynntils/Wynntils/commit/2c9ca74879748c7fe566697b321201e517f0e3b5))
+* Fix mythic detection from lootrun reward chest [skip ci] ([#2846](https://github.com/Wynntils/Wynntils/issues/2846)) ([769fe46](https://github.com/Wynntils/Wynntils/commit/769fe4628506b3d33837b3a5750faaab7dc7b976))
+* Handle null acquired and no treasury in guild map [skip ci] ([#2843](https://github.com/Wynntils/Wynntils/issues/2843)) ([721731c](https://github.com/Wynntils/Wynntils/commit/721731c2bff80a6c2ad9e1888efb30e1b5407249))
+
+
+### Code Refactoring
+
+* dont return a pair of nulls [skip ci] ([#2847](https://github.com/Wynntils/Wynntils/issues/2847)) ([a56c194](https://github.com/Wynntils/Wynntils/commit/a56c194dcf2fb2291e0ff5736f97195a10871e6a))
+
 ## [2.2.0](https://github.com/Wynntils/Wynntils/compare/v2.1.4...v2.2.0) (2024-09-08)
 
 
@@ -19,6 +40,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2838](https://github.com/Wynntils/Wynntils/issues/2838)) ([7437500](https://github.com/Wynntils/Wynntils/commit/7437500f34509054f5e6e5ca7534b08632b50b31))
+* **release:** v2.2.0 [skip ci] ([5879775](https://github.com/Wynntils/Wynntils/commit/587977544d4efa76a766acc3bc3d01cd2d84c5ca))
 
 ## [2.1.4](https://github.com/Wynntils/Wynntils/compare/v2.1.3...v2.1.4) (2024-09-08)
 
@@ -75,17 +97,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2815](https://github.com/Wynntils/Wynntils/issues/2815)) ([59102ea](https://github.com/Wynntils/Wynntils/commit/59102eaf78e0eb56cf4e7fac4849c3bd6283c3b4))
 * **release:** v2.1.2 [skip ci] ([cf19965](https://github.com/Wynntils/Wynntils/commit/cf19965a89b0fa7c36d0a045ae260706c9fdddc8))
-
-## [2.1.1](https://github.com/Wynntils/Wynntils/compare/v2.1.0...v2.1.1) (2024-08-31)
-
-
-### Bug Fixes
-
-* Add all missing stats to legacy stat ordering and add a warning log for missing stats ([#2813](https://github.com/Wynntils/Wynntils/issues/2813)) ([3bb995c](https://github.com/Wynntils/Wynntils/commit/3bb995c5200ccbee3b889a6402e870586dc83888))
-* Don't update leaderboards on world switch [skip ci] ([#2811](https://github.com/Wynntils/Wynntils/issues/2811)) ([0c7d5b1](https://github.com/Wynntils/Wynntils/commit/0c7d5b1d94501ed0cd010d2f6f338b1bd0d2b9d0))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.1.1 [skip ci] ([81a0a2d](https://github.com/Wynntils/Wynntils/commit/81a0a2db298383bf960ae90a51bd462c8e44e6bd))
 
