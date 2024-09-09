@@ -216,6 +216,7 @@ public class WynntilsCommand extends Command {
 
         // Reload all downloaded data
         WynntilsMod.reloadAllComponentData();
+        Managers.Download.download();
 
         return 1;
     }

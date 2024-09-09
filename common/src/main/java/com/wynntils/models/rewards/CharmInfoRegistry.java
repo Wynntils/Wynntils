@@ -11,9 +11,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.Dependency;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRestrictions;
@@ -34,14 +34,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class CharmInfoRegistry {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserizalier())
+            .create();
+
     private List<CharmInfo> charmInfoRegistry = List.of();
     private Map<String, CharmInfo> charmInfoLookup = Map.of();
 
-    public void reloadData() {
-        loadCharmInfoRegistry();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_CHARMS,
+                        Dependency.multi(
+                                Models.WynnItem,
+                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                .handleJsonObject(this::handleCharmInfoRegistry);
     }
 
     public CharmInfo getFromDisplayName(String gearName) {
@@ -52,39 +62,29 @@ public class CharmInfoRegistry {
         return charmInfoRegistry.stream();
     }
 
-    private void loadCharmInfoRegistry() {
-        if (!Models.WynnItem.hasObtainInfo()) return;
-        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+    private void handleCharmInfoRegistry(JsonObject json) {
+        List<CharmInfo> registry = new ArrayList<>();
 
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_CHARMS);
-        dl.handleJsonObject(json -> {
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserizalier())
-                    .create();
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonObject itemObject = entry.getValue().getAsJsonObject();
 
-            List<CharmInfo> registry = new ArrayList<>();
+            // Inject the name into the object
+            itemObject.addProperty("name", entry.getKey());
 
-            for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                JsonObject itemObject = entry.getValue().getAsJsonObject();
+            // Deserialize the item
+            CharmInfo charmInfo = GSON.fromJson(itemObject, CharmInfo.class);
 
-                // Inject the name into the object
-                itemObject.addProperty("name", entry.getKey());
+            // Add the item to the registry
+            registry.add(charmInfo);
+        }
 
-                // Deserialize the item
-                CharmInfo charmInfo = gson.fromJson(itemObject, CharmInfo.class);
+        // Create fast lookup maps
+        Map<String, CharmInfo> lookupMap = registry.stream()
+                .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
 
-                // Add the item to the registry
-                registry.add(charmInfo);
-            }
-
-            // Create fast lookup maps
-            Map<String, CharmInfo> lookupMap = registry.stream()
-                    .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
-
-            // Make the result visisble to the world
-            charmInfoRegistry = registry;
-            charmInfoLookup = lookupMap;
-        });
+        // Make the result visisble to the world
+        charmInfoRegistry = registry;
+        charmInfoLookup = lookupMap;
     }
 
     private static final class CharmInfoDeserizalier extends AbstractItemInfoDeserializer<CharmInfo> {
