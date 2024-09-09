@@ -9,6 +9,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,10 @@ import net.minecraft.network.chat.Style;
 public final class StyledTextUtils {
     private static final Pattern COORDINATE_PATTERN =
             Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
+
+    // Note: Post Wynncraft 2.1, the hover text is inconsistent, sometimes "'s" is white, sometimes it's gray
+    public static final Pattern NICKNAME_PATTERN =
+            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real username is §f(?<username>.+)");
 
     private static final String NEWLINE_PREPARATION = "\n";
     private static final Pattern NEWLINE_WRAP_PATTERN = Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06");
@@ -197,5 +202,28 @@ public final class StyledTextUtils {
         }
 
         return StyledText.fromParts(newParts);
+    }
+
+    public static Pair<String, String> extractNameAndNick(StyledText styledText) {
+        for (StyledTextPart part : styledText) {
+            HoverEvent hoverEvent = part.getPartStyle().getStyle().getHoverEvent();
+
+            if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
+                continue;
+            }
+
+            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
+                    .split("\n");
+
+            for (StyledText partText : partTexts) {
+                Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
+
+                if (nicknameMatcher.matches()) {
+                    return new Pair<>(nicknameMatcher.group("username"), nicknameMatcher.group("nick"));
+                }
+            }
+        }
+
+        return null;
     }
 }

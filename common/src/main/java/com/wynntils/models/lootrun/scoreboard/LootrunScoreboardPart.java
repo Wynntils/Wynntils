@@ -32,7 +32,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern TIMER_PATTERN =
             Pattern.compile("^[-—] Time Left: (\\d+):(\\d+)(?: \\[[+-]\\d+[msMS]\\])?$");
     private static final Pattern CHALLENGES_PATTERN =
-            Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])$");
+            Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])?$");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
