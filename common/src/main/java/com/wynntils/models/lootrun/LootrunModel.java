@@ -72,6 +72,7 @@ import java.util.stream.Collectors;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2d;
@@ -335,29 +336,39 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onEntitySpawn(SetEntityDataEvent event) {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
-        if (!(entity instanceof Display.ItemDisplay itemDisplay)) return;
+        int idToCheck;
+
+        // Currently the items are ItemEntity's however this may change in the future so we want to check for
+        // ItemDisplay's too to ensure future compatibility.
+        if (entity instanceof ItemEntity) {
+            idToCheck = ItemEntity.DATA_ITEM.id();
+        } else if (entity instanceof Display.ItemDisplay) {
+            idToCheck = Display.ItemDisplay.DATA_ITEM_STACK_ID.id();
+        } else {
+            return;
+        }
 
         // We only care about items that are close to the lootrun master
         // If we don't know where the lootrun master is, we probably don't care
         if (closestLootrunMasterLocation == null) return;
 
         // Check if the item is close enough to the lootrun master
-        if (closestLootrunMasterLocation.toBlockPos().distSqr(itemDisplay.blockPosition())
+        if (closestLootrunMasterLocation.toBlockPos().distSqr(entity.blockPosition())
                 > Math.pow(LOOTRUN_MASTER_REWARDS_RADIUS, 2)) {
             return;
         }
 
         // Check if we've already checked this item entity
         // Otherwise duplication can occur
-        if (checkedItemEntities.contains(itemDisplay.getUUID())) return;
+        if (checkedItemEntities.contains(entity.getUUID())) return;
 
-        checkedItemEntities.add(itemDisplay.getUUID());
+        checkedItemEntities.add(entity.getUUID());
 
         // Detect lootrun end reward items by checking the appearing item entities
         // This is much more reliable than checking the item in the chest,
         // as the chest can be rerolled, etc.
         for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
-            if (packedItem.id() == Display.ItemDisplay.DATA_ITEM_STACK_ID.id()) {
+            if (packedItem.id() == idToCheck) {
                 if (!(packedItem.value() instanceof ItemStack itemStack)) return;
 
                 boolean foundLootrunMythic = false;
