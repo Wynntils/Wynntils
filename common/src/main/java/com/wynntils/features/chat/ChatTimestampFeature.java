@@ -18,6 +18,7 @@ import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
@@ -52,5 +53,22 @@ public class ChatTimestampFeature extends Feature {
                 .append(Component.literal(extension.getCreated().format(formatter))
                         .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY)));
+    }
+
+    @SubscribeEvent
+    public void onTimestampRender(RenderEvent event) {
+        event.setRendered(true);
+    }
+
+    public static class RenderEvent extends Event {
+        private boolean rendered = false;
+
+        public boolean isRendered() {
+            return rendered;
+        }
+
+        public void setRendered(boolean rendered) {
+            this.rendered = rendered;
+        }
     }
 }

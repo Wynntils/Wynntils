@@ -9,7 +9,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
@@ -53,9 +52,6 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     private Minecraft minecraft;
 
     @Unique
-    private ChatTimestampFeature timestampFeature;
-
-    @Unique
     private int timestampWidth = 0;
 
     @WrapOperation(
@@ -83,15 +79,6 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
         refreshTrimmedMessages();
     }
 
-    @Unique
-    private ChatTimestampFeature getTimestampFeature() {
-        if (timestampFeature == null) {
-            timestampFeature = Managers.Feature.getFeatureInstance(ChatTimestampFeature.class);
-        }
-
-        return timestampFeature;
-    }
-
     @Inject(
             method = "render",
             at =
@@ -102,9 +89,10 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             GuiGraphics guiGraphics, int tickCount, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
         timestampWidth = 0;
 
-        if (!getTimestampFeature().isEnabled()) {
-            return;
-        }
+        ChatTimestampFeature.RenderEvent event = new ChatTimestampFeature.RenderEvent();
+        WynntilsMod.postEvent(event);
+
+        if (!event.isRendered()) return;
 
         for (GuiMessage.Line line : trimmedMessages) {
             GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) line;
