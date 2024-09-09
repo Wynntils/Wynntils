@@ -479,9 +479,12 @@ public class TestRegex {
     @Test
     public void InfoBar_TERRITORY_INFO_PATTERN() {
         PatternTester p = new PatternTester(InfoBar.class, "TERRITORY_INFO_PATTERN");
-        p.shouldMatch("§aLutho§2 [PROF]");
-        p.shouldMatch("§bCorkus City§3 [HOC]");
-        p.shouldMatch("§cDetlas§4 [AVO]");
+        p.shouldMatch(
+                "§aNexus of Light§2 \uE060\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFE6§f\uE00C\uE004\uE00B\uE013\uDB00\uDC02"); // MELT tag
+        p.shouldMatch(
+                "§bFleris Cranny§3 \uE060\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE062\uDAFF\uDFEC§f\uE007\uE00E\uE002\uDB00\uDC02"); // HOC tag
+        p.shouldMatch(
+                "§cCinfras§4 \uE060\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE062\uDAFF\uDFEE§f\uE008\uE002\uE00E\uDB00\uDC02"); // ICO tag
     }
 
     @Test
