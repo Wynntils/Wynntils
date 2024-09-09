@@ -20,13 +20,17 @@ import com.wynntils.models.raid.type.RaidKind;
 import com.wynntils.models.raid.type.RaidRoomType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -39,12 +43,17 @@ public class RaidModel extends Model {
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
     private static final Pattern RAID_FAILED_PATTERN = Pattern.compile("§4§kRa§c§lid Failed!");
 
+    private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
+            "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
+
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
 
     @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
     private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
+
+    private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
     private boolean completedCurrentChallenge = false;
     private CappedValue challenges = CappedValue.EMPTY;
@@ -85,6 +94,24 @@ public class RaidModel extends Model {
     // so we have to check for the chat message
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
+        if (inBuffRoom()) {
+            Matcher matcher = event.getOriginalStyledText().stripAlignment().getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            if (matcher.matches()) {
+                String playerName = matcher.group(4);
+                // if the player is nicknamed
+                if (matcher.group(3) != null) {
+                    playerName = StyledTextUtils.extractNameAndNick(event.getOriginalStyledText())
+                            .a();
+                }
+
+                String buff = matcher.group(5);
+
+                partyRaidBuffs
+                        .computeIfAbsent(playerName, k -> new ArrayList<>())
+                        .add(buff);
+            }
+        }
+
         if (!inChallengeRoom()) return;
 
         if (event.getStyledText().matches(CHALLENGE_COMPLETED_PATTERN)) {
@@ -102,6 +129,7 @@ public class RaidModel extends Model {
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
             roomTimers.clear();
+            partyRaidBuffs.clear();
 
             McUtils.sendMessageToClient(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
@@ -182,6 +210,7 @@ public class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        partyRaidBuffs.clear();
     }
 
     public void failedRaid() {
@@ -195,6 +224,7 @@ public class RaidModel extends Model {
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        partyRaidBuffs.clear();
     }
 
     public void setTimeLeft(int seconds) {
@@ -219,6 +249,28 @@ public class RaidModel extends Model {
 
     public RaidKind getCurrentRaid() {
         return currentRaid;
+    }
+
+    public List<String> getRaidMajorIds(String playerName) {
+        if (!partyRaidBuffs.containsKey(playerName)) return List.of();
+
+        List<String> rawBuffNames = partyRaidBuffs.get(playerName);
+        List<String> majorIds = new ArrayList<>();
+
+        for (String rawBuffName : rawBuffNames) {
+            String[] buffParts = rawBuffName.split(" ");
+            if (buffParts.length < 2) continue;
+
+            String buffName = buffParts[0];
+            int buffTier = MathUtils.integerFromRoman(buffParts[1]);
+
+            String majorId = this.currentRaid.majorIdFromBuff(buffName, buffTier);
+            if (majorId == null) continue;
+
+            majorIds.add(majorId);
+        }
+
+        return majorIds;
     }
 
     public RaidRoomType getCurrentRoom() {

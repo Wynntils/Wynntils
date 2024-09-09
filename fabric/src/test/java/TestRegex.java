@@ -4,7 +4,6 @@
  */
 import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
-import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.trademarket.TradeMarketAutoOpenChatFeature;
@@ -32,6 +31,7 @@ import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
+import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -40,6 +40,7 @@ import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.bossbars.InfoBar;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 import net.minecraft.SharedConstants;
@@ -861,6 +862,13 @@ public class TestRegex {
     }
 
     @Test
+    public void RaidModel_RAID_BUFF_PATTERN() {
+        PatternTester p = new PatternTester(RaidModel.class, "RAID_CHOOSE_BUFF_PATTERN");
+        p.shouldMatch(
+                "§#d6401eff\uE009\uE002 §#fa7f63ffDanzxms§#d6401eff has chosen the §#fa7f63ffStonewalker III§#d6401eff buff!");
+    }
+
+    @Test
     public void WynnItemParser_CRAFTED_ITEM_NAME_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
         p.shouldMatch("§3§otest item§b§o [24%]À");
@@ -918,8 +926,8 @@ public class TestRegex {
     }
 
     @Test
-    public void RevealNicknamesFeature_NICKNAME_PATTERN() {
-        PatternTester p = new PatternTester(RevealNicknamesFeature.class, "NICKNAME_PATTERN");
+    public void StyledTextUtils_NICKNAME_PATTERN() {
+        PatternTester p = new PatternTester(StyledTextUtils.class, "NICKNAME_PATTERN");
 
         p.shouldMatch("§fbol§7's real username is §fbolyai");
         p.shouldMatch("§fbol's§7 real username is §fbolyai");
