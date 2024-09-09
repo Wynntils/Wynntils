@@ -139,12 +139,12 @@ public class DownloadManager extends Manager {
         throw new IllegalStateException("Queued download has no handler set: " + queuedDownload);
     }
 
-    private void replaceDownload(QueuedDownload toBeReplaced) {
+    private void queueNextDownload(QueuedDownload finishedDownload) {
         QueuedDownload nextDownload = graph.nextDownload();
 
         for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {
             if (currentDownloads[i] == null) continue;
-            if (!currentDownloads[i].key().equals(toBeReplaced)) continue;
+            if (!currentDownloads[i].key().equals(finishedDownload)) continue;
 
             if (nextDownload == null) {
                 currentDownloads[i] = null;
@@ -156,7 +156,7 @@ public class DownloadManager extends Manager {
         }
 
         WynntilsMod.error(
-                "Finished, but not yet replaced download not found in the current downloads: " + toBeReplaced);
+                "Finished, but not yet replaced download not found in the current downloads: " + finishedDownload);
     }
 
     private <T> Consumer<T> wrapDownloadHandler(Consumer<T> handler, QueuedDownload download) {
@@ -176,7 +176,7 @@ public class DownloadManager extends Manager {
 
             // Mark the download as completed
             graph.markDownloadCompleted(download);
-            replaceDownload(download);
+            queueNextDownload(download);
             checkDownloadsFinished();
         };
     }
@@ -192,7 +192,7 @@ public class DownloadManager extends Manager {
 
             // Mark the download as failed
             graph.markDownloadError(download);
-            replaceDownload(download);
+            queueNextDownload(download);
             checkDownloadsFinished();
         };
     }
