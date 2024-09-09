@@ -1,20 +1,20 @@
+/*
+ * Copyright © Wynntils 2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.mc.extension;
 
-import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
-import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
+import net.minecraft.network.chat.Component;
 
 public interface GuiMessageLineExtension {
-   LocalDateTime getCreated();
+    LocalDateTime getCreated();
 
-   void setCreated(LocalDateTime date);
+    void setCreated(LocalDateTime date);
 
-   Optional<Pair<Component, Integer>> getTimestamp();
+    Optional<Pair<Component, Integer>> getTimestamp();
 
-   void setTimestamp(Component component);
+    void setTimestamp(Component component);
 }

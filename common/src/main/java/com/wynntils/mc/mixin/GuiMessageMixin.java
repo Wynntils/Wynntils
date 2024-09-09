@@ -1,6 +1,11 @@
+/*
+ * Copyright © Wynntils 2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.mc.mixin;
 
 import com.wynntils.mc.extension.GuiMessageExtension;
+import java.time.LocalDateTime;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.GuiMessageTag;
 import net.minecraft.network.chat.Component;
@@ -11,26 +16,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.time.LocalDateTime;
-
 @Mixin(GuiMessage.class)
 public abstract class GuiMessageMixin implements GuiMessageExtension {
-   @Unique
-   private LocalDateTime createdAt;
+    @Unique
+    private LocalDateTime createdAt;
 
-   @Inject(method = "<init>", at = @At("TAIL"))
-   private void init(
-           int addedTime,
-           Component content,
-           MessageSignature signature,
-           GuiMessageTag tag,
-           CallbackInfo ci
-   ) {
-      createdAt = LocalDateTime.now();
-   }
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void init(
+            int addedTime, Component content, MessageSignature signature, GuiMessageTag tag, CallbackInfo ci) {
+        createdAt = LocalDateTime.now();
+    }
 
-   @Override
-   public LocalDateTime getCreated() {
-      return createdAt;
-   }
+    @Override
+    public LocalDateTime getCreated() {
+        return createdAt;
+    }
 }
