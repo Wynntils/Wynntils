@@ -15,15 +15,23 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ComponentUtils {
     private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
+    private static final ResourceLocation CHAT_BANNER_FONT_LOCATION = ResourceLocation.parse("wynntils:chat");
+    private static final Style CHAT_BANNER_STYLE =
+            Style.EMPTY.withFont(CHAT_BANNER_FONT_LOCATION).withColor(ChatFormatting.DARK_GREEN);
+    private static final String CHAT_BANNER_FIRST_LINE = "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE";
+    private static final String CHAT_BANNER_LINE_PREFIX = "\uDAFF\uDFFC\uE001\uDB00\uDC06";
 
     public static List<Component> stripDuplicateBlank(List<Component> lore) {
         List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
@@ -167,5 +175,43 @@ public final class ComponentUtils {
             newName.append(Component.literal(current.toString()));
         }
         return newName;
+    }
+
+    /**
+     * Adds a Wynntils chat banner to the left side of the provided text in the style of Wynncraft 2.1 chat banners.
+     * The formatting of the provided text is preserved.
+     *
+     * @param formattedText the formatted text to add the Wynntils chat banner to
+     * @return a {@code Component} holding the formatted text with the Wynntils chat banner added
+     */
+    public static Component addWynntilsBanner(FormattedText formattedText) {
+        // - 2 to have room for the banner character and a space on the left
+        Minecraft mc = Minecraft.getInstance();
+        /*
+        Add 3 spaces worth of space when splitting since sometimes the string is still too long and gets wrapped by
+        ChatComponent.
+         */
+        List<FormattedText> lines = mc.font
+                .getSplitter()
+                .splitLines(
+                        formattedText,
+                        ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(" ") * 3,
+                        Style.EMPTY);
+
+        MutableComponent output = Component.literal(CHAT_BANNER_FIRST_LINE)
+                .withStyle(CHAT_BANNER_STYLE)
+                .append("\n");
+
+        for (int i = 0; i < lines.size(); i++) {
+            output.append(Component.literal(CHAT_BANNER_LINE_PREFIX))
+                    .append(Component.literal(" ")
+                            .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("default")))
+                            .append(formattedTextToComponent(lines.get(i))));
+            if (i != lines.size() - 1) {
+                output.append("\n");
+            }
+        }
+
+        return output;
     }
 }

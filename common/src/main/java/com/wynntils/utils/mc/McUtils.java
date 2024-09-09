@@ -96,7 +96,7 @@ public final class McUtils {
                     "Tried to send message to client: \"" + component.getString() + "\", but player was null.");
             return;
         }
-        player().sendSystemMessage(component);
+        player().sendSystemMessage(ComponentUtils.addWynntilsBanner(component));
     }
 
     public static void removeMessageFromChat(Component component) {
