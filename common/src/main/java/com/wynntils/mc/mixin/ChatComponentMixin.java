@@ -66,8 +66,8 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             int i,
             Object line,
             Operation<Void> original,
-            @Local(name = "j") int index,
-            @Local(name = "message") GuiMessage message) {
+            @Local(ordinal = 1) int index,
+            @Local(argsOnly = true) GuiMessage message) {
         GuiMessageExtension messageExtension = (GuiMessageExtension) (Object) message;
 
         ((GuiMessageLineExtension) line).setCreated(messageExtension.getCreated());
@@ -143,9 +143,9 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             int mouseY,
             boolean focused,
             CallbackInfo ci,
-            @Local(name = "x") int x,
-            @Local(name = "o") int o,
-            @Local(name = "v") int v) {
+            @Local(ordinal = 18) int x,
+            @Local(ordinal = 9) int o,
+            @Local(ordinal = 16) int v) {
         if (timestampWidth == 0) return;
 
         guiGraphics.pose().pushPose();
@@ -171,9 +171,8 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             boolean focused,
             CallbackInfo ci,
             @Local GuiMessage.Line line,
-            @Local(name = "y") int y,
-            @Local(name = "u") int u,
-            @Local(name = "f") float scale) {
+            @Local(ordinal = 19) int y,
+            @Local(ordinal = 15) int u) {
         if (timestampWidth == 0) return;
 
         GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) line;
