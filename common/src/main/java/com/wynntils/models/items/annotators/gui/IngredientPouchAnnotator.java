@@ -44,7 +44,10 @@ public final class IngredientPouchAnnotator implements GuiItemAnnotator {
             IngredientInfo ingredientInfo = Models.Ingredient.getIngredientInfoFromName(ingredientName);
 
             // Skip unknown ingredients; the pouch list will be wrong but better than nothing
-            if (ingredientInfo == null) continue;
+            if (ingredientInfo == null) {
+                ingredientInfo = Models.Ingredient.getIngredientInfoFromApiName(ingredientName);
+                if (ingredientInfo == null) continue;
+            }
 
             if (ingredientInfo.tier() != tier) {
                 WynntilsMod.warn("Incorrect tier (pouch) in ingredient database: " + ingredientName + " is currently "

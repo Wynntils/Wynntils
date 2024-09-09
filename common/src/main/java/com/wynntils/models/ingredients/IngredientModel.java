@@ -61,6 +61,10 @@ public class IngredientModel extends Model {
         return ingredientInfoRegistry.getFromDisplayName(ingredientName);
     }
 
+    public IngredientInfo getIngredientInfoFromApiName(String ingredientName) {
+        return ingredientInfoRegistry.getFromApiName(ingredientName);
+    }
+
     public List<ItemObtainInfo> getObtainInfo(IngredientInfo ingredientInfo) {
         List<ItemObtainInfo> obtainInfo = Models.WynnItem.getObtainInfo(ingredientInfo.name());
         if (obtainInfo == null) {
