@@ -3,6 +3,7 @@
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
+    "accessors.ChatComponentAccessor",
     "ChatComponentMixin",
     "ChatScreenMixin",
     "ChestMenuMixin",

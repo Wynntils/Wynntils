@@ -9,14 +9,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
-import com.wynntils.mc.event.RenderChatTimestampEvent;
+import com.wynntils.mc.event.ChatComponentRenderEvent;
 import com.wynntils.mc.extension.ChatComponentExtension;
-import com.wynntils.mc.extension.GuiMessageExtension;
-import com.wynntils.mc.extension.GuiMessageLineExtension;
-import com.wynntils.utils.type.Pair;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -64,11 +61,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             Operation<Void> original,
             @Local(ordinal = 1) int index,
             @Local(argsOnly = true) GuiMessage message) {
-        GuiMessageExtension messageExtension = (GuiMessageExtension) (Object) message;
-
-        ((GuiMessageLineExtension) line).setCreated(messageExtension.getCreated());
-
-        WynntilsMod.postEvent(new AddGuiMessageLineEvent((GuiMessage.Line) line, index));
+        WynntilsMod.postEvent(new AddGuiMessageLineEvent(message, (GuiMessage.Line) line, index));
 
         original.call(trimmedMessages, i, line);
     }
@@ -87,21 +80,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
                             target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V"))
     private void setupRender(
             GuiGraphics guiGraphics, int tickCount, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
-        timestampWidth = 0;
-
-        RenderChatTimestampEvent event = new RenderChatTimestampEvent();
-        WynntilsMod.postEvent(event);
-
-        if (!event.isRendered()) return;
-
-        for (GuiMessage.Line line : trimmedMessages) {
-            GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) line;
-            Optional<Pair<Component, Integer>> timestamp = extension.getTimestamp();
-
-            if (timestamp.isEmpty()) continue;
-
-            timestampWidth = Math.max(timestampWidth, timestamp.get().b());
-        }
+        MixinHelper.post(new ChatComponentRenderEvent.Pre((ChatComponent) (Object) this, guiGraphics));
     }
 
     @ModifyArg(
@@ -109,16 +88,22 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 0),
             index = 0)
     private float offsetChatBox(float x) {
-        if (timestampWidth == 0) return x;
+        ChatComponentRenderEvent.Translate event =
+                new ChatComponentRenderEvent.Translate((ChatComponent) (Object) this, x);
 
-        return x + 4 + timestampWidth;
+        MixinHelper.post(event);
+
+        return event.getX();
     }
 
     @WrapMethod(method = "screenToChatX")
     private double screenToChatX(double x, Operation<Double> original) {
-        if (timestampWidth == 0) return original.call(x);
+        ChatComponentRenderEvent.MapMouseX event =
+                new ChatComponentRenderEvent.MapMouseX((ChatComponent) (Object) this, x);
 
-        return original.call(x - (4 + timestampWidth));
+        MixinHelper.post(event);
+
+        return original.call(event.getX());
     }
 
     @Inject(
@@ -134,14 +119,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             @Local(ordinal = 18) int x,
             @Local(ordinal = 9) int o,
             @Local(ordinal = 16) int v) {
-        if (timestampWidth == 0) return;
-
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate((float) -(timestampWidth + 4), 0f, 0f);
-
-        guiGraphics.fill(-2, x - o, timestampWidth - 2, x, v << 24);
-
-        guiGraphics.pose().popPose();
+        MixinHelper.post(new ChatComponentRenderEvent.Background((ChatComponent) (Object) this, guiGraphics, x, o, v));
     }
 
     @Inject(
@@ -161,18 +139,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             @Local GuiMessage.Line line,
             @Local(ordinal = 19) int y,
             @Local(ordinal = 15) int u) {
-        if (timestampWidth == 0) return;
-
-        GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) line;
-
-        if (extension.getTimestamp().isEmpty()) return;
-
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(-(extension.getTimestamp().get().b() + 4f), 0f, 0f);
-
-        guiGraphics.drawString(
-                this.minecraft.font, extension.getTimestamp().get().a(), 0, y, 16777215 + (u << 24));
-
-        guiGraphics.pose().popPose();
+        MixinHelper.post(new ChatComponentRenderEvent.Text(
+                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, u));
     }
 }
