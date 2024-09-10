@@ -4,10 +4,7 @@
  */
 package com.wynntils.models.raid.type;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.raid.RaidModel;
-import com.wynntils.utils.MathUtils;
 import java.util.Map;
 import java.util.regex.Pattern;
 
