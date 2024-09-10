@@ -10,6 +10,7 @@ import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
@@ -23,10 +24,12 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -47,6 +50,36 @@ import java.util.function.Function;
  *     The URLs are stored in a JSON file, which is read and parsed into a map of id - url pairs.
  * </p>
  *
+ * <h3>Handling data hash conflicts between different data sources</h3>
+ * <p>
+ *     It's possible for the URL sources to point to different hashes, even when their version matches.
+ *     As we can't gurantee that all 3 of the url lists load, and that they are up to date,
+ *     some rules have to be applied to make sure outdated hashes are not being used.
+ * </p>
+ * <p>
+ *     The rules are as follows:
+ * </p>
+ * <ol>
+ *     <li>
+ *         If the online sources are available, use all hashes avaiable in it. If an url was removed from the online list,
+ *         fall back to using the local cache, or the bundled list.
+ *     </li>
+ *     <li>
+ *         If the online sources are not available, use the local cache. If the local cache's hash and the bundled hash
+ *         are different, we assume both of the hashes are incorrect, as the local cache may be from an older version,
+ *         and the bundled list may have just been updated. This case should be rare, and is usually resolved without
+ *         any user interactions, as it's very likely that the remote download won't fail again.
+ *     </li>
+ *     <li>
+ *         If no other sources are available, use the bundled urls, but don't trust any hashes,
+ *         to try to be as up-to-date as possible.
+ *     </li>
+ * </ol>
+ *
+ * <p>It's also possible to override these rules with JVM flags.</p>
+ * <p>See the list of flags for alternative hash conflict resolution below.</p>
+ * // FIXME: Add the list of flags for alternative hash conflict resolution
+ *
  * <h3>URL override</h3>
  * <p>
  *     It is possible to override the URL list by setting the java property `wynntils.url.list.override.link` to a valid URL.
@@ -64,11 +97,18 @@ public final class UrlManager extends Manager {
     // -Dwynntils.url.list.ignore.cache=true
     private static final String URLS_IGNORE_CACHE_ENV = "wynntils.url.list.ignore.cache";
 
+    // -Dwynntils.url.list.debug.log=true
+    private static final String URLS_DEBUG_LOG_ENV = "wynntils.url.list.debug.log";
+
+    private static final boolean DEBUG_LOGS = System.getProperty(URLS_DEBUG_LOG_ENV) != null;
+
     private final URI urlListOverrideUri;
     private final boolean ignoreCache;
 
-    private Map<UrlId, UrlInfo> urlMap = Map.of();
-    private int version = -1;
+    private Map<UrlListType, UrlList> urlListMap = new ConcurrentHashMap<>();
+
+    private Object urlMapLock = new Object();
+    private UrlList urlList = UrlList.EMPTY;
 
     public UrlManager(NetManager netManager) {
         super(List.of(netManager));
@@ -100,11 +140,11 @@ public final class UrlManager extends Manager {
     }
 
     public UrlInfo getUrlInfo(UrlId urlId) {
-        return urlMap.get(urlId);
+        return urlList.get(urlId);
     }
 
     public String getUrl(UrlId urlId) {
-        UrlInfo urlInfo = urlMap.get(urlId);
+        UrlInfo urlInfo = urlList.get(urlId);
 
         // This is only valid for POST URLs, or GET URLs with no arguments
         assert (urlInfo.method() == Method.POST || urlInfo.arguments().isEmpty());
@@ -113,7 +153,7 @@ public final class UrlManager extends Manager {
     }
 
     public String buildUrl(UrlId urlId, Map<String, String> arguments) {
-        UrlInfo urlInfo = urlMap.get(urlId);
+        UrlInfo urlInfo = urlList.get(urlId);
 
         return buildUrl(urlInfo, arguments);
     }
@@ -137,10 +177,15 @@ public final class UrlManager extends Manager {
 
     @Override
     public void reloadData() {
-        loadUrls();
+        // Specifically do NOT reload the URLs here, as they require special handling every time,
+        // unlike other core components.
     }
 
     private void loadUrls() {
+        // Reset the URL lists
+        urlListMap.clear();
+        urlList = UrlList.EMPTY;
+
         // Figure out where to load the URLs from initially
 
         // If we don't have an override, read the URLs in a normal way
@@ -156,14 +201,20 @@ public final class UrlManager extends Manager {
             // Then trigger a (re-)download from the net to the cache
             // We need to do the urlInfo lookup ourself, since we might have
             // a embryonic netManager which can't do much.
-            UrlInfo urlInfo = getUrlInfo(UrlId.DATA_STATIC_URLS);
+            UrlInfo urlInfo = urlListMap
+                    .getOrDefault(UrlListType.BUNDLED, urlListMap.getOrDefault(UrlListType.LOCAL_CACHE, UrlList.EMPTY))
+                    .get(UrlId.DATA_STATIC_URLS);
             if (urlInfo == null) {
                 WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
                 throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
             }
+
             URI uri = URI.create(urlInfo.url());
             downloadAndReadRemoteUrls(uri);
         } else {
+            // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
+            readEmbeddedUrls();
+
             if (!ignoreCache) {
                 // Try to read the URLs from the local cache
                 readLocalUrlCache();
@@ -176,7 +227,7 @@ public final class UrlManager extends Manager {
 
     private void readEmbeddedUrls() {
         try {
-            readInputStreamForUrl(getBundledInputStream());
+            readInputStreamForUrl(getBundledInputStream(), UrlListType.BUNDLED);
         } catch (IOException | JsonSyntaxException e) {
             // We can't load the url list bundled. This is a catastrophic failure.
             // Nothing will work after this, so just abort.
@@ -190,7 +241,7 @@ public final class UrlManager extends Manager {
         Pair<FileInputStream, File> localCache = getLocalCacheInputStreams();
         if (localCache != null) {
             try {
-                readInputStreamForUrl(localCache.key());
+                readInputStreamForUrl(localCache.key(), UrlListType.LOCAL_CACHE);
             } catch (IOException | JsonSyntaxException e) {
                 // The local cache is corrupt. Delete it and try again.
                 WynntilsMod.warn("Problem reading URL list from local cache, deleting it.", e);
@@ -203,33 +254,141 @@ public final class UrlManager extends Manager {
         String localFileName = UrlId.DATA_STATIC_URLS.getId();
 
         Download dl = Managers.Net.download(uri, localFileName);
-        dl.handleInputStream(inputStream -> {
-            try {
-                Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
-                tryUpdateUrlMap(tryMap, true);
-            } catch (IOException e) {
-                WynntilsMod.warn("Problem updating URL list from online source", e);
-            }
-        });
+        dl.handleInputStream(
+                inputStream -> {
+                    try {
+                        UrlList urlList = readUrls(inputStream);
+                        urlListMap.put(UrlListType.REMOTE, urlList);
+
+                        // Merge the lists with the remote list as the primary source
+                        mergeUrlLists();
+                    } catch (IllegalStateException e) {
+                        // IllegalStateExceptions are thrown on cricical errors detected by the manager
+                        WynntilsMod.error("Critical error while updating URL list from online source", e);
+                        throw e;
+                    } catch (IOException e) {
+                        WynntilsMod.warn("Problem updating URL list from online source", e);
+
+                        // Merge the lists we could load, even if the remote list failed
+                        mergeUrlLists();
+                    }
+                },
+                throwable -> WynntilsMod.warn("Failed to download URL list from online source", throwable));
     }
 
-    private void readInputStreamForUrl(InputStream tryStream) throws JsonSyntaxException, IOException {
+    private void readInputStreamForUrl(InputStream tryStream, UrlListType listType)
+            throws JsonSyntaxException, IOException {
         try (InputStream inputStream = tryStream) {
-            Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
-            tryUpdateUrlMap(tryMap, false);
+            UrlList urlList = readUrls(inputStream);
+            urlListMap.put(listType, urlList);
         } catch (MalformedJsonException e) {
             // This is handled by the caller, so just rethrow
             throw new MalformedJsonException(e);
         }
     }
 
-    private void tryUpdateUrlMap(Pair<Integer, Map<UrlId, UrlInfo>> tryMap, boolean forceUpdateOnSameVersion) {
-        // Even if the version is the same, we might want to update the URLs if the urls are downloaded from the
-        // internet since the URLs might have changed. (local cache and bundled URLs are not always updated)
-        if (tryMap.a() > version || (forceUpdateOnSameVersion && tryMap.a() == version)) {
-            urlMap = tryMap.b();
-            version = tryMap.a();
+    private void mergeUrlLists() {
+        // In theory, this method shouldn't be called concurrently ever, but just in case
+        synchronized (urlMapLock) {
+            int currentVersion;
+            Map<UrlId, UrlInfo> currentUrls;
+
+            // Start by using the bundled urls as a baseline
+            UrlList bundledList = urlListMap.get(UrlListType.BUNDLED);
+            currentVersion = bundledList.version();
+            currentUrls = new LinkedHashMap<>(bundledList.urls());
+
+            if (DEBUG_LOGS) {
+                WynntilsMod.info("Bundled URL list version: " + currentVersion + ", URLs: " + currentUrls.size());
+            }
+
+            // Then check if we have a local cache
+            if (urlListMap.containsKey(UrlListType.LOCAL_CACHE)) {
+                UrlList localCacheList = urlListMap.get(UrlListType.LOCAL_CACHE);
+
+                // Firstly, check for version differences between the lists
+                if (localCacheList.version() >= currentVersion) {
+                    currentVersion = localCacheList.version();
+
+                    // We do have a local cache. Let's merge it in.
+                    // Two main rules are applied:
+                    // 1. If an URL is only present in the local cache, it is added to the list, without a hash.
+                    // 2. If an URL is present in both the local cache and the bundled list, remove the hash info, to
+                    //    ensure that the most up-to-date data is downloaded, as we have no way of knowing which one is
+                    //    correct.
+
+                    // Add all URLs from the local cache that are not in the current list
+                    localCacheList.urls.entrySet().stream()
+                            .filter(entry -> !currentUrls.containsKey(entry.getKey()))
+                            .forEach(entry -> currentUrls.put(entry.getKey(), entry.getValue()));
+
+                    // Remove the hashes from the URLs that are in both the local cache and the bundled list
+                    localCacheList.urls().forEach((key, value) -> {
+                        if (!currentUrls.containsKey(key)) return;
+
+                        UrlInfo urlInfo = currentUrls.get(key);
+
+                        // If the hashes are different, remove the hash
+                        if (!urlInfo.md5().equals(value.md5())) {
+                            currentUrls.put(key, value.withoutMd5());
+
+                            if (DEBUG_LOGS) {
+                                WynntilsMod.info("Bundled and local hashes differ for " + key + ". Removing hash. ("
+                                        + urlInfo.md5().orElse("null") + " -> null)");
+                            }
+                        }
+                    });
+                }
+            } else {
+                WynntilsMod.warn(
+                        "No URL cache found. This is normal if you are running Wynntils for the first time. Otherwise, this likely indicates a problem.");
+            }
+
+            // Once we are done with the local cache, try to use the remote list as much as we can
+            if (urlListMap.containsKey(UrlListType.REMOTE)) {
+                UrlList remoteList = urlListMap.get(UrlListType.REMOTE);
+
+                // Firstly, check for version differences between the lists
+                // It's very weird for the remote list to have a lower version than the local cache, but it's
+                // possible
+                if (remoteList.version() < currentVersion) {
+                    throw new IllegalStateException(
+                            "Remote URL list has a lower version than the local cache. This should not happen.");
+                }
+
+                currentVersion = remoteList.version();
+
+                // Use the remote list's hashes for all URLs, if they are present
+                remoteList.urls().forEach((key, value) -> {
+                    if (currentUrls.containsKey(key)) {
+                        UrlInfo oldInfo = currentUrls.put(key, value);
+
+                        if (DEBUG_LOGS && oldInfo != null && !oldInfo.md5().equals(value.md5())) {
+                            WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. (" + oldInfo.md5()
+                                    + " -> " + value.md5().orElse("null") + ")");
+                        }
+                    }
+                });
+            } else {
+                WynntilsMod.warn("No remote URL list available. Falling back to local sources.");
+            }
+
+            // Finally, set the new URL list
+            urlList = new UrlList(currentVersion, currentUrls);
         }
+
+        if (urlList == null || urlList.urls().isEmpty()) {
+            throw new IllegalStateException(
+                    "URL list is empty after merging. This means all three of the URL sources failed to load. This is a critical error, try contacting the developers.");
+        }
+
+        // Fire the event that we have finished processing the URLs
+        // Move the loading back to the main thread, even if that's not strictly necessary
+        WynntilsMod.info("Merged URL list. Version: " + urlList.version + ", URLs: " + urlList.urls.size());
+        WynntilsMod.postEventOnMainThread(new UrlProcessingFinishedEvent());
+
+        // Also trigger a reload for all components, as they might depend on the URLs which they couldn't load before
+        WynntilsMod.reloadAllComponentData();
     }
 
     private InputStream getBundledInputStream() {
@@ -255,8 +414,7 @@ public final class UrlManager extends Manager {
         return null;
     }
 
-    private Pair<Integer, Map<UrlId, UrlInfo>> readUrls(InputStream inputStream)
-            throws IOException, JsonSyntaxException {
+    private UrlList readUrls(InputStream inputStream) throws IOException, JsonSyntaxException {
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();
@@ -293,11 +451,11 @@ public final class UrlManager extends Manager {
         for (UrlId urlId : UrlId.values()) {
             if (!newMap.containsKey(urlId)) {
                 WynntilsMod.warn("Missing URL in urls.json: " + urlId);
-                return Pair.of(-1, Map.of());
+                return UrlList.EMPTY;
             }
         }
 
-        return Pair.of(version, newMap);
+        return new UrlList(version, newMap);
     }
 
     public enum Method {
@@ -331,7 +489,11 @@ public final class UrlManager extends Manager {
         }
     }
 
-    public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {}
+    public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {
+        public UrlInfo withoutMd5() {
+            return new UrlInfo(url, arguments, method, encoding, Optional.empty());
+        }
+    }
 
     private static final class UrlProfile {
         int version;
@@ -341,5 +503,19 @@ public final class UrlManager extends Manager {
         List<String> arguments;
         String md5;
         String encoding;
+    }
+
+    private record UrlList(int version, Map<UrlId, UrlInfo> urls) {
+        public static final UrlList EMPTY = new UrlList(-1, Map.of());
+
+        public UrlInfo get(UrlId urlId) {
+            return urls.get(urlId);
+        }
+    }
+
+    private enum UrlListType {
+        BUNDLED,
+        LOCAL_CACHE,
+        REMOTE
     }
 }

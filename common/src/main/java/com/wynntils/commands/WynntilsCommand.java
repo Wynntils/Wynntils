@@ -163,7 +163,7 @@ public class WynntilsCommand extends Command {
                         false);
 
         Services.Hades.tryDisconnect();
-        Services.WynntilsAccount.reauth();
+        Services.WynntilsAccount.reloadData();
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
@@ -213,6 +213,8 @@ public class WynntilsCommand extends Command {
                         () -> Component.translatable("command.wynntils.reloadCaches.reloading")
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
+
+        // FIXME: Special URL reloading
 
         // Reload all downloaded data
         WynntilsMod.reloadAllComponentData();
