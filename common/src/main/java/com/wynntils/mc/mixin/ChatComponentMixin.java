@@ -8,7 +8,6 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
@@ -61,7 +60,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             Operation<Void> original,
             @Local(ordinal = 1) int index,
             @Local(argsOnly = true) GuiMessage message) {
-        WynntilsMod.postEvent(new AddGuiMessageLineEvent(message, (GuiMessage.Line) line, index));
+        MixinHelper.post(new AddGuiMessageLineEvent(message, (GuiMessage.Line) line, index));
 
         original.call(trimmedMessages, i, line);
     }
