@@ -1,3 +1,12 @@
+## [2.2.2](https://github.com/Wynntils/Wynntils/compare/v2.2.1...v2.2.2) (2024-09-10)
+
+
+### Bug Fixes
+
+* Fix attack timer defense not being detected [skip ci] ([#2851](https://github.com/Wynntils/Wynntils/issues/2851)) ([d5b3658](https://github.com/Wynntils/Wynntils/commit/d5b36580119f901a3c25f4287e152814dfe67e23))
+* Fix aura & volley timers ([#2853](https://github.com/Wynntils/Wynntils/issues/2853)) ([659ca98](https://github.com/Wynntils/Wynntils/commit/659ca987e4e104af7a9f498cd39370ded617d305))
+* Fix blacksmith redirector [skip ci] ([#2849](https://github.com/Wynntils/Wynntils/issues/2849)) ([f4c4206](https://github.com/Wynntils/Wynntils/commit/f4c420659aa8eb3093315d57773a740fd8042df9))
+
 ## [2.2.1](https://github.com/Wynntils/Wynntils/compare/v2.2.0...v2.2.1) (2024-09-09)
 
 
@@ -13,6 +22,11 @@
 * Fix lootrun challenge count [skip ci] ([#2841](https://github.com/Wynntils/Wynntils/issues/2841)) ([2c9ca74](https://github.com/Wynntils/Wynntils/commit/2c9ca74879748c7fe566697b321201e517f0e3b5))
 * Fix mythic detection from lootrun reward chest [skip ci] ([#2846](https://github.com/Wynntils/Wynntils/issues/2846)) ([769fe46](https://github.com/Wynntils/Wynntils/commit/769fe4628506b3d33837b3a5750faaab7dc7b976))
 * Handle null acquired and no treasury in guild map [skip ci] ([#2843](https://github.com/Wynntils/Wynntils/issues/2843)) ([721731c](https://github.com/Wynntils/Wynntils/commit/721731c2bff80a6c2ad9e1888efb30e1b5407249))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.2.1 [skip ci] ([3f412b6](https://github.com/Wynntils/Wynntils/commit/3f412b6b2b90220b98834c15fcdcd1f1c41831fb))
 
 
 ### Code Refactoring
@@ -77,24 +91,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2821](https://github.com/Wynntils/Wynntils/issues/2821)) ([7d92705](https://github.com/Wynntils/Wynntils/commit/7d92705623925e37b30d802f63c4ddd4d8721c15))
 * **release:** v2.1.3 [skip ci] ([c7d1800](https://github.com/Wynntils/Wynntils/commit/c7d18006caa84dbaa402ef6646821a4c12e7a8d2))
-
-## [2.1.2](https://github.com/Wynntils/Wynntils/compare/v2.1.1...v2.1.2) (2024-09-03)
-
-
-### New Features
-
-* Add additional links to Mod Menu entry [skip ci] ([#2819](https://github.com/Wynntils/Wynntils/issues/2819)) ([b514230](https://github.com/Wynntils/Wynntils/commit/b514230dbfb5c48939193c913690b0cf2c018c84))
-
-
-### Bug Fixes
-
-* Don't crash guild map when a territory has no resources [skip ci] ([#2814](https://github.com/Wynntils/Wynntils/issues/2814)) ([2553cc7](https://github.com/Wynntils/Wynntils/commit/2553cc71793932ca13066d4b399bd347f7d97b49))
-* Fix base health stat not being set on gear items ([#2820](https://github.com/Wynntils/Wynntils/issues/2820)) ([1d4baa0](https://github.com/Wynntils/Wynntils/commit/1d4baa0cd72a0ba200a7b0ed03be992942cd13e8))
-* Various party management screen fixes [skip ci] ([#2812](https://github.com/Wynntils/Wynntils/issues/2812)) ([083e094](https://github.com/Wynntils/Wynntils/commit/083e0942d98395b60d3988ec47763cdc53d8a973))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2815](https://github.com/Wynntils/Wynntils/issues/2815)) ([59102ea](https://github.com/Wynntils/Wynntils/commit/59102eaf78e0eb56cf4e7fac4849c3bd6283c3b4))
-* **release:** v2.1.2 [skip ci] ([cf19965](https://github.com/Wynntils/Wynntils/commit/cf19965a89b0fa7c36d0a045ae260706c9fdddc8))
 
