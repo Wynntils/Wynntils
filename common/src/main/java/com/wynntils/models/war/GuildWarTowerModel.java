@@ -22,8 +22,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class GuildWarTowerModel extends Model {
     private static final int EFFECT_PROC_MS = 3200;
-    private static final StyledText AURA_TITLE = StyledText.fromString("§4§n/!\\§7 Tower §6Aura");
-    private static final StyledText VOLLEY_TITLE = StyledText.fromString("§4§n/!\\§7 Tower §dVolley");
+    private static final StyledText AURA_TITLE = StyledText.fromString("§4§n[!]§7 Tower §6Aura");
+    private static final StyledText VOLLEY_TITLE = StyledText.fromString("§4§n[!]§7 Tower §dVolley");
 
     private final TrackedBar WarTowerBar = new WarTowerBar();
 
