@@ -7,6 +7,7 @@ package com.wynntils.models.territories;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
@@ -131,6 +132,12 @@ public class TerritoryInfo {
                 case WOOD -> resourceColors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
                 case CROPS -> resourceColors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
             }
+        }
+
+        // Very rarely a territory can have no resources causing the guild map
+        // to crash if using resource mode
+        if (resourceColors.isEmpty()) {
+            resourceColors.add(CommonColors.WHITE);
         }
     }
 

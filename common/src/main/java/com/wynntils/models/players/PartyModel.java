@@ -63,14 +63,18 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_LIST_SELF_FAILED =
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to use this\\.");
 
+    // This message has no period unlike the others. Add a period here when Wynn adds one.
+    private static final Pattern PARTY_LEAVE_SELF =
+            Pattern.compile(PARTY_PREFIX_REGEX + "You have left your current party");
     private static final Pattern PARTY_LEAVE_OTHER =
             Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has left the party\\.");
     private static final Pattern PARTY_LEAVE_SELF_ALREADYLEFT =
             Pattern.compile(PARTY_PREFIX_REGEX + "You must be in a party to leave\\.");
-
-    // This is a special case; Wynn sends the same message for when we leave a party or get kicked from a party
-    private static final Pattern PARTY_LEAVE_SELF_KICK =
+    private static final Pattern PARTY_LEAVE_KICK =
             Pattern.compile(PARTY_PREFIX_REGEX + "You have been removed from the party\\.");
+    // This message is currently not used in the model.
+    private static final Pattern PARTY_PLAYER_NOT_ON_SAME_WORLD =
+            Pattern.compile(PARTY_PREFIX_REGEX + "That player is not playing on your world \\(WC\\d+\\)!");
 
     private static final Pattern PARTY_JOIN_OTHER =
             Pattern.compile(PARTY_PREFIX_REGEX + "(\\w{1,16}) has joined your party, say hello!");
@@ -84,8 +88,9 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_PROMOTE_SELF = Pattern.compile(
             PARTY_PREFIX_REGEX + "You are now the leader of this party! Type /party for a list of commands\\.");
 
+    // This message has no period unlike the others. Add a period here when Wynn adds one.
     private static final Pattern PARTY_DISBAND_ALL =
-            Pattern.compile(PARTY_PREFIX_REGEX + "Your party has been disbanded\\.");
+            Pattern.compile(PARTY_PREFIX_REGEX + "Your party has been disbanded");
     private static final Pattern PARTY_DISBAND_SELF = Pattern.compile(
             PARTY_PREFIX_REGEX + "Your party has been disbanded since you were the only member remaining\\.");
 
@@ -100,6 +105,8 @@ public final class PartyModel extends Model {
     // endregion
 
     private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
+
+    public static final int MAX_PARTY_MEMBER_COUNT = 10;
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private long lastPartyRequest = 0; // The last time the client requested party data
@@ -165,7 +172,8 @@ public final class PartyModel extends Model {
         }
 
         if (styledText.matches(PARTY_DISBAND_ALL)
-                || styledText.matches(PARTY_LEAVE_SELF_KICK)
+                || styledText.matches(PARTY_LEAVE_SELF)
+                || styledText.matches(PARTY_LEAVE_KICK)
                 || styledText.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
                 || styledText.matches(PARTY_DISBAND_SELF)) {
             WynntilsMod.info("Player left the party.");
@@ -292,7 +300,7 @@ public final class PartyModel extends Model {
 
         String[] partyList = StyledText.fromString(matcher.group(1))
                 .getStringWithoutFormatting()
-                .split("(, | and )");
+                .split("(?:,(?: and)? )");
         List<String> newPartyMembers = new ArrayList<>();
 
         boolean firstMember = true;

@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 1,
   "authors": [
     "Team Wynntils"
   ],
@@ -11,12 +12,17 @@
   },
   "contact": {
     "homepage": "https://wynntils.com",
+    "issues": "https://github.com/Wynntils/Wynntils/issues",
     "sources": "https://github.com/Wynntils/Wynntils"
   },
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/wynntils-mod"
+        "modmenu.crowdin": "https://crowdin.com/project/wynntils-mod",
+        "modmenu.discord": "https://discord.gg/SZuNem8",
+        "modmenu.github_releases": "https://github.com/Wynntils/Wynntils/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/wynntils",
+        "modmenu.patreon": "https://patreon.com/Wynntils"
       },
       "update_checker": true
     }
@@ -43,7 +49,6 @@
     "wynntils.mixins.fabric.json"
   ],
   "name": "Wynntils",
-  "schemaVersion": 1,
   "suggests": {
     "flamingo": "*"
   },

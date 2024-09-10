@@ -14,9 +14,12 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -28,9 +31,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class RevealNicknamesFeature extends Feature {
-    // Note: Post Wynncraft 2.1, the hover text is inconsistent, sometimes "'s" is white, sometimes it's gray
-    private static final Pattern NICKNAME_PATTERN =
-            Pattern.compile("§f(?<nick>.+?)(§7)?'s?(§7)? real username is §f(?<username>.+)");
     private static final String NICKNAME_HOVER_TEXT = "§f%s§7's nickname is §f%s";
 
     @Persisted
@@ -54,7 +54,7 @@ public class RevealNicknamesFeature extends Feature {
             String nickname = null;
             String username = null;
             for (StyledText partText : partTexts) {
-                Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
+                Matcher nicknameMatcher = partText.getMatcher(StyledTextUtils.NICKNAME_PATTERN);
 
                 if (nicknameMatcher.matches()) {
                     nickname = nicknameMatcher.group("nick");

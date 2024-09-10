@@ -11,82 +11,53 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
-public class PartyMemberWidget extends AbstractWidget {
-    private final String playerName;
-    private final boolean isOffline;
+public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
     private final Button promoteButton;
     private final Button kickButton;
     private final Button disbandButton;
     private final Button moveUpButton;
     private final Button moveDownButton;
-    private final float gridDivisions;
 
     public PartyMemberWidget(
             float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
-        super((int) x, (int) y, width, height, Component.literal(playerName));
-        this.playerName = playerName;
-        this.isOffline = isOffline;
-        this.gridDivisions = gridDivisions;
+        super((int) x, (int) y, width, height, playerName, isOffline, gridDivisions);
+        int baseButtonWidth = (int) (this.width / gridDivisions);
+
         this.promoteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 16)) + 1, this.getY())
-                .size(
-                        (int) ((this.getX() + (this.width / this.gridDivisions * 20))
-                                        - (this.getX() + (this.width / this.gridDivisions * 16)))
-                                - 2,
-                        20)
+                .size(baseButtonWidth * 4, height)
                 .build();
         this.kickButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
                         (button) -> Models.Party.partyKick(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
-                .size(
-                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
-                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
-                                - 2,
-                        20)
+                .size(baseButtonWidth * 4, height)
                 .build();
         this.disbandButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.partyDisband())
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
-                .size(
-                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
-                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
-                                - 2,
-                        20)
+                .size(baseButtonWidth * 4, height)
                 .build();
         this.moveUpButton = new Button.Builder(
                         Component.literal("🠝"), (button) -> Models.Party.increasePlayerPriority(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)) + 1, this.getY())
-                .size(
-                        (int) ((this.getX() + (this.width / this.gridDivisions * 25))
-                                        - (this.getX() + (this.width / this.gridDivisions * 24)))
-                                - 2,
-                        20)
+                .size(baseButtonWidth * 2, height)
                 .build();
         this.moveDownButton = new Button.Builder(
                         Component.literal("🠟"), (button) -> Models.Party.decreasePlayerPriority(playerName))
-                .pos((int) (this.getX() + (this.width / this.gridDivisions * 25)) + 1, this.getY())
-                .size(
-                        (int) ((this.getX() + (this.width / this.gridDivisions * 26))
-                                        - (this.getX() + (this.width / this.gridDivisions * 25)))
-                                - 2,
-                        20)
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 26)) + 1, this.getY())
+                .size(baseButtonWidth * 2, height)
                 .build();
         if (Models.Party.isPartyLeader(playerName)) {
             this.promoteButton.active = false;
@@ -98,43 +69,9 @@ public class PartyMemberWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        PlayerInfo playerInfo =
-                McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
-        ResourceLocation skin = (playerInfo == null)
-                ? ResourceLocation.withDefaultNamespace("textures/entity/steve.png")
-                : playerInfo.getSkin().texture();
-        // head rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX() + (this.width / gridDivisions) - 8,
-                this.getY() + (this.height / 2) - 8,
-                8,
-                16,
-                16,
-                8,
-                8,
-                8,
-                8,
-                64,
-                64);
-        // hat rendering
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                skin,
-                this.getX() + (this.width / gridDivisions) - 8,
-                this.getY() + (this.height / 2) - 8,
-                1,
-                16,
-                16,
-                40,
-                8,
-                8,
-                8,
-                64,
-                64);
+        PoseStack poseStack = guiGraphics.pose();
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
@@ -189,7 +126,4 @@ public class PartyMemberWidget extends AbstractWidget {
                 || kickButton.mouseClicked(mouseX, mouseY, button)
                 || disbandButton.mouseClicked(mouseX, mouseY, button);
     }
-
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

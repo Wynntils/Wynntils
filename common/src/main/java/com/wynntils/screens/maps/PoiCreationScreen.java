@@ -12,6 +12,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.Poi;
@@ -278,6 +279,8 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         } else if (colorInput.getTextBoxInput().isEmpty()) {
             colorInput.setTextBoxInput("#FFFFFF");
         }
+        this.addRenderableWidget(
+                new ColorPickerWidget((int) (dividedWidth * 22.5), (int) (dividedHeight * 34), 20, 20, colorInput));
         // endregion
 
         // region Visibility
