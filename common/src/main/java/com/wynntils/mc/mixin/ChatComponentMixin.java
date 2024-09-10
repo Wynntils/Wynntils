@@ -40,9 +40,6 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     private List<GuiMessage.Line> trimmedMessages;
 
     @Shadow
-    public abstract double getScale();
-
-    @Shadow
     @Final
     private Minecraft minecraft;
 
