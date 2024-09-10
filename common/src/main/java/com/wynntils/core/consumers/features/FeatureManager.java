@@ -117,7 +117,6 @@ import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
-import com.wynntils.features.redirects.BlacksmithRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
 import com.wynntils.features.redirects.TerritoryMessageRedirectFeature;
@@ -323,7 +322,6 @@ public final class FeatureManager extends Manager {
 
         // region redirects
         registerFeature(new AbilityRefreshRedirectFeature());
-        registerFeature(new BlacksmithRedirectFeature());
         registerFeature(new ChatRedirectFeature());
         registerFeature(new InventoryRedirectFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
