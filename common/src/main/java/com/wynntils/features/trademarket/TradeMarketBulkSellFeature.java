@@ -64,14 +64,12 @@ public class TradeMarketBulkSellFeature extends Feature {
         if (!amountItemName.equalsString(CLICK_TO_SET_AMOUNT, PartStyle.StyleType.NONE)) return;
 
         String soldItemName = getSoldItemName(containerScreen);
-        System.out.println(soldItemName);
 
         removeSellButtons(containerScreen);
 
         if (soldItemName == null) return;
 
         addSellButtons(containerScreen, soldItemName);
-        System.out.println("Added sell buttons");
     }
 
     @SubscribeEvent
