@@ -14,6 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.type.PlayerRank;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends Feature {
+    @Persisted
+    public final Config<RedirectAction> blacksmith = new Config<>(RedirectAction.REDIRECT);
+
     @Persisted
     public final Config<RedirectAction> bloodPactHealth = new Config<>(RedirectAction.REDIRECT);
 
@@ -91,6 +95,7 @@ public class ChatRedirectFeature extends Feature {
     private final List<Redirector> redirectors = new ArrayList<>();
 
     public ChatRedirectFeature() {
+        register(new BlacksmithRedirector());
         register(new BloodPactHealthDeficitRedirector());
         register(new CraftedDurabilityRedirector());
         register(new EmptyManaBankRedirector());
@@ -118,7 +123,6 @@ public class ChatRedirectFeature extends Feature {
         register(new PotionsMovedRedirector());
         register(new PotionsReplacedRedirector());
         register(new ScrollTeleportationHousingFailRedirector());
-        register(new ScrollTeleportationMobFailRedirector());
         register(new SpeedBoostRedirector());
         register(new ToolDurabilityRedirector());
         register(new UnusedAbilityPointsRedirector());
@@ -194,6 +198,29 @@ public class ChatRedirectFeature extends Feature {
         protected abstract StyledText getNotification(Matcher matcher);
     }
 
+    private class BlacksmithRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§5(\uE00A\uE002|\uE001) Blacksmith: §dYou have (sold|repaired) (.*)§d for §(a|3)(.*)");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return blacksmith.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(
+                    ChatFormatting.LIGHT_PURPLE + StringUtils.capitalizeFirst(matcher.group(2)) + " "
+                            + matcher.group(3)
+                            + ChatFormatting.LIGHT_PURPLE + " for §" + matcher.group(4) + matcher.group(5));
+        }
+    }
+
     private class BloodPactHealthDeficitRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You don't have enough health to cast that spell!$");
@@ -218,7 +245,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§cYour items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
+                "^§4(?:\uE008\uE002|\uE001) Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -464,7 +491,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class HousingTeleportArrivalCooldownRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cYou need to wait a bit before joining another house\\.$");
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) You need to wait before joining another house\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -599,8 +626,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class MageTeleportationFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§cSorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+                "^§4(?:\uE008\uE002|\uE001) Sorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -709,7 +736,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class PotionsMovedRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your bank\\.$");
+                "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your Character Bank\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -769,28 +796,6 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText getNotification(Matcher matcher) {
             return StyledText.fromComponent(
                     Component.translatable("feature.wynntils.chatRedirect.scrollTeleport.notificationHousing")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
-    private class ScrollTeleportationMobFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("§cThere are aggressive mobs nearby\\.\\.\\.$");
-
-        @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return scrollTeleport.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.scrollTeleport.notificationMobs")
                             .withStyle(ChatFormatting.DARK_RED));
         }
     }

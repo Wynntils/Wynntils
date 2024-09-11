@@ -27,6 +27,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
@@ -293,7 +294,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         JsonObject baseStats = JsonUtils.getNullableJsonObject(json, "base");
         JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
 
-        int healthBuff = JsonUtils.getNullableJsonInt(baseStats, "health");
+        int healthBuff = JsonUtils.getNullableJsonInt(baseStats, "baseHealth");
         String attackSpeedStr = JsonUtils.getNullableJsonString(json, "attackSpeed");
         Optional<GearAttackSpeed> attackSpeed = Optional.ofNullable(GearAttackSpeed.fromString(attackSpeedStr));
 
@@ -331,11 +332,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         List<Pair<DamageType, RangedValue>> list = new ArrayList<>();
 
         // First look for neutral damage, which has a non-standard name
-        addDamageStat(list, DamageType.NEUTRAL, json.get("damage"));
+        addDamageStat(list, DamageType.NEUTRAL, json.get("baseDamage"));
 
         // Then check for elemental damage
         for (Element element : Models.Element.getGearElementOrder()) {
-            String damageName = element.name().toLowerCase(Locale.ROOT) + "Damage";
+            String damageName = "base" + EnumUtils.toNiceString(element) + "Damage";
             addDamageStat(list, DamageType.fromElement(element), json.get(damageName));
         }
 

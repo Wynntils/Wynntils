@@ -54,7 +54,8 @@ public final class BufferedFontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
-            float textScale) {
+            float textScale,
+            Font.DisplayMode displayMode) {
         float renderX;
         float renderY;
 
@@ -87,7 +88,7 @@ public final class BufferedFontRenderer {
                     false,
                     poseStack.last().pose(),
                     bufferSource,
-                    Font.DisplayMode.SEE_THROUGH,
+                    displayMode,
                     0,
                     0xF000F0);
             case NORMAL -> font.drawInBatch(
@@ -98,7 +99,7 @@ public final class BufferedFontRenderer {
                     true,
                     poseStack.last().pose(),
                     bufferSource,
-                    Font.DisplayMode.SEE_THROUGH,
+                    displayMode,
                     0,
                     0xF000F0);
             case OUTLINE -> {
@@ -118,7 +119,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        displayMode,
                         0,
                         0xF000F0);
                 font.drawInBatch(
@@ -129,7 +130,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        displayMode,
                         0,
                         0xF000F0);
                 font.drawInBatch(
@@ -140,7 +141,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        displayMode,
                         0,
                         0xF000F0);
                 font.drawInBatch(
@@ -151,7 +152,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        displayMode,
                         0,
                         0xF000F0);
 
@@ -163,13 +164,38 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        Font.DisplayMode.NORMAL,
+                        displayMode,
                         0,
                         0xF000F0);
             }
         }
 
         poseStack.popPose();
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            StyledText text,
+            float x,
+            float y,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow shadow,
+            float textScale) {
+        renderText(
+                poseStack,
+                bufferSource,
+                text,
+                x,
+                y,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                shadow,
+                textScale,
+                Font.DisplayMode.SEE_THROUGH);
     }
 
     public void renderAlignedTextInBox(
