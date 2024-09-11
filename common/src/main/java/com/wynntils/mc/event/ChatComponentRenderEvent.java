@@ -77,7 +77,8 @@ public abstract class ChatComponentRenderEvent extends Event {
         private final int lineHeight;
         private final int opacity;
 
-        public Background(ChatComponent chatComponent, GuiGraphics guiGraphics, int renderX, int lineHeight, int opacity) {
+        public Background(
+                ChatComponent chatComponent, GuiGraphics guiGraphics, int renderX, int lineHeight, int opacity) {
             super(chatComponent);
 
             this.guiGraphics = guiGraphics;
@@ -111,7 +112,12 @@ public abstract class ChatComponentRenderEvent extends Event {
         private final int textOpacity;
 
         public Text(
-                ChatComponent chatComponent, GuiGraphics guiGraphics, GuiMessage.Line line, Font font, int renderY, int textOpacity) {
+                ChatComponent chatComponent,
+                GuiGraphics guiGraphics,
+                GuiMessage.Line line,
+                Font font,
+                int renderY,
+                int textOpacity) {
             super(chatComponent);
 
             this.guiGraphics = guiGraphics;

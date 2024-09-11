@@ -111,7 +111,8 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             @Local(ordinal = 18) int renderX,
             @Local(ordinal = 9) int lineHeight,
             @Local(ordinal = 16) int opacity) {
-        MixinHelper.post(new ChatComponentRenderEvent.Background((ChatComponent) (Object) this, guiGraphics, renderX, lineHeight, opacity));
+        MixinHelper.post(new ChatComponentRenderEvent.Background(
+                (ChatComponent) (Object) this, guiGraphics, renderX, lineHeight, opacity));
     }
 
     @Inject(
