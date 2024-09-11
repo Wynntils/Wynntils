@@ -73,33 +73,33 @@ public abstract class ChatComponentRenderEvent extends Event {
 
     public static class Background extends ChatComponentRenderEvent {
         private final GuiGraphics guiGraphics;
-        private final int x;
-        private final int o;
-        private final int v;
+        private final int renderX;
+        private final int lineHeight;
+        private final int opacity;
 
-        public Background(ChatComponent chatComponent, GuiGraphics guiGraphics, int x, int o, int v) {
+        public Background(ChatComponent chatComponent, GuiGraphics guiGraphics, int renderX, int lineHeight, int opacity) {
             super(chatComponent);
 
             this.guiGraphics = guiGraphics;
-            this.x = x;
-            this.o = o;
-            this.v = v;
+            this.renderX = renderX;
+            this.lineHeight = lineHeight;
+            this.opacity = opacity;
         }
 
         public GuiGraphics getGuiGraphics() {
             return guiGraphics;
         }
 
-        public int getX() {
-            return x;
+        public int getRenderX() {
+            return renderX;
         }
 
-        public int getO() {
-            return o;
+        public int getLineHeight() {
+            return lineHeight;
         }
 
-        public int getV() {
-            return v;
+        public int getOpacity() {
+            return opacity;
         }
     }
 
@@ -107,18 +107,18 @@ public abstract class ChatComponentRenderEvent extends Event {
         private final GuiGraphics guiGraphics;
         private final GuiMessage.Line line;
         private final Font font;
-        private final int y;
-        private final int u;
+        private final int renderY;
+        private final int textOpacity;
 
         public Text(
-                ChatComponent chatComponent, GuiGraphics guiGraphics, GuiMessage.Line line, Font font, int y, int u) {
+                ChatComponent chatComponent, GuiGraphics guiGraphics, GuiMessage.Line line, Font font, int renderY, int textOpacity) {
             super(chatComponent);
 
             this.guiGraphics = guiGraphics;
             this.line = line;
             this.font = font;
-            this.y = y;
-            this.u = u;
+            this.renderY = renderY;
+            this.textOpacity = textOpacity;
         }
 
         public GuiGraphics getGuiGraphics() {
@@ -133,12 +133,12 @@ public abstract class ChatComponentRenderEvent extends Event {
             return font;
         }
 
-        public int getY() {
-            return y;
+        public int getRenderY() {
+            return renderY;
         }
 
-        public int getU() {
-            return u;
+        public int getTextOpacity() {
+            return textOpacity;
         }
     }
 }

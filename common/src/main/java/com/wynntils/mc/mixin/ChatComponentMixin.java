@@ -108,10 +108,10 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             int mouseY,
             boolean focused,
             CallbackInfo ci,
-            @Local(ordinal = 18) int x,
-            @Local(ordinal = 9) int o,
-            @Local(ordinal = 16) int v) {
-        MixinHelper.post(new ChatComponentRenderEvent.Background((ChatComponent) (Object) this, guiGraphics, x, o, v));
+            @Local(ordinal = 18) int renderX,
+            @Local(ordinal = 9) int lineHeight,
+            @Local(ordinal = 16) int opacity) {
+        MixinHelper.post(new ChatComponentRenderEvent.Background((ChatComponent) (Object) this, guiGraphics, renderX, lineHeight, opacity));
     }
 
     @Inject(
@@ -130,8 +130,8 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
             CallbackInfo ci,
             @Local GuiMessage.Line line,
             @Local(ordinal = 19) int y,
-            @Local(ordinal = 15) int u) {
+            @Local(ordinal = 15) int textOpacity) {
         MixinHelper.post(new ChatComponentRenderEvent.Text(
-                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, u));
+                (ChatComponent) (Object) this, guiGraphics, line, this.minecraft.font, y, textOpacity));
     }
 }

@@ -96,7 +96,7 @@ public class ChatTimestampFeature extends Feature {
         event.getGuiGraphics().pose().translate((float) -(timestampWidth + 4), 0f, 0f);
 
         event.getGuiGraphics()
-                .fill(-2, event.getX() - event.getO(), timestampWidth - 2, event.getX(), event.getV() << 24);
+                .fill(-2, event.getRenderX() - event.getLineHeight(), timestampWidth - 2, event.getRenderX(), event.getOpacity() << 24);
 
         event.getGuiGraphics().pose().popPose();
     }
@@ -117,8 +117,8 @@ public class ChatTimestampFeature extends Feature {
                         event.getFont(),
                         extension.getTimestamp().get().a(),
                         0,
-                        event.getY(),
-                        16777215 + (event.getU() << 24));
+                        event.getRenderY(),
+                        16777215 + (event.getTextOpacity() << 24));
 
         event.getGuiGraphics().pose().popPose();
     }
