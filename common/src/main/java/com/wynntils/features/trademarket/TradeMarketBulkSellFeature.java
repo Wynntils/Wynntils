@@ -5,6 +5,7 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -14,6 +15,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -32,7 +34,6 @@ public class TradeMarketBulkSellFeature extends Feature {
     private static final Pattern ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
     private static final String SOLD_ITEM_SLOT = "Empty Item Slot";
     private static final String CLICK_TO_SET_AMOUNT = "Set Amount";
-    private static final String SELL_DIALOGUE_TITLE = "§f\uDAFF\uDFE8\uE014";
     private static final String TYPE_SELL_AMOUNT =
             "\uDAFF\uDFFC\uE001\uDB00\uDC06 Type the amount you wish to sell or ";
 
@@ -55,9 +56,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
 
-        StyledText title = StyledText.fromComponent(containerScreen.getTitle());
-        // The sell title changes based on the state of the screen but always contains this string
-        if (!title.contains(SELL_DIALOGUE_TITLE)) return;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
         StyledText amountItemName = StyledText.fromComponent(
                 containerScreen.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName());
