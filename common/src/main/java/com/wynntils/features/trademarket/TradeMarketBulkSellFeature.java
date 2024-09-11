@@ -29,15 +29,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketBulkSellFeature extends Feature {
-    private static final Pattern ITEM_NAME_PATTERN =
-            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*(:?§6)? for §f[\\d,]*§7² Each");
-    private static final String CLICK_TO_SELL_ITEM = "§6Click an Item to Sell";
-    private static final String CLICK_TO_SET_AMOUNT = "Click to Set Amount";
-    private static final String SELL_DIALOGUE_TITLE = "What would you like to sell?";
-    private static final String TYPE_SELL_AMOUNT = "Type the amount you wish to sell or type 'cancel' to cancel:";
+    private static final Pattern ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
+    private static final String SOLD_ITEM_SLOT = "Empty Item Slot";
+    private static final String CLICK_TO_SET_AMOUNT = "Set Amount";
+    private static final String SELL_DIALOGUE_TITLE = "§f\uDAFF\uDFE8\uE014";
+    private static final String TYPE_SELL_AMOUNT =
+            "\uDAFF\uDFFC\uE001\uDB00\uDC06 Type the amount you wish to sell or ";
 
-    private static final int SELLABLE_ITEM_SLOT = 10;
-    private static final int AMOUNT_ITEM_SLOT = 11;
+    private static final int SELLABLE_ITEM_SLOT = 22;
+    private static final int AMOUNT_ITEM_SLOT = 31;
 
     @Persisted
     public final Config<Integer> bulkSell1Amount = new Config<>(64);
@@ -56,25 +56,28 @@ public class TradeMarketBulkSellFeature extends Feature {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
 
         StyledText title = StyledText.fromComponent(containerScreen.getTitle());
-        if (!title.equalsString(SELL_DIALOGUE_TITLE, PartStyle.StyleType.NONE)) return;
+        // The sell title changes based on the state of the screen but always contains this string
+        if (!title.contains(SELL_DIALOGUE_TITLE)) return;
 
         StyledText amountItemName = StyledText.fromComponent(
                 containerScreen.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName());
         if (!amountItemName.equalsString(CLICK_TO_SET_AMOUNT, PartStyle.StyleType.NONE)) return;
 
         String soldItemName = getSoldItemName(containerScreen);
+        System.out.println(soldItemName);
 
         removeSellButtons(containerScreen);
 
         if (soldItemName == null) return;
 
         addSellButtons(containerScreen, soldItemName);
+        System.out.println("Added sell buttons");
     }
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!sendAmountMessage) return;
-        if (!e.getOriginalStyledText().equalsString(TYPE_SELL_AMOUNT, PartStyle.StyleType.NONE)) return;
+        if (!e.getOriginalStyledText().contains(TYPE_SELL_AMOUNT)) return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
 
@@ -88,12 +91,12 @@ public class TradeMarketBulkSellFeature extends Feature {
         if (itemStack == ItemStack.EMPTY) return null;
 
         StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
-        if (itemStackName.getString().equals(CLICK_TO_SELL_ITEM)) return null;
+        if (itemStackName.getString(PartStyle.StyleType.NONE).equals(SOLD_ITEM_SLOT)) return null;
 
         Matcher m = itemStackName.getMatcher(ITEM_NAME_PATTERN);
         if (!m.matches()) return null;
 
-        return m.group(2);
+        return m.group(1);
     }
 
     private int getAmountInInventory(String name) {
@@ -113,29 +116,29 @@ public class TradeMarketBulkSellFeature extends Feature {
 
     private void addSellButtons(ContainerScreen containerScreen, String soldItemName) {
         containerScreen.addRenderableWidget(new SellButton(
-                containerScreen.leftPos - SellButton.BUTTON_WIDTH,
-                containerScreen.topPos,
+                containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
+                containerScreen.topPos + 30,
                 () -> getAmountInInventory(soldItemName),
                 true));
 
         if (bulkSell1Amount.get() > 0) {
             containerScreen.addRenderableWidget(new SellButton(
-                    containerScreen.leftPos - SellButton.BUTTON_WIDTH,
-                    containerScreen.topPos + 21,
+                    containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
+                    containerScreen.topPos + 51,
                     bulkSell1Amount::get,
                     false));
         }
         if (bulkSell2Amount.get() > 0) {
             containerScreen.addRenderableWidget(new SellButton(
-                    containerScreen.leftPos - SellButton.BUTTON_WIDTH,
-                    containerScreen.topPos + 42,
+                    containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
+                    containerScreen.topPos + 72,
                     bulkSell2Amount::get,
                     false));
         }
         if (bulkSell3Amount.get() > 0) {
             containerScreen.addRenderableWidget(new SellButton(
-                    containerScreen.leftPos - SellButton.BUTTON_WIDTH,
-                    containerScreen.topPos + 63,
+                    containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
+                    containerScreen.topPos + 103,
                     bulkSell3Amount::get,
                     false));
         }
