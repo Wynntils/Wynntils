@@ -52,6 +52,10 @@ public class IngredientInfoRegistry {
         return ingredientInfoLookup.get(ingredientName);
     }
 
+    public IngredientInfo getFromApiName(String ingredientName) {
+        return ingredientInfoLookupApiName.get(ingredientName);
+    }
+
     public Stream<IngredientInfo> getIngredientInfoStream() {
         return ingredientInfoRegistry.stream();
     }
