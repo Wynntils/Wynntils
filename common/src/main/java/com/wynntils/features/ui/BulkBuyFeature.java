@@ -57,6 +57,7 @@ public class BulkBuyFeature extends Feature {
     private BulkBuyWidget bulkBuyWidget;
     private int bulkBoughtSlotNumber = -1; // Slot number of the thing we're buying
     private AbstractContainerMenu bulkBoughtContainer = null; // Shop container we're buying from
+    private ItemStack bulkBoughtItemStack = null; // Item we're buying
     private int bulkBoughtAmount = 0; // Amount remaining that we need to buy
     private int bulkBoughtPrice = 0; // Price of a single item
 
@@ -118,11 +119,9 @@ public class BulkBuyFeature extends Feature {
             // we're starting a new bulk buy
             bulkBoughtSlotNumber = e.getSlotNum();
             bulkBoughtContainer = container;
+            bulkBoughtItemStack = itemStack;
             bulkBoughtAmount = bulkBuyAmount.get();
             bulkBoughtPrice = itemPrice;
-
-            bulkBuyWidget.setBulkBoughtPrice(bulkBoughtPrice);
-            bulkBuyWidget.setBulkBoughtItemStack(itemStack);
         } else if (bulkBoughtSlotNumber != e.getSlotNum()) {
             // we're trying to buy a different item
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyDifferentItem"));
@@ -131,7 +130,7 @@ public class BulkBuyFeature extends Feature {
             // we're buying more of the same item
             bulkBoughtAmount += bulkBuyAmount.get();
         }
-        bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
+        bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
 
         e.setCanceled(true);
     }
@@ -157,7 +156,7 @@ public class BulkBuyFeature extends Feature {
         if (bulkBoughtAmount <= 0) {
             resetBulkBuy(true);
         }
-        bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
+        bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
     }
 
     private void resetBulkBuy(boolean resetWidget) {
@@ -167,9 +166,7 @@ public class BulkBuyFeature extends Feature {
         bulkBoughtPrice = 0;
 
         if (!resetWidget) return;
-        bulkBuyWidget.setBulkBoughtAmount(bulkBoughtAmount);
-        bulkBuyWidget.setBulkBoughtPrice(bulkBoughtPrice);
-        bulkBuyWidget.setBulkBoughtItemStack(null);
+        bulkBuyWidget.setBulkBoughtItem(null);
     }
 
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
@@ -260,4 +257,6 @@ public class BulkBuyFeature extends Feature {
             return ticksDelay;
         }
     }
+
+    public record BulkBoughtItem(ItemStack itemStack, int amount, int price) {}
 }

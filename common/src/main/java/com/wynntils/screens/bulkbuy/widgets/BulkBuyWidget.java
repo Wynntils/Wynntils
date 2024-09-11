@@ -5,6 +5,7 @@
 package com.wynntils.screens.bulkbuy.widgets;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,13 +18,10 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 public class BulkBuyWidget extends AbstractWidget {
     private static final int BULK_BUY_WIDGET_CENTER = 89;
-    private ItemStack bulkBoughtItemStack = null;
-    private int bulkBoughtAmount = 0;
-    private int bulkBoughtPrice = 0;
+    private BulkBuyFeature.BulkBoughtItem bulkBoughtItem = null;
 
     public BulkBuyWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Bulk Buy Widget"));
@@ -34,7 +32,7 @@ public class BulkBuyWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BULK_BUY_PANEL, getX(), getY());
 
         // bulkBoughtItemStack is null when there is no item being bulk bought
-        if (bulkBoughtItemStack == null) {
+        if (bulkBoughtItem == null) {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics.pose(),
@@ -70,11 +68,12 @@ public class BulkBuyWidget extends AbstractWidget {
                         TextShadow.NORMAL);
 
         // X coordinate is center of widget (BULK_BUY_WIDGET_CENTER) minus half of the item icon width (8)
-        guiGraphics.renderItem(bulkBoughtItemStack, getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+        guiGraphics.renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics.pose(),
-                        StyledText.fromString(bulkBoughtItemStack.getHoverName().getString()),
+                        StyledText.fromString(
+                                bulkBoughtItem.itemStack().getHoverName().getString()),
                         getX() + BULK_BUY_WIDGET_CENTER,
                         getY() + 63,
                         getWidth() - 20,
@@ -86,7 +85,8 @@ public class BulkBuyWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
-                        StyledText.fromString(I18n.get("feature.wynntils.bulkBuy.widget.amount", bulkBoughtAmount)),
+                        StyledText.fromString(
+                                I18n.get("feature.wynntils.bulkBuy.widget.amount", bulkBoughtItem.amount())),
                         getX() + BULK_BUY_WIDGET_CENTER,
                         getY() + 79,
                         CommonColors.WHITE,
@@ -97,7 +97,8 @@ public class BulkBuyWidget extends AbstractWidget {
                 .renderText(
                         guiGraphics.pose(),
                         StyledText.fromString(I18n.get(
-                                "feature.wynntils.bulkBuy.widget.totalPrice", (bulkBoughtAmount * bulkBoughtPrice))),
+                                "feature.wynntils.bulkBuy.widget.totalPrice",
+                                (bulkBoughtItem.amount() * bulkBoughtItem.price()))),
                         getX() + BULK_BUY_WIDGET_CENTER,
                         getY() + 89,
                         CommonColors.LIGHT_GREEN,
@@ -116,16 +117,8 @@ public class BulkBuyWidget extends AbstractWidget {
                         TextShadow.NORMAL);
     }
 
-    public void setBulkBoughtItemStack(ItemStack bulkBoughtItemStack) {
-        this.bulkBoughtItemStack = bulkBoughtItemStack;
-    }
-
-    public void setBulkBoughtAmount(int bulkBoughtAmount) {
-        this.bulkBoughtAmount = bulkBoughtAmount;
-    }
-
-    public void setBulkBoughtPrice(int bulkBoughtPrice) {
-        this.bulkBoughtPrice = bulkBoughtPrice;
+    public void setBulkBoughtItem(BulkBuyFeature.BulkBoughtItem bulkBoughtItem) {
+        this.bulkBoughtItem = bulkBoughtItem;
     }
 
     @Override
