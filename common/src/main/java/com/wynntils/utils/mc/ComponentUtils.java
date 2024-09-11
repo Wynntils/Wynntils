@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
@@ -184,18 +185,14 @@ public final class ComponentUtils {
      * @param formattedText the formatted text to add the Wynntils chat banner to
      * @return a {@code Component} holding the formatted text with the Wynntils chat banner added
      */
-    public static Component addWynntilsBanner(FormattedText formattedText) {
-        // - 2 to have room for the banner character and a space on the left
+    public static Component addWynntilsBanner(Component component) {
         Minecraft mc = Minecraft.getInstance();
-        /*
-        Add 3 spaces worth of space when splitting since sometimes the string is still too long and gets wrapped by
-        ChatComponent.
-         */
         List<FormattedText> lines = mc.font
                 .getSplitter()
                 .splitLines(
-                        formattedText,
-                        ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(" ") * 3,
+                        StyledText.fromComponent(component).getString(PartStyle.StyleType.DEFAULT),
+                        ChatComponent.getWidth(mc.options.chatWidth().get())
+                                - mc.font.width(CHAT_BANNER_LINE_PREFIX + " "),
                         Style.EMPTY);
 
         MutableComponent output = Component.literal(CHAT_BANNER_FIRST_LINE)

@@ -10,6 +10,7 @@ import com.wynntils.mc.extension.ChatComponentExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -61,6 +62,10 @@ public final class McUtils {
 
     public static double guiScale() {
         return window().getGuiScale();
+    }
+
+    public static int getChatWindowWidth() {
+        return ChatComponent.getWidth(mc().options.chatWidth().get());
     }
 
     public static void playSoundUI(SoundEvent sound) {
