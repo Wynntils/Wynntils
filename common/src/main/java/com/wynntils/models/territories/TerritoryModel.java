@@ -12,6 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -71,7 +72,7 @@ public final class TerritoryModel extends Model {
 
         Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
 
-        scheduleTerritoryUpdate(false);
+        scheduleTerritoryUpdate(true);
     }
 
     public TerritoryProfile getTerritoryProfile(String name) {
@@ -276,5 +277,7 @@ public final class TerritoryModel extends Model {
                             .collect(Collectors.toSet());
                 },
                 onError -> WynntilsMod.warn("Failed to update territory data."));
+
+        scheduleTerritoryUpdate(Models.Guild.isInGuild());
     }
 }

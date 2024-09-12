@@ -403,6 +403,10 @@ public class GuildModel extends Model {
         return guildRank;
     }
 
+    public boolean isInGuild() {
+        return !guildName.isEmpty();
+    }
+
     public int getGuildLevel() {
         return guildLevel;
     }
