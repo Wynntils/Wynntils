@@ -214,11 +214,12 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        // FIXME: Special URL reloading
+        Managers.Url.loadUrls();
 
         // Reload all downloaded data
         WynntilsMod.reloadAllComponentData();
-        Managers.Download.download();
+
+        // Explicitly, do NOT call DownloadManager here, as it will get called when UrlManager finishes reloading
 
         return 1;
     }

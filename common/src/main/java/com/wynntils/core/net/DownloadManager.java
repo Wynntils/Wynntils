@@ -10,6 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.CoreComponent;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
 import com.wynntils.utils.StringUtils;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * Manages downloading files from the internet. This manager acts as a middle layer between the caller components
@@ -63,6 +65,11 @@ public class DownloadManager extends Manager {
         super(List.of());
     }
 
+    @SubscribeEvent
+    public void onUrlProcessingFinished(UrlProcessingFinishedEvent event) {
+        download();
+    }
+
     public void initComponents(Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap) {
         componentMap.forEach((componentClass, coreComponents) -> {
             coreComponents.forEach(
@@ -81,7 +88,17 @@ public class DownloadManager extends Manager {
         }
     }
 
-    public void download() {
+    QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {
+        if (registrationLock) {
+            throw new IllegalStateException("Cannot queue downloads after the download graph is already built.");
+        }
+
+        QueuedDownload queuedDownload = new QueuedDownload(callerComponent, urlId, dependency);
+        registeredDownloads.add(queuedDownload);
+        return queuedDownload;
+    }
+
+    private void download() {
         // Reset the state of the manager, as the downloads are being started
         graph.resetState();
         currentDownloads = new LinkedHashMap<>();
@@ -102,16 +119,6 @@ public class DownloadManager extends Manager {
                 currentDownloads.put(queuedDownload, getDownload(queuedDownload));
             }
         }
-    }
-
-    QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {
-        if (registrationLock) {
-            throw new IllegalStateException("Cannot queue downloads after the download graph is already built.");
-        }
-
-        QueuedDownload queuedDownload = new QueuedDownload(callerComponent, urlId, dependency);
-        registeredDownloads.add(queuedDownload);
-        return queuedDownload;
     }
 
     private Download getDownload(QueuedDownload queuedDownload) {

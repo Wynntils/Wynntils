@@ -204,7 +204,6 @@ public final class WynntilsMod {
 
         // Ask every component about their data dependencies and register them
         Managers.Download.initComponents(componentMap);
-        Managers.Download.download();
 
         addCrashCallbacks();
     }

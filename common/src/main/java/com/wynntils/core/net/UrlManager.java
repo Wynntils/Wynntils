@@ -190,7 +190,7 @@ public final class UrlManager extends Manager {
         // unlike other core components.
     }
 
-    private void loadUrls() {
+    public void loadUrls() {
         // Reset the URL lists
         urlListMap.clear();
         urlList = UrlList.EMPTY;
