@@ -27,6 +27,7 @@ public abstract class GuiMessageMixin implements GuiMessageExtension {
         createdAt = LocalDateTime.now();
     }
 
+    @Unique
     @Override
     public LocalDateTime getCreated() {
         return createdAt;

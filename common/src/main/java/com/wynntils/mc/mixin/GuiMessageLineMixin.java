@@ -33,21 +33,25 @@ public abstract class GuiMessageLineMixin implements GuiMessageLineExtension {
         timestamp = Optional.empty();
     }
 
+    @Unique
     @Override
     public LocalDateTime getCreated() {
         return createdAt;
     }
 
+    @Unique
     @Override
     public void setCreated(LocalDateTime date) {
         createdAt = date;
     }
 
+    @Unique
     @Override
     public Optional<Pair<Component, Integer>> getTimestamp() {
         return timestamp;
     }
 
+    @Unique
     @Override
     public void setTimestamp(Component component) {
         timestamp = Optional.of(
