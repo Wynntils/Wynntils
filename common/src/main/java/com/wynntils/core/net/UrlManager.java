@@ -270,7 +270,7 @@ public final class UrlManager extends Manager {
                         // Merge the lists with the remote list as the primary source
                         mergeUrlLists();
                     } catch (IllegalStateException e) {
-                        // IllegalStateExceptions are thrown on cricical errors detected by the manager
+                        // IllegalStateExceptions are thrown on critical errors detected by the manager
                         WynntilsMod.error("Critical error while updating URL list from online source", e);
                         throw e;
                     } catch (IOException e) {
