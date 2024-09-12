@@ -123,12 +123,14 @@ public final class UrlManager extends Manager {
         super(List.of(netManager));
 
         // Read the url override from environment
-        URI parsedOverrideUri;
-        try {
-            parsedOverrideUri = URI.create(OVERRIDE_LINK);
-        } catch (Exception e) {
-            parsedOverrideUri = null;
-            WynntilsMod.error("Invalid URL list override link: " + OVERRIDE_LINK);
+        URI parsedOverrideUri = null;
+        if (OVERRIDE_LINK != null) {
+            try {
+                parsedOverrideUri = URI.create(OVERRIDE_LINK);
+            } catch (Exception e) {
+                parsedOverrideUri = null;
+                WynntilsMod.error("Invalid URL list override link: " + OVERRIDE_LINK);
+            }
         }
         urlListOverrideUri = parsedOverrideUri;
 
@@ -313,78 +315,82 @@ public final class UrlManager extends Manager {
             }
 
             // Then check if we have a local cache
-            if ((forceSource == null || forceSource == UrlListType.LOCAL_CACHE)
-                    && urlListMap.containsKey(UrlListType.LOCAL_CACHE)) {
-                UrlList localCacheList = urlListMap.get(UrlListType.LOCAL_CACHE);
+            if (forceSource == null || forceSource == UrlListType.LOCAL_CACHE) {
+                if (urlListMap.containsKey(UrlListType.LOCAL_CACHE)) {
+                    UrlList localCacheList = urlListMap.get(UrlListType.LOCAL_CACHE);
 
-                // Firstly, check for version differences between the lists
-                if (localCacheList.version() >= currentVersion) {
-                    currentVersion = localCacheList.version();
+                    // Firstly, check for version differences between the lists
+                    if (localCacheList.version() >= currentVersion) {
+                        currentVersion = localCacheList.version();
 
-                    // We do have a local cache. Let's merge it in.
-                    // Two main rules are applied:
-                    // 1. If an URL is only present in the local cache, it is added to the list, without a hash.
-                    // 2. If an URL is present in both the local cache and the bundled list, remove the hash info, to
-                    //    ensure that the most up-to-date data is downloaded, as we have no way of knowing which one is
-                    //    correct.
+                        // We do have a local cache. Let's merge it in.
+                        // Two main rules are applied:
+                        // 1. If an URL is only present in the local cache, it is added to the list, without a hash.
+                        // 2. If an URL is present in both the local cache and the bundled list, remove the hash info,
+                        // to
+                        //    ensure that the most up-to-date data is downloaded, as we have no way of knowing which one
+                        // is
+                        //    correct.
 
-                    // Add all URLs from the local cache that are not in the current list
-                    localCacheList.urls.entrySet().stream()
-                            .filter(entry -> !currentUrls.containsKey(entry.getKey()))
-                            .forEach(entry -> currentUrls.put(entry.getKey(), entry.getValue()));
+                        // Add all URLs from the local cache that are not in the current list
+                        localCacheList.urls.entrySet().stream()
+                                .filter(entry -> !currentUrls.containsKey(entry.getKey()))
+                                .forEach(entry -> currentUrls.put(entry.getKey(), entry.getValue()));
 
-                    // Remove the hashes from the URLs that are in both the local cache and the bundled list
-                    localCacheList.urls().forEach((key, value) -> {
-                        if (!currentUrls.containsKey(key)) return;
+                        // Remove the hashes from the URLs that are in both the local cache and the bundled list
+                        localCacheList.urls().forEach((key, value) -> {
+                            if (!currentUrls.containsKey(key)) return;
 
-                        UrlInfo urlInfo = currentUrls.get(key);
+                            UrlInfo urlInfo = currentUrls.get(key);
 
-                        // If the hashes are different, remove the hash
-                        if (!urlInfo.md5().equals(value.md5())) {
-                            currentUrls.put(key, value.withoutMd5());
+                            // If the hashes are different, remove the hash
+                            if (!urlInfo.md5().equals(value.md5())) {
+                                currentUrls.put(key, value.withoutMd5());
 
-                            if (DEBUG_LOGS) {
-                                WynntilsMod.info("Bundled and local hashes differ for " + key + ". Removing hash. ("
-                                        + urlInfo.md5().orElse("null") + " -> null)");
+                                if (DEBUG_LOGS) {
+                                    WynntilsMod.info("Bundled and local hashes differ for " + key + ". Removing hash. ("
+                                            + urlInfo.md5().orElse("null") + " -> null)");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                } else {
+                    WynntilsMod.warn(
+                            "No URL cache found. This is normal if you are running Wynntils for the first time. Otherwise, this likely indicates a problem.");
                 }
-            } else {
-                WynntilsMod.warn(
-                        "No URL cache found. This is normal if you are running Wynntils for the first time. Otherwise, this likely indicates a problem.");
             }
 
             // Once we are done with the local cache, try to use the remote list as much as we can
-            if ((forceSource == null || forceSource == UrlListType.REMOTE)
-                    && urlListMap.containsKey(UrlListType.REMOTE)) {
-                UrlList remoteList = urlListMap.get(UrlListType.REMOTE);
+            if (forceSource == null || forceSource == UrlListType.REMOTE) {
+                if (urlListMap.containsKey(UrlListType.REMOTE)) {
+                    UrlList remoteList = urlListMap.get(UrlListType.REMOTE);
 
-                // Firstly, check for version differences between the lists
-                // It's very weird for the remote list to have a lower version than the local cache, but it's
-                // possible
-                if (remoteList.version() < currentVersion) {
-                    throw new IllegalStateException(
-                            "Remote URL list has a lower version than the local cache. This should not happen.");
-                }
-
-                currentVersion = remoteList.version();
-
-                // Use the remote list's hashes for all URLs, if they are present
-                remoteList.urls().forEach((key, value) -> {
-                    if (currentUrls.containsKey(key)) {
-                        UrlInfo oldInfo = currentUrls.put(key, value);
-
-                        if (DEBUG_LOGS && oldInfo != null && !oldInfo.md5().equals(value.md5())) {
-                            WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. (" + oldInfo.md5()
-                                    + " -> " + value.md5().orElse("null") + ")");
-                        }
-                    } else {
-                        currentUrls.put(key, value);
+                    // Firstly, check for version differences between the lists
+                    // It's very weird for the remote list to have a lower version than the local cache, but it's
+                    // possible
+                    if (remoteList.version() < currentVersion) {
+                        throw new IllegalStateException(
+                                "Remote URL list has a lower version than the local cache. This should not happen.");
                     }
-                });
-            } else {
-                WynntilsMod.warn("No remote URL list available. Falling back to local sources.");
+
+                    currentVersion = remoteList.version();
+
+                    // Use the remote list's hashes for all URLs, if they are present
+                    remoteList.urls().forEach((key, value) -> {
+                        if (currentUrls.containsKey(key)) {
+                            UrlInfo oldInfo = currentUrls.put(key, value);
+
+                            if (DEBUG_LOGS && oldInfo != null && !oldInfo.md5().equals(value.md5())) {
+                                WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. ("
+                                        + oldInfo.md5() + " -> " + value.md5().orElse("null") + ")");
+                            }
+                        } else {
+                            currentUrls.put(key, value);
+                        }
+                    });
+                } else {
+                    WynntilsMod.warn("No remote URL list available. Falling back to local sources.");
+                }
             }
 
             // Finally, set the new URL list
@@ -394,10 +400,10 @@ public final class UrlManager extends Manager {
         if (urlList == null || urlList.urls().isEmpty()) {
             throw new IllegalStateException(
                     """
-                            URL list is empty after merging. This means all three of the URL sources failed to load.
-                            If you have set a custom url loading mode, this means that it failed to load.
-                            Otherwise, this is a critical error, try contacting the developers.
-                       """);
+                                 URL list is empty after merging. This means all three of the URL sources failed to load.
+                                 If you have set a custom url loading mode, this means that it failed to load.
+                                 Otherwise, this is a critical error, try contacting the developers.
+                            """);
         }
 
         // Fire the event that we have finished processing the URLs
