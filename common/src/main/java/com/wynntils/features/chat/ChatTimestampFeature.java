@@ -80,12 +80,18 @@ public class ChatTimestampFeature extends Feature {
 
     @SubscribeEvent
     public void onChatComponentTranslate(ChatComponentRenderEvent.Translate event) {
-        if (timestampWidth != 0) event.setX(event.getX() + 4 + timestampWidth);
+        if (timestampWidth != 0) {
+            // Moves the vanilla chatbox to the right
+            event.setX(event.getX() + 4 + timestampWidth);
+        }
     }
 
     @SubscribeEvent
     public void onChatComponentMapMouseX(ChatComponentRenderEvent.MapMouseX event) {
-        if (timestampWidth != 0) event.setX(event.getX() - (4 + timestampWidth));
+        if (timestampWidth != 0) {
+            // Account for the translation so that hover/click events work properly
+            event.setX(event.getX() - (4 + timestampWidth));
+        }
     }
 
     @SubscribeEvent
