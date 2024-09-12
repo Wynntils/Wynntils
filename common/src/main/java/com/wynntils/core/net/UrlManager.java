@@ -78,7 +78,11 @@ import java.util.function.Function;
  *
  * <p>It's also possible to override these rules with JVM flags.</p>
  * <p>See the list of flags for alternative hash conflict resolution below.</p>
- * // FIXME: Add the list of flags for alternative hash conflict resolution
+ * <ul>
+ *     <li>
+ *         <code>wynntils.url.list.force.source</code> - Force the source to be used, regardless of the version.
+ *         Possible values are <code>bundled</code>, <code>local</code>, <code>remote</code>.
+ *     </li>
  *
  * <h3>URL override</h3>
  * <p>
@@ -94,16 +98,21 @@ import java.util.function.Function;
 public final class UrlManager extends Manager {
     // -Dwynntils.url.list.override.link=https://example.com/urls.json
     private static final String URLS_OVERRIDE_ENV = "wynntils.url.list.override.link";
+    private static final String OVERRIDE_LINK = System.getProperty(URLS_OVERRIDE_ENV);
+    private final URI urlListOverrideUri;
+
     // -Dwynntils.url.list.ignore.cache=true
     private static final String URLS_IGNORE_CACHE_ENV = "wynntils.url.list.ignore.cache";
+    private static final boolean IGNORE_CACHE = Boolean.parseBoolean(System.getProperty(URLS_IGNORE_CACHE_ENV));
 
     // -Dwynntils.url.list.debug.log=true
     private static final String URLS_DEBUG_LOG_ENV = "wynntils.url.list.debug.log";
-
     private static final boolean DEBUG_LOGS = System.getProperty(URLS_DEBUG_LOG_ENV) != null;
 
-    private final URI urlListOverrideUri;
-    private final boolean ignoreCache;
+    // -Dwynntils.url.list.force.source=local
+    private static final String URLS_OVERRIDE_FORCE_SOURCE_ENV = "wynntils.url.list.force.source";
+    private static final String FORCE_SOURCE = System.getProperty(URLS_OVERRIDE_FORCE_SOURCE_ENV);
+    private final UrlListType forceSource;
 
     private Map<UrlListType, UrlList> urlListMap = new ConcurrentHashMap<>();
 
@@ -114,27 +123,25 @@ public final class UrlManager extends Manager {
         super(List.of(netManager));
 
         // Read the url override from environment
-        String urlListOverride = System.getProperty(URLS_OVERRIDE_ENV);
         URI parsedOverrideUri;
         try {
-            parsedOverrideUri = URI.create(urlListOverride);
+            parsedOverrideUri = URI.create(OVERRIDE_LINK);
         } catch (Exception e) {
             parsedOverrideUri = null;
-            WynntilsMod.error("Invalid URL list override link: " + urlListOverride);
+            WynntilsMod.error("Invalid URL list override link: " + OVERRIDE_LINK);
         }
         urlListOverrideUri = parsedOverrideUri;
-
-        // Read the ignore cache from environment
-        ignoreCache = Boolean.parseBoolean(System.getProperty(URLS_IGNORE_CACHE_ENV));
 
         // Log the settings
         if (urlListOverrideUri == null) {
             WynntilsMod.info(
-                    "Loading urls.json in the normal mode. Url cache is " + (ignoreCache ? "ignored" : "used") + ".");
+                    "Loading urls.json in the normal mode. Url cache is " + (IGNORE_CACHE ? "ignored" : "used") + ".");
         } else {
             WynntilsMod.info("Loading urls.json from " + urlListOverrideUri + ". Url cache is "
-                    + (ignoreCache ? "ignored" : "used") + ".");
+                    + (IGNORE_CACHE ? "ignored" : "used") + ".");
         }
+
+        forceSource = UrlListType.valueOf(FORCE_SOURCE.toUpperCase(Locale.ROOT));
 
         loadUrls();
     }
@@ -193,7 +200,7 @@ public final class UrlManager extends Manager {
             // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
             readEmbeddedUrls();
 
-            if (!ignoreCache) {
+            if (!IGNORE_CACHE) {
                 // Then try to read the URLs from the local cache
                 readLocalUrlCache();
             }
@@ -215,7 +222,7 @@ public final class UrlManager extends Manager {
             // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
             readEmbeddedUrls();
 
-            if (!ignoreCache) {
+            if (!IGNORE_CACHE) {
                 // Try to read the URLs from the local cache
                 readLocalUrlCache();
             }
@@ -290,20 +297,24 @@ public final class UrlManager extends Manager {
     private void mergeUrlLists() {
         // In theory, this method shouldn't be called concurrently ever, but just in case
         synchronized (urlMapLock) {
-            int currentVersion;
-            Map<UrlId, UrlInfo> currentUrls;
+            int currentVersion = -1;
+            Map<UrlId, UrlInfo> currentUrls = new LinkedHashMap<>();
 
             // Start by using the bundled urls as a baseline
             UrlList bundledList = urlListMap.get(UrlListType.BUNDLED);
-            currentVersion = bundledList.version();
-            currentUrls = new LinkedHashMap<>(bundledList.urls());
+
+            if (forceSource == null || forceSource == UrlListType.BUNDLED) {
+                currentVersion = bundledList.version();
+                currentUrls.putAll(bundledList.urls());
+            }
 
             if (DEBUG_LOGS) {
                 WynntilsMod.info("Bundled URL list version: " + currentVersion + ", URLs: " + currentUrls.size());
             }
 
             // Then check if we have a local cache
-            if (urlListMap.containsKey(UrlListType.LOCAL_CACHE)) {
+            if ((forceSource == null || forceSource == UrlListType.LOCAL_CACHE)
+                    && urlListMap.containsKey(UrlListType.LOCAL_CACHE)) {
                 UrlList localCacheList = urlListMap.get(UrlListType.LOCAL_CACHE);
 
                 // Firstly, check for version differences between the lists
@@ -345,7 +356,8 @@ public final class UrlManager extends Manager {
             }
 
             // Once we are done with the local cache, try to use the remote list as much as we can
-            if (urlListMap.containsKey(UrlListType.REMOTE)) {
+            if ((forceSource == null || forceSource == UrlListType.REMOTE)
+                    && urlListMap.containsKey(UrlListType.REMOTE)) {
                 UrlList remoteList = urlListMap.get(UrlListType.REMOTE);
 
                 // Firstly, check for version differences between the lists
@@ -367,6 +379,8 @@ public final class UrlManager extends Manager {
                             WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. (" + oldInfo.md5()
                                     + " -> " + value.md5().orElse("null") + ")");
                         }
+                    } else {
+                        currentUrls.put(key, value);
                     }
                 });
             } else {
@@ -379,7 +393,11 @@ public final class UrlManager extends Manager {
 
         if (urlList == null || urlList.urls().isEmpty()) {
             throw new IllegalStateException(
-                    "URL list is empty after merging. This means all three of the URL sources failed to load. This is a critical error, try contacting the developers.");
+                    """
+                            URL list is empty after merging. This means all three of the URL sources failed to load.
+                            If you have set a custom url loading mode, this means that it failed to load.
+                            Otherwise, this is a critical error, try contacting the developers.
+                       """);
         }
 
         // Fire the event that we have finished processing the URLs
