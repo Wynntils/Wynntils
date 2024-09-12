@@ -28,6 +28,7 @@ import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
+import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -125,6 +126,7 @@ public final class ContainerModel extends Model {
         registerContainer(new SeaskipperContainer());
         registerContainer(new TradeMarketFiltersContainer());
         registerContainer(new TradeMarketContainer());
+        registerContainer(new TradeMarketSellContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
