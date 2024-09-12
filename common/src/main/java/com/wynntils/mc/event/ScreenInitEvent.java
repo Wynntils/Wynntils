@@ -33,7 +33,6 @@ public abstract class ScreenInitEvent extends Event {
         }
     }
 
-    // FIXME: This event does not trigger on first init. See the section near ScreenMixin.java L61
     public static class Post extends ScreenInitEvent {
         public Post(Screen screen, boolean firstInit) {
             super(screen, firstInit);

@@ -53,7 +53,7 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Inject(
             method = "rebuildWidgets()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
-    private void onScreenInit(CallbackInfo ci) {
+    private void onScreenInitPre(CallbackInfo ci) {
         // This is called whenever a screen is re-inited (e.g. when the window is resized)
         MixinHelper.postAlways(new ScreenInitEvent.Pre((Screen) (Object) this, false));
     }
@@ -66,9 +66,21 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Inject(
             method = "init(Lnet/minecraft/client/Minecraft;II)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
-    private void onFirstScreenInit(CallbackInfo ci) {
+    private void onFirstScreenInitPre(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
         MixinHelper.post(new ScreenInitEvent.Pre((Screen) (Object) this, true));
+    }
+
+    @Inject(
+            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/gui/screens/Screen;init()V",
+                            shift = At.Shift.AFTER))
+    private void onFirstScreenInitPost(CallbackInfo ci) {
+        // This is called only once, when the screen is first initialized
+        MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, true));
     }
 
     @Inject(method = "changeFocus(Lnet/minecraft/client/gui/ComponentPath;)V", at = @At("HEAD"), cancellable = true)
