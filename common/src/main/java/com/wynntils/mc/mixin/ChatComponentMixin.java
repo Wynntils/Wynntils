@@ -45,7 +45,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     private Minecraft minecraft;
 
     @WrapOperation(
-            method = "addMessageToDisplayQueue",
+            method = "addMessageToDisplayQueue(Lnet/minecraft/client/GuiMessage;)V",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V"))
     private void addMessageToDisplayQueue(
             List<GuiMessage.Line> instance,
@@ -67,7 +67,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     }
 
     @Inject(
-            method = "render",
+            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -78,7 +78,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     }
 
     @ModifyArg(
-            method = "render",
+            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V", ordinal = 0),
             index = 0)
     private float offsetChatBox(float x) {
@@ -101,7 +101,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     }
 
     @Inject(
-            method = "render",
+            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V", ordinal = 0))
     private void renderTimestampBackground(
             GuiGraphics guiGraphics,
@@ -118,7 +118,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
     }
 
     @Inject(
-            method = "render",
+            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V",
             at =
                     @At(
                             value = "INVOKE",
