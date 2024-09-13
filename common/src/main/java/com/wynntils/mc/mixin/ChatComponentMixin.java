@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -58,6 +59,7 @@ public abstract class ChatComponentMixin implements ChatComponentExtension {
         original.call(trimmedMessages, i, line);
     }
 
+    @Unique
     @Override
     public void deleteMessage(Component component) {
         allMessages.removeIf(guiMessage -> guiMessage.content().equals(component));
