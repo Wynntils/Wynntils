@@ -58,7 +58,6 @@ public class DownloadManager extends Manager {
 
     private DownloadDependencyGraph graph = null;
 
-    private Object downloadsLock = new Object();
     private Map<QueuedDownload, Download> currentDownloads;
 
     public DownloadManager() {
@@ -105,7 +104,7 @@ public class DownloadManager extends Manager {
 
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
-        synchronized (downloadsLock) {
+        synchronized (currentDownloads) {
             for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {
                 QueuedDownload queuedDownload = graph.nextDownload();
 
@@ -151,7 +150,7 @@ public class DownloadManager extends Manager {
     private void queueNextDownload(QueuedDownload finishedDownload) {
         QueuedDownload nextDownload = graph.nextDownload();
 
-        synchronized (downloadsLock) {
+        synchronized (currentDownloads) {
             for (Map.Entry<QueuedDownload, Download> entry : currentDownloads.entrySet()) {
                 if (!entry.getKey().equals(finishedDownload)) continue;
 

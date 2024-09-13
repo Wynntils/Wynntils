@@ -214,12 +214,11 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
+        // This reloads all URLs, and will then trigger a re-download by the DownloadManager
         Managers.Url.loadUrls();
 
         // Reload all downloaded data
         WynntilsMod.reloadAllComponentData();
-
-        // Explicitly, do NOT call DownloadManager here, as it will get called when UrlManager finishes reloading
 
         return 1;
     }

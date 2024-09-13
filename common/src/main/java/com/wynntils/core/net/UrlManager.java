@@ -112,12 +112,10 @@ public final class UrlManager extends Manager {
     // -Dwynntils.url.list.force.source=local
     private static final String URLS_OVERRIDE_FORCE_SOURCE_ENV = "wynntils.url.list.force.source";
     private static final String FORCE_SOURCE = System.getProperty(URLS_OVERRIDE_FORCE_SOURCE_ENV);
-    private final UrlListType forceSource;
+    private final UrlMapperType forceSource;
 
-    private Map<UrlListType, UrlList> urlListMap = new ConcurrentHashMap<>();
-
-    private Object urlMapLock = new Object();
-    private UrlList urlList = UrlList.EMPTY;
+    private Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
+    private UrlMapper urlMapper = UrlMapper.EMPTY;
 
     public UrlManager(NetManager netManager) {
         super(List.of(netManager));
@@ -143,17 +141,17 @@ public final class UrlManager extends Manager {
                     + (IGNORE_CACHE ? "ignored" : "used") + ".");
         }
 
-        forceSource = UrlListType.valueOf(FORCE_SOURCE.toUpperCase(Locale.ROOT));
+        forceSource = UrlMapperType.valueOf(FORCE_SOURCE.toUpperCase(Locale.ROOT));
 
         loadUrls();
     }
 
     public UrlInfo getUrlInfo(UrlId urlId) {
-        return urlList.get(urlId);
+        return urlMapper.get(urlId);
     }
 
     public String getUrl(UrlId urlId) {
-        UrlInfo urlInfo = urlList.get(urlId);
+        UrlInfo urlInfo = urlMapper.get(urlId);
 
         // This is only valid for POST URLs, or GET URLs with no arguments
         assert (urlInfo.method() == Method.POST || urlInfo.arguments().isEmpty());
@@ -162,7 +160,7 @@ public final class UrlManager extends Manager {
     }
 
     public String buildUrl(UrlId urlId, Map<String, String> arguments) {
-        UrlInfo urlInfo = urlList.get(urlId);
+        UrlInfo urlInfo = urlMapper.get(urlId);
 
         return buildUrl(urlInfo, arguments);
     }
@@ -192,8 +190,8 @@ public final class UrlManager extends Manager {
 
     public void loadUrls() {
         // Reset the URL lists
-        urlListMap.clear();
-        urlList = UrlList.EMPTY;
+        urlMappersByType.clear();
+        urlMapper = UrlMapper.EMPTY;
 
         // Figure out where to load the URLs from initially
 
@@ -210,8 +208,10 @@ public final class UrlManager extends Manager {
             // Then trigger a (re-)download from the net to the cache
             // We need to do the urlInfo lookup ourself, since we might have
             // a embryonic netManager which can't do much.
-            UrlInfo urlInfo = urlListMap
-                    .getOrDefault(UrlListType.BUNDLED, urlListMap.getOrDefault(UrlListType.LOCAL_CACHE, UrlList.EMPTY))
+            UrlInfo urlInfo = urlMappersByType
+                    .getOrDefault(
+                            UrlMapperType.BUNDLED,
+                            urlMappersByType.getOrDefault(UrlMapperType.LOCAL_CACHE, UrlMapper.EMPTY))
                     .get(UrlId.DATA_STATIC_URLS);
             if (urlInfo == null) {
                 WynntilsMod.error("ERROR: Failed to load baseline URL list. Try deleting Wynntils cache.");
@@ -236,7 +236,7 @@ public final class UrlManager extends Manager {
 
     private void readEmbeddedUrls() {
         try {
-            readInputStreamForUrl(getBundledInputStream(), UrlListType.BUNDLED);
+            readInputStreamForUrl(getBundledInputStream(), UrlMapperType.BUNDLED);
         } catch (IOException | JsonSyntaxException e) {
             // We can't load the url list bundled. This is a catastrophic failure.
             // Nothing will work after this, so just abort.
@@ -250,7 +250,7 @@ public final class UrlManager extends Manager {
         Pair<FileInputStream, File> localCache = getLocalCacheInputStreams();
         if (localCache != null) {
             try {
-                readInputStreamForUrl(localCache.key(), UrlListType.LOCAL_CACHE);
+                readInputStreamForUrl(localCache.key(), UrlMapperType.LOCAL_CACHE);
             } catch (IOException | JsonSyntaxException e) {
                 // The local cache is corrupt. Delete it and try again.
                 WynntilsMod.warn("Problem reading URL list from local cache, deleting it.", e);
@@ -266,8 +266,8 @@ public final class UrlManager extends Manager {
         dl.handleInputStream(
                 inputStream -> {
                     try {
-                        UrlList urlList = readUrls(inputStream);
-                        urlListMap.put(UrlListType.REMOTE, urlList);
+                        UrlMapper urlMapper = readUrlMapper(inputStream);
+                        urlMappersByType.put(UrlMapperType.REMOTE, urlMapper);
 
                         // Merge the lists with the remote list as the primary source
                         mergeUrlLists();
@@ -285,11 +285,11 @@ public final class UrlManager extends Manager {
                 throwable -> WynntilsMod.warn("Failed to download URL list from online source", throwable));
     }
 
-    private void readInputStreamForUrl(InputStream tryStream, UrlListType listType)
+    private void readInputStreamForUrl(InputStream tryStream, UrlMapperType listType)
             throws JsonSyntaxException, IOException {
         try (InputStream inputStream = tryStream) {
-            UrlList urlList = readUrls(inputStream);
-            urlListMap.put(listType, urlList);
+            UrlMapper urlMapper = readUrlMapper(inputStream);
+            urlMappersByType.put(listType, urlMapper);
         } catch (MalformedJsonException e) {
             // This is handled by the caller, so just rethrow
             throw new MalformedJsonException(e);
@@ -298,14 +298,14 @@ public final class UrlManager extends Manager {
 
     private void mergeUrlLists() {
         // In theory, this method shouldn't be called concurrently ever, but just in case
-        synchronized (urlMapLock) {
+        synchronized (urlMapper) {
             int currentVersion = -1;
             Map<UrlId, UrlInfo> currentUrls = new LinkedHashMap<>();
 
             // Start by using the bundled urls as a baseline
-            UrlList bundledList = urlListMap.get(UrlListType.BUNDLED);
+            UrlMapper bundledList = urlMappersByType.get(UrlMapperType.BUNDLED);
 
-            if (forceSource == null || forceSource == UrlListType.BUNDLED) {
+            if (forceSource == null || forceSource == UrlMapperType.BUNDLED) {
                 currentVersion = bundledList.version();
                 currentUrls.putAll(bundledList.urls());
             }
@@ -315,9 +315,9 @@ public final class UrlManager extends Manager {
             }
 
             // Then check if we have a local cache
-            if (forceSource == null || forceSource == UrlListType.LOCAL_CACHE) {
-                if (urlListMap.containsKey(UrlListType.LOCAL_CACHE)) {
-                    UrlList localCacheList = urlListMap.get(UrlListType.LOCAL_CACHE);
+            if (forceSource == null || forceSource == UrlMapperType.LOCAL_CACHE) {
+                if (urlMappersByType.containsKey(UrlMapperType.LOCAL_CACHE)) {
+                    UrlMapper localCacheList = urlMappersByType.get(UrlMapperType.LOCAL_CACHE);
 
                     // Firstly, check for version differences between the lists
                     if (localCacheList.version() >= currentVersion) {
@@ -361,9 +361,9 @@ public final class UrlManager extends Manager {
             }
 
             // Once we are done with the local cache, try to use the remote list as much as we can
-            if (forceSource == null || forceSource == UrlListType.REMOTE) {
-                if (urlListMap.containsKey(UrlListType.REMOTE)) {
-                    UrlList remoteList = urlListMap.get(UrlListType.REMOTE);
+            if (forceSource == null || forceSource == UrlMapperType.REMOTE) {
+                if (urlMappersByType.containsKey(UrlMapperType.REMOTE)) {
+                    UrlMapper remoteList = urlMappersByType.get(UrlMapperType.REMOTE);
 
                     // Firstly, check for version differences between the lists
                     // It's very weird for the remote list to have a lower version than the local cache, but it's
@@ -394,10 +394,10 @@ public final class UrlManager extends Manager {
             }
 
             // Finally, set the new URL list
-            urlList = new UrlList(currentVersion, currentUrls);
+            urlMapper = new UrlMapper(currentVersion, currentUrls);
         }
 
-        if (urlList == null || urlList.urls().isEmpty()) {
+        if (urlMapper == null || urlMapper.urls().isEmpty()) {
             throw new IllegalStateException(
                     """
                                  URL list is empty after merging. This means all three of the URL sources failed to load.
@@ -408,7 +408,7 @@ public final class UrlManager extends Manager {
 
         // Fire the event that we have finished processing the URLs
         // Move the loading back to the main thread, even if that's not strictly necessary
-        WynntilsMod.info("Merged URL list. Version: " + urlList.version + ", URLs: " + urlList.urls.size());
+        WynntilsMod.info("Merged URL list. Version: " + urlMapper.version + ", URLs: " + urlMapper.urls.size());
         WynntilsMod.postEventOnMainThread(new UrlProcessingFinishedEvent());
 
         // Also trigger a reload for all components, as they might depend on the URLs which they couldn't load before
@@ -438,7 +438,7 @@ public final class UrlManager extends Manager {
         return null;
     }
 
-    private UrlList readUrls(InputStream inputStream) throws IOException, JsonSyntaxException {
+    private UrlMapper readUrlMapper(InputStream inputStream) throws IOException, JsonSyntaxException {
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();
@@ -475,11 +475,11 @@ public final class UrlManager extends Manager {
         for (UrlId urlId : UrlId.values()) {
             if (!newMap.containsKey(urlId)) {
                 WynntilsMod.warn("Missing URL in urls.json: " + urlId);
-                return UrlList.EMPTY;
+                return UrlMapper.EMPTY;
             }
         }
 
-        return new UrlList(version, newMap);
+        return new UrlMapper(version, newMap);
     }
 
     public enum Method {
@@ -529,15 +529,15 @@ public final class UrlManager extends Manager {
         String encoding;
     }
 
-    private record UrlList(int version, Map<UrlId, UrlInfo> urls) {
-        public static final UrlList EMPTY = new UrlList(-1, Map.of());
+    private record UrlMapper(int version, Map<UrlId, UrlInfo> urls) {
+        public static final UrlMapper EMPTY = new UrlMapper(-1, Map.of());
 
         public UrlInfo get(UrlId urlId) {
             return urls.get(urlId);
         }
     }
 
-    private enum UrlListType {
+    private enum UrlMapperType {
         BUNDLED,
         LOCAL_CACHE,
         REMOTE
