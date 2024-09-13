@@ -978,7 +978,7 @@
   "feature.wynntils.mythicFound.lootChestDryBoxes": "%s dry boxes",
   "feature.wynntils.mythicFound.lootChestDryChests": "%s dry chests",
   "feature.wynntils.mythicFound.lootChestDryStreakBroken": "Dry streak broken! Found a(n) %s in %s after %s and %s.",
-  "feature.wynntils.mythicFound.lootChestMythicChestNumber": "chest %s",
+  "feature.wynntils.mythicFound.lootChestMythicChestNumber": "chest #%s",
   "feature.wynntils.mythicFound.lootrunDryPulls": "%s pulls",
   "feature.wynntils.mythicFound.lootrunDryStreakBroken": "Dry streak broken! Found a(n) %s after %s without a mythic.",
   "feature.wynntils.mythicFound.name": "Mythic Found",
