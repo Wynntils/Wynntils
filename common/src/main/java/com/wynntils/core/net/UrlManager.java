@@ -141,7 +141,11 @@ public final class UrlManager extends Manager {
                     + (IGNORE_CACHE ? "ignored" : "used") + ".");
         }
 
-        forceSource = UrlMapperType.valueOf(FORCE_SOURCE.toUpperCase(Locale.ROOT));
+        if (FORCE_SOURCE != null) {
+            forceSource = UrlMapperType.valueOf(FORCE_SOURCE.toUpperCase(Locale.ROOT));
+        } else {
+            forceSource = null;
+        }
 
         loadUrls();
     }
