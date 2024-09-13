@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 1,
   "authors": [
     "Team Wynntils"
   ],
@@ -48,7 +49,6 @@
     "wynntils.mixins.fabric.json"
   ],
   "name": "Wynntils",
-  "schemaVersion": 1,
   "suggests": {
     "flamingo": "*"
   },

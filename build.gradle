@@ -109,8 +109,6 @@ allprojects {
         }
         json {
             target "src/**/*.json"
-            // schemaVersion must be at the top or else Fabric will complain
-            targetExclude("src/main/resources/fabric.mod.json")
             // spotless replaces the Unicode escapes with the actual characters, worsening readability.
             targetExclude("src/main/resources/assets/wynntils/font/*.json")
             gson()
