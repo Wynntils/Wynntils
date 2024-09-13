@@ -270,7 +270,7 @@ public final class UrlManager extends Manager {
                         urlMappersByType.put(UrlMapperType.REMOTE, urlMapper);
 
                         // Merge the lists with the remote list as the primary source
-                        mergeUrlLists();
+                        mergeUrlMappers();
                     } catch (IllegalStateException e) {
                         // IllegalStateExceptions are thrown on critical errors detected by the manager
                         WynntilsMod.error("Critical error while updating URL list from online source", e);
@@ -279,7 +279,7 @@ public final class UrlManager extends Manager {
                         WynntilsMod.warn("Problem updating URL list from online source", e);
 
                         // Merge the lists we could load, even if the remote list failed
-                        mergeUrlLists();
+                        mergeUrlMappers();
                     }
                 },
                 throwable -> WynntilsMod.warn("Failed to download URL list from online source", throwable));
@@ -296,7 +296,7 @@ public final class UrlManager extends Manager {
         }
     }
 
-    private void mergeUrlLists() {
+    private void mergeUrlMappers() {
         // In theory, this method shouldn't be called concurrently ever, but just in case
         synchronized (urlMapper) {
             int currentVersion = -1;
