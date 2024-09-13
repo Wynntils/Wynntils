@@ -20,4 +20,12 @@ public abstract class CoreComponent implements Storageable {
     public void registerDownloads(DownloadRegistry registry) {
         // Override this method to register downloads for this component.
     }
+
+    // DO NOT call this method directly, especially not from a CoreComponent constructor.
+    public void reloadData() {
+        // This method is used for a hook for loading and reloading data for core components. Mainly, this method is
+        // used for downloading dynamic data using UrlIds, which is not available during a component constructor.
+        // This means that this method is called once UrlManager finished loading the URL lists,
+        // and decided how to merge them.
+    }
 }

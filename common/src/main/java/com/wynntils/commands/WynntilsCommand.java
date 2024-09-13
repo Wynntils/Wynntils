@@ -163,7 +163,7 @@ public class WynntilsCommand extends Command {
                         false);
 
         Services.Hades.tryDisconnect();
-        Services.WynntilsAccount.reauth();
+        Services.WynntilsAccount.reloadData();
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
@@ -214,9 +214,11 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
+        // This reloads all URLs, and will then trigger a re-download by the DownloadManager
+        Managers.Url.loadUrls();
+
         // Reload all downloaded data
         WynntilsMod.reloadAllComponentData();
-        Managers.Download.download();
 
         return 1;
     }

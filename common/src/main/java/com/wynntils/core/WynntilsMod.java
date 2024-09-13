@@ -86,9 +86,7 @@ public final class WynntilsMod {
     }
 
     public static void reloadAllComponentData() {
-        componentMap.get(Manager.class).forEach(c -> ((Manager) c).reloadData());
-        componentMap.get(Model.class).forEach(c -> ((Model) c).reloadData());
-        componentMap.get(Service.class).forEach(c -> ((Service) c).reloadData());
+        componentMap.values().stream().flatMap(List::stream).forEach(CoreComponent::reloadData);
     }
 
     private static void handleExceptionInEventListener(Throwable t, Event event) {
@@ -206,7 +204,6 @@ public final class WynntilsMod {
 
         // Ask every component about their data dependencies and register them
         Managers.Download.initComponents(componentMap);
-        Managers.Download.download();
 
         addCrashCallbacks();
     }
