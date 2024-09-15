@@ -94,10 +94,10 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw logo
         int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
-        Component logoComponent = Services.ResourcePack.isPreloadedPackSelected() ?
-                Component.literal(LOGO_STRING).withStyle(Style.EMPTY.withFont(
-                        ResourceLocation.withDefaultNamespace("screen"))) :
-                Component.literal(TEXT_LOGO_STRING);
+        Component logoComponent = Services.ResourcePack.isPreloadedPackSelected()
+                ? Component.literal(LOGO_STRING)
+                        .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("screen")))
+                : Component.literal(TEXT_LOGO_STRING);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
