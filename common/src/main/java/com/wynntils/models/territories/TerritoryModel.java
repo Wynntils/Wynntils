@@ -72,7 +72,7 @@ public final class TerritoryModel extends Model {
 
         Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
 
-        scheduleTerritoryUpdate(true);
+        scheduleTerritoryUpdate();
     }
 
     public TerritoryProfile getTerritoryProfile(String name) {
@@ -242,7 +242,7 @@ public final class TerritoryModel extends Model {
         }));
     }
 
-    private void scheduleTerritoryUpdate(boolean inGuild) {
+    private void scheduleTerritoryUpdate() {
         if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
             scheduledFuture.cancel(false);
         }
@@ -250,7 +250,7 @@ public final class TerritoryModel extends Model {
         scheduledFuture = timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap,
                 0,
-                inGuild ? IN_GUILD_TERRITORY_UPDATE_MS : NO_GUILD_TERRITORY_UPDATE_MS,
+                Models.Guild.isInGuild() ? IN_GUILD_TERRITORY_UPDATE_MS : NO_GUILD_TERRITORY_UPDATE_MS,
                 TimeUnit.MILLISECONDS);
     }
 
@@ -276,11 +276,11 @@ public final class TerritoryModel extends Model {
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
 
-                    scheduleTerritoryUpdate(Models.Guild.isInGuild());
+                    scheduleTerritoryUpdate();
                 },
                 onError -> {
                     WynntilsMod.warn("Failed to update territory data.");
-                    scheduleTerritoryUpdate(Models.Guild.isInGuild());
+                    scheduleTerritoryUpdate();
                 });
     }
 }
