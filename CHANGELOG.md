@@ -1,3 +1,17 @@
+## [2.2.3](https://github.com/Wynntils/Wynntils/compare/v2.2.2...v2.2.3) (2024-09-15)
+
+
+### New Features
+
+* Poi Creation Screen redesign [skip ci] ([#2850](https://github.com/Wynntils/Wynntils/issues/2850)) ([ab86658](https://github.com/Wynntils/Wynntils/commit/ab86658658495dbd5165d17c71ee14f06bb15bdd))
+* Rewrite ChatTimestampFeature ([#2844](https://github.com/Wynntils/Wynntils/issues/2844)) ([9a0a07f](https://github.com/Wynntils/Wynntils/commit/9a0a07ff808d132124bea0413a1f175affd67b4d))
+
+
+### Bug Fixes
+
+* Don't crash when stat filters exceed the integer limit [skip ci] ([#2858](https://github.com/Wynntils/Wynntils/issues/2858)) ([5759363](https://github.com/Wynntils/Wynntils/commit/5759363dbaa4e69026319095b8e1317adf05aca8))
+* Update TM bulk sell for 2.1 [skip ci] ([#2856](https://github.com/Wynntils/Wynntils/issues/2856)) ([bb4575b](https://github.com/Wynntils/Wynntils/commit/bb4575b4dd4f33ce88e65e51e10136459185c22c))
+
 ## [2.2.2](https://github.com/Wynntils/Wynntils/compare/v2.2.1...v2.2.2) (2024-09-10)
 
 
@@ -6,6 +20,11 @@
 * Fix attack timer defense not being detected [skip ci] ([#2851](https://github.com/Wynntils/Wynntils/issues/2851)) ([d5b3658](https://github.com/Wynntils/Wynntils/commit/d5b36580119f901a3c25f4287e152814dfe67e23))
 * Fix aura & volley timers ([#2853](https://github.com/Wynntils/Wynntils/issues/2853)) ([659ca98](https://github.com/Wynntils/Wynntils/commit/659ca987e4e104af7a9f498cd39370ded617d305))
 * Fix blacksmith redirector [skip ci] ([#2849](https://github.com/Wynntils/Wynntils/issues/2849)) ([f4c4206](https://github.com/Wynntils/Wynntils/commit/f4c420659aa8eb3093315d57773a740fd8042df9))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.2.2 [skip ci] ([a8d52dc](https://github.com/Wynntils/Wynntils/commit/a8d52dc75ed2f32844eb127371f6c4000cd0d3df))
 
 ## [2.2.1](https://github.com/Wynntils/Wynntils/compare/v2.2.0...v2.2.1) (2024-09-09)
 
@@ -72,23 +91,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.1.4 [skip ci] ([73d02c2](https://github.com/Wynntils/Wynntils/commit/73d02c20f959724c5a4225f264089fd0f9f06515))
-
-## [2.1.3](https://github.com/Wynntils/Wynntils/compare/v2.1.2...v2.1.3) (2024-09-04)
-
-
-### New Features
-
-* Add colour picker for colour inputs [skip ci] ([#2818](https://github.com/Wynntils/Wynntils/issues/2818)) ([10262a7](https://github.com/Wynntils/Wynntils/commit/10262a7303c6b4879f8136ba08b11d9b841eb477))
-* Add raid score leaderboard badges [skip ci] ([#2823](https://github.com/Wynntils/Wynntils/issues/2823)) ([10c867b](https://github.com/Wynntils/Wynntils/commit/10c867bb9b0d1b0aaef4f635c0ec84a7e1625471))
-
-
-### Bug Fixes
-
-* Fix damage stats not being set on gear items ([#2822](https://github.com/Wynntils/Wynntils/issues/2822)) ([dba1561](https://github.com/Wynntils/Wynntils/commit/dba1561d1244c5c57df4215f090fe3c9617e4066))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2821](https://github.com/Wynntils/Wynntils/issues/2821)) ([7d92705](https://github.com/Wynntils/Wynntils/commit/7d92705623925e37b30d802f63c4ddd4d8721c15))
-* **release:** v2.1.3 [skip ci] ([c7d1800](https://github.com/Wynntils/Wynntils/commit/c7d18006caa84dbaa402ef6646821a4c12e7a8d2))
 
