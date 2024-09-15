@@ -5,7 +5,6 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
@@ -40,12 +39,6 @@ public class CustomLoadingScreenFeature extends Feature {
             // Ensures baseConnectScreen is cleared after the initial handshake occurs
             // Only our LoadingScreen and ConnectScreen should be able to work with baseConnectScreen
             baseConnectScreen = null;
-        }
-
-        // Enable the custom loading screen for world transfers
-        if (MixinHelper.onWynncraft() && event.getScreen() instanceof ReceivingLevelScreen && loadingScreen == null) {
-            loadingScreen = LoadingScreen.create();
-            McUtils.mc().setScreen(loadingScreen);
         }
 
         if (loadingScreen == null) return;
@@ -125,7 +118,10 @@ public class CustomLoadingScreenFeature extends Feature {
                 McUtils.mc().setScreen(loadingScreen);
             }
             case INTERIM -> {
-                if (loadingScreen == null) return;
+                if (loadingScreen == null) {
+                    loadingScreen = LoadingScreen.create();
+                    McUtils.mc().setScreen(loadingScreen);
+                }
 
                 loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.joiningWorld"));
             }
