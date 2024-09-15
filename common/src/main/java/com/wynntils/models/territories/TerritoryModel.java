@@ -242,7 +242,7 @@ public final class TerritoryModel extends Model {
         }));
     }
 
-    public void scheduleTerritoryUpdate(boolean inGuild) {
+    private void scheduleTerritoryUpdate(boolean inGuild) {
         if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
             scheduledFuture.cancel(false);
         }
@@ -275,9 +275,12 @@ public final class TerritoryModel extends Model {
                     allTerritoryPois = territoryProfileMap.values().stream()
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
-                },
-                onError -> WynntilsMod.warn("Failed to update territory data."));
 
-        scheduleTerritoryUpdate(Models.Guild.isInGuild());
+                    scheduleTerritoryUpdate(Models.Guild.isInGuild());
+                },
+                onError -> {
+                    WynntilsMod.warn("Failed to update territory data.");
+                    scheduleTerritoryUpdate(Models.Guild.isInGuild());
+                });
     }
 }

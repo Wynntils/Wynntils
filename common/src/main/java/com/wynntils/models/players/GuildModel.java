@@ -12,7 +12,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -278,7 +277,6 @@ public class GuildModel extends Model {
             Matcher guildNameMatcher = line.getMatcher(GUILD_NAME_MATCHER);
             if (guildNameMatcher.matches()) {
                 guildName = guildNameMatcher.group("name");
-                Models.Territory.scheduleTerritoryUpdate(true);
                 continue;
             }
 
