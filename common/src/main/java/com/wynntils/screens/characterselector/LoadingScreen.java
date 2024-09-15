@@ -30,8 +30,8 @@ public final class LoadingScreen extends WynntilsScreen {
     private static final int SPINNER_SPEED = 1200;
 
     private String message = "";
-    private String heading = "";
-    private String subheading = "";
+    private String title = "";
+    private String subtitle = "";
 
     private LoadingScreen() {
         super(Component.translatable("screens.wynntils.characterSelection.name"));
@@ -55,12 +55,12 @@ public final class LoadingScreen extends WynntilsScreen {
         this.message = message;
     }
 
-    public void setHeading(String heading) {
-        this.heading = heading;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setSubheading(String subheading) {
-        this.subheading = subheading;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     @Override
@@ -125,7 +125,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(heading),
+                        StyledText.fromString(title),
                         centerX,
                         120,
                         MOSS_GREEN,
@@ -135,7 +135,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(subheading),
+                        StyledText.fromString(subtitle),
                         centerX,
                         130,
                         MOSS_GREEN,

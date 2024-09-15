@@ -82,14 +82,14 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onTitleSetText(TitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setHeading(e.getComponent().getString());
+        loadingScreen.setTitle(e.getComponent().getString());
     }
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setSubheading(e.getComponent().getString());
+        loadingScreen.setSubtitle(e.getComponent().getString());
     }
 
     @SubscribeEvent
