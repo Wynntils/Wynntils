@@ -5,6 +5,7 @@
 package com.wynntils.features.ui;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
@@ -41,6 +42,12 @@ public class CustomLoadingScreenFeature extends Feature {
             baseConnectScreen = null;
         }
 
+        // Enable the custom loading screen for world transfers
+        if (MixinHelper.onWynncraft() && event.getScreen() instanceof ReceivingLevelScreen && loadingScreen == null) {
+            loadingScreen = LoadingScreen.create();
+            McUtils.mc().setScreen(loadingScreen);
+        }
+
         if (loadingScreen == null) return;
 
         if (event.getScreen() instanceof ProgressScreen) {
@@ -75,14 +82,14 @@ public class CustomLoadingScreenFeature extends Feature {
     public void onTitleSetText(TitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setTitle(e.getComponent().getString());
+        loadingScreen.setHeading(e.getComponent().getString());
     }
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
-        loadingScreen.setSubtitle(e.getComponent().getString());
+        loadingScreen.setSubheading(e.getComponent().getString());
     }
 
     @SubscribeEvent

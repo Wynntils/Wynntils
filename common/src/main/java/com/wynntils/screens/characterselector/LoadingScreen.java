@@ -20,17 +20,18 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
 public final class LoadingScreen extends WynntilsScreen {
-    private static final String LOGO_STRING = "\u2060\u2064\u2061";
+    private static final String LOGO_STRING = "\uDAFF\uDFFC\uE005\uDAFF\uDFFF\uE006\uDAFF\uDFFE";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
 
     private String message = "";
-    private String title = "";
-    private String subtitle = "";
+    private String heading = "";
+    private String subheading = "";
 
     private LoadingScreen() {
         super(Component.translatable("screens.wynntils.characterSelection.name"));
@@ -54,12 +55,12 @@ public final class LoadingScreen extends WynntilsScreen {
         this.message = message;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setHeading(String heading) {
+        this.heading = heading;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setSubheading(String subheading) {
+        this.subheading = subheading;
     }
 
     @Override
@@ -93,11 +94,14 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw logo
         int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
-        String logoString = Services.ResourcePack.isPreloadedPackSelected() ? LOGO_STRING : TEXT_LOGO_STRING;
+        Component logoComponent = Services.ResourcePack.isPreloadedPackSelected() ?
+                Component.literal(LOGO_STRING).withStyle(Style.EMPTY.withFont(
+                        ResourceLocation.withDefaultNamespace("screen"))) :
+                Component.literal(TEXT_LOGO_STRING);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(logoString),
+                        StyledText.fromComponent(logoComponent),
                         centerX,
                         60,
                         CommonColors.WHITE,
@@ -121,7 +125,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(title),
+                        StyledText.fromString(heading),
                         centerX,
                         120,
                         MOSS_GREEN,
@@ -131,7 +135,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(subtitle),
+                        StyledText.fromString(subheading),
                         centerX,
                         130,
                         MOSS_GREEN,

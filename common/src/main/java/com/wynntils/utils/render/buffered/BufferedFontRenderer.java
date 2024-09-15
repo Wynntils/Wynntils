@@ -65,8 +65,8 @@ public final class BufferedFontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case LEFT -> x;
-            case CENTER -> x - (font.width(text.getString()) / 2f * textScale);
-            case RIGHT -> x - font.width(text.getString()) * textScale;
+            case CENTER -> x - (font.width(text.getComponent()) / 2f * textScale);
+            case RIGHT -> x - font.width(text.getComponent()) * textScale;
         };
 
         renderY = switch (verticalAlignment) {
