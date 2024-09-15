@@ -178,12 +178,12 @@ public final class TerritoryModel extends Model {
 
     @SubscribeEvent
     public void onGuildJoined(GuildEvent.Joined e) {
-        scheduleTerritoryUpdate(true);
+        scheduleTerritoryUpdate();
     }
 
     @SubscribeEvent
     public void onGuildLeft(GuildEvent.Left e) {
-        scheduleTerritoryUpdate(false);
+        scheduleTerritoryUpdate();
     }
 
     public Map<TerritoryItem, TerritoryConnectionType> getTerritoryConnections(List<TerritoryItem> territoryItems) {
