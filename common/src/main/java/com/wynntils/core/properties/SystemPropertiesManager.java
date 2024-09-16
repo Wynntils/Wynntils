@@ -7,6 +7,7 @@ package com.wynntils.core.properties;
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.utils.EnumUtils;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,19 @@ public class SystemPropertiesManager extends Manager {
             return null;
         }
 
+        // Try to convert as an enum first
+        if (property.getClassType().isEnum()) {
+            try {
+                T enumValue = (T) EnumUtils.searchEnum((Class<? extends Enum>) property.getClassType(), propertyValue);
+                return enumValue;
+            } catch (IllegalArgumentException e) {
+                WynntilsMod.warn("Could not parse enum from JVM property " + property.getFullJvmArgumentPath()
+                        + ". Using null. Value: " + propertyValue);
+                return null;
+            }
+        }
+
+        // Then fall back to using the mappers†
         Function<String, Object> mapper = MAPPERS.get(property.getClassType());
         if (mapper == null) {
             WynntilsMod.error(
