@@ -69,10 +69,6 @@ public class ShamanTotemModel extends Model {
         totemCastTimestamp = System.currentTimeMillis();
     }
 
-    /**
-     * Runs fully when a totem is spawned close to the player.
-     * @param e
-     */
     @SubscribeEvent
     public void onTotemSpawn(AddEntityEvent e) {
         if (!Models.WorldState.onWorld()) return;
