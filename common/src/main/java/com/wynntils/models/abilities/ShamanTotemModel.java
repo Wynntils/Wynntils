@@ -136,11 +136,6 @@ public class ShamanTotemModel extends Model {
         int parsedTime = Integer.parseInt(m.group("time"));
         int timerId = textDisplay.getId();
 
-        if (orphanedTimers.getOrDefault(timerId, 0) >= 3) {
-            // check every other second to find the totem to avoid performance problems
-            if (parsedTime % 2 == 0) return;
-        }
-
         if (getBoundTotem(timerId) == null) {
             // this is a new timer that needs to find a totem to link with
             findAndLinkTotem(timerId, parsedTime, textDisplay);
@@ -189,12 +184,9 @@ public class ShamanTotemModel extends Model {
                 }
             }
         }
-        if (orphanedTimers.containsKey(timerId)) {
-            orphanedTimers.compute(timerId, (k, v) -> v + 1);
-            WynntilsMod.warn("Matched an unbound totem timer " + timerId
-                    + " but couldn't find a totem to bind it to. (Attempt " + orphanedTimers.get(timerId) + ")");
-        } else {
-            orphanedTimers.put(timerId, 1);
+        orphanedTimers.merge(timerId, 1, Integer::sum);
+        if (orphanedTimers.get(timerId) == 2) {
+            WynntilsMod.warn("Matched an unbound totem timer " + timerId + " but couldn't find a totem to bind it to.");
         }
     }
 
