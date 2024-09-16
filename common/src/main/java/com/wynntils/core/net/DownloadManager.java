@@ -15,9 +15,10 @@ import com.wynntils.core.properties.Property;
 import com.wynntils.utils.StringUtils;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -52,7 +53,7 @@ public class DownloadManager extends Manager {
 
     private DownloadDependencyGraph graph = null;
 
-    private Map<QueuedDownload, Download> currentDownloads;
+    private Set<QueuedDownload> currentDownloads;
 
     public DownloadManager() {
         super(List.of());
@@ -94,7 +95,7 @@ public class DownloadManager extends Manager {
     private void download() {
         // Reset the state of the manager, as the downloads are being started
         graph.resetState();
-        currentDownloads = new LinkedHashMap<>();
+        currentDownloads = new LinkedHashSet<>();
 
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
@@ -109,7 +110,19 @@ public class DownloadManager extends Manager {
                     return;
                 }
 
-                currentDownloads.put(queuedDownload, getDownload(queuedDownload));
+                currentDownloads.add(queuedDownload);
+                getDownload(queuedDownload);
+            }
+
+            if (DEBUG_LOGS) {
+                WynntilsMod.info("[DownloadManager] Started downloads:");
+                currentDownloads.forEach(queuedDownload -> {
+                    WynntilsMod.info("  - %s -> %s"
+                            .formatted(
+                                    StringUtils.capitalizeFirst(
+                                            queuedDownload.callerComponent().getJsonName()),
+                                    queuedDownload.urlId()));
+                });
             }
         }
     }
@@ -142,22 +155,23 @@ public class DownloadManager extends Manager {
     }
 
     private void queueNextDownload(QueuedDownload finishedDownload) {
-        QueuedDownload nextDownload = graph.nextDownload();
-
         synchronized (currentDownloads) {
-            for (Map.Entry<QueuedDownload, Download> entry : currentDownloads.entrySet()) {
-                if (!entry.getKey().equals(finishedDownload)) continue;
+            QueuedDownload nextDownload = graph.nextDownload();
+
+            for (QueuedDownload queuedDownload : currentDownloads) {
+                if (!queuedDownload.equals(finishedDownload)) continue;
 
                 if (debugLogs.get()) {
-                    WynntilsMod.info(entry.getKey() + " -> " + nextDownload);
+                    WynntilsMod.info(queuedDownload + " -> " + nextDownload);
                 }
 
                 // Remove the finished download from the current downloads
-                currentDownloads.remove(entry.getKey());
+                currentDownloads.remove(queuedDownload);
 
                 // Queue the next download, if there is one
                 if (nextDownload != null) {
-                    currentDownloads.put(nextDownload, getDownload(nextDownload));
+                    currentDownloads.add(nextDownload);
+                    getDownload(nextDownload);
                 }
 
                 return;
