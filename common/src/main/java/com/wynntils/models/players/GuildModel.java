@@ -23,6 +23,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.players.event.GuildEvent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
@@ -158,6 +159,7 @@ public class GuildModel extends Model {
         StyledText message = e.getOriginalStyledText();
 
         if (message.matches(MSG_LEFT_GUILD)) {
+            WynntilsMod.postEvent(new GuildEvent.Left(guildName));
             guildName = "";
             guildRank = null;
             guildLevel = -1;
@@ -173,6 +175,7 @@ public class GuildModel extends Model {
             guildName = joinedGuildMatcher.group(1);
             guildRank = GuildRank.RECRUIT;
             WynntilsMod.info("User joined guild " + guildName + " as a " + guildRank);
+            WynntilsMod.postEvent(new GuildEvent.Joined(guildName));
             return;
         }
 
@@ -396,6 +399,10 @@ public class GuildModel extends Model {
 
     public GuildRank getGuildRank() {
         return guildRank;
+    }
+
+    public boolean isInGuild() {
+        return !guildName.isEmpty();
     }
 
     public int getGuildLevel() {

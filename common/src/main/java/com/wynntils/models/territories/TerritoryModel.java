@@ -12,11 +12,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
+import com.wynntils.models.players.event.GuildEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
@@ -34,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -46,7 +49,8 @@ import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TerritoryModel extends Model {
-    private static final int TERRITORY_UPDATE_MS = 15000;
+    private static final int IN_GUILD_TERRITORY_UPDATE_MS = 15000;
+    private static final int NO_GUILD_TERRITORY_UPDATE_MS = 300000;
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
@@ -60,6 +64,7 @@ public final class TerritoryModel extends Model {
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
+    private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
 
     public TerritoryModel() {
@@ -67,8 +72,7 @@ public final class TerritoryModel extends Model {
 
         Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
 
-        timerExecutor.scheduleWithFixedDelay(
-                this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+        scheduleTerritoryUpdate();
     }
 
     public TerritoryProfile getTerritoryProfile(String name) {
@@ -172,6 +176,16 @@ public final class TerritoryModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onGuildJoined(GuildEvent.Joined e) {
+        scheduleTerritoryUpdate();
+    }
+
+    @SubscribeEvent
+    public void onGuildLeft(GuildEvent.Left e) {
+        scheduleTerritoryUpdate();
+    }
+
     public Map<TerritoryItem, TerritoryConnectionType> getTerritoryConnections(List<TerritoryItem> territoryItems) {
         TerritoryItem hqTerritory = territoryItems.stream()
                 .filter(TerritoryItem::isHeadquarters)
@@ -228,6 +242,18 @@ public final class TerritoryModel extends Model {
         }));
     }
 
+    private void scheduleTerritoryUpdate() {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(false);
+        }
+
+        scheduledFuture = timerExecutor.scheduleWithFixedDelay(
+                this::updateTerritoryProfileMap,
+                0,
+                Models.Guild.isInGuild() ? IN_GUILD_TERRITORY_UPDATE_MS : NO_GUILD_TERRITORY_UPDATE_MS,
+                TimeUnit.MILLISECONDS);
+    }
+
     private void updateTerritoryProfileMap() {
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
@@ -249,7 +275,12 @@ public final class TerritoryModel extends Model {
                     allTerritoryPois = territoryProfileMap.values().stream()
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
+
+                    scheduleTerritoryUpdate();
                 },
-                onError -> WynntilsMod.warn("Failed to update territory data."));
+                onError -> {
+                    WynntilsMod.warn("Failed to update territory data.");
+                    scheduleTerritoryUpdate();
+                });
     }
 }
