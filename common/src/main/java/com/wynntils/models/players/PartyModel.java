@@ -97,8 +97,8 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_CREATE_SELF =
             Pattern.compile(PARTY_PREFIX_REGEX + "You have successfully created a party\\.");
 
-    private static final Pattern PARTY_INVITED =
-            Pattern.compile("\\s+§eYou have been invited to join (\\w{1,16})'s? party!\\s+");
+    private static final Pattern PARTY_INVITED = Pattern.compile(
+            "(?:" + PARTY_PREFIX_REGEX + "|\\s+§e)You have been invited to join (\\w{1,16})'s? party!\\s*");
 
     private static final Pattern PARTY_KICK_OTHER =
             Pattern.compile(PARTY_PREFIX_REGEX + "You have kicked the player from the party\\.");
