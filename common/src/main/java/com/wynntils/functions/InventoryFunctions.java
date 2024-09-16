@@ -21,6 +21,9 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
@@ -308,6 +311,27 @@ public class InventoryFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("held_item", "held_name");
+        }
+    }
+
+    public static class HeldItemCooldownFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Player player = McUtils.player();
+            ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+            ItemCooldowns cooldowns = player.getCooldowns();
+            ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(itemStack.getItem());
+            if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
+
+            int remaining = cooldown.endTime - cooldowns.tickCount;
+            if (remaining <= 0) return CappedValue.EMPTY;
+
+            return new CappedValue(remaining, cooldown.endTime - cooldown.startTime);
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("held_cooldown", "held_cd");
         }
     }
 }
