@@ -114,7 +114,7 @@ public class DownloadManager extends Manager {
                 getDownload(queuedDownload);
             }
 
-            if (DEBUG_LOGS) {
+            if (debugLogs.get()) {
                 WynntilsMod.info("[DownloadManager] Started downloads:");
                 currentDownloads.forEach(queuedDownload -> {
                     WynntilsMod.info("  - %s -> %s"
