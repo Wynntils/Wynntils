@@ -191,14 +191,18 @@ public class ShamanTotemModel extends Model {
                     WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), possibleTotem.position()));
 
                     pendingTotemVisibleIds[i] = null;
-                    orphanedTimers.remove(timerId);
+                    if (orphanedTimers.containsKey(timerId)) {
+                        WynntilsMod.info("Matched an orphaned totem timer " + timerId + " to a totem "
+                                + totem.getTotemNumber() + " after " + orphanedTimers.get(timerId) + " attempts.");
+                        orphanedTimers.remove(timerId);
+                    }
 
                     return;
                 }
             }
         }
         if (orphanedTimers.containsKey(timerId)) {
-            orphanedTimers.put(timerId, orphanedTimers.get(timerId) + 1);
+            orphanedTimers.compute(timerId, (k, v) -> v + 1);
             WynntilsMod.warn("Matched an unbound totem timer " + timerId
                     + " but couldn't find a totem to bind it to. (Attempt " + orphanedTimers.get(timerId) + ")");
         } else {
