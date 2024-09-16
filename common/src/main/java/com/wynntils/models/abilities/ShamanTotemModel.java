@@ -174,7 +174,7 @@ public class ShamanTotemModel extends Model {
                     WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), possibleTotem.position()));
 
                     timerlessTotemVisibleIds[i] = null;
-                    if (orphanedTimers.containsKey(timerId)) {
+                    if (orphanedTimers.containsKey(timerId) && orphanedTimers.get(timerId) > 1) {
                         WynntilsMod.info("Matched an orphaned totem timer " + timerId + " to a totem "
                                 + totem.getTotemNumber() + " after " + orphanedTimers.get(timerId) + " attempts.");
                         orphanedTimers.remove(timerId);
