@@ -19,7 +19,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 public final class StringUtils {
     private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
-    private static final long[] SUFFIX_MULTIPLIERS = {-1L, 1_000L, 1_000_000L, 1_000_000_000L, 1_000_000_000_000L};
+    private static final long[] SUFFIX_MULTIPLIERS = {1L, 1_000L, 1_000_000L, 1_000_000_000L, 1_000_000_000_000L};
     private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");

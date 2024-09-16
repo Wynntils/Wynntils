@@ -14,6 +14,7 @@ import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.damage.type.FocusedDamageEvent;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
@@ -38,6 +39,8 @@ public final class DamageModel extends Model {
     private String focusedMobElementals = "";
     private long focusedMobHealth;
     private CappedValue focusedMobHealthPercent = CappedValue.EMPTY;
+    private long focusedMobExpiryTime = -1L;
+
     private long lastDamageDealtTimestamp;
 
     public DamageModel() {
@@ -64,19 +67,34 @@ public final class DamageModel extends Model {
         lastDamageDealtTimestamp = System.currentTimeMillis();
     }
 
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        areaDamageSet.clear();
+        focusedMobName = "";
+        focusedMobElementals = "";
+        focusedMobHealth = 0;
+        focusedMobHealthPercent = CappedValue.EMPTY;
+        focusedMobExpiryTime = -1L;
+        lastDamageDealtTimestamp = 0L;
+    }
+
     public String getFocusedMobName() {
+        checkFocusedMobValidity();
         return focusedMobName;
     }
 
     public String getFocusedMobElementals() {
+        checkFocusedMobValidity();
         return focusedMobElementals; // TODO: Parse this into specific elements and expose as functions
     }
 
     public long getFocusedMobHealth() {
+        checkFocusedMobValidity();
         return focusedMobHealth;
     }
 
     public CappedValue getFocusedMobHealthPercent() {
+        checkFocusedMobValidity();
         return focusedMobHealthPercent;
     }
 
@@ -94,6 +112,24 @@ public final class DamageModel extends Model {
                         .mapToLong(TimedSet.TimedEntry::getEntry)
                         .sum()
                 / (double) seconds;
+    }
+
+    private void checkFocusedMobValidity() {
+        if (focusedMobExpiryTime >= 0 && System.currentTimeMillis() >= focusedMobExpiryTime) {
+            focusedMobName = "";
+            focusedMobElementals = "";
+            focusedMobHealth = 0;
+            focusedMobHealthPercent = CappedValue.EMPTY;
+            focusedMobExpiryTime = -1L;
+        }
+    }
+
+    private void invalidateFocusedMob() {
+        focusedMobExpiryTime = System.currentTimeMillis() + 1000L;
+    }
+
+    private void revalidateFocusedMob() {
+        focusedMobExpiryTime = -1L;
     }
 
     public final class DamageBar extends TrackedBar {
@@ -119,6 +155,7 @@ public final class DamageModel extends Model {
                 mobElementals = "";
             }
 
+            checkFocusedMobValidity();
             if (mobName.equals(focusedMobName) && mobElementals.equals(focusedMobElementals)) {
                 long oldHealth = focusedMobHealth;
                 focusedMobHealth = health;
@@ -133,21 +170,22 @@ public final class DamageModel extends Model {
                 WynntilsMod.postEvent(
                         new FocusedDamageEvent.MobFocused(focusedMobName, focusedMobElementals, focusedMobHealth));
             }
+            revalidateFocusedMob();
+
             lastDamageDealtTimestamp = System.currentTimeMillis();
         }
 
         @Override
         public void onUpdateProgress(float progress) {
             focusedMobHealthPercent = new CappedValue(Math.round(progress * 100), 100);
+            revalidateFocusedMob();
+
             lastDamageDealtTimestamp = System.currentTimeMillis();
         }
 
         @Override
         protected void reset() {
-            focusedMobName = "";
-            focusedMobElementals = "";
-            focusedMobHealth = 0;
-            focusedMobHealthPercent = CappedValue.EMPTY;
+            invalidateFocusedMob();
         }
     }
 }

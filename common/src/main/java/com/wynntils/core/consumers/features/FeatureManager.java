@@ -89,7 +89,7 @@ import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
-import com.wynntils.features.overlays.FixCrosshairPositionFeature;
+import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
@@ -290,7 +290,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomPlayerListOverlayFeature());
-        registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new HeldItemCooldownOverlayFeature());
@@ -365,6 +364,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.overlays;
+package com.wynntils.features.utilities;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -19,7 +19,7 @@ import net.minecraft.client.gui.Gui;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@ConfigCategory(Category.OVERLAYS)
+@ConfigCategory(Category.UTILITIES)
 public class FixCrosshairPositionFeature extends Feature {
     private static boolean shouldOverrideCrosshair(Minecraft mc) {
         if (!mc.options.getCameraType().isFirstPerson()) return false;
