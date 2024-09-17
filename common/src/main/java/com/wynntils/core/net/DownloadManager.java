@@ -15,6 +15,7 @@ import com.wynntils.core.properties.Property;
 import com.wynntils.utils.StringUtils;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,10 @@ public class DownloadManager extends Manager {
         if (dumpGraph.get()) {
             graph.logGraph();
         }
+    }
+
+    public List<QueuedDownload> registeredDownloads() {
+        return Collections.unmodifiableList(registeredDownloads);
     }
 
     QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {

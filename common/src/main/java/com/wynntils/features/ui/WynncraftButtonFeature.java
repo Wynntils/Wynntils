@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -13,12 +14,22 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.screens.downloads.DownloadScreen;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -48,6 +59,12 @@ public class WynncraftButtonFeature extends Feature {
     @Persisted
     public final Config<Boolean> loadResourcePack = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> cancelAutoJoin = new Config<>(true);
+
+    @Persisted
+    public final Storage<Boolean> ignoreFailedDownloads = new Storage<>(false);
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
         TitleScreen titleScreen = event.getTitleScreen();
@@ -61,6 +78,8 @@ public class WynncraftButtonFeature extends Feature {
 
         if (firstTitleScreenInit && autoConnect.get()) {
             firstTitleScreenInit = false;
+            // FIXME: If there any failed downloads and cancelAutoJoin is enabled/ignoreFailedDownloads isn't true then
+            //  cancel autojoining
             ServerData wynncraftServer = getWynncraftServer();
             connectToServer(wynncraftServer);
             return;
@@ -74,8 +93,9 @@ public class WynncraftButtonFeature extends Feature {
 
         ServerData wynncraftServer = getWynncraftServer();
 
+        // FIXME: Replace true with if there are any failed downloads
         WynncraftButton wynncraftButton = new WynncraftButton(
-                titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24);
+                titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24, true);
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
@@ -94,16 +114,22 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private static class WynncraftButton extends Button {
+        private static final List<Component> CONNECT_TOOLTIP =
+                List.of(Component.translatable("feature.wynntils.wynncraftButton.connect"));
+        private static final List<Component> DOWNLOAD_TOOLTIP = List.of(
+                Component.translatable("feature.wynntils.wynncraftButton.download1"),
+                Component.translatable("feature.wynntils.wynncraftButton.download2"));
         private final ServerData serverData;
         private final ServerIcon serverIcon;
+        private final boolean showWarning;
 
-        // TODO tooltip
-        WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
+        WynncraftButton(Screen backScreen, ServerData serverData, int x, int y, boolean showWarning) {
             super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
 
             this.serverIcon = new ServerIcon(serverData);
             this.serverIcon.loadResource(false);
+            this.showWarning = showWarning;
         }
 
         @Override
@@ -115,23 +141,48 @@ public class WynncraftButtonFeature extends Feature {
             }
 
             // Insets the icon by 3
-            guiGraphics.blit(
+            RenderUtils.drawScalingTexturedRect(
+                    guiGraphics.pose(),
                     serverIcon.getServerIconLocation(),
                     this.getX() + 3,
                     this.getY() + 3,
+                    0,
                     this.width - 6,
                     this.height - 6,
-                    0,
-                    0,
-                    64,
-                    64,
                     64,
                     64);
+
+            if (showWarning) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics.pose(),
+                                StyledText.fromString("⚠"),
+                                this.getX() + 20,
+                                this.getY(),
+                                CommonColors.RED,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.OUTLINE);
+            }
+
+            if (isHovered) {
+                McUtils.mc()
+                        .screen
+                        .setTooltipForNextRenderPass(Lists.transform(
+                                showWarning ? DOWNLOAD_TOOLTIP : CONNECT_TOOLTIP, Component::getVisualOrderText));
+            }
         }
 
         protected static void onPress(Button button) {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
-            connectToServer(wynncraftButton.serverData);
+            // FIXME: Use if else once finished
+            McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
+            //            if (wynncraftButton.showWarning) {
+            //                McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen,
+            // wynncraftButton.serverData));
+            //            } else {
+            //                connectToServer(wynncraftButton.serverData);
+            //            }
         }
     }
 
