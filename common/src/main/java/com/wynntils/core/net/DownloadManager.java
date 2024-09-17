@@ -11,6 +11,7 @@ import com.wynntils.core.components.CoreComponent;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
+import com.wynntils.core.properties.Property;
 import com.wynntils.utils.StringUtils;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -43,16 +44,9 @@ import net.neoforged.bus.api.SubscribeEvent;
  * can also provide a clear view of the download queue, and the download progress.
  */
 public class DownloadManager extends Manager {
-    // -Dwynntils.downloads.dump.graph=true
-    private static final String DOWNLOADS_DUMP_GRAPH = "wynntils.downloads.dump.graph";
-    // -Dwynntils.downloads.log.debug=true
-    private static final String DOWNLOADS_LOG_DEBUG = "wynntils.downloads.log.debug";
-    // -Dwynntils.downloads.max.parallel=8
-    private static final String DOWNLOADS_MAX_PARALLEL = "wynntils.downloads.max.parallel";
-
-    private static final boolean DUMP_GRAPH = System.getProperty(DOWNLOADS_DUMP_GRAPH) != null;
-    private static final boolean DEBUG_LOGS = System.getProperty(DOWNLOADS_LOG_DEBUG) != null;
-    private static final int MAX_PARALLEL_DOWNLOADS = Integer.getInteger(DOWNLOADS_MAX_PARALLEL, 4);
+    private final Property<Boolean> dumpGraph = createProperty(Boolean.class, "dump.graph", false);
+    private final Property<Boolean> debugLogs = createProperty(Boolean.class, "log.debug", false);
+    private final Property<Integer> maxParallelDownloads = createProperty(Integer.class, "max.parallel", 4);
 
     private final List<QueuedDownload> registeredDownloads = new ArrayList<>();
     private boolean registrationLock = false;
@@ -83,7 +77,7 @@ public class DownloadManager extends Manager {
         graph = DownloadDependencyGraph.build(registeredDownloads);
 
         // Dump the graph if the system property is set
-        if (DUMP_GRAPH) {
+        if (dumpGraph.get()) {
             graph.logGraph();
         }
     }
@@ -106,7 +100,7 @@ public class DownloadManager extends Manager {
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
         synchronized (currentDownloads) {
-            for (int i = 0; i < MAX_PARALLEL_DOWNLOADS; i++) {
+            for (int i = 0; i < maxParallelDownloads.get(); i++) {
                 QueuedDownload queuedDownload = graph.nextDownload();
 
                 if (queuedDownload == null) {
@@ -120,7 +114,7 @@ public class DownloadManager extends Manager {
                 getDownload(queuedDownload);
             }
 
-            if (DEBUG_LOGS) {
+            if (debugLogs.get()) {
                 WynntilsMod.info("[DownloadManager] Started downloads:");
                 currentDownloads.forEach(queuedDownload -> {
                     WynntilsMod.info("  - %s -> %s"
@@ -167,7 +161,7 @@ public class DownloadManager extends Manager {
             for (QueuedDownload queuedDownload : currentDownloads) {
                 if (!queuedDownload.equals(finishedDownload)) continue;
 
-                if (DEBUG_LOGS) {
+                if (debugLogs.get()) {
                     WynntilsMod.info(queuedDownload + " -> " + nextDownload);
                 }
 
@@ -197,7 +191,7 @@ public class DownloadManager extends Manager {
             // (if the handling failed, download itself handles the error)
 
             // Log the progress if the system property is set
-            if (DEBUG_LOGS) {
+            if (debugLogs.get()) {
                 WynntilsMod.info("Download finished: "
                         + StringUtils.capitalizeFirst(download.callerComponent().getJsonName()) + " -> "
                         + download.urlId());
@@ -213,7 +207,7 @@ public class DownloadManager extends Manager {
     private Consumer<Throwable> wrapDownloadFailure(QueuedDownload download) {
         return (throwable) -> {
             // Log the progress if the system property is set
-            if (DEBUG_LOGS) {
+            if (debugLogs.get()) {
                 WynntilsMod.warn("Download failed: "
                         + StringUtils.capitalizeFirst(download.callerComponent().getJsonName()) + " -> "
                         + download.urlId());
@@ -238,7 +232,7 @@ public class DownloadManager extends Manager {
             WynntilsMod.warn("[DownloadManager] Some downloads failed. See the statistics for more information.");
         }
 
-        if (graph.hasError() || DEBUG_LOGS) {
+        if (graph.hasError() || debugLogs.get()) {
             WynntilsMod.info("[DownloadManager] Download statistics:");
             WynntilsMod.info("  - Total downloads: %d".formatted(graph.totalDownloads()));
             WynntilsMod.info("  - Successful downloads: %d".formatted(graph.successfulDownloads()));

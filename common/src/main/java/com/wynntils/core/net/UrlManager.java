@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
+import com.wynntils.core.properties.Property;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
@@ -80,7 +81,7 @@ import java.util.function.Function;
  * <p>See the list of flags for alternative hash conflict resolution below.</p>
  * <ul>
  *     <li>
- *         <code>wynntils.url.list.force.source</code> - Force the source to be used, regardless of the version.
+ *         <code>wynntils.url.force.type</code> - Force the source to be used, regardless of the version.
  *         Possible values are <code>bundled</code>, <code>local</code>, <code>remote</code>.
  *     </li>
  *
@@ -96,23 +97,10 @@ import java.util.function.Function;
  * </p>
  */
 public final class UrlManager extends Manager {
-    // -Dwynntils.url.list.override.link=https://example.com/urls.json
-    private static final String URLS_OVERRIDE_ENV = "wynntils.url.list.override.link";
-    private static final String OVERRIDE_LINK = System.getProperty(URLS_OVERRIDE_ENV);
-    private final URI urlListOverrideUri;
-
-    // -Dwynntils.url.list.ignore.cache=true
-    private static final String URLS_IGNORE_CACHE_ENV = "wynntils.url.list.ignore.cache";
-    private static final boolean IGNORE_CACHE = Boolean.parseBoolean(System.getProperty(URLS_IGNORE_CACHE_ENV));
-
-    // -Dwynntils.url.list.debug.log=true
-    private static final String URLS_DEBUG_LOG_ENV = "wynntils.url.list.debug.log";
-    private static final boolean DEBUG_LOGS = System.getProperty(URLS_DEBUG_LOG_ENV) != null;
-
-    // -Dwynntils.url.list.force.source=local
-    private static final String URLS_OVERRIDE_FORCE_SOURCE_ENV = "wynntils.url.list.force.source";
-    private static final String FORCE_SOURCE = System.getProperty(URLS_OVERRIDE_FORCE_SOURCE_ENV);
-    private final UrlMapperType forceSource;
+    private final Property<URI> urlListOverride = createProperty(URI.class, "override.link");
+    private final Property<Boolean> ignoreCache = createProperty(Boolean.class, "ignore.cache", false);
+    private final Property<Boolean> debugLogs = createProperty(Boolean.class, "log.debug", false);
+    private final Property<UrlMapperType> urlMapperForceType = createProperty(UrlMapperType.class, "force.type");
 
     private Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
     private UrlMapper urlMapper = UrlMapper.EMPTY;
@@ -120,31 +108,13 @@ public final class UrlManager extends Manager {
     public UrlManager(NetManager netManager) {
         super(List.of(netManager));
 
-        // Read the url override from environment
-        URI parsedOverrideUri = null;
-        if (OVERRIDE_LINK != null) {
-            try {
-                parsedOverrideUri = URI.create(OVERRIDE_LINK);
-            } catch (Exception e) {
-                parsedOverrideUri = null;
-                WynntilsMod.error("Invalid URL list override link: " + OVERRIDE_LINK);
-            }
-        }
-        urlListOverrideUri = parsedOverrideUri;
-
         // Log the settings
-        if (urlListOverrideUri == null) {
-            WynntilsMod.info(
-                    "Loading urls.json in the normal mode. Url cache is " + (IGNORE_CACHE ? "ignored" : "used") + ".");
+        if (urlListOverride.get() == null) {
+            WynntilsMod.info("Loading urls.json in the normal mode. Url cache is "
+                    + (ignoreCache.get() ? "ignored" : "used") + ".");
         } else {
-            WynntilsMod.info("Loading urls.json from " + urlListOverrideUri + ". Url cache is "
-                    + (IGNORE_CACHE ? "ignored" : "used") + ".");
-        }
-
-        if (FORCE_SOURCE != null) {
-            forceSource = UrlMapperType.valueOf(FORCE_SOURCE.toUpperCase(Locale.ROOT));
-        } else {
-            forceSource = null;
+            WynntilsMod.info("Loading urls.json from " + urlListOverride.get() + ". Url cache is "
+                    + (ignoreCache.get() ? "ignored" : "used") + ".");
         }
 
         loadUrls();
@@ -200,11 +170,11 @@ public final class UrlManager extends Manager {
         // Figure out where to load the URLs from initially
 
         // If we don't have an override, read the URLs in a normal way
-        if (urlListOverrideUri == null) {
+        if (urlListOverride.get() == null) {
             // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
             readEmbeddedUrls();
 
-            if (!IGNORE_CACHE) {
+            if (!ignoreCache.get()) {
                 // Then try to read the URLs from the local cache
                 readLocalUrlCache();
             }
@@ -228,13 +198,13 @@ public final class UrlManager extends Manager {
             // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
             readEmbeddedUrls();
 
-            if (!IGNORE_CACHE) {
+            if (!ignoreCache.get()) {
                 // Try to read the URLs from the local cache
                 readLocalUrlCache();
             }
 
             // Then trigger a (re-)download from the net to the cache
-            downloadAndReadRemoteUrls(urlListOverrideUri);
+            downloadAndReadRemoteUrls(urlListOverride.get());
         }
     }
 
@@ -309,17 +279,17 @@ public final class UrlManager extends Manager {
             // Start by using the bundled urls as a baseline
             UrlMapper bundledList = urlMappersByType.get(UrlMapperType.BUNDLED);
 
-            if (forceSource == null || forceSource == UrlMapperType.BUNDLED) {
+            if (urlMapperForceType.get() == null || urlMapperForceType.get() == UrlMapperType.BUNDLED) {
                 currentVersion = bundledList.version();
                 currentUrls.putAll(bundledList.urls());
             }
 
-            if (DEBUG_LOGS) {
+            if (debugLogs.get()) {
                 WynntilsMod.info("Bundled URL list version: " + currentVersion + ", URLs: " + currentUrls.size());
             }
 
             // Then check if we have a local cache
-            if (forceSource == null || forceSource == UrlMapperType.LOCAL_CACHE) {
+            if (urlMapperForceType.get() == null || urlMapperForceType.get() == UrlMapperType.LOCAL_CACHE) {
                 if (urlMappersByType.containsKey(UrlMapperType.LOCAL_CACHE)) {
                     UrlMapper localCacheList = urlMappersByType.get(UrlMapperType.LOCAL_CACHE);
 
@@ -351,7 +321,7 @@ public final class UrlManager extends Manager {
                             if (!urlInfo.md5().equals(value.md5())) {
                                 currentUrls.put(key, value.withoutMd5());
 
-                                if (DEBUG_LOGS) {
+                                if (debugLogs.get()) {
                                     WynntilsMod.info("Bundled and local hashes differ for " + key + ". Removing hash. ("
                                             + urlInfo.md5().orElse("null") + " -> null)");
                                 }
@@ -365,7 +335,7 @@ public final class UrlManager extends Manager {
             }
 
             // Once we are done with the local cache, try to use the remote list as much as we can
-            if (forceSource == null || forceSource == UrlMapperType.REMOTE) {
+            if (urlMapperForceType.get() == null || urlMapperForceType.get() == UrlMapperType.REMOTE) {
                 if (urlMappersByType.containsKey(UrlMapperType.REMOTE)) {
                     UrlMapper remoteList = urlMappersByType.get(UrlMapperType.REMOTE);
 
@@ -384,7 +354,9 @@ public final class UrlManager extends Manager {
                         if (currentUrls.containsKey(key)) {
                             UrlInfo oldInfo = currentUrls.put(key, value);
 
-                            if (DEBUG_LOGS && oldInfo != null && !oldInfo.md5().equals(value.md5())) {
+                            if (debugLogs.get()
+                                    && oldInfo != null
+                                    && !oldInfo.md5().equals(value.md5())) {
                                 WynntilsMod.info("Remote hash differs for " + key + ". Using remote hash. ("
                                         + oldInfo.md5() + " -> " + value.md5().orElse("null") + ")");
                             }

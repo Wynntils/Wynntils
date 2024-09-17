@@ -22,9 +22,13 @@ import com.wynntils.core.persisted.PersistedManager;
 import com.wynntils.core.persisted.config.ConfigManager;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.persisted.upfixers.UpfixerManager;
+import com.wynntils.core.properties.SystemPropertiesManager;
 
 public final class Managers {
-    // Start with UrlManager to give it chance to update URLs in background
+    // Start with SystemPropertiesManager so it can bootstrap before other Managers access properties
+    public static final SystemPropertiesManager SystemProperties = new SystemPropertiesManager();
+
+    // Then, load UrlManager to give it chance to update URLs in background
     public static final NetManager Net = new NetManager();
     public static final UrlManager Url = new UrlManager(Net);
     public static final DownloadManager Download = new DownloadManager();
