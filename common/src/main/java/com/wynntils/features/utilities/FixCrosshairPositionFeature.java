@@ -21,9 +21,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class FixCrosshairPositionFeature extends Feature {
-    private static boolean shouldOverrideCrosshair(Minecraft mc) {
+    private static boolean shouldOverrideCrosshair() {
+        Minecraft mc = McUtils.mc();
         if (!mc.options.getCameraType().isFirstPerson()) return false;
-        return !mc.gui.getDebugOverlay().showDebugScreen()
+        return !mc.gui.getDebugOverlay().showDebugScreen() // Let vanilla handle the debug crosshair
                 || mc.player.isReducedDebugInfo()
                 || mc.options.reducedDebugInfo().get();
     }
@@ -31,8 +32,7 @@ public class FixCrosshairPositionFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderCrosshair(RenderEvent.Pre event) {
         if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
-        Minecraft mc = McUtils.mc();
-        if (!shouldOverrideCrosshair(mc)) return;
+        if (!shouldOverrideCrosshair()) return;
         event.setCanceled(true);
 
         RenderSystem.enableBlend();
