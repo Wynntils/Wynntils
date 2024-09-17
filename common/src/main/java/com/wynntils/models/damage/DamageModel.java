@@ -29,7 +29,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class DamageModel extends Model {
     // Test in DamageModel_DAMAGE_BAR_PATTERN
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile(
-            "^\\s*§[ace](.*) - §c(\\d+(?:\\.\\d+)?[kKmM]?)§4❤(?:§r - ( ?(§.(.+))(Dam|Weak|Def))+)?\\s*$");
+            "^\\s*§[0-9a-f](.*) - §c(\\d+(?:\\.\\d+)?[kKmM]?)§4❤(?:§r - ( ?(§.(.+))(Dam|Weak|Def))+)?\\s*$");
 
     private final DamageBar damageBar = new DamageBar();
 
