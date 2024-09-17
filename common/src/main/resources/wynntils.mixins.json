@@ -43,6 +43,7 @@
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
+    "SimpleContainerMixin",
     "SlotMixin",
     "SoundManagerMixin",
     "accessors.ChatScreenAccessor",

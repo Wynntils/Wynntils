@@ -65,6 +65,7 @@ import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
+import com.wynntils.features.inventory.FixStackSizeFeature;
 import com.wynntils.features.inventory.GuildBankHotkeyFeature;
 import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
@@ -76,6 +77,7 @@ import com.wynntils.features.inventory.ItemScreenshotFeature;
 import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
+import com.wynntils.features.inventory.SynchronizeInventoryFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GuildMapFeature;
@@ -258,6 +260,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
+        registerFeature(new FixStackSizeFeature());
         registerFeature(new GuildBankHotkeyFeature());
         registerFeature(new HightlightDuplicateCosmeticsFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
@@ -269,6 +272,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LootchestTextFeature());
         registerFeature(new PersonalStorageUtilitiesFeature());
+        registerFeature(new SynchronizeInventoryFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         // endregion
 
