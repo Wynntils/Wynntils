@@ -20,11 +20,13 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 
 public final class LoadingScreen extends WynntilsScreen {
-    private static final String LOGO_STRING = "\u2060\u2064\u2061";
+    private static final String LOGO_STRING = "\uE005\uDAFF\uDFFF\uE006";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
+    private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen");
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
 
@@ -93,12 +95,14 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw logo
         int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
-        String logoString = Services.ResourcePack.isPreloadedPackSelected() ? LOGO_STRING : TEXT_LOGO_STRING;
+        Component logoComponent = Services.ResourcePack.isPreloadedPackSelected()
+                ? Component.literal(LOGO_STRING).withStyle(Style.EMPTY.withFont(LOGO_FONT_LOCATION))
+                : Component.literal(TEXT_LOGO_STRING);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(logoString),
-                        centerX,
+                        StyledText.fromComponent(logoComponent),
+                        centerX - font.width(logoComponent) / 2 + 7,
                         60,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
