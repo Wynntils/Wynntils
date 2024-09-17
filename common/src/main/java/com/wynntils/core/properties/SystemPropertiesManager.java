@@ -42,7 +42,7 @@ public class SystemPropertiesManager extends Manager {
             }
         }
 
-        // Then fall back to using the mappers†
+        // Then fall back to using the mappers
         Function<String, Object> mapper = MAPPERS.get(property.getClassType());
         if (mapper == null) {
             WynntilsMod.error(
