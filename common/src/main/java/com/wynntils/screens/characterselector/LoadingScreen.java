@@ -102,7 +102,7 @@ public final class LoadingScreen extends WynntilsScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromComponent(logoComponent),
-                        centerX - font.width(logoComponent) / 2 + 7,
+                        centerX,
                         60,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
