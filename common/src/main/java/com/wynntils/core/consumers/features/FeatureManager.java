@@ -91,6 +91,7 @@ import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
@@ -144,6 +145,7 @@ import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
@@ -290,6 +292,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomPlayerListOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
+        registerFeature(new HeldItemCooldownOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
@@ -361,6 +364,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
