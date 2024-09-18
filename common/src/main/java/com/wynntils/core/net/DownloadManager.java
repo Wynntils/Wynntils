@@ -10,6 +10,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.CoreComponent;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
 import com.wynntils.core.properties.Property;
 import com.wynntils.utils.StringUtils;
@@ -105,6 +106,8 @@ public class DownloadManager extends Manager {
         // Reset the state of the manager, as the downloads are being started
         graph.resetState();
         currentDownloads = new LinkedHashSet<>();
+
+        WynntilsMod.postEventOnMainThread(new DownloadEvent.Started());
 
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
@@ -238,7 +241,11 @@ public class DownloadManager extends Manager {
         WynntilsMod.info("[DownloadManager] All downloads finished.");
 
         if (graph.hasError()) {
+            WynntilsMod.postEventOnMainThread(new DownloadEvent.Completed());
             WynntilsMod.warn("[DownloadManager] Some downloads failed. See the statistics for more information.");
+        } else {
+            WynntilsMod.postEventOnMainThread(new DownloadEvent.Failed());
+            WynntilsMod.info("[DownloadManager] All downloads succeeded.");
         }
 
         if (graph.hasError() || debugLogs.get()) {

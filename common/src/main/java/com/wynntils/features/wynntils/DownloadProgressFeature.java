@@ -5,6 +5,7 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.utils.mc.McUtils;
@@ -14,23 +15,22 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class DownloadProgressFeature extends Feature {
-    // FIXME: Needs events
     @SubscribeEvent
-    public void onDownloadStarted() {
+    public void onDownloadStarted(DownloadEvent.Started event) {
         displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.startingDownload"),
                 Component.literal("Download name"));
     }
 
     @SubscribeEvent
-    public void onDownloadCompleted() {
+    public void onDownloadCompleted(DownloadEvent.Completed event) {
         displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadCompleted"),
                 Component.literal("Download name"));
     }
 
     @SubscribeEvent
-    public void onDownloadFailed() {
+    public void onDownloadFailed(DownloadEvent.Failed event) {
         displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadFailed"),
                 Component.literal("Download name"));
