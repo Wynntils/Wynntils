@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
-import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -70,7 +69,4 @@ public class HeldItemCooldownOverlay extends Overlay {
         BufferedRenderUtils.drawRect(poseStack, bufferSource, color, x1 + offset, y, 0, barWidth, height);
         BufferedRenderUtils.drawRect(poseStack, bufferSource, color, x2 - barWidth - offset, y, 0, barWidth, height);
     }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
 }
