@@ -37,12 +37,12 @@ public class HeldItemCooldownOverlay extends Overlay {
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         Player player = McUtils.player();
-        float cdPercent = player.getCooldowns()
+        float cooldownPercent = player.getCooldowns()
                 .getCooldownPercent(
                         player.getItemInHand(InteractionHand.MAIN_HAND).getItem(),
                         deltaTracker.getGameTimeDeltaPartialTick(true));
-        if (cdPercent <= 0f) return;
-        renderOverlay(poseStack, bufferSource, cdPercent);
+        if (cooldownPercent <= 0f) return;
+        renderOverlay(poseStack, bufferSource, cooldownPercent);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class HeldItemCooldownOverlay extends Overlay {
         renderOverlay(poseStack, bufferSource, 1F);
     }
 
-    private void renderOverlay(PoseStack poseStack, MultiBufferSource bufferSource, float cdPercent) {
+    private void renderOverlay(PoseStack poseStack, MultiBufferSource bufferSource, float cooldownPercent) {
         float width = getWidth();
         float x1 = getRenderX();
         float x2 = x1 + width;
@@ -66,7 +66,7 @@ public class HeldItemCooldownOverlay extends Overlay {
 
         // Draw bars
         float barWidth = 3f;
-        float offset = (1f - cdPercent) * (width - barWidth) / 2f;
+        float offset = (1f - cooldownPercent) * (width - barWidth) / 2f;
         BufferedRenderUtils.drawRect(poseStack, bufferSource, color, x1 + offset, y, 0, barWidth, height);
         BufferedRenderUtils.drawRect(poseStack, bufferSource, color, x2 - barWidth - offset, y, 0, barWidth, height);
     }
