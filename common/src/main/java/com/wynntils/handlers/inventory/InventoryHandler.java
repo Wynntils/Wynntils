@@ -55,11 +55,9 @@ public class InventoryHandler extends Handler {
                         if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT || heldStack.getCount() == 1) {
                             forceSyncLater(menu);
                         }
-                        expect(new PendingInteraction.Place(menu, slotNum, heldStack.copy()));
-                    } else if (areItemsSimilar(heldStack, slotStack)) {
-                        expect(new PendingInteraction.Place(menu, slotNum, heldStack.copy()));
+                        expect(new PendingInteraction.PlaceOrSwap(menu, slotNum, heldStack.copy(), ItemStack.EMPTY));
                     } else {
-                        expect(new PendingInteraction.Swap(menu, slotNum, heldStack.copy(), slotStack.copy()));
+                        expect(new PendingInteraction.PlaceOrSwap(menu, slotNum, heldStack.copy(), slotStack.copy()));
                     }
                 }
             }
@@ -131,19 +129,6 @@ public class InventoryHandler extends Handler {
 
     private void expect(PendingInteraction interaction) {
         pending.add(new PendingInteractionEntry(interaction));
-    }
-
-    static boolean areItemsSimilar(ItemStack a, ItemStack b) {
-        if (a.isEmpty()) {
-            return b.isEmpty();
-        } else {
-            return !b.isEmpty()
-                    && a.getHoverName().getString().equals(b.getHoverName().getString());
-        }
-    }
-
-    static boolean areStacksSimilar(ItemStack a, ItemStack b) {
-        return areItemsSimilar(a, b) && a.getCount() == b.getCount();
     }
 
     private final class RunningInteraction {
