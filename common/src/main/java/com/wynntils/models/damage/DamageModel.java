@@ -89,7 +89,8 @@ public final class DamageModel extends Model {
 
     public String getFocusedMobElementals() {
         checkFocusedMobValidity();
-        return focusedMobElementals; // TODO: Parse this into specific elements and expose as functions
+        // TODO: Parse this into specific elements and expose as functions
+        return focusedMobElementals;
     }
 
     public long getFocusedMobHealth() {
