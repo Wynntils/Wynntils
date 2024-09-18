@@ -19,21 +19,21 @@ public class DownloadProgressFeature extends Feature {
     public void onDownloadStarted(DownloadEvent.Started event) {
         displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.startingDownload"),
-                Component.literal("Download name"));
+                Component.translatable("feature.wynntils.downloadProgress.startingDownloadMessage"));
     }
 
     @SubscribeEvent
     public void onDownloadCompleted(DownloadEvent.Completed event) {
         displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadCompleted"),
-                Component.literal("Download name"));
+                Component.translatable("feature.wynntils.downloadProgress.downloadCompletedMessage"));
     }
 
     @SubscribeEvent
     public void onDownloadFailed(DownloadEvent.Failed event) {
         displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadFailed"),
-                Component.literal("Download name"));
+                Component.translatable("feature.wynntils.downloadProgress.downloadFailedMessage"));
     }
 
     private void displayToast(Component title, Component message) {

@@ -28,7 +28,6 @@ public class DownloadWidget extends AbstractWidget {
     private static final List<Component> DOWNLOAD_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.downloads.tryRedownload"));
 
-    private final QueuedDownload download;
     private final String downloadName;
 
     private float offset = 0f;
@@ -36,7 +35,6 @@ public class DownloadWidget extends AbstractWidget {
     public DownloadWidget(int x, int y, int width, int height, QueuedDownload download) {
         super(x, y, width, height, Component.literal("Download Widget"));
 
-        this.download = download;
         downloadName = EnumUtils.toNiceString(download.urlId());
     }
 
