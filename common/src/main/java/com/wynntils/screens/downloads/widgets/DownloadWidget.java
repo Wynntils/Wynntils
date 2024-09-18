@@ -62,7 +62,15 @@ public class DownloadWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        // FIXME: If download in progress render a spinning arc
+        // FIXME: Only render when download in progress
+        if (!successfulDownload) {
+            offset = (float) ((offset + 0.1f) % (2 * Math.PI));
+            int outerRadius = (int) (height * 0.5f);
+            float arcY = getY() + (height / 2f) - outerRadius;
+            int innerRadius = (int) (outerRadius * 0.85f);
+
+            RenderUtils.drawArc(guiGraphics.pose(), CommonColors.BLACK, getX(), arcY, 0, 0.8f, innerRadius, outerRadius, offset);
+        }
 
         if (isHovered && !successfulDownload) {
             McUtils.mc()
