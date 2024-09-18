@@ -23,13 +23,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
     // Test in DamageModel_DAMAGE_BAR_PATTERN
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile(
             "^\\s*§[0-9a-f](.*) - §c(\\d+(?:\\.\\d+)?[kKmM]?)§4❤(?:§r - ( ?(§.(.+))(Dam|Weak|Def))+)?\\s*$");
+
+    // Wynncraft updates the focused mob health bar by repeatedly destroying and recreating the boss bar. We don't want
+    // to lose the entire focused mob state every time the boss bar is recreated, so we delay invalidation by this many
+    // milliseconds and revalidate if a recreation/update event arrives during the delay
+    private static final long FOCUSED_MOB_INVALIDATION_DELAY = 1000L;
 
     private final DamageBar damageBar = new DamageBar();
 
@@ -125,7 +129,7 @@ public final class DamageModel extends Model {
     }
 
     private void invalidateFocusedMob() {
-        focusedMobExpiryTime = System.currentTimeMillis() + 1000L;
+        focusedMobExpiryTime = System.currentTimeMillis() + FOCUSED_MOB_INVALIDATION_DELAY;
     }
 
     private void revalidateFocusedMob() {
@@ -135,15 +139,6 @@ public final class DamageModel extends Model {
     public final class DamageBar extends TrackedBar {
         private DamageBar() {
             super(DAMAGE_BAR_PATTERN);
-        }
-
-        @Override
-        public void setEvent(LerpingBossEvent event) {
-            super.setEvent(event);
-            // Wynncraft updates the focused mob health bar by repeatedly destroying and recreating the boss bar. We
-            // grab the progress here, when the bar's recreation event is received, to avoid the brief delay before
-            // the first progress update event is received, during which the state would otherwise be inconsistent
-            onUpdateProgress(event.getProgress());
         }
 
         @Override
