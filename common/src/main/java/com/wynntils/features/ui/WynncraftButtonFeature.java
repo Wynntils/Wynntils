@@ -9,6 +9,7 @@ import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
@@ -78,8 +79,10 @@ public class WynncraftButtonFeature extends Feature {
 
         if (firstTitleScreenInit && autoConnect.get()) {
             firstTitleScreenInit = false;
-            // FIXME: If there any failed downloads and cancelAutoJoin is enabled/ignoreFailedDownloads isn't true then
-            //  cancel autojoining
+            if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
+                WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
+                return;
+            }
             ServerData wynncraftServer = getWynncraftServer();
             connectToServer(wynncraftServer);
             return;
@@ -93,9 +96,12 @@ public class WynncraftButtonFeature extends Feature {
 
         ServerData wynncraftServer = getWynncraftServer();
 
-        // FIXME: Replace true with if there are any failed downloads
         WynncraftButton wynncraftButton = new WynncraftButton(
-                titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24, true);
+                titleScreen,
+                wynncraftServer,
+                titleScreen.width / 2 + 104,
+                titleScreen.height / 4 + 48 + 24,
+                Managers.Download.graphState().error());
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
@@ -175,18 +181,19 @@ public class WynncraftButtonFeature extends Feature {
 
         protected static void onPress(Button button) {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
-            // FIXME: Use if else once finished
-            McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
-            //            if (wynncraftButton.showWarning) {
-            //                McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen,
-            // wynncraftButton.serverData));
-            //            } else {
-            //                connectToServer(wynncraftButton.serverData);
-            //            }
+            if (!Managers.Download.graphState().finished()) return;
+
+            if (wynncraftButton.showWarning) {
+                McUtils.mc().setScreen(DownloadScreen.create(McUtils.mc().screen, wynncraftButton.serverData));
+            } else {
+                connectToServer(wynncraftButton.serverData);
+            }
         }
     }
 
-    /** Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods */
+    /**
+     * Provides the icon for a server in the form of a {@link ResourceLocation} with utility methods
+     */
     private static final class ServerIcon {
         private static final ResourceLocation FALLBACK;
 
@@ -238,17 +245,23 @@ public class WynncraftButtonFeature extends Feature {
             this(server, null);
         }
 
-        /** Returns whether getting the icon has succeeded. */
+        /**
+         * Returns whether getting the icon has succeeded.
+         */
         public boolean isSuccess() {
             return !FALLBACK.equals(serverIconLocation);
         }
 
-        /** Returns the {@link ServerData} used to get the icon */
+        /**
+         * Returns the {@link ServerData} used to get the icon
+         */
         public ServerData getServer() {
             return server;
         }
 
-        /** Returns the icon as a {@link ResourceLocation} if found, else unknown server texture */
+        /**
+         * Returns the icon as a {@link ResourceLocation} if found, else unknown server texture
+         */
         private synchronized ResourceLocation getServerIconLocation() {
             return serverIconLocation;
         }

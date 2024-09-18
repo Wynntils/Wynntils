@@ -5,6 +5,9 @@
 package com.wynntils.screens.downloads.widgets;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.EnumUtils;
@@ -27,21 +30,20 @@ public class DownloadWidget extends AbstractWidget {
 
     private final QueuedDownload download;
     private final String downloadName;
-    private boolean successfulDownload;
 
     private float offset = 0f;
 
-    public DownloadWidget(int x, int y, int width, int height, QueuedDownload download, boolean successfulDownload) {
+    public DownloadWidget(int x, int y, int width, int height, QueuedDownload download) {
         super(x, y, width, height, Component.literal("Download Widget"));
 
         this.download = download;
         downloadName = EnumUtils.toNiceString(download.urlId());
-        // FIXME: This will need to be updated if a download is retried and successful
-        this.successfulDownload = successfulDownload;
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        DownloadDependencyGraph.DownloadDependencyGraphState downloadState = Managers.Download.graphState();
+
         RenderUtils.drawRect(
                 guiGraphics.pose(),
                 CommonColors.GRAY.withAlpha(isHovered ? 200 : 100),
@@ -57,22 +59,22 @@ public class DownloadWidget extends AbstractWidget {
                         StyledText.fromString(downloadName),
                         getX() + width / 2f,
                         getY() + height / 2f,
-                        successfulDownload ? CommonColors.GREEN : CommonColors.RED,
+                        downloadState.successful() ? CommonColors.GREEN : CommonColors.RED,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        // FIXME: Only render when download in progress
-        if (!successfulDownload) {
+        if (!downloadState.finished()) {
             offset = (float) ((offset + 0.1f) % (2 * Math.PI));
             int outerRadius = (int) (height * 0.5f);
             float arcY = getY() + (height / 2f) - outerRadius;
             int innerRadius = (int) (outerRadius * 0.85f);
 
-            RenderUtils.drawArc(guiGraphics.pose(), CommonColors.BLACK, getX(), arcY, 0, 0.8f, innerRadius, outerRadius, offset);
+            RenderUtils.drawArc(
+                    guiGraphics.pose(), CommonColors.BLACK, getX(), arcY, 0, 0.8f, innerRadius, outerRadius, offset);
         }
 
-        if (isHovered && !successfulDownload) {
+        if (isHovered && !downloadState.successful()) {
             McUtils.mc()
                     .screen
                     .setTooltipForNextRenderPass(Lists.transform(DOWNLOAD_TOOLTIP, Component::getVisualOrderText));
@@ -81,9 +83,13 @@ public class DownloadWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (successfulDownload) return false;
+        if (Managers.Download.graphState().successful()) return false;
 
-        // FIXME: Redownload here
+        // This reloads all URLs, and will then trigger a re-download by the DownloadManager
+        Managers.Url.loadUrls();
+
+        // Reload all non-DownloadManager downloaded data
+        WynntilsMod.reloadAllComponentData();
 
         return true;
     }

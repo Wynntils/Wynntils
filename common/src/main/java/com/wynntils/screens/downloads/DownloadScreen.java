@@ -6,6 +6,7 @@ package com.wynntils.screens.downloads;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -289,10 +290,10 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         int y = (int) (dividedHeight * WIDGET_TOP_Y);
 
-        // FIXME: Replace true with if the download failed
         for (QueuedDownload download : Managers.Download.registeredDownloads()) {
+            DownloadDependencyGraph.DownloadDependencyGraphState downloadState = Managers.Download.graphState();
             downloadWidgets.add(new DownloadWidget(
-                    (int) (dividedWidth * 16), y, (int) (dividedWidth * 32), widgetHeight, download, true));
+                    (int) (dividedWidth * 16), y, (int) (dividedWidth * 32), widgetHeight, download));
             y += widgetHeight;
         }
 

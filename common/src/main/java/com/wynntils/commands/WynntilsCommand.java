@@ -217,7 +217,7 @@ public class WynntilsCommand extends Command {
         // This reloads all URLs, and will then trigger a re-download by the DownloadManager
         Managers.Url.loadUrls();
 
-        // Reload all downloaded data
+        // Reload all non-DownloadManager downloaded data
         WynntilsMod.reloadAllComponentData();
 
         return 1;

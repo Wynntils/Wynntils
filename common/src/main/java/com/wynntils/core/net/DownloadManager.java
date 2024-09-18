@@ -87,6 +87,10 @@ public class DownloadManager extends Manager {
         return Collections.unmodifiableList(registeredDownloads);
     }
 
+    public DownloadDependencyGraph.DownloadDependencyGraphState graphState() {
+        return graph.state();
+    }
+
     QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {
         if (registrationLock) {
             throw new IllegalStateException("Cannot queue downloads after the download graph is already built.");

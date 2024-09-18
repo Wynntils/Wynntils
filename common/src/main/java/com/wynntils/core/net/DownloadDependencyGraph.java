@@ -103,6 +103,11 @@ public final class DownloadDependencyGraph {
 
     // region State and Progress
 
+    public DownloadDependencyGraphState state() {
+        return new DownloadDependencyGraphState(
+                isFinished(), hasError(), totalDownloads(), successfulDownloads(), failedDownloads(), errorRate());
+    }
+
     public boolean isFinished() {
         return nodeMap.values().stream().allMatch(state -> state == NodeState.COMPLETED || state == NodeState.ERROR);
     }
@@ -235,6 +240,18 @@ public final class DownloadDependencyGraph {
     }
 
     // endregion
+
+    public record DownloadDependencyGraphState(
+            boolean finished,
+            boolean error,
+            int totalDownloads,
+            int successfulDownloads,
+            int failedDownloads,
+            float errorRate) {
+        public boolean successful() {
+            return !error && finished;
+        }
+    }
 
     private enum NodeState {
         WAITING_ON_DEPENDENCY,
