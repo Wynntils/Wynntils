@@ -215,7 +215,7 @@ public final class FontRenderer {
                 renderX,
                 cursorRenderY,
                 0,
-                font.width(text.getString()),
+                font.width(text.getComponent()),
                 font.lineHeight + 2);
 
         renderAlignedTextInBox(
@@ -297,7 +297,7 @@ public final class FontRenderer {
             Font.DisplayMode displayMode) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getString()) / textScale < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getComponent()) / textScale < maxWidth) {
             renderText(
                     poseStack,
                     text,
@@ -422,7 +422,7 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
-        int textLength = (int) ((font.width(styledText.getString()) + 1) * textScale);
+        int textLength = (int) ((font.width(styledText.getComponent()) + 1) * textScale);
 
         if (textLength > renderWidth) {
             float maxScrollOffset =
@@ -646,12 +646,14 @@ public final class FontRenderer {
                 .sum();
     }
 
-    public float calculateRenderHeight(StyledText line, float maxWidth) {
-        return calculateRenderHeight(line.getString(), maxWidth);
+    public float calculateRenderHeight(String line, float maxWidth) {
+        return calculateRenderHeight(StyledText.fromString(line), maxWidth);
     }
 
-    public float calculateRenderHeight(String line, float maxWidth) {
+    public float calculateRenderHeight(StyledText line, float maxWidth) {
         // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
-        return font.wordWrapHeight(line.isEmpty() ? " " : line, maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
+        return font.wordWrapHeight(
+                line.isEmpty() ? Component.literal(" ") : line.getComponent(),
+                maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 }

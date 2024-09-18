@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
-import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.models.spells.event.SpellEvent;
@@ -101,7 +100,4 @@ public class SpellCastMessageOverlay extends Overlay {
                         this.getRenderVerticalAlignment(),
                         TextShadow.NORMAL);
     }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
 }
