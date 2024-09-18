@@ -13,13 +13,12 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.KeyMappingEvent;
-import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -72,6 +71,17 @@ public class InvertAttackKeybindsFeature extends Feature {
         }
     }
 
+    public boolean isInvertingForClass(ClassType classType) {
+        return switch (Models.Character.getClassType()) {
+            case MAGE -> invertMage.get();
+            case ARCHER -> invertArcher.get();
+            case WARRIOR -> invertWarrior.get();
+            case ASSASSIN -> invertAssassin.get();
+            case SHAMAN -> invertShaman.get();
+            default -> false;
+        };
+    }
+
     public InputConstants.Key remapKey(InputConstants.Key key) {
         Options options = McUtils.options();
 
@@ -86,22 +96,10 @@ public class InvertAttackKeybindsFeature extends Feature {
         }
 
         // Ensure key inversion is enabled for the current class
-        if (!switch (Models.Character.getClassType()) {
-            case MAGE -> invertMage.get();
-            case ARCHER -> invertArcher.get();
-            case WARRIOR -> invertWarrior.get();
-            case ASSASSIN -> invertAssassin.get();
-            case SHAMAN -> invertShaman.get();
-            default -> false;
-        }) {
-            return null;
-        }
+        if (!isInvertingForClass(Models.Character.getClassType())) return null;
 
         // Ensure the held item is a weapon
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(InventoryUtils.getItemInHand());
-        if (wynnItemOpt.isEmpty()
-                || !(wynnItemOpt.get() instanceof GearTypeItemProperty gearTypeItem)
-                || !gearTypeItem.getGearType().isWeapon()) return null;
+        if (!ItemUtils.isWeapon(InventoryUtils.getItemInHand())) return null;
 
         return target.key;
     }
