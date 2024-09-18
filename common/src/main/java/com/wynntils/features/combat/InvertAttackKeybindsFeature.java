@@ -26,7 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.COMBAT)
-public class InvertKeybindsFeature extends Feature {
+public class InvertAttackKeybindsFeature extends Feature {
     @Persisted
     public final Config<Boolean> invertWarrior = new Config<>(false);
 
