@@ -193,7 +193,7 @@ public class ItemCompareFeature extends Feature {
                         });
                     }
                 }
-                // TODO: allow comparing with equipped/selected tomes and selected charms
+                    // TODO: allow comparing with equipped/selected tomes and selected charms
             }
         }
 
@@ -330,11 +330,8 @@ public class ItemCompareFeature extends Feature {
         poseStack.pushPose();
         poseStack.scale(hoveredScaleFactor, hoveredScaleFactor, 1);
         guiGraphics.renderTooltip(
-                font,
-                hoveredLines,
-                hoveredItemStack.getTooltipImage(),
-                (int) (hoveredX / hoveredScaleFactor),
-                (int) (hoveredY / hoveredScaleFactor));
+                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
+                        (hoveredY / hoveredScaleFactor));
         poseStack.popPose();
 
         for (Tooltip tooltip : tooltips) {
@@ -373,7 +370,8 @@ public class ItemCompareFeature extends Feature {
         int slot = hoveredSlot.getContainerSlot();
 
         // Selecting armor and accessory slots is not allowed
-        if (slot == 9 || slot == 10 || slot == 11 || slot == 12 || slot == 36 || slot == 37 || slot == 38 || slot == 39) return;
+        if (slot == 9 || slot == 10 || slot == 11 || slot == 12 || slot == 36 || slot == 37 || slot == 38 || slot == 39)
+            return;
 
         ItemStack itemStack = hoveredSlot.getItem();
         if (itemStack.isEmpty()) return;
