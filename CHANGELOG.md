@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/Wynntils/Wynntils/compare/v2.3.0...v2.3.1) (2024-09-19)
+
+
+### Bug Fixes
+
+* Do not send nor display crafted item names from item encodings ([#2877](https://github.com/Wynntils/Wynntils/issues/2877)) ([13509a1](https://github.com/Wynntils/Wynntils/commit/13509a14038c366fe8af3c1405b2beacf0563589))
+
 ## [2.3.0](https://github.com/Wynntils/Wynntils/compare/v2.2.4...v2.3.0) (2024-09-19)
 
 
@@ -8,6 +15,11 @@
 ### New Features
 
 * Introduce the new data dependency loading systems ([#2845](https://github.com/Wynntils/Wynntils/issues/2845)) ([1d25ab5](https://github.com/Wynntils/Wynntils/commit/1d25ab5166c3a9cba4fa369afcae9c68261246a2)), closes [#2797](https://github.com/Wynntils/Wynntils/issues/2797)
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.0 [skip ci] ([ca5cbf8](https://github.com/Wynntils/Wynntils/commit/ca5cbf8fbe39cdaca59cd037ae057e4b165ada0d))
 
 ## [2.2.4](https://github.com/Wynntils/Wynntils/compare/v2.2.3...v2.2.4) (2024-09-19)
 
@@ -95,30 +107,4 @@ While this is technically a breaking change, it shouldn't break behaviour in any
 ### Miscellaneous Chores
 
 * **release:** v2.2.2 [skip ci] ([a8d52dc](https://github.com/Wynntils/Wynntils/commit/a8d52dc75ed2f32844eb127371f6c4000cd0d3df))
-
-## [2.2.1](https://github.com/Wynntils/Wynntils/compare/v2.2.0...v2.2.1) (2024-09-09)
-
-
-### New Features
-
-* Add Range Visualizer for Raid Buff Major Ids [skip ci] ([#2827](https://github.com/Wynntils/Wynntils/issues/2827)) ([edc39f7](https://github.com/Wynntils/Wynntils/commit/edc39f75db77411c45c54a0ef9c0374452a4be64))
-
-
-### Bug Fixes
-
-* Fix certain ingredients using API name not being annotated [skip ci] ([#2842](https://github.com/Wynntils/Wynntils/issues/2842)) ([24637da](https://github.com/Wynntils/Wynntils/commit/24637da6be6ab4ba1693e423abaf74a0e6c0ae7e))
-* Fix info bar territory pattern ([#2848](https://github.com/Wynntils/Wynntils/issues/2848)) ([d246ce5](https://github.com/Wynntils/Wynntils/commit/d246ce5ef125c1fb5a4562c28ee8e51a4cba7b85))
-* Fix lootrun challenge count [skip ci] ([#2841](https://github.com/Wynntils/Wynntils/issues/2841)) ([2c9ca74](https://github.com/Wynntils/Wynntils/commit/2c9ca74879748c7fe566697b321201e517f0e3b5))
-* Fix mythic detection from lootrun reward chest [skip ci] ([#2846](https://github.com/Wynntils/Wynntils/issues/2846)) ([769fe46](https://github.com/Wynntils/Wynntils/commit/769fe4628506b3d33837b3a5750faaab7dc7b976))
-* Handle null acquired and no treasury in guild map [skip ci] ([#2843](https://github.com/Wynntils/Wynntils/issues/2843)) ([721731c](https://github.com/Wynntils/Wynntils/commit/721731c2bff80a6c2ad9e1888efb30e1b5407249))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.2.1 [skip ci] ([3f412b6](https://github.com/Wynntils/Wynntils/commit/3f412b6b2b90220b98834c15fcdcd1f1c41831fb))
-
-
-### Code Refactoring
-
-* dont return a pair of nulls [skip ci] ([#2847](https://github.com/Wynntils/Wynntils/issues/2847)) ([a56c194](https://github.com/Wynntils/Wynntils/commit/a56c194dcf2fb2291e0ff5736f97195a10871e6a))
 
