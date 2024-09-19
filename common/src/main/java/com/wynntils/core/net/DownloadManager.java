@@ -63,7 +63,7 @@ public class DownloadManager extends Manager {
 
     @SubscribeEvent
     public void onUrlProcessingFinished(UrlProcessingFinishedEvent event) {
-        download();
+        download(false);
     }
 
     public void initComponents(Map<Class<? extends CoreComponent>, List<CoreComponent>> componentMap) {
@@ -84,12 +84,31 @@ public class DownloadManager extends Manager {
         }
     }
 
+    public void retryDownload(QueuedDownload download) {
+        if (!registrationLock) {
+            throw new IllegalStateException("Cannot retry downloads while the download graph is still being built.");
+        }
+
+        if (!graph.state().finished()) {
+            throw new IllegalStateException("Cannot retry downloads while a download is already happening.");
+        }
+
+        // Mark the download as a retry, with it's dependencies and dependents
+        graph.markDownloadRetry(download);
+
+        download(true);
+    }
+
     public List<QueuedDownload> registeredDownloads() {
         return Collections.unmodifiableList(registeredDownloads);
     }
 
     public DownloadDependencyGraph.DownloadDependencyGraphState graphState() {
         return graph.state();
+    }
+
+    public DownloadDependencyGraph.NodeState getDownloadState(QueuedDownload download) {
+        return graph.getDownloadState(download);
     }
 
     QueuedDownload queueDownload(UrlId urlId, CoreComponent callerComponent, Dependency dependency) {
@@ -102,12 +121,14 @@ public class DownloadManager extends Manager {
         return queuedDownload;
     }
 
-    private void download() {
-        // Reset the state of the manager, as the downloads are being started
-        graph.resetState();
-        currentDownloads = new LinkedHashSet<>();
+    private void download(boolean partialRedownload) {
+        if (!partialRedownload) {
+            // Reset the state of the manager, as a full redownload is happening
+            graph.resetState();
+            currentDownloads = new LinkedHashSet<>();
+        }
 
-        WynntilsMod.postEventOnMainThread(new DownloadEvent.Started());
+        WynntilsMod.postEventOnMainThread(new DownloadEvent.Started(partialRedownload));
 
         // Start the downloads by filling the parallel download slots
         // After that, the manager will regulate the downloads by itself
@@ -116,9 +137,12 @@ public class DownloadManager extends Manager {
                 QueuedDownload queuedDownload = graph.nextDownload();
 
                 if (queuedDownload == null) {
-                    // This may not be an issue, but it can be a sign of a bug, or a bad configuration
-                    WynntilsMod.warn(
-                            "Max parallel downloads was not reached, but there are no more downloads to start.");
+                    if (!partialRedownload) {
+                        // This may not be an issue, but it can be a sign of a bug, or a bad configuration
+                        WynntilsMod.warn(
+                                "Max parallel downloads was not reached, but there are no more downloads to start.");
+                    }
+
                     return;
                 }
 
@@ -238,14 +262,14 @@ public class DownloadManager extends Manager {
 
         // All downloads are finished, and there are no more downloads to start
         // Display statistics from the graph
-        WynntilsMod.info("[DownloadManager] All downloads finished.");
+        WynntilsMod.info("[DownloadManager] Downloads finished.");
 
         if (graph.hasError()) {
             WynntilsMod.postEventOnMainThread(new DownloadEvent.Failed());
             WynntilsMod.warn("[DownloadManager] Some downloads failed. See the statistics for more information.");
         } else {
             WynntilsMod.postEventOnMainThread(new DownloadEvent.Completed());
-            WynntilsMod.info("[DownloadManager] All downloads succeeded.");
+            WynntilsMod.info("[DownloadManager] Downloads succeeded.");
         }
 
         if (graph.hasError() || debugLogs.get()) {

@@ -5,6 +5,7 @@
 package com.wynntils.screens.downloads.widgets;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
@@ -29,6 +30,7 @@ public class DownloadWidget extends AbstractWidget {
 
     private static final String dataPattern = "Data (Static|Athena) ";
 
+    private final QueuedDownload download;
     private final String downloadName;
 
     private float offset = 0f;
@@ -36,12 +38,13 @@ public class DownloadWidget extends AbstractWidget {
     public DownloadWidget(int x, int y, int width, int height, QueuedDownload download) {
         super(x, y, width, height, Component.literal("Download Widget"));
 
-        downloadName = EnumUtils.toNiceString(download.urlId()).replaceFirst(dataPattern, "");
+        this.download = download;
+        this.downloadName = EnumUtils.toNiceString(download.urlId()).replaceFirst(dataPattern, "");
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        DownloadDependencyGraph.DownloadDependencyGraphState downloadState = Managers.Download.graphState();
+        DownloadDependencyGraph.DownloadDependencyGraphState managerState = Managers.Download.graphState();
 
         RenderUtils.drawRect(
                 guiGraphics.pose(),
@@ -52,18 +55,24 @@ public class DownloadWidget extends AbstractWidget {
                 width,
                 height);
 
+        DownloadDependencyGraph.NodeState downloadState = Managers.Download.getDownloadState(download);
+
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics.pose(),
                         StyledText.fromString(downloadName),
                         getX() + width / 2f,
                         getY() + height / 2f,
-                        downloadState.successful() ? CommonColors.GREEN : CommonColors.RED,
+                        downloadState == DownloadDependencyGraph.NodeState.COMPLETED
+                                ? CommonColors.GREEN
+                                : CommonColors.RED,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (!downloadState.finished()) {
+        if (downloadState == DownloadDependencyGraph.NodeState.WAITING_ON_DEPENDENCY
+                || downloadState == DownloadDependencyGraph.NodeState.IN_PROGRESS
+                || downloadState == DownloadDependencyGraph.NodeState.QUEUED) {
             offset = (float) ((offset + 0.1f) % (2 * Math.PI));
             int outerRadius = (int) (height * 0.5f);
             float arcY = getY() + (height / 2f) - outerRadius;
@@ -73,7 +82,7 @@ public class DownloadWidget extends AbstractWidget {
                     guiGraphics.pose(), CommonColors.BLACK, getX(), arcY, 0, 0.8f, innerRadius, outerRadius, offset);
         }
 
-        if (isHovered && !downloadState.successful()) {
+        if (isHovered) {
             McUtils.mc()
                     .screen
                     .setTooltipForNextRenderPass(Lists.transform(DOWNLOAD_TOOLTIP, Component::getVisualOrderText));
@@ -82,12 +91,11 @@ public class DownloadWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (Managers.Download.graphState().successful()) return false;
-
-        // This reloads all URLs, and will then trigger a re-download
-        // in both DownloadManager and dynamically downloaded data (CoreComponent#reloadData)
-        // FIXME: Only redownload this download
-        Managers.Url.loadUrls();
+        try {
+            Managers.Download.retryDownload(download);
+        } catch (IllegalStateException e) {
+            WynntilsMod.warn("Retrying download caused an exception", e);
+        }
 
         return true;
     }
