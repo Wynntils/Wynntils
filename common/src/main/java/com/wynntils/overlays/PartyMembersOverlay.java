@@ -251,8 +251,5 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
 
             poseStack.popPose();
         }
-
-        @Override
-        protected void onConfigUpdate(Config<?> config) {}
     }
 }
