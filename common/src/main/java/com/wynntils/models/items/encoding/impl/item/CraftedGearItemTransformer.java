@@ -73,13 +73,10 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         requirements = requirementsData.requirements();
 
         // Optional blocks
-        NameData nameData = itemDataMap.get(NameData.class);
-        if (nameData != null) {
-            name = nameData.name();
-        } else {
-            name = "Crafted "
-                    + StringUtils.capitalizeFirst(gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
-        }
+        // Unfortunately, we cannot use the NameData from crafted items, since it can be
+        // set to unsuitable values by the users.
+        name = "Crafted "
+                + StringUtils.capitalizeFirst(gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
 
         DamageData damageData = itemDataMap.get(DamageData.class);
         if (damageData != null) {
