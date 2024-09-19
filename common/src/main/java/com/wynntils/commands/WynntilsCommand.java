@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.FileUtils;
@@ -82,6 +83,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("menu").executes(this::menu))
                 .then(Commands.literal("reauth").executes(this::reauth))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
+                .then(Commands.literal("downloads").executes(this::downloads))
                 .then(Commands.literal("rescan").executes(this::rescan))
                 .then(Commands.literal("status").executes(this::status))
                 .then(Commands.literal("token").executes(this::token))
@@ -214,12 +216,15 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        // This reloads all URLs, and will then trigger a re-download by the DownloadManager
+        // This reloads all URLs, and will then trigger a re-download
+        // in both DownloadManager and dynamically downloaded data (CoreComponent#reloadData)
         Managers.Url.loadUrls();
 
-        // Reload all downloaded data
-        WynntilsMod.reloadAllComponentData();
+        return 1;
+    }
 
+    private int downloads(CommandContext<CommandSourceStack> context) {
+        Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(DownloadScreen.create(null, null)));
         return 1;
     }
 

@@ -94,6 +94,36 @@ public final class DownloadDependencyGraph {
         node.dependents.forEach(dependent -> nodeMap.put(dependent, NodeState.ERROR));
     }
 
+    public void markDownloadRetry(QueuedDownload download) {
+        Node node = nodeMap.keySet().stream()
+                .filter(n -> n.download == download)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Download not found in graph: " + download.urlId()));
+
+        // Also mark all dependents as waiting on dependency, as they need to wait for the retry to complete
+        node.dependents.forEach(dependent -> nodeMap.put(dependent, NodeState.WAITING_ON_DEPENDENCY));
+
+        // And mark all dependencies as queued, as they need to be re-downloaded
+        // Do this by traversing the graph from the node, and marking all dependencies as waiting on dependency
+        // or queued, if they have no dependencies
+        Deque<Node> stack = new LinkedList<>();
+        stack.addFirst(node);
+
+        while (!stack.isEmpty()) {
+            Node currentNode = stack.pop();
+
+            if (currentNode.dependencies.isEmpty()) {
+                nodeMap.put(currentNode, NodeState.QUEUED);
+            } else {
+                nodeMap.put(currentNode, NodeState.WAITING_ON_DEPENDENCY);
+                currentNode.dependencies.forEach(stack::addFirst);
+            }
+        }
+
+        // Either mark the node as queued, or waiting on dependency if it has dependencies
+        nodeMap.put(node, node.dependencies.isEmpty() ? NodeState.QUEUED : NodeState.WAITING_ON_DEPENDENCY);
+    }
+
     public void resetState() {
         nodeMap.replaceAll(
                 (node, state) -> node.dependencies.isEmpty() ? NodeState.QUEUED : NodeState.WAITING_ON_DEPENDENCY);
@@ -102,6 +132,11 @@ public final class DownloadDependencyGraph {
     // endregion
 
     // region State and Progress
+
+    public DownloadDependencyGraphState state() {
+        return new DownloadDependencyGraphState(
+                isFinished(), hasError(), totalDownloads(), successfulDownloads(), failedDownloads(), errorRate());
+    }
 
     public boolean isFinished() {
         return nodeMap.values().stream().allMatch(state -> state == NodeState.COMPLETED || state == NodeState.ERROR);
@@ -129,6 +164,15 @@ public final class DownloadDependencyGraph {
 
     public float errorRate() {
         return (float) failedDownloads() / totalDownloads();
+    }
+
+    public NodeState getDownloadState(QueuedDownload download) {
+        Node node = nodeMap.keySet().stream()
+                .filter(n -> n.download == download)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Download not found in graph: " + download.urlId()));
+
+        return nodeMap.get(node);
     }
 
     // endregion
@@ -236,7 +280,19 @@ public final class DownloadDependencyGraph {
 
     // endregion
 
-    private enum NodeState {
+    public record DownloadDependencyGraphState(
+            boolean finished,
+            boolean error,
+            int totalDownloads,
+            int successfulDownloads,
+            int failedDownloads,
+            float errorRate) {
+        public boolean successful() {
+            return !error && finished;
+        }
+    }
+
+    public enum NodeState {
         WAITING_ON_DEPENDENCY,
         QUEUED,
         IN_PROGRESS,
