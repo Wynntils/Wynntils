@@ -133,7 +133,4 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
             offsetY += renderedHeightWithoutTextHeight + textHeight;
         }
     }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
 }
