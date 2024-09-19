@@ -83,8 +83,9 @@ public class ShamanTotemModel extends Model {
                 () -> {
                     // didn't come from a cast within the delay, probably not casted by the player
                     // this check needs to be ran with a delay, the cast/spawn order is not guaranteed
-                    if (!hasAutoCasterItem() && System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY_MS)
+                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY_MS && !hasAutoCasterItem()) {
                         return;
+                    }
 
                     // Checks to verify this is a totem
                     // These must be ran with a delay,
