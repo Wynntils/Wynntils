@@ -31,13 +31,13 @@ interface PendingInteraction {
         @Override
         public boolean onSlotUpdate(int containerId, int slotNum, ItemStack newStack) {
             if (containerId == -1) {
-                tryDispatch(newStack);
+                checkAndSend(newStack);
                 return false;
             }
             return true;
         }
 
-        protected abstract void tryDispatch(ItemStack newHeldStack);
+        protected abstract void checkAndSend(ItemStack newHeldStack);
     }
 
     abstract class CaptureSlot implements PendingInteraction {
@@ -139,7 +139,7 @@ interface PendingInteraction {
         }
 
         @Override
-        protected void tryDispatch(ItemStack newHeldStack) {
+        protected void checkAndSend(ItemStack newHeldStack) {
             if (!areItemsSimilar(heldStack, newHeldStack)) return;
             int amount = newHeldStack.getCount() - heldStack.getCount();
             if (amount <= 0) return;
@@ -195,7 +195,7 @@ interface PendingInteraction {
         }
 
         @Override
-        protected void tryDispatch(ItemStack newHeldStack) {
+        protected void checkAndSend(ItemStack newHeldStack) {
             if (!(newHeldStack.isEmpty() || areItemsSimilar(heldStack, newHeldStack))) return;
             int amount = heldStack.getCount() - newHeldStack.getCount();
             if (amount <= 0) return;
@@ -214,7 +214,7 @@ interface PendingInteraction {
         }
 
         @Override
-        protected void tryDispatch(ItemStack newHeldStack) {
+        protected void checkAndSend(ItemStack newHeldStack) {
             if (!(newHeldStack.isEmpty() || areItemsSimilar(heldStack, newHeldStack))) return;
             int amount = heldStack.getCount() - newHeldStack.getCount();
             if (amount <= 0) return;

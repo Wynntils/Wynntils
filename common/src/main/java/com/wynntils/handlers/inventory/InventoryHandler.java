@@ -26,6 +26,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class InventoryHandler extends Handler {
+    private static final long SYNC_WINDOW_MS = 500L;
+
     private RunningInteraction running;
     private final List<PendingInteractionEntry> pending = new LinkedList<>();
 
@@ -178,7 +180,7 @@ public class InventoryHandler extends Handler {
 
         private PendingInteractionEntry(PendingInteraction interaction) {
             this.interaction = interaction;
-            this.expiryTime = System.currentTimeMillis() + 500L;
+            this.expiryTime = System.currentTimeMillis() + SYNC_WINDOW_MS;
         }
     }
 }
