@@ -73,26 +73,28 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     protected void doInit() {
         super.doInit();
 
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
-                .pos((int) dividedWidth, (int) (dividedHeight * 31))
-                .size((int) (dividedWidth * 14), 20)
-                .build());
-
         this.addRenderableWidget(
                 new Button.Builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
                         .pos((int) (dividedWidth * 5), (int) (dividedHeight * 37))
                         .size((int) (dividedWidth * 6), 20)
                         .build());
 
-        this.addRenderableWidget(new WynntilsCheckbox(
-                (int) (dividedWidth * 2),
-                (int) (dividedHeight * 25),
-                20,
-                Component.translatable("screens.wynntils.downloads.dontShowAgain"),
-                false,
-                (int) (dividedWidth * 10),
-                (c, b) -> toggleShowAgain(b)));
+        if (serverData != null) {
+            this.addRenderableWidget(new Button.Builder(
+                            Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
+                    .pos((int) dividedWidth, (int) (dividedHeight * 31))
+                    .size((int) (dividedWidth * 14), 20)
+                    .build());
+
+            this.addRenderableWidget(new WynntilsCheckbox(
+                    (int) (dividedWidth * 2),
+                    (int) (dividedHeight * 25),
+                    20,
+                    Component.translatable("screens.wynntils.downloads.dontShowAgain"),
+                    false,
+                    (int) (dividedWidth * 10),
+                    (c, b) -> toggleShowAgain(b)));
+        }
 
         widgetHeight = (int) (dividedHeight * 3.5f);
 
