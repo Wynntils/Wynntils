@@ -96,7 +96,9 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         if (encodingSettings.shareItemName()) {
             // Unfortunately, we cannot use the name of crafted items, since it can be
             // set to unsuitable values by the users.
-            String name = "Crafted " + StringUtils.capitalizeFirst(item.getConsumableType().name().toLowerCase(Locale.ROOT));
+            String name = "Crafted "
+                    + StringUtils.capitalizeFirst(
+                            item.getConsumableType().name().toLowerCase(Locale.ROOT));
 
             dataList.add(new NameData(name));
         }
