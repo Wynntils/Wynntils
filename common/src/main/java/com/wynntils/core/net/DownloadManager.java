@@ -241,10 +241,10 @@ public class DownloadManager extends Manager {
         WynntilsMod.info("[DownloadManager] All downloads finished.");
 
         if (graph.hasError()) {
-            WynntilsMod.postEventOnMainThread(new DownloadEvent.Completed());
+            WynntilsMod.postEventOnMainThread(new DownloadEvent.Failed());
             WynntilsMod.warn("[DownloadManager] Some downloads failed. See the statistics for more information.");
         } else {
-            WynntilsMod.postEventOnMainThread(new DownloadEvent.Failed());
+            WynntilsMod.postEventOnMainThread(new DownloadEvent.Completed());
             WynntilsMod.info("[DownloadManager] All downloads succeeded.");
         }
 

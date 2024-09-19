@@ -214,11 +214,9 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        // This reloads all URLs, and will then trigger a re-download by the DownloadManager
+        // This reloads all URLs, and will then trigger a re-download
+        // in both DownloadManager and dynamically downloaded data (CoreComponent#reloadData)
         Managers.Url.loadUrls();
-
-        // Reload all non-DownloadManager downloaded data
-        WynntilsMod.reloadAllComponentData();
 
         return 1;
     }

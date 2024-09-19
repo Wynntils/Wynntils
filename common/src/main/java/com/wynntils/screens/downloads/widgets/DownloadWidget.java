@@ -5,7 +5,6 @@
 package com.wynntils.screens.downloads.widgets;
 
 import com.google.common.collect.Lists;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
@@ -83,11 +82,9 @@ public class DownloadWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (Managers.Download.graphState().successful()) return false;
 
-        // This reloads all URLs, and will then trigger a re-download by the DownloadManager
+        // This reloads all URLs, and will then trigger a re-download
+        // in both DownloadManager and dynamically downloaded data (CoreComponent#reloadData)
         Managers.Url.loadUrls();
-
-        // Reload all non-DownloadManager downloaded data
-        WynntilsMod.reloadAllComponentData();
 
         return true;
     }
