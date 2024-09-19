@@ -1,3 +1,14 @@
+## [2.3.0](https://github.com/Wynntils/Wynntils/compare/v2.2.4...v2.3.0) (2024-09-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* Introduce the new data dependency loading systems (#2845)
+
+### New Features
+
+* Introduce the new data dependency loading systems ([#2845](https://github.com/Wynntils/Wynntils/issues/2845)) ([1d25ab5](https://github.com/Wynntils/Wynntils/commit/1d25ab5166c3a9cba4fa369afcae9c68261246a2)), closes [#2797](https://github.com/Wynntils/Wynntils/issues/2797)
+
 ## [2.2.4](https://github.com/Wynntils/Wynntils/compare/v2.2.3...v2.2.4) (2024-09-19)
 
 
@@ -44,6 +55,7 @@ While this is technically a breaking change, it shouldn't break behaviour in any
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2864](https://github.com/Wynntils/Wynntils/issues/2864)) ([c2a905b](https://github.com/Wynntils/Wynntils/commit/c2a905b11f0896a529674684d7cf575d62a09a70))
+* **release:** v2.2.4 [skip ci] ([3c54a16](https://github.com/Wynntils/Wynntils/commit/3c54a16cb7040d5ab915e3c2806e0438d3619039))
 * Swap save and cancel buttons on colour picker [skip ci] ([#2869](https://github.com/Wynntils/Wynntils/issues/2869)) ([8f6be26](https://github.com/Wynntils/Wynntils/commit/8f6be26ee359d8d5b15890829931aef4d6e185bf))
 
 
@@ -109,27 +121,4 @@ While this is technically a breaking change, it shouldn't break behaviour in any
 ### Code Refactoring
 
 * dont return a pair of nulls [skip ci] ([#2847](https://github.com/Wynntils/Wynntils/issues/2847)) ([a56c194](https://github.com/Wynntils/Wynntils/commit/a56c194dcf2fb2291e0ff5736f97195a10871e6a))
-
-## [2.2.0](https://github.com/Wynntils/Wynntils/compare/v2.1.4...v2.2.0) (2024-09-08)
-
-
-### ⚠ BREAKING CHANGES
-
-* Bump development version to 1.21.1 (and maintain 1.21 compatibility) (#2840)
-
-### New Features
-
-* Bump development version to 1.21.1 (and maintain 1.21 compatibility) ([#2840](https://github.com/Wynntils/Wynntils/issues/2840)) ([bc3d9ba](https://github.com/Wynntils/Wynntils/commit/bc3d9baf21b623bb5207f9ea16bba9490a25f144))
-
-
-### Bug Fixes
-
-* Fix custom territory management screen [skip ci] ([#2837](https://github.com/Wynntils/Wynntils/issues/2837)) ([6ed05ad](https://github.com/Wynntils/Wynntils/commit/6ed05ade533f55a19ddba8046308263929341b93))
-* Fix issues with slot rendering [skip ci] ([#2839](https://github.com/Wynntils/Wynntils/issues/2839)) ([9923a69](https://github.com/Wynntils/Wynntils/commit/9923a69f8e6de2a2653cc76aaf84908988aa9b6e))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2838](https://github.com/Wynntils/Wynntils/issues/2838)) ([7437500](https://github.com/Wynntils/Wynntils/commit/7437500f34509054f5e6e5ca7534b08632b50b31))
-* **release:** v2.2.0 [skip ci] ([5879775](https://github.com/Wynntils/Wynntils/commit/587977544d4efa76a766acc3bc3d01cd2d84c5ca))
 
