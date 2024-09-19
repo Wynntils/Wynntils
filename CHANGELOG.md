@@ -1,3 +1,56 @@
+## [2.2.4](https://github.com/Wynntils/Wynntils/compare/v2.2.3...v2.2.4) (2024-09-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* mob health is now represented as a `long` in the `DamageModel`
+
+* fix: fix issues with "more overlays" implementation
+
+* Tracks focused mob state more correctly in `DamageModel`
+* Moves the crosshair position fix to the "utilities" category
+* Factors item cooldown out of the inventory function and into the character stats model
+* Changes the fallback value for `StringUtils::SUFFIX_MULTIPLIERS` to 1
+
+* ci: spotless formatting
+
+* chore: move `Minecraft` access into `FixCrosshairPositionFeature::shouldOverrideCrosshair`
+
+* fix: allow any colour mob name in `DamageModel` health bar parser
+
+* chore: `cdPercent` -> `cooldownPercent`
+
+* feat!: emit first boss bar progress update on bar creation in `BossBarHandler`
+
+While this is technically a breaking change, it shouldn't break behaviour in any meaningful way; if anything, it should remove the possibility of ephemeral inconsistent states between the creation of a boss bar and the arrival of the first progress update
+
+* fix: todo line
+
+### New Features
+
+* attack/spell keybind inversion [skip ci] ([#2872](https://github.com/Wynntils/Wynntils/issues/2872)) ([b150f81](https://github.com/Wynntils/Wynntils/commit/b150f814168333d299cadd7cf8988a5cfe30a44f))
+* held item cooldown overlay + focused mob health overlay [skip ci] ([#2862](https://github.com/Wynntils/Wynntils/issues/2862)) ([925366a](https://github.com/Wynntils/Wynntils/commit/925366ae196233400dced36828fec9c0909b9949))
+* Highlight jump button for current page [skip ci] ([#2868](https://github.com/Wynntils/Wynntils/issues/2868)) ([0aad12f](https://github.com/Wynntils/Wynntils/commit/0aad12f6859480eb74a366503d5ca7e5288499de))
+
+
+### Bug Fixes
+
+* custom loading screen fixes [skip ci] ([#2860](https://github.com/Wynntils/Wynntils/issues/2860)) ([af392d8](https://github.com/Wynntils/Wynntils/commit/af392d89af70633738a071bc7fd209ef02211231))
+* Fix (Buffered)FontRenderer not calculating width/height correctly in every case [skip ci] ([#2866](https://github.com/Wynntils/Wynntils/issues/2866)) ([5b94995](https://github.com/Wynntils/Wynntils/commit/5b949953fb826cc1d5dd35826362dad95a5b5a0f))
+* Fix auto join party [skip ci] ([#2867](https://github.com/Wynntils/Wynntils/issues/2867)) ([88ef6d1](https://github.com/Wynntils/Wynntils/commit/88ef6d12b1b8d6f6d367d6acf52bebc7db5cecb3))
+* Fix CustomLoadingScreen Wynncraft logo position [skip ci] ([#2873](https://github.com/Wynntils/Wynntils/issues/2873)) ([deab186](https://github.com/Wynntils/Wynntils/commit/deab1862b61486077fe2c1c24e923f199487bb29))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2864](https://github.com/Wynntils/Wynntils/issues/2864)) ([c2a905b](https://github.com/Wynntils/Wynntils/commit/c2a905b11f0896a529674684d7cf575d62a09a70))
+* Swap save and cancel buttons on colour picker [skip ci] ([#2869](https://github.com/Wynntils/Wynntils/issues/2869)) ([8f6be26](https://github.com/Wynntils/Wynntils/commit/8f6be26ee359d8d5b15890829931aef4d6e185bf))
+
+
+### Code Refactoring
+
+* Don't require onConfigUpdate to be overridden in overlays [skip ci] ([#2874](https://github.com/Wynntils/Wynntils/issues/2874)) ([e2252e6](https://github.com/Wynntils/Wynntils/commit/e2252e67c00737530a8ddc77cc27d19ac486dff0))
+
 ## [2.2.3](https://github.com/Wynntils/Wynntils/compare/v2.2.2...v2.2.3) (2024-09-15)
 
 
@@ -11,6 +64,11 @@
 
 * Don't crash when stat filters exceed the integer limit [skip ci] ([#2858](https://github.com/Wynntils/Wynntils/issues/2858)) ([5759363](https://github.com/Wynntils/Wynntils/commit/5759363dbaa4e69026319095b8e1317adf05aca8))
 * Update TM bulk sell for 2.1 [skip ci] ([#2856](https://github.com/Wynntils/Wynntils/issues/2856)) ([bb4575b](https://github.com/Wynntils/Wynntils/commit/bb4575b4dd4f33ce88e65e51e10136459185c22c))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.2.3 [skip ci] ([3386a49](https://github.com/Wynntils/Wynntils/commit/3386a4971c270876e5d9cd606a9962c75a9f3185))
 
 ## [2.2.2](https://github.com/Wynntils/Wynntils/compare/v2.2.1...v2.2.2) (2024-09-10)
 
@@ -74,21 +132,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2838](https://github.com/Wynntils/Wynntils/issues/2838)) ([7437500](https://github.com/Wynntils/Wynntils/commit/7437500f34509054f5e6e5ca7534b08632b50b31))
 * **release:** v2.2.0 [skip ci] ([5879775](https://github.com/Wynntils/Wynntils/commit/587977544d4efa76a766acc3bc3d01cd2d84c5ca))
-
-## [2.1.4](https://github.com/Wynntils/Wynntils/compare/v2.1.3...v2.1.4) (2024-09-08)
-
-
-### Bug Fixes
-
-* Fix ability tree annotators [skip ci] ([#2824](https://github.com/Wynntils/Wynntils/issues/2824)) ([7c7690a](https://github.com/Wynntils/Wynntils/commit/7c7690ae9aef3aebea4cecf96a5b55d855daedd7))
-* Fix death coordinates [skip ci] ([#2831](https://github.com/Wynntils/Wynntils/issues/2831)) ([90e55d8](https://github.com/Wynntils/Wynntils/commit/90e55d82bf6756ad7fb36c6bfba831ea0b4aec10))
-* Fix getting stuck in interim state when changing world via housing join [skip ci] ([#2826](https://github.com/Wynntils/Wynntils/issues/2826)) ([a21c793](https://github.com/Wynntils/Wynntils/commit/a21c793ffac52e044e96e09b918e786240dc5092))
-* Fix lootrun notes not rendering and saving incorrectly [skip ci] ([#2829](https://github.com/Wynntils/Wynntils/issues/2829)) ([720ada9](https://github.com/Wynntils/Wynntils/commit/720ada91dab3b4d5ca9e1e840be630fad39d7acb))
-* Fix outline text shadow not rendering around vanilla hud elements [skip ci] ([#2830](https://github.com/Wynntils/Wynntils/issues/2830)) ([7a5ab6b](https://github.com/Wynntils/Wynntils/commit/7a5ab6b10c3dd5dffbdb584545bcdf2cc5748e0c))
-* Fix some more chat redirects [skip ci] ([#2825](https://github.com/Wynntils/Wynntils/issues/2825)) ([f2ce337](https://github.com/Wynntils/Wynntils/commit/f2ce33751e4617a8396f6a8fb406dcaa18650244))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.1.4 [skip ci] ([73d02c2](https://github.com/Wynntils/Wynntils/commit/73d02c20f959724c5a4225f264089fd0f9f06515))
 
