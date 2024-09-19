@@ -18,7 +18,6 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
-import com.wynntils.models.players.event.GuildEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
@@ -36,7 +35,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -64,15 +62,16 @@ public final class TerritoryModel extends Model {
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
-    private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private long lastGuildUpdate = 0;
 
     public TerritoryModel() {
         super(List.of());
 
         Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
 
-        scheduleTerritoryUpdate();
+        timerExecutor.scheduleWithFixedDelay(
+                this::updateTerritoryProfileMap, 0, IN_GUILD_TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public TerritoryProfile getTerritoryProfile(String name) {
@@ -176,16 +175,6 @@ public final class TerritoryModel extends Model {
         }
     }
 
-    @SubscribeEvent
-    public void onGuildJoined(GuildEvent.Joined e) {
-        scheduleTerritoryUpdate();
-    }
-
-    @SubscribeEvent
-    public void onGuildLeft(GuildEvent.Left e) {
-        scheduleTerritoryUpdate();
-    }
-
     public Map<TerritoryItem, TerritoryConnectionType> getTerritoryConnections(List<TerritoryItem> territoryItems) {
         TerritoryItem hqTerritory = territoryItems.stream()
                 .filter(TerritoryItem::isHeadquarters)
@@ -242,22 +231,16 @@ public final class TerritoryModel extends Model {
         }));
     }
 
-    private void scheduleTerritoryUpdate() {
-        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
-            scheduledFuture.cancel(false);
-        }
-
-        scheduledFuture = timerExecutor.scheduleWithFixedDelay(
-                this::updateTerritoryProfileMap,
-                0,
-                Models.Guild.isInGuild() ? IN_GUILD_TERRITORY_UPDATE_MS : NO_GUILD_TERRITORY_UPDATE_MS,
-                TimeUnit.MILLISECONDS);
-    }
-
     private void updateTerritoryProfileMap() {
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
                 json -> {
+                    // If the player is not in a guild, we don't need to update the territory data
+                    if (!Models.Guild.isInGuild()
+                            && System.currentTimeMillis() - lastGuildUpdate < NO_GUILD_TERRITORY_UPDATE_MS) {
+                        return;
+                    }
+
                     Map<String, TerritoryProfile> tempMap = new HashMap<>();
                     for (Map.Entry<String, JsonElement> entry :
                             json.getAsJsonObject().entrySet()) {
@@ -276,11 +259,10 @@ public final class TerritoryModel extends Model {
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
 
-                    scheduleTerritoryUpdate();
+                    lastGuildUpdate = System.currentTimeMillis();
                 },
                 onError -> {
                     WynntilsMod.warn("Failed to update territory data.");
-                    scheduleTerritoryUpdate();
                 });
     }
 }
