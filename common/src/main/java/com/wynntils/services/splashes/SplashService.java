@@ -1,15 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.splashes;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,30 +25,25 @@ public final class SplashService extends Service {
 
     public SplashService() {
         super(List.of());
-
-        updateCurrentSplash();
     }
 
     @Override
-    public void reloadData() {
-        updateCurrentSplash();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_SPLASHES).handleReader(this::handleCurrentSplash);
     }
 
     public String getCurrentSplash() {
         return currentSplash;
     }
 
-    private void updateCurrentSplash() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SPLASHES);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<List<String>>() {}.getType();
-            allSplashes = WynntilsMod.GSON.fromJson(reader, type);
-            if (allSplashes.isEmpty()) {
-                // Use fallback in case of failure
-                currentSplash = DEFAULT_SPLASH;
-            } else {
-                currentSplash = allSplashes.get(RANDOM.nextInt(allSplashes.size()));
-            }
-        });
+    private void handleCurrentSplash(Reader reader) {
+        Type type = new TypeToken<List<String>>() {}.getType();
+        allSplashes = WynntilsMod.GSON.fromJson(reader, type);
+        if (allSplashes.isEmpty()) {
+            // Use fallback in case of failure
+            currentSplash = DEFAULT_SPLASH;
+        } else {
+            currentSplash = allSplashes.get(RANDOM.nextInt(allSplashes.size()));
+        }
     }
 }

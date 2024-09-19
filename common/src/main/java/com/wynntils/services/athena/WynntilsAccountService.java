@@ -28,9 +28,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.Crypt;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class WynntilsAccountService extends Service {
     private static final String NO_TOKEN = "<no token>";
+    private static final Logger log = LoggerFactory.getLogger(WynntilsAccountService.class);
 
     private String token = NO_TOKEN;
     private boolean loggedIn = false;
@@ -40,12 +43,10 @@ public final class WynntilsAccountService extends Service {
 
     public WynntilsAccountService() {
         super(List.of());
-
-        login();
     }
 
-    public void reauth() {
-        loggedIn = false;
+    @Override
+    public void reloadData() {
         login();
     }
 

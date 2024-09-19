@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem;
@@ -13,14 +13,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.models.wynnitem.type.MaterialConversionInfo;
 import com.wynntils.utils.JsonUtils;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +34,13 @@ public class WynnItemModel extends Model {
 
     public WynnItemModel() {
         super(List.of());
+    }
 
-        loadObtainData();
-        loadMaterialConversionData();
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_ITEM_OBTAIN).handleReader(this::handleObtainData);
+        registry.registerDownload(UrlId.DATA_STATIC_MATERIAL_CONVERSION)
+                .handleReader(this::handleMaterialConversionData);
     }
 
     public List<ItemObtainInfo> getObtainInfo(String name) {
@@ -53,28 +57,22 @@ public class WynnItemModel extends Model {
         return Optional.of(conversionInfo.name());
     }
 
-    private void loadObtainData() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_OBTAIN);
-        dl.handleReader(reader -> {
-            Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
-                    .create();
-            itemObtainMap = gson.fromJson(reader, obtainType);
-        });
+    private void handleObtainData(Reader reader) {
+        Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
+        Gson gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
+                .create();
+        itemObtainMap = gson.fromJson(reader, obtainType);
     }
 
-    private void loadMaterialConversionData() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MATERIAL_CONVERSION);
-        dl.handleReader(reader -> {
-            Type materialConversionType = new TypeToken<List<MaterialConversionInfo>>() {}.getType();
-            allMaterialConversions = WynntilsMod.GSON.fromJson(reader, materialConversionType);
+    private void handleMaterialConversionData(Reader reader) {
+        Type materialConversionType = new TypeToken<List<MaterialConversionInfo>>() {}.getType();
+        allMaterialConversions = WynntilsMod.GSON.fromJson(reader, materialConversionType);
 
-            // Store in fast lookup map
-            Map<Integer, MaterialConversionInfo> lookupMap = new HashMap<>();
-            allMaterialConversions.forEach(m -> lookupMap.put(m.id(), m));
-            materialConversionLookup = lookupMap;
-        });
+        // Store in fast lookup map
+        Map<Integer, MaterialConversionInfo> lookupMap = new HashMap<>();
+        allMaterialConversions.forEach(m -> lookupMap.put(m.id(), m));
+        materialConversionLookup = lookupMap;
     }
 
     public boolean hasObtainInfo() {

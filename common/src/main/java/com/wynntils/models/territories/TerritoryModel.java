@@ -12,6 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -46,7 +47,8 @@ import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TerritoryModel extends Model {
-    private static final int TERRITORY_UPDATE_MS = 15000;
+    private static final int IN_GUILD_TERRITORY_UPDATE_MS = 15000;
+    private static final int NO_GUILD_TERRITORY_UPDATE_MS = 300000;
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
@@ -61,6 +63,7 @@ public final class TerritoryModel extends Model {
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private long lastGuildUpdate = 0;
 
     public TerritoryModel() {
         super(List.of());
@@ -68,7 +71,7 @@ public final class TerritoryModel extends Model {
         Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
 
         timerExecutor.scheduleWithFixedDelay(
-                this::updateTerritoryProfileMap, 0, TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
+                this::updateTerritoryProfileMap, 0, IN_GUILD_TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
     public TerritoryProfile getTerritoryProfile(String name) {
@@ -232,6 +235,12 @@ public final class TerritoryModel extends Model {
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
                 json -> {
+                    // If the player is not in a guild, we don't need to update the territory data
+                    if (!Models.Guild.isInGuild()
+                            && System.currentTimeMillis() - lastGuildUpdate < NO_GUILD_TERRITORY_UPDATE_MS) {
+                        return;
+                    }
+
                     Map<String, TerritoryProfile> tempMap = new HashMap<>();
                     for (Map.Entry<String, JsonElement> entry :
                             json.getAsJsonObject().entrySet()) {
@@ -249,7 +258,11 @@ public final class TerritoryModel extends Model {
                     allTerritoryPois = territoryProfileMap.values().stream()
                             .map(TerritoryPoi::new)
                             .collect(Collectors.toSet());
+
+                    lastGuildUpdate = System.currentTimeMillis();
                 },
-                onError -> WynntilsMod.warn("Failed to update territory data."));
+                onError -> {
+                    WynntilsMod.warn("Failed to update territory data.");
+                });
     }
 }
