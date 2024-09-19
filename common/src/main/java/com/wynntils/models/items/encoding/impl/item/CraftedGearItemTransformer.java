@@ -138,7 +138,12 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         // Optional blocks
         if (encodingSettings.shareItemName()) {
-            dataList.add(new NameData(item.getName()));
+            // Unfortunately, we cannot use the name of crafted items, since it can be
+            // set to unsuitable values by the users.
+            String name = "Crafted "
+                    + StringUtils.capitalizeFirst(item.getGearType().name().toLowerCase(Locale.ROOT));
+
+            dataList.add(new NameData(name));
         }
 
         dataList.add(new DamageData(item.getAttackSpeed(), item.getDamages()));

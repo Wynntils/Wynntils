@@ -94,7 +94,11 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
                 new GearRequirements(item.getLevel(), Optional.empty(), List.of(), Optional.empty())));
 
         if (encodingSettings.shareItemName()) {
-            dataList.add(new NameData(item.getName()));
+            // Unfortunately, we cannot use the name of crafted items, since it can be
+            // set to unsuitable values by the users.
+            String name = "Crafted " + StringUtils.capitalizeFirst(item.getConsumableType().name().toLowerCase(Locale.ROOT));
+
+            dataList.add(new NameData(name));
         }
 
         dataList.add(new EffectsData(item.getNamedEffects()));
