@@ -300,7 +300,7 @@ public class ChatItemFeature extends Feature {
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(s -> s.withClickEvent(new ClickEvent(
                         ClickEvent.Action.COPY_TO_CLIPBOARD,
-                        errorOrEncodedByteBuffer.getValue().toUtf16String())))
+                        Models.ItemEncoding.makeItemString(wynnItem, errorOrEncodedByteBuffer.getValue()))))
                 .withStyle(s -> s.withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         Component.translatable("feature.wynntils.chatItem.chatItemTooltip")

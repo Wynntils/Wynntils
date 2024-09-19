@@ -191,8 +191,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     private void shareItem(String target) {
         switch (target) {
-            case "guild" -> Handlers.Command.sendCommandImmediately("g " + encodedItem.toUtf16String());
-            case "party" -> Handlers.Command.sendCommandImmediately("p " + encodedItem.toUtf16String());
+            case "guild" -> Handlers.Command.sendCommandImmediately("g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+            case "party" -> Handlers.Command.sendCommandImmediately("p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 
@@ -211,7 +211,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 }
             }
             default -> {
-                McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
+                McUtils.mc().keyboardHandler.setClipboard(Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
 
                 McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
                         .withStyle(ChatFormatting.GREEN));

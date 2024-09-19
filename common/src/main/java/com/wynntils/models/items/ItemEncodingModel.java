@@ -9,6 +9,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
@@ -49,5 +50,16 @@ public class ItemEncodingModel extends Model {
 
     public Pattern getEncodedDataPattern() {
         return ENCODED_DATA_PATTERN;
+    }
+
+    public String makeItemString(WynnItem wynnItem, EncodedByteBuffer encodedItem) {
+        String craftedNamePart;
+        if (wynnItem instanceof CraftedItemProperty craftedItem) {
+            craftedNamePart = " \"" + craftedItem.getName() + "\"";
+        } else {
+            craftedNamePart = "";
+        }
+
+        return encodedItem.toUtf16String() + craftedNamePart;
     }
 }
