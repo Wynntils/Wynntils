@@ -9,13 +9,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.ShinyStatType;
 import com.wynntils.utils.mc.McUtils;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,23 +31,18 @@ public class ShinyModel extends Model {
 
     public ShinyModel() {
         super(List.of());
-        reloadData();
     }
 
     @Override
-    public void reloadData() {
-        loadShinyStatTypes();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_SHINY_STATS).handleReader(this::handleShinyStatTypes);
     }
 
-    private void loadShinyStatTypes() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SHINY_STATS);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<List<ShinyStatType>>() {}.getType();
-            List<ShinyStatType> statTypes = Managers.Json.GSON.fromJson(reader, type);
+    private void handleShinyStatTypes(Reader reader) {
+        Type type = new TypeToken<List<ShinyStatType>>() {}.getType();
+        List<ShinyStatType> statTypes = Managers.Json.GSON.fromJson(reader, type);
 
-            shinyStatTypes =
-                    statTypes.stream().collect(Collectors.toMap(ShinyStatType::displayName, statType -> statType));
-        });
+        shinyStatTypes = statTypes.stream().collect(Collectors.toMap(ShinyStatType::displayName, statType -> statType));
     }
 
     public ShinyStatType getShinyStatType(int id) {
