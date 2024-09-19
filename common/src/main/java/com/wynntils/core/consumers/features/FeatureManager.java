@@ -158,6 +158,7 @@ import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
+import com.wynntils.features.wynntils.DownloadProgressFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
 import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
@@ -381,6 +382,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new DataCrowdSourcingFeature());
+        registerFeature(new DownloadProgressFeature());
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
