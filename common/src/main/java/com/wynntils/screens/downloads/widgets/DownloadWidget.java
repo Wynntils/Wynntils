@@ -27,6 +27,8 @@ public class DownloadWidget extends AbstractWidget {
     private static final List<Component> DOWNLOAD_TOOLTIP =
             List.of(Component.translatable("screens.wynntils.downloads.tryRedownload"));
 
+    private static final String dataPattern = "Data (Static|Athena) ";
+
     private final String downloadName;
 
     private float offset = 0f;
@@ -34,7 +36,7 @@ public class DownloadWidget extends AbstractWidget {
     public DownloadWidget(int x, int y, int width, int height, QueuedDownload download) {
         super(x, y, width, height, Component.literal("Download Widget"));
 
-        downloadName = EnumUtils.toNiceString(download.urlId());
+        downloadName = EnumUtils.toNiceString(download.urlId()).replaceFirst(dataPattern, "");
     }
 
     @Override
@@ -84,6 +86,7 @@ public class DownloadWidget extends AbstractWidget {
 
         // This reloads all URLs, and will then trigger a re-download
         // in both DownloadManager and dynamically downloaded data (CoreComponent#reloadData)
+        // FIXME: Only redownload this download
         Managers.Url.loadUrls();
 
         return true;

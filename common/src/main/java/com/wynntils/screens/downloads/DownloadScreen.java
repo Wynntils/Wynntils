@@ -206,6 +206,12 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
             }
         }
 
+        for (DownloadWidget downloadWidget : this.downloadWidgets) {
+            if (downloadWidget.isMouseOver(mouseX, mouseY)) {
+                return downloadWidget.mouseClicked(mouseX, mouseY, button);
+            }
+        }
+
         return false;
     }
 
