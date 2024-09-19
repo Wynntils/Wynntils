@@ -44,7 +44,7 @@ public class QuickJumpButton extends WynntilsButton {
                         StyledText.fromString(String.valueOf(destination)),
                         getX() + 8,
                         getY() + 8,
-                        CommonColors.WHITE,
+                        Models.Bank.getCurrentPage() == destination ? CommonColors.GREEN : CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);

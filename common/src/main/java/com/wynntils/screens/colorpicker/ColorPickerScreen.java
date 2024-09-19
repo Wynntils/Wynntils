@@ -91,16 +91,16 @@ public final class ColorPickerScreen extends WynntilsScreen {
         this.addRenderableWidget(alphaSlider);
 
         this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.colorPicker.save"), (button) -> {
-                            inputWidget.setTextBoxInput(color.toHexString());
-                            onClose();
-                        })
+                new Button.Builder(Component.translatable("screens.wynntils.colorPicker.cancel"), (button) -> onClose())
                         .pos(getTranslationX() + 40, getTranslationY() + Texture.COLOR_PICKER_BACKGROUND.height() + 5)
                         .size(150, 20)
                         .build());
 
         this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.colorPicker.cancel"), (button) -> onClose())
+                new Button.Builder(Component.translatable("screens.wynntils.colorPicker.save"), (button) -> {
+                            inputWidget.setTextBoxInput(color.toHexString());
+                            onClose();
+                        })
                         .pos(
                                 getTranslationX() + Texture.COLOR_PICKER_BACKGROUND.width() - 190,
                                 getTranslationY() + Texture.COLOR_PICKER_BACKGROUND.height() + 5)

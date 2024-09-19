@@ -51,9 +51,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     protected static final float SCREEN_SIDE_OFFSET = 10;
+    protected static final int MAP_CENTER_X = -360;
+    protected static final int MAP_CENTER_Z = -3000;
     private static final float BORDER_OFFSET = 6;
-    private static final int MAP_CENTER_X = -400;
-    private static final int MAP_CENTER_Z = -1700;
     private static final int MAX_X = 1650;
     private static final int MAX_Z = -150;
     private static final int MIN_X = -2400;

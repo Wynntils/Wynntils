@@ -118,7 +118,10 @@ public class CustomLoadingScreenFeature extends Feature {
                 McUtils.mc().setScreen(loadingScreen);
             }
             case INTERIM -> {
-                if (loadingScreen == null) return;
+                if (loadingScreen == null) {
+                    loadingScreen = LoadingScreen.create();
+                    McUtils.mc().setScreen(loadingScreen);
+                }
 
                 loadingScreen.setMessage(I18n.get("feature.wynntils.customLoadingScreen.joiningWorld"));
             }

@@ -95,7 +95,9 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         callOnConfigUpdate(config);
     }
 
-    protected abstract void onConfigUpdate(Config<?> config);
+    protected void onConfigUpdate(Config<?> config) {
+        // Override this method to handle config updates
+    }
 
     protected void callOnConfigUpdate(Config<?> config) {
         try {
