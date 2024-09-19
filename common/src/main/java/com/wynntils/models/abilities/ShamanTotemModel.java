@@ -17,6 +17,7 @@ import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,7 +43,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class ShamanTotemModel extends Model {
     // Test in ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile("§c(?<time>\\d+)s(\n\\+(?<regen>\\d+)❤§7/s)?");
-    private static final List<String> AUTO_CASTER_ITEMS = List.of("Time Rift", "Pandemonium");
+    private static final List<String> AUTO_CASTER_MAJOR_IDS = List.of("Sorcery", "Madness");
     private static final int MAX_TOTEM_COUNT = 4;
     private static final double TOTEM_SEARCH_RADIUS = 1;
     private static final int TOTEM_DATA_DELAY_TICKS = 2;
@@ -117,8 +119,19 @@ public class ShamanTotemModel extends Model {
      * @return True if the player has any item in AUTO_CASTER_ITEMS equipped.
      */
     private boolean hasAutoCasterItem() {
-        return Models.Inventory.getEquippedItems().stream()
-                .anyMatch(item -> AUTO_CASTER_ITEMS.contains(item.getHoverName().getString()));
+        for (ItemStack item : McUtils.player().getInventory().items) {
+            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(item, GearItem.class);
+            if (gearItemOpt.isEmpty()) continue;
+
+            GearItem gearItem = gearItemOpt.get();
+            if (gearItem.getItemInfo().fixedStats().majorIds().stream()
+                    .anyMatch(majorId -> AUTO_CASTER_MAJOR_IDS.contains(majorId.name()))) {
+                return true;
+            }
+        }
+
+        return Models.Raid.getRaidMajorIds(McUtils.mc().getUser().getName()).stream()
+                .anyMatch(AUTO_CASTER_MAJOR_IDS::contains);
     }
 
     @SubscribeEvent
