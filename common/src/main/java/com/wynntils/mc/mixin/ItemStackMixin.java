@@ -5,6 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
@@ -58,6 +59,14 @@ public abstract class ItemStackMixin implements ItemStackExtension {
         MixinHelper.post(event);
 
         return event.getFlags();
+    }
+
+    @ModifyReturnValue(method = "copy", at = @At("RETURN"))
+    private ItemStack onCopy(ItemStack copy) {
+        if (!copy.isEmpty()) {
+            ((ItemStackExtension) copy).setAnnotation(this.getAnnotation());
+        }
+        return copy;
     }
 
     @Override
