@@ -62,6 +62,15 @@ public final class ItemUtils {
                 && ItemStack.isSameItemSameComponents(oldItem, newItem);
     }
 
+    public static boolean areItemsSimilar(ItemStack a, ItemStack b) {
+        if (a.isEmpty()) {
+            return b.isEmpty();
+        } else {
+            return !b.isEmpty()
+                    && a.getHoverName().getString().equals(b.getHoverName().getString());
+        }
+    }
+
     public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {
         if (gearName.contains("Crafted")) {
             return Component.literal(gearName).withStyle(ChatFormatting.DARK_AQUA);

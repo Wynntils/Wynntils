@@ -4,6 +4,13 @@
  */
 package com.wynntils.handlers.inventory;
 
+import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_HEADER_CONTINUE;
+import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_HEADER_END;
+import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_HEADER_START;
+import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_TYPE_GREEDY;
+import static net.minecraft.world.inventory.AbstractContainerMenu.getQuickcraftHeader;
+import static net.minecraft.world.inventory.AbstractContainerMenu.getQuickcraftType;
+
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -16,6 +23,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -77,8 +85,11 @@ public class InventoryHandler extends Handler {
                 }
             }
             case QUICK_CRAFT -> {
-                if (!heldStack.isEmpty()) {
-                    running = new RunningInteraction(menu, (event.getMouseButton() & 0x4) != 0, heldStack.copy());
+                if (!heldStack.isEmpty() && getQuickcraftHeader(event.getMouseButton()) == QUICKCRAFT_HEADER_START) {
+                    running = new RunningInteraction(
+                            menu,
+                            getQuickcraftType(event.getMouseButton()) == QUICKCRAFT_TYPE_GREEDY,
+                            heldStack.copy());
                 }
             }
             case PICKUP_ALL -> {
@@ -92,20 +103,17 @@ public class InventoryHandler extends Handler {
 
     @SubscribeEvent
     public void onSetContents(ContainerSetContentEvent.Pre event) {
-        long now = System.currentTimeMillis();
         int containerId = event.getContainerId();
         List<ItemStack> newInv = event.getItems();
-        pending.removeIf(entry -> now >= entry.expiryTime || !entry.interaction.onContentUpdate(containerId, newInv));
+        updatePending(ixn -> ixn.onContentUpdate(containerId, newInv));
     }
 
     @SubscribeEvent
     public void onSetSlot(ContainerSetSlotEvent.Pre event) {
-        long now = System.currentTimeMillis();
         int containerId = event.getContainerId();
         int slotNum = event.getSlot();
         ItemStack newStack = event.getItemStack();
-        pending.removeIf(
-                entry -> now >= entry.expiryTime || !entry.interaction.onSlotUpdate(containerId, slotNum, newStack));
+        updatePending(ixn -> ixn.onSlotUpdate(containerId, slotNum, newStack));
     }
 
     @SubscribeEvent
@@ -133,6 +141,11 @@ public class InventoryHandler extends Handler {
         pending.add(new PendingInteractionEntry(interaction));
     }
 
+    private void updatePending(Predicate<PendingInteraction> consumer) {
+        long now = System.currentTimeMillis();
+        pending.removeIf(entry -> now >= entry.expiryTime || !consumer.test(entry.interaction));
+    }
+
     private final class RunningInteraction {
         private final AbstractContainerMenu menu;
         private final boolean single;
@@ -153,14 +166,14 @@ public class InventoryHandler extends Handler {
             }
 
             int mask = event.getMouseButton();
-            if (((mask & 0x4) == 0) == single) {
+            if ((getQuickcraftType(mask) == QUICKCRAFT_TYPE_GREEDY) != single) {
                 running = null;
                 return false;
             }
 
-            switch (event.getMouseButton() & 0x3) {
-                case 1 -> slots.add(event.getSlotNum());
-                case 2 -> {
+            switch (getQuickcraftHeader(event.getMouseButton())) {
+                case QUICKCRAFT_HEADER_CONTINUE -> slots.add(event.getSlotNum());
+                case QUICKCRAFT_HEADER_END -> {
                     forceSyncLater(menu);
                     expect(new PendingInteraction.Spread(menu, slots, heldStack, single));
                     running = null;

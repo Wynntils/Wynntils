@@ -6,6 +6,7 @@ package com.wynntils.handlers.inventory;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.inventory.event.InventoryInteractionEvent;
+import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.List;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,15 +17,6 @@ interface PendingInteraction {
 
     default boolean onContentUpdate(int containerId, List<ItemStack> newInv) {
         return true;
-    }
-
-    static boolean areItemsSimilar(ItemStack a, ItemStack b) {
-        if (a.isEmpty()) {
-            return b.isEmpty();
-        } else {
-            return !b.isEmpty()
-                    && a.getHoverName().getString().equals(b.getHoverName().getString());
-        }
     }
 
     abstract class CaptureHeld implements PendingInteraction {
@@ -122,8 +114,8 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newHeldStack, ItemStack newSlotStack) {
-            if (!areItemsSimilar(slotStack, newHeldStack)) return;
-            if (!(newSlotStack.isEmpty() || areItemsSimilar(slotStack, newSlotStack))) return;
+            if (!ItemUtils.areItemsSimilar(slotStack, newHeldStack)) return;
+            if (!(newSlotStack.isEmpty() || ItemUtils.areItemsSimilar(slotStack, newSlotStack))) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
                     menu, new InventoryInteraction.PickUp(slotNum, newHeldStack.copy(), newSlotStack.copy())));
         }
@@ -140,7 +132,7 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newHeldStack) {
-            if (!areItemsSimilar(heldStack, newHeldStack)) return;
+            if (!ItemUtils.areItemsSimilar(heldStack, newHeldStack)) return;
             int amount = newHeldStack.getCount() - heldStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
@@ -160,10 +152,10 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newHeldStack, ItemStack newSlotStack) {
-            if (!areItemsSimilar(heldStack, newSlotStack)) return;
+            if (!ItemUtils.areItemsSimilar(heldStack, newSlotStack)) return;
 
             // Check for placement
-            if (newHeldStack.isEmpty() || areItemsSimilar(heldStack, newHeldStack)) {
+            if (newHeldStack.isEmpty() || ItemUtils.areItemsSimilar(heldStack, newHeldStack)) {
                 int numPlaced = heldStack.getCount() - newHeldStack.getCount();
                 if (numPlaced > 0) {
                     WynntilsMod.postEvent(new InventoryInteractionEvent(
@@ -173,7 +165,7 @@ interface PendingInteraction {
             }
 
             // Check for swap
-            if (!areItemsSimilar(slotStack, newHeldStack)
+            if (!ItemUtils.areItemsSimilar(slotStack, newHeldStack)
                     || slotStack.getCount() != newHeldStack.getCount()
                     || heldStack.getCount() != newSlotStack.getCount()) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
@@ -196,7 +188,7 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newHeldStack) {
-            if (!(newHeldStack.isEmpty() || areItemsSimilar(heldStack, newHeldStack))) return;
+            if (!(newHeldStack.isEmpty() || ItemUtils.areItemsSimilar(heldStack, newHeldStack))) return;
             int amount = heldStack.getCount() - newHeldStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
@@ -215,7 +207,7 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newHeldStack) {
-            if (!(newHeldStack.isEmpty() || areItemsSimilar(heldStack, newHeldStack))) return;
+            if (!(newHeldStack.isEmpty() || ItemUtils.areItemsSimilar(heldStack, newHeldStack))) return;
             int amount = heldStack.getCount() - newHeldStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
@@ -233,7 +225,7 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newSlotStack) {
-            if (!(newSlotStack.isEmpty() || areItemsSimilar(slotStack, newSlotStack))) return;
+            if (!(newSlotStack.isEmpty() || ItemUtils.areItemsSimilar(slotStack, newSlotStack))) return;
             int amount = slotStack.getCount() - newSlotStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
@@ -251,7 +243,7 @@ interface PendingInteraction {
 
         @Override
         protected void checkAndSend(ItemStack newSlotStack) {
-            if (!(newSlotStack.isEmpty() || areItemsSimilar(slotStack, newSlotStack))) return;
+            if (!(newSlotStack.isEmpty() || ItemUtils.areItemsSimilar(slotStack, newSlotStack))) return;
             int amount = slotStack.getCount() - newSlotStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
