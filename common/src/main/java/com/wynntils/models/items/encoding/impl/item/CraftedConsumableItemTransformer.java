@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.items.encoding.impl.item;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.chat.ChatItemFeature;
 import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.items.encoding.data.CustomConsumableTypeData;
@@ -60,9 +62,16 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         level = requirementsData.requirements().level();
 
         // Optional blocks
-        // Unfortunately, we cannot use the NameData from crafted items, since it can be
-        // set to unsuitable values by the users.
-        name = "Crafted " + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
+        NameData nameData = itemDataMap.get(NameData.class);
+        if (nameData != null
+                && Managers.Feature.getFeatureInstance(ChatItemFeature.class)
+                        .showCraftedItemCustomNames
+                        .get()) {
+            name = nameData.name();
+        } else {
+            name = "Crafted "
+                    + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
+        }
 
         EffectsData effectsData = itemDataMap.get(EffectsData.class);
         if (effectsData != null) {
@@ -94,13 +103,7 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
                 new GearRequirements(item.getLevel(), Optional.empty(), List.of(), Optional.empty())));
 
         if (encodingSettings.shareItemName()) {
-            // Unfortunately, we cannot use the name of crafted items, since it can be
-            // set to unsuitable values by the users.
-            String name = "Crafted "
-                    + StringUtils.capitalizeFirst(
-                            item.getConsumableType().name().toLowerCase(Locale.ROOT));
-
-            dataList.add(new NameData(name));
+            dataList.add(NameData.from(item.getName()));
         }
 
         dataList.add(new EffectsData(item.getNamedEffects()));

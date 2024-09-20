@@ -78,6 +78,9 @@ public class ChatItemFeature extends Feature {
     @Persisted
     public final Config<Boolean> showPerfectOrDefective = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> showCraftedItemCustomNames = new Config<>(false);
+
     private final Map<String, String> chatItems = new HashMap<>();
 
     @SubscribeEvent

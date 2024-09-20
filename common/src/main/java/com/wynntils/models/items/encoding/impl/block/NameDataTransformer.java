@@ -52,7 +52,7 @@ public class NameDataTransformer extends DataTransformer<NameData> {
             return ErrorOr.error("Name data is not null terminated");
         }
 
-        return ErrorOr.of(new NameData(UnsignedByteUtils.decodeString(bytes)));
+        return ErrorOr.of(NameData.from(UnsignedByteUtils.decodeString(bytes)));
     }
 
     @Override
