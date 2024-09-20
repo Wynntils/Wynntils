@@ -18,10 +18,12 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
-import com.wynntils.models.containers.containers.TradeMarketContainer;
+import com.wynntils.models.containers.containers.InventoryContainer;
+import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
@@ -44,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -52,6 +55,8 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -120,13 +125,14 @@ public class ItemCompareFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Post event) {
+    public void onRenderSlot(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(slot.getItem());
-        if (wynnItemOpt.isEmpty()) return;
-        if (selectedItems.containsKey(wynnItemOpt.get())) {
-            RenderUtils.drawArc(event.getPoseStack(), CommonColors.LIGHT_BLUE, slot.x, slot.y, 200, 1, 6, 8);
-        }
+        drawSelectionArc(event.getPoseStack(), slot.getItem(), slot.x, slot.y, false);
+    }
+
+    @SubscribeEvent
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre event) {
+        drawSelectionArc(event.getPoseStack(), event.getItemStack(), event.getX(), event.getY(), true);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -225,13 +231,19 @@ public class ItemCompareFeature extends Feature {
         poseStack.translate(0, 0, 300);
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
-        if (removeFlavourText.get()) removeFlavourText(hoveredLines);
-        if (removeSetInfoText.get()) removeSetInfoText(hoveredLines);
+        if (removeFlavourText.get()) {
+            removeFlavourText(hoveredLines);
+        }
+        if (removeSetInfoText.get()) {
+            removeSetInfoText(hoveredLines);
+        }
         List<ClientTooltipComponent> hoveredClientComponents = TooltipUtils.getClientTooltipComponent(hoveredLines);
         int hoveredTooltipWidth = TooltipUtils.getTooltipWidth(hoveredClientComponents, font);
         int hoveredTooltipHeight = TooltipUtils.getTooltipHeight(hoveredClientComponents);
 
-        if (centerItemName.get()) centerItemName(hoveredLines, hoveredTooltipWidth);
+        if (centerItemName.get()) {
+            centerItemName(hoveredLines, hoveredTooltipWidth);
+        }
 
         if (displayTag.get()) {
             if (selectedItems.containsValue(event.getItemStack())) {
@@ -264,14 +276,20 @@ public class ItemCompareFeature extends Feature {
 
         for (Pair<WynnItem, ItemStack> pair : itemsToCompare) {
             List<Component> lines = getWynnOrVanillaLines(abstractContainerScreen, pair.key(), pair.value());
-            if (removeFlavourText.get()) removeFlavourText(lines);
-            if (removeSetInfoText.get()) removeSetInfoText(lines);
+            if (removeFlavourText.get()) {
+                removeFlavourText(lines);
+            }
+            if (removeSetInfoText.get()) {
+                removeSetInfoText(lines);
+            }
             List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(lines);
 
             int tooltipWidth = TooltipUtils.getTooltipWidth(clientTooltipComponents, font);
             int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents);
 
-            if (centerItemName.get()) centerItemName(lines, tooltipWidth);
+            if (centerItemName.get()) {
+                centerItemName(lines, tooltipWidth);
+            }
 
             if (displayTag.get()) {
                 if (equippedCount > 0) {
@@ -365,13 +383,18 @@ public class ItemCompareFeature extends Feature {
 
     private void onSelectKeyPress(Slot hoveredSlot) {
         if (hoveredSlot == null) return;
-        // Selecting items behaves weirdly on tm updates, so no selecting in tm
-        if (Models.Container.getCurrentContainer() instanceof TradeMarketContainer) return;
+        // Only allow selecting in player inventory
+        if (!(Models.Container.getCurrentContainer() instanceof InventoryContainer)) return;
+
         int slot = hoveredSlot.getContainerSlot();
 
         // Selecting armor and accessory slots is not allowed
-        if (slot == 9 || slot == 10 || slot == 11 || slot == 12 || slot == 36 || slot == 37 || slot == 38 || slot == 39)
-            return;
+        for (int i : InventoryAccessory.getSlots()) {
+            if (slot == i) return;
+        }
+        for (int i : Inventory.ALL_ARMOR_SLOTS) {
+            if (slot == i + Inventory.INVENTORY_SIZE) return;
+        }
 
         ItemStack itemStack = hoveredSlot.getItem();
         if (itemStack.isEmpty()) return;
@@ -392,6 +415,14 @@ public class ItemCompareFeature extends Feature {
         return I18n.get(key);
     }
 
+    private void drawSelectionArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        if (wynnItemOpt.isEmpty()) return;
+        if (selectedItems.containsKey(wynnItemOpt.get())) {
+            RenderUtils.drawArc(poseStack, CommonColors.LIGHT_BLUE, slotX, slotY, hotbar ? 0 : 200, 1, 6, 8);
+        }
+    }
+
     private List<Component> getWynnOrVanillaLines(
             AbstractContainerScreen<?> screen, WynnItem wynnItem, ItemStack itemStack) {
         List<Component> wynnTooltip = TooltipUtils.getWynnItemTooltip(itemStack, wynnItem);
@@ -406,8 +437,21 @@ public class ItemCompareFeature extends Feature {
     }
 
     private void removeFlavourText(List<Component> lines) {
-        while (lines.getLast().getString().startsWith("§8")) {
-            lines.removeLast();
+        TextColor loreColor = TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY);
+        for (int i = lines.size() - 1; i >= 0; --i) {
+            Component line = lines.get(i);
+
+            // Since line has dark_purple as color we get Component with actual color value with this
+            Component comp = StyledText.fromComponent(line).getComponent();
+            // This Component is empty, the Component we need is stored as it's sibling
+            List<Component> siblings = comp.getSiblings();
+
+            if (siblings.getFirst().getStyle().getColor().equals(loreColor)) {
+                lines.remove(i);
+            } else if (ItemUtils.ITEM_RARITY_PATTERN.matcher(line.getString()).find()) {
+                // Must stop when we hit item rarity line, otherwise `Average DPS` line will get removed, if present
+                return;
+            }
         }
     }
 
