@@ -24,7 +24,9 @@ import java.util.function.Predicate;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -154,7 +156,7 @@ public class InventoryHandler extends Handler {
                 McUtils.sendPacket(new ServerboundContainerClickPacket(
                         menu.containerId,
                         menu.getStateId(),
-                        menu.slots.size() > 1 ? 1 : 0, // Avoid the inventory crafting result slot, which ignores swaps
+                        getForceSyncSwapSlot(menu),
                         hotbarSlot,
                         ClickType.SWAP,
                         ItemStack.EMPTY,
@@ -199,6 +201,20 @@ public class InventoryHandler extends Handler {
         // FIXME Reversed dependency of handler on feature
         return Managers.Feature.getFeatureInstance(ImprovedInventorySyncFeature.class)
                 .isEnabled();
+    }
+
+    private static int getForceSyncSwapSlot(AbstractContainerMenu menu) {
+        int idealSlot =
+                switch (menu) {
+                        // First hotbar slot; in some weird situations, swapping into the actual chest might not cause
+                        // an update
+                    case ChestMenu chest -> menu.slots.size() - 9;
+                        // Avoid the inventory crafting result slot, which doesn't support swapping operations
+                    case InventoryMenu inv -> 1;
+                        // In any other menu, arbitrarily pick slot zero
+                    default -> 0;
+                };
+        return Math.min(idealSlot, menu.slots.size() - 1); // Fail-safe
     }
 
     private final class RunningInteraction {
