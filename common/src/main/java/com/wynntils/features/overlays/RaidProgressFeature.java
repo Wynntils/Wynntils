@@ -16,6 +16,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.overlays.RaidProgressOverlay;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class RaidProgressFeature extends Feature {
-    private static final String TIME_FORMAT = "%02d:%02d.%03d\n";
+    private static final String TIME_FORMAT = "%02d:%02d.%03d";
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final RaidProgressOverlay raidProgressOverlay = new RaidProgressOverlay();
@@ -44,6 +45,10 @@ public class RaidProgressFeature extends Feature {
             WynntilsMod.error("Unexpected room count on raid completion: "
                     + event.getRoomTimes().size());
             return;
+        } else if (event.getRoomDamages().size() != Models.Raid.ROOM_DAMAGES_COUNT) {
+            WynntilsMod.error("Unexpected room damages count on raid completion: "
+                    + event.getRoomDamages().size());
+            return;
         }
 
         MutableComponent raidComponents = Component.literal("");
@@ -58,20 +63,43 @@ public class RaidProgressFeature extends Feature {
         for (int i = 0; i < Models.Raid.MAX_CHALLENGES; i++) {
             raidComponents.append(
                     Component.literal("Challenge " + (i + 1) + ": ").withStyle(ChatFormatting.LIGHT_PURPLE));
-            raidComponents.append(formatTime(event.getRoomTimes().get(i)));
+            raidComponents.append(
+                    Component.literal(formatTime(event.getRoomTimes().get(i))).withStyle(ChatFormatting.AQUA));
+            raidComponents
+                    .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                    .append(Component.literal(StringUtils.integerToShortString(
+                                    event.getRoomDamages().get(i)))
+                            .withStyle(ChatFormatting.YELLOW))
+                    .append(Component.literal(")\n").withStyle(ChatFormatting.WHITE));
         }
 
         raidComponents.append(Component.literal("\n"));
 
         raidComponents.append(Component.literal("Boss: ").withStyle(ChatFormatting.DARK_RED));
-        raidComponents.append(formatTime(event.getRoomTimes().get(3)));
+        raidComponents.append(
+                Component.literal(formatTime(event.getRoomTimes().get(3))).withStyle(ChatFormatting.AQUA));
+        raidComponents
+                .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                .append(Component.literal(StringUtils.integerToShortString(
+                                event.getRoomDamages().get(3)))
+                        .withStyle(ChatFormatting.YELLOW))
+                .append(Component.literal(")\n").withStyle(ChatFormatting.WHITE));
+
         raidComponents.append(Component.literal("\n"));
 
         raidComponents.append(Component.literal("Intermission: ").withStyle(ChatFormatting.DARK_GRAY));
-        raidComponents.append(formatTime(event.getRoomTimes().get(4)));
+        raidComponents.append(
+                Component.literal(formatTime(event.getRoomTimes().get(4))).withStyle(ChatFormatting.GRAY));
+
+        raidComponents.append(Component.literal("\n"));
 
         raidComponents.append(Component.literal("Total: ").withStyle(ChatFormatting.DARK_PURPLE));
-        raidComponents.append(formatTime(event.getRaidTime()));
+        raidComponents.append(Component.literal(formatTime(event.getRaidTime())).withStyle(ChatFormatting.AQUA));
+        raidComponents
+                .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                .append(Component.literal(StringUtils.integerToShortString(event.getRaidDamage()))
+                        .withStyle(ChatFormatting.YELLOW))
+                .append(Component.literal(")\n").withStyle(ChatFormatting.WHITE));
 
         McUtils.sendMessageToClient(raidComponents);
     }
