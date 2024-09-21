@@ -57,6 +57,20 @@ public class RaidFunctions {
         }
     }
 
+    public static class CurrentRaidDamageFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
+
+            return Models.Raid.getRaidDamage();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("raid_damage");
+        }
+    }
+
     public static class CurrentRaidRoomTimeFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
@@ -65,6 +79,17 @@ public class RaidFunctions {
             if (Models.Raid.getCurrentRoom() == null) return -1L;
 
             return Models.Raid.currentRoomTime();
+        }
+    }
+
+    public static class CurrentRaidRoomDamageFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
+            // Room should never be null if the raid is not but just in case the tracking fails
+            if (Models.Raid.getCurrentRoom() == null) return -1L;
+
+            return Models.Raid.getCurrentRoomDamage();
         }
     }
 
@@ -95,6 +120,26 @@ public class RaidFunctions {
             if (roomType == null) return -1L;
 
             return Models.Raid.getRoomTime(roomType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("roomName", String.class, null)));
+        }
+    }
+
+    public static class RaidRoomDamageFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return -1L;
+
+            RaidRoomType roomType =
+                    RaidRoomType.fromName(arguments.getArgument("roomName").getStringValue());
+
+            if (roomType == null) return -1L;
+
+            return Models.Raid.getRoomDamage(roomType);
         }
 
         @Override
