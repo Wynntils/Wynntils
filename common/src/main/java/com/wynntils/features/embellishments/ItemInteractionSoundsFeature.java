@@ -107,24 +107,24 @@ public class ItemInteractionSoundsFeature extends Feature {
     public void onInventoryInteraction(InventoryInteractionEvent event) {
         switch (event.getInteraction()) {
             case InventoryInteraction.PickUp ixn -> playSoundEvent(PICK_UP_SOUND);
-            case InventoryInteraction.Place ixn -> playItemSound(ixn.placed());
-            case InventoryInteraction.Spread ixn -> playItemSound(ixn.stack());
-            case InventoryInteraction.Swap ixn -> playItemSound(ixn.placed());
-            case InventoryInteraction.Transfer ixn -> playItemSound(ixn.transferred());
+            case InventoryInteraction.Place ixn -> playSoundForStack(ixn.placed());
+            case InventoryInteraction.Spread ixn -> playSoundForStack(ixn.stack());
+            case InventoryInteraction.Swap ixn -> playSoundForStack(ixn.placed());
+            case InventoryInteraction.Transfer ixn -> playSoundForStack(ixn.transferred());
             default -> {}
         }
     }
 
-    public void playItemSound(ItemStack stack) {
+    public void playSoundForStack(ItemStack stack) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(stack);
         if (wynnItemOpt.isPresent()) {
-            playItemSound(wynnItemOpt.get());
+            playSoundForItem(wynnItemOpt.get());
         } else {
             playSoundEvent(PLACE_GENERIC_SOUND);
         }
     }
 
-    public void playItemSound(WynnItem item) {
+    public void playSoundForItem(WynnItem item) {
         playSoundEvent(getItemSound(item));
         if (mythicLayer.get()
                 && item instanceof GearTierItemProperty tiered
