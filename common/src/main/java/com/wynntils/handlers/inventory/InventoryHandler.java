@@ -29,10 +29,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -149,14 +149,41 @@ public class InventoryHandler extends Handler {
     }
 
     public void forceSync(AbstractContainerMenu menu) {
-        McUtils.sendPacket(new ServerboundContainerClickPacket(
-                menu.containerId,
-                menu.getStateId(),
-                Math.min(1, menu.slots.size() - 1),
-                0,
-                ClickType.SWAP,
-                new ItemStack(Items.BARRIER, 31),
-                Int2ObjectMaps.emptyMap()));
+        // Find a nonempty hotbar slot
+        Inventory inventory = McUtils.player().getInventory();
+        for (int hotbarSlot = 8; hotbarSlot >= 0; hotbarSlot--) { // In reverse, to find the content book first
+            ItemStack stack = inventory.getItem(hotbarSlot);
+            if (!stack.isEmpty()) {
+                // Swap the item into an inventory slot, which should be no-op, but which will prompt an update packet
+                McUtils.sendPacket(new ServerboundContainerClickPacket(
+                        menu.containerId,
+                        menu.getStateId(),
+                        menu.slots.size() > 1 ? 1 : 0, // Avoid the inventory crafting result slot, which ignores swaps
+                        hotbarSlot,
+                        ClickType.SWAP,
+                        ItemStack.EMPTY,
+                        Int2ObjectMaps.emptyMap()));
+                return;
+            }
+        }
+
+        // Find a nonempty inventory slot
+        for (int slotNum = 9; slotNum <= menu.slots.size(); slotNum++) {
+            ItemStack stack = menu.getSlot(slotNum).getItem();
+            if (!stack.isEmpty()) {
+                // Swap the item into hotbar slot 0, which should be no-op, but which will prompt an update packet
+                McUtils.sendPacket(new ServerboundContainerClickPacket(
+                        menu.containerId,
+                        menu.getStateId(),
+                        slotNum,
+                        0,
+                        ClickType.SWAP,
+                        ItemStack.EMPTY,
+                        Int2ObjectMaps.emptyMap()));
+                return;
+            }
+        }
+        // At this point, our view of the inventory must be completely empty; there's not much we can do
     }
 
     private void forceSyncLater(AbstractContainerMenu menu) {
