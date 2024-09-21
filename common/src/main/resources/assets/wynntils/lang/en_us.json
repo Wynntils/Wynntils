@@ -1370,6 +1370,8 @@
   "feature.wynntils.translation.translationService.name": "Translation Service",
   "feature.wynntils.unidentifiedItemIcon.description": "Adds an icon to unidentified items.",
   "feature.wynntils.unidentifiedItemIcon.name": "Unidentified Item Icon",
+  "feature.wynntils.unidentifiedItemIcon.showOnUnboxed.description": "Should the icon be shown over unboxed unidentified items?",
+  "feature.wynntils.unidentifiedItemIcon.showOnUnboxed.name": "Show On Unboxed Items",
   "feature.wynntils.unidentifiedItemIcon.texture.description": "What texture should be used for the overlay icons?",
   "feature.wynntils.unidentifiedItemIcon.texture.name": "Unidentified Item Icon Texture",
   "feature.wynntils.updates.autoUpdate.description": "Should the mod auto-update when you first join a world using the mod? You will still have to restart the game manually.",
