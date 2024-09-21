@@ -6,7 +6,9 @@ package com.wynntils.features.embellishments;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.inventory.InventoryInteraction;
 import com.wynntils.handlers.inventory.event.InventoryInteractionEvent;
@@ -92,10 +94,19 @@ public class ItemInteractionSoundsFeature extends Feature {
                 ResourceLocation.fromNamespaceAndPath("wynntils", "inventory.item." + key));
     }
 
+    @Persisted
+    private final Config<Float> soundVolume = new Config<>(1.0f);
+
+    @Persisted
+    private final Config<Boolean> mythicLayer = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> shinyLayer = new Config<>(true);
+
     @SubscribeEvent
     public void onInventoryInteraction(InventoryInteractionEvent event) {
         switch (event.getInteraction()) {
-            case InventoryInteraction.PickUp ixn -> McUtils.playSoundUI(PICK_UP_SOUND, 1f);
+            case InventoryInteraction.PickUp ixn -> playSoundEvent(PICK_UP_SOUND);
             case InventoryInteraction.Place ixn -> playItemSound(ixn.placed());
             case InventoryInteraction.Spread ixn -> playItemSound(ixn.stack());
             case InventoryInteraction.Swap ixn -> playItemSound(ixn.placed());
@@ -109,17 +120,21 @@ public class ItemInteractionSoundsFeature extends Feature {
         if (wynnItemOpt.isPresent()) {
             playItemSound(wynnItemOpt.get());
         } else {
-            McUtils.playSoundUI(PLACE_GENERIC_SOUND, 1f);
+            playSoundEvent(PLACE_GENERIC_SOUND);
         }
     }
 
     public void playItemSound(WynnItem item) {
-        McUtils.playSoundUI(getItemSound(item), 1f);
-        if (item instanceof GearTierItemProperty tiered && tiered.getGearTier() == GearTier.MYTHIC) {
-            McUtils.playSoundUI(MYTHIC_LAYER_SOUND, 1f);
+        playSoundEvent(getItemSound(item));
+        if (mythicLayer.get()
+                && item instanceof GearTierItemProperty tiered
+                && tiered.getGearTier() == GearTier.MYTHIC) {
+            playSoundEvent(MYTHIC_LAYER_SOUND);
         }
-        if (item instanceof ShinyItemProperty shiny && shiny.getShinyStat().isPresent()) {
-            McUtils.playSoundUI(SHINY_LAYER_SOUND, 1f);
+        if (shinyLayer.get()
+                && item instanceof ShinyItemProperty shiny
+                && shiny.getShinyStat().isPresent()) {
+            playSoundEvent(SHINY_LAYER_SOUND);
         }
     }
 
@@ -205,5 +220,9 @@ public class ItemInteractionSoundsFeature extends Feature {
             case OIL -> BOTTLE_SOUND;
             case MEAT -> CLOTH_ITEM_SOUND;
         };
+    }
+
+    private void playSoundEvent(SoundEvent sound) {
+        McUtils.playSoundUI(sound, soundVolume.get());
     }
 }
