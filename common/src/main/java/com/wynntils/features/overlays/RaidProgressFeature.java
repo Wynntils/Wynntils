@@ -89,7 +89,7 @@ public class RaidProgressFeature extends Feature {
 
         raidComponents.append(Component.literal("Intermission: ").withStyle(ChatFormatting.DARK_GRAY));
         raidComponents.append(
-                Component.literal(formatTime(event.getRoomTimes().get(4))).withStyle(ChatFormatting.GRAY));
+                Component.literal(formatTime(event.getRoomTimes().get(4))).withStyle(ChatFormatting.AQUA));
 
         raidComponents.append(Component.literal("\n"));
 
