@@ -1,9 +1,26 @@
+## [2.3.2](https://github.com/Wynntils/Wynntils/compare/v2.3.1...v2.3.2) (2024-09-21)
+
+
+### New Features
+
+* Add functions for damage in raids, use in raid overlay ([#2882](https://github.com/Wynntils/Wynntils/issues/2882)) ([fba6976](https://github.com/Wynntils/Wynntils/commit/fba697633bd9d27c4a015bf66d785a29a6618d2a))
+
+
+### Bug Fixes
+
+* Time Rift, Pandemonium, and overall totem performance fixes [skip ci] ([#2863](https://github.com/Wynntils/Wynntils/issues/2863)) ([d04a565](https://github.com/Wynntils/Wynntils/commit/d04a5655fb2d473ea1c5c4102de82bc5c5096400))
+
 ## [2.3.1](https://github.com/Wynntils/Wynntils/compare/v2.3.0...v2.3.1) (2024-09-19)
 
 
 ### Bug Fixes
 
 * Do not send nor display crafted item names from item encodings ([#2877](https://github.com/Wynntils/Wynntils/issues/2877)) ([13509a1](https://github.com/Wynntils/Wynntils/commit/13509a14038c366fe8af3c1405b2beacf0563589))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.1 [skip ci] ([b5272e9](https://github.com/Wynntils/Wynntils/commit/b5272e930d3556eb29453212c10689717dfcf607))
 
 ## [2.3.0](https://github.com/Wynntils/Wynntils/compare/v2.2.4...v2.3.0) (2024-09-19)
 
@@ -93,18 +110,4 @@ While this is technically a breaking change, it shouldn't break behaviour in any
 ### Miscellaneous Chores
 
 * **release:** v2.2.3 [skip ci] ([3386a49](https://github.com/Wynntils/Wynntils/commit/3386a4971c270876e5d9cd606a9962c75a9f3185))
-
-## [2.2.2](https://github.com/Wynntils/Wynntils/compare/v2.2.1...v2.2.2) (2024-09-10)
-
-
-### Bug Fixes
-
-* Fix attack timer defense not being detected [skip ci] ([#2851](https://github.com/Wynntils/Wynntils/issues/2851)) ([d5b3658](https://github.com/Wynntils/Wynntils/commit/d5b36580119f901a3c25f4287e152814dfe67e23))
-* Fix aura & volley timers ([#2853](https://github.com/Wynntils/Wynntils/issues/2853)) ([659ca98](https://github.com/Wynntils/Wynntils/commit/659ca987e4e104af7a9f498cd39370ded617d305))
-* Fix blacksmith redirector [skip ci] ([#2849](https://github.com/Wynntils/Wynntils/issues/2849)) ([f4c4206](https://github.com/Wynntils/Wynntils/commit/f4c420659aa8eb3093315d57773a740fd8042df9))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.2.2 [skip ci] ([a8d52dc](https://github.com/Wynntils/Wynntils/commit/a8d52dc75ed2f32844eb127371f6c4000cd0d3df))
 
