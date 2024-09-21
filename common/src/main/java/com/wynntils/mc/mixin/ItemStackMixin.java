@@ -61,7 +61,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
         return event.getFlags();
     }
 
-    @ModifyReturnValue(method = "copy", at = @At("RETURN"))
+    @ModifyReturnValue(method = "copy()Lnet/minecraft/world/item/ItemStack;", at = @At("RETURN"))
     private ItemStack onCopy(ItemStack copy) {
         if (!copy.isEmpty()) {
             ((ItemStackExtension) copy).setAnnotation(this.getAnnotation());

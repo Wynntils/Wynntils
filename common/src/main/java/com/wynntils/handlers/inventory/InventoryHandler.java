@@ -4,13 +4,6 @@
  */
 package com.wynntils.handlers.inventory;
 
-import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_HEADER_CONTINUE;
-import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_HEADER_END;
-import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_HEADER_START;
-import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_TYPE_GREEDY;
-import static net.minecraft.world.inventory.AbstractContainerMenu.getQuickcraftHeader;
-import static net.minecraft.world.inventory.AbstractContainerMenu.getQuickcraftType;
-
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
@@ -111,10 +104,13 @@ public class InventoryHandler extends Handler {
                 }
             }
             case QUICK_CRAFT -> {
-                if (!heldStack.isEmpty() && getQuickcraftHeader(event.getMouseButton()) == QUICKCRAFT_HEADER_START) {
+                if (!heldStack.isEmpty()
+                        && AbstractContainerMenu.getQuickcraftHeader(event.getMouseButton())
+                                == AbstractContainerMenu.QUICKCRAFT_HEADER_START) {
                     running = new RunningInteraction(
                             menu,
-                            getQuickcraftType(event.getMouseButton()) == QUICKCRAFT_TYPE_GREEDY,
+                            AbstractContainerMenu.getQuickcraftType(event.getMouseButton())
+                                    == AbstractContainerMenu.QUICKCRAFT_TYPE_GREEDY,
                             heldStack.copy());
                 }
             }
@@ -225,14 +221,15 @@ public class InventoryHandler extends Handler {
             }
 
             int mask = event.getMouseButton();
-            if ((getQuickcraftType(mask) == QUICKCRAFT_TYPE_GREEDY) != single) {
+            if ((AbstractContainerMenu.getQuickcraftType(mask) == AbstractContainerMenu.QUICKCRAFT_TYPE_GREEDY)
+                    != single) {
                 running = null;
                 return false;
             }
 
-            switch (getQuickcraftHeader(event.getMouseButton())) {
-                case QUICKCRAFT_HEADER_CONTINUE -> slots.add(event.getSlotNum());
-                case QUICKCRAFT_HEADER_END -> {
+            switch (AbstractContainerMenu.getQuickcraftHeader(event.getMouseButton())) {
+                case AbstractContainerMenu.QUICKCRAFT_HEADER_CONTINUE -> slots.add(event.getSlotNum());
+                case AbstractContainerMenu.QUICKCRAFT_HEADER_END -> {
                     if (isImprovedSyncEnabled()) {
                         forceSyncLater(menu);
                         expect(new PendingInteraction.Spread(menu, slots, heldStack, single));
