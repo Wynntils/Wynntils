@@ -11,13 +11,17 @@ import static net.minecraft.world.inventory.AbstractContainerMenu.QUICKCRAFT_TYP
 import static net.minecraft.world.inventory.AbstractContainerMenu.getQuickcraftHeader;
 import static net.minecraft.world.inventory.AbstractContainerMenu.getQuickcraftType;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
+import com.wynntils.features.inventory.ImprovedInventorySyncFeature;
+import com.wynntils.handlers.inventory.event.InventoryInteractionEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Confidence;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -50,8 +54,16 @@ public class InventoryHandler extends Handler {
             case PICKUP -> {
                 if (slotNum < 0) { // Slot -999 -> tossed an item outside the GUI
                     if (!heldStack.isEmpty()) {
-                        if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT || heldStack.getCount() == 1) {
-                            forceSyncLater(menu);
+                        boolean throwAll = event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT;
+                        if (throwAll || heldStack.getCount() == 1) {
+                            if (isImprovedSyncEnabled()) {
+                                forceSyncLater(menu);
+                            } else {
+                                ItemStack thrown = throwAll ? heldStack.copy() : heldStack.copyWithCount(1);
+                                WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                        menu, new InventoryInteraction.ThrowFromHeld(thrown), Confidence.UNCERTAIN));
+                                return;
+                            }
                         }
                         expect(new PendingInteraction.ThrowFromHeld(menu, heldStack.copy()));
                     }
@@ -62,8 +74,16 @@ public class InventoryHandler extends Handler {
                             expect(new PendingInteraction.PickUp(menu, slotNum, slotStack.copy()));
                         }
                     } else if (slotStack.isEmpty()) {
-                        if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT || heldStack.getCount() == 1) {
-                            forceSyncLater(menu);
+                        boolean placeAll = event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT;
+                        if (placeAll || heldStack.getCount() == 1) {
+                            if (isImprovedSyncEnabled()) {
+                                forceSyncLater(menu);
+                            } else {
+                                ItemStack placed = placeAll ? heldStack.copy() : heldStack.copyWithCount(1);
+                                WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                        menu, new InventoryInteraction.Place(slotNum, placed), Confidence.UNCERTAIN));
+                                return;
+                            }
                         }
                         expect(new PendingInteraction.PlaceOrSwap(menu, slotNum, heldStack.copy(), ItemStack.EMPTY));
                     } else {
@@ -80,8 +100,14 @@ public class InventoryHandler extends Handler {
             case THROW -> {
                 ItemStack slotStack = menu.getSlot(slotNum).getItem();
                 if (heldStack.isEmpty() && !slotStack.isEmpty()) {
-                    forceSyncLater(menu);
-                    expect(new PendingInteraction.ThrowFromSlot(menu, slotNum, slotStack.copy()));
+                    if (isImprovedSyncEnabled()) {
+                        forceSyncLater(menu);
+                        expect(new PendingInteraction.ThrowFromSlot(menu, slotNum, slotStack.copy()));
+                    } else {
+                        ItemStack thrown = event.getMouseButton() == 0 ? slotStack.copyWithCount(1) : slotStack.copy();
+                        WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                menu, new InventoryInteraction.ThrowFromSlot(slotNum, thrown), Confidence.UNCERTAIN));
+                    }
                 }
             }
             case QUICK_CRAFT -> {
@@ -146,6 +172,12 @@ public class InventoryHandler extends Handler {
         pending.removeIf(entry -> now >= entry.expiryTime || !consumer.test(entry.interaction));
     }
 
+    private static boolean isImprovedSyncEnabled() {
+        // FIXME Reversed dependency of handler on feature
+        return Managers.Feature.getFeatureInstance(ImprovedInventorySyncFeature.class)
+                .isEnabled();
+    }
+
     private final class RunningInteraction {
         private final AbstractContainerMenu menu;
         private final boolean single;
@@ -174,8 +206,15 @@ public class InventoryHandler extends Handler {
             switch (getQuickcraftHeader(event.getMouseButton())) {
                 case QUICKCRAFT_HEADER_CONTINUE -> slots.add(event.getSlotNum());
                 case QUICKCRAFT_HEADER_END -> {
-                    forceSyncLater(menu);
-                    expect(new PendingInteraction.Spread(menu, slots, heldStack, single));
+                    if (isImprovedSyncEnabled()) {
+                        forceSyncLater(menu);
+                        expect(new PendingInteraction.Spread(menu, slots, heldStack, single));
+                    } else {
+                        WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                menu,
+                                new InventoryInteraction.Spread(slots, heldStack.copy(), single),
+                                Confidence.UNCERTAIN));
+                    }
                     running = null;
                 }
                 default -> {

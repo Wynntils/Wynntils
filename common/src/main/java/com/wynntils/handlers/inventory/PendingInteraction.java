@@ -6,6 +6,7 @@ package com.wynntils.handlers.inventory;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.inventory.event.InventoryInteractionEvent;
+import com.wynntils.utils.type.Confidence;
 import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.List;
@@ -117,7 +118,9 @@ interface PendingInteraction {
             if (!ItemUtils.areItemsSimilar(slotStack, newHeldStack)) return;
             if (!(newSlotStack.isEmpty() || ItemUtils.areItemsSimilar(slotStack, newSlotStack))) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.PickUp(slotNum, newHeldStack.copy(), newSlotStack.copy())));
+                    menu,
+                    new InventoryInteraction.PickUp(slotNum, newHeldStack.copy(), newSlotStack.copy()),
+                    Confidence.CERTAIN));
         }
     }
 
@@ -136,7 +139,7 @@ interface PendingInteraction {
             int amount = newHeldStack.getCount() - heldStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.PickUpAll(newHeldStack.copyWithCount(amount))));
+                    menu, new InventoryInteraction.PickUpAll(newHeldStack.copyWithCount(amount)), Confidence.CERTAIN));
         }
     }
 
@@ -159,7 +162,9 @@ interface PendingInteraction {
                 int numPlaced = heldStack.getCount() - newHeldStack.getCount();
                 if (numPlaced > 0) {
                     WynntilsMod.postEvent(new InventoryInteractionEvent(
-                            menu, new InventoryInteraction.Place(slotNum, newSlotStack.copyWithCount(numPlaced))));
+                            menu,
+                            new InventoryInteraction.Place(slotNum, newSlotStack.copyWithCount(numPlaced)),
+                            Confidence.CERTAIN));
                     return;
                 }
             }
@@ -169,7 +174,9 @@ interface PendingInteraction {
                     || slotStack.getCount() != newHeldStack.getCount()
                     || heldStack.getCount() != newSlotStack.getCount()) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.Swap(slotNum, newSlotStack.copy(), newHeldStack.copy())));
+                    menu,
+                    new InventoryInteraction.Swap(slotNum, newSlotStack.copy(), newHeldStack.copy()),
+                    Confidence.CERTAIN));
         }
     }
 
@@ -192,7 +199,9 @@ interface PendingInteraction {
             int amount = heldStack.getCount() - newHeldStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.Spread(slots, heldStack.copyWithCount(amount), single)));
+                    menu,
+                    new InventoryInteraction.Spread(slots, heldStack.copyWithCount(amount), single),
+                    Confidence.CERTAIN));
         }
     }
 
@@ -211,7 +220,7 @@ interface PendingInteraction {
             int amount = heldStack.getCount() - newHeldStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.ThrowFromHeld(heldStack.copyWithCount(amount))));
+                    menu, new InventoryInteraction.ThrowFromHeld(heldStack.copyWithCount(amount)), Confidence.CERTAIN));
         }
     }
 
@@ -229,7 +238,9 @@ interface PendingInteraction {
             int amount = slotStack.getCount() - newSlotStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.ThrowFromSlot(slotNum, slotStack.copyWithCount(amount))));
+                    menu,
+                    new InventoryInteraction.ThrowFromSlot(slotNum, slotStack.copyWithCount(amount)),
+                    Confidence.CERTAIN));
         }
     }
 
@@ -247,7 +258,9 @@ interface PendingInteraction {
             int amount = slotStack.getCount() - newSlotStack.getCount();
             if (amount <= 0) return;
             WynntilsMod.postEvent(new InventoryInteractionEvent(
-                    menu, new InventoryInteraction.Transfer(slotNum, slotStack.copyWithCount(amount))));
+                    menu,
+                    new InventoryInteraction.Transfer(slotNum, slotStack.copyWithCount(amount)),
+                    Confidence.CERTAIN));
         }
     }
 }
