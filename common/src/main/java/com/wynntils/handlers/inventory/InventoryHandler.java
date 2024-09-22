@@ -93,15 +93,35 @@ public class InventoryHandler extends Handler {
                 }
             }
             case THROW -> {
-                ItemStack slotStack = menu.getSlot(slotNum).getItem();
-                if (heldStack.isEmpty() && !slotStack.isEmpty()) {
-                    if (isImprovedSyncEnabled()) {
-                        forceSyncLater(menu);
-                        expect(new PendingInteraction.ThrowFromSlot(menu, slotNum, slotStack.copy()));
-                    } else {
-                        ItemStack thrown = event.getMouseButton() == 0 ? slotStack.copyWithCount(1) : slotStack.copy();
-                        WynntilsMod.postEvent(new InventoryInteractionEvent(
-                                menu, new InventoryInteraction.ThrowFromSlot(slotNum, thrown), Confidence.UNCERTAIN));
+                if (slotNum < 0) { // Slot -999 -> tossed an item outside the GUI
+                    if (!heldStack.isEmpty()) { // This probably shouldn't happen, but we'll check anyways
+                        boolean throwAll = event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT;
+                        if (throwAll || heldStack.getCount() == 1) {
+                            if (isImprovedSyncEnabled()) {
+                                forceSyncLater(menu);
+                            } else {
+                                ItemStack thrown = throwAll ? heldStack.copy() : heldStack.copyWithCount(1);
+                                WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                        menu, new InventoryInteraction.ThrowFromHeld(thrown), Confidence.UNCERTAIN));
+                                return;
+                            }
+                        }
+                        expect(new PendingInteraction.ThrowFromHeld(menu, heldStack.copy()));
+                    }
+                } else {
+                    ItemStack slotStack = menu.getSlot(slotNum).getItem();
+                    if (heldStack.isEmpty() && !slotStack.isEmpty()) {
+                        if (isImprovedSyncEnabled()) {
+                            forceSyncLater(menu);
+                            expect(new PendingInteraction.ThrowFromSlot(menu, slotNum, slotStack.copy()));
+                        } else {
+                            ItemStack thrown =
+                                    event.getMouseButton() == 0 ? slotStack.copyWithCount(1) : slotStack.copy();
+                            WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                    menu,
+                                    new InventoryInteraction.ThrowFromSlot(slotNum, thrown),
+                                    Confidence.UNCERTAIN));
+                        }
                     }
                 }
             }
