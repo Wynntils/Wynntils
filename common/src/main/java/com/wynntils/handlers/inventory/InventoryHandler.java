@@ -93,15 +93,20 @@ public class InventoryHandler extends Handler {
                 }
             }
             case THROW -> {
-                ItemStack slotStack = menu.getSlot(slotNum).getItem();
-                if (heldStack.isEmpty() && !slotStack.isEmpty()) {
-                    if (isImprovedSyncEnabled()) {
-                        forceSyncLater(menu);
-                        expect(new PendingInteraction.ThrowFromSlot(menu, slotNum, slotStack.copy()));
-                    } else {
-                        ItemStack thrown = event.getMouseButton() == 0 ? slotStack.copyWithCount(1) : slotStack.copy();
-                        WynntilsMod.postEvent(new InventoryInteractionEvent(
-                                menu, new InventoryInteraction.ThrowFromSlot(slotNum, thrown), Confidence.UNCERTAIN));
+                if (slotNum > 0) { // Slot -999 -> clicked outside the GUI
+                    ItemStack slotStack = menu.getSlot(slotNum).getItem();
+                    if (heldStack.isEmpty() && !slotStack.isEmpty()) {
+                        if (isImprovedSyncEnabled()) {
+                            forceSyncLater(menu);
+                            expect(new PendingInteraction.ThrowFromSlot(menu, slotNum, slotStack.copy()));
+                        } else {
+                            ItemStack thrown =
+                                    event.getMouseButton() == 0 ? slotStack.copyWithCount(1) : slotStack.copy();
+                            WynntilsMod.postEvent(new InventoryInteractionEvent(
+                                    menu,
+                                    new InventoryInteraction.ThrowFromSlot(slotNum, thrown),
+                                    Confidence.UNCERTAIN));
+                        }
                     }
                 }
             }
