@@ -78,26 +78,15 @@ public class UnidentifiedItemIconFeature extends Feature {
     }
 
     private void drawIcon(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, int z) {
-        Pair<UnidentifiedItemTextures, GearType> gearTypePair = getUnidentifiedGearType(itemStack);
-        if (gearTypePair != null) {
-            gearTypePair.a().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, gearTypePair.b());
-        }
-    }
-
-    private Pair<UnidentifiedItemTextures, GearType> getUnidentifiedGearType(ItemStack itemStack) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) return null;
+        if (wynnItemOpt.isEmpty()) return;
+
         WynnItem wynnItem = wynnItemOpt.get();
-
         if (wynnItem instanceof GearBoxItem box) {
-            return Pair.of(texture.get(), box.getGearType());
+            texture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, box.getGearType());
+        } else if (showOnUnboxed.get() && wynnItem instanceof GearItem gear && gear.isUnidentified()) {
+            unboxedTexture.get().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, gear.getGearType());
         }
-
-        if (showOnUnboxed.get() && wynnItem instanceof GearItem gear && gear.isUnidentified()) {
-            return Pair.of(unboxedTexture.get(), gear.getGearType());
-        }
-
-        return null;
     }
 
     @FunctionalInterface

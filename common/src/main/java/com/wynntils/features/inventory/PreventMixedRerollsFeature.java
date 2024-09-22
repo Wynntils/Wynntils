@@ -4,18 +4,24 @@
  */
 package com.wynntils.features.inventory;
 
+import com.google.common.primitives.Ints;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.GameItem;
+import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.UnidentifiedItemProperty;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +46,8 @@ public class PreventMixedRerollsFeature extends Feature {
     public void onMenuOpen(MenuEvent.MenuOpenedEvent.Post event) {
         if (event.getTitle().getString().equals(ITEM_IDENTIFIER_NAME)) {
             state = State.NO_FILTER;
+        } else {
+            state = State.NOT_OPEN;
         }
     }
 
@@ -52,16 +60,21 @@ public class PreventMixedRerollsFeature extends Feature {
     public void onUpdateContents(ContainerSetContentEvent.Post event) {
         if (state == State.NOT_OPEN) return;
 
-        List<ItemStack> items = event.getItems();
-        for (int slotNum : ITEM_IDENTIFIER_SLOTS) {
-            Optional<UnidentifiedItemProperty> unidItemOpt =
-                    Models.Item.asWynnItemProperty(items.get(slotNum), UnidentifiedItemProperty.class);
-            if (unidItemOpt.isPresent()) {
-                state = unidItemOpt.get().isUnidentified() ? State.UNIDENTIFIED_ONLY : State.IDENTIFIED_ONLY;
-                return;
-            }
-        }
-        state = State.NO_FILTER;
+        AbstractContainerMenu menu = McUtils.containerMenu();
+        if (menu.containerId != event.getContainerId()) return;
+
+        updateState(menu);
+    }
+
+    @SubscribeEvent
+    public void onUpdateSlot(ContainerSetSlotEvent.Post event) {
+        if (state == State.NOT_OPEN) return;
+
+        AbstractContainerMenu menu = McUtils.containerMenu();
+        if (menu.containerId != event.getContainerId() || Ints.indexOf(ITEM_IDENTIFIER_SLOTS, event.getSlot()) == -1)
+            return;
+
+        updateState(menu);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -105,20 +118,34 @@ public class PreventMixedRerollsFeature extends Feature {
         event.setTooltips(newTooltips);
     }
 
-    private boolean isItemFiltered(ItemStack itemStack) {
-        Optional<UnidentifiedItemProperty> unidItemOpt =
-                Models.Item.asWynnItemProperty(itemStack, UnidentifiedItemProperty.class);
-        if (unidItemOpt.isEmpty()) return false;
-
-        return switch (state) {
-            case UNIDENTIFIED_ONLY -> !unidItemOpt.get().isUnidentified();
-            case IDENTIFIED_ONLY -> unidItemOpt.get().isUnidentified();
-            default -> false;
-        };
+    private void updateState(AbstractContainerMenu menu) {
+        for (int slotNum : ITEM_IDENTIFIER_SLOTS) {
+            Optional<UnidentifiedItemProperty> unidItemOpt =
+                    Models.Item.asWynnItemProperty(menu.getSlot(slotNum).getItem(), UnidentifiedItemProperty.class);
+            if (unidItemOpt.isPresent()) {
+                state = unidItemOpt.get().isUnidentified() ? State.UNIDENTIFIED_ONLY : State.IDENTIFIED_ONLY;
+                return;
+            }
+        }
+        state = State.NO_FILTER;
     }
 
-    private static boolean isEmptySlot(ItemStack itemStack) {
-        return itemStack.getHoverName().getString().equals(EMPTY_ITEM_SLOT_NAME);
+    private boolean isItemFiltered(ItemStack itemStack) {
+        if (itemStack.isEmpty()) return false;
+
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        if (wynnItemOpt.isEmpty()) return false;
+
+        WynnItem wynnItem = wynnItemOpt.get();
+        if (wynnItem instanceof UnidentifiedItemProperty unidItem) {
+            return switch (state) {
+                case UNIDENTIFIED_ONLY -> !unidItem.isUnidentified();
+                case IDENTIFIED_ONLY -> unidItem.isUnidentified();
+                default -> false;
+            };
+        } else {
+            return wynnItem instanceof GameItem || wynnItem instanceof IngredientPouchItem;
+        }
     }
 
     private enum State {
