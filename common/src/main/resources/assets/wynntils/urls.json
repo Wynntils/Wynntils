@@ -1,6 +1,6 @@
 [
   {
-    "version": 10
+    "version": 11
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -61,7 +61,7 @@
     ],
     "encoding": "wiki",
     "id": "apiWikiDiscoveryQuery",
-    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%{name}"
+    "url": "https://wynncraft.wiki.gg/api.php?action=parse&format=json&prop=wikitext&section=0&page=%{name}"
   },
   {
     "arguments": [
@@ -69,7 +69,7 @@
     ],
     "encoding": "cargo",
     "id": "apiWikiQuestPageQuery",
-    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}"
+    "url": "https://wynncraft.wiki.gg/index.php?title=Special:CargoExport&tables=Quests&&fields=Quests._pageTitle&where=Quests.name+%3D+%{name}&order+by=&limit=2000&format=json"
   },
   {
     "id": "dataAthenaGuildList",
@@ -85,12 +85,12 @@
   },
   {
     "id": "dataStaticAbilities",
-    "md5": "69b6987c0bc3b76224718b4bad7d48a5",
-    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Data-Storage/abilities.json"
+    "md5": "fd5e9a5b76988ae00265695ee90d622a",
+    "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/abilities.json"
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "26f32fb8e2a8d31c49747a8410a63acb",
+    "md5": "8d329a3c3d31d2c05cf594d2dd016609",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/caves.json"
   },
   {
@@ -115,12 +115,12 @@
   },
   {
     "id": "dataStaticGearAdvanced",
-    "md5": "c1a442a84db4f7675b1c06dbf118c9af",
+    "md5": "7cc0f3d523b1423e11f5fcb7a508c2d9",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_gear.json"
   },
   {
     "id": "dataStaticIdentificationKeys",
-    "md5": "2d4bc2b39baf7060b637ceb5ee538b77",
+    "md5": "dcd9d021c6bae9948c7f8c3e5a6a6ae6",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/id_keys.json"
   },
   {
@@ -135,7 +135,7 @@
   },
   {
     "id": "dataStaticIngredientsAdvanced",
-    "md5": "56f32c7fb6a2c4dc186f331adc51d3c1",
+    "md5": "db6bd17b8d83e532567e92ad5164c94a",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/advanced_ingredients.json"
   },
   {
@@ -185,7 +185,7 @@
   },
   {
     "id": "dataStaticServices",
-    "md5": "20c6bad6dddac9fdf32b582764e266ef",
+    "md5": "183e76811f0b598649753c870e158444",
     "url": "https://raw.githubusercontent.com/Wynntils/Static-Storage/main/Reference/services.json"
   },
   {
@@ -222,7 +222,7 @@
     ],
     "encoding": "wiki",
     "id": "linkWikiLookup",
-    "url": "https://wynncraft.fandom.com/wiki/%{title}"
+    "url": "https://wynncraft.wiki.gg/wiki/%{title}"
   },
   {
     "arguments": [

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -28,7 +28,7 @@ public class CustomBankPageNamesFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
-        if (Models.Bank.getCurrentContainer() == null) return;
+        if (Models.Bank.getStorageContainerType() == null) return;
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
@@ -41,7 +41,7 @@ public class CustomBankPageNamesFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderLabels(ContainerLabelRenderEvent.ContainerLabel event) {
-        if (Models.Bank.getCurrentContainer() == null) return;
+        if (Models.Bank.getStorageContainerType() == null) return;
 
         if (Models.Bank.isEditingName()) {
             event.setCanceled(true);
@@ -72,7 +72,7 @@ public class CustomBankPageNamesFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (Models.Bank.getCurrentContainer() == null) return;
+        if (Models.Bank.getStorageContainerType() == null) return;
         Models.Bank.toggleEditingName(false);
     }
 

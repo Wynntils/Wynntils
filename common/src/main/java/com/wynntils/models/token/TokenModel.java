@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.token;
@@ -11,7 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
-import com.wynntils.models.containers.type.InventoryWatcher;
+import com.wynntils.models.inventory.InventoryWatcher;
 import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.models.token.type.TokenGatekeeper;
@@ -200,7 +200,7 @@ public class TokenModel extends Model {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        inventoryWatchers.values().forEach(Models.PlayerInventory::unregisterWatcher);
+        inventoryWatchers.values().forEach(Models.Inventory::unregisterWatcher);
 
         Set<TokenGatekeeper> oldGatekeepers = new HashSet<>(activeGatekeepers.values());
 
@@ -216,7 +216,7 @@ public class TokenModel extends Model {
     private void addGatekeeper(int entityId, TokenGatekeeper gatekeeper) {
         TokenInventoryWatcher watcher = new TokenInventoryWatcher(gatekeeper);
         inventoryWatchers.put(gatekeeper, watcher);
-        Models.PlayerInventory.registerWatcher(watcher);
+        Models.Inventory.registerWatcher(watcher);
         activeGatekeepers.put(entityId, gatekeeper);
 
         WynntilsMod.postEvent(new TokenGatekeeperEvent.Added(gatekeeper));
@@ -225,7 +225,7 @@ public class TokenModel extends Model {
     private void removeGatekeeper(int entityId, TokenGatekeeper gatekeeper) {
         activeGatekeepers.remove(entityId);
         InventoryWatcher watcher = inventoryWatchers.get(gatekeeper);
-        Models.PlayerInventory.unregisterWatcher(watcher);
+        Models.Inventory.unregisterWatcher(watcher);
         inventoryWatchers.remove(gatekeeper);
 
         WynntilsMod.postEvent(new TokenGatekeeperEvent.Removed(gatekeeper));

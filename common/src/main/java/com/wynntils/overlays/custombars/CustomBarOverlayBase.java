@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.custombars;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.BarOverlay;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
@@ -19,7 +20,7 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
     public final Config<String> valueTemplate = new Config<>("");
 
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
-    public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
+    public final Config<String> enabledTemplate = new Config<>("");
 
     protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
         super(id, overlaySize);
@@ -41,8 +42,15 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
 
     @Override
     public boolean isRendered() {
+        // If the text template is empty, the overlay is not rendered.
         if (valueTemplate.get().isEmpty()) return false;
 
+        // If the enabled template is empty,
+        // the overlay is rendered when the player is in the world.
+        if (enabledTemplate.get().isEmpty()) return Models.WorldState.onWorld();
+
+        // If the enabled template is not empty,
+        // the overlay is rendered when the template evaluates to true.
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
     }

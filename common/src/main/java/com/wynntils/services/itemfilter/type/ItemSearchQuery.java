@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 
 public record ItemSearchQuery(
         String queryString,
-        List<StatProviderAndFilterPair<?>> filters,
+        StatProviderFilterMap filters,
         List<Pair<SortDirection, ItemStatProvider<?>>> sortStatProviders,
         List<Pair<ChatFormatting, Pair<Integer, Integer>>> colorRanges,
         List<String> errors,

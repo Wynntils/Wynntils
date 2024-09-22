@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.quests;
@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
+    private static final String WIKI_APOSTROPHE = "&#039;";
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
@@ -132,15 +133,18 @@ public final class QuestModel extends Model {
             String wikiName = "Quests#" + type + "ing_Posts";
 
             Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
-            return;
+        } else {
+            ApiResponse apiResponse =
+                    Managers.Net.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
+            apiResponse.handleJsonArray(json -> {
+                String pageTitle = json.get(0)
+                        .getAsJsonObject()
+                        .get("_pageTitle")
+                        .getAsString()
+                        .replace(WIKI_APOSTROPHE, "'");
+                Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
+            });
         }
-
-        ApiResponse apiResponse =
-                Managers.Net.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", questInfo.getName()));
-        apiResponse.handleJsonArray(json -> {
-            String pageTitle = json.get(0).getAsJsonObject().get("_pageTitle").getAsString();
-            Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
-        });
     }
 
     public Optional<QuestInfo> getQuestInfoFromName(String name) {

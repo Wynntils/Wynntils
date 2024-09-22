@@ -75,7 +75,7 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     @SubscribeEvent
-    public void onNpcDialogue(NpcDialogueProcessingEvent.Post event) {
+    public void onNpcDialoguePost(NpcDialogueProcessingEvent.Post event) {
         NpcDialogue dialogue = event.getDialogue();
 
         // This is specific to the overlay, so we don't want to handle it in the feature

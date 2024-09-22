@@ -18,4 +18,5 @@ public record CraftedItemParseResults(
         GearAttackSpeed attackSpeed,
         List<Pair<DamageType, RangedValue>> damages,
         List<Pair<Element, Integer>> defences,
-        GearRequirements requirements) {}
+        GearRequirements requirements,
+        boolean allRequirementsMet) {}

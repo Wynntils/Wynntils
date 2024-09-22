@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
@@ -10,6 +10,7 @@ public enum ItemObtainType {
     // From Wynncraft API
     LOOT_CHEST("lootchest", "Tier III/IV Loot Chest"), // lootchests (implies t3 or t4, afaict)
     NORMAL_MOB_DROP("normal", "Unspecified Mob Drop"), // mob drops (and any loot chest, afaict)
+    MINIBOSS("miniboss", "Miniboss"), // miniboss
     CHALLENGE("challenge", "Challenge"), // at the moment, only Legendary Island
     EVENT("event", "Event"), // like Bonfire, Heroes, etc.
     LOOTRUN("lootrun", "Lootrun"), // lootrun

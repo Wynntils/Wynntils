@@ -1,8 +1,8 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.containers.type;
+package com.wynntils.models.inventory.type;
 
 import java.util.Locale;
 
@@ -30,5 +30,14 @@ public enum InventoryAccessory {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public static int[] getSlots() {
+        InventoryAccessory[] accessories = values();
+        int[] slots = new int[accessories.length];
+        for (int i = 0; i < accessories.length; i++) {
+            slots[i] = accessories[i].getSlot();
+        }
+        return slots;
     }
 }

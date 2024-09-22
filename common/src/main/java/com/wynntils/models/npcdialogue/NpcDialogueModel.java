@@ -140,14 +140,21 @@ public class NpcDialogueModel extends Model {
                 return;
             }
 
-            // Should never happen, but just in case
-            if (styledTexts.isEmpty()) return;
-
             // Capture the old dialogue from the method
             final NpcDialogue oldDialogue = dialogue;
 
+            // Should never happen, but just in case
+            if (styledTexts.isEmpty()) {
+                WynntilsMod.warn("Dialogue processing returned an empty list.");
+                WynntilsMod.postEvent(new NpcDialogueProcessingEvent.Post(oldDialogue, oldDialogue.currentDialogue()));
+                return;
+            }
+
             // If the dialogue is the same as the old one, don't do anything
-            if (oldDialogue.currentDialogue().equals(styledTexts)) return;
+            if (oldDialogue.currentDialogue().equals(styledTexts)) {
+                WynntilsMod.postEvent(new NpcDialogueProcessingEvent.Post(oldDialogue, styledTexts));
+                return;
+            }
 
             styledTexts.forEach(styledText -> WynntilsMod.info("[Translated NPC] " + styledText.getString()));
 

@@ -6,14 +6,14 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class SeaskipperDestinationAnnotator implements ItemAnnotator {
+public final class SeaskipperDestinationAnnotator implements GuiItemAnnotator {
     private static final Pattern SEASKIPPER_PASS_PATTERN = Pattern.compile("^§b(.*) Pass §7for §b(\\d+)²$");
 
     @Override

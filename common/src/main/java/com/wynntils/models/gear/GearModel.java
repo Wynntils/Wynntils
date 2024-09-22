@@ -24,6 +24,7 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -80,9 +81,10 @@ public final class GearModel extends Model {
 
     @Override
     public void reloadData() {
-        gearInfoRegistry.reloadData();
+        gearInfoRegistry.loadData();
     }
 
+    // For "real" gear items eg. from the inventory
     public GearInstance parseInstance(GearInfo gearInfo, ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
         if (result.tier() != gearInfo.tier()) {
@@ -90,14 +92,27 @@ public final class GearModel extends Model {
         }
 
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                result.allRequirementsMet(),
+                result.setInstance());
     }
 
+    // For parsing gear from the gear viewer
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
         return GearInstance.create(
-                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
+                gearInfo,
+                result.identifications(),
+                result.powders(),
+                result.rerolls(),
+                result.shinyStat(),
+                false,
+                Optional.empty());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
@@ -141,6 +156,7 @@ public final class GearModel extends Model {
                 result.identifications(),
                 result.powders(),
                 result.powderSlots(),
+                result.allRequirementsMet(),
                 durability);
     }
 

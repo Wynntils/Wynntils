@@ -18,6 +18,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -30,6 +32,7 @@ public class LoadoutWidget extends AbstractWidget {
     private final String name;
     private final SavableSkillPointSet loadout;
     private final SkillPointLoadoutsScreen parent;
+    private final List<String> gearNames = new ArrayList<>();
 
     public LoadoutWidget(
             int x,
@@ -45,6 +48,11 @@ public class LoadoutWidget extends AbstractWidget {
         this.name = name;
         this.loadout = loadout;
         this.parent = parent;
+        if (loadout.weapon() != null) {
+            gearNames.add(loadout.weapon());
+        }
+        gearNames.addAll(loadout.armourNames());
+        gearNames.addAll(loadout.accessoryNames());
     }
 
     @Override
@@ -69,12 +77,11 @@ public class LoadoutWidget extends AbstractWidget {
         }
 
         int nameYOffset = 2;
-        if (loadout.isBuild()) {
+        if (loadout.isBuild()) { // Renders list of weapon, armour, and accessories under name for build loadouts
             nameYOffset = 3;
             String text = RenderedStringUtils.getMaxFittingText(
-                    String.join(
-                            ", ", (loadout.armourNames().isEmpty() ? loadout.accessoryNames() : loadout.armourNames())),
-                    this.getWidth(),
+                    String.join(", ", gearNames),
+                    dividedWidth * 19,
                     FontRenderer.getInstance().getFont());
             FontRenderer.getInstance()
                     .renderText(

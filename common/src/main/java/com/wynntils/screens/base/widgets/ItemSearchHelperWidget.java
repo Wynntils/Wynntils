@@ -5,6 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.wynntils.core.components.Services;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatFilterFactory;
@@ -20,12 +21,21 @@ import org.lwjgl.glfw.GLFW;
 public class ItemSearchHelperWidget extends BasicTexturedButton {
     private static final int ELEMENTS_PER_PAGE = 4;
 
+    private final List<ItemProviderType> supportedProviderTypes;
     private final List<List<Component>> tooltipPages = new ArrayList<>();
 
     private int page = 0;
 
-    public ItemSearchHelperWidget(int x, int y, int width, int height, Texture texture, boolean scaleTexture) {
+    public ItemSearchHelperWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            Texture texture,
+            boolean scaleTexture,
+            List<ItemProviderType> supportedProviderTypes) {
         super(x, y, width, height, texture, (b) -> {}, List.of(), scaleTexture);
+        this.supportedProviderTypes = supportedProviderTypes;
 
         generateTooltipPages();
     }
@@ -85,7 +95,10 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
 
         // Stats
         counter = 0;
-        List<ItemStatProvider<?>> itemStatProviders = Services.ItemFilter.getItemStatProviders();
+        List<ItemStatProvider<?>> itemStatProviders = Services.ItemFilter.getItemStatProviders().stream()
+                .filter(itemStatProvider ->
+                        itemStatProvider.getFilterTypes().stream().anyMatch(supportedProviderTypes::contains))
+                .toList();
         for (ItemStatProvider<?> itemStatProvider : itemStatProviders) {
             currentTooltip.add(Component.empty());
             currentTooltip.add(Component.literal(itemStatProvider.getName() + ": ")

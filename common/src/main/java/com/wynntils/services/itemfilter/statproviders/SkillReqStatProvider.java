@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -7,6 +7,7 @@ package com.wynntils.services.itemfilter.statproviders;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -36,5 +37,10 @@ public class SkillReqStatProvider extends ItemStatProvider<Integer> {
                 .filter(pair -> pair.key() == skill)
                 .map(Pair::value)
                 .toList();
+    }
+
+    @Override
+    public List<ItemProviderType> getFilterTypes() {
+        return List.of(ItemProviderType.GEAR);
     }
 }

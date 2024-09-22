@@ -71,6 +71,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     @Override
     protected void doInit() {
         super.doInit();
+
+        // If our encoding breaks for some reason, we need to clean up the item record to prevent crashes
+        Services.ItemRecord.cleanupItemRecord();
+
         this.leftPos = (this.width - Texture.ITEM_RECORD.width()) / 2;
         this.topPos = (this.height - Texture.ITEM_RECORD.height()) / 2;
 

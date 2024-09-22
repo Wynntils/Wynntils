@@ -5,8 +5,8 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class CraftedConsumableAnnotator implements ItemAnnotator {
+public final class CraftedConsumableAnnotator implements GameItemAnnotator {
     private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]$");
 
     @Override

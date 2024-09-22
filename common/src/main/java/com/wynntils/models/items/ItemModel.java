@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items;
@@ -45,6 +45,7 @@ import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
+import com.wynntils.models.items.annotators.gui.TerritoryAnnotator;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +54,7 @@ public class ItemModel extends Model {
     public ItemModel() {
         super(List.of());
 
+        // GameItemAnnotators
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
         Handlers.Item.registerAnnotator(new GearBoxAnnotator());
@@ -79,7 +81,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new TrinketAnnotator());
 
-        // GUI handlers
+        // GuiItemAnnotators
         Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
         Handlers.Item.registerAnnotator(new ActivityAnnotator());
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
@@ -91,7 +93,9 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
+        Handlers.Item.registerAnnotator(new TerritoryAnnotator());
 
+        // ItemAnnotators
         // This must be done last
         Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
         Handlers.Item.registerAnnotator(new MiscAnnotator());

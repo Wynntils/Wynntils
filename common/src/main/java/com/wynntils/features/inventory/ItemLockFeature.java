@@ -17,7 +17,7 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
-import com.wynntils.models.containers.type.InteractiveContainerType;
+import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -54,8 +54,8 @@ public class ItemLockFeature extends Feature {
     public void onContainerRender(ContainerRenderEvent event) {
         AbstractContainerScreen<?> abstractContainerScreen = event.getScreen();
 
-        // Don't render lock on ability tree slots
-        if (InteractiveContainerType.ABILITY_TREE.isScreen(abstractContainerScreen)) return;
+        // Don't render lock on full screen containers
+        if (Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
 
         for (Integer slotId : classSlotLockMap.get().getOrDefault(Models.Character.getId(), new TreeSet<>())) {
             Optional<Slot> lockedSlot = abstractContainerScreen.getMenu().slots.stream()
@@ -72,9 +72,9 @@ public class ItemLockFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClickEvent(ContainerClickEvent event) {
-        // Don't lock ability tree slots
+        // Don't lock fullscreen container slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
-                || InteractiveContainerType.ABILITY_TREE.isScreen(abstractContainerScreen)) return;
+                || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
 
         // We have to match slot.index here, because the event slot number is an index as well

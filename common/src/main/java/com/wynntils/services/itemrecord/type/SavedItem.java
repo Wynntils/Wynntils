@@ -22,11 +22,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public record SavedItem(String base64, Set<String> categories, ItemStack itemStack) implements Comparable<SavedItem> {
+    // This is the encoding settings used to encode the item when it was saved
+    // We cannot let users not save extended identification and share item name as it would break the item if the API
+    // changes
+    private static final EncodingSettings SAVED_ITEM_ENCODING_SETTINGS = new EncodingSettings(true, true);
+
     public static SavedItem create(WynnItem wynnItem, Set<String> categories, ItemStack itemStack) {
-        EncodingSettings encodingSettings = new EncodingSettings(
-                Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
         ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
-                Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
+                Models.ItemEncoding.encodeItem(wynnItem, SAVED_ITEM_ENCODING_SETTINGS);
 
         if (errorOrEncodedByteBuffer.hasError()) {
             throw new IllegalArgumentException(

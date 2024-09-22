@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -33,7 +34,7 @@ public class LootchestTextFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderLootChest(ContainerRenderEvent event) {
-        if (!Models.Container.isLootChest(event.getScreen())) return;
+        if (!(Models.Container.getCurrentContainer() instanceof LootChestContainer)) return;
 
         int startX = event.getScreen().leftPos;
         int startY = event.getScreen().topPos;

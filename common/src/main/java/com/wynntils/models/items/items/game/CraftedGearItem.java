@@ -17,6 +17,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.PowderedItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -33,7 +34,8 @@ public class CraftedGearItem extends GameItem
                 DurableItemProperty,
                 LeveledItemProperty,
                 PowderedItemProperty,
-                CraftedItemProperty {
+                CraftedItemProperty,
+                RequirementItemProperty {
     private final String name;
     private final int effectStrength;
     private final GearType gearType;
@@ -46,6 +48,7 @@ public class CraftedGearItem extends GameItem
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final int powderSlots;
+    private final boolean requirementsMet;
     private final CappedValue durability;
 
     public CraftedGearItem(
@@ -61,6 +64,7 @@ public class CraftedGearItem extends GameItem
             List<StatActualValue> identifications,
             List<Powder> powders,
             int powderSlots,
+            boolean requirementsMet,
             CappedValue durability) {
         this.name = name;
         this.effectStrength = effectStrength;
@@ -74,6 +78,7 @@ public class CraftedGearItem extends GameItem
         this.identifications = identifications;
         this.powders = powders;
         this.powderSlots = powderSlots;
+        this.requirementsMet = requirementsMet;
         this.durability = durability;
     }
 
@@ -154,6 +159,11 @@ public class CraftedGearItem extends GameItem
     @Override
     public GearTier getGearTier() {
         return GearTier.CRAFTED;
+    }
+
+    @Override
+    public boolean meetsActualRequirements() {
+        return requirementsMet;
     }
 
     @Override

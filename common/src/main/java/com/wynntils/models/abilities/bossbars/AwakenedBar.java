@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.bossbars;
@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class AwakenedBar extends TrackedBar {
-    private static final Pattern AWAKENED_PATTERN = Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]");
+    private static final Pattern AWAKENED_PATTERN = Pattern.compile("§fAwakened §7\\[§f(\\d+)/(\\d+)§7]");
 
     public AwakenedBar() {
         super(AWAKENED_PATTERN);

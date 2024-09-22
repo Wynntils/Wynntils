@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -356,11 +356,11 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
             poi.renderAt(
                     poseStack,
                     bufferSource,
-                    MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom),
-                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom),
+                    MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale),
+                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale),
                     hovered == poi,
                     1,
-                    currentZoom);
+                    zoomRenderScale);
 
             bufferSource.endBatch();
         }
@@ -503,8 +503,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
             zInput.setTextBoxInput(String.valueOf(gameZ));
         }

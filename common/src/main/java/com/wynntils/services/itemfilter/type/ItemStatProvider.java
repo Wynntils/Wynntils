@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -29,6 +29,12 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
      * @return The value of the stat for the given item
      */
     public abstract List<T> getValue(WynnItem wynnItem);
+
+    /**
+     * Returns the type of filter this stat provider is for.
+     * @return The type of filter this stat provider is for
+     */
+    public abstract List<ItemProviderType> getFilterTypes();
 
     public Class<T> getType() {
         return (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];

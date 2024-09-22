@@ -1,19 +1,19 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class AbilityTreeAnnotator implements ItemAnnotator {
+public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     // Deals with the ability tree button in the compass menu
     private static final StyledText COMPASS_ABILITY_POINTS_NAME = StyledText.fromString("§b§lAbility Tree");
     private static final Pattern COMPASS_ABILITY_POINTS_PATTERN = Pattern.compile("^§3✦ Unused Points: §f(\\d+)$");

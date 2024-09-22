@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -207,8 +207,8 @@ public class GearChatEncoding {
 
         // create chat gear stack
         // Note that the chat procotol does not allow for shiny stats to be transferred
-        GearInstance gearInstance =
-                GearInstance.create(gearInfo, identifications, powderList, rerolls, Optional.empty());
+        GearInstance gearInstance = GearInstance.create(
+                gearInfo, identifications, powderList, rerolls, Optional.empty(), false, Optional.empty());
         return new GearItem(gearInfo, gearInstance);
     }
 
