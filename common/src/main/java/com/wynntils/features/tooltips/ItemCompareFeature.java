@@ -20,10 +20,8 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
-import com.wynntils.models.containers.containers.InventoryContainer;
 import com.wynntils.models.inventory.type.InventoryAccessory;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
@@ -42,9 +40,7 @@ import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -456,9 +452,16 @@ public class ItemCompareFeature extends Feature {
 
             StyledText styledText = StyledText.fromComponent(line);
             if (styledText.getPartCount() > 0) {
-                if (styledText.getFirstPart().getComponent().getStyle().getColor().equals(loreColor)) {
+                if (styledText
+                        .getFirstPart()
+                        .getComponent()
+                        .getStyle()
+                        .getColor()
+                        .equals(loreColor)) {
                     lines.remove(i);
-                } else if (ItemUtils.ITEM_RARITY_PATTERN.matcher(line.getString()).find()) {
+                } else if (ItemUtils.ITEM_RARITY_PATTERN
+                        .matcher(line.getString())
+                        .find()) {
                     // Must stop when we hit item rarity line, otherwise `Average DPS` line will get removed, if present
                     return;
                 }
