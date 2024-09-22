@@ -23,7 +23,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
-    static final int TICKS_PER_ATTACK = 2;
+    static final int TICKS_PER_ATTACK = 4;
 
     int lastSelectedSlot;
     boolean preventWrongCast = false;
