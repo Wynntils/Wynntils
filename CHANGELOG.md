@@ -1,3 +1,15 @@
+## [2.3.3](https://github.com/Wynntils/Wynntils/compare/v2.3.2...v2.3.3) (2024-09-22)
+
+
+### New Features
+
+* inventory interaction improvements and desync fixes ([#2871](https://github.com/Wynntils/Wynntils/issues/2871)) ([8966795](https://github.com/Wynntils/Wynntils/commit/8966795aaae1fdf503db74c9f3a39dfa7825e97c))
+
+
+### Bug Fixes
+
+* Fix a race between UrlManager and CoreComponent initialization [skip ci] ([#2885](https://github.com/Wynntils/Wynntils/issues/2885)) ([17863fa](https://github.com/Wynntils/Wynntils/commit/17863fa804e43abc30750bbf7c852d8d9b4797cb))
+
 ## [2.3.2](https://github.com/Wynntils/Wynntils/compare/v2.3.1...v2.3.2) (2024-09-21)
 
 
@@ -9,6 +21,11 @@
 ### Bug Fixes
 
 * Time Rift, Pandemonium, and overall totem performance fixes [skip ci] ([#2863](https://github.com/Wynntils/Wynntils/issues/2863)) ([d04a565](https://github.com/Wynntils/Wynntils/commit/d04a5655fb2d473ea1c5c4102de82bc5c5096400))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.2 [skip ci] ([75d38a4](https://github.com/Wynntils/Wynntils/commit/75d38a492387993b5a88f6e5a5e91a97d5d16000))
 
 ## [2.3.1](https://github.com/Wynntils/Wynntils/compare/v2.3.0...v2.3.1) (2024-09-19)
 
@@ -91,23 +108,4 @@ While this is technically a breaking change, it shouldn't break behaviour in any
 ### Code Refactoring
 
 * Don't require onConfigUpdate to be overridden in overlays [skip ci] ([#2874](https://github.com/Wynntils/Wynntils/issues/2874)) ([e2252e6](https://github.com/Wynntils/Wynntils/commit/e2252e67c00737530a8ddc77cc27d19ac486dff0))
-
-## [2.2.3](https://github.com/Wynntils/Wynntils/compare/v2.2.2...v2.2.3) (2024-09-15)
-
-
-### New Features
-
-* Poi Creation Screen redesign [skip ci] ([#2850](https://github.com/Wynntils/Wynntils/issues/2850)) ([ab86658](https://github.com/Wynntils/Wynntils/commit/ab86658658495dbd5165d17c71ee14f06bb15bdd))
-* Rewrite ChatTimestampFeature ([#2844](https://github.com/Wynntils/Wynntils/issues/2844)) ([9a0a07f](https://github.com/Wynntils/Wynntils/commit/9a0a07ff808d132124bea0413a1f175affd67b4d))
-
-
-### Bug Fixes
-
-* Don't crash when stat filters exceed the integer limit [skip ci] ([#2858](https://github.com/Wynntils/Wynntils/issues/2858)) ([5759363](https://github.com/Wynntils/Wynntils/commit/5759363dbaa4e69026319095b8e1317adf05aca8))
-* Update TM bulk sell for 2.1 [skip ci] ([#2856](https://github.com/Wynntils/Wynntils/issues/2856)) ([bb4575b](https://github.com/Wynntils/Wynntils/commit/bb4575b4dd4f33ce88e65e51e10136459185c22c))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.2.3 [skip ci] ([3386a49](https://github.com/Wynntils/Wynntils/commit/3386a4971c270876e5d9cd606a9962c75a9f3185))
 
