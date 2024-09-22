@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.properties;
@@ -17,7 +17,7 @@ import java.util.Optional;
  * @param <T> The type of the item info
  * @param <U> The type of the item instance
  */
-public interface IdentifiableItemProperty<T, U> extends NamedItemProperty {
+public interface IdentifiableItemProperty<T, U> extends NamedItemProperty, UnidentifiedItemProperty {
     T getItemInfo();
 
     Optional<U> getItemInstance();
@@ -39,4 +39,9 @@ public interface IdentifiableItemProperty<T, U> extends NamedItemProperty {
     boolean isDefective();
 
     float getOverallPercentage();
+
+    @Override
+    default boolean isUnidentified() {
+        return getItemInstance().isEmpty();
+    }
 }
