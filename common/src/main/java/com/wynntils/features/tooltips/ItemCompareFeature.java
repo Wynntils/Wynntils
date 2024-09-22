@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.models.containers.containers.InventoryContainer;
@@ -91,7 +92,7 @@ public class ItemCompareFeature extends Feature {
     private final KeyBind selectCompareKeyBind =
             new KeyBind("Select for comparing", GLFW.GLFW_KEY_KP_ADD, true, null, this::onSelectKeyPress);
 
-    private final Map<WynnItem, ItemStack> selectedItems = new HashMap<>();
+    private final List<Pair<WynnItem, ItemStack>> selectedItems = new ArrayList<>();
     private static final int COMPARE_ITEM_PAD = 6;
     private static final String EQUIPPED_KEY = "feature.wynntils.itemCompare.tag.equipped";
     private static final String HOVERED_KEY = "feature.wynntils.itemCompare.tag.hovered";
@@ -114,24 +115,24 @@ public class ItemCompareFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryClickEvent(ContainerClickEvent event) {
-        Models.Item.getWynnItem(event.getItemStack()).ifPresent(selectedItems::remove);
+        unselectItemStack(event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRendering(TooltipRenderEvent event) {
+    public void onTooltipRenderEvent(TooltipRenderEvent event) {
         if (!changePositioner) return;
 
         event.setPositioner(PassiveTooltipPositioner.INSTANCE);
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre event) {
+    public void onSlotRenderEvent(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
         drawSelectionArc(event.getPoseStack(), slot.getItem(), slot.x, slot.y, false);
     }
 
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre event) {
+    public void onHotbarSlotRenderEvent(HotbarSlotRenderEvent.Pre event) {
         drawSelectionArc(event.getPoseStack(), event.getItemStack(), event.getX(), event.getY(), true);
     }
 
@@ -156,7 +157,7 @@ public class ItemCompareFeature extends Feature {
         List<Pair<WynnItem, ItemStack>> itemsToCompare = new ArrayList<>();
 
         // If hovered over selected item, only compare with other selected items
-        if (!selectedItems.containsKey(hoveredWynnItem)) {
+        if (!isItemStackSelected(hoveredItemStack)) {
             switch (hoveredGearItemProperty.getGearType()) {
                 case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> {
                     List<ItemStack> armors = McUtils.inventory().armor;
@@ -168,8 +169,8 @@ public class ItemCompareFeature extends Feature {
                         ItemStack armor = matchingArmorOpt.get();
                         Models.Item.getWynnItem(armor).ifPresent(wynnItem -> {
                             if (armor != hoveredItemStack) {
-                                itemsToCompare.add(new Pair<>(wynnItem, armor));
-                                ++equippedCount;
+                                itemsToCompare.add(Pair.of(wynnItem, armor));
+                                equippedCount++;
                             }
                         });
                     }
@@ -184,8 +185,8 @@ public class ItemCompareFeature extends Feature {
                             .toList();
                     matchingAccessories.forEach(itemStack -> {
                         itemsToCompare.add(
-                                new Pair<>(Models.Item.getWynnItem(itemStack).get(), itemStack));
-                        ++equippedCount;
+                                Pair.of(Models.Item.getWynnItem(itemStack).get(), itemStack));
+                        equippedCount++;
                     });
                 }
                 case SPEAR, WAND, DAGGER, BOW, RELIK -> {
@@ -193,8 +194,8 @@ public class ItemCompareFeature extends Feature {
                     if (inHand != ItemStack.EMPTY && inHand != hoveredItemStack) {
                         Models.Item.getWynnItem(inHand).ifPresent(wynnItem -> {
                             if (isMatchingType(wynnItem, hoveredGearItemProperty)) {
-                                itemsToCompare.add(new Pair<>(wynnItem, inHand));
-                                ++equippedCount;
+                                itemsToCompare.add(Pair.of(wynnItem, inHand));
+                                equippedCount++;
                             }
                         });
                     }
@@ -203,10 +204,9 @@ public class ItemCompareFeature extends Feature {
             }
         }
 
-        List<Pair<WynnItem, ItemStack>> selectedMatchingHovered = selectedItems.entrySet().stream()
-                .filter(entry -> isMatchingType(entry.getKey(), hoveredGearItemProperty))
-                .filter(entry -> entry.getKey() != hoveredWynnItem)
-                .map(entry -> new Pair<>(entry.getKey(), entry.getValue()))
+        List<Pair<WynnItem, ItemStack>> selectedMatchingHovered = selectedItems.stream()
+                .filter(pair -> isMatchingType(pair.a(), hoveredGearItemProperty))
+                .filter(pair -> pair.b() != hoveredItemStack)
                 .filter(pair -> !itemsToCompare.contains(pair))
                 .collect(Collectors.toCollection(ArrayList::new));
 
@@ -246,7 +246,7 @@ public class ItemCompareFeature extends Feature {
         }
 
         if (displayTag.get()) {
-            if (selectedItems.containsValue(event.getItemStack())) {
+            if (isItemStackSelected(hoveredItemStack)) {
                 hoveredLines.addFirst(getPaddedComponent(getTag(HOVERED_SELECTED_KEY), hoveredTooltipWidth));
             } else {
                 hoveredLines.addFirst(getPaddedComponent(getTag(HOVERED_KEY), hoveredTooltipWidth));
@@ -294,7 +294,7 @@ public class ItemCompareFeature extends Feature {
             if (displayTag.get()) {
                 if (equippedCount > 0) {
                     lines.addFirst(getPaddedComponent(getTag(EQUIPPED_KEY), tooltipWidth));
-                    --equippedCount;
+                    equippedCount--;
                 } else {
                     lines.addFirst(getPaddedComponent(getTag(SELECTED_KEY), tooltipWidth));
                 }
@@ -383,8 +383,6 @@ public class ItemCompareFeature extends Feature {
 
     private void onSelectKeyPress(Slot hoveredSlot) {
         if (hoveredSlot == null) return;
-        // Only allow selecting in player inventory
-        if (!(Models.Container.getCurrentContainer() instanceof InventoryContainer)) return;
 
         int slot = hoveredSlot.getContainerSlot();
 
@@ -404,11 +402,26 @@ public class ItemCompareFeature extends Feature {
         WynnItem wynnItem = wynnItemOpt.get();
         if (!(wynnItem instanceof GearItem)) return;
 
-        if (selectedItems.containsKey(wynnItem)) {
-            selectedItems.remove(wynnItem);
-        } else {
-            selectedItems.put(wynnItem, itemStack);
+        if (!unselectItemStack(itemStack)) {
+            selectedItems.add(Pair.of(wynnItem, itemStack));
         }
+    }
+
+    private boolean isItemStackSelected(ItemStack newItem) {
+        for (Pair<WynnItem, ItemStack> pair : selectedItems) {
+            if (ItemUtils.isItemEqual(pair.b(), newItem)) return true;
+        }
+        return false;
+    }
+
+    private boolean unselectItemStack(ItemStack newItem) {
+        for (int i = 0; i < selectedItems.size(); ++i) {
+            if (ItemUtils.isItemEqual(selectedItems.get(i).b(), newItem)) {
+                selectedItems.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getTag(String key) {
@@ -418,7 +431,7 @@ public class ItemCompareFeature extends Feature {
     private void drawSelectionArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
-        if (selectedItems.containsKey(wynnItemOpt.get())) {
+        if (isItemStackSelected(itemStack)) {
             RenderUtils.drawArc(poseStack, CommonColors.LIGHT_BLUE, slotX, slotY, hotbar ? 0 : 200, 1, 6, 8);
         }
     }
@@ -441,16 +454,14 @@ public class ItemCompareFeature extends Feature {
         for (int i = lines.size() - 1; i >= 0; --i) {
             Component line = lines.get(i);
 
-            // Since line has dark_purple as color we get Component with actual color value with this
-            Component comp = StyledText.fromComponent(line).getComponent();
-            // This Component is empty, the Component we need is stored as it's sibling
-            List<Component> siblings = comp.getSiblings();
-
-            if (siblings.getFirst().getStyle().getColor().equals(loreColor)) {
-                lines.remove(i);
-            } else if (ItemUtils.ITEM_RARITY_PATTERN.matcher(line.getString()).find()) {
-                // Must stop when we hit item rarity line, otherwise `Average DPS` line will get removed, if present
-                return;
+            StyledText styledText = StyledText.fromComponent(line);
+            if (styledText.getPartCount() > 0) {
+                if (styledText.getFirstPart().getComponent().getStyle().getColor().equals(loreColor)) {
+                    lines.remove(i);
+                } else if (ItemUtils.ITEM_RARITY_PATTERN.matcher(line.getString()).find()) {
+                    // Must stop when we hit item rarity line, otherwise `Average DPS` line will get removed, if present
+                    return;
+                }
             }
         }
     }
