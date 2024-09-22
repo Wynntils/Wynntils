@@ -11,23 +11,34 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class UnidentifiedItemIconFeature extends Feature {
+    private static final StyledText QUESTION_MARK_TEXT =
+            StyledText.fromComponent(Component.literal("?").withStyle(ChatFormatting.BOLD));
     private static final Map<GearType, Pair<Integer, Integer>> TEXTURE_COORDS = new EnumMap<>(GearType.class);
 
     static {
@@ -53,6 +64,9 @@ public class UnidentifiedItemIconFeature extends Feature {
     @Persisted
     public final Config<Boolean> showOnUnboxed = new Config<>(true);
 
+    @Persisted
+    public final Config<UnidentifiedItemTextures> unboxedTexture = new Config<>(UnidentifiedItemTextures.QUESTION_MARK);
+
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {
         drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 200);
@@ -64,55 +78,87 @@ public class UnidentifiedItemIconFeature extends Feature {
     }
 
     private void drawIcon(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, int z) {
-        GearType gearType = getUnidentifiedGearType(itemStack);
-        if (gearType == null) return;
-
-        int textureX = TEXTURE_COORDS.get(gearType).a();
-        int textureY = TEXTURE_COORDS.get(gearType).b();
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.GEAR_ICONS.resource(),
-                slotX + 2,
-                slotY + 2,
-                z,
-                12,
-                12,
-                textureX,
-                textureY + texture.get().getTextureYOffset(),
-                16,
-                16,
-                Texture.GEAR_ICONS.width(),
-                Texture.GEAR_ICONS.height());
+        Pair<UnidentifiedItemTextures, GearType> gearTypePair = getUnidentifiedGearType(itemStack);
+        if (gearTypePair != null) {
+            gearTypePair.a().getIconRenderer().renderIcon(poseStack, slotX, slotY, z, gearTypePair.b());
+        }
     }
 
-    private GearType getUnidentifiedGearType(ItemStack itemStack) {
+    private Pair<UnidentifiedItemTextures, GearType> getUnidentifiedGearType(ItemStack itemStack) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return null;
         WynnItem wynnItem = wynnItemOpt.get();
 
         if (wynnItem instanceof GearBoxItem box) {
-            return box.getGearType();
+            return Pair.of(texture.get(), box.getGearType());
         }
 
         if (showOnUnboxed.get() && wynnItem instanceof GearItem gear && gear.isUnidentified()) {
-            return gear.getGearType();
+            return Pair.of(unboxedTexture.get(), gear.getGearType());
         }
 
         return null;
     }
 
-    public enum UnidentifiedItemTextures {
-        WYNN(0),
-        OUTLINE(64);
+    @FunctionalInterface
+    private interface IconRenderer {
+        void renderIcon(PoseStack poseStack, int x, int y, int z, GearType gearType);
 
-        private final int yOffset;
-
-        UnidentifiedItemTextures(int yOffset) {
-            this.yOffset = yOffset;
+        static IconRenderer forSpriteSheet(Texture texture, int yOffset, int padding) {
+            int paddedDims = 16 - padding - padding;
+            return (poseStack, x, y, z, gearType) -> {
+                Pair<Integer, Integer> textureCoords = TEXTURE_COORDS.get(gearType);
+                RenderUtils.drawTexturedRect(
+                        poseStack,
+                        texture.resource(),
+                        x + padding,
+                        y + padding,
+                        z,
+                        paddedDims,
+                        paddedDims,
+                        textureCoords.a(),
+                        textureCoords.b() + yOffset,
+                        16,
+                        16,
+                        texture.width(),
+                        texture.height());
+            };
         }
 
-        private int getTextureYOffset() {
-            return yOffset;
+        static IconRenderer forText(Function<GearType, StyledText> textMap) {
+            return (poseStack, x, y, z, gearType) -> {
+                poseStack.pushPose();
+                poseStack.translate(0, 0, z);
+                StyledText text = textMap.apply(gearType);
+                FontRenderer.getInstance()
+                        .renderText(
+                                poseStack,
+                                text,
+                                x + 8,
+                                y + 9,
+                                0,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.OUTLINE);
+                poseStack.popPose();
+            };
+        }
+    }
+
+    public enum UnidentifiedItemTextures {
+        WYNN(IconRenderer.forSpriteSheet(Texture.GEAR_ICONS, 0, 2)),
+        OUTLINE(IconRenderer.forSpriteSheet(Texture.GEAR_ICONS, 64, 2)),
+        QUESTION_MARK(IconRenderer.forText(gearType -> QUESTION_MARK_TEXT));
+
+        private final IconRenderer iconRenderer;
+
+        UnidentifiedItemTextures(IconRenderer iconRenderer) {
+            this.iconRenderer = iconRenderer;
+        }
+
+        private IconRenderer getIconRenderer() {
+            return iconRenderer;
         }
     }
 }

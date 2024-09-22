@@ -1377,6 +1377,8 @@
   "feature.wynntils.unidentifiedItemIcon.showOnUnboxed.name": "Show On Unboxed Items",
   "feature.wynntils.unidentifiedItemIcon.texture.description": "What texture should be used for the overlay icons?",
   "feature.wynntils.unidentifiedItemIcon.texture.name": "Unidentified Item Icon Texture",
+  "feature.wynntils.unidentifiedItemIcon.unboxedTexture.description": "What texture should be used for overlay icons on unboxed items?",
+  "feature.wynntils.unidentifiedItemIcon.unboxedTexture.name": "Unboxed Item Icon Texture",
   "feature.wynntils.updates.autoUpdate.description": "Should the mod auto-update when you first join a world using the mod? You will still have to restart the game manually.",
   "feature.wynntils.updates.autoUpdate.name": "Auto Update",
   "feature.wynntils.updates.checking": "Checking for updates...",
