@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -62,6 +63,7 @@ public final class TerritoryModel extends Model {
     // This is just a cache of TerritoryPois created for all territoryProfileMap values
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
+    private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
     private long lastGuildUpdate = 0;
 
@@ -69,8 +71,15 @@ public final class TerritoryModel extends Model {
         super(List.of());
 
         Handlers.WrappedScreen.registerWrappedScreen(new TerritoryManagementHolder());
+    }
 
-        timerExecutor.scheduleWithFixedDelay(
+    @Override
+    public void reloadData() {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(false);
+        }
+
+        scheduledFuture = timerExecutor.scheduleWithFixedDelay(
                 this::updateTerritoryProfileMap, 0, IN_GUILD_TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
@@ -232,15 +241,14 @@ public final class TerritoryModel extends Model {
     }
 
     private void updateTerritoryProfileMap() {
+        // If the player is not in a guild, we don't need to update the territory data as often
+        if (!Models.Guild.isInGuild() && System.currentTimeMillis() - lastGuildUpdate < NO_GUILD_TERRITORY_UPDATE_MS) {
+            return;
+        }
+
         Download dl = Managers.Net.download(UrlId.DATA_WYNNCRAFT_TERRITORY_LIST);
         dl.handleJsonObject(
                 json -> {
-                    // If the player is not in a guild, we don't need to update the territory data
-                    if (!Models.Guild.isInGuild()
-                            && System.currentTimeMillis() - lastGuildUpdate < NO_GUILD_TERRITORY_UPDATE_MS) {
-                        return;
-                    }
-
                     Map<String, TerritoryProfile> tempMap = new HashMap<>();
                     for (Map.Entry<String, JsonElement> entry :
                             json.getAsJsonObject().entrySet()) {
