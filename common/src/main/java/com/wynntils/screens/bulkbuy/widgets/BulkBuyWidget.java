@@ -10,9 +10,11 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.time.Duration;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -21,14 +23,21 @@ import net.minecraft.network.chat.Component;
 
 public class BulkBuyWidget extends AbstractWidget {
     private static final int BULK_BUY_WIDGET_CENTER = 89;
+
+    private final int originalX;
+    private final AnimationPercentage animationPercentage;
     private BulkBuyFeature.BulkBoughtItem bulkBoughtItem = null;
 
-    public BulkBuyWidget(int x, int y, int width, int height) {
+    public BulkBuyWidget(int x, int y, int width, int height, int animationDuration) {
         super(x, y, width, height, Component.literal("Bulk Buy Widget"));
+        this.originalX = x;
+        animationPercentage = new AnimationPercentage(
+                () -> bulkBoughtItem != null, Duration.of(animationDuration, java.time.temporal.ChronoUnit.MILLIS));
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.setX(originalX - (int) (getWidth() * animationPercentage.getAnimation()));
         RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.BULK_BUY_PANEL, getX(), getY());
 
         // bulkBoughtItemStack is null when there is no item being bulk bought

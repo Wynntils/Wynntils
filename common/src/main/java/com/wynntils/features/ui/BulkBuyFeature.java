@@ -48,6 +48,9 @@ public class BulkBuyFeature extends Feature {
     @Persisted
     public final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
 
+    @Persisted
+    public final Config<Integer> animationDuration = new Config<>(125);
+
     private static final String SHOP_TITLE_SUFFIX = " Shop";
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
@@ -94,11 +97,15 @@ public class BulkBuyFeature extends Feature {
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
 
         bulkBuyWidget = new BulkBuyWidget(
-                containerScreen.leftPos - Texture.BULK_BUY_PANEL.width(),
+                containerScreen.leftPos,
                 containerScreen.topPos - 5,
                 Texture.BULK_BUY_PANEL.width(),
-                Texture.BULK_BUY_PANEL.height());
-        containerScreen.addRenderableWidget(bulkBuyWidget);
+                Texture.BULK_BUY_PANEL.height(),
+                animationDuration.get());
+        // Using addRenderableWidget causes the widget's click box to cover the item slots
+        // And we cannot change the Z level for widgets added like this
+        // And since we don't need to handle clicks on the widget ever, this is fine
+        containerScreen.addRenderableOnly(bulkBuyWidget);
     }
 
     @SubscribeEvent
@@ -155,8 +162,9 @@ public class BulkBuyFeature extends Feature {
 
         if (bulkBoughtAmount <= 0) {
             resetBulkBuy(true);
+        } else {
+            bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
         }
-        bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
     }
 
     private void resetBulkBuy(boolean resetWidget) {

@@ -138,6 +138,8 @@
   "feature.wynntils.bombBellRelay.name": "Bomb Bell Relay",
   "feature.wynntils.bombBellRelay.noKnownBombs": "No known bomb bells to relay.",
   "feature.wynntils.bombBellTracking.name": "Bomb Bell Tracking",
+  "feature.wynntils.bulkBuy.animationDuration.description": "How long should the info widget animation take, in milliseconds?",
+  "feature.wynntils.bulkBuy.animationDuration.name": "Animation Duration",
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Click to buy %d times",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "How many items should be bought at once?",
   "feature.wynntils.bulkBuy.bulkBuyAmount.name": "Bulk Buy Amount",
