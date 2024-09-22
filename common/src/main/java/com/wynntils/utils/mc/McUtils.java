@@ -67,6 +67,10 @@ public final class McUtils {
         mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
     }
 
+    public static void playSoundUI(SoundEvent sound, float volume) {
+        mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F, volume));
+    }
+
     public static void playSoundAmbient(SoundEvent sound) {
         playSoundAmbient(sound, 1.0F, 1.0F);
     }

@@ -205,6 +205,9 @@ public final class WynntilsMod {
         // Ask every component about their data dependencies and register them
         Managers.Download.initComponents(componentMap);
 
+        // Start loading all URLs, now that DownloadManager initialized
+        Managers.Url.loadUrls();
+
         addCrashCallbacks();
     }
 
