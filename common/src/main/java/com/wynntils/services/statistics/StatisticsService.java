@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics;
@@ -17,7 +17,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsService extends Service {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
@@ -25,6 +25,9 @@ public final class StatisticsService extends Service {
     // All statistics, per character
     @Persisted
     private final Storage<Map<String, Map<StatisticKind, StatisticEntry>>> statistics = new Storage<>(new TreeMap<>());
+
+    @Persisted
+    public final Storage<Boolean> screenOverallMode = new Storage<>(true);
 
     // The currently active statistics
     private Map<StatisticKind, StatisticEntry> currentStatistics = new EnumMap<>(StatisticKind.class);
@@ -57,7 +60,7 @@ public final class StatisticsService extends Service {
         addToStatistics(kind, 1);
     }
 
-    public void addToStatistics(StatisticKind kind, int amount) {
+    public void addToStatistics(StatisticKind kind, long amount) {
         StatisticEntry newValue = currentStatistics.containsKey(kind)
                 ? currentStatistics.get(kind).getUpdatedEntry(amount)
                 : new StatisticEntry(amount, 1, amount, amount, System.currentTimeMillis(), System.currentTimeMillis());
@@ -73,8 +76,36 @@ public final class StatisticsService extends Service {
         return currentStatistics;
     }
 
-    public void resetStatistic(StatisticKind statistic) {
+    public StatisticEntry getOverallStatistic(StatisticKind statistic) {
+        StatisticEntry overall = StatisticEntry.EMPTY;
+
+        for (Map<StatisticKind, StatisticEntry> characterStatistics :
+                statistics.get().values()) {
+            StatisticEntry entry = characterStatistics.get(statistic);
+            if (entry != null) {
+                overall = new StatisticEntry(
+                        overall.total() + entry.total(),
+                        overall.count() + entry.count(),
+                        Math.min(overall.min(), entry.min()),
+                        Math.max(overall.max(), entry.max()),
+                        Math.min(overall.firstModified(), entry.firstModified()),
+                        Math.max(overall.lastModified(), entry.lastModified()));
+            }
+        }
+
+        return overall;
+    }
+
+    public void resetStatisticForCharacter(StatisticKind statistic) {
         currentStatistics.remove(statistic);
+        statistics.touched();
+    }
+
+    public void resetStatisticOverall(StatisticKind statistic) {
+        for (Map<StatisticKind, StatisticEntry> characterStatistics :
+                statistics.get().values()) {
+            characterStatistics.remove(statistic);
+        }
         statistics.touched();
     }
 

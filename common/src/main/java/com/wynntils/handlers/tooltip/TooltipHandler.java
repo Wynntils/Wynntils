@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -38,14 +38,16 @@ public class TooltipHandler extends Handler {
     /**
      * Creates a tooltip builder that provides a synthetic header and footer
      */
-    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, boolean hideUnidentified) {
+    public IdentifiableTooltipBuilder buildNew(
+            IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType) {
         IdentifiableTooltipComponent tooltipComponent = identifiableTooltipComponents.get(identifiableItem.getClass());
         if (tooltipComponent == null) {
             throw new IllegalArgumentException("No tooltip component registered for "
                     + identifiableItem.getClass().getName());
         }
 
-        return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, tooltipComponent, hideUnidentified);
+        return IdentifiableTooltipBuilder.buildNewItem(
+                identifiableItem, tooltipComponent, hideUnidentified, showItemType);
     }
 
     /**

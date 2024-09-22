@@ -5,13 +5,16 @@
 package com.wynntils.services.mapdata.providers.builtin;
 
 import com.wynntils.services.mapdata.attributes.AbstractMapAttributes;
+import com.wynntils.services.mapdata.attributes.FixedMapVisibility;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CharacterProvider extends BuiltInProvider {
@@ -40,35 +43,30 @@ public class CharacterProvider extends BuiltInProvider {
         }
 
         @Override
-        public String getName() {
-            return "Your position";
+        public Optional<String> getName() {
+            return Optional.of("Player positions");
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return "Player position";
+                public Optional<Integer> getPriority() {
+                    return Optional.of(900);
                 }
 
                 @Override
-                public String getIconId() {
-                    return "wynntils:icon:symbols:waypoint";
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(FixedMapVisibility.ICON_ALWAYS);
                 }
-
-                @Override
-                public int getPriority() {
-                    return 900;
-                }
-            };
+            });
         }
     }
 
     private static final class CharacterLocation implements MapLocation {
         @Override
         public String getFeatureId() {
-            return "built-in:character:marker";
+            return "built-in:character:location";
         }
 
         @Override
@@ -77,8 +75,13 @@ public class CharacterProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return null;
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(FixedMapVisibility.ICON_NEVER);
+                }
+            });
         }
 
         @Override

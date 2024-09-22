@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -7,10 +7,13 @@ package com.wynntils.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -22,20 +25,51 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
 public class ConfigTile extends WynntilsButton {
-    private final WynntilsBookSettingsScreen settingsScreen;
-    private final Config<?> config;
-
+    private final TextboxScreen screen;
+    private final int maskTopY;
+    private final int maskBottomY;
+    private final float translationX;
+    private final float translationY;
     private final GeneralSettingsButton resetButton;
+    private final StyledText displayName;
     private AbstractWidget configOptionElement;
 
-    public ConfigTile(
-            int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, Config<?> config) {
+    public ConfigTile(int x, int y, int width, int height, TextboxScreen screen, Config<?> config) {
         super(x, y, width, height, Component.literal(config.getJsonName()));
-        this.settingsScreen = settingsScreen;
-        this.config = config;
+        this.screen = screen;
+
+        if (screen instanceof WynntilsBookSettingsScreen settingsScreen) {
+            maskTopY = settingsScreen.getMaskTopY();
+            maskBottomY = settingsScreen.getConfigMaskBottomY();
+            displayName = settingsScreen.configOptionContains(config)
+                    ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
+                    : StyledText.fromString(config.getDisplayName());
+            translationX = settingsScreen.getTranslationX();
+            translationY = settingsScreen.getTranslationY();
+        } else if (screen instanceof OverlaySelectionScreen overlaySelectionScreen) {
+            maskTopY = overlaySelectionScreen.getConfigMaskTopY();
+            maskBottomY = overlaySelectionScreen.getConfigMaskBottomY();
+            displayName = overlaySelectionScreen.configOptionContains(config)
+                    ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
+                    : StyledText.fromString(config.getDisplayName());
+            translationX = overlaySelectionScreen.getTranslationX();
+            translationY = overlaySelectionScreen.getTranslationY();
+        } else {
+            maskTopY = 0;
+            maskBottomY = McUtils.mc().screen.height;
+            displayName = StyledText.fromString(config.getDisplayName());
+            translationX = 0;
+            translationY = 0;
+        }
+
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
-                config, () -> configOptionElement = getWidgetFromConfig(config), x + width - 40, getRenderY());
+                config,
+                () -> configOptionElement = getWidgetFromConfig(config),
+                x + width - 40,
+                getRenderY(),
+                maskTopY,
+                maskBottomY);
     }
 
     @Override
@@ -56,58 +90,54 @@ public class ConfigTile extends WynntilsButton {
                 0,
                 1);
 
-        poseStack.pushPose();
-        final int renderX = getRenderX();
-        final int renderY = getRenderY();
-        poseStack.translate(renderX, renderY, 0);
-        configOptionElement.render(guiGraphics, mouseX - renderX, mouseY - renderY, partialTick);
-        poseStack.popPose();
+        configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     private void renderDisplayName(PoseStack poseStack) {
-        StyledText displayName = settingsScreen.configOptionContains(config)
-                ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
-                : StyledText.fromString(config.getDisplayName());
-        poseStack.pushPose();
-        poseStack.scale(0.8f, 0.8f, 0);
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
                         displayName,
-                        getRenderX() / 0.8f,
-                        (this.getY() + 3) / 0.8f,
+                        getRenderX(),
+                        this.getY() + 3,
+                        this.width - 3,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
-        poseStack.popPose();
+                        TextShadow.NONE,
+                        0.8f);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
+        // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
         return resetButton.mouseClicked(mouseX, mouseY, button)
-                || configOptionElement.mouseClicked(actualMouseX, actualMouseY, button);
+                || configOptionElement.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
-        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY)
-                || super.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY);
+        return configOptionElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+                || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
+        if ((mouseY <= maskTopY || mouseY >= maskBottomY)) return false;
 
-        return configOptionElement.mouseReleased(actualMouseX, actualMouseY, button)
-                || super.mouseReleased(actualMouseX, actualMouseY, button);
+        return configOptionElement.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        configOptionElement.setY(getRenderY());
+        resetButton.setY(getRenderY());
     }
 
     @Override
@@ -116,7 +146,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private int getRenderY() {
-        return this.getY() + 12;
+        return this.getY() + 19;
     }
 
     private int getRenderX() {
@@ -125,13 +155,29 @@ public class ConfigTile extends WynntilsButton {
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton((Config<Boolean>) configOption);
+            return new BooleanSettingsButton(
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<Boolean>) configOption,
+                    maskTopY,
+                    maskBottomY,
+                    translationX,
+                    translationY);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>((Config<E>) configOption);
+            return new EnumSettingsButton<>(
+                    getRenderX(),
+                    getRenderY(),
+                    (Config<E>) configOption,
+                    maskTopY,
+                    maskBottomY,
+                    translationX,
+                    translationY);
         } else if (configOption.getType().equals(CustomColor.class)) {
-            return new CustomColorSettingsButton((Config<CustomColor>) configOption, settingsScreen);
+            return new CustomColorSettingsButton(
+                    getRenderX(), getRenderY(), (Config<CustomColor>) configOption, screen, maskTopY, maskBottomY);
         } else {
-            return new TextInputBoxSettingsWidget<>(configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget<>(
+                    getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY);
         }
     }
 }

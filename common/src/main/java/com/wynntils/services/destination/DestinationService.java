@@ -5,10 +5,10 @@
 package com.wynntils.services.destination;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +19,11 @@ public class DestinationService extends Service {
 
     public DestinationService() {
         super(List.of());
-
-        reloadData();
     }
 
     @Override
-    public void reloadData() {
-        loadDestinations();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_DESTINATIONS).handleReader(this::handleDestinations);
     }
 
     /**
@@ -62,18 +60,15 @@ public class DestinationService extends Service {
         return abbreviation;
     }
 
-    private void loadDestinations() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_DESTINATIONS);
-        dl.handleReader(reader -> {
-            Map<String, String> newDestinations = new HashMap<>();
+    private void handleDestinations(Reader reader) {
+        Map<String, String> newDestinations = new HashMap<>();
 
-            Destination result = WynntilsMod.GSON.fromJson(reader, Destination.class);
-            for (Destination.DestinationDetail destination : result.destinations) {
-                newDestinations.put(destination.location, destination.abbreviation);
-            }
+        Destination result = WynntilsMod.GSON.fromJson(reader, Destination.class);
+        for (Destination.DestinationDetail destination : result.destinations) {
+            newDestinations.put(destination.location, destination.abbreviation);
+        }
 
-            destinations = newDestinations;
-        });
+        destinations = newDestinations;
     }
 
     private static class Destination {

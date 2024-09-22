@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Services;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -35,31 +37,64 @@ public class StatisticsCommand extends Command {
 
     @Override
     public List<String> getAliases() {
-        return List.of("stats");
+        return List.of("stats", "stat", "st");
     }
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
-            LiteralArgumentBuilder<CommandSourceStack> base) {
-        return base.then(Commands.literal("show").executes(this::showStatistics))
+            LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
+        RequiredArgumentBuilder<CommandSourceStack, String> characterStatisticsBuilder = Commands.argument(
+                        "statistic", StringArgumentType.greedyString())
+                .suggests(STATISTIC_SUGGESTION_PROVIDER)
+                .executes(this::getStatistic);
+
+        RequiredArgumentBuilder<CommandSourceStack, String> overallStatisticsBuilder = Commands.argument(
+                        "statistic", StringArgumentType.greedyString())
+                .suggests(STATISTIC_SUGGESTION_PROVIDER)
+                .executes(this::getStatisticOverall);
+
+        return base.then(Commands.literal("show")
+                        .then(Commands.literal("overall").executes(this::showOverallStatistics))
+                        .then(Commands.literal("o").executes(this::showOverallStatistics))
+                        .executes(this::showCharacterStatistics))
                 .then(Commands.literal("list").executes(this::listStatistics))
                 .then(Commands.literal("get")
-                        .then(Commands.argument("statistic", StringArgumentType.greedyString())
-                                .suggests(STATISTIC_SUGGESTION_PROVIDER)
-                                .executes(this::getStatistic)))
+                        .then(Commands.literal("character").then(characterStatisticsBuilder))
+                        .then(Commands.literal("c").then(characterStatisticsBuilder))
+                        .then(Commands.literal("overall").then(overallStatisticsBuilder))
+                        .then(Commands.literal("o").then(overallStatisticsBuilder)))
                 .then(Commands.literal("reset")
                         .then(Commands.literal("confirm").executes(this::doResetStatistics))
                         .executes(this::resetStatistics))
                 .executes(this::syntaxError);
     }
 
-    private int showStatistics(CommandContext<CommandSourceStack> context) {
+    private int showCharacterStatistics(CommandContext<CommandSourceStack> context) {
         MutableComponent response = Component.literal("Statistics:").withStyle(ChatFormatting.AQUA);
 
         for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
                 .sorted(Comparator.comparing(StatisticKind::getName))
                 .toList()) {
-            int value = Services.Statistics.getStatistic(statistic).total();
+            long value = Services.Statistics.getStatistic(statistic).total();
+
+            response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
+                    .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(statistic.getFormattedValue(value))
+                            .withStyle(ChatFormatting.DARK_GREEN));
+        }
+
+        context.getSource().sendSuccess(() -> response, false);
+        return 1;
+    }
+
+    private int showOverallStatistics(CommandContext<CommandSourceStack> context) {
+        MutableComponent response = Component.literal("Statistics:").withStyle(ChatFormatting.AQUA);
+
+        for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
+                .sorted(Comparator.comparing(StatisticKind::getName))
+                .toList()) {
+            long value = Services.Statistics.getOverallStatistic(statistic).total();
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
@@ -93,12 +128,36 @@ public class StatisticsCommand extends Command {
         StatisticKind statistic = StatisticKind.from(statisticId);
         if (statistic == null) {
             context.getSource()
-                    .sendFailure(Component.literal("No such statistic").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.literal("No such statistic.").withStyle(ChatFormatting.RED));
             return 0;
         }
 
         StatisticEntry value = Services.Statistics.getStatistic(statistic);
 
+        MutableComponent response = getStatisticComponent(statistic, value);
+
+        context.getSource().sendSuccess(() -> response, false);
+        return 1;
+    }
+
+    private int getStatisticOverall(CommandContext<CommandSourceStack> context) {
+        String statisticId = context.getArgument("statistic", String.class);
+        StatisticKind statistic = StatisticKind.from(statisticId);
+        if (statistic == null) {
+            context.getSource()
+                    .sendFailure(Component.literal("No such statistic.").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        StatisticEntry value = Services.Statistics.getOverallStatistic(statistic);
+
+        MutableComponent response = getStatisticComponent(statistic, value);
+
+        context.getSource().sendSuccess(() -> response, false);
+        return 1;
+    }
+
+    private static MutableComponent getStatisticComponent(StatisticKind statistic, StatisticEntry value) {
         MutableComponent response = Component.literal(statistic.getName())
                 .withStyle(ChatFormatting.WHITE)
                 .append(Component.literal(":\nTotal: ").withStyle(ChatFormatting.GRAY))
@@ -116,9 +175,7 @@ public class StatisticsCommand extends Command {
                 .append(Component.literal("\nAverage: ").withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(statistic.getFormattedValue(value.average()))
                         .withStyle(ChatFormatting.DARK_GREEN));
-
-        context.getSource().sendSuccess(() -> response, false);
-        return 1;
+        return response;
     }
 
     private int resetStatistics(CommandContext<CommandSourceStack> context) {
@@ -133,7 +190,7 @@ public class StatisticsCommand extends Command {
                                 .withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(
-                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statistics reset confirmed"))),
+                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statistics reset confirm"))),
                         false);
 
         return 1;

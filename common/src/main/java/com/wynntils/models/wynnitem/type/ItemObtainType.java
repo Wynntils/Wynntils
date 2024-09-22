@@ -29,9 +29,23 @@ public enum ItemObtainType {
     QIRA_HIVE_MERCHANT("hive", "Qira Hive Merchant", true),
     QUEST("quest", "Quest"),
     RAID("raid", "Raid"),
-    SECRET_DISCOVER("discovery", "Secret Discovery"),
+    SECRET_DISCOVERY("discovery", "Secret Discovery"),
     SPECIAL_MOB_DROP("specialdrop", "Specific Mob Drop"),
     UNOBTAINABLE("unobtainable", "Unobtainable");
+
+    // All sources that possibly drop boxed items
+    public static final List<ItemObtainType> BOXED_ITEMS = List.of(
+            LOOT_CHEST,
+            NORMAL_MOB_DROP,
+            BOSS_ALTAR,
+            MINIBOSS,
+            LOOTRUN, // some items are boxed, some are not
+            DUNGEON_RAIN,
+            FORGERY_CHEST,
+            RAID,
+            SECRET_DISCOVERY,
+            SPECIAL_MOB_DROP,
+            UNKNOWN); // API does not specify drops for many old boxed items yet
 
     private final List<String> apiNames;
     private final String displayName;

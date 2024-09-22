@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
@@ -17,7 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 public abstract class IdentifiableTooltipComponent<T, U> {
     public abstract List<Component> buildHeaderTooltip(T itemInfo, U itemInstance, boolean hideUnidentified);
 
-    public abstract List<Component> buildFooterTooltip(T itemInfo, U itemInstance);
+    public abstract List<Component> buildFooterTooltip(T itemInfo, U itemInstance, boolean showItemType);
 
     protected MutableComponent buildRequirementLine(String requirementName, boolean fulfilled) {
         MutableComponent requirement;

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.crafted.components;
@@ -99,7 +99,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
         if (requirements.quest().isPresent()) {
             String questName = requirements.quest().get();
             Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
-            boolean fulfilled = quest.isPresent() && quest.get().getStatus() == ActivityStatus.COMPLETED;
+            boolean fulfilled = quest.isPresent() && quest.get().status() == ActivityStatus.COMPLETED;
             header.add(buildRequirementLine("Quest Req: " + questName, fulfilled));
             requirementsCount++;
         }
@@ -138,7 +138,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             if (!craftedItem.getPowders().isEmpty()) {
                 MutableComponent powderList = Component.literal("[");
                 for (Powder p : craftedItem.getPowders()) {
-                    String symbol = p.getColoredSymbol();
+                    String symbol = p.getColoredSymbol().getString();
                     if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                     powderList.append(Component.literal(symbol));
                 }

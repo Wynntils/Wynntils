@@ -9,55 +9,56 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.Optional;
 
 public abstract class AbstractMapAttributes implements MapAttributes {
     @Override
-    public String getLabel() {
-        return null;
+    public Optional<String> getLabel() {
+        return Optional.empty();
     }
 
     @Override
-    public String getIconId() {
-        return null;
+    public Optional<String> getIconId() {
+        return Optional.empty();
     }
 
     @Override
-    public int getPriority() {
-        return 0;
+    public Optional<Integer> getPriority() {
+        return Optional.empty();
     }
 
     @Override
-    public int getLevel() {
-        return 0;
+    public Optional<Integer> getLevel() {
+        return Optional.empty();
     }
 
     @Override
-    public MapVisibility getLabelVisibility() {
-        return null;
+    public Optional<MapVisibility> getLabelVisibility() {
+        return Optional.empty();
     }
 
     @Override
-    public CustomColor getLabelColor() {
-        return null;
+    public Optional<CustomColor> getLabelColor() {
+        return Optional.empty();
     }
 
     @Override
-    public TextShadow getLabelShadow() {
-        return null;
+    public Optional<TextShadow> getLabelShadow() {
+        return Optional.empty();
     }
 
     @Override
-    public MapVisibility getIconVisibility() {
-        return null;
+    public Optional<MapVisibility> getIconVisibility() {
+        return Optional.empty();
     }
 
     @Override
-    public CustomColor getIconColor() {
-        return null;
+    public Optional<CustomColor> getIconColor() {
+        return Optional.empty();
     }
 
     @Override
-    public MapDecoration getIconDecoration() {
-        return null;
+    public Optional<MapDecoration> getIconDecoration() {
+        return Optional.empty();
     }
 }

@@ -5,7 +5,7 @@
 package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -18,8 +18,10 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import java.lang.reflect.Field;
@@ -34,11 +36,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class OverlayManager extends Manager {
-    private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     private final Map<Feature, List<Overlay>> overlayParentMap = new HashMap<>();
     private final Map<Overlay, OverlayInfoContainer> overlayInfoMap = new HashMap<>();
@@ -197,6 +201,14 @@ public final class OverlayManager extends Manager {
 
     // endregion
 
+    // region Ticking
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        enabledOverlays.forEach(Overlay::tick);
+    }
+
+    // endregion
+
     // region Rendering
 
     @SubscribeEvent
@@ -214,12 +226,22 @@ public final class OverlayManager extends Manager {
     }
 
     private void renderOverlays(RenderEvent event, RenderState renderState) {
-        boolean testMode = false;
+        boolean showPreview = false;
+        boolean renderNonSelected = true;
         boolean shouldRender = true;
+        Overlay selectedOverlay = null;
 
         if (McUtils.mc().screen instanceof OverlayManagementScreen screen) {
-            testMode = screen.isTestMode();
             shouldRender = false;
+            showPreview = screen.showPreview();
+            renderNonSelected = screen.shouldRenderAllOverlays();
+            selectedOverlay = screen.getSelectedOverlay();
+        } else if (McUtils.mc().screen instanceof OverlaySelectionScreen screen) {
+            if (screen.renderingPreview()) {
+                showPreview = true;
+                renderNonSelected = screen.shouldShowOverlays();
+                selectedOverlay = screen.getSelectedOverlay();
+            }
         }
 
         List<Overlay> crashedOverlays = new LinkedList<>();
@@ -234,7 +256,9 @@ public final class OverlayManager extends Manager {
                 if (renderState != RenderState.PRE) {
                     continue;
                 }
-                event.setCanceled(true);
+                if (event instanceof ICancellableEvent cancellableEvent) {
+                    cancellableEvent.setCanceled(true);
+                }
             } else {
                 if (renderInfo.renderState() != renderState) {
                     continue;
@@ -242,15 +266,15 @@ public final class OverlayManager extends Manager {
             }
 
             try {
-                if (testMode) {
+                if (showPreview) {
+                    if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
+
                     overlay.renderPreview(
-                            event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
-                } else {
-                    if (shouldRender) {
-                        long startTime = System.currentTimeMillis();
-                        overlay.render(event.getPoseStack(), bufferSource, event.getPartialTicks(), event.getWindow());
-                        logProfilingData(startTime, overlay);
-                    }
+                            event.getPoseStack(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                } else if (shouldRender) {
+                    long startTime = System.currentTimeMillis();
+                    overlay.render(event.getPoseStack(), BUFFER_SOURCE, event.getDeltaTracker(), event.getWindow());
+                    logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
                 RenderUtils.disableScissor();
@@ -268,7 +292,7 @@ public final class OverlayManager extends Manager {
             }
         }
 
-        bufferSource.endBatch();
+        BUFFER_SOURCE.endBatch();
 
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {

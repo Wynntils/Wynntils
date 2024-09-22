@@ -18,7 +18,7 @@ import com.wynntils.utils.type.TimedSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class NotificationManager extends Manager {
     private static final TimedSet<MessageContainer> cachedMessageSet = new TimedSet<>(10, TimeUnit.SECONDS, true);
@@ -51,7 +51,7 @@ public final class NotificationManager extends Manager {
         for (MessageContainer cachedContainer : cachedMessageSet) {
             StyledText checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
-                Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
+                Component oldMessage = cachedContainer.getRenderTask().getText().getComponent();
 
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 

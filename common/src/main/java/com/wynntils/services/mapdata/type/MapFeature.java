@@ -6,17 +6,15 @@ package com.wynntils.services.mapdata.type;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import java.util.List;
+import java.util.Optional;
 
 public interface MapFeature {
-    // Required. The id should be unique, and track the provenance of the feature
+    // The id should be unique, and track the provenance of the feature
     String getFeatureId();
 
-    // Required.
     String getCategoryId();
 
-    // Optional
-    MapAttributes getAttributes();
+    Optional<MapAttributes> getAttributes();
 
-    // Optional
     List<String> getTags();
 }

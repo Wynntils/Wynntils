@@ -7,7 +7,7 @@ package com.wynntils.services.itemfilter.statproviders.territory;
 import com.google.common.base.CaseFormat;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.type.TerritoryUpgrade;
-import java.util.List;
+import java.util.Optional;
 
 public class TerritoryUpgradeLevelStatProvider extends TerritoryStatProvider<Integer> {
     private final TerritoryUpgrade territoryUpgrade;
@@ -17,14 +17,18 @@ public class TerritoryUpgradeLevelStatProvider extends TerritoryStatProvider<Int
     }
 
     @Override
-    public List<Integer> getValue(TerritoryItem territoryItem) {
-        Integer upgradeLevel = territoryItem.getUpgrades().get(territoryUpgrade);
-        return upgradeLevel == null ? List.of() : List.of(upgradeLevel);
+    public Optional<Integer> getValue(TerritoryItem territoryItem) {
+        return Optional.ofNullable(territoryItem.getUpgrades().get(territoryUpgrade));
     }
 
     @Override
     public String getName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, territoryUpgrade.name());
+    }
+
+    @Override
+    public String getDisplayName() {
+        return territoryUpgrade.getName() + " Level";
     }
 
     @Override

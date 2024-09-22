@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.marker.type.DynamicLocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
@@ -17,7 +18,6 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
-import com.wynntils.services.map.pois.PlayerMainMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.pois.WaypointPoi;
@@ -25,7 +25,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -254,6 +253,11 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderPois(poseStack, mouseX, mouseY);
 
+        if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
+            renderChunkBorders(poseStack);
+            BUFFER_SOURCE.endBatch();
+        }
+
         // Cursor
         renderCursor(
                 poseStack,
@@ -307,18 +311,13 @@ public final class MainMapScreen extends AbstractMapScreen {
         pois = Stream.concat(pois, Models.Marker.getAllPois());
         pois = Stream.concat(
                 pois,
-                Services.Hades.getHadesUsers()
-                        .filter(
-                                hadesUser -> (hadesUser.isPartyMember()
-                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                                        .renderRemotePartyPlayers
-                                                        .get())
-                                        || (hadesUser.isMutualFriend()
-                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                                        .renderRemoteFriendPlayers
-                                                        .get())
-                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
-                        .map(PlayerMainMapPoi::new));
+                Services.Hades.getPlayerPois(
+                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                .renderRemotePartyPlayers
+                                .get(),
+                        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                                .renderRemoteFriendPlayers
+                                .get()));
 
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
@@ -375,7 +374,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             List<MarkerInfo> markers =
                     Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
-            if (McUtils.player().isShiftKeyDown() && !markers.isEmpty()) {
+            if (KeyboardUtils.isShiftDown() && !markers.isEmpty()) {
                 // -1 is fine as the index since we always increment it by 1
                 int index = markers.indexOf(focusedMarker);
                 MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
@@ -396,7 +395,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
-                // If shift is not held down, clear all waypoints to only add have the new one
+                // If shift is not held down, clear all waypoints to only have the new one
                 if (!KeyboardUtils.isShiftDown()) {
                     Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
                 }
@@ -408,18 +407,22 @@ public final class MainMapScreen extends AbstractMapScreen {
                                     new Location(hovered.getLocation()),
                                     iconPoi.getIcon(),
                                     customPoi.getColor(),
-                                    customPoi.getColor());
+                                    customPoi.getColor(),
+                                    hovered.getName());
                         } else {
                             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                                    new Location(hovered.getLocation()), iconPoi.getIcon());
+                                    new Location(hovered.getLocation()), iconPoi.getIcon(), hovered.getName());
                         }
                     } else {
-                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(hovered.getLocation()));
+                        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                                new Location(hovered.getLocation()), hovered.getName());
                     }
                 } else {
                     final Poi finalHovered = hovered;
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new DynamicLocationSupplier(
-                            () -> finalHovered.getLocation().asLocation()));
+                    Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                            new DynamicLocationSupplier(
+                                    () -> finalHovered.getLocation().asLocation()),
+                            finalHovered.getName());
                 }
                 return true;
             }
@@ -431,7 +434,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
                     int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
-                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new PoiLocation(gameX, null, gameZ)));
+                    McUtils.mc().setScreen(PoiCreationScreen.create(this, new Location(gameX, 0, gameZ)));
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi && !Services.Poi.isPoiProvided(customPoi)) {
@@ -441,21 +444,12 @@ public final class MainMapScreen extends AbstractMapScreen {
                     customPois.touched();
                 }
             } else {
-                setCompassToMouseCoords(mouseX, mouseY);
+                setCompassToMouseCoords(mouseX, mouseY, true);
+                return true;
             }
         }
 
         return super.doMouseClicked(mouseX, mouseY, button);
-    }
-
-    private void setCompassToMouseCoords(double mouseX, double mouseY) {
-        double gameX = (mouseX - centerX) / zoomRenderScale + mapCenterX;
-        double gameZ = (mouseY - centerZ) / zoomRenderScale + mapCenterZ;
-        Location compassLocation = Location.containing(gameX, 0, gameZ);
-        Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
-
-        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {
@@ -476,7 +470,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         if (shareCompass) {
             // FIXME: Find an intuitive way to share compasses with multiple waypoints
-            LocationUtils.shareCompass(target, markers.get(0).location());
+            LocationUtils.shareCompass(target, markers.getFirst().location());
         } else {
             LocationUtils.shareLocation(target);
         }

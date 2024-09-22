@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.objectives;
@@ -24,9 +24,10 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     @Persisted
@@ -58,7 +59,7 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
         if (objectives.isEmpty()) return;
@@ -123,16 +124,13 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
                         this.getRenderX() + this.getWidth(),
                         renderY + SPACE_BETWEEN + actualBarHeight,
                         0,
-                        objectivesTexture.get().getTextureYOffset(),
+                        objectivesTexture.get().getTextureY1(),
                         barWidth,
-                        objectivesTexture.get().getTextureYOffset() + 10,
+                        objectivesTexture.get().getTextureY2(),
                         objective.getProgress());
             }
 
             offsetY += renderedHeightWithoutTextHeight + textHeight;
         }
     }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
 }

@@ -1,12 +1,14 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.type;
 
+import com.wynntils.core.persisted.config.NullableConfig;
+import java.util.List;
 import java.util.Locale;
 
-public enum ProfessionType {
+public enum ProfessionType implements NullableConfig {
     WOODCUTTING("Woodcutting", "Ⓒ"),
     MINING("Mining", "Ⓑ"),
     FISHING("Fishing", "Ⓚ"),
@@ -44,5 +46,9 @@ public enum ProfessionType {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+    public static List<ProfessionType> craftingProfessionTypes() {
+        return List.of(ALCHEMISM, ARMOURING, COOKING, JEWELING, SCRIBING, TAILORING, WEAPONSMITHING, WOODWORKING);
     }
 }

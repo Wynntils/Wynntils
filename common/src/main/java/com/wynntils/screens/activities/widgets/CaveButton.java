@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
@@ -18,7 +18,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -62,24 +61,21 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
         CustomColor backgroundColor = getBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
-        int maxTextWidth = this.width - 10 - 11;
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                caveInfo.getName(),
-                                maxTextWidth,
-                                FontRenderer.getInstance().getFont())),
+                        StyledText.fromString(caveInfo.name()),
                         this.getX() + 14,
                         this.getY() + 1,
-                        0,
+                        this.width - 15,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        1f);
 
         Texture stateTexture =
-                switch (caveInfo.getStatus()) {
+                switch (caveInfo.status()) {
                     case STARTED -> Texture.ACTIVITY_STARTED;
                     case COMPLETED -> Texture.ACTIVITY_FINISHED;
                     case AVAILABLE -> Texture.CAVE_AVALIABLE_ICON;
@@ -135,7 +131,7 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
                 Models.Activity.stopTracking();
                 caveScreen.setTrackingRequested(null);
             } else {
-                Models.Activity.startTracking(this.caveInfo.getName(), ActivityType.CAVE);
+                Models.Activity.startTracking(this.caveInfo.name(), ActivityType.CAVE);
                 caveScreen.setTrackingRequested(this.caveInfo);
             }
         }
@@ -177,11 +173,11 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
     private List<Component> generateTooltipLines() {
         List<Component> tooltipLines = new ArrayList<>();
 
-        tooltipLines.add(Component.literal(caveInfo.getName())
+        tooltipLines.add(Component.literal(caveInfo.name())
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.GOLD));
         tooltipLines.add(
-                switch (caveInfo.getStatus()) {
+                switch (caveInfo.status()) {
                     case AVAILABLE, STARTED -> Component.literal("Can be explored")
                             .withStyle(ChatFormatting.YELLOW);
                     case UNAVAILABLE -> Component.literal("Cannot be explored").withStyle(ChatFormatting.RED);
@@ -189,41 +185,41 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
                 });
         tooltipLines.add(Component.literal(""));
 
-        tooltipLines.add((Models.CombatXp.getCombatLevel().current() >= caveInfo.getRecommendedLevel()
+        tooltipLines.add((Models.CombatXp.getCombatLevel().current() >= caveInfo.recommendedLevel()
                         ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                         : Component.literal("✖").withStyle(ChatFormatting.RED))
                 .append(Component.literal(" Recommended Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(String.valueOf(caveInfo.getRecommendedLevel()))
+                .append(Component.literal(String.valueOf(caveInfo.recommendedLevel()))
                         .withStyle(ChatFormatting.WHITE)));
 
         tooltipLines.add(Component.literal("-")
                 .withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(" Length: ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(EnumUtils.toNiceString(caveInfo.getLength()))
+                .append(Component.literal(EnumUtils.toNiceString(caveInfo.length()))
                         .withStyle(ChatFormatting.WHITE)));
 
         tooltipLines.add(Component.literal("-")
                 .withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(" Difficulty: ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(EnumUtils.toNiceString(caveInfo.getDifficulty()))
+                .append(Component.literal(EnumUtils.toNiceString(caveInfo.difficulty()))
                         .withStyle(ChatFormatting.WHITE)));
 
         tooltipLines.add(Component.literal("-")
                 .withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(" Distance: ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(EnumUtils.toNiceString(caveInfo.getDistance()))
+                .append(Component.literal(EnumUtils.toNiceString(caveInfo.distance()))
                         .withStyle(ChatFormatting.WHITE)));
 
         tooltipLines.add(Component.literal(""));
 
         tooltipLines.addAll(ComponentUtils.splitComponent(
-                Component.literal(caveInfo.getDescription()).withStyle(ChatFormatting.GRAY), 150));
+                Component.literal(caveInfo.description()).withStyle(ChatFormatting.GRAY), 150));
 
         tooltipLines.add(Component.literal(""));
 
         // rewards
         tooltipLines.add(Component.literal("Rewards:").withStyle(ChatFormatting.LIGHT_PURPLE));
-        for (String reward : caveInfo.getRewards()) {
+        for (String reward : caveInfo.rewards()) {
             tooltipLines.add(Component.literal("- ")
                     .withStyle(ChatFormatting.LIGHT_PURPLE)
                     .append(Component.literal(reward).withStyle(ChatFormatting.GRAY)));

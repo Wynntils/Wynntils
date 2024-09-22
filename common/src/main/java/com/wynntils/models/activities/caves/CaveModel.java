@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.caves;
@@ -18,12 +18,13 @@ import com.wynntils.models.activities.type.ActivityType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class CaveModel extends Model {
-    private List<CaveInfo> caves = new ArrayList<>();
-    private List<StyledText> caveProgress = List.of();
+    private final Map<String, CaveStorage> caveStorage = new HashMap<>();
 
     public CaveModel() {
         super(List.of());
@@ -45,18 +46,19 @@ public class CaveModel extends Model {
             CaveInfo caveInfo = getCaveInfoFromActivity(activity);
             newCaves.add(caveInfo);
         }
-        caves = newCaves;
-        caveProgress = progress;
+        caveStorage.put(
+                Models.Character.getId(),
+                new CaveStorage(Collections.unmodifiableList(newCaves), Collections.unmodifiableList(progress)));
         WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.CAVE));
-        WynntilsMod.info("Updated caves from query, got " + caves.size() + " caves.");
+        WynntilsMod.info("Updated caves from query, got " + newCaves.size() + " caves.");
     }
 
     public Optional<CaveInfo> getCaveInfoFromName(String name) {
-        return caves.stream().filter(cave -> cave.getName().equals(name)).findFirst();
+        return getCavesRaw().stream().filter(cave -> cave.name().equals(name)).findFirst();
     }
 
     public List<CaveInfo> getSortedCaves(ActivitySortOrder sortOrder) {
-        return sortCaveInfoList(sortOrder, caves);
+        return sortCaveInfoList(sortOrder, getCavesRaw());
     }
 
     private List<CaveInfo> sortCaveInfoList(ActivitySortOrder sortOrder, List<CaveInfo> caveList) {
@@ -64,33 +66,41 @@ public class CaveModel extends Model {
         // the given sort order, and finally a third way if the given sort order is equal.
 
         CaveInfo trackedCaveInfo = Models.Activity.getTrackedCaveInfo();
-        String trackedCaveName = trackedCaveInfo != null ? trackedCaveInfo.getName() : "";
+        String trackedCaveName = trackedCaveInfo != null ? trackedCaveInfo.name() : "";
         Comparator<CaveInfo> baseComparator =
-                Comparator.comparing(caveInfo -> !caveInfo.getName().equals(trackedCaveName));
+                Comparator.comparing(caveInfo -> !caveInfo.name().equals(trackedCaveName));
         return switch (sortOrder) {
             case LEVEL -> caveList.stream()
                     .sorted(baseComparator
-                            .thenComparing(CaveInfo::getStatus)
-                            .thenComparing(CaveInfo::getRecommendedLevel)
-                            .thenComparing(CaveInfo::getName))
+                            .thenComparing(CaveInfo::status)
+                            .thenComparing(CaveInfo::recommendedLevel)
+                            .thenComparing(CaveInfo::name))
                     .toList();
             case DISTANCE -> caveList.stream()
                     .sorted(baseComparator
-                            .thenComparing(CaveInfo::getStatus)
-                            .thenComparing(CaveInfo::getDistance)
-                            .thenComparing(CaveInfo::getName))
+                            .thenComparing(CaveInfo::status)
+                            .thenComparing(CaveInfo::distance)
+                            .thenComparing(CaveInfo::name))
                     .toList();
             case ALPHABETIC -> caveList.stream()
                     .sorted(baseComparator
-                            .thenComparing(CaveInfo::getStatus)
-                            .thenComparing(CaveInfo::getName)
-                            .thenComparing(CaveInfo::getRecommendedLevel))
+                            .thenComparing(CaveInfo::status)
+                            .thenComparing(CaveInfo::name)
+                            .thenComparing(CaveInfo::recommendedLevel))
                     .toList();
         };
     }
 
     public List<StyledText> getCaveProgress() {
-        return Collections.unmodifiableList(caveProgress);
+        return Collections.unmodifiableList(caveStorage
+                .getOrDefault(Models.Character.getId(), CaveStorage.EMPTY)
+                .progress());
+    }
+
+    public List<CaveInfo> getCavesRaw() {
+        return Collections.unmodifiableList(caveStorage
+                .getOrDefault(Models.Character.getId(), CaveStorage.EMPTY)
+                .caves());
     }
 
     private CaveInfo getCaveInfoFromActivity(ActivityInfo activity) {
@@ -103,5 +113,9 @@ public class CaveModel extends Model {
                 activity.length().orElse(ActivityLength.SHORT),
                 activity.difficulty().orElse(ActivityDifficulty.EASY),
                 activity.rewards());
+    }
+
+    private record CaveStorage(List<CaveInfo> caves, List<StyledText> progress) {
+        public static final CaveStorage EMPTY = new CaveStorage(List.of(), List.of());
     }
 }

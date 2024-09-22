@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
@@ -21,10 +22,16 @@ public class IngredientModel extends Model {
             ChatFormatting.YELLOW, 1,
             ChatFormatting.LIGHT_PURPLE, 2,
             ChatFormatting.AQUA, 3);
+
     private final IngredientInfoRegistry ingredientInfoRegistry = new IngredientInfoRegistry();
 
     public IngredientModel() {
         super(List.of());
+    }
+
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        ingredientInfoRegistry.registerDownloads(registry);
     }
 
     public int getTierFromColorCode(String tierColor) {
@@ -33,6 +40,10 @@ public class IngredientModel extends Model {
 
     public IngredientInfo getIngredientInfoFromName(String ingredientName) {
         return ingredientInfoRegistry.getFromDisplayName(ingredientName);
+    }
+
+    public IngredientInfo getIngredientInfoFromApiName(String ingredientName) {
+        return ingredientInfoRegistry.getFromApiName(ingredientName);
     }
 
     public List<ItemObtainInfo> getObtainInfo(IngredientInfo ingredientInfo) {
@@ -45,10 +56,5 @@ public class IngredientModel extends Model {
 
     public Stream<IngredientInfo> getAllIngredientInfos() {
         return ingredientInfoRegistry.getIngredientInfoStream();
-    }
-
-    @Override
-    public void reloadData() {
-        ingredientInfoRegistry.loadData();
     }
 }

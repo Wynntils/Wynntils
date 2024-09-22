@@ -9,13 +9,14 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class PowderSlotsStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof GearItem gearItem)) return List.of();
+    public Optional<Integer> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof GearItem gearItem)) return Optional.empty();
 
-        return List.of(gearItem.getItemInfo().powderSlots());
+        return Optional.of(gearItem.getItemInfo().powderSlots());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -35,7 +35,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
 public class CustomNametagRendererFeature extends Feature {
@@ -43,6 +43,7 @@ public class CustomNametagRendererFeature extends Feature {
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
     private static final float BADGE_MARGIN = 2;
+    private static final int BADGE_SCROLL_SPEED = 40;
     private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
     @Persisted
@@ -55,7 +56,10 @@ public class CustomNametagRendererFeature extends Feature {
     public final Config<Boolean> hideNametagBackground = new Config<>(false);
 
     @Persisted
-    public final Config<Boolean> showProfessionBadges = new Config<>(true);
+    public final Config<Boolean> showLeaderboardBadges = new Config<>(true);
+
+    @Persisted
+    public final Config<Integer> badgeCount = new Config<>(7);
 
     @Persisted
     public final Config<Boolean> showGearOnHover = new Config<>(true);
@@ -212,21 +216,33 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     private void drawBadges(PlayerNametagRenderEvent event, float height) {
-        if (!showProfessionBadges.get()) return;
+        if (!showLeaderboardBadges.get()) return;
+        if (badgeCount.get() <= 0) return;
 
-        List<LeaderboardBadge> badges =
+        List<LeaderboardBadge> allBadges =
                 Services.Leaderboard.getBadges(event.getEntity().getUUID());
 
-        if (badges.isEmpty()) return;
+        if (allBadges.isEmpty()) return;
 
-        float totalWidth = LeaderboardBadge.WIDTH * badges.size() + BADGE_MARGIN * (badges.size() - 1);
+        List<LeaderboardBadge> badgesToRender = new ArrayList<>();
+
+        if (badgeCount.get() >= allBadges.size()) {
+            badgesToRender = allBadges;
+        } else {
+            int offset = (McUtils.player().tickCount / BADGE_SCROLL_SPEED) % allBadges.size();
+            for (int i = 0; i < badgeCount.get(); i++) {
+                badgesToRender.add(allBadges.get((i + offset) % allBadges.size()));
+            }
+        }
+
+        float totalWidth = LeaderboardBadge.WIDTH * badgesToRender.size() + BADGE_MARGIN * (badgesToRender.size() - 1);
         float xOffset = -(totalWidth / 2) + LeaderboardBadge.WIDTH / 2F;
         float yOffset = 15F;
         if (height == 0) {
             yOffset += 10F;
         }
 
-        for (LeaderboardBadge badge : badges) {
+        for (LeaderboardBadge badge : badgesToRender) {
             RenderUtils.renderProfessionBadge(
                     event.getPoseStack(),
                     event.getEntityRenderDispatcher(),

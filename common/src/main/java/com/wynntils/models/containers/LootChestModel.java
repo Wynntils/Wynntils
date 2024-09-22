@@ -36,10 +36,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
-    private static final int LOOT_CHEST_ITEM_COUNT = 27;
+    public static final int LOOT_CHEST_ITEM_COUNT = 27;
 
     @Persisted
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
@@ -124,11 +124,11 @@ public final class LootChestModel extends Model {
 
         GearBoxItem gearBox = gearBoxItem.get();
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
-            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
+            WynntilsMod.postEvent(new MythicFoundEvent(itemStack, false));
 
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
                 storeMythicFind(itemStack, gearBox.getLevelRange());
-                resetDryStatistics();
+                resetNormalDryStatistics();
             }
         }
     }
@@ -186,7 +186,7 @@ public final class LootChestModel extends Model {
         mythicFinds.touched();
     }
 
-    private void resetDryStatistics() {
+    private void resetNormalDryStatistics() {
         dryBoxes.store(0);
         dryCount.store(0);
         dryEmeralds.store(0);

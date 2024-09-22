@@ -29,7 +29,7 @@ import java.util.TreeSet;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends Feature {
@@ -115,7 +115,7 @@ public class ItemFavoriteFeature extends Feature {
                 Texture.FAVORITE_ICON.resource(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
-                400,
+                399,
                 9,
                 9,
                 Texture.FAVORITE_ICON.width(),

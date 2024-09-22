@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.lootrunpaths;
@@ -7,17 +7,22 @@ package com.wynntils.services.lootrunpaths;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.services.lootrunpaths.type.LootrunPath;
 import com.wynntils.services.lootrunpaths.type.LootrunSaveResult;
+import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -59,7 +64,7 @@ public final class LootrunPathFileParser {
                 JsonObject positionJson = noteJson.getAsJsonObject("position");
 
                 // Artemis builds, until this point have used a slightly different format for notes
-                // This perserves support for those files, as this commit fixes the format to match legacy
+                // This preserves support for those files, as this commit fixes the format to match legacy
                 if (positionJson == null) {
                     positionJson = noteJson.getAsJsonObject("location");
                 }
@@ -68,7 +73,8 @@ public final class LootrunPathFileParser {
                         positionJson.get("x").getAsDouble(),
                         positionJson.get("y").getAsDouble(),
                         positionJson.get("z").getAsDouble());
-                Component component = Component.Serializer.fromJson(noteJson.get("note"));
+                Component component = Component.Serializer.fromJson(
+                        noteJson.get("note"), McUtils.mc().player.registryAccess());
                 LootrunNote note = new LootrunNote(position, component);
                 notes.add(note);
             }
@@ -116,15 +122,22 @@ public final class LootrunPathFileParser {
                 locationJson.addProperty("z", position.z());
                 noteJson.add("location", locationJson);
 
-                noteJson.add("note", Component.Serializer.toJsonTree(note.component()));
+                String noteString = Component.Serializer.toJson(
+                        note.component(), McUtils.mc().player.registryAccess());
+
+                // Parse the JSON string back into a JSON object
+                JsonObject noteObject = JsonParser.parseString(noteString).getAsJsonObject();
+                noteJson.add("note", noteObject);
                 notes.add(noteJson);
             }
             json.add("notes", notes);
 
-            json.addProperty(
-                    "date",
-                    DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.US)
-                            .format(new Date()));
+            ZonedDateTime time = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+
+            DateTimeFormatter formatter =
+                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.US);
+
+            json.addProperty("date", time.format(formatter));
             FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8);
             WynntilsMod.GSON.toJson(json, writer);
             writer.close();

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards.type;
@@ -31,6 +31,6 @@ public record CharmInstance(int rerolls, List<StatActualValue> identifications, 
     }
 
     public boolean isDefective() {
-        return overallQuality.orElse(0.0f) <= 0.0f;
+        return overallQuality.isPresent() && overallQuality.orElse(0.0f) <= 0.0f;
     }
 }

@@ -26,6 +26,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -115,7 +116,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         if (requirements.quest().isPresent()) {
             String questName = requirements.quest().get();
             Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
-            boolean fulfilled = quest.isPresent() && quest.get().getStatus() == ActivityStatus.COMPLETED;
+            boolean fulfilled = quest.isPresent() && quest.get().status() == ActivityStatus.COMPLETED;
             header.add(buildRequirementLine("Quest Req: " + questName, fulfilled));
             requirementsCount++;
         }
@@ -151,7 +152,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
     }
 
     @Override
-    public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance) {
+    public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean showItemType) {
         List<Component> footer = new ArrayList<>();
 
         // major ids
@@ -181,7 +182,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
                 if (!gearInstance.powders().isEmpty()) {
                     MutableComponent powderList = Component.literal("[");
                     for (Powder p : gearInstance.powders()) {
-                        String symbol = p.getColoredSymbol();
+                        String symbol = p.getColoredSymbol().getString();
                         if (!powderList.getSiblings().isEmpty()) symbol = " " + symbol;
                         powderList.append(Component.literal(symbol));
                     }
@@ -194,7 +195,14 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
 
         // tier & rerolls
         GearTier gearTier = gearInfo.tier();
-        MutableComponent tier = Component.literal(gearTier.getName() + " Item").withStyle(gearTier.getChatFormatting());
+        MutableComponent itemTypeName = showItemType
+                ? Component.literal(
+                        StringUtils.capitalizeFirst(gearInfo.type().name().toLowerCase(Locale.ROOT)))
+                : Component.literal("Item");
+        MutableComponent tier = Component.literal(gearTier.getName())
+                .withStyle(gearTier.getChatFormatting())
+                .append(" ")
+                .append(itemTypeName);
         if (gearInstance != null && gearInstance.rerolls() > 1) {
             tier.append(" [" + gearInstance.rerolls() + "]");
         }

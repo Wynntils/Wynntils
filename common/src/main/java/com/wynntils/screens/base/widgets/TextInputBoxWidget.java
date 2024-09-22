@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -202,6 +202,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     /**
      * Determines the text to render based on cursor position and maxTextWidth
+     *
      * @return The text to render, and the starting position of the text within the entire text
      */
     private Pair<String, Integer> getRenderedText(float maxTextWidth) {
@@ -511,6 +512,25 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
+    public void setTextBoxInput(String textBoxInput) {
+        this.textBoxInput = textBoxInput;
+        setCursorAndHighlightPositions(textBoxInput.length());
+
+        this.onUpdateConsumer.accept(this.textBoxInput);
+    }
+
+    /**
+     * Resets the text box input to an empty string.
+     * <p><b>
+     * This method does not call {@link TextInputBoxWidget#onUpdateConsumer}.
+     * If you want the consumer to be called, use {@link TextInputBoxWidget#setTextBoxInput(String)}.
+     * </b></p>
+     */
+    public void resetTextBoxInput() {
+        this.textBoxInput = "";
+        setCursorAndHighlightPositions(0);
+    }
+
     protected void drawCursor(
             PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
         if (isDragging || hasHighlighted()) return;
@@ -540,16 +560,10 @@ public class TextInputBoxWidget extends AbstractWidget {
         textboxScreen.setFocusedTextInput(null);
     }
 
-    public void setTextBoxInput(String textBoxInput) {
-        this.textBoxInput = textBoxInput;
-        setCursorAndHighlightPositions(textBoxInput.length());
-
-        this.onUpdateConsumer.accept(this.textBoxInput);
-    }
-
     /**
      * Sets the cursor position to the given value.
      * Accepts values outside the bounds of the text box, it will clamp them.
+     *
      * @param cursorPosition
      */
     protected void setCursorPosition(int cursorPosition) {

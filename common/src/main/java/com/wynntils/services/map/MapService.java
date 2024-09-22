@@ -10,12 +10,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.BoundingCircle;
 import com.wynntils.utils.type.BoundingShape;
 import java.io.IOException;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
@@ -26,17 +28,11 @@ public final class MapService extends Service {
 
     public MapService() {
         super(List.of());
-
-        loadData();
     }
 
     @Override
-    public void reloadData() {
-        loadData();
-    }
-
-    private void loadData() {
-        loadMaps();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_MAPS).handleReader(this::handleMaps);
     }
 
     public List<MapTexture> getMapsForBoundingBox(BoundingBox box) {
@@ -58,20 +54,15 @@ public final class MapService extends Service {
         return !getMapsForBoundingCircle(textureBoundingCircle).isEmpty();
     }
 
-    private void loadMaps() {
-        maps.clear();
+    private void handleMaps(Reader reader) {
+        Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_MAPS);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
+        List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
+        for (MapPartProfile mapPart : mapPartList) {
+            String fileName = mapPart.md5 + ".png";
 
-            List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
-            for (MapPartProfile mapPart : mapPartList) {
-                String fileName = mapPart.md5 + ".png";
-
-                loadMapPart(mapPart, fileName);
-            }
-        });
+            loadMapPart(mapPart, fileName);
+        }
     }
 
     private void loadMapPart(MapPartProfile mapPart, String fileName) {

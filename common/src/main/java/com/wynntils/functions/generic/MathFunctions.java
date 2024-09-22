@@ -210,6 +210,19 @@ public final class MathFunctions {
         }
     }
 
+    public static class LongFunction extends GenericFunction<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            return arguments.getArgument("value").getLongValue();
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+        }
+    }
+
     public static class RandomFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {

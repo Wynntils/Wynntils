@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.filters;
@@ -11,12 +11,9 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
 
 public class AnyStatFilters {
-    public static final class AnyStringStatFilter extends StatFilter<String> {
-        @Override
-        public boolean matches(String value) {
-            return true;
-        }
+    private static final String ANY_FILTER_INPUT = "*";
 
+    public static final class AnyStringStatFilter extends AbstractAnyStatFilter<String> {
         public static final class AnyStringStatFilterFactory extends AbstractAnyStatFilterFactory<AnyStringStatFilter> {
             @Override
             protected AnyStringStatFilter getAnyStatFilter() {
@@ -25,12 +22,7 @@ public class AnyStatFilters {
         }
     }
 
-    public static final class AnyIntegerStatFilter extends StatFilter<Integer> {
-        @Override
-        public boolean matches(Integer value) {
-            return true;
-        }
-
+    public static final class AnyIntegerStatFilter extends AbstractAnyStatFilter<Integer> {
         public static final class AnyIntegerStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyIntegerStatFilter> {
             @Override
@@ -40,12 +32,7 @@ public class AnyStatFilters {
         }
     }
 
-    public static final class AnyCappedValueStatFilter extends StatFilter<CappedValue> {
-        @Override
-        public boolean matches(CappedValue value) {
-            return true;
-        }
-
+    public static final class AnyCappedValueStatFilter extends AbstractAnyStatFilter<CappedValue> {
         public static final class AnyCappedValueStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyCappedValueStatFilter> {
             @Override
@@ -55,12 +42,7 @@ public class AnyStatFilters {
         }
     }
 
-    public static final class AnyStatValueStatFilter extends StatFilter<StatValue> {
-        @Override
-        public boolean matches(StatValue value) {
-            return true;
-        }
-
+    public static final class AnyStatValueStatFilter extends AbstractAnyStatFilter<StatValue> {
         public static final class AnyStatValueStatFilterFactory
                 extends AbstractAnyStatFilterFactory<AnyStatValueStatFilter> {
             @Override
@@ -70,9 +52,19 @@ public class AnyStatFilters {
         }
     }
 
-    private abstract static class AbstractAnyStatFilterFactory<T> extends StatFilterFactory<T> {
-        private static final String ANY_FILTER_INPUT = "*";
+    public abstract static class AbstractAnyStatFilter<T> extends StatFilter<T> {
+        @Override
+        public final boolean matches(T value) {
+            return true;
+        }
 
+        @Override
+        public final String asString() {
+            return ANY_FILTER_INPUT;
+        }
+    }
+
+    private abstract static class AbstractAnyStatFilterFactory<T> extends StatFilterFactory<T> {
         @Override
         public final Optional<T> create(String inputString) {
             if (inputString.equals(ANY_FILTER_INPUT)) {
@@ -80,6 +72,10 @@ public class AnyStatFilters {
             }
 
             return Optional.empty();
+        }
+
+        public final T create() {
+            return getAnyStatFilter();
         }
 
         protected abstract T getAnyStatFilter();

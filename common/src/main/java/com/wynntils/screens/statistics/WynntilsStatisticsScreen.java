@@ -1,14 +1,16 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.statistics;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
+import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.statistics.widgets.StatisticButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -21,15 +23,15 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
+import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsStatisticsScreen
-        extends WynntilsListScreen<Pair<StatisticKind, StatisticEntry>, StatisticButton> {
-    private StatisticButton highlightedButton;
+public final class WynntilsStatisticsScreen extends WynntilsListScreen<StatisticKind, StatisticButton> {
+    private StatisticKind highlightedStatisticKind;
 
     private WynntilsStatisticsScreen() {
         super(Component.translatable("screens.wynntils.statistics.name"));
@@ -64,6 +66,37 @@ public final class WynntilsStatisticsScreen
                 Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
+
+        this.addRenderableWidget(new FilterButton(
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 15) / 2f),
+                157,
+                30,
+                30,
+                Texture.FAVORITE_ICON,
+                false,
+                List.of(Component.literal("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(Component.translatable("screens.wynntils.statistics.modeButton.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                List.of(
+                        Component.translatable("screens.wynntils.statistics.modeButton.descriptionOverall")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.statistics.modeButton.enabled")
+                                .withStyle(ChatFormatting.GRAY)),
+                List.of(
+                        Component.translatable("screens.wynntils.statistics.modeButton.descriptionSingle")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.statistics.modeButton.disabled")
+                                .withStyle(ChatFormatting.GRAY)),
+                () -> {
+                    Storage<Boolean> screenOverallMode = Services.Statistics.screenOverallMode;
+                    screenOverallMode.store(!screenOverallMode.get());
+                    reloadElements();
+                },
+                Services.Statistics.screenOverallMode::get));
     }
 
     @Override
@@ -98,7 +131,7 @@ public final class WynntilsStatisticsScreen
     }
 
     private void renderDescription(PoseStack poseStack) {
-        if (highlightedButton == null) {
+        if (highlightedStatisticKind == null) {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
@@ -113,12 +146,12 @@ public final class WynntilsStatisticsScreen
             return;
         }
 
-        Pair<StatisticKind, StatisticEntry> statistic = highlightedButton.getStatistic();
-        StatisticKind statisticKind = statistic.a();
-        StatisticEntry entry = statistic.b();
+        StatisticEntry entry = Services.Statistics.screenOverallMode.get()
+                ? Services.Statistics.getOverallStatistic(highlightedStatisticKind)
+                : Services.Statistics.getStatistic(highlightedStatisticKind);
 
         poseStack.pushPose();
-        poseStack.translate(20, 80, 0);
+        poseStack.translate(20, 75, 0);
 
         // Name
         poseStack.pushPose();
@@ -126,7 +159,7 @@ public final class WynntilsStatisticsScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(statisticKind.getName()),
+                        StyledText.fromString(highlightedStatisticKind.getName()),
                         0,
                         0,
                         (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20) / 1.2f,
@@ -137,9 +170,9 @@ public final class WynntilsStatisticsScreen
         poseStack.popPose();
 
         // Statistics
-        switch (statisticKind.getType()) {
-            case COUNT -> renderCountStatistics(poseStack, statisticKind, entry);
-            case ADVANCED -> renderAdvancedStatistics(poseStack, statisticKind, entry);
+        switch (highlightedStatisticKind.getType()) {
+            case COUNT -> renderCountStatistics(poseStack, highlightedStatisticKind, entry);
+            case ADVANCED -> renderAdvancedStatistics(poseStack, highlightedStatisticKind, entry);
         }
 
         poseStack.popPose();
@@ -227,12 +260,12 @@ public final class WynntilsStatisticsScreen
                         TextShadow.NONE);
     }
 
-    public void setHighlightedButton(StatisticButton button) {
-        this.highlightedButton = button;
+    public void setHighlightedStatisticKind(StatisticKind kind) {
+        this.highlightedStatisticKind = kind;
     }
 
-    public StatisticButton getHighlightedButton() {
-        return highlightedButton;
+    public StatisticKind getHighlightedStatisticKind() {
+        return highlightedStatisticKind;
     }
 
     @Override
@@ -250,9 +283,7 @@ public final class WynntilsStatisticsScreen
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(Arrays.stream(StatisticKind.values())
-                .map(kind -> new Pair<>(kind, Services.Statistics.getStatistic(kind)))
-                .filter(statisticEntry ->
-                        StringUtils.partialMatch(statisticEntry.a().getName(), searchTerm))
+                .filter(statisticEntry -> StringUtils.partialMatch(statisticEntry.getName(), searchTerm))
                 .toList());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -23,7 +23,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomTradeMarketResultScreenFeature extends Feature {
@@ -38,20 +38,26 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
         if (event.getWrappedScreenClass() != TradeMarketSearchResultScreen.class) return;
 
+        boolean shouldOpen = false;
+
         switch (shiftBehaviorConfig.get()) {
             case NONE -> {
-                event.setOpenScreen(true);
+                shouldOpen = true;
             }
             case ENABLED_IF_SHIFT_HELD -> {
                 if (shiftClickedSearchItem) {
-                    event.setOpenScreen(true);
+                    shouldOpen = true;
                 }
             }
             case DISABLED_IF_SHIFT_HELD -> {
                 if (!shiftClickedSearchItem) {
-                    event.setOpenScreen(true);
+                    shouldOpen = true;
                 }
             }
+        }
+
+        if (shouldOpen) {
+            event.setOpenScreen(true);
         }
     }
 

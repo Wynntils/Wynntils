@@ -4,6 +4,9 @@
  */
 package com.wynntils.models.players;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -14,14 +17,17 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
+import com.wynntils.models.players.type.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.TimedSet;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -30,11 +36,14 @@ import java.util.stream.Stream;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
+    private static final Gson PLAYER_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(WynnPlayerInfo.class, new WynnPlayerInfo.WynnPlayerInfoDeserializer())
+            .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
-    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
+    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_WC(\\d+)$");
 
     // If there is a failure with the API, give it time to recover
     private static final int ERROR_TIMEOUT_MINUTE = 5;
@@ -159,7 +168,8 @@ public final class PlayerModel extends Model {
         fetching.add(uuid); // temporary, avoid extra loads
         nameMap.put(uuid, userName);
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
+        ApiResponse apiResponse =
+                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(
                 json -> {
                     if (json.has("message") && json.get("message").getAsString().equals(ATHENA_USER_NOT_FOUND)) {
@@ -188,6 +198,21 @@ public final class PlayerModel extends Model {
 
                     saveUserFailures(uuid, userName);
                 });
+    }
+
+    public CompletableFuture<WynnPlayerInfo> getPlayer(String username) {
+        CompletableFuture<WynnPlayerInfo> future = new CompletableFuture<>();
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
+        apiResponse.handleJsonObject(
+                json -> {
+                    Type type = new TypeToken<WynnPlayerInfo>() {}.getType();
+
+                    future.complete(PLAYER_GSON.fromJson(json, type));
+                },
+                onError -> future.complete(null));
+
+        return future;
     }
 
     private void saveUserFailures(UUID uuid, String userName) {

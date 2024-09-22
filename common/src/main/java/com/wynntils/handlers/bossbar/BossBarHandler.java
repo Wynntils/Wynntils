@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.bossbar;
@@ -23,7 +23,7 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.world.BossEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class BossBarHandler extends Handler {
     private final Map<UUID, TrackedBar> presentBars = new HashMap<>();
@@ -85,6 +85,7 @@ public class BossBarHandler extends Handler {
             }
 
             trackedBar.onUpdateName(matcher);
+            trackedBar.onUpdateProgress(progress);
 
             presentBars.put(id, trackedBar);
         }
@@ -112,7 +113,6 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateProgress(UUID id, float progress) {
             handleBarUpdate(id, trackedBar -> {
-                event.setCanceled(true);
                 trackedBar.getEvent().setProgress(progress);
                 trackedBar.onUpdateProgress(progress);
             });

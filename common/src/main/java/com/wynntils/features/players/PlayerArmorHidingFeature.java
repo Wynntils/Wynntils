@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.PLAYERS)
@@ -43,22 +43,28 @@ public class PlayerArmorHidingFeature extends Feature {
                     return;
                 }
 
-                // only cancel if helmet item isn't cosmetic - all helmet skins use a pickaxe texture
+                // Only cancel if the helmet item isn't cosmetic.
+                // Pre-2.1 cosmetics helmet skins use a diamond pickaxe texture
+                // Cosmetics released after 2.1 use an iron horse armor texture
                 ItemStack headItem = event.getPlayer().getItemBySlot(event.getSlot());
-                if (headItem.getItem() != Items.DIAMOND_PICKAXE) event.setCanceled(true);
-                return;
+                if (headItem.getItem() != Items.DIAMOND_PICKAXE && headItem.getItem() != Items.IRON_HORSE_ARMOR) {
+                    event.setCanceled(true);
+                }
             }
             case CHEST -> {
-                if (hideChestplates.get()) event.setCanceled(true);
-                return;
+                if (hideChestplates.get()) {
+                    event.setCanceled(true);
+                }
             }
             case LEGS -> {
-                if (hideLeggings.get()) event.setCanceled(true);
-                return;
+                if (hideLeggings.get()) {
+                    event.setCanceled(true);
+                }
             }
             case FEET -> {
-                if (hideBoots.get()) event.setCanceled(true);
-                return;
+                if (hideBoots.get()) {
+                    event.setCanceled(true);
+                }
             }
         }
     }

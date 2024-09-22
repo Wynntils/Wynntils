@@ -7,12 +7,17 @@ package com.wynntils.overlays.custombars;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.BarOverlay;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.utils.type.ErrorOr;
 
-public abstract class CustomBarOverlayBase extends BarOverlay {
+public abstract class CustomBarOverlayBase extends BarOverlay implements CustomNameProperty {
+    @Persisted
+    public final HiddenConfig<String> customName = new HiddenConfig<>("");
+
     @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
     public final Config<String> textTemplate = new Config<>("");
 
@@ -53,6 +58,16 @@ public abstract class CustomBarOverlayBase extends BarOverlay {
         // the overlay is rendered when the template evaluates to true.
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
+    }
+
+    @Override
+    public Config<String> getCustomName() {
+        return customName;
+    }
+
+    @Override
+    public void setCustomName(String newName) {
+        customName.setValue(newName);
     }
 
     protected abstract BarOverlayTemplatePair getActualPreviewTemplate();

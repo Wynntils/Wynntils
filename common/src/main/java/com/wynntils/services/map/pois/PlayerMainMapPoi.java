@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -34,7 +34,9 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
+            float zoomRenderScale,
+            float zoomLevel,
+            boolean showLabels) {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 

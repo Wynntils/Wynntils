@@ -56,4 +56,8 @@ public enum GuildResource {
     public String getPrettySymbol() {
         return color + symbol + (!symbol.isEmpty() ? " " : "");
     }
+
+    public boolean isMaterialResource() {
+        return this != EMERALDS;
+    }
 }

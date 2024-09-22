@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
@@ -26,11 +26,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Crypt;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class WynntilsAccountService extends Service {
     private static final String NO_TOKEN = "<no token>";
+    private static final Logger log = LoggerFactory.getLogger(WynntilsAccountService.class);
 
     private String token = NO_TOKEN;
     private boolean loggedIn = false;
@@ -40,12 +43,10 @@ public final class WynntilsAccountService extends Service {
 
     public WynntilsAccountService() {
         super(List.of());
-
-        login();
     }
 
-    public void reauth() {
-        loggedIn = false;
+    @Override
+    public void reloadData() {
         login();
     }
 
@@ -54,17 +55,30 @@ public final class WynntilsAccountService extends Service {
         if (!event.isFirstJoinWorld()) return;
 
         if (!loggedIn) {
-            MutableComponent failed = Component.literal(
-                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+            MutableComponent failed = Component.translatable("service.wynntils.wynntilsAccount.failedToConnect")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reauth")
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect1")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect2")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
+                            .withUnderlined(true)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect3")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
             McUtils.sendMessageToClient(failed);
         }
+    }
+
+    // Wrapper for callApi with Wynntils authentication
+    public ApiResponse callApi(UrlId urlId, Map<String, String> arguments) {
+        return Managers.Net.callApi(urlId, arguments, Map.of("authToken", isLoggedIn() ? token : ""));
+    }
+
+    // Wrapper for callApi with Wynntils authentication
+    public ApiResponse callApi(UrlId urlId) {
+        return callApi(urlId, Map.of());
     }
 
     private void login() {

@@ -5,11 +5,14 @@
 package com.wynntils.services.itemfilter.statproviders.territory;
 
 import com.wynntils.models.items.items.gui.TerritoryItem;
-import java.util.List;
+import java.util.Optional;
 
 public class TerritoryTreasuryStatProvider extends TerritoryStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(TerritoryItem territoryItem) {
-        return territoryItem.getTreasuryBonus() == -1 ? List.of() : List.of(territoryItem.getTreasuryBonus());
+    public Optional<Integer> getValue(TerritoryItem territoryItem) {
+        // We don't support float stat providers, so we cast to int
+        return territoryItem.getTreasuryBonus() == -1
+                ? Optional.empty()
+                : Optional.of((int) territoryItem.getTreasuryBonus());
     }
 }

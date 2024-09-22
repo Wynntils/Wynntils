@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.charm;
@@ -19,6 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 
 public class GuideCharmItemStack extends GuideItemStack {
@@ -41,7 +42,7 @@ public class GuideCharmItemStack extends GuideItemStack {
     }
 
     @Override
-    public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
+    public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
         appendObtainInfo(tooltipLines, charmInfo.metaInfo().obtainInfo());
@@ -63,7 +64,8 @@ public class GuideCharmItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new CharmItem(charmInfo, null), true);
+        IdentifiableTooltipBuilder tooltipBuilder =
+                Handlers.Tooltip.buildNew(new CharmItem(charmInfo, null), true, false);
         this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache

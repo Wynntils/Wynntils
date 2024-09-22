@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -26,7 +27,7 @@ import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends Feature {
@@ -73,6 +74,12 @@ public class ItemGuessFeature extends Feature {
             int level = entry.getKey();
             List<MutableComponent> itemsForLevel = entry.getValue();
 
+            if (itemsForLevel.isEmpty()) {
+                WynntilsMod.warn("No items for level " + level + " in gear box " + gearBoxItem.getGearTier() + " "
+                        + gearBoxItem.getLevelRange() + "!");
+                continue;
+            }
+
             MutableComponent guesses = Component.literal("    ");
 
             guesses.append(Component.literal("- ")
@@ -91,12 +98,14 @@ public class ItemGuessFeature extends Feature {
 
             guesses.append(StyledText.fromString("§7: ").getComponent());
 
-            Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
-                    .reduce((i, j) -> i.append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
-                            .append(j));
+            MutableComponent itemsComponent = Component.empty();
+            itemsComponent.append(itemsForLevel.getFirst());
+            itemsForLevel.stream().skip(1).forEach(i -> itemsComponent
+                    .append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
+                    .append(i));
 
-            if (itemsComponent.isPresent()) {
-                guesses.append(itemsComponent.get());
+            if (!itemsForLevel.isEmpty()) {
+                guesses.append(itemsComponent);
 
                 addon.add(guesses);
             }

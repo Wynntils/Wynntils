@@ -13,6 +13,7 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class PlaceListProvider extends BuiltInProvider {
@@ -29,13 +30,13 @@ public class PlaceListProvider extends BuiltInProvider {
     }
 
     public static void registerFeature(Label label) {
-        PROVIDED_FEATURES.add(new ServiceLocation(label));
+        PROVIDED_FEATURES.add(new PlaceLocation(label));
     }
 
-    private static final class ServiceLocation implements MapLocation {
+    private static final class PlaceLocation implements MapLocation {
         private final Label label;
 
-        public ServiceLocation(Label label) {
+        private PlaceLocation(Label label) {
             this.label = label;
         }
 
@@ -50,18 +51,18 @@ public class PlaceListProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return label.getName();
+                public Optional<String> getLabel() {
+                    return Optional.of(label.getName());
                 }
 
                 @Override
-                public int getLevel() {
-                    return label.getCombatLevel();
+                public Optional<Integer> getLevel() {
+                    return label.getLevel();
                 }
-            };
+            });
         }
 
         @Override

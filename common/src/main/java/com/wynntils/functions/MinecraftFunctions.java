@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -7,6 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
@@ -42,6 +43,20 @@ public class MinecraftFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return (int) McUtils.mc().level.getGameTime();
+        }
+    }
+
+    public static class KeyPressedFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            int keyCode = arguments.getArgument("keyCode").getIntegerValue();
+            return KeyboardUtils.isKeyDown(keyCode);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("keyCode", Integer.class, null)));
         }
     }
 }

@@ -53,7 +53,7 @@ public record GearInstance(
     }
 
     public boolean isDefective() {
-        return overallQuality.orElse(0.0f) <= 0.0f;
+        return overallQuality.isPresent() && overallQuality.orElse(0.0f) <= 0.0f;
     }
 
     public StatActualValue getActualValue(StatType statType) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -19,17 +19,17 @@ public class GuildAttackScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
-        Models.GuildAttackTimer.processChanges(newValue);
+        Models.GuildAttackTimer.processScoreboardChanges(newValue);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.GuildAttackTimer.resetTimers();
+        // Do nothing, war timer model will clean up after itself
     }
 
     @Override
     public void reset() {
-        Models.GuildAttackTimer.resetTimers();
+        // Do nothing, war timer model will clean up after itself
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.item;
@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.items.WynnItem;
@@ -23,15 +24,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class ItemHandler extends Handler {
     private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
@@ -124,6 +131,31 @@ public class ItemHandler extends Handler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntitySpawn(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+
+        int itemId = -1;
+        if (entity instanceof ItemEntity) {
+            itemId = ItemEntity.DATA_ITEM.id();
+        } else if (entity instanceof Display.ItemDisplay) {
+            itemId = Display.ItemDisplay.DATA_ITEM_STACK_ID.id();
+        }
+
+        // No item on this entity
+        if (itemId == -1) return;
+
+        // Item entities can have an item that needs to be annotated
+        for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
+            if (packedItem.id() == itemId) {
+                if (!(packedItem.value() instanceof ItemStack itemStack)) return;
+
+                annotate(itemStack);
+                return;
+            }
+        }
+    }
+
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
@@ -174,7 +206,7 @@ public class ItemHandler extends Handler {
             ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
             if (event.isCanceled()) {
-                newItem.setHoverName(existingItem.getHoverName());
+                newItem.set(DataComponents.CUSTOM_NAME, existingItem.getHoverName());
             }
         } else {
             // The name is different, and it is not a know special name. This means it could be a
@@ -218,10 +250,16 @@ public class ItemHandler extends Handler {
      * It might have additional lines added, but these are not checked.
      */
     private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
-        List<StyledText> firstLines = LoreUtils.getLore(firstItem);
-        List<StyledText> secondLines = LoreUtils.getLore(secondItem);
-        int firstLinesLen = firstLines.size();
-        int secondLinesLen = secondLines.size();
+        List<StyledText> firstLoreLines = LoreUtils.getLore(firstItem);
+        List<StyledText> secondLoreLines = LoreUtils.getLore(secondItem);
+
+        // Tags implement equals, so we can use this to check if the lore is identical
+        // This is the most common short-circuit case
+        if (Objects.equals(firstLoreLines, secondLoreLines)) return true;
+
+        // Continue, as we allow 3 lines to differ
+        int firstLinesLen = firstLoreLines.size();
+        int secondLinesLen = secondLoreLines.size();
 
         // Only allow a maximum number of additional lines in the longer tooltip
         if (Math.abs(firstLinesLen - secondLinesLen) > 3) return false;
@@ -231,8 +269,8 @@ public class ItemHandler extends Handler {
         if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
 
         for (int i = 0; i < linesToCheck; i++) {
-            StyledText firstLine = firstLines.get(i);
-            StyledText secondLine = secondLines.get(i);
+            StyledText firstLine = firstLoreLines.get(i);
+            StyledText secondLine = secondLoreLines.get(i);
 
             if (!firstLine.equals(secondLine)) return false;
         }
@@ -264,7 +302,7 @@ public class ItemHandler extends Handler {
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
                 WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
+                WynntilsMod.warn("Problematic item tags:" + itemStack.getTags());
 
                 McUtils.sendErrorToClient("Not all items will be properly parsed.");
             }
@@ -335,5 +373,9 @@ public class ItemHandler extends Handler {
     public void resetProfiling() {
         profilingTimes.clear();
         profilingCounts.clear();
+    }
+
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
     }
 }

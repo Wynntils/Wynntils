@@ -12,6 +12,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class CombatListProvider extends BuiltInProvider {
@@ -56,13 +57,13 @@ public class CombatListProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return new AbstractMapAttributes() {
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
                 @Override
-                public String getLabel() {
-                    return name;
+                public Optional<String> getLabel() {
+                    return Optional.of(name);
                 }
-            };
+            });
         }
 
         @Override

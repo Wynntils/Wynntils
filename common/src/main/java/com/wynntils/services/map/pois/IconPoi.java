@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -67,7 +67,9 @@ public abstract class IconPoi implements Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
+            float zoomRenderScale,
+            float zoomLevel,
+            boolean showLabels) {
         float modifier = scale;
 
         if (hovered) {
@@ -84,7 +86,7 @@ public abstract class IconPoi implements Poi {
                 bufferSource,
                 icon.resource(),
                 this.getIconColor(),
-                this.getIconAlpha(mapZoom),
+                this.getIconAlpha(zoomRenderScale),
                 renderX - width / 2,
                 renderY - height / 2,
                 getDisplayPriority().ordinal(), // z-index for rendering
@@ -109,5 +111,10 @@ public abstract class IconPoi implements Poi {
 
             poseStack.popPose();
         }
+    }
+
+    @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return this.getIconAlpha(zoomRenderScale) >= 0.1f;
     }
 }

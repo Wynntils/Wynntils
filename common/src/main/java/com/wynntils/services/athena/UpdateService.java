@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
@@ -39,7 +39,8 @@ public final class UpdateService extends Service {
         String stream = getStream();
         WynntilsMod.info("Checking for update for stream " + stream + ".");
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
+        ApiResponse apiResponse =
+                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
         apiResponse.handleJsonObject(
                 json -> {
                     String version = json.getAsJsonPrimitive("version").getAsString();
@@ -80,7 +81,8 @@ public final class UpdateService extends Service {
         String stream = getStream();
         WynntilsMod.info("Attempting to download update for stream " + stream + ".");
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
+        ApiResponse apiResponse =
+                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
         apiResponse.handleJsonObject(
                 json -> {
                     String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();

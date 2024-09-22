@@ -1,20 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.gui;
 
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.utils.type.CappedValue;
-import net.minecraft.ChatFormatting;
 
 public class ArchetypeAbilitiesItem extends GuiItem implements CountedItemProperty {
     private final CappedValue abilitiesCount;
-    private final ChatFormatting color;
 
-    public ArchetypeAbilitiesItem(CappedValue cappedValue, char colorCode) {
+    public ArchetypeAbilitiesItem(CappedValue cappedValue) {
         this.abilitiesCount = cappedValue;
-        this.color = ChatFormatting.getByCode(colorCode);
     }
 
     @Override
@@ -31,12 +28,8 @@ public class ArchetypeAbilitiesItem extends GuiItem implements CountedItemProper
         return abilitiesCount;
     }
 
-    public ChatFormatting getColor() {
-        return color;
-    }
-
     @Override
     public String toString() {
-        return "ArchetypeItem{" + "count=" + abilitiesCount + ", color=" + color.getName() + '}';
+        return "ArchetypeItem{" + "count=" + abilitiesCount + '}';
     }
 }

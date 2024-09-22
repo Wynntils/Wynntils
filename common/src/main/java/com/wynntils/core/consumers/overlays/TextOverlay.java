@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -20,8 +19,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * An overlay, which main purpose is to display function templates.
@@ -68,14 +67,15 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!isRendered()) return;
 
         renderTemplate(poseStack, bufferSource, cachedLines, getTextScale());
     }
 
     @Override
-    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+    public void renderPreview(
+            PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
         renderTemplate(poseStack, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
@@ -106,10 +106,9 @@ public abstract class TextOverlay extends DynamicOverlay {
         }
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
+    @Override
+    public void tick() {
         if (!Models.WorldState.onWorld()) return;
-
         cachedLines = calculateTemplateValue(getTemplate());
     }
 
@@ -129,17 +128,23 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     protected abstract String getPreviewTemplate();
 
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
-
-    public boolean isRendered() {
+    public final boolean isRendered() {
         // If the enabled template is empty,
         // the overlay is rendered when the player is in the world.
-        if (enabledTemplate.get().isEmpty()) return Models.WorldState.onWorld();
+        if (enabledTemplate.get().isEmpty()) return isRenderedDefault();
 
         // If the enabled template is not empty,
         // the overlay is rendered when the template is true.
         ErrorOr<Boolean> enabledOrError = Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
         return !enabledOrError.hasError() && enabledOrError.getValue();
+    }
+
+    /**
+     * Returns whether the overlay is rendered with the default (empty) template.
+     *
+     * @return whether the overlay is rendered with the default (empty) template
+     */
+    public boolean isRenderedDefault() {
+        return Models.WorldState.onWorld();
     }
 }

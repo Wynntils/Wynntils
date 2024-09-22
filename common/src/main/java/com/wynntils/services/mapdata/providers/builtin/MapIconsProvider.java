@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 import net.minecraft.resources.ResourceLocation;
 
 public class MapIconsProvider extends BuiltInProvider {
+    public static final String FALLBACK_ICON_ID = "wynntils:icon:symbols:waypoint";
+
     private static final List<MapIcon> PROVIDED_ICONS = List.of(
             new BuiltInIcon("wynntils:icon:content:boss-altar", Texture.BOSS_ALTAR),
             new BuiltInIcon("wynntils:icon:content:cave", Texture.CAVE),
@@ -68,6 +70,16 @@ public class MapIconsProvider extends BuiltInProvider {
     @Override
     public Stream<MapIcon> getIcons() {
         return PROVIDED_ICONS.stream();
+    }
+
+    public static String getIconIdFromTexture(Texture texture) {
+        for (MapIcon icon : PROVIDED_ICONS) {
+            if (icon.getResourceLocation().equals(texture.resource())) {
+                return icon.getIconId();
+            }
+        }
+
+        return FALLBACK_ICON_ID;
     }
 
     private static final class BuiltInIcon implements MapIcon {

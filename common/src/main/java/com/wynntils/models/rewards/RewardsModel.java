@@ -6,6 +6,7 @@ package com.wynntils.models.rewards;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearTier;
@@ -30,9 +31,9 @@ public class RewardsModel extends Model {
     }
 
     @Override
-    public void reloadData() {
-        tomeInfoRegistry.reloadData();
-        charmInfoRegistry.reloadData();
+    public void registerDownloads(DownloadRegistry registry) {
+        tomeInfoRegistry.registerDownloads(registry);
+        charmInfoRegistry.registerDownloads(registry);
     }
 
     public CharmInfo getCharmInfoFromDisplayName(String name) {

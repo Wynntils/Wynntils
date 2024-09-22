@@ -6,32 +6,39 @@ package com.wynntils.services.mapdata.attributes.type;
 
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.Optional;
 
+/**
+ * Defines the possible attributes that can be defined. These can be contributed to
+ * either directly in a map feature, or by any level of the category hierarchy.
+ * To contribute a value, implementor should return a non-empty Optional value.
+ * If the value is empty, the search will continue for another implementation,
+ * i.e. the value is inherited.
+ */
 public interface MapAttributes {
     // If this is the empty string (""), then no label will be displayed
-    // null means inherit
-    String getLabel();
+    Optional<String> getLabel();
 
     // If this is MapFeatureIcon.NO_ICON_ID ("none"), then no icon will be displayed
-    // null means inherit
-    String getIconId();
+    Optional<String> getIconId();
 
-    // 1-1000, 1000 is highest priority (drawn on top of everything else)
-    // 0 means no value specified; inherit
-    int getPriority();
+    // 1-1000, 1000 is the highest priority (drawn on top of everything else)
+    Optional<Integer> getPriority();
 
-    // 0 means no information is available, or suitable for all combat levels
-    int getLevel();
+    // The minimum combat level for which this feature is suitable for
+    // 0 means no information is available, or level is not applicable
+    // 1 means suitable for all levels
+    Optional<Integer> getLevel();
 
-    MapVisibility getLabelVisibility();
+    Optional<MapVisibility> getLabelVisibility();
 
-    CustomColor getLabelColor();
+    Optional<CustomColor> getLabelColor();
 
-    TextShadow getLabelShadow();
+    Optional<TextShadow> getLabelShadow();
 
-    MapVisibility getIconVisibility();
+    Optional<MapVisibility> getIconVisibility();
 
-    CustomColor getIconColor();
+    Optional<CustomColor> getIconColor();
 
-    MapDecoration getIconDecoration();
+    Optional<MapDecoration> getIconDecoration();
 }

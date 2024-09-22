@@ -56,14 +56,19 @@ public final class ItemUtils {
     public static boolean isItemEqual(ItemStack oldItem, ItemStack newItem) {
         if (oldItem == null || newItem == null) return oldItem != newItem;
 
-        if (!newItem.getItem().equals(oldItem.getItem())
-                || newItem.getDamageValue() != oldItem.getDamageValue()
-                || newItem.getCount() != oldItem.getCount()
-                || !ItemStack.isSameItemSameTags(oldItem, newItem)) {
-            return false;
-        }
+        return newItem.getItem().equals(oldItem.getItem())
+                && newItem.getDamageValue() == oldItem.getDamageValue()
+                && newItem.getCount() == oldItem.getCount()
+                && ItemStack.isSameItemSameComponents(oldItem, newItem);
+    }
 
-        return true;
+    public static boolean areItemsSimilar(ItemStack a, ItemStack b) {
+        if (a.isEmpty()) {
+            return b.isEmpty();
+        } else {
+            return !b.isEmpty()
+                    && a.getHoverName().getString().equals(b.getHoverName().getString());
+        }
     }
 
     public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {

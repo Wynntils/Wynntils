@@ -10,18 +10,19 @@ import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
-public abstract class TerritoryStatProvider<T extends Comparable<T>> extends ItemStatProvider<T> {
+abstract class TerritoryStatProvider<T extends Comparable<T>> extends ItemStatProvider<T> {
     @Override
-    public final List<T> getValue(WynnItem wynnItem) {
+    public final Optional<T> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof TerritoryItem territoryItem) {
             return getValue(territoryItem);
         }
 
-        return List.of();
+        return Optional.empty();
     }
 
-    public abstract List<T> getValue(TerritoryItem territoryItem);
+    public abstract Optional<T> getValue(TerritoryItem territoryItem);
 
     @Override
     public List<ItemProviderType> getFilterTypes() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.arguments;
@@ -8,6 +8,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.NamedValue;
+import com.wynntils.utils.type.RangedValue;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public final class FunctionArguments {
             }
 
             boolean hasListArgument = arguments.stream().anyMatch(argument -> argument instanceof ListArgument<?>);
-            if (hasListArgument && !(arguments.get(arguments.size() - 1) instanceof ListArgument<?>)) {
+            if (hasListArgument && !(arguments.getLast() instanceof ListArgument<?>)) {
                 throw new IllegalArgumentException("List argument needs to be the last argument.");
             }
 
@@ -130,9 +131,11 @@ public final class FunctionArguments {
                 String.class,
                 Boolean.class,
                 Integer.class,
+                Long.class,
                 Double.class,
                 Number.class,
                 CappedValue.class,
+                RangedValue.class,
                 NamedValue.class,
                 Location.class);
 
@@ -185,6 +188,14 @@ public final class FunctionArguments {
             return (Integer) this.getValue();
         }
 
+        public Long getLongValue() {
+            if (this.type == Number.class) {
+                return ((Number) this.getValue()).longValue();
+            }
+
+            return (Long) this.getValue();
+        }
+
         public Double getDoubleValue() {
             if (this.type == Number.class) {
                 return ((Number) this.getValue()).doubleValue();
@@ -195,6 +206,10 @@ public final class FunctionArguments {
 
         public CappedValue getCappedValue() {
             return (CappedValue) this.getValue();
+        }
+
+        public RangedValue getRangedValue() {
+            return (RangedValue) this.getValue();
         }
 
         public NamedValue getNamedValue() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.lootrunpaths.widgets;
@@ -16,7 +16,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -53,21 +52,18 @@ public class LootrunPathButton extends WynntilsButton {
         CustomColor backgroundColor = getButtonBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
-        int maxTextWidth = this.width - 21;
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                lootrun.name(),
-                                maxTextWidth,
-                                FontRenderer.getInstance().getFont())),
-                        this.getX() + 14,
+                        StyledText.fromString(lootrun.name()),
+                        this.getX() + 2,
                         this.getY() + 1,
-                        0,
+                        this.width - 3,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        1f);
     }
 
     private CustomColor getButtonBackgroundColor() {
@@ -103,7 +99,7 @@ public class LootrunPathButton extends WynntilsButton {
             }
 
             LootrunPath path = lootrun.path();
-            Position start = path.points().get(0);
+            Position start = path.points().getFirst();
 
             McUtils.mc().setScreen(MainMapScreen.create((float) start.x(), (float) start.z()));
             return true;

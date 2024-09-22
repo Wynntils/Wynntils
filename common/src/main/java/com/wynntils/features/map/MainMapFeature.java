@@ -21,9 +21,11 @@ import com.wynntils.models.containers.type.LootChestType;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
@@ -36,7 +38,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
@@ -131,7 +133,7 @@ public class MainMapFeature extends Feature {
     }
 
     private void openWaypointSetup() {
-        PoiLocation location = new PoiLocation(
+        Location location = new Location(
                 McUtils.player().getBlockX(),
                 McUtils.player().getBlockY(),
                 McUtils.player().getBlockZ());
@@ -186,6 +188,19 @@ public class MainMapFeature extends Feature {
                             .withStyle(ChatFormatting.AQUA));
 
             customPois.touched();
+            updateWaypoints();
         }
+    }
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        if (config == customPois) {
+            updateWaypoints();
+        }
+    }
+
+    public void updateWaypoints() {
+        WaypointsProvider.resetFeatures();
+        customPois.get().forEach(WaypointsProvider::registerFeature);
     }
 }

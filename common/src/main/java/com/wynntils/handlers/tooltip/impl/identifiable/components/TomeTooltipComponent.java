@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
@@ -11,9 +11,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.rewards.type.TomeRequirements;
-import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -40,34 +38,22 @@ public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo,
             header.add(Component.empty());
         }
 
-        // Add the special tome stats
-        for (Pair<StatType, Integer> staticBaseStat : tomeInfo.staticBaseStats()) {
-            header.add(Component.literal("Add ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("+" + staticBaseStat.b()
-                                    + staticBaseStat.a().getUnit().getDisplayName() + " "
-                                    + staticBaseStat.a().getDisplayName())
-                            .withStyle(ChatFormatting.WHITE)));
-            header.add(Component.literal("to your character when used").withStyle(ChatFormatting.GRAY));
-        }
-
-        if (!tomeInfo.staticBaseStats().isEmpty()) {
-            header.add(Component.empty());
-        }
-
         return header;
     }
 
     @Override
-    public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+    public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean showItemType) {
         List<Component> footer = new ArrayList<>();
 
         footer.add(Component.empty());
 
         // tier & rerolls
         GearTier gearTier = tomeInfo.tier();
-        MutableComponent tier =
-                Component.literal(gearTier.getName() + " Raid Reward").withStyle(gearTier.getChatFormatting());
+        MutableComponent itemTypeName = showItemType ? Component.literal("Tome") : Component.literal("Raid Reward");
+        MutableComponent tier = Component.literal(gearTier.getName())
+                .withStyle(gearTier.getChatFormatting())
+                .append(" ")
+                .append(itemTypeName);
         if (tomeInstance != null && tomeInstance.rerolls() > 1) {
             tier.append(" [" + tomeInstance.rerolls() + "]");
         }

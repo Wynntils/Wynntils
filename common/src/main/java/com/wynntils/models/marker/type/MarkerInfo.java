@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.marker.type;
@@ -14,7 +14,8 @@ public record MarkerInfo(
         Texture texture,
         CustomColor beaconColor,
         CustomColor textureColor,
-        CustomColor textColor) {
+        CustomColor textColor,
+        String additionalText) {
     public Location location() {
         return locationSupplier.getLocation();
     }

@@ -5,13 +5,16 @@
 package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.containers.type.ScrollableContainerProperty;
 import java.util.regex.Pattern;
 
-public class TradeMarketFiltersContainer extends Container implements ScrollableContainerProperty {
-    private static final Pattern TITLE_PATTERN = Pattern.compile("\\[Pg\\. \\d] Filter Items");
-    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Forward to §fPage \\d+");
-    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Back to §fPage \\d+");
+public class TradeMarketFiltersContainer extends Container
+        implements ScrollableContainerProperty, HighlightableProfessionProperty {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFE8\uE010");
+    private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
+    private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
     public TradeMarketFiltersContainer() {
         super(TITLE_PATTERN);
@@ -29,11 +32,16 @@ public class TradeMarketFiltersContainer extends Container implements Scrollable
 
     @Override
     public int getNextItemSlot() {
-        return 35;
+        return 52;
     }
 
     @Override
     public int getPreviousItemSlot() {
-        return 26;
+        return 50;
+    }
+
+    @Override
+    public ContainerBounds getBounds() {
+        return new ContainerBounds(0, 0, 5, 6);
     }
 }

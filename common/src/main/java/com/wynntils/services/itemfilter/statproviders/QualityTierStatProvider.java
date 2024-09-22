@@ -9,13 +9,14 @@ import com.wynntils.models.items.properties.QualityTierItemProperty;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import java.util.List;
+import java.util.Optional;
 
 public class QualityTierStatProvider extends ItemStatProvider<Integer> {
     @Override
-    public List<Integer> getValue(WynnItem wynnItem) {
-        if (!(wynnItem instanceof QualityTierItemProperty qualityTierItemProperty)) return List.of();
+    public Optional<Integer> getValue(WynnItem wynnItem) {
+        if (!(wynnItem instanceof QualityTierItemProperty qualityTierItemProperty)) return Optional.empty();
 
-        return List.of(qualityTierItemProperty.getQualityTier());
+        return Optional.of(qualityTierItemProperty.getQualityTier());
     }
 
     @Override

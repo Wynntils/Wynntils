@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
@@ -16,6 +16,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class LabelPoi implements Poi {
@@ -63,13 +64,15 @@ public class LabelPoi implements Poi {
             alpha = switch (label.getLayer()) {
                 case PROVINCE -> 0; // Never visible at high zoom
                 case CITY -> MathUtils.map(zoom, 1.0f, 1.3f, 1f, 0f);
-                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);};
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 1.5f, 2.3f, 1f, 0f);
+            };
         } else {
             // Fade out/in when zoomed out
             alpha = switch (label.getLayer()) {
                 case PROVINCE -> MathUtils.map(zoom, 0.2f, 0.25f, 1f, 0f);
                 case CITY -> 1; // always visible at low zoom
-                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);};
+                case TOWN_OR_PLACE -> MathUtils.map(zoom, 0.2f, 0.25f, 0f, 1f);
+            };
         }
 
         return MathUtils.clamp(alpha, 0f, 1f) * 0.9f;
@@ -98,14 +101,16 @@ public class LabelPoi implements Poi {
             float renderY,
             boolean hovered,
             float scale,
-            float mapZoom) {
-        float alpha = getAlphaFromScale(mapZoom);
+            float zoomRenderScale,
+            float zoomLevel,
+            boolean showLabels) {
+        float alpha = getAlphaFromScale(zoomRenderScale);
         if (alpha < 0.01) {
             return; // small enough alphas are turned into 255
         }
         float modifier = scale;
         if (hovered) {
-            modifier *= 1.05;
+            modifier *= 1.05f;
             alpha = 1f;
         }
         CustomColor color = getRenderedColor(alpha);
@@ -127,13 +132,13 @@ public class LabelPoi implements Poi {
                         getTextShadow(),
                         1f);
         if (hovered) {
-            String level = label.getLevel();
-            if (!level.isEmpty()) {
+            Optional<Integer> level = label.getLevel();
+            if (level.isPresent() && level.get() >= 1) {
                 BufferedFontRenderer.getInstance()
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                StyledText.fromString("[Lv " + level + "]"),
+                                StyledText.fromString("[Lv. " + level.get() + "]"),
                                 0,
                                 10,
                                 color,
@@ -153,5 +158,10 @@ public class LabelPoi implements Poi {
 
     public Label getLabel() {
         return label;
+    }
+
+    @Override
+    public boolean isVisible(float zoomRenderScale, float zoomLevel) {
+        return this.getAlphaFromScale(zoomRenderScale) >= 0.1f;
     }
 }

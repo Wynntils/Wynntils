@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities;
@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.mc.event.MenuEvent;
@@ -45,14 +46,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
         implements SortableActivityScreen {
     private QuestInfo trackingRequested = null;
-    private boolean showQuests = true;
-    private boolean showMiniQuests = false;
     private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
 
     private final List<FilterButton> filterButtons = new ArrayList<>();
@@ -70,8 +69,23 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         return new WynntilsQuestBookScreen();
     }
 
+    // Called when the screen is closed
     @Override
     public void onClose() {
+        cleanupOnClose();
+
+        super.onClose();
+    }
+
+    // Called when the screen is "overwritten" by another screen
+    @Override
+    public void removed() {
+        cleanupOnClose();
+
+        super.removed();
+    }
+
+    private void cleanupOnClose() {
         WynntilsMod.unregisterEventListener(this);
 
         if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
@@ -79,8 +93,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 .get()) {
             Handlers.ContainerQuery.endAllQueries();
         }
-
-        super.onClose();
     }
 
     /** This is called on every resize. Re-registering widgets are required, re-creating them is not.
@@ -88,7 +100,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     @Override
     protected void doInit() {
         if (firstInit) {
-            Models.Quest.rescanQuestBook(true, false);
+            Models.Quest.rescanQuestBook(isShowingQuests(), isShowingMiniQuests());
         }
 
         firstInit = false;
@@ -117,10 +129,17 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showQuests = !showQuests;
+                    Storage<Boolean> questsSelected =
+                            Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).questsSelected;
+                    questsSelected.store(!questsSelected.get());
                     reloadElements();
+
+                    // Scan quests, if it's the first time we're showing them
+                    if (questsSelected.get()) {
+                        Models.Quest.rescanQuestBook(true, false);
+                    }
                 },
-                () -> showQuests));
+                this::isShowingQuests));
         filterButtons.add(new FilterButton(
                 90,
                 142,
@@ -134,15 +153,17 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                                 .withStyle(ChatFormatting.BOLD)
                                 .withStyle(ChatFormatting.GREEN))),
                 () -> {
-                    showMiniQuests = !showMiniQuests;
+                    Storage<Boolean> miniQuestsSelected =
+                            Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class).miniQuestsSelected;
+                    miniQuestsSelected.store(!miniQuestsSelected.get());
                     reloadElements();
 
-                    if (showMiniQuests) {
-                        // Scan mini quests, we don't do this on init because it's slow
+                    // Scan mini quests, if it's the first time we're showing them
+                    if (miniQuestsSelected.get()) {
                         Models.Quest.rescanQuestBook(false, true);
                     }
                 },
-                () -> showMiniQuests));
+                this::isShowingMiniQuests));
 
         for (FilterButton filterButton : filterButtons) {
             this.addRenderableWidget(filterButton);
@@ -154,7 +175,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "quest",
-                () -> Models.Quest.rescanQuestBook(showQuests, showMiniQuests)));
+                () -> Models.Quest.rescanQuestBook(isShowingQuests(), isShowingMiniQuests())));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
                 Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
@@ -274,7 +295,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
             tooltipLines.add(Component.literal(""));
 
-            if (questInfo.isTrackable()) {
+            if (questInfo.trackable()) {
                 if (questInfo.equals(Models.Activity.getTrackedQuestInfo())) {
                     tooltipLines.add(Component.literal("Left click to stop tracking it!")
                             .withStyle(ChatFormatting.RED)
@@ -359,7 +380,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     protected void reloadElementsList(String searchText) {
         List<QuestInfo> newQuests = getSortedQuests();
         elements = newQuests.stream()
-                .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
+                .filter(questInfo -> StringUtils.partialMatch(questInfo.name(), searchText))
                 .collect(Collectors.toList());
 
         this.maxPage = Math.max(
@@ -368,7 +389,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     private List<QuestInfo> getSortedQuests() {
-        return Models.Quest.getSortedQuests(activitySortOrder, showQuests, showMiniQuests);
+        return Models.Quest.getSortedQuests(activitySortOrder, isShowingQuests(), isShowingMiniQuests());
     }
 
     private void setQuests(List<QuestInfo> quests) {
@@ -414,6 +435,18 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         this.setCurrentPage(0);
     }
 
+    private boolean isShowingQuests() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .questsSelected
+                .get();
+    }
+
+    private boolean isShowingMiniQuests() {
+        return Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .miniQuestsSelected
+                .get();
+    }
+
     private void addQuestProgressTooltipLines(List<Component> tooltipLines, boolean miniQuestMode) {
         List<QuestInfo> elements = this.elements.stream()
                 .filter(questInfo -> questInfo.isMiniQuest() == miniQuestMode)
@@ -424,12 +457,12 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
             int maxLevel = i + 24;
 
             long count = elements.stream()
-                    .filter(questInfo -> questInfo.getSortLevel() >= minLevel && questInfo.getSortLevel() <= maxLevel)
+                    .filter(questInfo -> questInfo.sortLevel() >= minLevel && questInfo.sortLevel() <= maxLevel)
                     .count();
             long completedCount = elements.stream()
-                    .filter(questInfo -> questInfo.getStatus() == ActivityStatus.COMPLETED
-                            && questInfo.getSortLevel() >= minLevel
-                            && questInfo.getSortLevel() <= maxLevel)
+                    .filter(questInfo -> questInfo.status() == ActivityStatus.COMPLETED
+                            && questInfo.sortLevel() >= minLevel
+                            && questInfo.sortLevel() <= maxLevel)
                     .count();
 
             tooltipLines.add(Component.literal("- Lv. " + minLevel + "-" + maxLevel)
@@ -440,14 +473,13 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         }
 
         long count = elements.stream()
-                .filter(questInfo -> questInfo.getSortLevel() >= 101)
+                .filter(questInfo -> questInfo.sortLevel() >= 101)
                 .count();
         long completedCount;
 
         if (count > 0) {
             completedCount = elements.stream()
-                    .filter(questInfo ->
-                            questInfo.getStatus() == ActivityStatus.COMPLETED && questInfo.getSortLevel() >= 101)
+                    .filter(questInfo -> questInfo.status() == ActivityStatus.COMPLETED && questInfo.sortLevel() >= 101)
                     .count();
             tooltipLines.add(Component.literal("- Lv. 101+")
                     .append(Component.literal(" [" + completedCount + "/" + count + "]")
@@ -458,7 +490,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
         count = elements.size();
         completedCount = elements.stream()
-                .filter(questInfo -> questInfo.getStatus() == ActivityStatus.COMPLETED)
+                .filter(questInfo -> questInfo.status() == ActivityStatus.COMPLETED)
                 .count();
 
         tooltipLines.add(Component.literal(""));

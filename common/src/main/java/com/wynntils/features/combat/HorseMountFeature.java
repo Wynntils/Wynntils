@@ -18,7 +18,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -33,13 +32,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
 public class HorseMountFeature extends Feature {
-    private static final ResourceLocation HORSE_WHISTLE_ID = new ResourceLocation("wynntils:horse.whistle");
+    private static final ResourceLocation HORSE_WHISTLE_ID =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "horse.whistle");
     private static final SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
@@ -51,7 +51,8 @@ public class HorseMountFeature extends Feature {
             StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby."),
             StyledText.fromString("§4You cannot interact with your horse at the moment."),
             StyledText.fromString("§4You cannot use your horse here!"),
-            StyledText.fromString("§4Your horse spawn was disabled (in vanish)!"));
+            StyledText.fromString("§4Your horse spawn was disabled (in vanish)!"),
+            StyledText.fromString("§4You can not use a horse while in war."));
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -117,9 +118,35 @@ public class HorseMountFeature extends Feature {
 
         // swap to soul points to avoid right click problems
         int prevItem = McUtils.inventory().selected;
-        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(InventoryUtils.SOUL_POINTS_SLOT_NUM));
+        int nonConflictingSlot = findNonConflictingSlot();
+        if (nonConflictingSlot == -1) {
+            postHorseErrorMessage(MountHorseStatus.CONFLICTING_SLOTS);
+            return;
+        }
+
+        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(nonConflictingSlot));
         McUtils.sendPacket(ServerboundInteractPacket.createInteractionPacket(horse, false, InteractionHand.MAIN_HAND));
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
+    }
+
+    /** Finds a hotbar slot where the item held allows us to safely mount a horse */
+    private int findNonConflictingSlot() {
+        for (int i = 0; i < 9; i++) {
+            ItemStack itemStack = McUtils.inventory().getItem(i);
+
+            // empty hand
+            if (itemStack.isEmpty()) {
+                return i;
+            }
+
+            // horse item
+            Optional<HorseItem> horseItemOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
+            if (horseItemOpt.isPresent()) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
@@ -152,7 +179,8 @@ public class HorseMountFeature extends Feature {
                         return;
                     }
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
-                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
+                    McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
+                            InteractionHand.MAIN_HAND, id, player.getXRot(), player.getYRot()));
 
                     trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
@@ -166,7 +194,8 @@ public class HorseMountFeature extends Feature {
 
     private enum MountHorseStatus {
         NO_HORSE("feature.wynntils.horseMount.noHorse"),
-        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding");
+        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding"),
+        CONFLICTING_SLOTS("feature.wynntils.horseMount.conflictingSlots");
 
         private final String tcString;
 

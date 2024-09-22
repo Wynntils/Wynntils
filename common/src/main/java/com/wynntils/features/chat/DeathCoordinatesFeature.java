@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -13,7 +13,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
@@ -24,6 +24,6 @@ public class DeathCoordinatesFeature extends Feature {
                         .withStyle(ChatFormatting.DARK_RED));
         deathMessage = deathMessage.appendPart(StyledTextUtils.createLocationPart(e.getLocation()));
 
-        McUtils.player().sendSystemMessage(deathMessage.getComponent());
+        McUtils.sendMessageToClient(deathMessage.getComponent());
     }
 }

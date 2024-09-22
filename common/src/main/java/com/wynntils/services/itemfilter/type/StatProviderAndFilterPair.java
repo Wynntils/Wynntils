@@ -5,7 +5,7 @@
 package com.wynntils.services.itemfilter.type;
 
 import com.wynntils.models.items.WynnItem;
-import java.util.List;
+import java.util.Optional;
 
 public record StatProviderAndFilterPair<T>(ItemStatProvider statProvider, StatFilter<T> statFilter) {
     public static StatProviderAndFilterPair fromPair(ItemStatProvider itemStatProvider, StatFilter value) {
@@ -13,7 +13,7 @@ public record StatProviderAndFilterPair<T>(ItemStatProvider statProvider, StatFi
     }
 
     public boolean matches(WynnItem wynnItem) {
-        List<T> statProviderValues = statProvider.getValue(wynnItem);
-        return statFilter.matches(statProviderValues);
+        Optional<T> statProviderValue = statProvider.getValue(wynnItem);
+        return statProviderValue.isPresent() && statFilter.matches(statProviderValue.get());
     }
 }

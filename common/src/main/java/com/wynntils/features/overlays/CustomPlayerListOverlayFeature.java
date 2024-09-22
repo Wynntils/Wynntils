@@ -15,6 +15,8 @@ import com.wynntils.overlays.CustomPlayerListOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomPlayerListOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    // This render type is not set to PLAYER_TAB_LIST on purpose,
+    // as we need to do additional rendering before and after the player list is rendered (for animations).
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.POST)
     private final Overlay customPlayerListOverlay = new CustomPlayerListOverlay();
 }

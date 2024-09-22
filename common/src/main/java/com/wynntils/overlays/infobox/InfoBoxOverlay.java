@@ -1,14 +1,19 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.infobox;
 
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 
-public class InfoBoxOverlay extends TextOverlay {
+public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
+    @Persisted
+    public final HiddenConfig<String> customName = new HiddenConfig<>("");
+
     @Persisted
     public final Config<String> content = new Config<>("");
 
@@ -28,5 +33,15 @@ public class InfoBoxOverlay extends TextOverlay {
         }
 
         return "&cX: {x(my_loc):0}, &9Y: {y(my_loc):0}, &aZ: {z(my_loc):0}";
+    }
+
+    @Override
+    public Config<String> getCustomName() {
+        return customName;
+    }
+
+    @Override
+    public void setCustomName(String newName) {
+        customName.setValue(newName);
     }
 }

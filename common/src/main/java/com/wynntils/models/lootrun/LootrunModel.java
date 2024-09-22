@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun;
@@ -10,7 +10,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -18,14 +18,22 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.particle.event.ParticleVerifiedEvent;
 import com.wynntils.handlers.particle.type.ParticleType;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
-import com.wynntils.models.beacons.type.BeaconColor;
+import com.wynntils.models.beacons.type.LootrunBeaconKind;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.InsulatorItem;
+import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
+import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
 import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
@@ -33,9 +41,11 @@ import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
+import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
+import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
@@ -44,7 +54,9 @@ import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
+import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,11 +66,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2d;
 
 /** A model dedicated to lootruns (the Wynncraft lootrun runs).
@@ -78,11 +95,13 @@ public class LootrunModel extends Model {
     // Rewards
     private static final Pattern REWARD_PULLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Pulls§r");
     private static final Pattern REWARD_REROLLS_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Rerolls§r");
+    private static final Pattern REWARD_SACRIFICES_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Reward Sacrifices§r");
     private static final Pattern LOOTRUN_EXPERIENCE_PATTERN = Pattern.compile("[À\\s]*§.(\\d+)§7 Lootrun Experience§r");
 
     // Statistics
     private static final Pattern TIME_ELAPSED_PATTERN = Pattern.compile("[À\\s]*§7Time Elapsed: §.(\\d+):(\\d+)");
     private static final Pattern MOBS_KILLED_PATTERN = Pattern.compile("[À\\s]*§7Mobs Killed: §.(\\d+)");
+    private static final Pattern CHESTS_OPENED_PATTERN = Pattern.compile("[À\\s]*§7Chests Open: §.(\\d+)");
     private static final Pattern CHALLENGES_COMPLETED_PATTERN =
             Pattern.compile("[À\\s]*§7Challenges Completed: §.(\\d+)");
 
@@ -94,16 +113,35 @@ public class LootrunModel extends Model {
     //                        ÀÀÀ§7Challenges Completed: §f7
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
+    private static final Pattern CHALLENGE_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lChallenge Failed!");
+
+    private static final Pattern MISSION_COMPLETED_PATTERN = Pattern.compile("[À\\s]*§b§lMission Completed");
+
+    // Some missions don't have a mission completed message, so we also look for "active" missions
+    // (missions that apply effects on challenge completion)
+    private static final Pattern COMPLETED_MISSION_PATTERN = Pattern.compile("[À\\s]*?§.(?<mission>"
+            + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
+    private static final Pattern ACTIVE_MISSION_PATTERN = Pattern.compile("[À\\s]*?§b§l(?<mission>"
+            + MissionType.missionTypes().stream().map(MissionType::getName).collect(Collectors.joining("|")) + ")");
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
     // Beacon positions are sometimes off by a few blocks
     private static final int TASK_POSITION_ERROR = 3;
 
+    private static final int LOOTRUN_MASTER_REWARDS_RADIUS = 20;
+    private static final String LOOTRUN_MASTER_NAME = "Lootrun Master";
+
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
             new LootrunBeaconMarkerProvider();
+
+    @Persisted
+    public final Storage<Integer> dryPulls = new Storage<>(0);
+
+    private Location closestLootrunMasterLocation = null;
+    private Set<UUID> checkedItemEntities = new HashSet<>();
 
     private Map<LootrunLocation, Set<TaskLocation>> taskLocations = new HashMap<>();
 
@@ -115,18 +153,24 @@ public class LootrunModel extends Model {
     private LootrunTaskType taskType;
 
     // rely on color, beacon positions change
-    private Map<BeaconColor, TaskPrediction> beacons = new HashMap<>();
+    private Map<LootrunBeaconKind, TaskPrediction> beacons = new HashMap<>();
 
     // particles can accurately show task locations
     private Set<TaskLocation> possibleTaskLocations = new HashSet<>();
 
+    private Map<LootrunBeaconKind, Integer> selectedBeacons = new TreeMap<>();
+    private int timeLeft = 0;
+    private CappedValue challenges = CappedValue.EMPTY;
+
+    private boolean expectMissionComplete = false;
+
     // Data to be persisted
     @Persisted
-    private final Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage =
+    private final Storage<Map<String, Map<LootrunBeaconKind, Integer>>> selectedBeaconsStorage =
             new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, BeaconColor>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, LootrunBeaconKind>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
@@ -134,10 +178,8 @@ public class LootrunModel extends Model {
     @Persisted
     private final Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
 
-    private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
-
-    private int timeLeft = 0;
-    private CappedValue challenges = CappedValue.EMPTY;
+    @Persisted
+    private final Storage<Map<String, List<MissionType>>> missionStorage = new Storage<>(new TreeMap<>());
 
     public LootrunModel(MarkerModel markerModel) {
         super(List.of(markerModel));
@@ -145,20 +187,16 @@ public class LootrunModel extends Model {
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
-        reloadData();
     }
 
     @Override
-    public void reloadData() {
-        loadLootrunTaskLocations();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED).handleReader(this::handleLootrunTaskLocations);
     }
 
-    private void loadLootrunTaskLocations() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
-            taskLocations = Managers.Json.GSON.fromJson(reader, type);
-        });
+    private void handleLootrunTaskLocations(Reader reader) {
+        Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
+        taskLocations = Managers.Json.GSON.fromJson(reader, type);
     }
 
     @SubscribeEvent
@@ -224,6 +262,9 @@ public class LootrunModel extends Model {
         selectedBeacons = selectedBeaconsStorage.get().get(id);
 
         selectedBeaconsStorage.touched();
+
+        missionStorage.get().putIfAbsent(id, new ArrayList<>());
+        missionStorage.touched();
     }
 
     @SubscribeEvent
@@ -247,12 +288,124 @@ public class LootrunModel extends Model {
         } else if (lootrunFailedBuilder != null) {
             parseFailedMessages(styledText);
         }
+
+        Matcher matcher = MISSION_COMPLETED_PATTERN.matcher(styledText.getString());
+        if (matcher.matches()) {
+            expectMissionComplete = true;
+            return;
+        }
+
+        if (expectMissionComplete) {
+            matcher = COMPLETED_MISSION_PATTERN.matcher(styledText.getString());
+            if (matcher.matches()) {
+                MissionType mission = MissionType.fromName(matcher.group("mission"));
+                addMission(mission);
+                return;
+            }
+        }
+
+        matcher = ACTIVE_MISSION_PATTERN.matcher(styledText.getString());
+        if (matcher.find()) {
+            MissionType mission = MissionType.fromName(matcher.group("mission"));
+            addMission(mission);
+            return;
+        }
+
+        matcher = CHALLENGE_FAILED_PATTERN.matcher(styledText.getString());
+        if (matcher.matches()) {
+            LootrunBeaconKind color = getLastTaskBeaconColor();
+            if (color == LootrunBeaconKind.GRAY) {
+                addMission(MissionType.FAILED);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onNpcLabelFound(LabelIdentifiedEvent event) {
+        if (event.getLabelInfo() instanceof NpcLabelInfo npcLabelInfo) {
+            if (npcLabelInfo.getName().equals(LOOTRUN_MASTER_NAME)) {
+                closestLootrunMasterLocation = event.getLabelInfo().getLocation();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntitySpawn(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+        int idToCheck;
+
+        // Currently the items are ItemEntity's however this may change in the future so we want to check for
+        // ItemDisplay's too to ensure future compatibility.
+        if (entity instanceof ItemEntity) {
+            idToCheck = ItemEntity.DATA_ITEM.id();
+        } else if (entity instanceof Display.ItemDisplay) {
+            idToCheck = Display.ItemDisplay.DATA_ITEM_STACK_ID.id();
+        } else {
+            return;
+        }
+
+        // We only care about items that are close to the lootrun master
+        // If we don't know where the lootrun master is, we probably don't care
+        if (closestLootrunMasterLocation == null) return;
+
+        // Check if the item is close enough to the lootrun master
+        if (closestLootrunMasterLocation.toBlockPos().distSqr(entity.blockPosition())
+                > Math.pow(LOOTRUN_MASTER_REWARDS_RADIUS, 2)) {
+            return;
+        }
+
+        // Check if we've already checked this item entity
+        // Otherwise duplication can occur
+        if (checkedItemEntities.contains(entity.getUUID())) return;
+
+        checkedItemEntities.add(entity.getUUID());
+
+        // Detect lootrun end reward items by checking the appearing item entities
+        // This is much more reliable than checking the item in the chest,
+        // as the chest can be rerolled, etc.
+        for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
+            if (packedItem.id() == idToCheck) {
+                if (!(packedItem.value() instanceof ItemStack itemStack)) return;
+
+                boolean foundLootrunMythic = false;
+                Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+                if (gearItemOpt.isPresent()) {
+                    GearItem gearItem = gearItemOpt.get();
+
+                    if (gearItem.getGearTier() == GearTier.MYTHIC) {
+                        foundLootrunMythic = true;
+                    }
+                }
+
+                // No need to check tier for these as they are only mythic
+                Optional<InsulatorItem> insulatorItemOpt = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
+                if (insulatorItemOpt.isPresent()) {
+                    foundLootrunMythic = true;
+                }
+
+                Optional<SimulatorItem> simulatorItemOpt = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
+                if (simulatorItemOpt.isPresent()) {
+                    foundLootrunMythic = true;
+                }
+
+                if (foundLootrunMythic) {
+                    WynntilsMod.postEvent(new MythicFoundEvent(itemStack, true));
+                    dryPulls.store(0);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLootrunCompleted(LootrunFinishedEvent.Completed event) {
+        dryPulls.store(dryPulls.get() + event.getRewardPulls());
+        checkedItemEntities.clear();
     }
 
     @SubscribeEvent
     public void onWorldStateChanged(WorldStateEvent event) {
         // The world state event is sometimes late compared to lootrun events (beacons, scoreboard)
-        // Reseting once when leaving the class is enough
+        // Resetting once when leaving the class is enough
         if (event.getNewState() == WorldState.WORLD) return;
 
         lootrunCompletedBuilder = null;
@@ -274,20 +427,16 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconMoved(BeaconEvent.Moved event) {
         Beacon beacon = event.getNewBeacon();
-        BeaconColor beaconColor = beacon.color();
-        if (!beaconColor.isUsedInLootruns()) return;
-
         updateTaskLocationPrediction(beacon);
     }
 
-    // When we get close to a beacon, it get's removed.
+    // When we get close to a beacon, it gets removed.
     // This is our signal to know that this can be the current beacon,
     // but we don't know for sure until the scoreboard confirms it.
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         Beacon beacon = event.getBeacon();
-        BeaconColor beaconColor = beacon.color();
-        if (!beaconColor.isUsedInLootruns()) return;
+        LootrunBeaconKind lootrunBeaconKind = beacon.color();
 
         Beacon closestBeacon = getClosestBeacon();
 
@@ -302,7 +451,7 @@ public class LootrunModel extends Model {
             setClosestBeacon(event.getBeacon());
         } else {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
-            beacons.remove(beaconColor);
+            beacons.remove(lootrunBeaconKind);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         }
     }
@@ -310,24 +459,31 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconAdded(BeaconEvent.Added event) {
         Beacon beacon = event.getBeacon();
-        if (!beacon.color().isUsedInLootruns()) return;
 
         // FIXME: Feature-model dependency
         CustomLootrunBeaconsFeature feature = Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class);
         if (feature.removeOriginalBeacons.get() && feature.isEnabled()) {
-            for (Entity entity : event.getEntities()) {
-                // Only set this once they are added.
-                // This is cleaner than posting an event on render,
-                // but a change in the config will only have effect on newly placed beacons.
-                ((EntityExtension) entity).setRendered(false);
-            }
+            // Only set this once they are added.
+            // This is cleaner than posting an event on render,
+            // but a change in the config will only have effect on newly placed beacons.
+            ((EntityExtension) event.getEntity()).setRendered(false);
         }
 
         updateTaskLocationPrediction(beacon);
     }
 
-    public int getBeaconCount(BeaconColor color) {
+    public int getBeaconCount(LootrunBeaconKind color) {
         return selectedBeacons.getOrDefault(color, 0);
+    }
+
+    public String getMissionStatus(int index, boolean colored) {
+        List<MissionType> missions = missionStorage.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
+        if (index < 0 || index >= missions.size()) {
+            return colored ? MissionType.UNKNOWN.getColoredName() : MissionType.UNKNOWN.getName();
+        }
+
+        MissionType mission = missionStorage.get().get(Models.Character.getId()).get(index);
+        return colored ? mission.getColoredName() : mission.getName();
     }
 
     public LootrunningState getState() {
@@ -338,12 +494,12 @@ public class LootrunModel extends Model {
         return Optional.ofNullable(taskType);
     }
 
-    public Map<BeaconColor, TaskPrediction> getBeacons() {
+    public Map<LootrunBeaconKind, TaskPrediction> getBeacons() {
         return beacons;
     }
 
-    public TaskLocation getTaskForColor(BeaconColor beaconColor) {
-        TaskPrediction taskPrediction = beacons.get(beaconColor);
+    public TaskLocation getTaskForColor(LootrunBeaconKind lootrunBeaconKind) {
+        TaskPrediction taskPrediction = beacons.get(lootrunBeaconKind);
         if (taskPrediction == null) return null;
 
         return taskPrediction.taskLocation();
@@ -368,7 +524,7 @@ public class LootrunModel extends Model {
         return challenges;
     }
 
-    public BeaconColor getLastTaskBeaconColor() {
+    public LootrunBeaconKind getLastTaskBeaconColor() {
         return lastTaskBeaconColorStorage.get().get(Models.Character.getId());
     }
 
@@ -380,11 +536,11 @@ public class LootrunModel extends Model {
         return redBeaconTaskCountStorage.get().getOrDefault(Models.Character.getId(), 0);
     }
 
-    private void setLastTaskBeaconColor(BeaconColor beaconColor) {
-        if (beaconColor == null) {
+    private void setLastTaskBeaconColor(LootrunBeaconKind lootrunBeaconKind) {
+        if (lootrunBeaconKind == null) {
             lastTaskBeaconColorStorage.get().remove(Models.Character.getId());
         } else {
-            lastTaskBeaconColorStorage.get().put(Models.Character.getId(), beaconColor);
+            lastTaskBeaconColorStorage.get().put(Models.Character.getId(), lootrunBeaconKind);
         }
 
         lastTaskBeaconColorStorage.touched();
@@ -415,9 +571,27 @@ public class LootrunModel extends Model {
         redBeaconTaskCountStorage.touched();
     }
 
-    public void resetRedBeaconTaskCount() {
+    private void resetRedBeaconTaskCount() {
         redBeaconTaskCountStorage.get().remove(Models.Character.getId());
         redBeaconTaskCountStorage.touched();
+    }
+
+    private void resetMissions() {
+        missionStorage.get().putIfAbsent(Models.Character.getId(), new ArrayList<>());
+        missionStorage.get().get(Models.Character.getId()).clear();
+        missionStorage.touched();
+    }
+
+    private void addMission(MissionType mission) {
+        List<MissionType> missions =
+                missionStorage.get().computeIfAbsent(Models.Character.getId(), k -> new ArrayList<>());
+        if (!missions.contains(mission)) {
+            missions.add(mission);
+        }
+
+        missionStorage.touched();
+
+        expectMissionComplete = false;
     }
 
     public void setTimeLeft(int seconds) {
@@ -436,7 +610,7 @@ public class LootrunModel extends Model {
         }
 
         // Then, check if we completed have new challenges from a red beacon.
-        if (getLastTaskBeaconColor() == BeaconColor.RED && amount.max() > oldChallenges.max()) {
+        if (getLastTaskBeaconColor() == LootrunBeaconKind.RED && amount.max() > oldChallenges.max()) {
             addToRedBeaconTaskCount(amount.max() - oldChallenges.max());
         }
     }
@@ -444,6 +618,7 @@ public class LootrunModel extends Model {
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             resetBeaconStorage();
+            resetMissions();
 
             taskType = null;
             setClosestBeacon(null);
@@ -624,6 +799,19 @@ public class LootrunModel extends Model {
             }
 
             WynntilsMod.warn("Found lootrun rerolls but no mobs killed: " + styledText);
+        }
+
+        matcher = styledText.getMatcher(REWARD_SACRIFICES_PATTERN);
+        if (matcher.find()) {
+            lootrunCompletedBuilder.setRewardSacrifices(Integer.parseInt(matcher.group(1)));
+
+            matcher = styledText.getMatcher(CHESTS_OPENED_PATTERN);
+            if (matcher.find()) {
+                lootrunCompletedBuilder.setChestsOpened(Integer.parseInt(matcher.group(1)));
+                return;
+            }
+
+            WynntilsMod.warn("Found lootrun sacrifices but no chests opened: " + styledText);
         }
 
         matcher = styledText.getMatcher(LOOTRUN_EXPERIENCE_PATTERN);

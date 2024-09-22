@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.crowdsource;
@@ -18,7 +18,8 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
  * If you need to access crowd sourced data, use the {@link CrowdSourcedDataManager}.
  */
 public class CrowdSourcedData {
-    private final Map<CrowdSourcedDataGameVersion, Map<CrowdSourcedDataType, Set<Object>>> data = new TreeMap<>();
+    private final Map<CrowdSourcedDataGameVersion, Map<CrowdSourcedDataType, Set<Object>>> data =
+            new ConcurrentSkipListMap<>();
 
     CrowdSourcedData() {}
 
@@ -42,7 +44,7 @@ public class CrowdSourcedData {
         }
 
         data.computeIfAbsent(version, k -> new TreeMap<>())
-                .computeIfAbsent(crowdSourcedDataType, k -> new TreeSet<>())
+                .computeIfAbsent(crowdSourcedDataType, k -> new ConcurrentSkipListSet<>())
                 .add(crowdSourceData);
     }
 
@@ -67,14 +69,15 @@ public class CrowdSourcedData {
 
             JsonObject dataObject = jsonObject.getAsJsonObject("data");
 
-            Map<CrowdSourcedDataGameVersion, Map<CrowdSourcedDataType, Set<Object>>> deserializedData = new TreeMap<>();
+            Map<CrowdSourcedDataGameVersion, Map<CrowdSourcedDataType, Set<Object>>> deserializedData =
+                    new ConcurrentSkipListMap<>();
 
             for (Map.Entry<String, JsonElement> gameVersionEntry : dataObject.entrySet()) {
                 CrowdSourcedDataGameVersion gameVersion = context.deserialize(
                         new JsonPrimitive(gameVersionEntry.getKey()), CrowdSourcedDataGameVersion.class);
                 JsonObject gameVersionObject = gameVersionEntry.getValue().getAsJsonObject();
 
-                Map<CrowdSourcedDataType, Set<Object>> deserializedGameVersionData = new TreeMap<>();
+                Map<CrowdSourcedDataType, Set<Object>> deserializedGameVersionData = new ConcurrentSkipListMap<>();
 
                 for (Map.Entry<String, JsonElement> crowdSourceDataTypeEntry : gameVersionObject.entrySet()) {
                     try {
@@ -83,7 +86,7 @@ public class CrowdSourcedData {
                         JsonArray crowdSourcedTypeArray =
                                 crowdSourceDataTypeEntry.getValue().getAsJsonArray();
 
-                        Set<Object> deserializedCrowdSourcedTypeData = new TreeSet<>();
+                        Set<Object> deserializedCrowdSourcedTypeData = new ConcurrentSkipListSet<>();
                         crowdSourcedTypeArray.forEach(entry -> deserializedCrowdSourcedTypeData.add(
                                 context.deserialize(entry, crowdSourcedDataType.getDataClass())));
 

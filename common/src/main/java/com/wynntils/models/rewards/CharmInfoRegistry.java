@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -11,10 +11,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.net.Dependency;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.type.GearDropRestrictions;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
@@ -34,20 +34,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class CharmInfoRegistry {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserizalier())
+            .create();
+
     private List<CharmInfo> charmInfoRegistry = List.of();
     private Map<String, CharmInfo> charmInfoLookup = Map.of();
 
-    public CharmInfoRegistry() {
-        WynntilsMod.registerEventListener(this);
-
-        reloadData();
-    }
-
-    public void reloadData() {
-        loadCharmInfoRegistry();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_CHARMS,
+                        Dependency.multi(
+                                Models.WynnItem,
+                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                .handleJsonObject(this::handleCharmInfoRegistry);
     }
 
     public CharmInfo getFromDisplayName(String gearName) {
@@ -58,36 +62,29 @@ public class CharmInfoRegistry {
         return charmInfoRegistry.stream();
     }
 
-    private void loadCharmInfoRegistry() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_CHARMS);
-        dl.handleJsonObject(json -> {
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserizalier())
-                    .create();
+    private void handleCharmInfoRegistry(JsonObject json) {
+        List<CharmInfo> registry = new ArrayList<>();
 
-            List<CharmInfo> registry = new ArrayList<>();
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonObject itemObject = entry.getValue().getAsJsonObject();
 
-            for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                JsonObject itemObject = entry.getValue().getAsJsonObject();
+            // Inject the name into the object
+            itemObject.addProperty("name", entry.getKey());
 
-                // Inject the name into the object
-                itemObject.addProperty("name", entry.getKey());
+            // Deserialize the item
+            CharmInfo charmInfo = GSON.fromJson(itemObject, CharmInfo.class);
 
-                // Deserialize the item
-                CharmInfo charmInfo = gson.fromJson(itemObject, CharmInfo.class);
+            // Add the item to the registry
+            registry.add(charmInfo);
+        }
 
-                // Add the item to the registry
-                registry.add(charmInfo);
-            }
+        // Create fast lookup maps
+        Map<String, CharmInfo> lookupMap = registry.stream()
+                .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
 
-            // Create fast lookup maps
-            Map<String, CharmInfo> lookupMap = registry.stream()
-                    .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
-
-            // Make the result visisble to the world
-            charmInfoRegistry = registry;
-            charmInfoLookup = lookupMap;
-        });
+        // Make the result visisble to the world
+        charmInfoRegistry = registry;
+        charmInfoLookup = lookupMap;
     }
 
     private static final class CharmInfoDeserizalier extends AbstractItemInfoDeserializer<CharmInfo> {
@@ -100,50 +97,46 @@ public class CharmInfoRegistry {
             String displayName = names.key();
             String internalName = names.value();
 
-            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
+            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no tier");
             }
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, displayName, internalName);
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
             CharmRequirements requirements = parseCharmRequirements(json);
 
             // Base stats are parsed the same way as variable stats
+            List<Pair<StatType, StatPossibleValues>> baseStats = parseVariableStats(json, "base");
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
-            return new CharmInfo(displayName, tier, metaInfo, requirements, variableStats);
+            // For now, concat base and variable stats, they are the same from our perspective
+            return new CharmInfo(
+                    displayName,
+                    tier,
+                    metaInfo,
+                    requirements,
+                    Stream.concat(baseStats.stream(), variableStats.stream()).toList());
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String name, String apiName) {
-            GearDropRestrictions dropRestrictions = parseDropRestrictions(json);
+        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
             GearRestrictions restrictions = parseRestrictions(json);
-            ItemMaterial material = parseOtherMaterial(json);
+            ItemMaterial material = parseMaterial(json, apiName);
 
-            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json, name);
+            List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
             return new GearMetaInfo(
-                    dropRestrictions,
-                    restrictions,
-                    material,
-                    obtainInfo,
-                    Optional.empty(),
-                    Optional.empty(),
-                    true,
-                    false);
+                    restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);
         }
 
-        private ItemMaterial parseOtherMaterial(JsonObject json) {
-            String material = JsonUtils.getNullableJsonString(json, "material");
+        private ItemMaterial parseMaterial(JsonObject json, String name) {
+            ItemMaterial material = parseOtherMaterial(json);
+
             if (material == null) {
-                // We're screwed.
-                // The best we can do is to give a generic default representation
+                WynntilsMod.warn("Charm DB is missing material for " + name);
                 return ItemMaterial.getDefaultCharmItemMaterial();
             }
 
-            String[] materialArray = material.split(":");
-            int itemTypeCode = Integer.parseInt(materialArray[0]);
-            int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-            return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+            return material;
         }
 
         private CharmRequirements parseCharmRequirements(JsonObject json) {

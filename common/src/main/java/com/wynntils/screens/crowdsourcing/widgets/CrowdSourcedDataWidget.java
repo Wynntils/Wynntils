@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.crowdsourcing.widgets;
@@ -11,11 +11,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -38,11 +38,19 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
             Pair.of(new CustomColor(181, 174, 151), new CustomColor(121, 116, 101));
 
     private final CrowdSourcedDataType crowdSourcedDataType;
+    private final WynntilsCrowdSourcingSettingsScreen crowdSourcingSettingsScreen;
 
-    public CrowdSourcedDataWidget(int x, int y, int width, int height, CrowdSourcedDataType crowdSourcedDataType) {
+    public CrowdSourcedDataWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            CrowdSourcedDataType crowdSourcedDataType,
+            WynntilsCrowdSourcingSettingsScreen screen) {
         super(x, y, width, height, Component.literal(crowdSourcedDataType.name()));
 
         this.crowdSourcedDataType = crowdSourcedDataType;
+        this.crowdSourcingSettingsScreen = screen;
     }
 
     @Override
@@ -52,21 +60,18 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR.b() : BUTTON_COLOR.a();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
-        int maxTextWidth = this.width - 18;
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         poseStack,
-                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                crowdSourcedDataType.getTranslatedName(),
-                                maxTextWidth,
-                                FontRenderer.getInstance().getFont())),
+                        StyledText.fromString(crowdSourcedDataType.getTranslatedName()),
                         this.getX() + 14,
                         this.getY() + 1,
-                        0,
+                        this.width - 15,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        1f);
 
         Texture stateTexture =
                 switch (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType)) {

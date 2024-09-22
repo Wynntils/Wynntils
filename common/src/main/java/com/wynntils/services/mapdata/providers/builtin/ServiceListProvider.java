@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ServiceListProvider extends BuiltInProvider {
@@ -53,8 +54,8 @@ public class ServiceListProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapAttributes getAttributes() {
-            return null;
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.empty();
         }
 
         @Override
