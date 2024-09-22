@@ -15,6 +15,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Confidence;
+import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -167,6 +168,25 @@ public class InventoryHandler extends Handler {
     }
 
     public void forceSync(AbstractContainerMenu menu) {
+        // Find a non-slot placeholder item in a bank-like inventory
+        // We try this first to avoid the "cannot place in this bank!" error in certain filtered inventories
+        if (menu.slots.size() >= 54 && menu instanceof ChestMenu) {
+            for (int slotNum = 45; slotNum < 54; slotNum++) {
+                if (ItemUtils.isNonSlotPlaceholder(menu.getSlot(slotNum).getItem())) {
+                    // Click the placeholder item, which should be no-op, but which will prompt an update packet
+                    McUtils.sendPacket(new ServerboundContainerClickPacket(
+                            menu.containerId,
+                            menu.getStateId(),
+                            slotNum,
+                            0,
+                            ClickType.PICKUP,
+                            ItemStack.EMPTY,
+                            Int2ObjectMaps.emptyMap()));
+                    return;
+                }
+            }
+        }
+
         // Find a nonempty hotbar slot
         Inventory inventory = McUtils.player().getInventory();
         for (int hotbarSlot = 8; hotbarSlot >= 0; hotbarSlot--) { // In reverse, to find the content book first

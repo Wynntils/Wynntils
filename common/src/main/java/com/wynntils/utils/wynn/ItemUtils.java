@@ -22,6 +22,7 @@ import net.minecraft.world.item.Items;
 public final class ItemUtils {
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
+    public static final String NON_SLOT_PLACEHOLDER_NAME = "\uDB3F\uDFFF";
 
     public static boolean isWeapon(ItemStack itemStack) {
         Optional<GearTypeItemProperty> gearItemOpt =
@@ -36,6 +37,10 @@ public final class ItemUtils {
         return wynnItemOpt
                 .filter(wynnItem -> wynnItem instanceof GatheringToolItem)
                 .isPresent();
+    }
+
+    public static boolean isNonSlotPlaceholder(ItemStack itemStack) {
+        return itemStack.getHoverName().getString().equals(NON_SLOT_PLACEHOLDER_NAME);
     }
 
     public static StyledText getItemName(ItemStack itemStack) {
