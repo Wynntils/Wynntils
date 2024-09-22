@@ -116,8 +116,6 @@ public final class UrlManager extends Manager {
             WynntilsMod.info("Loading urls.json from " + urlListOverride.get() + ". Url cache is "
                     + (ignoreCache.get() ? "ignored" : "used") + ".");
         }
-
-        loadUrls();
     }
 
     public UrlInfo getUrlInfo(UrlId urlId) {
