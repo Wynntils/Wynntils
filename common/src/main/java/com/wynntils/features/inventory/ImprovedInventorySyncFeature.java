@@ -5,6 +5,7 @@
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
+@StartDisabled
 @ConfigCategory(Category.INVENTORY)
 public class ImprovedInventorySyncFeature extends Feature {
     @Persisted
