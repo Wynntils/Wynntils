@@ -1,3 +1,10 @@
+## [2.3.5](https://github.com/Wynntils/Wynntils/compare/v2.3.4...v2.3.5) (2024-09-23)
+
+
+### Bug Fixes
+
+* Disable ImprovedInventorySyncFeature by default until refinements are made ([#2893](https://github.com/Wynntils/Wynntils/issues/2893)) ([97a573b](https://github.com/Wynntils/Wynntils/commit/97a573bacaa1658945c8b94d7b78fc84a28cddc4))
+
 ## [2.3.4](https://github.com/Wynntils/Wynntils/compare/v2.3.3...v2.3.4) (2024-09-22)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2886](https://github.com/Wynntils/Wynntils/issues/2886)) ([c9308e7](https://github.com/Wynntils/Wynntils/commit/c9308e7142c41ce09efb2afbac87b7f1b049e8da))
+* **release:** v2.3.4 [skip ci] ([5688783](https://github.com/Wynntils/Wynntils/commit/56887833b6bc4c09ccf86693b45c85c1e8019af0))
 
 ## [2.3.3](https://github.com/Wynntils/Wynntils/compare/v2.3.2...v2.3.3) (2024-09-22)
 
@@ -55,20 +63,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.1 [skip ci] ([b5272e9](https://github.com/Wynntils/Wynntils/commit/b5272e930d3556eb29453212c10689717dfcf607))
-
-## [2.3.0](https://github.com/Wynntils/Wynntils/compare/v2.2.4...v2.3.0) (2024-09-19)
-
-
-### ⚠ BREAKING CHANGES
-
-* Introduce the new data dependency loading systems (#2845)
-
-### New Features
-
-* Introduce the new data dependency loading systems ([#2845](https://github.com/Wynntils/Wynntils/issues/2845)) ([1d25ab5](https://github.com/Wynntils/Wynntils/commit/1d25ab5166c3a9cba4fa369afcae9c68261246a2)), closes [#2797](https://github.com/Wynntils/Wynntils/issues/2797)
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.0 [skip ci] ([ca5cbf8](https://github.com/Wynntils/Wynntils/commit/ca5cbf8fbe39cdaca59cd037ae057e4b165ada0d))
 
