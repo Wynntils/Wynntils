@@ -7,11 +7,13 @@ package com.wynntils.handlers.inventory;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.inventory.ImprovedInventorySyncFeature;
 import com.wynntils.handlers.inventory.event.InventoryInteractionEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Confidence;
@@ -23,11 +25,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -168,10 +170,9 @@ public class InventoryHandler extends Handler {
     }
 
     public void forceSync(AbstractContainerMenu menu) {
-        // Find a non-slot placeholder item in a bank-like inventory
-        // We try this first to avoid the "cannot place in this bank!" error in certain filtered inventories
-        if (menu.slots.size() >= 54 && menu instanceof ChestMenu) {
-            for (int slotNum = 45; slotNum < 54; slotNum++) {
+        // Method 1: click a non-slot placeholder item in a bank-like inventory
+        if (menu.slots.size() > 36 && menu instanceof ChestMenu) {
+            for (int slotNum = menu.slots.size() - 37; slotNum >= 0; slotNum--) {
                 if (ItemUtils.isNonSlotPlaceholder(menu.getSlot(slotNum).getItem())) {
                     // Click the placeholder item, which should be no-op, but which will prompt an update packet
                     McUtils.sendPacket(new ServerboundContainerClickPacket(
@@ -187,41 +188,44 @@ public class InventoryHandler extends Handler {
             }
         }
 
-        // Find a nonempty hotbar slot
-        Inventory inventory = McUtils.player().getInventory();
-        for (int hotbarSlot = 8; hotbarSlot >= 0; hotbarSlot--) { // In reverse, to find the content book first
-            ItemStack stack = inventory.getItem(hotbarSlot);
-            if (!stack.isEmpty()) {
-                // Swap the item into an inventory slot, which should be no-op, but which will prompt an update packet
-                McUtils.sendPacket(new ServerboundContainerClickPacket(
-                        menu.containerId,
-                        menu.getStateId(),
-                        getForceSyncSwapSlot(menu),
-                        hotbarSlot,
-                        ClickType.SWAP,
-                        ItemStack.EMPTY,
-                        Int2ObjectMaps.emptyMap()));
-                return;
+        // Method 2: swap the content book into an empty slot
+        ItemStack contentBookStack = McUtils.player().getInventory().getItem(8);
+        if (!contentBookStack.isEmpty()) {
+            for (int slotNum = 0; slotNum <= menu.slots.size(); slotNum++) {
+                Slot slot = menu.slots.get(slotNum);
+                if (slot.getItem().isEmpty() && slot.mayPlace(contentBookStack)) {
+                    // Swap the book into the slot, which should be no-op, but which will prompt an update packet
+                    McUtils.sendPacket(new ServerboundContainerClickPacket(
+                            menu.containerId,
+                            menu.getStateId(),
+                            slotNum,
+                            8,
+                            ClickType.SWAP,
+                            ItemStack.EMPTY,
+                            Int2ObjectMaps.emptyMap()));
+                    return;
+                }
             }
         }
 
-        // Find a nonempty inventory slot
-        for (int slotNum = 9; slotNum <= menu.slots.size(); slotNum++) {
-            ItemStack stack = menu.getSlot(slotNum).getItem();
-            if (!stack.isEmpty()) {
-                // Swap the item into hotbar slot 0, which should be no-op, but which will prompt an update packet
-                McUtils.sendPacket(new ServerboundContainerClickPacket(
-                        menu.containerId,
-                        menu.getStateId(),
-                        slotNum,
-                        0,
-                        ClickType.SWAP,
-                        ItemStack.EMPTY,
-                        Int2ObjectMaps.emptyMap()));
-                return;
-            }
+        // Method 3: swap the ingredient pouch into the content book
+        // This is the method of last resort because in certain inventories with filtered interactions (e.g. housing
+        // inventories or blacksmiths), swapping the pouch will prompt an annoying error message in the chat
+        int pouchSlot = menu instanceof InventoryMenu ? 13 : (menu.slots.size() - 32);
+        // FIXME Reversed dependency of handler on model
+        if (Models.Item.asWynnItem(menu.getSlot(pouchSlot).getItem(), IngredientPouchItem.class)
+                .isPresent()) {
+            // Swap the pouch into the content book slot, which should be no-op, but which will prompt an update packet
+            McUtils.sendPacket(new ServerboundContainerClickPacket(
+                    menu.containerId,
+                    menu.getStateId(),
+                    pouchSlot,
+                    8,
+                    ClickType.SWAP,
+                    ItemStack.EMPTY,
+                    Int2ObjectMaps.emptyMap()));
+            return;
         }
-        // At this point, our view of the inventory must be completely empty; there's not much we can do
     }
 
     private void forceSyncLater(AbstractContainerMenu menu) {
@@ -241,20 +245,6 @@ public class InventoryHandler extends Handler {
         // FIXME Reversed dependency of handler on feature
         return Managers.Feature.getFeatureInstance(ImprovedInventorySyncFeature.class)
                 .isEnabled();
-    }
-
-    private static int getForceSyncSwapSlot(AbstractContainerMenu menu) {
-        int idealSlot =
-                switch (menu) {
-                        // First hotbar slot; in some weird situations, swapping into the actual chest might not cause
-                        // an update
-                    case ChestMenu chest -> menu.slots.size() - 9;
-                        // Avoid the inventory crafting result slot, which doesn't support swapping operations
-                    case InventoryMenu inv -> 1;
-                        // In any other menu, arbitrarily pick slot zero
-                    default -> 0;
-                };
-        return Math.min(idealSlot, menu.slots.size() - 1); // Fail-safe
     }
 
     private final class RunningInteraction {
