@@ -17,6 +17,7 @@ import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Confidence;
+import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -189,7 +190,7 @@ public class InventoryHandler extends Handler {
         }
 
         // Method 2: swap the content book into an empty slot
-        ItemStack contentBookStack = McUtils.player().getInventory().getItem(8);
+        ItemStack contentBookStack = McUtils.player().getInventory().getItem(InventoryUtils.CONTENT_BOOK_SLOT_NUM);
         if (!contentBookStack.isEmpty()) {
             for (int slotNum = 0; slotNum <= menu.slots.size(); slotNum++) {
                 Slot slot = menu.slots.get(slotNum);
@@ -199,7 +200,7 @@ public class InventoryHandler extends Handler {
                             menu.containerId,
                             menu.getStateId(),
                             slotNum,
-                            8,
+                            InventoryUtils.CONTENT_BOOK_SLOT_NUM,
                             ClickType.SWAP,
                             ItemStack.EMPTY,
                             Int2ObjectMaps.emptyMap()));
@@ -211,7 +212,8 @@ public class InventoryHandler extends Handler {
         // Method 3: swap the ingredient pouch into the content book
         // This is the method of last resort because in certain inventories with filtered interactions (e.g. housing
         // inventories or blacksmiths), swapping the pouch will prompt an annoying error message in the chat
-        int pouchSlot = menu instanceof InventoryMenu ? 13 : (menu.slots.size() - 32);
+        int pouchSlot =
+                menu instanceof InventoryMenu ? InventoryUtils.INGREDIENT_POUCH_SLOT_NUM : (menu.slots.size() - 32);
         // FIXME Reversed dependency of handler on model
         if (Models.Item.asWynnItem(menu.getSlot(pouchSlot).getItem(), IngredientPouchItem.class)
                 .isPresent()) {
