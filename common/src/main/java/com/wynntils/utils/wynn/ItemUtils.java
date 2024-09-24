@@ -13,6 +13,7 @@ import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,7 @@ import net.minecraft.world.item.Items;
 public final class ItemUtils {
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
-    public static final String NON_SLOT_PLACEHOLDER_NAME = "\uDB3F\uDFFF";
+    public static final Set<String> NON_SLOT_PLACEHOLDER_NAMES = Set.of("\uDB3F\uDFFF"); // TODO complete
 
     public static boolean isWeapon(ItemStack itemStack) {
         Optional<GearTypeItemProperty> gearItemOpt =
@@ -46,7 +47,7 @@ public final class ItemUtils {
     }
 
     public static boolean isNonSlotPlaceholder(ItemStack itemStack) {
-        return itemStack.getHoverName().getString().equals(NON_SLOT_PLACEHOLDER_NAME);
+        return !itemStack.isEmpty() && NON_SLOT_PLACEHOLDER_NAMES.contains(itemStack.getHoverName().getString());
     }
 
     public static StyledText getItemName(ItemStack itemStack) {
