@@ -47,7 +47,8 @@ public final class ItemUtils {
     }
 
     public static boolean isNonSlotPlaceholder(ItemStack itemStack) {
-        return !itemStack.isEmpty() && NON_SLOT_PLACEHOLDER_NAMES.contains(itemStack.getHoverName().getString());
+        return !itemStack.isEmpty()
+                && NON_SLOT_PLACEHOLDER_NAMES.contains(itemStack.getHoverName().getString());
     }
 
     public static StyledText getItemName(ItemStack itemStack) {
