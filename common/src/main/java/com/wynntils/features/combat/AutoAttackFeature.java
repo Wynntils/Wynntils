@@ -26,7 +26,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
-    static final int TICKS_PER_ATTACK = 4;
+    static final int TICKS_PER_ATTACK = 2;
 
     int lastSelectedSlot;
     boolean preventWrongCast = false;
@@ -79,7 +79,7 @@ public class AutoAttackFeature extends Feature {
         for (StyledText lore : LoreUtils.getLore(heldItem)) {
             if (lore.contains("✖")) return;
         }
-        if (player.tickCount % TICKS_PER_ATTACK == 0) return;
+        if (player.tickCount % TICKS_PER_ATTACK != 0) return;
 
         if (isArcher) {
             SpellDirection.RIGHT.getSendPacketRunnable().run();
