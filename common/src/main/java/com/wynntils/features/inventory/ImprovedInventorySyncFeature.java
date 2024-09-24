@@ -10,6 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.handlers.inventory.event.DesyncableContainerClickEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -26,6 +27,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class ImprovedInventorySyncFeature extends Feature {
     @Persisted
     public Config<Boolean> forceSync = new Config<>(false);
+
+    @SubscribeEvent
+    public void onDesyncableContainerClick(DesyncableContainerClickEvent event) {
+        event.setShouldResync(true);
+        if (event.getResyncStrategy() == null) {
+            // TODO resolve resync strategy
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onContainerClick(ContainerClickEvent event) {

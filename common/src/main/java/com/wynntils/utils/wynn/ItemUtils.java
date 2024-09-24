@@ -9,6 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
+import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,11 @@ public final class ItemUtils {
         return wynnItemOpt
                 .filter(wynnItem -> wynnItem instanceof GatheringToolItem)
                 .isPresent();
+    }
+
+    public static boolean isIngredientPouch(ItemStack itemStack) {
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        return wynnItemOpt.isPresent() && wynnItemOpt.get() instanceof IngredientPouchItem;
     }
 
     public static boolean isNonSlotPlaceholder(ItemStack itemStack) {

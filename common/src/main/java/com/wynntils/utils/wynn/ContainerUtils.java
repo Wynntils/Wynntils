@@ -6,16 +6,16 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public final class ContainerUtils {
@@ -44,58 +44,77 @@ public final class ContainerUtils {
         return true;
     }
 
+    public static void sendSlotInteraction(
+            int containerId,
+            int stateId,
+            int slotNumber,
+            ClickType clickType,
+            int mouseButton,
+            ItemStack heldStack,
+            Int2ObjectMap<ItemStack> changedSlots) {
+        McUtils.sendPacket(new ServerboundContainerClickPacket(
+                containerId, stateId, slotNumber, mouseButton, clickType, heldStack, changedSlots));
+    }
+
+    public static void sendSlotInteraction(
+            AbstractContainerMenu menu,
+            int slotNumber,
+            ClickType clickType,
+            int mouseButton,
+            ItemStack heldStack,
+            Int2ObjectMap<ItemStack> changedSlots) {
+        sendSlotInteraction(
+                menu.containerId, menu.getStateId(), slotNumber, clickType, mouseButton, heldStack, changedSlots);
+    }
+
+    public static void sendSlotInteraction(
+            AbstractContainerMenu menu, int slotNumber, ClickType clickType, int mouseButton) {
+        sendSlotInteraction(menu, slotNumber, clickType, mouseButton, ItemStack.EMPTY, Int2ObjectMaps.emptyMap());
+    }
+
     /**
      * Clicks on a slot in the specified container. containerId and the list of items should correspond to the
      * same container!
      */
     public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
-
         // FIXME: To expand usage of this function, the following variables needs to
         // be properly handled
         int transactionId = 0;
 
-        McUtils.sendPacket(new ServerboundContainerClickPacket(
+        sendSlotInteraction(
                 containerId,
                 transactionId,
                 clickedSlot,
-                mouseButton,
                 ClickType.PICKUP,
+                mouseButton,
                 items.get(clickedSlot),
-                changedSlots));
+                Int2ObjectMaps.singleton(clickedSlot, ItemStack.EMPTY));
     }
 
     public static void shiftClickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
-
         int transactionId = 0;
 
-        McUtils.sendPacket(new ServerboundContainerClickPacket(
+        sendSlotInteraction(
                 containerId,
                 transactionId,
                 clickedSlot,
-                mouseButton,
                 ClickType.QUICK_MOVE,
+                mouseButton,
                 items.get(clickedSlot),
-                changedSlots));
+                Int2ObjectMaps.singleton(clickedSlot, ItemStack.EMPTY));
     }
 
     public static void pressKeyOnSlot(int clickedSlot, int containerId, int buttonNum, List<ItemStack> items) {
-        Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, new ItemStack(Items.AIR));
-
         int transactionId = 0;
 
-        McUtils.sendPacket(new ServerboundContainerClickPacket(
+        sendSlotInteraction(
                 containerId,
                 transactionId,
                 clickedSlot,
-                buttonNum,
                 ClickType.SWAP,
+                buttonNum,
                 items.get(clickedSlot),
-                changedSlots));
+                Int2ObjectMaps.singleton(clickedSlot, ItemStack.EMPTY));
     }
 
     public static void closeContainer(int containerId) {
