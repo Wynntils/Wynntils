@@ -18,6 +18,7 @@ import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -150,7 +151,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
         encodedItem = errorOrEncodedByteBuffer.getValue();
 
         // Decode the item to be displayed
-        ErrorOr<WynnItem> errorOrDecodedByteBuffer = Models.ItemEncoding.decodeItem(encodedItem);
+        String itemName = wynnItem instanceof NamedItemProperty namedItem ? namedItem.getName() : null;
+        ErrorOr<WynnItem> errorOrDecodedByteBuffer = Models.ItemEncoding.decodeItem(encodedItem, itemName);
         if (errorOrDecodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to decode item: " + errorOrDecodedByteBuffer.getError());
             previewItemStack = null;
@@ -191,8 +193,10 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     private void shareItem(String target) {
         switch (target) {
-            case "guild" -> Handlers.Command.sendCommandImmediately("g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
-            case "party" -> Handlers.Command.sendCommandImmediately("p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+            case "guild" -> Handlers.Command.sendCommandImmediately(
+                    "g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+            case "party" -> Handlers.Command.sendCommandImmediately(
+                    "p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 
