@@ -1,9 +1,26 @@
+## [2.3.6](https://github.com/Wynntils/Wynntils/compare/v2.3.5...v2.3.6) (2024-09-25)
+
+
+### New Features
+
+* Add keybind options for opening overlay selection and management screens [skip ci] ([#2894](https://github.com/Wynntils/Wynntils/issues/2894)) ([9cf256d](https://github.com/Wynntils/Wynntils/commit/9cf256d6a452b5d4fff862a38c01ce2528c089c2))
+
+
+### Bug Fixes
+
+* Fix beta warning feature sometimes failing to initialise ([#2895](https://github.com/Wynntils/Wynntils/issues/2895)) ([1f6797e](https://github.com/Wynntils/Wynntils/commit/1f6797ea442f0c3f9fa2ea15d969ff272ed34166))
+
 ## [2.3.5](https://github.com/Wynntils/Wynntils/compare/v2.3.4...v2.3.5) (2024-09-23)
 
 
 ### Bug Fixes
 
 * Disable ImprovedInventorySyncFeature by default until refinements are made ([#2893](https://github.com/Wynntils/Wynntils/issues/2893)) ([97a573b](https://github.com/Wynntils/Wynntils/commit/97a573bacaa1658945c8b94d7b78fc84a28cddc4))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.5 [skip ci] ([9e211ba](https://github.com/Wynntils/Wynntils/commit/9e211baf0d6065a476dd0dfd6fb6447c18ab10b3))
 
 ## [2.3.4](https://github.com/Wynntils/Wynntils/compare/v2.3.3...v2.3.4) (2024-09-22)
 
@@ -51,16 +68,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.2 [skip ci] ([75d38a4](https://github.com/Wynntils/Wynntils/commit/75d38a492387993b5a88f6e5a5e91a97d5d16000))
-
-## [2.3.1](https://github.com/Wynntils/Wynntils/compare/v2.3.0...v2.3.1) (2024-09-19)
-
-
-### Bug Fixes
-
-* Do not send nor display crafted item names from item encodings ([#2877](https://github.com/Wynntils/Wynntils/issues/2877)) ([13509a1](https://github.com/Wynntils/Wynntils/commit/13509a14038c366fe8af3c1405b2beacf0563589))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.1 [skip ci] ([b5272e9](https://github.com/Wynntils/Wynntils/commit/b5272e930d3556eb29453212c10689717dfcf607))
 
