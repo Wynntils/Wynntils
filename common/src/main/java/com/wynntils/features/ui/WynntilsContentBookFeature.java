@@ -24,6 +24,8 @@ import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.core.component.DataComponents;
@@ -52,6 +54,16 @@ public class WynntilsContentBookFeature extends Feature {
             GLFW.GLFW_KEY_I,
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openOverlayMenu =
+            new KeyBind("Open Overlay Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
+                    .setScreen(OverlaySelectionScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openOverlayFreeMove =
+            new KeyBind("Open Overlay Free Move", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
+                    .setScreen(OverlayManagementScreen.create(null)));
 
     @RegisterKeyBind
     private final KeyBind openPowderGuide = new KeyBind(
