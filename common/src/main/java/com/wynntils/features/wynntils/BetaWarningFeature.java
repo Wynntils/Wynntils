@@ -6,7 +6,6 @@ package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.config.Category;
