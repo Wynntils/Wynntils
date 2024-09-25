@@ -116,7 +116,7 @@
   "feature.wynntils.betaWarning.description": "Adds a warning when you are playing on the beta server without the correct version.",
   "feature.wynntils.betaWarning.name": "Beta Warning",
   "feature.wynntils.betaWarning.usingBetaOnNormalServer": "You are using a beta version of Wynntils. This version may only be supported on the Wynncraft Beta, and may not work correctly on normal Wynncraft. If you have confirmed this version is working correctly, you can ignore this warning.",
-  "feature.wynntils.betaWarning.usingReleaseOnBetaServer": "You are using a release version of Wynntils. This version is not supported on the Wynncraft Beta and various features may be broken. Please connect to the normal Wynncraft server or use a beta version of Wynntils which you can find in our Discord at %s.",
+  "feature.wynntils.betaWarning.usingReleaseOnBetaServer": "You are using a release version of Wynntils. This version is not supported on the Wynncraft Beta and various features may be broken. Please connect to the normal Wynncraft server or use a beta version of Wynntils which you can find in our Discord.",
   "feature.wynntils.bombBellOverlay.description": "Adds an overlay to see active bombs.",
   "feature.wynntils.bombBellOverlay.name": "Bomb Bell",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.fontScale.description": "How large should the bomb bell text be?",

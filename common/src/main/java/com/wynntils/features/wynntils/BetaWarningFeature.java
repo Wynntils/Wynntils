@@ -5,10 +5,10 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
-import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerInfoEvent;
@@ -39,15 +39,19 @@ public class BetaWarningFeature extends Feature {
         if (warnType == WarnType.NONE) return;
 
         McUtils.sendMessageToClient(warnType.getWarning());
+
+        // Send a link to our Discord server for beta builds, we can't include the link in the message as Urls have
+        // not been loaded by the time the enum is initialised
+        if (warnType == WarnType.RELEASE) {
+            Handlers.Command.sendCommandImmediately("wynntils discord");
+        }
         warnType = WarnType.NONE;
     }
 
     private enum WarnType {
         NONE(Component.empty()),
         BETA(Component.translatable("feature.wynntils.betaWarning.usingBetaOnNormalServer")),
-        RELEASE(Component.translatable(
-                "feature.wynntils.betaWarning.usingReleaseOnBetaServer",
-                Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE)));
+        RELEASE(Component.translatable("feature.wynntils.betaWarning.usingReleaseOnBetaServer"));
 
         private final Component warning;
 
