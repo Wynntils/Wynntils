@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -24,11 +25,15 @@ import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.core.component.DataComponents;
+import com.wynntils.utils.mc.PosUtils;
+import net.minecraft.core.Position;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -36,8 +41,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UI)
 public class WynntilsContentBookFeature extends Feature {
     private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
-    private static final int TUTORIAL_HIGHLIGHT_SLOT = 8;
-    private static final int TUTORIAL_CUSTOM_MODEL_DATA_VALUE = 307;
+    private static final Position TUTORIAL_POSITION = new Vec3(-884.5, 67.0, -1575.5);
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
@@ -52,6 +56,16 @@ public class WynntilsContentBookFeature extends Feature {
             GLFW.GLFW_KEY_I,
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openOverlayMenu =
+            new KeyBind("Open Overlay Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
+                    .setScreen(OverlaySelectionScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openOverlayFreeMove =
+            new KeyBind("Open Overlay Free Move", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
+                    .setScreen(OverlayManagementScreen.create(null)));
 
     @RegisterKeyBind
     private final KeyBind openPowderGuide = new KeyBind(
@@ -154,17 +168,15 @@ public class WynntilsContentBookFeature extends Feature {
     }
 
     private void tryCancelQuestBookOpen(ICancellableEvent event) {
-        // Tutorial safeguard, don't replace the content book if the player hasn't completed the tutorial
-        ItemStack contentBookItem = McUtils.inventory().getItem(TUTORIAL_HIGHLIGHT_SLOT);
-
-        if (contentBookItem != null && contentBookItem.getComponents().has(DataComponents.CUSTOM_MODEL_DATA)) {
-            if (contentBookItem
-                            .getComponents()
-                            .get(DataComponents.CUSTOM_MODEL_DATA)
-                            .value()
-                    == TUTORIAL_CUSTOM_MODEL_DATA_VALUE) {
-                return;
-            }
+        // Tutorial safeguard, don't replace the content book if the player hasn't completed the tutorial.
+        // As the custom model data for the content book can change with updates we can't reliably use it
+        // to determine if the player is in the tutorial so instead, if the player is near the content book
+        // tutorial area and have the slowdown effect, we can assume they are in the turorial.
+        // We need to check for the slowdown effect for npc dialogue as the dialogue can expire, meaning
+        // NpcDialogueModel will think we are no longer in dialogue
+        if (Handlers.Chat.hasSlowdown()
+                && PosUtils.closerThanIgnoringY(McUtils.player().position(), TUTORIAL_POSITION, 15)) {
+            return;
         }
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);

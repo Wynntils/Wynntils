@@ -57,6 +57,7 @@ import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.ItemInteractionSoundsFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -66,8 +67,10 @@ import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
+import com.wynntils.features.inventory.FixStackSizeFeature;
 import com.wynntils.features.inventory.GuildBankHotkeyFeature;
 import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
+import com.wynntils.features.inventory.ImprovedInventorySyncFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -251,6 +254,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
+        registerFeature(new ItemInteractionSoundsFeature());
         registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
@@ -263,8 +267,10 @@ public final class FeatureManager extends Manager {
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
+        registerFeature(new FixStackSizeFeature());
         registerFeature(new GuildBankHotkeyFeature());
         registerFeature(new HightlightDuplicateCosmeticsFeature());
+        registerFeature(new ImprovedInventorySyncFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
