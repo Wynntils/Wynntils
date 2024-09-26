@@ -7,11 +7,14 @@ package com.wynntils.features.inventory;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -19,6 +22,8 @@ import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -26,14 +31,25 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends Feature {
     // This should really move to FavoritesModel, but for now, models cannot have configs
+
+    @RegisterKeyBind
+    private final KeyBind itemFavoriteKeyBind = new KeyBind(
+            "Favorite/Unfavorite Item", GLFW.GLFW_KEY_UNKNOWN, true, null, this::tryChangeFavoriteStateOnHoveredSlot);
+
+    @Persisted
+    public final Config<Boolean> allowFavoritingAllItems = new Config<>(false);
+
     @Persisted
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
 
@@ -120,5 +136,30 @@ public class ItemFavoriteFeature extends Feature {
                 9,
                 Texture.FAVORITE_ICON.width(),
                 Texture.FAVORITE_ICON.height());
+    }
+
+    private static final Pattern PATTERN = Pattern.compile("À$");
+
+    private void tryChangeFavoriteStateOnHoveredSlot(Slot hoveredSlot) {
+        if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
+
+        String unformattedName = PATTERN.matcher(
+                        StyledText.fromComponent((hoveredSlot.getItem().getHoverName()))
+                                .getStringWithoutFormatting())
+                .replaceAll("");
+
+        Optional<GearItem> gearItemOpt;
+        Optional<IngredientItem> ingredientItemOpt;
+        String itemName = null;
+
+        gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
+        if (gearItemOpt.isPresent()) itemName = gearItemOpt.get().getName();
+
+        ingredientItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), IngredientItem.class);
+        if (ingredientItemOpt.isPresent()) itemName = ingredientItemOpt.get().getName();
+
+        if (allowFavoritingAllItems.get()) itemName = unformattedName;
+
+        if (itemName != null && !itemName.isBlank()) Services.Favorites.toggleFavorite(itemName);
     }
 }
