@@ -173,6 +173,10 @@ public final class ChatHandler extends Handler {
         }
     }
 
+    public boolean hasSlowdown() {
+        return lastSlowdownApplied != 0;
+    }
+
     private void handleIncomingChatLine(ChatPacketReceivedEvent event) {
         StyledText styledText = StyledText.fromComponent(event.getMessage());
 
