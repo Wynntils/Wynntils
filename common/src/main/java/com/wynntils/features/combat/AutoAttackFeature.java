@@ -11,6 +11,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ArmSwingEvent.ArmSwingContext;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
@@ -26,10 +28,23 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
-    static final int TICKS_PER_ATTACK = 2;
+    private static final int TICKS_PER_ATTACK = 2;
 
-    int lastSelectedSlot;
-    boolean preventWrongCast = false;
+    private Boolean canUseWeapon = null;
+    private int lastSelectedSlot;
+    private boolean preventWrongCast = false;
+
+    @SubscribeEvent
+    public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
+        canUseWeapon = null;
+    }
+
+    @SubscribeEvent
+    public void onSetSlotEvent(SetSlotEvent.Post event) {
+        if (event.getSlot() == McUtils.inventory().selected) {
+            canUseWeapon = null;
+        }
+    }
 
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
@@ -52,6 +67,16 @@ public class AutoAttackFeature extends Feature {
         preventWrongCast = false;
     }
 
+    private boolean checkWeapon() {
+        ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+        if (!ItemUtils.isWeapon(heldItem)) return false;
+        if (ItemUtils.getItemName(heldItem).contains("Unidentified")) return false;
+        for (StyledText lore : LoreUtils.getLore(heldItem)) {
+            if (lore.contains("✖")) return false;
+        }
+        return true;
+    }
+
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
@@ -64,22 +89,21 @@ public class AutoAttackFeature extends Feature {
             preventWrongCast = false;
         }
 
+        LocalPlayer player = McUtils.player();
+        if (player.tickCount % TICKS_PER_ATTACK != 0) return;
+
+        if (canUseWeapon == null) {
+            canUseWeapon = checkWeapon();
+        }
+
+        if (!canUseWeapon) return;
+
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
         if (isArcher) {
             if (!McUtils.options().keyUse.isDown()) return;
         } else {
             if (!McUtils.options().keyAttack.isDown()) return;
         }
-
-        LocalPlayer player = McUtils.player();
-        ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
-
-        if (!ItemUtils.isWeapon(heldItem)) return;
-        if (ItemUtils.getItemName(heldItem).contains("Unidentified")) return;
-        for (StyledText lore : LoreUtils.getLore(heldItem)) {
-            if (lore.contains("✖")) return;
-        }
-        if (player.tickCount % TICKS_PER_ATTACK != 0) return;
 
         if (isArcher) {
             SpellDirection.RIGHT.getSendPacketRunnable().run();
