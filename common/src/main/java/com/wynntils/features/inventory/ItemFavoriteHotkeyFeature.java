@@ -33,7 +33,7 @@ public class ItemFavoriteHotkeyFeature extends Feature {
     public final Config<Boolean> allowFavoritingAllItems = new Config<>(false);
 
     private void tryChangeFavoriteStateOnHoveredSlot(Slot hoveredSlot) {
-        if (!Models.WorldState.onWorld() || hoveredSlot == null) return;
+        if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
         String unformattedName = PATTERN.matcher(
                         StyledText.fromComponent((hoveredSlot.getItem().getHoverName()))
