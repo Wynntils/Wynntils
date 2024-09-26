@@ -18,9 +18,6 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
-import com.wynntils.models.items.items.game.MultiHealthPotionItem;
-import net.fabricmc.loader.impl.util.log.ConsoleLogHandler;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
@@ -41,13 +38,12 @@ public class ItemFavoriteHotkeyFeature extends Feature {
         String unformattedName = PATTERN.matcher(
                         StyledText.fromComponent((hoveredSlot.getItem().getHoverName()))
                                 .getStringWithoutFormatting())
-                                .replaceAll("");
+                .replaceAll("");
 
         Optional<GearItem> gearItemOpt;
         Optional<IngredientItem> ingredientItemOpt;
         String itemName = null;
 
-        //Models.Item.asWynnItem(hoveredSlot.getItem(), MultiHealthPotionItem.class).isPresent();
         gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
         if (gearItemOpt.isPresent()) itemName = gearItemOpt.get().getName();
 
