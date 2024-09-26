@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import static com.wynntils.utils.wynn.WynnUtils.normalizeBadString;
-
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -29,6 +27,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -148,11 +147,13 @@ public class ItemFavoriteFeature extends Feature {
         if (namedItemPropertyOpt.isPresent()) {
             itemName = namedItemPropertyOpt.get().getName();
         } else if (allowFavoritingAllItems.get()) {
-            itemName = normalizeBadString(
+            itemName = WynnUtils.normalizeBadString(
                     StyledText.fromComponent((hoveredSlot.getItem().getHoverName()))
                             .getStringWithoutFormatting());
         }
 
-        if (itemName != null && !itemName.isBlank()) Services.Favorites.toggleFavorite(itemName);
+        if (itemName != null && !itemName.isBlank()) {
+            Services.Favorites.toggleFavorite(itemName);
+        }
     }
 }
