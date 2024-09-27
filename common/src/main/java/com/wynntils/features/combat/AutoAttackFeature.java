@@ -30,19 +30,25 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class AutoAttackFeature extends Feature {
     private static final int TICKS_PER_ATTACK = 2;
 
-    private Boolean canUseWeapon = null;
+    private enum WeaponStatus {
+        UNKNOWN,
+        NOT_USABLE,
+        USABLE
+    }
+
+    private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
     private int lastSelectedSlot;
     private boolean preventWrongCast = false;
 
     @SubscribeEvent
     public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
-        canUseWeapon = null;
+        weaponStatus = WeaponStatus.UNKNOWN;
     }
 
     @SubscribeEvent
     public void onSetSlotEvent(SetSlotEvent.Post event) {
         if (event.getSlot() == McUtils.inventory().selected) {
-            canUseWeapon = null;
+            weaponStatus = WeaponStatus.UNKNOWN;
         }
     }
 
@@ -67,7 +73,7 @@ public class AutoAttackFeature extends Feature {
         preventWrongCast = false;
     }
 
-    private boolean checkWeapon() {
+    private boolean isHoldingUsableWeapon() {
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (!ItemUtils.isWeapon(heldItem)) return false;
         if (ItemUtils.getItemName(heldItem).contains("Unidentified")) return false;
@@ -92,11 +98,11 @@ public class AutoAttackFeature extends Feature {
         LocalPlayer player = McUtils.player();
         if (player.tickCount % TICKS_PER_ATTACK != 0) return;
 
-        if (canUseWeapon == null) {
-            canUseWeapon = checkWeapon();
+        if (weaponStatus == WeaponStatus.UNKNOWN) {
+            weaponStatus = isHoldingUsableWeapon() ? WeaponStatus.USABLE : WeaponStatus.NOT_USABLE;
         }
 
-        if (!canUseWeapon) return;
+        if (weaponStatus != WeaponStatus.USABLE) return;
 
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
         if (isArcher) {
@@ -108,6 +114,7 @@ public class AutoAttackFeature extends Feature {
         if (isArcher) {
             SpellDirection.RIGHT.getSendPacketRunnable().run();
         } else {
+            // SpellDirection.LEFT doesn't do the swing animation
             player.swing(InteractionHand.MAIN_HAND);
         }
     }
