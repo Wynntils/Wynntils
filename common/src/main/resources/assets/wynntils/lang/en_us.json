@@ -659,6 +659,8 @@
   "feature.wynntils.itemCompare.name": "Item Compare",
   "feature.wynntils.itemDebugTooltips.description": "Adds debug tooltips to items.",
   "feature.wynntils.itemDebugTooltips.name": "Item Debug Tooltips",
+  "feature.wynntils.itemFavorite.allowFavoritingAllItems.description": "Should it be possible to use the favorite item hotkey on any item?",
+  "feature.wynntils.itemFavorite.allowFavoritingAllItems.name": "Favorite Anything",
   "feature.wynntils.itemFavorite.closingBlocked": "You cannot close this chest as it has a favorite item inside!",
   "feature.wynntils.itemFavorite.closingBlockedOverride": "You cannot close this chest as it has a favorite item inside! Try to close the container %d more times to force close it.",
   "feature.wynntils.itemFavorite.description": "Adds the ability to favorite items, and prevent closing chests while a favorite item is inside.",
