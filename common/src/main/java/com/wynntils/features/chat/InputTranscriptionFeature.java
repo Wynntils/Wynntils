@@ -41,7 +41,7 @@ public class InputTranscriptionFeature extends Feature {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (!transcriptionButtons.get()) return;
 
         if (event.getScreen() instanceof ChatScreen chatScreen) {

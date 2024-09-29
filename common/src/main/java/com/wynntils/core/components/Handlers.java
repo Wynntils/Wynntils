@@ -9,7 +9,6 @@ import com.wynntils.handlers.bossbar.BossBarHandler;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.command.CommandHandler;
 import com.wynntils.handlers.container.ContainerQueryHandler;
-import com.wynntils.handlers.inventory.InventoryHandler;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.handlers.labels.LabelHandler;
 import com.wynntils.handlers.particle.ParticleHandler;
@@ -23,7 +22,6 @@ public final class Handlers {
     public static final ChatHandler Chat = new ChatHandler();
     public static final CommandHandler Command = new CommandHandler();
     public static final ContainerQueryHandler ContainerQuery = new ContainerQueryHandler();
-    public static final InventoryHandler Inventory = new InventoryHandler();
     public static final ItemHandler Item = new ItemHandler();
     public static final LabelHandler Label = new LabelHandler();
     public static final ParticleHandler Particle = new ParticleHandler();

@@ -114,7 +114,7 @@ public final class StatisticsCollectors {
     }
 
     @SubscribeEvent
-    public void onRewardContainerOpened(ScreenInitEvent e) {
+    public void onRewardContainerOpened(ScreenInitEvent.Pre e) {
         if (Models.Container.getCurrentContainer() instanceof RewardContainer rewardContainer) {
             Services.Statistics.increaseStatistics(StatisticKind.LOOTRUNS_CHESTS_OPENED);
         }
