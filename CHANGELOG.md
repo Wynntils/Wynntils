@@ -1,3 +1,21 @@
+## [2.3.7](https://github.com/Wynntils/Wynntils/compare/v2.3.6...v2.3.7) (2024-09-29)
+
+
+### New Features
+
+* Added favorite item hotkey [skip ci] ([#2897](https://github.com/Wynntils/Wynntils/issues/2897)) ([9a4f474](https://github.com/Wynntils/Wynntils/commit/9a4f474bb1e1923eab7fdfeb0ed72302b52a037a))
+* Bulk buy rework ([#2735](https://github.com/Wynntils/Wynntils/issues/2735)) ([bead9be](https://github.com/Wynntils/Wynntils/commit/bead9be41230541daa760ff9533137061bbdd3d6))
+
+
+### Bug Fixes
+
+* Fix tutorial content book [skip ci] ([#2896](https://github.com/Wynntils/Wynntils/issues/2896)) ([25b36c2](https://github.com/Wynntils/Wynntils/commit/25b36c28905423528353d75b2a27ff71689ec705))
+
+
+### Miscellaneous Chores
+
+* Remove ImprovedInventorySync and ItemInteractionSounds features [skip ci] ([#2898](https://github.com/Wynntils/Wynntils/issues/2898)) ([5291a99](https://github.com/Wynntils/Wynntils/commit/5291a99f6971196edbc35241b8fd27186800e309))
+
 ## [2.3.6](https://github.com/Wynntils/Wynntils/compare/v2.3.5...v2.3.6) (2024-09-25)
 
 
@@ -9,6 +27,11 @@
 ### Bug Fixes
 
 * Fix beta warning feature sometimes failing to initialise ([#2895](https://github.com/Wynntils/Wynntils/issues/2895)) ([1f6797e](https://github.com/Wynntils/Wynntils/commit/1f6797ea442f0c3f9fa2ea15d969ff272ed34166))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.6 [skip ci] ([5e39a44](https://github.com/Wynntils/Wynntils/commit/5e39a448f3a2313c342699b8589d28773d364683))
 
 ## [2.3.5](https://github.com/Wynntils/Wynntils/compare/v2.3.4...v2.3.5) (2024-09-23)
 
@@ -51,21 +74,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.3 [skip ci] ([f33696d](https://github.com/Wynntils/Wynntils/commit/f33696de485708200ad861d2c905fecd8164d971))
-
-## [2.3.2](https://github.com/Wynntils/Wynntils/compare/v2.3.1...v2.3.2) (2024-09-21)
-
-
-### New Features
-
-* Add functions for damage in raids, use in raid overlay ([#2882](https://github.com/Wynntils/Wynntils/issues/2882)) ([fba6976](https://github.com/Wynntils/Wynntils/commit/fba697633bd9d27c4a015bf66d785a29a6618d2a))
-
-
-### Bug Fixes
-
-* Time Rift, Pandemonium, and overall totem performance fixes [skip ci] ([#2863](https://github.com/Wynntils/Wynntils/issues/2863)) ([d04a565](https://github.com/Wynntils/Wynntils/commit/d04a5655fb2d473ea1c5c4102de82bc5c5096400))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.2 [skip ci] ([75d38a4](https://github.com/Wynntils/Wynntils/commit/75d38a492387993b5a88f6e5a5e91a97d5d16000))
 
