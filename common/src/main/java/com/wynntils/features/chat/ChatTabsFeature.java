@@ -79,7 +79,7 @@ public class ChatTabsFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (event.getScreen() instanceof ChatScreen chatScreen) {
             int xOffset = 0;
 
