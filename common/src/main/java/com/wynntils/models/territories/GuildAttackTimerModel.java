@@ -115,7 +115,7 @@ public final class GuildAttackTimerModel extends Model {
             return;
         }
 
-        matcher = StyledTextUtils.unwrap(event.getOriginalStyledText()).getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
+        matcher = event.getOriginalUnwrappedStyledText().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (matcher.matches()) {
             String territory = matcher.group(1);
             territoryDefenses.put(territory, GuildResourceValues.fromString(matcher.group(2)));
