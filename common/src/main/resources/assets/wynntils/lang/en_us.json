@@ -696,6 +696,8 @@
   "feature.wynntils.itemHighlight.fabledHighlightColor.name": "Fabled Highlight Color",
   "feature.wynntils.itemHighlight.fabledHighlightEnabled.description": "Enable highlighting of fabled items",
   "feature.wynntils.itemHighlight.fabledHighlightEnabled.name": "Fabled Item Highlight",
+  "feature.wynntils.itemHighlight.highlightTexture.description": "What texture should be used for item highlighting?",
+  "feature.wynntils.itemHighlight.highlightTexture.name": "Highlight Texture",
   "feature.wynntils.itemHighlight.hotbarHighlightEnabled.description": "Enable highlighting of items in the hotbar",
   "feature.wynntils.itemHighlight.hotbarHighlightEnabled.name": "Hotbar Item Highlights",
   "feature.wynntils.itemHighlight.hotbarOpacity.description": "What level of opacity should highlighted items in the hotbar have?",
