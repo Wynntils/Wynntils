@@ -20,10 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {
-    // Type the price in emeralds or formatted (e.g '10eb', '10stx 5eb') or type 'cancel' to cancel:
-    // Type the amount you wish to sell or type 'cancel' to cancel:
-    // Type the item name or type 'cancel' to cancel:
-    // Type the amount you wish to buy or type 'cancel' to cancel:
+    // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
