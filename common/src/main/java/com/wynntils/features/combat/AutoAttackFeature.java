@@ -29,6 +29,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
     private static final int TICKS_PER_ATTACK = 2;
+    private static final int SPELL_TIMEOUT_TICKS = 60;
 
     private enum WeaponStatus {
         UNKNOWN,
@@ -38,7 +39,7 @@ public class AutoAttackFeature extends Feature {
 
     private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
     private int lastSelectedSlot;
-    private boolean preventWrongCast = false;
+    private int preventWrongCast = Integer.MIN_VALUE;
 
     @SubscribeEvent
     public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
@@ -58,19 +59,19 @@ public class AutoAttackFeature extends Feature {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
         if (Models.Character.getClassType() != ClassType.ARCHER) return;
         lastSelectedSlot = McUtils.inventory().selected;
-        preventWrongCast = true;
+        preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
     }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (Models.Character.getClassType() == ClassType.ARCHER) return;
         lastSelectedSlot = McUtils.inventory().selected;
-        preventWrongCast = true;
+        preventWrongCast = McUtils.player().tickCount + SPELL_TIMEOUT_TICKS;
     }
 
     @SubscribeEvent
     public void onSpellCastCompleted(SpellEvent.Completed event) {
-        preventWrongCast = false;
+        preventWrongCast = Integer.MIN_VALUE;
     }
 
     private boolean isHoldingUsableWeapon() {
@@ -87,15 +88,15 @@ public class AutoAttackFeature extends Feature {
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
+        LocalPlayer player = McUtils.player();
         int currentSelectedSlot = McUtils.inventory().selected;
         if (currentSelectedSlot == lastSelectedSlot) {
-            if (preventWrongCast) return;
+            if (preventWrongCast > player.tickCount) return;
         } else {
             lastSelectedSlot = currentSelectedSlot;
-            preventWrongCast = false;
+            preventWrongCast = Integer.MIN_VALUE;
         }
 
-        LocalPlayer player = McUtils.player();
         if (player.tickCount % TICKS_PER_ATTACK != 0) return;
 
         if (weaponStatus == WeaponStatus.UNKNOWN) {
