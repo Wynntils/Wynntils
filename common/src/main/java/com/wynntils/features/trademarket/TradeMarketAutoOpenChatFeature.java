@@ -8,29 +8,31 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {
-    // Type the price in emeralds or type 'cancel' to cancel:
-    // Type the amount you wish to buy or type 'cancel' to cancel:
-    // Type the item name or type 'cancel' to cancel:
-    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile(
-            "^§5(\uE00A\uE002|\uE001) \n\uE001 Type the .* or type (\n\uE001 'cancel' to|'cancel' to \n\uE001) cancel:\n\uE001 ");
+    // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
+    private static final Pattern TYPE_TO_CHAT_PATTERN =
+            Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
     private boolean openChatWhenContainerClosed = false;
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
+        StyledText styledText =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
 
-        if (event.getOriginalStyledText().stripAlignment().matches(TYPE_TO_CHAT_PATTERN)) {
+        if (styledText.matches(TYPE_TO_CHAT_PATTERN)) {
             openChatWhenContainerClosed = true;
         }
     }
