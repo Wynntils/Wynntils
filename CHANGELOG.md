@@ -1,3 +1,17 @@
+## [2.3.8](https://github.com/Wynntils/Wynntils/compare/v2.3.7...v2.3.8) (2024-10-01)
+
+
+### New Features
+
+* Add texture options for item highlights [skip ci] ([#2901](https://github.com/Wynntils/Wynntils/issues/2901)) ([a266bf7](https://github.com/Wynntils/Wynntils/commit/a266bf79e48a534a7cb626afe34add7a27a2e3ca))
+* Hide raid intermission by default and don't include in raid best time [skip ci] ([#2903](https://github.com/Wynntils/Wynntils/issues/2903)) ([e12b253](https://github.com/Wynntils/Wynntils/commit/e12b25371aab4db3984afd2dc3c8236d06d5cfaa))
+
+
+### Bug Fixes
+
+* Fix Territorry defense not being recognized for long territorry names [skip ci] ([#2899](https://github.com/Wynntils/Wynntils/issues/2899)) ([05fefd4](https://github.com/Wynntils/Wynntils/commit/05fefd4a93ba03334e8c2605c9ef721c823d0b21))
+* Fix trade market auto open chat and price conversion ([#2902](https://github.com/Wynntils/Wynntils/issues/2902)) ([48b964a](https://github.com/Wynntils/Wynntils/commit/48b964a562e5c4758e7298753bd51ed1d6b31226))
+
 ## [2.3.7](https://github.com/Wynntils/Wynntils/compare/v2.3.6...v2.3.7) (2024-09-29)
 
 
@@ -14,6 +28,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v2.3.7 [skip ci] ([d17bd3e](https://github.com/Wynntils/Wynntils/commit/d17bd3eda12bab8490755dbc533d6599515985f6))
 * Remove ImprovedInventorySync and ItemInteractionSounds features [skip ci] ([#2898](https://github.com/Wynntils/Wynntils/issues/2898)) ([5291a99](https://github.com/Wynntils/Wynntils/commit/5291a99f6971196edbc35241b8fd27186800e309))
 
 ## [2.3.6](https://github.com/Wynntils/Wynntils/compare/v2.3.5...v2.3.6) (2024-09-25)
@@ -57,21 +72,4 @@
 
 * [auto-generated] Update urls.json [ci skip] ([#2886](https://github.com/Wynntils/Wynntils/issues/2886)) ([c9308e7](https://github.com/Wynntils/Wynntils/commit/c9308e7142c41ce09efb2afbac87b7f1b049e8da))
 * **release:** v2.3.4 [skip ci] ([5688783](https://github.com/Wynntils/Wynntils/commit/56887833b6bc4c09ccf86693b45c85c1e8019af0))
-
-## [2.3.3](https://github.com/Wynntils/Wynntils/compare/v2.3.2...v2.3.3) (2024-09-22)
-
-
-### New Features
-
-* inventory interaction improvements and desync fixes ([#2871](https://github.com/Wynntils/Wynntils/issues/2871)) ([8966795](https://github.com/Wynntils/Wynntils/commit/8966795aaae1fdf503db74c9f3a39dfa7825e97c))
-
-
-### Bug Fixes
-
-* Fix a race between UrlManager and CoreComponent initialization [skip ci] ([#2885](https://github.com/Wynntils/Wynntils/issues/2885)) ([17863fa](https://github.com/Wynntils/Wynntils/commit/17863fa804e43abc30750bbf7c852d8d9b4797cb))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.3 [skip ci] ([f33696d](https://github.com/Wynntils/Wynntils/commit/f33696de485708200ad861d2c905fecd8164d971))
 
