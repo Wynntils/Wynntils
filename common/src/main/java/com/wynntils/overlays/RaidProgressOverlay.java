@@ -18,13 +18,13 @@ public class RaidProgressOverlay extends TextOverlay {
     private String previewTemplate;
 
     @Persisted
-    public final Config<Boolean> showIntermission = new Config<>(true);
+    public final Config<Boolean> showIntermission = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> showMilliseconds = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> totalIntermission = new Config<>(true);
+    public final Config<Boolean> totalIntermission = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> showDamage = new Config<>(true);
