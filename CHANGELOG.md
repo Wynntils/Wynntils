@@ -1,3 +1,10 @@
+## [2.3.9](https://github.com/Wynntils/Wynntils/compare/v2.3.8...v2.3.9) (2024-10-03)
+
+
+### New Features
+
+* Reworked ItemCompareFeature ([#2876](https://github.com/Wynntils/Wynntils/issues/2876)) ([f40570a](https://github.com/Wynntils/Wynntils/commit/f40570a4cc31401fa9b20eee5dd783d88868ceac))
+
 ## [2.3.8](https://github.com/Wynntils/Wynntils/compare/v2.3.7...v2.3.8) (2024-10-01)
 
 
@@ -11,6 +18,11 @@
 
 * Fix Territorry defense not being recognized for long territorry names [skip ci] ([#2899](https://github.com/Wynntils/Wynntils/issues/2899)) ([05fefd4](https://github.com/Wynntils/Wynntils/commit/05fefd4a93ba03334e8c2605c9ef721c823d0b21))
 * Fix trade market auto open chat and price conversion ([#2902](https://github.com/Wynntils/Wynntils/issues/2902)) ([48b964a](https://github.com/Wynntils/Wynntils/commit/48b964a562e5c4758e7298753bd51ed1d6b31226))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.8 [skip ci] ([245ffac](https://github.com/Wynntils/Wynntils/commit/245fface0d92b4b0d9e964706c35faa4b515e119))
 
 ## [2.3.7](https://github.com/Wynntils/Wynntils/compare/v2.3.6...v2.3.7) (2024-09-29)
 
@@ -59,17 +71,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.5 [skip ci] ([9e211ba](https://github.com/Wynntils/Wynntils/commit/9e211baf0d6065a476dd0dfd6fb6447c18ab10b3))
-
-## [2.3.4](https://github.com/Wynntils/Wynntils/compare/v2.3.3...v2.3.4) (2024-09-22)
-
-
-### Bug Fixes
-
-* Fix guild map not showing territories ([#2889](https://github.com/Wynntils/Wynntils/issues/2889)) ([c269de4](https://github.com/Wynntils/Wynntils/commit/c269de451b314711c5c222dff2a99a8b6d643806))
-
-
-### Miscellaneous Chores
-
-* [auto-generated] Update urls.json [ci skip] ([#2886](https://github.com/Wynntils/Wynntils/issues/2886)) ([c9308e7](https://github.com/Wynntils/Wynntils/commit/c9308e7142c41ce09efb2afbac87b7f1b049e8da))
-* **release:** v2.3.4 [skip ci] ([5688783](https://github.com/Wynntils/Wynntils/commit/56887833b6bc4c09ccf86693b45c85c1e8019af0))
 
