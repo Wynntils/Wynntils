@@ -4,9 +4,15 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -15,15 +21,25 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ComponentUtils {
     private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
+    private static final ResourceLocation CHAT_BANNER_FONT_LOCATION = ResourceLocation.parse("wynntils:chat");
+    private static final Style CHAT_BANNER_STYLE =
+            Style.EMPTY.withFont(CHAT_BANNER_FONT_LOCATION).withColor(ChatFormatting.DARK_GREEN);
+    private static final String CHAT_BANNER_FIRST_LINE = "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE";
+    private static final String CHAT_BANNER_LINE_PREFIX = "\uDAFF\uDFFC\uE001\uDB00\uDC06";
 
     public static List<Component> stripDuplicateBlank(List<Component> lore) {
         List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
@@ -167,5 +183,85 @@ public final class ComponentUtils {
             newName.append(Component.literal(current.toString()));
         }
         return newName;
+    }
+
+    /**
+     * Adds a Wynntils chat banner to the left side of the provided text in the style of Wynncraft 2.1 chat banners.
+     * The formatting of the provided text is preserved.
+     *
+     * @param formattedText the formatted text to add the Wynntils chat banner to
+     * @return a {@code Component} holding the formatted text with the Wynntils chat banner added
+     */
+    public static Component addWynntilsBanner(Component component) {
+        Minecraft mc = Minecraft.getInstance();
+        List<FormattedText> lines = mc.font
+                .getSplitter()
+                .splitLines(
+                        component,
+                        ChatComponent.getWidth(mc.options.chatWidth().get())
+                                - mc.font.width(CHAT_BANNER_LINE_PREFIX + " "),
+                        Style.EMPTY);
+
+        MutableComponent output = Component.literal(CHAT_BANNER_FIRST_LINE)
+                .withStyle(CHAT_BANNER_STYLE)
+                .append("\n");
+
+        for (int i = 0; i < lines.size(); i++) {
+            output.append(Component.literal(CHAT_BANNER_LINE_PREFIX))
+                    .append(Component.literal(" ")
+                            .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("default")))
+                            .append(formattedTextToComponent(lines.get(i))));
+            if (i != lines.size() - 1) {
+                output.append("\n");
+            }
+        }
+
+        return output;
+    }
+
+    /**
+     * Creates a new {@link Component} from a given {@link WynnItem} that shows the item's stats when hovered. A
+     * {@code Component} with a hoverable error message will be returned if item encoding fails.
+     *
+     * @param wynnItem the {@code WynnItem} to create a {@code Component} for
+     * @return a {@code Component} with the given item's stats, or a {@code Component} with an error message if
+     * encoding fails
+     */
+    public static Component createItemChatComponent(WynnItem wynnItem) {
+        EncodingSettings encodingSettings = new EncodingSettings(
+                Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
+        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
+                Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
+        if (errorOrEncodedByteBuffer.hasError()) {
+            WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
+            return Component.translatable("feature.wynntils.chatItem.chatItemError")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.RED)
+                            .withUnderlined(true)
+                            .withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.COPY_TO_CLIPBOARD, errorOrEncodedByteBuffer.getError()))
+                            .withHoverEvent(new HoverEvent(
+                                    HoverEvent.Action.SHOW_TEXT,
+                                    Component.translatable(
+                                            "feature.wynntils.chatItem.chatItemErrorEncode",
+                                            errorOrEncodedByteBuffer.getError()))));
+        }
+
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            WynntilsMod.info("Encoded item: " + errorOrEncodedByteBuffer.getValue());
+            WynntilsMod.info("Encoded item UTF-16: "
+                    + errorOrEncodedByteBuffer.getValue().toUtf16String());
+        }
+
+        return Component.translatable("feature.wynntils.chatItem.chatItemMessage")
+                .withStyle(ChatFormatting.DARK_GREEN)
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(s -> s.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.COPY_TO_CLIPBOARD,
+                        errorOrEncodedByteBuffer.getValue().toUtf16String())))
+                .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
+                                .withStyle(ChatFormatting.DARK_AQUA))));
     }
 }

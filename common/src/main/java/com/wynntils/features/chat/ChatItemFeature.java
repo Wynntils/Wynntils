@@ -23,7 +23,6 @@ import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.mc.mixin.accessors.ItemStackInfoAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -48,7 +47,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
@@ -169,7 +167,7 @@ public class ChatItemFeature extends Feature {
             if (showSharingScreen.get()) {
                 McUtils.mc().setScreen(ItemSharingScreen.create(wynnItemOpt.get(), hoveredSlot.getItem()));
             } else {
-                makeChatPrompt(wynnItemOpt.get());
+                McUtils.sendMessageToClient(ComponentUtils.createItemChatComponent(wynnItemOpt.get()));
             }
         } else {
             ItemStack itemStackToSave = hoveredSlot.getItem();
@@ -275,35 +273,5 @@ public class ChatItemFeature extends Feature {
                 .toList());
 
         return parts;
-    }
-
-    private void makeChatPrompt(WynnItem wynnItem) {
-        EncodingSettings encodingSettings = new EncodingSettings(
-                Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
-        ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
-                Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
-        if (errorOrEncodedByteBuffer.hasError()) {
-            WynntilsMod.error("Failed to encode item: " + errorOrEncodedByteBuffer.getError());
-            McUtils.sendErrorToClient(
-                    I18n.get("feature.wynntils.chatItem.chatItemErrorEncode", errorOrEncodedByteBuffer.getError()));
-            return;
-        }
-
-        if (WynntilsMod.isDevelopmentEnvironment()) {
-            WynntilsMod.info("Encoded item: " + errorOrEncodedByteBuffer.getValue());
-            WynntilsMod.info("Encoded item UTF-16: "
-                    + errorOrEncodedByteBuffer.getValue().toUtf16String());
-        }
-
-        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatItem.chatItemMessage")
-                .withStyle(ChatFormatting.DARK_GREEN)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(s -> s.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.COPY_TO_CLIPBOARD,
-                        errorOrEncodedByteBuffer.getValue().toUtf16String())))
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
-                                .withStyle(ChatFormatting.DARK_AQUA)))));
     }
 }
