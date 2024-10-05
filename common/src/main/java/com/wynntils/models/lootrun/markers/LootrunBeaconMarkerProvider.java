@@ -43,7 +43,7 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
                                     .showAdditionalTextInWorld
                                     .get()
                             ? entry.getValue().taskLocation().name() + " - "
-                                    + entry.getValue().beacon().color().name()
+                                    + entry.getKey().name()
                             : null));
         }
         taskMarkers = newTaskMarkers;

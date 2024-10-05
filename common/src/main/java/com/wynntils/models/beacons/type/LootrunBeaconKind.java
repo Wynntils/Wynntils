@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.beacons.type;
 
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.core.component.DataComponents;
@@ -13,20 +13,18 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 
-public enum LootrunBeaconKind {
-    GREEN(79, CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
-    YELLOW(79, CustomColor.fromInt(0xFFFF33), CommonColors.YELLOW),
-    BLUE(79, CustomColor.fromInt(0x5C5CE6), CommonColors.BLUE),
-    PURPLE(79, CustomColor.fromInt(0xFF00FF), CommonColors.PURPLE),
-    GRAY(79, CustomColor.fromInt(0xBFBFBF), CommonColors.LIGHT_GRAY),
-    ORANGE(79, CustomColor.fromInt(0xFF9500), CommonColors.ORANGE),
-    RED(79, CustomColor.fromInt(0xFF0000), CommonColors.RED),
-    DARK_GRAY(79, CustomColor.fromInt(0x808080), CommonColors.GRAY),
-    WHITE(79, CommonColors.WHITE, CommonColors.WHITE),
-    AQUA(79, CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
+public enum LootrunBeaconKind implements BeaconKind {
+    GREEN(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
+    YELLOW(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFFFF33), CommonColors.YELLOW),
+    BLUE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x5C5CE6), CommonColors.BLUE),
+    PURPLE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF00FF), CommonColors.PURPLE),
+    GRAY(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xBFBFBF), CommonColors.LIGHT_GRAY),
+    ORANGE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF9500), CommonColors.ORANGE),
+    RED(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF0000), CommonColors.RED),
+    DARK_GRAY(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x808080), CommonColors.GRAY),
+    WHITE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CommonColors.WHITE, CommonColors.WHITE),
+    AQUA(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
     RAINBOW(80, CommonColors.WHITE, CommonColors.RAINBOW);
-
-    private static final int COLOR_CUSTOM_MODEL_DATA = 79;
 
     // These values are used to identify the beacon kind
     private final int customModelData;
@@ -41,36 +39,20 @@ public enum LootrunBeaconKind {
         this.displayColor = displayColor;
     }
 
-    public static LootrunBeaconKind fromItemStack(ItemStack itemStack) {
-        if (itemStack.getItem() != Items.POTION) return null;
+    @Override
+    public boolean matches(ItemStack itemStack) {
+        if (itemStack.getItem() != Items.POTION) return false;
 
-        // Extract custom color from potion
         PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
-        if (potionContents == null) return null;
+        if (potionContents == null) return false;
 
-        // Extract custom model data from potion
-        CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-        if (customModelData == null) return null;
+        CustomModelData potionCustomModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (potionCustomModelData == null) return false;
 
-        int customModel = customModelData.value();
+        int customModel = potionCustomModelData.value();
+        int potionCustomColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
-        // Extract custom color from potion
-        // If there is no custom color, assume it's white
-        int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
-
-        // Find the corresponding beacon kind
-        for (LootrunBeaconKind color : values()) {
-            if (color.customModelData == customModel && color.customColor.equals(CustomColor.fromInt(customColor))) {
-                return color;
-            }
-        }
-
-        // Log the color if it's likely to be a new beacon kind
-        if (customModel == COLOR_CUSTOM_MODEL_DATA) {
-            WynntilsMod.warn("Unknown beacon kind: " + customModel + " " + customColor);
-        }
-
-        return null;
+        return this.customModelData == customModel && this.customColor.equals(CustomColor.fromInt(potionCustomColor));
     }
 
     public static LootrunBeaconKind fromName(String name) {
