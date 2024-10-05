@@ -1351,6 +1351,8 @@
   "feature.wynntils.tradeMarketPriceMatch.undercutBy.description": "How much should the buttons undercut the existing prices by? Set to 0 to match the existing prices.",
   "feature.wynntils.tradeMarketPriceMatch.undercutBy.name": "Undercut By",
   "feature.wynntils.tradeMarketPriceMatch.youReceive": "You receive: ",
+  "feature.wynntils.tradeMarketQuickSearch.description": "Adds a hotkey to instantly seach an item on the trade market.",
+  "feature.wynntils.tradeMarketQuickSearch.name": "Trade Market Quick Search",
   "feature.wynntils.transcribeMessages.coloredTranscriptions.description": "Should Gavellian and Wynnic transcriptions be colored?",
   "feature.wynntils.transcribeMessages.coloredTranscriptions.name": "Colored Transcriptions",
   "feature.wynntils.transcribeMessages.description": "Automatically transcribe Gavellian and Wynnic to English characters?",
