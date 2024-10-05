@@ -32,7 +32,7 @@ public class ContentTrackerFeature extends Feature {
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> hideOriginalMakrer = new Config<>(true);
+    public final Config<Boolean> hideOriginalMarker = new Config<>(true);
 
     @SubscribeEvent
     public void onTrackerUpdate(ActivityTrackerUpdatedEvent event) {

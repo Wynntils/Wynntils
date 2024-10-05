@@ -136,7 +136,7 @@ public final class ActivityModel extends Model {
 
         // FIXME: Feature-model dependency
         ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
-        if (feature.hideOriginalMakrer.get() && feature.isEnabled()) {
+        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
             // Only set this once they are added.
             // This is cleaner than posting an event on render,
             // but a change in the config will only have effect on newly placed beacons.
@@ -151,7 +151,7 @@ public final class ActivityModel extends Model {
 
         // FIXME: Feature-model dependency
         ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
-        if (feature.hideOriginalMakrer.get() && feature.isEnabled()) {
+        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
             // Only set this once they are added.
             // This is cleaner than posting an event on render,
             // but a change in the config will only have effect on newly placed beacons.
