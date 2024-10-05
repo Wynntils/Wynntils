@@ -26,7 +26,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class RaidProgressFeature extends Feature {
-    private static final String TIME_FORMAT = "%02d:%02d.%03d";
+    private static final String TIME_FORMAT_MILLISECONDS = "%02d:%02d.%03d";
+    private static final String TIME_FORMAT_SECONDS = "%02d:%02d";
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final RaidProgressOverlay raidProgressOverlay = new RaidProgressOverlay();
@@ -65,12 +66,15 @@ public class RaidProgressFeature extends Feature {
                     Component.literal("Challenge " + (i + 1) + ": ").withStyle(ChatFormatting.LIGHT_PURPLE));
             raidComponents.append(
                     Component.literal(formatTime(event.getRoomTimes().get(i))).withStyle(ChatFormatting.AQUA));
-            raidComponents
-                    .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(StringUtils.integerToShortString(
-                                    event.getRoomDamages().get(i)))
-                            .withStyle(ChatFormatting.YELLOW))
-                    .append(Component.literal(")\n").withStyle(ChatFormatting.WHITE));
+            if (raidProgressOverlay.showDamage.get()) {
+                raidComponents
+                        .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                        .append(Component.literal(StringUtils.integerToShortString(
+                                        event.getRoomDamages().get(i)))
+                                .withStyle(ChatFormatting.YELLOW))
+                        .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
+            }
+            raidComponents.append(Component.literal("\n"));
         }
 
         raidComponents.append(Component.literal("\n"));
@@ -78,28 +82,37 @@ public class RaidProgressFeature extends Feature {
         raidComponents.append(Component.literal("Boss: ").withStyle(ChatFormatting.DARK_RED));
         raidComponents.append(
                 Component.literal(formatTime(event.getRoomTimes().get(3))).withStyle(ChatFormatting.AQUA));
-        raidComponents
-                .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
-                .append(Component.literal(StringUtils.integerToShortString(
-                                event.getRoomDamages().get(3)))
-                        .withStyle(ChatFormatting.YELLOW))
-                .append(Component.literal(")\n").withStyle(ChatFormatting.WHITE));
+        if (raidProgressOverlay.showDamage.get()) {
+            raidComponents
+                    .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                    .append(Component.literal(StringUtils.integerToShortString(
+                                    event.getRoomDamages().get(3)))
+                            .withStyle(ChatFormatting.YELLOW))
+                    .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
+        }
 
-        raidComponents.append(Component.literal("\n"));
+        raidComponents.append(Component.literal("\n\n"));
 
-        raidComponents.append(Component.literal("Intermission: ").withStyle(ChatFormatting.DARK_GRAY));
-        raidComponents.append(
-                Component.literal(formatTime(event.getRoomTimes().get(4))).withStyle(ChatFormatting.AQUA));
-
-        raidComponents.append(Component.literal("\n"));
+        if (raidProgressOverlay.showIntermission.get()) {
+            raidComponents.append(Component.literal("Intermission: ").withStyle(ChatFormatting.DARK_GRAY));
+            raidComponents.append(
+                    Component.literal(formatTime(event.getRoomTimes().get(4))).withStyle(ChatFormatting.AQUA));
+            raidComponents.append(Component.literal("\n"));
+        }
 
         raidComponents.append(Component.literal("Total: ").withStyle(ChatFormatting.DARK_PURPLE));
-        raidComponents.append(Component.literal(formatTime(event.getRaidTime())).withStyle(ChatFormatting.AQUA));
-        raidComponents
-                .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
-                .append(Component.literal(StringUtils.integerToShortString(event.getRaidDamage()))
-                        .withStyle(ChatFormatting.YELLOW))
-                .append(Component.literal(")\n").withStyle(ChatFormatting.WHITE));
+        long raidTime = event.getRaidTime()
+                - (raidProgressOverlay.totalIntermission.get()
+                        ? 0
+                        : event.getRoomTimes().get(4));
+        raidComponents.append(Component.literal(formatTime(raidTime)).withStyle(ChatFormatting.AQUA));
+        if (raidProgressOverlay.showDamage.get()) {
+            raidComponents
+                    .append(Component.literal(" (").withStyle(ChatFormatting.WHITE))
+                    .append(Component.literal(StringUtils.integerToShortString(event.getRaidDamage()))
+                            .withStyle(ChatFormatting.YELLOW))
+                    .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
+        }
 
         McUtils.sendMessageToClient(raidComponents);
     }
@@ -131,6 +144,10 @@ public class RaidProgressFeature extends Feature {
         long seconds = (time / 1000) % 60;
         long milliseconds = time % 1000;
 
-        return String.format(TIME_FORMAT, minutes, seconds, milliseconds);
+        if (raidProgressOverlay.showMilliseconds.get()) {
+            return String.format(TIME_FORMAT_MILLISECONDS, minutes, seconds, milliseconds);
+        } else {
+            return String.format(TIME_FORMAT_SECONDS, minutes, seconds);
+        }
     }
 }

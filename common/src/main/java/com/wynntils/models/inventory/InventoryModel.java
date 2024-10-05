@@ -16,6 +16,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class InventoryModel extends Model {
-    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
 
@@ -70,7 +70,7 @@ public final class InventoryModel extends Model {
                 baseSize = McUtils.player().containerMenu.getItems().size();
             }
             ItemStack accessory = McUtils.inventory().getItem(i + baseSize);
-            if (accessory.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) continue;
+            if (ItemUtils.isEmptyAccessorySlot(accessory)) continue;
             returnable.add(McUtils.inventory().getItem(i + baseSize));
         }
 

@@ -222,7 +222,10 @@ public class RaidModel extends Model {
         WynntilsMod.postEvent(new RaidEndedEvent.Completed(
                 currentRaid, getAllRoomTimes(), currentRaidTime(), getAllRoomDamages(), getRaidDamage()));
 
-        checkForNewPersonalBest(currentRaid, currentRaidTime());
+        // Need to add boss time to get correct intermission time since
+        // currentRoom will still be boss room when getIntermissionTime() is called
+        checkForNewPersonalBest(
+                currentRaid, currentRaidTime() - (getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT)));
 
         currentRaid = null;
         currentRoom = null;
