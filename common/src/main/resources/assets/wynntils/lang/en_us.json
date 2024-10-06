@@ -1342,6 +1342,8 @@
   "feature.wynntils.towerStats.printTowerStatsOnEnd.description": "Should the tower stats be printed to chat when the war ends?",
   "feature.wynntils.towerStats.printTowerStatsOnEnd.name": "Print Tower Stats on War End",
   "feature.wynntils.tradeMarketAutoOpenChat.description": "Automatically open chat when using the trade market.",
+  "feature.wynntils.tradeMarketAutoOpenChat.hidePrompt.description": "Should the chat prompt be hidden?",
+  "feature.wynntils.tradeMarketAutoOpenChat.hidePrompt.name": "Hide Prompt",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Market Auto Open Chat",
   "feature.wynntils.tradeMarketBulkSell.bulkSell1Amount.description": "How many items should be sold when the bulk sell 1 button is pressed?",
   "feature.wynntils.tradeMarketBulkSell.bulkSell1Amount.name": "Bulk Sell 1 Amount",

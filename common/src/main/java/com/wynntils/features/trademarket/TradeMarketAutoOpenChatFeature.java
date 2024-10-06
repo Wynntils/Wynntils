@@ -6,7 +6,9 @@ package com.wynntils.features.trademarket;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -21,6 +23,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {
     // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
+
+    @Persisted
+    public final Config<Boolean> hidePrompt = new Config<>(false);
+
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
@@ -34,6 +40,9 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
 
         if (styledText.matches(TYPE_TO_CHAT_PATTERN)) {
             openChatWhenContainerClosed = true;
+            if (hidePrompt.get()) {
+                event.setCanceled(true);
+            }
         }
     }
 
