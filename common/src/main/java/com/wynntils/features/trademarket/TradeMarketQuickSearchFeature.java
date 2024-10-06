@@ -1,9 +1,11 @@
+/*
+ * Copyright © Wynntils 2024.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -13,51 +15,44 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.TradeMarketContainer;
-import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-import com.wynntils.utils.wynn.WynnUtils;
-import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-import com.wynntils.mc.event.ContainerSetContentEvent;
-import org.lwjgl.glfw.GLFW;
-import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.world.inventory.Slot;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketQuickSearchFeature extends Feature {
-
     @Persisted
     public final Config<Boolean> instantSearch = new Config<>(true);
+
     @Persisted
     public final Config<Boolean> searchHistory = new Config<>(true);
+
     @Persisted
     public final Config<Boolean> hidePrompt = new Config<>(true);
+
     @Persisted
     public final Config<Boolean> autoCancel = new Config<>(true);
 
-
     @RegisterKeyBind
-    private final KeyBind quickSearchKeyBind = new KeyBind(
-            "Quick Search TM", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, true, null, this::tryQuickSearch);
+    private final KeyBind quickSearchKeyBind =
+            new KeyBind("Quick Search TM", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, true, null, this::tryQuickSearch);
+
     private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile(
             "^§5(\uE00A\uE002|\uE001) \n\uE001 Type the .* or type (\n\uE001 'cancel' to|'cancel' to \n\uE001) cancel:\n\uE001 ");
-    //Maybe there is a better solution for this than regex, but the TM is very peculiar.
+    // Maybe there is a better solution for this than regex, but the TM is very peculiar.
     // \\[.*?\\] Crafting stuff, \\[\\uE000-\\uF8FF\\] Gathering Tools, \\u2B21 Shiny
-    private static final Pattern CUT_PATTERN = Pattern.compile(
-            "(Emerald Pouch|\\[.*?\\]|[\\uE000-\\uF8FF]+|\\u2B21)\\s*");
+    private static final Pattern CUT_PATTERN =
+            Pattern.compile("(Emerald Pouch|\\[.*?\\]|[\\uE000-\\uF8FF]+|\\u2B21)\\s*");
 
     private static final Pattern EOL_PATTERN = Pattern.compile("À+$");
 
@@ -87,7 +82,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         inSearchChat = false;
     }
 
-    //EventPriority.HIGH so that InventoryEmeraldCountFeature does not render.
+    // EventPriority.HIGH so that InventoryEmeraldCountFeature does not render.
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void MenuClosedEvent(MenuClosedEvent event) {
         if (!inTradeMarket) return;
@@ -100,7 +95,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private void tryQuickSearch(Slot hoveredSlot) {
         if (!inTradeMarket || hoveredSlot == null || !hoveredSlot.hasItem()) return;
         quickSearching = true;
-        searchQuery = StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
+        searchQuery =
+                StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
         searchQuery = getSearchQuery(searchQuery);
         if (searchQuery == null || searchQuery.isBlank()) return;
         ContainerUtils.clickOnSlot(
@@ -119,19 +115,18 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 event.setCanceled(true);
             }
             inSearchChat = true;
-        }
-        else {
+        } else {
             event.setCanceled(true);
             McUtils.sendChat(searchQuery);
         }
     }
 
-   private String getSearchQuery(String rawName)
-   {
-       String searchTerm = EOL_PATTERN.matcher(
-               CUT_PATTERN.matcher(rawName).replaceFirst("").trim()
-       ).replaceFirst("").trim();
-       WynntilsMod.info("Quick Searching: " + rawName + " -> " + searchTerm);
-       return searchTerm;
-   }
+    private String getSearchQuery(String rawName) {
+        String searchTerm = EOL_PATTERN
+                .matcher(CUT_PATTERN.matcher(rawName).replaceFirst("").trim())
+                .replaceFirst("")
+                .trim();
+        WynntilsMod.info("Quick Searching: " + rawName + " -> " + searchTerm);
+        return searchTerm;
+    }
 }
