@@ -7,7 +7,7 @@ package com.wynntils.models.lootrun.markers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
-import com.wynntils.models.beacons.type.LootrunBeaconKind;
+import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;

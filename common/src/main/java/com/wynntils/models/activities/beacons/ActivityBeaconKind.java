@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.beacons.type;
+package com.wynntils.models.activities.beacons;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.core.component.DataComponents;

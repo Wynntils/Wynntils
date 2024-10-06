@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.beacons.type;
+package com.wynntils.models.activities.beacons;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.beacons.type.BeaconMarkerKind;
 import java.util.regex.Pattern;
 
 public enum ActivityBeaconMarkerKind implements BeaconMarkerKind {
