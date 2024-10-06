@@ -21,7 +21,7 @@ public enum ActivityBeaconMarkerKind implements BeaconMarkerKind {
     LOOTRUN_CAMP("\uE005");
 
     private static final String MARKER_PREFIX = "\uDAFF\uDFF8[\uE010-\uE014]\uDAFF\uDFDE";
-    private static final String MARKER_SUFFIX = "\n\\d+m (\uE000|\uE001)?";
+    private static final String MARKER_SUFFIX = "(\n\\d+m (\uE000|\uE001)?)?";
 
     private final Pattern iconPattern;
 
