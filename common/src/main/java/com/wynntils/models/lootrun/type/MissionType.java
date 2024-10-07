@@ -34,7 +34,6 @@ public enum MissionType {
     WARMTH_DEVOURER("Warmth Devourer", ChatFormatting.RED),
     COMPLETE_CHAOS("Complete Chaos", ChatFormatting.WHITE);
 
-
     private final String name;
     private final ChatFormatting color;
 
