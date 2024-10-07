@@ -6,25 +6,33 @@ package com.wynntils.features.trademarket;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {
+    @Persisted
+    public final Config<Boolean> autoCancel = new Config<>(true);
+
     // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
     private boolean openChatWhenContainerClosed = false;
+    private boolean inSearchChat = false;
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
@@ -39,9 +47,16 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent event) {
+        if (inSearchChat && event.getScreen() instanceof ChatScreen) {
+            if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+                McUtils.sendChat("cancel");
+            }
+            inSearchChat = false;
+        }
         if (!openChatWhenContainerClosed) return;
 
         openChatWhenContainerClosed = false;
+        inSearchChat = true;
         McUtils.mc().setScreen(new ChatScreen(""));
     }
 
