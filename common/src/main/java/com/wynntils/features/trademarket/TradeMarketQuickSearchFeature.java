@@ -22,6 +22,7 @@ import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.world.inventory.Slot;
@@ -54,6 +55,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private static final Pattern CUT_PATTERN =
             Pattern.compile("(Emerald Pouch|\\[.*?\\]|[\\uE000-\\uF8FF]+|\\u2B21)\\s*");
 
+    private static final Pattern POTION_PATTERN = Pattern.compile("^Potion of (. \\w+)");
     private static final Pattern EOL_PATTERN = Pattern.compile("À+$");
 
     private static final int SEARCH_SLOT = 47;
@@ -123,10 +125,12 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     private String getSearchQuery(String rawName) {
-        String searchTerm = EOL_PATTERN
-                .matcher(CUT_PATTERN.matcher(rawName).replaceFirst("").trim())
-                .replaceFirst("")
-                .trim();
+        String searchTerm = CUT_PATTERN.matcher(rawName).replaceFirst("");
+        searchTerm = EOL_PATTERN.matcher(searchTerm).replaceFirst("").trim();
+        Matcher potionMatcher = POTION_PATTERN.matcher(searchTerm);
+        if (potionMatcher.matches()) {
+            searchTerm = potionMatcher.group(1);
+        }
         WynntilsMod.info("Quick Searching: " + rawName + " -> " + searchTerm);
         return searchTerm;
     }
