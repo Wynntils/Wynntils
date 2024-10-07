@@ -106,7 +106,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 McUtils.containerMenu().getItems());
     }
 
-    @SubscribeEvent
+    // EventPriority.HIGH so that this takes priority over TradeMarketAutoOpenChatFeature.hidePrompt.
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!quickSearching || !event.getOriginalStyledText().stripAlignment().matches(TYPE_TO_CHAT_PATTERN)) return;
         if (!instantSearch.get() || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
