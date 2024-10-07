@@ -13,10 +13,10 @@ public enum MissionType {
     FAILED("Failed", ChatFormatting.DARK_RED),
 
     CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
+    HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
     HOARDER("Hoarder", ChatFormatting.YELLOW),
     JESTERS_TRICK("Jester's Trick", ChatFormatting.YELLOW),
     MATERIALISM("Materialism", ChatFormatting.YELLOW),
-    HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
     TREASURE_HUNTING("Treasure Hunting", ChatFormatting.YELLOW),
     GOURMAND("Gourmand", ChatFormatting.BLUE),
     ORPHIONS_GRACE("Orphion's Grace", ChatFormatting.BLUE),
