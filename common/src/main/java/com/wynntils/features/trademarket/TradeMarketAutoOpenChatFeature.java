@@ -25,7 +25,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {
     @Persisted
-    public final Config<Boolean> autoCancel = new Config<>(false);
+    public final Config<Boolean> autoCancel = new Config<>(true);
 
     // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
     private static final Pattern TYPE_TO_CHAT_PATTERN =
