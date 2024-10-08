@@ -19,6 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,13 +29,17 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     public final Config<Boolean> autoCancel = new Config<>(true);
 
     // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
+
+    @Persisted
+    public final Config<Boolean> hidePrompt = new Config<>(false);
+
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
     private boolean openChatWhenContainerClosed = false;
     private boolean inSearchChat = false;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
         StyledText styledText =
@@ -42,6 +47,9 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
 
         if (styledText.matches(TYPE_TO_CHAT_PATTERN)) {
             openChatWhenContainerClosed = true;
+            if (hidePrompt.get()) {
+                event.setCanceled(true);
+            }
         }
     }
 
