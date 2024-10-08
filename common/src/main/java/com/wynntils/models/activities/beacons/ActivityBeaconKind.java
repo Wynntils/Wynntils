@@ -15,16 +15,16 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum ActivityBeaconKind implements BeaconKind {
-    QUEST(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(2739350)),
-    STORYLINE_QUEST(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(3388219)),
-    MINI_QUEST(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(11767725)),
-    WORLD_EVENT(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(48575)),
-    DISCOVERY(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(10601446)),
-    CAVE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(16747545)),
-    DUNGEON(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(13395575)),
-    RAID(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(14041118)),
-    BOSS_ALTAR(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(15913801)),
-    LOOTRUN_CAMP(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(3381708));
+    QUEST(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x29CC96)),
+    STORYLINE_QUEST(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x33B33B)),
+    MINI_QUEST(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xB38FAD)),
+    WORLD_EVENT(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x00BDBF)),
+    DISCOVERY(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xA1C3E6)),
+    CAVE(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xFF8C19)),
+    DUNGEON(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xCC6677)),
+    RAID(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xD6401E)),
+    BOSS_ALTAR(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0xF2D349)),
+    LOOTRUN_CAMP(Models.Beacon.COLOR_CUSTOM_MODEL_DATA, CustomColor.fromInt(0x3399CC));
 
     private final int customModelData;
     private final CustomColor customColor;
