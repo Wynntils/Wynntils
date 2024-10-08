@@ -19,7 +19,7 @@ import com.wynntils.models.beacons.type.BeaconMarkerKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.component.DataComponents;
@@ -37,8 +37,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class BeaconModel extends Model {
     public static final int COLOR_CUSTOM_MODEL_DATA = 79;
     private static final ResourceLocation MARKER_FONT = ResourceLocation.withDefaultNamespace("marker");
-    private static final Map<String, BeaconKind> beaconRegistry = new HashMap<>();
-    private static final Map<String, BeaconMarkerKind> beaconMarkerRegistry = new HashMap<>();
+    private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
+    private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();
     // Maps base entity id to corresponding beacon
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
@@ -115,16 +115,16 @@ public class BeaconModel extends Model {
         });
     }
 
-    public void registerBeacon(String name, BeaconKind beaconKind) {
-        beaconRegistry.put(name, beaconKind);
+    public void registerBeacon(BeaconKind beaconKind) {
+        beaconRegistry.add(beaconKind);
     }
 
-    public void registerBeaconMarker(String name, BeaconMarkerKind beaconMarkerKind) {
-        beaconMarkerRegistry.put(name, beaconMarkerKind);
+    public void registerBeaconMarker(BeaconMarkerKind beaconMarkerKind) {
+        beaconMarkerRegistry.add(beaconMarkerKind);
     }
 
     private static BeaconKind beaconKindFromItemStack(ItemStack itemStack) {
-        for (BeaconKind beaconKind : beaconRegistry.values()) {
+        for (BeaconKind beaconKind : beaconRegistry) {
             if (beaconKind.matches(itemStack)) {
                 return beaconKind;
             }
@@ -157,7 +157,7 @@ public class BeaconModel extends Model {
     }
 
     private static BeaconMarkerKind beaconMarkerKindFromIcon(StyledText iconStyledText) {
-        for (BeaconMarkerKind beaconMarkerKind : beaconMarkerRegistry.values()) {
+        for (BeaconMarkerKind beaconMarkerKind : beaconMarkerRegistry) {
             if (beaconMarkerKind.matches(iconStyledText)) {
                 return beaconMarkerKind;
             }

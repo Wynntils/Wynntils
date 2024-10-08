@@ -189,7 +189,7 @@ public class LootrunModel extends Model {
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
 
         for (LootrunBeaconKind beaconKind : LootrunBeaconKind.values()) {
-            Models.Beacon.registerBeacon(beaconKind.name(), beaconKind);
+            Models.Beacon.registerBeacon(beaconKind);
         }
     }
 

@@ -101,11 +101,11 @@ public final class ActivityModel extends Model {
         Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
 
         for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
-            Models.Beacon.registerBeacon(beaconKind.name(), beaconKind);
+            Models.Beacon.registerBeacon(beaconKind);
         }
 
         for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
-            Models.Beacon.registerBeaconMarker(beaconMarkerKind.name(), beaconMarkerKind);
+            Models.Beacon.registerBeaconMarker(beaconMarkerKind);
         }
     }
 
