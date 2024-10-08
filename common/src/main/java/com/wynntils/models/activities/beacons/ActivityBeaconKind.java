@@ -34,6 +34,7 @@ public enum ActivityBeaconKind implements BeaconKind {
         this.customColor = customColor;
     }
 
+    @Override
     public boolean matches(ItemStack itemStack) {
         if (itemStack.getItem() != Items.POTION) return false;
 

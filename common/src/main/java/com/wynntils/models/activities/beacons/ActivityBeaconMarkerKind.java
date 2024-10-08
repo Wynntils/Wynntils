@@ -29,6 +29,7 @@ public enum ActivityBeaconMarkerKind implements BeaconMarkerKind {
         this.iconPattern = Pattern.compile(MARKER_PREFIX + iconCharacter + MARKER_SUFFIX);
     }
 
+    @Override
     public boolean matches(StyledText styledText) {
         return styledText.matches(iconPattern);
     }
