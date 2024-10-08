@@ -1375,8 +1375,6 @@
   "feature.wynntils.tradeMarketQuickSearch.instantSearch.description": "Instantly search without opening chat (holding LShift will bring up the search in chat).",
   "feature.wynntils.tradeMarketQuickSearch.instantSearch.name": "Instant Search",
   "feature.wynntils.tradeMarketQuickSearch.name": "Trade Market Quick Search",
-  "feature.wynntils.tradeMarketQuickSearch.searchHistory.description": "Saves a search history that can be navigated via the quick search hotkey while not hovering anything (LShift forwards).",
-  "feature.wynntils.tradeMarketQuickSearch.searchHistory.name": "Search History",
   "feature.wynntils.transcribeMessages.coloredTranscriptions.description": "Should Gavellian and Wynnic transcriptions be colored?",
   "feature.wynntils.transcribeMessages.coloredTranscriptions.name": "Colored Transcriptions",
   "feature.wynntils.transcribeMessages.description": "Automatically transcribe Gavellian and Wynnic to English characters?",

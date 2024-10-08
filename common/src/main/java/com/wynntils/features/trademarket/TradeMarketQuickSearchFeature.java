@@ -36,9 +36,6 @@ public class TradeMarketQuickSearchFeature extends Feature {
     public final Config<Boolean> instantSearch = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> searchHistory = new Config<>(true);
-
-    @Persisted
     public final Config<Boolean> hidePrompt = new Config<>(true);
 
     @Persisted
