@@ -18,6 +18,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
@@ -32,7 +33,7 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
 
     private boolean openChatWhenContainerClosed = false;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
         StyledText styledText =
