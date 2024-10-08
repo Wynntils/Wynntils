@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.trademarket;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -42,8 +43,13 @@ public class TradeMarketQuickSearchFeature extends Feature {
     public final Config<Boolean> autoCancel = new Config<>(true);
 
     @RegisterKeyBind
-    private final KeyBind quickSearchKeyBind =
-            new KeyBind("Quick Search TM", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, true, null, this::tryQuickSearch);
+    private final KeyBind quickSearchKeyBind = new KeyBind(
+            "Quick Search TM",
+            GLFW.GLFW_MOUSE_BUTTON_MIDDLE,
+            InputConstants.Type.MOUSE,
+            true,
+            null,
+            this::tryQuickSearch);
 
     private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile(
             "^§5(\uE00A\uE002|\uE001) \n\uE001 Type the .* or type (\n\uE001 'cancel' to|'cancel' to \n\uE001) cancel:\n\uE001 ");
