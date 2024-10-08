@@ -75,7 +75,6 @@ public class TradeMarketQuickSearchFeature extends Feature {
             return;
         }
         inTradeMarket = true;
-        WynntilsMod.info("TM Opened!");
     }
 
     @SubscribeEvent
