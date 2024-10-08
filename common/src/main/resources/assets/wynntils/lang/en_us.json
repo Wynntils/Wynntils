@@ -1372,7 +1372,7 @@
   "feature.wynntils.tradeMarketQuickSearch.description": "Adds a hotkey to instantly seach for an item on the trade market.",
   "feature.wynntils.tradeMarketQuickSearch.hidePrompt.description": "Hides the prompt when opening the chat.",
   "feature.wynntils.tradeMarketQuickSearch.hidePrompt.name": "Hide Chat Prompt",
-  "feature.wynntils.tradeMarketQuickSearch.instantSearch.description": "Instantly search without opening chat (holding LShift will bring up the search in chat).",
+  "feature.wynntils.tradeMarketQuickSearch.instantSearch.description": "Instantly search without opening chat (hold Shift to still bring up the search in chat).",
   "feature.wynntils.tradeMarketQuickSearch.instantSearch.name": "Instant Search",
   "feature.wynntils.tradeMarketQuickSearch.name": "Trade Market Quick Search",
   "feature.wynntils.transcribeMessages.coloredTranscriptions.description": "Should Gavellian and Wynnic transcriptions be colored?",
