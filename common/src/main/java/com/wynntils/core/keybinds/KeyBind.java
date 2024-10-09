@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.keybinds;
@@ -29,6 +29,33 @@ public class KeyBind {
     public KeyBind(String name, int keyCode, boolean firstPress, Runnable onPress, Consumer<Slot> onInventoryPress) {
         this.firstPress = firstPress;
         this.keyMapping = new KeyMapping(name, InputConstants.Type.KEYSYM, keyCode, CATEGORY);
+
+        // Unbind keybind, bound after registration by options reload
+        keyMapping.setKey(InputConstants.UNKNOWN);
+        KeyMapping.resetMapping();
+
+        this.onPress = onPress;
+        this.onInventoryPress = onInventoryPress;
+    }
+
+    /**
+     * @param name             Name of the keybind
+     * @param keyCode          The keyCode of the default keybind. Use {@link org.lwjgl.glfw.GLFW} for easy
+     *                         key code getting
+     * @param type             Type of key
+     * @param firstPress       Boolean for whether onPress should only be done on first press
+     * @param onPress          Code to run when button is pressed, or null
+     * @param onInventoryPress Code to run when key is pressed in inventory, or null
+     */
+    public KeyBind(
+            String name,
+            int keyCode,
+            InputConstants.Type type,
+            boolean firstPress,
+            Runnable onPress,
+            Consumer<Slot> onInventoryPress) {
+        this.firstPress = firstPress;
+        this.keyMapping = new KeyMapping(name, type, keyCode, CATEGORY);
 
         // Unbind keybind, bound after registration by options reload
         keyMapping.setKey(InputConstants.UNKNOWN);
