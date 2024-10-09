@@ -49,12 +49,31 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
-    // Maybe there is a better solution for this than regex, but the TM is very peculiar.
-    // \\[.*?\\] Crafting stuff, \\[\\uE000-\\uF8FF\\] Gathering Tools, \\u2B21 Shiny
-    private static final Pattern CUT_PATTERN =
-            Pattern.compile("(Emerald Pouch|\\[.*?\\]|[\\uE000-\\uF8FF]+|\\u2B21)\\s*");
+    // The TM is very peculiar...
+    // 'Emerald Pouch' results in all Tiers of Pouches, to find a specific tier one needs to search only the tier.
+    // e.g. "Emerald Pouch [Tier V]" results in nothing, while "[Tier V]" results in the desired Pouches.
+    // (This is also the reason replaceFirst is used,
+    // as "Emerald Pouch" would be the first match, and "[Tier V]" would not get removed.)
 
+    // '\\[.*?\\]' Many items have square brackets at the end displaying some kind of information.
+    // e.g. durability on crafted items [50%], uses on consumables [3/3], stars on materials and ingredients [✫✫✫]
+
+    // '\\[\\uE000-\\uF8FF\\]' This range contains special chars used by Wynncraft.
+    // e.g. The prof icon at the beginning of Gathering tools
+
+    // '\\u2B21' Just the hexagon char "⬡" used for Shinies.
+    // 'Unidentified \\u2B21' As of now there is no known way of matching unided shinies, shiny is the next best thing.
+    private static final Pattern CUT_PATTERN =
+            Pattern.compile("(Emerald Pouch|\\[.*?\\]|[\\uE000-\\uF8FF]+|Unidentified \\u2B21|\\u2B21)\\s*");
+
+    // Similarly to the Pouches, the elemental/skill potions cannot be found by their full name (Other potions can).
+    // If we are searching such a potion, we simply search the second part. '.' matches the icon and '\w+' the skill.
+    // e.g. "Potion of ✤ Strength [2/2]" -> "Potion of ✤ Strength" -> "✤ Strength"
     private static final Pattern POTION_PATTERN = Pattern.compile("^Potion of (. \\w+)");
+
+    // 'À' this char is behind all the items names and needs to be trimmed before we search.
+    // We cannot use WynnUtils.normalizeBadString() as this messes up dungeon keys.
+    // e.g. "CorruptedÀÀÀGalleon'sÀÀÀGraveyard KeyÀ" -> "CorruptedÀÀÀGalleon'sÀÀÀGraveyard Key"
     private static final Pattern EOL_PATTERN = Pattern.compile("À+$");
 
     private static final int SEARCH_SLOT = 47;
