@@ -1,9 +1,35 @@
+## [2.3.10](https://github.com/Wynntils/Wynntils/compare/v2.3.9...v2.3.10) (2024-10-09)
+
+
+### New Features
+
+* Add 2.1 Lootrun Missions [skip ci] ([#2906](https://github.com/Wynntils/Wynntils/issues/2906)) ([c0ca80e](https://github.com/Wynntils/Wynntils/commit/c0ca80e5cac1a3f8d59d90b04476ce049cc4a0b5))
+* Add new mythic found sound (With config to use old) [skip ci] ([#2911](https://github.com/Wynntils/Wynntils/issues/2911)) ([420133f](https://github.com/Wynntils/Wynntils/commit/420133fc0666f625f7baa200ea479cf4762ee39e))
+* Hide original activity beacon & marker ([#2907](https://github.com/Wynntils/Wynntils/issues/2907)) ([74634e7](https://github.com/Wynntils/Wynntils/commit/74634e7c96553bff3726c04bc7101c160ad380cc))
+* Trade Market Auto Cancel option [skip ci] ([#2909](https://github.com/Wynntils/Wynntils/issues/2909)) ([7e22052](https://github.com/Wynntils/Wynntils/commit/7e22052d591d79127e497032096a412744f1e917))
+* Trade Market Hide Prompt option [skip ci] ([#2910](https://github.com/Wynntils/Wynntils/issues/2910)) ([d5407e2](https://github.com/Wynntils/Wynntils/commit/d5407e25003afe143fd5af51baaa6e5af1b92c63))
+
+
+### Bug Fixes
+
+* incorrect 2.1 mission colors [skip ci] ([#2913](https://github.com/Wynntils/Wynntils/issues/2913)) ([48686a7](https://github.com/Wynntils/Wynntils/commit/48686a7dd2abfa7022667053ab8833b156faef5c))
+
+
+### Miscellaneous Chores
+
+* [auto-generated] Update urls.json [ci skip] ([#2904](https://github.com/Wynntils/Wynntils/issues/2904)) ([c0ce0aa](https://github.com/Wynntils/Wynntils/commit/c0ce0aaacd22a4b94815217308d975129ca8038d))
+
 ## [2.3.9](https://github.com/Wynntils/Wynntils/compare/v2.3.8...v2.3.9) (2024-10-03)
 
 
 ### New Features
 
 * Reworked ItemCompareFeature ([#2876](https://github.com/Wynntils/Wynntils/issues/2876)) ([f40570a](https://github.com/Wynntils/Wynntils/commit/f40570a4cc31401fa9b20eee5dd783d88868ceac))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.9 [skip ci] ([bd74439](https://github.com/Wynntils/Wynntils/commit/bd74439c610ce11bca1af127b5153334bebb0aaa))
 
 ## [2.3.8](https://github.com/Wynntils/Wynntils/compare/v2.3.7...v2.3.8) (2024-10-01)
 
@@ -59,16 +85,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.6 [skip ci] ([5e39a44](https://github.com/Wynntils/Wynntils/commit/5e39a448f3a2313c342699b8589d28773d364683))
-
-## [2.3.5](https://github.com/Wynntils/Wynntils/compare/v2.3.4...v2.3.5) (2024-09-23)
-
-
-### Bug Fixes
-
-* Disable ImprovedInventorySyncFeature by default until refinements are made ([#2893](https://github.com/Wynntils/Wynntils/issues/2893)) ([97a573b](https://github.com/Wynntils/Wynntils/commit/97a573bacaa1658945c8b94d7b78fc84a28cddc4))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.5 [skip ci] ([9e211ba](https://github.com/Wynntils/Wynntils/commit/9e211baf0d6065a476dd0dfd6fb6447c18ab10b3))
 
