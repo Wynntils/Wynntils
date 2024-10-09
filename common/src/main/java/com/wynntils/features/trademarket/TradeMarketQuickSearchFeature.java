@@ -37,6 +37,12 @@ public class TradeMarketQuickSearchFeature extends Feature {
     @Persisted
     public final Config<Boolean> instantSearch = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> autoCancel = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> hidePrompt = new Config<>(false);
+
     @RegisterKeyBind
     private final KeyBind quickSearchKeyBind = new KeyBind(
             "Quick Search TM",
@@ -46,6 +52,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
             null,
             this::tryQuickSearch);
 
+    // Test in TradeMarketQuickSearchFeature_TYPE_TO_CHAT_PATTERN
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
@@ -80,52 +87,78 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private String searchQuery;
     private boolean inTradeMarket = false;
     private boolean inSearchChat = false;
+    private boolean openChatWhenContainerClosed = false;
     private boolean quickSearching = false;
+    private boolean instantSearching = false;
 
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
-        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketContainer)) {
-            inTradeMarket = false;
+        WynntilsMod.info("Screen Opened");
+        openChatWhenContainerClosed = false;
+        if ((Models.Container.getCurrentContainer() instanceof TradeMarketContainer)) {
+            inTradeMarket = true;
             quickSearching = false;
+            inSearchChat = false;
             return;
         }
-        inTradeMarket = true;
+        inTradeMarket = false;
     }
 
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent event) {
-        if (!inSearchChat || !(event.getScreen() instanceof ChatScreen)) return;
-        inSearchChat = false;
+        if (inSearchChat && event.getScreen() instanceof ChatScreen) {
+            if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+                McUtils.sendChat("cancel");
+            }
+            inSearchChat = false;
+        } else if (openChatWhenContainerClosed) {
+            if (quickSearching) {
+                McUtils.mc().setScreen(new ChatScreen(searchQuery));
+                quickSearching = false;
+            } else {
+                McUtils.mc().setScreen(new ChatScreen(""));
+            }
+            openChatWhenContainerClosed = false;
+            inSearchChat = true;
+        }
     }
 
     // EventPriority.HIGH so that InventoryEmeraldCountFeature does not render.
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void MenuClosedEvent(MenuClosedEvent event) {
+    public void onMenuClosed(MenuClosedEvent event) {
+        WynntilsMod.info("Menu Closed");
         if (!inTradeMarket) return;
         inTradeMarket = false;
-        if (!quickSearching) return;
-        event.setCanceled(true);
-        quickSearching = false;
+        if (instantSearching) {
+            event.setCanceled(true);
+            instantSearching = false;
+        }
     }
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        if (!quickSearching) return;
+        if (!Models.WorldState.onWorld()) return;
         StyledText styledText =
                 StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
         if (!styledText.matches(TYPE_TO_CHAT_PATTERN)) return;
-        if (!instantSearch.get() || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            McUtils.mc().setScreen(new ChatScreen(searchQuery));
-            inSearchChat = true;
-        } else {
+        if (instantSearching) {
             event.setCanceled(true);
             McUtils.sendChat(searchQuery);
+            return;
+        }
+        openChatWhenContainerClosed = true;
+        if (hidePrompt.get()) {
+            event.setCanceled(true);
         }
     }
 
     private void tryQuickSearch(Slot hoveredSlot) {
         if (!inTradeMarket || hoveredSlot == null || !hoveredSlot.hasItem()) return;
-        quickSearching = true;
+        if (instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            instantSearching = true;
+        } else {
+            quickSearching = true;
+        }
         searchQuery =
                 StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
         searchQuery = getSearchQuery(searchQuery);
