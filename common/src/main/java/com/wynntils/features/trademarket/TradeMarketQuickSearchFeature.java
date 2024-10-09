@@ -36,12 +36,6 @@ public class TradeMarketQuickSearchFeature extends Feature {
     @Persisted
     public final Config<Boolean> instantSearch = new Config<>(true);
 
-    @Persisted
-    public final Config<Boolean> hidePrompt = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> autoCancel = new Config<>(true);
-
     @RegisterKeyBind
     private final KeyBind quickSearchKeyBind = new KeyBind(
             "Quick Search TM",
@@ -80,9 +74,6 @@ public class TradeMarketQuickSearchFeature extends Feature {
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent event) {
         if (!inSearchChat || !(event.getScreen() instanceof ChatScreen)) return;
-        if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-            McUtils.sendChat("cancel");
-        }
         inSearchChat = false;
     }
 
@@ -101,9 +92,6 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!quickSearching || !event.getOriginalStyledText().stripAlignment().matches(TYPE_TO_CHAT_PATTERN)) return;
         if (!instantSearch.get() || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             McUtils.mc().setScreen(new ChatScreen(searchQuery));
-            if (hidePrompt.get()) {
-                event.setCanceled(true);
-            }
             inSearchChat = true;
         } else {
             event.setCanceled(true);
