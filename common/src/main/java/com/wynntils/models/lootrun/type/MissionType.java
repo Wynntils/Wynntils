@@ -14,16 +14,25 @@ public enum MissionType {
 
     CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
     HIGH_ROLLER("High Roller", ChatFormatting.YELLOW),
+    HOARDER("Hoarder", ChatFormatting.YELLOW),
     MATERIALISM("Materialism", ChatFormatting.YELLOW),
+    TREASURE_HUNTING("Treasure Hunting", ChatFormatting.YELLOW),
+    GOURMAND("Gourmand", ChatFormatting.BLUE),
     ORPHIONS_GRACE("Orphion's Grace", ChatFormatting.BLUE),
+    PORPHYROPHOBIA("Porphyrophobia", ChatFormatting.BLUE),
+    CHRONOKINESIS("Chronokinesis", ChatFormatting.BLUE),
     CLEANSING_RITUAL("Cleansing Ritual", ChatFormatting.DARK_PURPLE),
     EQUILIBRIUM("Equilibrium", ChatFormatting.DARK_PURPLE),
     INNER_PEACE("Inner Peace", ChatFormatting.DARK_PURPLE),
+    COMPLETE_CHAOS("Complete Chaos", ChatFormatting.DARK_PURPLE),
+    JESTERS_TRICK("Jester's Trick", ChatFormatting.DARK_PURPLE),
     BACKUP_BEAT("Backup Beat", ChatFormatting.GREEN),
     STASIS("Stasis", ChatFormatting.GREEN),
+    SAFETY_SEEKER("Safety Seeker", ChatFormatting.GREEN),
     GAMBLING_BEAST("Gambling Beast", ChatFormatting.RED),
     REDEMPTION("Redemption", ChatFormatting.RED),
-    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED);
+    ULTIMATE_SACRIFICE("Ultimate Sacrifice", ChatFormatting.RED),
+    WARMTH_DEVOURER("Warmth Devourer", ChatFormatting.RED);
 
     private final String name;
     private final ChatFormatting color;
