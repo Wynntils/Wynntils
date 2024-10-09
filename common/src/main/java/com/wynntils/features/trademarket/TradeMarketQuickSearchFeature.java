@@ -96,22 +96,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         quickSearching = false;
     }
 
-    private void tryQuickSearch(Slot hoveredSlot) {
-        if (!inTradeMarket || hoveredSlot == null || !hoveredSlot.hasItem()) return;
-        quickSearching = true;
-        searchQuery =
-                StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
-        searchQuery = getSearchQuery(searchQuery);
-        if (searchQuery == null || searchQuery.isBlank()) return;
-        ContainerUtils.clickOnSlot(
-                SEARCH_SLOT,
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
-    }
-
-    // EventPriority.HIGH so that this takes priority over TradeMarketAutoOpenChatFeature.hidePrompt.
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!quickSearching || !event.getOriginalStyledText().stripAlignment().matches(TYPE_TO_CHAT_PATTERN)) return;
         if (!instantSearch.get() || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
@@ -124,6 +109,20 @@ public class TradeMarketQuickSearchFeature extends Feature {
             event.setCanceled(true);
             McUtils.sendChat(searchQuery);
         }
+    }
+
+    private void tryQuickSearch(Slot hoveredSlot) {
+        if (!inTradeMarket || hoveredSlot == null || !hoveredSlot.hasItem()) return;
+        quickSearching = true;
+        searchQuery =
+                StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
+        searchQuery = getSearchQuery(searchQuery);
+        if (searchQuery == null || searchQuery.isBlank()) return;
+        ContainerUtils.clickOnSlot(
+                SEARCH_SLOT,
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
     }
 
     private String getSearchQuery(String rawName) {
