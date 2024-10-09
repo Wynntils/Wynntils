@@ -22,6 +22,7 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,8 +46,9 @@ public class TradeMarketQuickSearchFeature extends Feature {
             null,
             this::tryQuickSearch);
 
-    private static final Pattern TYPE_TO_CHAT_PATTERN = Pattern.compile(
-            "^§5(\uE00A\uE002|\uE001) \n\uE001 Type the .* or type (\n\uE001 'cancel' to|'cancel' to \n\uE001) cancel:\n\uE001 ");
+    private static final Pattern TYPE_TO_CHAT_PATTERN =
+            Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
+
     // Maybe there is a better solution for this than regex, but the TM is very peculiar.
     // \\[.*?\\] Crafting stuff, \\[\\uE000-\\uF8FF\\] Gathering Tools, \\u2B21 Shiny
     private static final Pattern CUT_PATTERN =
@@ -89,7 +91,10 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        if (!quickSearching || !event.getOriginalStyledText().stripAlignment().matches(TYPE_TO_CHAT_PATTERN)) return;
+        if (!quickSearching) return;
+        StyledText styledText =
+                StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
+        if (!styledText.matches(TYPE_TO_CHAT_PATTERN)) return;
         if (!instantSearch.get() || KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             McUtils.mc().setScreen(new ChatScreen(searchQuery));
             inSearchChat = true;

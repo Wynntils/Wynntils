@@ -28,11 +28,10 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     @Persisted
     public final Config<Boolean> autoCancel = new Config<>(true);
 
-    // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
-
     @Persisted
     public final Config<Boolean> hidePrompt = new Config<>(false);
 
+    // Test in TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN
     private static final Pattern TYPE_TO_CHAT_PATTERN =
             Pattern.compile("^§5(\uE00A\uE002|\uE001) Type the .* or type 'cancel' to cancel:");
 
