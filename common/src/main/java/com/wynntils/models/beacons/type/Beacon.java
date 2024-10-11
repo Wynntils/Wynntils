@@ -4,19 +4,19 @@
  */
 package com.wynntils.models.beacons.type;
 
+import com.wynntils.utils.mc.type.PreciseLocation;
 import java.util.Objects;
-import net.minecraft.world.phys.Vec3;
 
 public final class Beacon<T extends BeaconKind> {
-    private final Vec3 position;
+    private final PreciseLocation position;
     private final T beaconKind;
 
-    public Beacon(Vec3 position, T beaconKind) {
+    public Beacon(PreciseLocation position, T beaconKind) {
         this.position = position;
         this.beaconKind = beaconKind;
     }
 
-    public Vec3 position() {
+    public PreciseLocation position() {
         return position;
     }
 
