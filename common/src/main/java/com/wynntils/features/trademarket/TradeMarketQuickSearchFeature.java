@@ -93,19 +93,18 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
-        WynntilsMod.info("Screen Opened");
         openChatWhenContainerClosed = false;
-        if ((Models.Container.getCurrentContainer() instanceof TradeMarketContainer)) {
-            inTradeMarket = true;
-            quickSearching = false;
-            inSearchChat = false;
-            return;
-        }
-        inTradeMarket = false;
+        inTradeMarket = (Models.Container.getCurrentContainer() instanceof TradeMarketContainer);
+        if (!inTradeMarket) return;
+
+        quickSearching = false;
+        inSearchChat = false;
     }
 
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent event) {
+        if (!inSearchChat && !openChatWhenContainerClosed) return;
+
         if (inSearchChat && event.getScreen() instanceof ChatScreen) {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 McUtils.sendChat("cancel");
@@ -126,8 +125,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
     // EventPriority.HIGH so that InventoryEmeraldCountFeature does not render.
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onMenuClosed(MenuClosedEvent event) {
-        WynntilsMod.info("Menu Closed");
         if (!inTradeMarket) return;
+
         inTradeMarket = false;
         if (instantSearching) {
             event.setCanceled(true);
@@ -138,14 +137,17 @@ public class TradeMarketQuickSearchFeature extends Feature {
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
+
         StyledText styledText =
                 StyledTextUtils.unwrap(event.getOriginalStyledText()).stripAlignment();
         if (!styledText.matches(TYPE_TO_CHAT_PATTERN)) return;
+
         if (instantSearching) {
             event.setCanceled(true);
             McUtils.sendChat(searchQuery);
             return;
         }
+
         openChatWhenContainerClosed = true;
         if (hidePrompt.get()) {
             event.setCanceled(true);
@@ -154,6 +156,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     private void tryQuickSearch(Slot hoveredSlot) {
         if (!inTradeMarket || hoveredSlot == null || !hoveredSlot.hasItem()) return;
+
         if (instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             instantSearching = true;
         } else {
@@ -163,6 +166,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
         searchQuery = getSearchQuery(searchQuery);
         if (searchQuery == null || searchQuery.isBlank()) return;
+
         ContainerUtils.clickOnSlot(
                 SEARCH_SLOT,
                 McUtils.containerMenu().containerId,
