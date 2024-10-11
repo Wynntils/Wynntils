@@ -1,3 +1,10 @@
+## [2.3.11](https://github.com/Wynntils/Wynntils/compare/v2.3.10...v2.3.11) (2024-10-11)
+
+
+### Bug Fixes
+
+* fix lootrun beacon serialization crashing and location serialization depending on mappings ([#2916](https://github.com/Wynntils/Wynntils/issues/2916)) ([851b970](https://github.com/Wynntils/Wynntils/commit/851b970dbb9780f64e08e8c5ac1be64dba71a7ba))
+
 ## [2.3.10](https://github.com/Wynntils/Wynntils/compare/v2.3.9...v2.3.10) (2024-10-09)
 
 
@@ -18,6 +25,7 @@
 ### Miscellaneous Chores
 
 * [auto-generated] Update urls.json [ci skip] ([#2904](https://github.com/Wynntils/Wynntils/issues/2904)) ([c0ce0aa](https://github.com/Wynntils/Wynntils/commit/c0ce0aaacd22a4b94815217308d975129ca8038d))
+* **release:** v2.3.10 [skip ci] ([2a39b2e](https://github.com/Wynntils/Wynntils/commit/2a39b2e818ac2e1a57181fe6cb110e9813e418b5))
 
 ## [2.3.9](https://github.com/Wynntils/Wynntils/compare/v2.3.8...v2.3.9) (2024-10-03)
 
@@ -68,21 +76,4 @@
 
 * **release:** v2.3.7 [skip ci] ([d17bd3e](https://github.com/Wynntils/Wynntils/commit/d17bd3eda12bab8490755dbc533d6599515985f6))
 * Remove ImprovedInventorySync and ItemInteractionSounds features [skip ci] ([#2898](https://github.com/Wynntils/Wynntils/issues/2898)) ([5291a99](https://github.com/Wynntils/Wynntils/commit/5291a99f6971196edbc35241b8fd27186800e309))
-
-## [2.3.6](https://github.com/Wynntils/Wynntils/compare/v2.3.5...v2.3.6) (2024-09-25)
-
-
-### New Features
-
-* Add keybind options for opening overlay selection and management screens [skip ci] ([#2894](https://github.com/Wynntils/Wynntils/issues/2894)) ([9cf256d](https://github.com/Wynntils/Wynntils/commit/9cf256d6a452b5d4fff862a38c01ce2528c089c2))
-
-
-### Bug Fixes
-
-* Fix beta warning feature sometimes failing to initialise ([#2895](https://github.com/Wynntils/Wynntils/issues/2895)) ([1f6797e](https://github.com/Wynntils/Wynntils/commit/1f6797ea442f0c3f9fa2ea15d969ff272ed34166))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.6 [skip ci] ([5e39a44](https://github.com/Wynntils/Wynntils/commit/5e39a448f3a2313c342699b8589d28773d364683))
 
