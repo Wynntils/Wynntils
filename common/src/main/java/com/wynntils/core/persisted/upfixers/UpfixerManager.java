@@ -27,6 +27,7 @@ import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboard
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteNameUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
+        registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
 
