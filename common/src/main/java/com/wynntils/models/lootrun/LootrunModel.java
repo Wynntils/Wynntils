@@ -10,7 +10,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -25,13 +25,13 @@ import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
-import com.wynntils.models.beacons.type.LootrunBeaconKind;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
 import com.wynntils.models.items.items.game.SimulatorItem;
+import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
@@ -54,6 +54,7 @@ import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -172,7 +173,7 @@ public class LootrunModel extends Model {
     private final Storage<Map<String, LootrunBeaconKind>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Beacon<LootrunBeaconKind>>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
@@ -187,20 +188,19 @@ public class LootrunModel extends Model {
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
 
-        reloadData();
+        for (LootrunBeaconKind beaconKind : LootrunBeaconKind.values()) {
+            Models.Beacon.registerBeacon(beaconKind);
+        }
     }
 
     @Override
-    public void reloadData() {
-        loadLootrunTaskLocations();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED).handleReader(this::handleLootrunTaskLocations);
     }
 
-    private void loadLootrunTaskLocations() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED);
-        dl.handleReader(reader -> {
-            Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
-            taskLocations = Managers.Json.GSON.fromJson(reader, type);
-        });
+    private void handleLootrunTaskLocations(Reader reader) {
+        Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
+        taskLocations = Managers.Json.GSON.fromJson(reader, type);
     }
 
     @SubscribeEvent
@@ -431,6 +431,7 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconMoved(BeaconEvent.Moved event) {
         Beacon beacon = event.getNewBeacon();
+        if (!(beacon.beaconKind() instanceof LootrunBeaconKind)) return;
         updateTaskLocationPrediction(beacon);
     }
 
@@ -440,7 +441,7 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         Beacon beacon = event.getBeacon();
-        LootrunBeaconKind lootrunBeaconKind = beacon.color();
+        if (!(beacon.beaconKind() instanceof LootrunBeaconKind lootrunBeaconKind)) return;
 
         Beacon closestBeacon = getClosestBeacon();
 
@@ -463,6 +464,7 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconAdded(BeaconEvent.Added event) {
         Beacon beacon = event.getBeacon();
+        if (!(beacon.beaconKind() instanceof LootrunBeaconKind)) return;
 
         // FIXME: Feature-model dependency
         CustomLootrunBeaconsFeature feature = Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class);
@@ -641,13 +643,14 @@ public class LootrunModel extends Model {
         Beacon closestBeacon = getClosestBeacon();
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
-                && closestBeacon != null) {
-            WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.position());
-            selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
+                && closestBeacon != null
+                && closestBeacon.beaconKind() instanceof LootrunBeaconKind color) {
+            WynntilsMod.info("Selected a " + color + " beacon at " + closestBeacon.position());
+            selectedBeacons.put(color, selectedBeacons.getOrDefault(closestBeacon.beaconKind(), 0) + 1);
             selectedBeaconsStorage.touched();
-            setLastTaskBeaconColor(closestBeacon.color());
+            setLastTaskBeaconColor(color);
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
-                    closestBeacon, beacons.get(closestBeacon.color()).taskLocation()));
+                    closestBeacon, beacons.get(closestBeacon.beaconKind()).taskLocation()));
 
             possibleTaskLocations = new HashSet<>();
 
@@ -660,6 +663,8 @@ public class LootrunModel extends Model {
     }
 
     private void updateTaskLocationPrediction(Beacon beacon) {
+        if (!(beacon.beaconKind() instanceof LootrunBeaconKind color)) return;
+
         Set<TaskLocation> currentTaskLocations = possibleTaskLocations;
         if (currentTaskLocations == null || currentTaskLocations.isEmpty()) {
             WynntilsMod.warn("No task locations found. Using fallback, all locations.");
@@ -672,7 +677,7 @@ public class LootrunModel extends Model {
         }
 
         List<TaskPrediction> usedTaskLocations = beacons.entrySet().stream()
-                .filter(entry -> entry.getKey() != beacon.color())
+                .filter(entry -> entry.getKey() != beacon.beaconKind())
                 .map(Map.Entry::getValue)
                 .toList();
 
@@ -689,7 +694,7 @@ public class LootrunModel extends Model {
             TaskLocation closestTaskLocation = entry.getValue();
             Double predictionValue = entry.getKey();
 
-            TaskPrediction oldPrediction = beacons.get(beacon.color());
+            TaskPrediction oldPrediction = beacons.get(color);
             TaskPrediction newTaskPrediction = new TaskPrediction(beacon, closestTaskLocation, predictionValue);
 
             // If the prediction is the same, don't update.
@@ -697,7 +702,7 @@ public class LootrunModel extends Model {
                     && Objects.equals(oldPrediction.taskLocation(), newTaskPrediction.taskLocation())) {
                 if (newTaskPrediction.predictionScore() < oldPrediction.predictionScore()) {
                     // The prediction is the same, but the score is better, so update.
-                    beacons.put(beacon.color(), newTaskPrediction);
+                    beacons.put(color, newTaskPrediction);
                 }
                 return;
             }
@@ -712,8 +717,8 @@ public class LootrunModel extends Model {
                 // We predict that we are closer to the task location than the other beacon.
                 // Overwrite the other beacon's prediction.
                 if (newTaskPrediction.predictionScore() < usedTaskPrediction.predictionScore()) {
-                    beacons.put(beacon.color(), newTaskPrediction);
-                    beacons.remove(usedTaskPrediction.beacon().color());
+                    beacons.put(color, newTaskPrediction);
+                    beacons.remove(usedTaskPrediction.beacon().beaconKind());
 
                     // Update the other beacon's prediction.
                     updateTaskLocationPrediction(usedTaskPrediction.beacon());
@@ -726,7 +731,7 @@ public class LootrunModel extends Model {
             }
 
             // The prediction is not used by another beacon.
-            beacons.put(beacon.color(), newTaskPrediction);
+            beacons.put(color, newTaskPrediction);
             break;
         }
 

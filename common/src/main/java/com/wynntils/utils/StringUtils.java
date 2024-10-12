@@ -19,6 +19,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 public final class StringUtils {
     private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
+    private static final long[] SUFFIX_MULTIPLIERS = {1L, 1_000L, 1_000_000L, 1_000_000_000L, 1_000_000_000_000L};
     private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
     private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
@@ -66,6 +67,20 @@ public final class StringUtils {
         DecimalFormat format = new DecimalFormat("0.#");
         String value = format.format(count / Math.pow(1000, exp));
         return String.format("%s%c", value, "kMBTPE".charAt(exp - 1));
+    }
+
+    /**
+     * Parse a string, possible ending with an SI suffix, as an integer.
+     */
+    public static long parseSuffixedInteger(String numStr) throws NumberFormatException {
+        numStr = numStr.toLowerCase(Locale.ROOT);
+        for (int i = 1; i < SUFFIXES.length; i++) {
+            if (numStr.endsWith(SUFFIXES[i])) {
+                double baseValue = Double.parseDouble(numStr.substring(0, numStr.length() - 1));
+                return ((long) Math.ceil(baseValue)) * SUFFIX_MULTIPLIERS[i];
+            }
+        }
+        return Long.parseLong(numStr);
     }
 
     public static String formatDuration(long seconds) {

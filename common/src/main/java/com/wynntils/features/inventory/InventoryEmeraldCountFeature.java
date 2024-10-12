@@ -17,6 +17,7 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.StringUtils;
@@ -80,16 +81,23 @@ public class InventoryEmeraldCountFeature extends Feature {
             }
         }
 
-        int textureX = containerScreen.leftPos;
+        int topTextureX = containerScreen.leftPos;
+        int bottomTextureX = containerScreen.leftPos;
         int textX = (textDisplaySide.get() == TextDisplaySide.LEFT)
                 ? containerScreen.leftPos + 2
                 : screen.width - containerScreen.leftPos - 2;
 
+        // region Container-specific Exceptions
         if (Models.Container.getCurrentContainer() instanceof PersonalStorageContainer
                 && Managers.Feature.getFeatureInstance(PersonalStorageUtilitiesFeature.class)
                         .isEnabled()) {
-            textureX -= 10 + Texture.BANK_PANEL.width();
+            topTextureX -= Texture.BANK_PANEL.width() + 10;
         }
+
+        if (event.getScreen().renderables.stream().anyMatch(w -> w instanceof BulkBuyWidget)) {
+            topTextureX -= Texture.BULK_BUY_PANEL.width() + 1;
+        }
+        // endregion
 
         int bottomEmeralds = Models.Emerald.getAmountInInventory();
         boolean displayBottom = !isInventory
@@ -109,7 +117,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                         int bottomStartY = containerScreen.topPos + containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
                         y = Math.min(bottomStartY - textureVerticalSize, y);
                     }
-                    renderTexturedCount(event.getGuiGraphics(), textureX, y, topEmeralds);
+                    renderTexturedCount(event.getGuiGraphics(), topTextureX, y, topEmeralds);
                 }
             }
         }
@@ -119,7 +127,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
                 case TEXTURE -> renderTexturedCount(
-                        event.getGuiGraphics(), textureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
+                        event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
             }
         }
     }

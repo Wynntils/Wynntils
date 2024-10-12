@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
@@ -38,6 +39,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class RaidModel extends Model {
     public static final int MAX_CHALLENGES = 3;
+    public static final int ROOM_DAMAGES_COUNT = 4;
     public static final int ROOM_TIMERS_COUNT = 5;
     private static final Pattern CHALLENGE_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC5F§a§lChallenge Completed");
     private static final Pattern RAID_COMPLETED_PATTERN = Pattern.compile("§f§lR§#4d4d4dff§laid Completed!");
@@ -52,6 +54,7 @@ public class RaidModel extends Model {
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
     private final Map<RaidRoomType, Long> roomTimers = new EnumMap<>(RaidRoomType.class);
+    private final Map<RaidRoomType, Long> roomDamages = new EnumMap<>(RaidRoomType.class);
 
     private Map<String, List<String>> partyRaidBuffs = new HashMap<>();
 
@@ -60,6 +63,7 @@ public class RaidModel extends Model {
     private int timeLeft = 0;
     private long raidStartTime;
     private long roomStartTime;
+    private long currentRoomDamage = 0;
     private RaidKind currentRaid = null;
     private RaidRoomType currentRoom = null;
 
@@ -121,6 +125,14 @@ public class RaidModel extends Model {
     }
 
     @SubscribeEvent
+    public void onDamageDealtEvent(DamageDealtEvent event) {
+        if (currentRaid == null) return;
+
+        currentRoomDamage +=
+                event.getDamages().values().stream().mapToLong(d -> d).sum();
+    }
+
+    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         // Only want to send the message once the user has returned to an actual world
         if (currentRaid != null && event.getNewState() == WorldState.WORLD) {
@@ -130,6 +142,7 @@ public class RaidModel extends Model {
             timeLeft = 0;
             challenges = CappedValue.EMPTY;
             roomTimers.clear();
+            roomDamages.clear();
             partyRaidBuffs.clear();
 
             McUtils.sendMessageToClient(Component.literal(
@@ -180,6 +193,11 @@ public class RaidModel extends Model {
     // Only check for entry to a buff room once after the challenge has been completed.
     public void enterBuffRoom() {
         if (completedCurrentChallenge) {
+            // We put the damage dealt here instead of in completeChallenge as you are still in
+            // the challenge room and can deal damage until you enter the buff room
+            roomDamages.put(currentRoom, currentRoomDamage);
+            currentRoomDamage = 0;
+
             currentRoom = RaidRoomType.values()[currentRoom.ordinal() + 1];
 
             completedCurrentChallenge = false;
@@ -201,16 +219,22 @@ public class RaidModel extends Model {
         long bossTime = System.currentTimeMillis() - roomStartTime;
         roomTimers.put(RaidRoomType.BOSS_FIGHT, bossTime);
 
-        WynntilsMod.postEvent(new RaidEndedEvent.Completed(currentRaid, getAllRoomTimes(), currentRaidTime()));
+        WynntilsMod.postEvent(new RaidEndedEvent.Completed(
+                currentRaid, getAllRoomTimes(), currentRaidTime(), getAllRoomDamages(), getRaidDamage()));
 
-        checkForNewPersonalBest(currentRaid, currentRaidTime());
+        // Need to add boss time to get correct intermission time since
+        // currentRoom will still be boss room when getIntermissionTime() is called
+        checkForNewPersonalBest(
+                currentRaid, currentRaidTime() - (getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT)));
 
         currentRaid = null;
         currentRoom = null;
         completedCurrentChallenge = false;
         timeLeft = 0;
+        currentRoomDamage = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        roomDamages.clear();
         partyRaidBuffs.clear();
     }
 
@@ -221,10 +245,12 @@ public class RaidModel extends Model {
 
         currentRaid = null;
         currentRoom = null;
+        currentRoomDamage = 0;
         completedCurrentChallenge = false;
         timeLeft = 0;
         challenges = CappedValue.EMPTY;
         roomTimers.clear();
+        roomDamages.clear();
         partyRaidBuffs.clear();
     }
 
@@ -311,6 +337,23 @@ public class RaidModel extends Model {
         return intermissionTime;
     }
 
+    public long getRaidDamage() {
+        return currentRoomDamage
+                + roomDamages.values().stream().mapToLong(d -> d).sum();
+    }
+
+    public long getRoomDamage(RaidRoomType roomType) {
+        if (roomType == currentRoom) {
+            return getCurrentRoomDamage();
+        }
+
+        return roomDamages.getOrDefault(roomType, -1L);
+    }
+
+    public long getCurrentRoomDamage() {
+        return currentRoomDamage;
+    }
+
     private boolean inInstructionsRoom() {
         return currentRoom == RaidRoomType.INSTRUCTIONS_1
                 || currentRoom == RaidRoomType.INSTRUCTIONS_2
@@ -346,6 +389,17 @@ public class RaidModel extends Model {
         allRoomTimes.add(getIntermissionTime() + getRoomTime(RaidRoomType.BOSS_FIGHT));
 
         return allRoomTimes;
+    }
+
+    private List<Long> getAllRoomDamages() {
+        List<Long> allRoomDamages = new ArrayList<>();
+
+        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_1));
+        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_2));
+        allRoomDamages.add(getRoomDamage(RaidRoomType.CHALLENGE_3));
+        allRoomDamages.add(getRoomDamage(RaidRoomType.BOSS_FIGHT));
+
+        return allRoomDamages;
     }
 
     private void checkForNewPersonalBest(RaidKind raidKind, long time) {

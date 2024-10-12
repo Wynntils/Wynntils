@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -42,21 +43,23 @@ public class BetaWarningFeature extends Feature {
         warnType = WarnType.NONE;
     }
 
+    // As urls may not be initialised yet, we have to use a supplier so that it will be loaded when we need
+    // to access the Component which will only be after joining the server and urls should be loaded by then.
     private enum WarnType {
-        NONE(Component.empty()),
-        BETA(Component.translatable("feature.wynntils.betaWarning.usingBetaOnNormalServer")),
-        RELEASE(Component.translatable(
+        NONE(Component::empty),
+        BETA(() -> Component.translatable("feature.wynntils.betaWarning.usingBetaOnNormalServer")),
+        RELEASE(() -> Component.translatable(
                 "feature.wynntils.betaWarning.usingReleaseOnBetaServer",
                 Managers.Url.getUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE)));
 
-        private final Component warning;
+        private final Supplier<Component> warningSupplier;
 
-        WarnType(Component warning) {
-            this.warning = warning;
+        WarnType(Supplier<Component> warningSupplier) {
+            this.warningSupplier = warningSupplier;
         }
 
         public Component getWarning() {
-            return warning;
+            return warningSupplier.get();
         }
     }
 }

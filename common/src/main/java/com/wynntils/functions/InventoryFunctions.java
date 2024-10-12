@@ -310,4 +310,17 @@ public class InventoryFunctions {
             return List.of("held_item", "held_name");
         }
     }
+
+    public static class HeldItemCooldownFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.CharacterStats.getItemCooldownTicks(
+                    InventoryUtils.getItemInHand().getItem());
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("held_cooldown", "held_cd");
+        }
+    }
 }

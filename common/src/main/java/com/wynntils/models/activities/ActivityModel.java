@@ -10,10 +10,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.extension.EntityExtension;
+import com.wynntils.models.activities.beacons.ActivityBeaconKind;
+import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
@@ -27,6 +31,10 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.beacons.event.BeaconEvent;
+import com.wynntils.models.beacons.event.BeaconMarkerEvent;
+import com.wynntils.models.beacons.type.Beacon;
+import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -91,6 +99,14 @@ public final class ActivityModel extends Model {
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
+
+        for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
+            Models.Beacon.registerBeacon(beaconKind);
+        }
+
+        for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
+            Models.Beacon.registerBeaconMarker(beaconMarkerKind);
+        }
     }
 
     @SubscribeEvent
@@ -111,6 +127,36 @@ public final class ActivityModel extends Model {
         }
 
         ACTIVITY_MARKER_PROVIDER.setSpawnLocation(spawn);
+    }
+
+    @SubscribeEvent
+    public void onBeaconAdded(BeaconEvent.Added event) {
+        Beacon beacon = event.getBeacon();
+        if (!(beacon.beaconKind() instanceof ActivityBeaconKind)) return;
+
+        // FIXME: Feature-model dependency
+        ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
+        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
+            // Only set this once they are added.
+            // This is cleaner than posting an event on render,
+            // but a change in the config will only have effect on newly placed beacons.
+            ((EntityExtension) event.getEntity()).setRendered(false);
+        }
+    }
+
+    @SubscribeEvent
+    public void onBeaconMarkerAdded(BeaconMarkerEvent.Added event) {
+        BeaconMarker beaconMarker = event.getBeaconMarker();
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
+
+        // FIXME: Feature-model dependency
+        ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
+        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
+            // Only set this once they are added.
+            // This is cleaner than posting an event on render,
+            // but a change in the config will only have effect on newly placed beacons.
+            ((EntityExtension) event.getEntity()).setRendered(false);
+        }
     }
 
     @SubscribeEvent

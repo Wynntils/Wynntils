@@ -120,7 +120,4 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
                     guildObjective.getProgress());
         }
     }
-
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
 }

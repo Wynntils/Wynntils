@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class ItemUtils {
+    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
 
@@ -36,6 +37,10 @@ public final class ItemUtils {
         return wynnItemOpt
                 .filter(wynnItem -> wynnItem instanceof GatheringToolItem)
                 .isPresent();
+    }
+
+    public static boolean isEmptyAccessorySlot(ItemStack itemStack) {
+        return itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT);
     }
 
     public static StyledText getItemName(ItemStack itemStack) {
@@ -60,6 +65,15 @@ public final class ItemUtils {
                 && newItem.getDamageValue() == oldItem.getDamageValue()
                 && newItem.getCount() == oldItem.getCount()
                 && ItemStack.isSameItemSameComponents(oldItem, newItem);
+    }
+
+    public static boolean areItemsSimilar(ItemStack a, ItemStack b) {
+        if (a.isEmpty()) {
+            return b.isEmpty();
+        } else {
+            return !b.isEmpty()
+                    && a.getHoverName().getString().equals(b.getHoverName().getString());
+        }
     }
 
     public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {
