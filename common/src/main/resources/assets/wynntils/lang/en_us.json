@@ -1373,7 +1373,7 @@
   "feature.wynntils.tradeMarketPriceMatch.youReceive": "You receive: ",
   "feature.wynntils.tradeMarketQuickSearch.autoCancel.description": "Cancels the market chat prompt when ESC is pressed.",
   "feature.wynntils.tradeMarketQuickSearch.autoCancel.name": "Auto Cancel",
-  "feature.wynntils.tradeMarketQuickSearch.description": "Adds a hotkey to instantly search for an item on the trade market.",
+  "feature.wynntils.tradeMarketQuickSearch.description": "Adds a hotkey for quick item search and auto-opens chat during trade market use.",
   "feature.wynntils.tradeMarketQuickSearch.hidePrompt.description": "Hides the market prompt when opening the chat.",
   "feature.wynntils.tradeMarketQuickSearch.hidePrompt.name": "Hide Chat Prompt",
   "feature.wynntils.tradeMarketQuickSearch.instantSearch.description": "Instantly search without opening chat (hold Shift to reverse behavior).",
