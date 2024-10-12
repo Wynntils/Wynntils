@@ -59,9 +59,9 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteNameUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
-        registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
         registerConfigUpfixer(new ProfessionBadgesToLeaderboardBadgesUpfixer());
+        registerConfigUpfixer(new TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
