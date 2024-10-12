@@ -31,9 +31,11 @@ public final class ComponentUtils {
     private static final ResourceLocation CHAT_BANNER_FONT_LOCATION = ResourceLocation.parse("wynntils:chat");
     private static final Style CHAT_BANNER_STYLE =
             Style.EMPTY.withFont(CHAT_BANNER_FONT_LOCATION).withColor(ChatFormatting.DARK_GREEN);
-    private static final Style RESET_STYLE = Style.EMPTY.withFont(DEFAULT_FONT_LOCATION).withColor(ChatFormatting.WHITE);
-    private static final Component CHAT_BANNER_FIRST_LINE =
-            Component.literal("\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ").withStyle(CHAT_BANNER_STYLE);
+    private static final Style RESET_STYLE =
+            Style.EMPTY.withFont(DEFAULT_FONT_LOCATION).withColor(ChatFormatting.WHITE);
+    private static final Component CHAT_BANNER_FIRST_LINE = Component.literal(
+                    "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ")
+            .withStyle(CHAT_BANNER_STYLE);
     private static final Component CHAT_BANNER_LINE_PREFIX =
             Component.literal("\uDAFF\uDFFC\uE001\uDB00\uDC06 ").withStyle(CHAT_BANNER_STYLE);
 
@@ -191,14 +193,17 @@ public final class ComponentUtils {
     public static Component addWynntilsBanner(Component component) {
         Minecraft mc = Minecraft.getInstance();
 
-        List<Component> lines = splitComponent(component, ChatComponent.getWidth(mc.options.chatWidth().get()) -
-                mc.font.width(CHAT_BANNER_LINE_PREFIX));
+        List<Component> lines = splitComponent(
+                component,
+                ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(CHAT_BANNER_LINE_PREFIX));
 
         MutableComponent output = CHAT_BANNER_FIRST_LINE.copy();
-        output.append(Component.empty().withStyle(RESET_STYLE).append(lines.getFirst())).append("\n");
+        output.append(Component.empty().withStyle(RESET_STYLE).append(lines.getFirst()))
+                .append("\n");
 
         for (int i = 1; i < lines.size(); i++) {
-            output.append(CHAT_BANNER_LINE_PREFIX.copy()
+            output.append(CHAT_BANNER_LINE_PREFIX
+                    .copy()
                     .append(Component.empty().withStyle(RESET_STYLE).append(lines.get(i))));
             if (i != lines.size() - 1) {
                 output.append("\n");
