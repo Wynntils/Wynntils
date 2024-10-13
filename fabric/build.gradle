@@ -105,8 +105,3 @@ sourcesJar {
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
 }
-
-spotless.json {
-    // schemaVersion must be at the top or else Fabric will complain
-    targetExclude("src/main/resources/fabric.mod.json")
-}

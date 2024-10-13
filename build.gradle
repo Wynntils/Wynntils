@@ -109,8 +109,13 @@ allprojects {
         }
         json {
             target "src/**/*.json"
-            // spotless replaces the Unicode escapes with the actual characters, worsening readability.
-            targetExclude("src/main/resources/assets/wynntils/font/*.json")
+            /*
+            1. spotless replaces the Unicode escapes with the actual characters, worsening readability.
+            2. schemaVersion must be at the top or else Fabric will complain
+             */
+            targetExclude(
+                    "src/main/resources/assets/wynntils/font/*.json",
+                    "src/main/resources/fabric.mod.json")
             gson()
                     .indentWithSpaces(2)
                     .sortByKeys()
