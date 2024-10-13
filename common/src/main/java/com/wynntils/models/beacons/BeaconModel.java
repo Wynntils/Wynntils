@@ -18,6 +18,7 @@ import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.beacons.type.BeaconMarkerKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.PreciseLocation;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class BeaconModel extends Model {
 
             if (beaconKind == null) return;
 
-            Beacon beacon = new Beacon(entity.position(), beaconKind);
+            Beacon beacon = new Beacon(PreciseLocation.fromVec(entity.position()), beaconKind);
             beacons.put(event.getId(), beacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(beacon, entity));
         } else if (entity instanceof Display.TextDisplay textDisplay) {
@@ -87,7 +88,7 @@ public class BeaconModel extends Model {
         Beacon movedBeacon = beacons.get(event.getEntity().getId());
         BeaconMarker movedBeaconMarker = beaconMarkers.get(event.getEntity().getId());
         if (movedBeacon != null) {
-            Beacon newBeacon = new Beacon(event.getNewPosition(), movedBeacon.beaconKind());
+            Beacon newBeacon = new Beacon(PreciseLocation.fromVec(event.getNewPosition()), movedBeacon.beaconKind());
             // Replace the old map entry
             beacons.put(event.getEntity().getId(), newBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));

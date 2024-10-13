@@ -173,7 +173,7 @@ public class LootrunModel extends Model {
     private final Storage<Map<String, LootrunBeaconKind>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Beacon<LootrunBeaconKind>>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
