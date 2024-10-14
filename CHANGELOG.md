@@ -1,9 +1,26 @@
+## [2.3.12](https://github.com/Wynntils/Wynntils/compare/v2.3.11...v2.3.12) (2024-10-14)
+
+
+### New Features
+
+* Quick Search TM feature ([#2908](https://github.com/Wynntils/Wynntils/issues/2908)) ([d4fb891](https://github.com/Wynntils/Wynntils/commit/d4fb8918827fcab1a7eb5b1e31e202cf127750f5))
+
+
+### Build System
+
+* JVM runs out of memory after multiple hot swaps [skip ci] ([#2917](https://github.com/Wynntils/Wynntils/issues/2917)) ([d27deee](https://github.com/Wynntils/Wynntils/commit/d27deee23dd0155817cc971613ae20dbe2216ec9))
+
 ## [2.3.11](https://github.com/Wynntils/Wynntils/compare/v2.3.10...v2.3.11) (2024-10-11)
 
 
 ### Bug Fixes
 
 * fix lootrun beacon serialization crashing and location serialization depending on mappings ([#2916](https://github.com/Wynntils/Wynntils/issues/2916)) ([851b970](https://github.com/Wynntils/Wynntils/commit/851b970dbb9780f64e08e8c5ac1be64dba71a7ba))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.11 [skip ci] ([a6f9386](https://github.com/Wynntils/Wynntils/commit/a6f9386dc4b08b5297c4bdb079d0651f018bdbfc))
 
 ## [2.3.10](https://github.com/Wynntils/Wynntils/compare/v2.3.9...v2.3.10) (2024-10-09)
 
@@ -57,23 +74,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.8 [skip ci] ([245ffac](https://github.com/Wynntils/Wynntils/commit/245fface0d92b4b0d9e964706c35faa4b515e119))
-
-## [2.3.7](https://github.com/Wynntils/Wynntils/compare/v2.3.6...v2.3.7) (2024-09-29)
-
-
-### New Features
-
-* Added favorite item hotkey [skip ci] ([#2897](https://github.com/Wynntils/Wynntils/issues/2897)) ([9a4f474](https://github.com/Wynntils/Wynntils/commit/9a4f474bb1e1923eab7fdfeb0ed72302b52a037a))
-* Bulk buy rework ([#2735](https://github.com/Wynntils/Wynntils/issues/2735)) ([bead9be](https://github.com/Wynntils/Wynntils/commit/bead9be41230541daa760ff9533137061bbdd3d6))
-
-
-### Bug Fixes
-
-* Fix tutorial content book [skip ci] ([#2896](https://github.com/Wynntils/Wynntils/issues/2896)) ([25b36c2](https://github.com/Wynntils/Wynntils/commit/25b36c28905423528353d75b2a27ff71689ec705))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.7 [skip ci] ([d17bd3e](https://github.com/Wynntils/Wynntils/commit/d17bd3eda12bab8490755dbc533d6599515985f6))
-* Remove ImprovedInventorySync and ItemInteractionSounds features [skip ci] ([#2898](https://github.com/Wynntils/Wynntils/issues/2898)) ([5291a99](https://github.com/Wynntils/Wynntils/commit/5291a99f6971196edbc35241b8fd27186800e309))
 
