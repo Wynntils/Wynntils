@@ -24,7 +24,6 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
@@ -256,12 +255,13 @@ public class ContentBookQueries {
             // Only set slot changes can be valid
             if (changeType == ContainerContentChangeType.SET_CONTENT) return false;
 
-            // Check if the progress item changed, this is the last item to change
-            if (!changes.containsKey(PROGRESS_SLOT)) return false;
-
-            // Check if the filter item changed, and if so, if the active filter changed
-            String itemFilter = getActiveFilter(container.items().get(CHANGE_VIEW_SLOT));
-            return !Objects.equals(itemFilter, activeFilter);
+            // TEMP FIX: Consider the filter change complete as soon as we get the first item.
+            //           We don't seem to get called for changes in the player's inventory, so we cannot
+            //           rely on the Filter or Progress items changing.
+            //           We also can't wait for the last item, since we don't know which item that might be
+            //           (some filter categories have less than a page of items, so we won't always get
+            //           change events for the last item slot)
+            return changes.containsKey(0);
         };
     }
 
