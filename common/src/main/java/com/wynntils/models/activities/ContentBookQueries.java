@@ -206,6 +206,9 @@ public class ContentBookQueries {
     }
 
     private int getFilterChangeDirection(ItemStack itemStack, String targetFilter) {
+        // TEMP FIX: The filter item disappears on a right click
+        return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+        /*
         StyledText itemName = ItemUtils.getItemName(itemStack);
         if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
@@ -245,6 +248,7 @@ public class ContentBookQueries {
         if (backward < 0) backward += filterCount;
 
         return forward < backward ? GLFW.GLFW_MOUSE_BUTTON_LEFT : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+         */
     }
 
     private ContainerContentVerification getContentBookFilterChangeVerification() {
