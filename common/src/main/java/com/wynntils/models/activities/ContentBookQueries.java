@@ -270,7 +270,7 @@ public class ContentBookQueries {
             //           unconfirmed if this is intentional or a temporary bug.
             if (changeType != ContainerContentChangeType.SET_CONTENT
                     && changeType != ContainerContentChangeType.SET_SLOT) return false;
-            return changes.containsKey(66);
+            return changes.containsKey(CHANGE_VIEW_SLOT);
         };
     }
 
