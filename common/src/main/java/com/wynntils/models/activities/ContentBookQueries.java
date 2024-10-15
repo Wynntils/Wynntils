@@ -146,10 +146,15 @@ public class ContentBookQueries {
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
                 .execute(() -> {
+                    /*
                     // Inverse the filter change direction
                     filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                             ? GLFW.GLFW_MOUSE_BUTTON_LEFT
                             : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                     */
+
+                    // TEMP FIX: The filter item disappears on a right click
+                    filterChangeDirection = GLFW.GLFW_MOUSE_BUTTON_LEFT;
                 })
                 .repeat(
                         c -> {
@@ -253,7 +258,7 @@ public class ContentBookQueries {
     private ContainerContentVerification getContentBookFilterChangeVerification() {
         return (container, changes, changeType) -> {
             // Only set slot changes can be valid
-            if (changeType == ContainerContentChangeType.SET_CONTENT) return false;
+            // if (changeType == ContainerContentChangeType.SET_CONTENT) return false;
 
             // TEMP FIX: Consider the filter change complete as soon as we get the first item.
             //           We don't seem to get called for changes in the player's inventory, so we cannot
@@ -261,7 +266,11 @@ public class ContentBookQueries {
             //           We also can't wait for the last item, since we don't know which item that might be
             //           (some filter categories have less than a page of items, so we won't always get
             //           change events for the last item slot)
-            return changes.containsKey(0);
+            //           Additionally, it appears SET_CONTENT is now used in addition to SET_SLOT, but
+            //           unconfirmed if this is intentional or a temporary bug.
+            if (changeType != ContainerContentChangeType.SET_CONTENT
+                    && changeType != ContainerContentChangeType.SET_SLOT) return false;
+            return changes.containsKey(66);
         };
     }
 
@@ -341,10 +350,15 @@ public class ContentBookQueries {
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
                 .execute(() -> {
+                    /*
                     // Inverse the filter change direction
                     filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                             ? GLFW.GLFW_MOUSE_BUTTON_LEFT
                             : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                     */
+
+                    // TEMP FIX: The filter item disappears on a right click
+                    filterChangeDirection = GLFW.GLFW_MOUSE_BUTTON_LEFT;
                 })
                 .repeat(
                         c -> {
