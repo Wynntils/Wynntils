@@ -61,7 +61,6 @@ public class ArrowShieldModel extends Model {
         Vec3 playerPos = McUtils.player().position();
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    // Verify that there was a shield cast event recently
                     if (!isValidSpawn()) return;
 
                     // Verify that this is an armor stand holding an arrow. This must be ran with
@@ -81,7 +80,7 @@ public class ArrowShieldModel extends Model {
 
                     collector.add(arrowAS.getId());
 
-                    // 6 tick total delay to ensure all armor stands have spawned and have their inventory set.
+                    // 5 tick total delay to ensure all armor stands have spawned and have their inventory set
                     Managers.TickScheduler.scheduleLater(this::registerShield, 2);
                 },
                 3);
@@ -138,6 +137,9 @@ public class ArrowShieldModel extends Model {
         WynntilsMod.postEvent(new ArrowShieldEvent.Removed());
     }
 
+    /**
+     * @return true if there was either a valid cast recently, or there is a possibility of an auto cast
+     */
     private boolean isValidSpawn() {
         return System.currentTimeMillis() - shieldCastTime < 200 || Models.Inventory.hasAutoCasterItem();
     }
