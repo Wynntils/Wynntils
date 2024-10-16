@@ -7,11 +7,13 @@ package com.wynntils.models.abilities;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.event.ArrowShieldEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -27,10 +29,11 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ArrowShieldModel extends Model {
+    private static final double ARROW_SEARCH_RADIUS = 4.5;
+
     private List<Integer> collectedArrowIds;
     private List<Integer> spawnedArrowIds;
-
-    private static final double ARROW_SEARCH_RADIUS = 4.5;
+    private long shieldCastTime = 0;
 
     public ArrowShieldModel() {
         super(List.of());
@@ -40,17 +43,17 @@ public class ArrowShieldModel extends Model {
     public void onArrowShieldSpellCast(SpellEvent.Completed e) {
         if (e.getSpell() != SpellType.ARROW_SHIELD) return;
 
+        shieldCastTime = System.currentTimeMillis();
         collectedArrowIds = new ArrayList<>();
         spawnedArrowIds = null;
-        // Give the server (incl lag)  8 ticks (400 ms) to spawn all arrows
-        Managers.TickScheduler.scheduleLater(this::registerShield, 8);
     }
 
     @SubscribeEvent
     public void onArrowSpawn(AddEntityEvent event) {
-        // If we're not collecting arrows, do nothing.
-        if (collectedArrowIds == null) return;
+        if (Models.Character.getClassType() != ClassType.ARCHER) return;
 
+        // It is possible for us to receive the cast event just after the shield has actually spawned
+        // So we must collect all possible spawns
         Entity entity = McUtils.mc().level.getEntity(event.getId());
         if (entity == null) return;
         if (!(entity instanceof ArmorStand arrowAS)) return;
@@ -58,6 +61,8 @@ public class ArrowShieldModel extends Model {
         Vec3 playerPos = McUtils.player().position();
         Managers.TickScheduler.scheduleLater(
                 () -> {
+                    if (!isValidSpawn()) return;
+
                     // Verify that this is an armor stand holding an arrow. This must be ran with
                     // a delay, as inventory contents are set a couple ticks after the entity spawns.
                     ItemStack heldItem = arrowAS.getMainHandItem();
@@ -74,6 +79,9 @@ public class ArrowShieldModel extends Model {
                     if (collector == null) return;
 
                     collector.add(arrowAS.getId());
+
+                    // 5 tick total delay to ensure all armor stands have spawned and have their inventory set
+                    Managers.TickScheduler.scheduleLater(this::registerShield, 2);
                 },
                 3);
     }
@@ -127,5 +135,12 @@ public class ArrowShieldModel extends Model {
     private void removeShield() {
         spawnedArrowIds = null;
         WynntilsMod.postEvent(new ArrowShieldEvent.Removed());
+    }
+
+    /**
+     * @return true if there was either a valid cast recently, or there is a possibility of an auto cast
+     */
+    private boolean isValidSpawn() {
+        return System.currentTimeMillis() - shieldCastTime < 200 || Models.Inventory.hasAutoCasterItem();
     }
 }
