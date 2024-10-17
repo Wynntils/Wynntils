@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ShamanTotem;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -19,12 +20,28 @@ public class SpellFunctions {
     public static class ArrowShieldCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.ArrowShield.getArrowShieldCharge();
+            if (Models.Character.getClassType() != ClassType.ARCHER) return 0;
+
+            return Models.Shield.getShieldCharge();
         }
 
         @Override
         protected List<String> getAliases() {
             return List.of("arrow_shield");
+        }
+    }
+
+    public static class MantleShieldCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Character.getClassType() != ClassType.WARRIOR) return 0;
+
+            return Models.Shield.getShieldCharge();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("mantle_shield");
         }
     }
 
