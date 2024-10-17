@@ -19,6 +19,7 @@ import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
 import com.wynntils.overlays.gamebars.OphanimBarOverlay;
+import com.wynntils.overlays.gamebars.SacredSurgeBarOverlay;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
@@ -45,6 +46,9 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    private final SacredSurgeBarOverlay sacredSurgeBarOverlay = new SacredSurgeBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final FocusedMobHealthBarOverlay focusedMobHealthBarOverlay = new FocusedMobHealthBarOverlay();
