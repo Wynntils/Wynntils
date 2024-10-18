@@ -8,7 +8,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ArmSwingEvent.ArmSwingContext;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
@@ -16,11 +15,12 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -30,12 +30,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class AutoAttackFeature extends Feature {
     private static final int TICKS_PER_ATTACK = 2;
     private static final int SPELL_TIMEOUT_TICKS = 60;
-
-    private enum WeaponStatus {
-        UNKNOWN,
-        NOT_USABLE,
-        USABLE
-    }
 
     private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
     private int lastSelectedSlot;
@@ -77,11 +71,10 @@ public class AutoAttackFeature extends Feature {
     private boolean isHoldingUsableWeapon() {
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
         if (!ItemUtils.isWeapon(heldItem)) return false;
-        if (ItemUtils.getItemName(heldItem).contains("Unidentified")) return false;
-        for (StyledText lore : LoreUtils.getLore(heldItem)) {
-            if (lore.contains("✖")) return false;
-        }
-        return true;
+
+        Optional<RequirementItemProperty> wynnItem =
+                Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
+        return wynnItem.isPresent() && wynnItem.get().meetsActualRequirements();
     }
 
     @SubscribeEvent
@@ -105,18 +98,19 @@ public class AutoAttackFeature extends Feature {
 
         if (weaponStatus != WeaponStatus.USABLE) return;
 
-        boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
-        if (isArcher) {
+        if (Models.Character.getClassType() == ClassType.ARCHER) {
             if (!McUtils.options().keyUse.isDown()) return;
-        } else {
-            if (!McUtils.options().keyAttack.isDown()) return;
-        }
-
-        if (isArcher) {
             SpellDirection.RIGHT.getSendPacketRunnable().run();
         } else {
+            if (!McUtils.options().keyAttack.isDown()) return;
             // SpellDirection.LEFT doesn't do the swing animation
             player.swing(InteractionHand.MAIN_HAND);
         }
+    }
+
+    private enum WeaponStatus {
+        UNKNOWN,
+        NOT_USABLE,
+        USABLE
     }
 }
