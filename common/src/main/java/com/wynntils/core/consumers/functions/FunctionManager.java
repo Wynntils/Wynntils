@@ -581,6 +581,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new RangedFunctions.RangedFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.MantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
