@@ -60,7 +60,7 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         level = requirementsData.requirements().level();
 
         // Optional blocks
-        // Warning!: The name data from Crafted items is deliberately removed from the item data map to prevent
+        // Warning: The name data from Crafted items is deliberately removed from the item data map to prevent
         //           input sanitization issues.
         //           The name data present here is from plain-text string shared after the encoded item.
         NameData nameData = itemDataMap.get(NameData.class);
