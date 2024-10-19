@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -14,6 +14,7 @@ import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.TickSchedulerManager;
+import com.wynntils.core.net.DownloadManager;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.notifications.NotificationManager;
@@ -21,11 +22,16 @@ import com.wynntils.core.persisted.PersistedManager;
 import com.wynntils.core.persisted.config.ConfigManager;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.persisted.upfixers.UpfixerManager;
+import com.wynntils.core.properties.SystemPropertiesManager;
 
 public final class Managers {
-    // Start with UrlManager to give it chance to update URLs in background
+    // Start with SystemPropertiesManager so it can bootstrap before other Managers access properties
+    public static final SystemPropertiesManager SystemProperties = new SystemPropertiesManager();
+
+    // Then, load UrlManager to give it chance to update URLs in background
     public static final NetManager Net = new NetManager();
     public static final UrlManager Url = new UrlManager(Net);
+    public static final DownloadManager Download = new DownloadManager();
 
     public static final ClientCommandManager Command = new ClientCommandManager();
     public static final ConfigManager Config = new ConfigManager();

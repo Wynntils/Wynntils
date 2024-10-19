@@ -97,8 +97,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private Category selectedCategory;
     private Configurable selectedConfigurable = null;
 
-    private WynntilsBookSettingsScreen() {
+    private final Screen previousScreen;
+
+    private WynntilsBookSettingsScreen(Screen previousScreen) {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
+
+        this.previousScreen = previousScreen;
 
         searchWidget = new SettingsSearchWidget(
                 55,
@@ -118,8 +122,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         sortedCategories.sort(Comparator.comparing(Enum::name));
     }
 
-    public static Screen create() {
-        return new WynntilsBookSettingsScreen();
+    public static Screen create(Screen previousScreen) {
+        return new WynntilsBookSettingsScreen(previousScreen);
     }
 
     @Override
@@ -255,6 +259,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         PoseStack poseStack = guiGraphics.pose();
 
         poseStack.pushPose();
@@ -350,6 +355,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (McUtils.mc().level == null) {
+            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    @Override
     public void added() {
         searchWidget.opened();
         super.added();
@@ -358,7 +370,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     @Override
     public void onClose() {
         Managers.Config.reloadConfiguration();
-        super.onClose();
+
+        if (previousScreen != null) {
+            McUtils.mc().setScreen(previousScreen);
+        } else {
+            super.onClose();
+        }
     }
 
     @Override
@@ -895,13 +912,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void renderConfigurables(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.createRectMask(guiGraphics.pose(), 12, 21, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
+        RenderUtils.enableScissor(
+                (int) (12 + translationX), (int) (21 + translationY), 170, CONFIGURABLES_PER_PAGE * 12 - 3);
 
         for (WynntilsButton configurable : configurables) {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor();
     }
 
     private void renderConfigurableScroll(PoseStack poseStack) {
@@ -931,14 +949,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void renderConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.createRectMask(
-                guiGraphics.pose(), Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10, 21, 160, CONFIGS_PER_PAGE * 46);
+        RenderUtils.enableScissor(
+                (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + translationX),
+                (int) (21 + translationY),
+                160,
+                CONFIGS_PER_PAGE * 46);
 
         for (WynntilsButton config : configs) {
             config.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor();
     }
 
     private void renderConfigScroll(PoseStack poseStack) {

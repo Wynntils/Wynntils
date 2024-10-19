@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.stats.builders.MiscStatKind;
 import com.wynntils.models.stats.type.DamageStatType;
 import com.wynntils.models.stats.type.DefenceStatType;
@@ -84,6 +85,7 @@ public final class StatListOrderer {
             "DAMAGE_ANY_RAINBOW_RAW",
             "DAMAGE_ANY_RAINBOW_PERCENT",
             "", // delimiter
+            "DEFENCE_ELEMENTAL",
             "DEFENCE_EARTH",
             "DEFENCE_THUNDER",
             "DEFENCE_WATER",
@@ -116,11 +118,24 @@ public final class StatListOrderer {
             "SPELL_THIRD_SPELL_COST_PERCENT",
             "SPELL_FOURTH_SPELL_COST_RAW",
             "SPELL_FOURTH_SPELL_COST_PERCENT",
+            "", // delimiter
             // These were added in 2.0.3 and is not present in Legacy
             "MISC_HEALING_EFFICIENCY",
             "MISC_KNOCKBACK",
             "MISC_SLOW_ENEMY",
-            "MISC_WEAKEN_ENEMY");
+            "MISC_WEAKEN_ENEMY",
+            "", // delimiter
+            // Charm specific stats
+            "DEFENCE_TO_MOBS",
+            "DAMAGE_FROM_MOBS",
+            "DAMAGE_TO_MOBS",
+            "", // delimiter
+            // Charm and Tome specific misc stats
+            "MISC_SLAYING_XP",
+            "MISC_GATHERING_XP",
+            "MISC_DUNGEON_XP",
+            "MISC_LEVELED_XP_BONUS",
+            "MISC_LEVELED_LOOT_BONUS");
 
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_1 = List.of(
             MiscStatKind.KNOCKBACK,
@@ -137,7 +152,6 @@ public final class StatListOrderer {
             MiscStatKind.ATTACK_SPEED,
             MiscStatKind.POISON,
             MiscStatKind.HEALTH,
-            MiscStatKind.SOUL_POINT_REGEN,
             MiscStatKind.STEALING,
             MiscStatKind.HEALTH_REGEN_RAW,
             MiscStatKind.HEALING_EFFICIENCY,
@@ -266,6 +280,17 @@ public final class StatListOrderer {
                         .ifPresent(legacyOrdering::add);
             }
         }
+
+        // Log if any stats are missing
+        List<String> missingStats = allStats.stream()
+                .map(StatType::getKey)
+                .filter(key -> LEGACY_ORDER.stream().noneMatch(key::equals))
+                .toList();
+
+        if (!missingStats.isEmpty()) {
+            WynntilsMod.warn("Legacy stat ordering is missing the following stats: " + missingStats);
+        }
+
         return legacyOrdering;
     }
 }

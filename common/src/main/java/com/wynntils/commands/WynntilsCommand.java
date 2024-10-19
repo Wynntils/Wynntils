@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.FileUtils;
@@ -30,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
@@ -42,15 +44,17 @@ public class WynntilsCommand extends Command {
     private static final Pattern STATUS_HEADING = Pattern.compile("<h1 class='status-page__title'>(.*)</h1>");
 
     public void registerWithCommands(
-            Consumer<LiteralArgumentBuilder<CommandSourceStack>> consumer, List<Command> commands) {
-        List<LiteralArgumentBuilder<CommandSourceStack>> commandBuilders = getCommandBuilders();
+            Consumer<LiteralArgumentBuilder<CommandSourceStack>> consumer,
+            CommandBuildContext context,
+            List<Command> commands) {
+        List<LiteralArgumentBuilder<CommandSourceStack>> commandBuilders = getCommandBuilders(context);
 
         // Also register all our commands as subcommands under the wynntils command and it's aliases
         for (LiteralArgumentBuilder<CommandSourceStack> builder : commandBuilders) {
             for (Command commandInstance : commands) {
                 if (commandInstance == this) continue;
 
-                commandInstance.getCommandBuilders().forEach(builder::then);
+                commandInstance.getCommandBuilders(context).forEach(builder::then);
             }
 
             consumer.accept(builder);
@@ -64,7 +68,7 @@ public class WynntilsCommand extends Command {
 
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
-            LiteralArgumentBuilder<CommandSourceStack> base) {
+            LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
@@ -79,6 +83,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("menu").executes(this::menu))
                 .then(Commands.literal("reauth").executes(this::reauth))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
+                .then(Commands.literal("downloads").executes(this::downloads))
                 .then(Commands.literal("rescan").executes(this::rescan))
                 .then(Commands.literal("status").executes(this::status))
                 .then(Commands.literal("token").executes(this::token))
@@ -160,7 +165,7 @@ public class WynntilsCommand extends Command {
                         false);
 
         Services.Hades.tryDisconnect();
-        Services.WynntilsAccount.reauth();
+        Services.WynntilsAccount.reloadData();
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
@@ -211,9 +216,15 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.YELLOW),
                         false);
 
-        // Reload all downloaded data
-        WynntilsMod.reloadAllComponentData();
+        // This reloads all URLs, and will then trigger a re-download
+        // in both DownloadManager and dynamically downloaded data (CoreComponent#reloadData)
+        Managers.Url.loadUrls();
 
+        return 1;
+    }
+
+    private int downloads(CommandContext<CommandSourceStack> context) {
+        Managers.TickScheduler.scheduleNextTick(() -> McUtils.mc().setScreen(DownloadScreen.create(null, null)));
         return 1;
     }
 

@@ -10,10 +10,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.extension.EntityExtension;
+import com.wynntils.models.activities.beacons.ActivityBeaconKind;
+import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
@@ -27,7 +31,10 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.beacons.type.BeaconColor;
+import com.wynntils.models.beacons.event.BeaconEvent;
+import com.wynntils.models.beacons.event.BeaconMarkerEvent;
+import com.wynntils.models.beacons.type.Beacon;
+import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -47,8 +54,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /* An "Activity" is the name we've given to the kind of stuff that appears in the Wynncraft
  * "Content Book". In user fronting text, it could be referred to as a "Content Book Activity",
@@ -58,7 +65,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * discoveries.
  */
 public final class ActivityModel extends Model {
-    public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
+    public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
 
     private static final Location WORLD_SPAWN = new Location(-1572, 41, -1668);
     private static final Location HUB_SPAWN = new Location(295, 34, 321);
@@ -67,13 +74,15 @@ public final class ActivityModel extends Model {
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
     private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(.).À?§7 Quest Req: (.+)$");
-    private static final Pattern DISTANCE_PATTERN = Pattern.compile("^   §7Distance: §.([\\w\\s]*)(?:§8 \\((.+)\\))?$");
-    private static final Pattern LENGTH_PATTERN = Pattern.compile("^   §7Length: (\\w*)(?:§8 \\((.+)\\))?$");
-    private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^   §7Difficulty: (\\w*)$");
-    private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
-    private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
-    private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
-    private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\s*À*§7(\\d+) of (\\d+) completed$");
+    private static final Pattern DISTANCE_PATTERN =
+            Pattern.compile("^\uDB00\uDC0E§7Distance: §.([\\w\\s]*)(?:§8 \\((.+)\\))?$");
+    private static final Pattern LENGTH_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Length: (\\w*)(?:§8 \\((.+)\\))?$");
+    private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Difficulty: (\\w*)$");
+    private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^\uDB00\uDC0E§dRewards:$");
+    private static final Pattern REWARD_PATTERN = Pattern.compile("^§d\uDB00\uDC04(?<newline>- )?§7\\+?(?<reward>.+)$");
+    private static final Pattern TRACKING_PATTERN = Pattern.compile("^.*§(?:#.{8}|.)§lCLICK TO (UN)?TRACK$");
+    private static final Pattern OVERALL_PROGRESS_PATTERN =
+            Pattern.compile("^\uDB00\uDC1F*§7(\\d+) of (\\d+) completed$");
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
@@ -90,6 +99,14 @@ public final class ActivityModel extends Model {
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
+
+        for (ActivityBeaconKind beaconKind : ActivityBeaconKind.values()) {
+            Models.Beacon.registerBeacon(beaconKind);
+        }
+
+        for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
+            Models.Beacon.registerBeaconMarker(beaconMarkerKind);
+        }
     }
 
     @SubscribeEvent
@@ -113,6 +130,36 @@ public final class ActivityModel extends Model {
     }
 
     @SubscribeEvent
+    public void onBeaconAdded(BeaconEvent.Added event) {
+        Beacon beacon = event.getBeacon();
+        if (!(beacon.beaconKind() instanceof ActivityBeaconKind)) return;
+
+        // FIXME: Feature-model dependency
+        ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
+        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
+            // Only set this once they are added.
+            // This is cleaner than posting an event on render,
+            // but a change in the config will only have effect on newly placed beacons.
+            ((EntityExtension) event.getEntity()).setRendered(false);
+        }
+    }
+
+    @SubscribeEvent
+    public void onBeaconMarkerAdded(BeaconMarkerEvent.Added event) {
+        BeaconMarker beaconMarker = event.getBeaconMarker();
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
+
+        // FIXME: Feature-model dependency
+        ContentTrackerFeature feature = Managers.Feature.getFeatureInstance(ContentTrackerFeature.class);
+        if (feature.hideOriginalMarker.get() && feature.isEnabled()) {
+            // Only set this once they are added.
+            // This is cleaner than posting an event on render,
+            // but a change in the config will only have effect on newly placed beacons.
+            ((EntityExtension) event.getEntity()).setRendered(false);
+        }
+    }
+
+    @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent event) {
         // The progress cannot be outdated if we are in the content book
         // This speeds up navigation in the content book
@@ -128,17 +175,39 @@ public final class ActivityModel extends Model {
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
         Deque<StyledText> lore = LoreUtils.getLore(itemStack);
 
-        String statusLine = lore.pop().getString();
-        if (statusLine.charAt(0) != '§') return null;
+        StyledText statusLine = lore.pop();
 
-        ActivityStatus status = ActivityStatus.from(statusLine.charAt(1), itemStack.getItem());
-        int specialInfoEnd = statusLine.indexOf(" - ");
-        // If we have a specialInfo, skip the §x marker in the beginning, and keep everything
-        // until the " - " comes. Examples of specialInfo can be "Unlocks Dungeon" or
-        // "Storyline" (on most, but not all (!) storyline quests), or "Wynn Plains" (for
-        // discoveries).
-        String specialInfo = specialInfoEnd != -1 ? statusLine.substring(2, specialInfoEnd) : null;
-        if (!lore.pop().isEmpty()) return null;
+        StyledText[] statusLineParts = statusLine.split(" - ");
+
+        String specialInfo;
+        String statusMessage;
+
+        ActivityStatus status;
+
+        if (type == ActivityType.WORLD_EVENT) {
+            // World events have a slightly different format,
+            // with the first description line being the region,
+            // and the second being the status line.
+            specialInfo = statusLine.getString();
+            statusMessage = lore.pop().getString();
+
+            status = ActivityStatus.fromWorldEvent(statusMessage);
+        } else {
+            // Handle every other activity type
+            if (statusLineParts.length == 1) {
+                specialInfo = null;
+                statusMessage = statusLineParts[0].getString();
+            } else {
+                specialInfo = statusLineParts[0].getString();
+                statusMessage = statusLineParts[1].getString();
+            }
+
+            status = ActivityStatus.from(statusMessage);
+        }
+
+        if (status == null) return null;
+
+        if (!lore.pop().isBlank()) return null;
 
         Pair<Integer, Boolean> levelReq = Pair.of(0, true);
         ActivityDistance distance = null;
@@ -207,7 +276,12 @@ public final class ActivityModel extends Model {
 
             Matcher rewardMatcher = line.getMatcher(REWARD_PATTERN);
             if (rewardMatcher.matches()) {
-                rewards.add(rewardMatcher.group(1));
+                boolean extendLastLine = rewardMatcher.group("newline") == null;
+                if (extendLastLine && !rewards.isEmpty()) {
+                    rewards.set(rewards.size() - 1, rewards.getLast() + " " + rewardMatcher.group("reward"));
+                } else {
+                    rewards.add(rewardMatcher.group("reward"));
+                }
                 continue;
             }
 
@@ -299,8 +373,7 @@ public final class ActivityModel extends Model {
     void updateTracker(String name, String type, StyledText nextTask) {
         ActivityType trackedType = ActivityType.from(type);
         trackedActivity = new TrackedActivity(name, trackedType, nextTask);
-        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
-                getTrackedLocation(), BeaconColor.fromActivityType(trackedType));
+        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(getTrackedLocation(), trackedType.getColor());
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));

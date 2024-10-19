@@ -40,12 +40,12 @@ public final class DiscoveryModel extends Model {
     }
 
     public void openDiscoveryOnMap(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.getType() == DiscoveryType.SECRET) {
-            locateSecretDiscovery(discoveryInfo.getName(), DiscoveryOpenAction.MAP);
+        if (discoveryInfo.type() == DiscoveryType.SECRET) {
+            locateSecretDiscovery(discoveryInfo.name(), DiscoveryOpenAction.MAP);
             return;
         }
 
-        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.name());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
@@ -55,22 +55,23 @@ public final class DiscoveryModel extends Model {
     }
 
     public void setDiscoveryCompass(DiscoveryInfo discoveryInfo) {
-        if (discoveryInfo.getType() == DiscoveryType.SECRET) {
-            locateSecretDiscovery(discoveryInfo.getName(), DiscoveryOpenAction.COMPASS);
+        if (discoveryInfo.type() == DiscoveryType.SECRET) {
+            locateSecretDiscovery(discoveryInfo.name(), DiscoveryOpenAction.COMPASS);
             return;
         }
 
-        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.getName());
+        TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.name());
         if (guildTerritory != null) {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(centerX, 0, centerZ));
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
+                    new Location(centerX, 0, centerZ), guildTerritory.getName());
         }
     }
 
     public void openSecretDiscoveryWiki(DiscoveryInfo discoveryInfo) {
-        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.getName()));
+        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", discoveryInfo.name()));
     }
 
     private void queryDiscoveries(
@@ -183,18 +184,18 @@ public final class DiscoveryModel extends Model {
         }
 
         return switch (sortOrder) {
-            case LEVEL -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
-                    .thenComparing(DiscoveryInfo::getMinLevel)
-                    .thenComparing(DiscoveryInfo::getName));
-            case ALPHABETIC -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
-                    .thenComparing(DiscoveryInfo::getName)
-                    .thenComparing(DiscoveryInfo::getMinLevel));
+            case LEVEL -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::discovered)
+                    .thenComparing(DiscoveryInfo::minLevel)
+                    .thenComparing(DiscoveryInfo::name));
+            case ALPHABETIC -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::discovered)
+                    .thenComparing(DiscoveryInfo::name)
+                    .thenComparing(DiscoveryInfo::minLevel));
             case DISTANCE -> null;
         };
     }
 
     public Stream<DiscoveryInfo> getAllCompletedDiscoveries(ActivitySortOrder sortOrder) {
-        return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::isDiscovered);
+        return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::discovered);
     }
 
     public Stream<DiscoveryInfo> getAllDiscoveriesForType(DiscoveryType type) {
@@ -250,7 +251,7 @@ public final class DiscoveryModel extends Model {
                     // We can't run this is on request thread
                 case MAP -> Managers.TickScheduler.scheduleNextTick(
                         () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
-                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z));
+                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z), name);
             }
         });
     }

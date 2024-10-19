@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards.type;
@@ -17,11 +17,9 @@ import java.util.stream.Collectors;
 public record TomeInfo(
         String name,
         TomeType type,
-        TomeVariant variant,
         GearTier tier,
         GearMetaInfo metaInfo,
         TomeRequirements requirements,
-        List<Pair<StatType, Integer>> staticBaseStats,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()

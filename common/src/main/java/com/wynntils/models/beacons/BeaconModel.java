@@ -1,164 +1,169 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.mc.event.AddEntityEvent;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
+import com.wynntils.models.beacons.event.BeaconMarkerEvent;
 import com.wynntils.models.beacons.type.Beacon;
-import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.utils.mc.PosUtils;
-import com.wynntils.utils.type.TimedSet;
+import com.wynntils.models.beacons.type.BeaconKind;
+import com.wynntils.models.beacons.type.BeaconMarker;
+import com.wynntils.models.beacons.type.BeaconMarkerKind;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.PreciseLocation;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.compress.utils.Lists;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.CustomModelData;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class BeaconModel extends Model {
-    // Amount of armor stands above each other to consider this a beacon
-    // (A beacon always has 34, we wait for all of them)
-    private static final int VERIFICATION_ENTITY_COUNT = 34;
-
-    private final TimedSet<UnverifiedBeacon> unverifiedBeacons = new TimedSet<>(1000, TimeUnit.MILLISECONDS, true);
+    public static final int COLOR_CUSTOM_MODEL_DATA = 79;
+    private static final ResourceLocation MARKER_FONT = ResourceLocation.withDefaultNamespace("marker");
+    private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
+    private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();
     // Maps base entity id to corresponding beacon
-    private final Map<Integer, Beacon> verifiedBeacons = new HashMap<>();
+    private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
+    private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
 
     public BeaconModel() {
         super(List.of());
     }
 
-    @SubscribeEvent
-    public void onEntityAdd(AddEntityEvent event) {
-        if (event.getType() != EntityType.ARMOR_STAND) return;
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntitySetData(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+        if (entity instanceof Display.ItemDisplay) {
+            SynchedEntityData.DataValue<?> dataValue = event.getPackedItems().stream()
+                    .filter(data -> data.id() == Display.ItemDisplay.DATA_ITEM_STACK_ID.id())
+                    .findFirst()
+                    .orElse(null);
+            if (dataValue == null) return;
 
-        Entity entity = event.getEntity();
-        Position position = entity.position();
+            ItemStack itemStack = (ItemStack) dataValue.value();
 
-        if (isDuplicateBeacon(position)) return;
+            // Try to identify the beacon kind, when the display item's data is set
+            BeaconKind beaconKind = beaconKindFromItemStack(itemStack);
 
-        UnverifiedBeacon unverifiedBeacon = getUnverifiedBeaconAt(position);
-        if (unverifiedBeacon == null) {
-            unverifiedBeacons.put(new UnverifiedBeacon(position, entity));
-            return;
-        }
+            if (beaconKind == null) return;
 
-        boolean correctLocation = unverifiedBeacon.addEntity(entity);
+            Beacon beacon = new Beacon(PreciseLocation.fromVec(entity.position()), beaconKind);
+            beacons.put(event.getId(), beacon);
+            WynntilsMod.postEvent(new BeaconEvent.Added(beacon, entity));
+        } else if (entity instanceof Display.TextDisplay textDisplay) {
+            StyledText styledText = StyledText.fromComponent(textDisplay.getText());
+            if (styledText.getPartCount() == 0) return;
+            if (!styledText.getFirstPart().getPartStyle().getFont().equals(MARKER_FONT)) return;
 
-        if (!correctLocation) {
-            unverifiedBeacons.remove(unverifiedBeacon);
-            return;
-        }
+            BeaconMarkerKind beaconMarkerKind = beaconMarkerKindFromIcon(styledText);
 
-        if (unverifiedBeacon.getEntities().size() == VERIFICATION_ENTITY_COUNT) {
-            BeaconColor beaconColor = getBeaconColor(unverifiedBeacon);
+            if (beaconMarkerKind == null) return;
 
-            if (beaconColor == null) {
-                WynntilsMod.warn("Could not determine beacon color at " + position + " for entities "
-                        + unverifiedBeacon.getEntities());
-                unverifiedBeacons.remove(unverifiedBeacon);
-                return;
-            }
-
-            Position unverifiedBeaconPosition = unverifiedBeacon.getPosition();
-            Beacon verifiedBeacon = new Beacon(
-                    new Vec3(unverifiedBeaconPosition.x(), unverifiedBeaconPosition.y(), unverifiedBeaconPosition.z()),
-                    beaconColor);
-            int baseEntityId = unverifiedBeacon.getEntities().get(0).getId();
-            verifiedBeacons.put(baseEntityId, verifiedBeacon);
-            WynntilsMod.postEvent(new BeaconEvent.Added(
-                    verifiedBeacon, Collections.unmodifiableList(unverifiedBeacon.getEntities())));
-
-            unverifiedBeacons.remove(unverifiedBeacon);
+            BeaconMarker beaconMarker = new BeaconMarker(entity.position(), beaconMarkerKind);
+            beaconMarkers.put(event.getId(), beaconMarker);
+            WynntilsMod.postEvent(new BeaconMarkerEvent.Added(beaconMarker, entity));
         }
     }
 
     @SubscribeEvent
     public void onEntityTeleport(TeleportEntityEvent event) {
-        Beacon movedBeacon = verifiedBeacons.get(event.getEntity().getId());
-        if (movedBeacon == null) return;
-
-        Beacon newBeacon = new Beacon(event.getNewPosition(), movedBeacon.color());
-        // Replace the old map entry
-        verifiedBeacons.put(event.getEntity().getId(), newBeacon);
-        WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));
+        Beacon movedBeacon = beacons.get(event.getEntity().getId());
+        BeaconMarker movedBeaconMarker = beaconMarkers.get(event.getEntity().getId());
+        if (movedBeacon != null) {
+            Beacon newBeacon = new Beacon(PreciseLocation.fromVec(event.getNewPosition()), movedBeacon.beaconKind());
+            // Replace the old map entry
+            beacons.put(event.getEntity().getId(), newBeacon);
+            WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));
+        } else if (movedBeaconMarker != null) {
+            BeaconMarker newBeaconMarker =
+                    new BeaconMarker(event.getNewPosition(), movedBeaconMarker.beaconMarkerKind());
+            // Replace the old map entry
+            beaconMarkers.put(event.getEntity().getId(), newBeaconMarker);
+            WynntilsMod.postEvent(new BeaconMarkerEvent.Moved(movedBeaconMarker, newBeaconMarker));
+        }
     }
 
     @SubscribeEvent
     public void onEntityRemoved(RemoveEntitiesEvent event) {
-        event.getEntityIds().stream().filter(verifiedBeacons::containsKey).forEach(entityId -> {
-            Beacon removedBeacon = verifiedBeacons.get(entityId);
-            verifiedBeacons.remove(entityId);
+        event.getEntityIds().stream().filter(beacons::containsKey).forEach(entityId -> {
+            Beacon removedBeacon = beacons.get(entityId);
+            beacons.remove(entityId);
             WynntilsMod.postEvent(new BeaconEvent.Removed(removedBeacon));
+        });
+
+        event.getEntityIds().stream().filter(beaconMarkers::containsKey).forEach(entityId -> {
+            BeaconMarker removedBeaconMarker = beaconMarkers.get(entityId);
+            beaconMarkers.remove(entityId);
+            WynntilsMod.postEvent(new BeaconMarkerEvent.Removed(removedBeaconMarker));
         });
     }
 
-    private boolean isDuplicateBeacon(Position position) {
-        return verifiedBeacons.values().stream()
-                .anyMatch(verifiedBeacon -> PosUtils.equalsIgnoringY(position, verifiedBeacon.position()));
+    public void registerBeacon(BeaconKind beaconKind) {
+        beaconRegistry.add(beaconKind);
     }
 
-    private UnverifiedBeacon getUnverifiedBeaconAt(Position position) {
-        return unverifiedBeacons.stream()
-                .filter(unverifiedBeacon -> PosUtils.equalsIgnoringY(position, unverifiedBeacon.getPosition()))
-                .findFirst()
-                .orElse(null);
+    public void registerBeaconMarker(BeaconMarkerKind beaconMarkerKind) {
+        beaconMarkerRegistry.add(beaconMarkerKind);
     }
 
-    private BeaconColor getBeaconColor(UnverifiedBeacon unverifiedBeacon) {
-        List<Entity> entities = unverifiedBeacon.getEntities();
-        if (entities.isEmpty()) return null;
-
-        Entity entity = entities.get(0);
-        List<ItemStack> armorSlots = Lists.newArrayList(entity.getArmorSlots().iterator());
-        if (armorSlots.size() != 4) return null;
-
-        ItemStack bootsItem = armorSlots.get(3);
-        return BeaconColor.fromItemStack(bootsItem);
-    }
-
-    private static final class UnverifiedBeacon {
-        private static final float POSITION_OFFSET_Y = 7.5f;
-
-        private final Position position;
-        private final List<Entity> entities = new ArrayList<>();
-
-        private UnverifiedBeacon(Position position, Entity entity) {
-            this.position = position;
-            entities.add(entity);
-        }
-
-        public Position getPosition() {
-            return position;
-        }
-
-        public List<Entity> getEntities() {
-            return entities;
-        }
-
-        public boolean addEntity(Entity entity) {
-            Position entityPosition = entity.position();
-            Position lastEntityPosition = entities.get(entities.size() - 1).position();
-
-            if (entityPosition.y() - lastEntityPosition.y() == POSITION_OFFSET_Y) {
-                entities.add(entity);
-                return true;
+    private static BeaconKind beaconKindFromItemStack(ItemStack itemStack) {
+        for (BeaconKind beaconKind : beaconRegistry) {
+            if (beaconKind.matches(itemStack)) {
+                return beaconKind;
             }
-
-            return false;
         }
+
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            if (itemStack.getItem() != Items.POTION) return null;
+
+            // Extract custom color from potion
+            PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
+            if (potionContents == null) return null;
+
+            // Extract custom model data from potion
+            CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+            if (customModelData == null) return null;
+
+            int customModel = customModelData.value();
+
+            // Extract custom color from potion
+            // If there is no custom color, assume it's white
+            int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
+
+            // Log the color if it's likely to be a new beacon kind
+            if (customModel == COLOR_CUSTOM_MODEL_DATA) {
+                WynntilsMod.warn("Unknown beacon kind: " + customModel + " " + customColor);
+            }
+        }
+
+        return null;
+    }
+
+    private static BeaconMarkerKind beaconMarkerKindFromIcon(StyledText iconStyledText) {
+        for (BeaconMarkerKind beaconMarkerKind : beaconMarkerRegistry) {
+            if (beaconMarkerKind.matches(iconStyledText)) {
+                return beaconMarkerKind;
+            }
+        }
+
+        return null;
     }
 }

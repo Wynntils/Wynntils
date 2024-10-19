@@ -14,7 +14,8 @@ public record MarkerInfo(
         AbstractTexture texture,
         CustomColor beaconColor,
         CustomColor textureColor,
-        CustomColor textColor) {
+        CustomColor textColor,
+        String additionalText) {
     public Location location() {
         return locationSupplier.getLocation();
     }

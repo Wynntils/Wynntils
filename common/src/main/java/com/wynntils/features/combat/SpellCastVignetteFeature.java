@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -15,7 +16,8 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.wynntils.utils.type.CappedValue;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class SpellCastVignetteFeature extends Feature {
@@ -31,6 +33,9 @@ public class SpellCastVignetteFeature extends Feature {
     public final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
     @Persisted
+    public final Config<Float> maxItensityPercent = new Config<>(100f);
+
+    @Persisted
     public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int vignetteTimer;
@@ -38,9 +43,19 @@ public class SpellCastVignetteFeature extends Feature {
 
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {
+        if (Models.CharacterStats.getMana() == CappedValue.EMPTY) {
+            WynntilsMod.warn("Mana is empty, cannot calculate relative cost of spell cast");
+            return;
+        }
+
+        // If the spell costs no mana, don't show the vignette
+        if (event.getManaCost() == 0) return;
+
+        // Make sure the current mana is never 0 so the whole screen won't be covered in solid blue
+        int currentMana = Math.max(1, Models.CharacterStats.getMana().current());
+
         // An relativeCost of 1.0 means we just used all mana we have left
-        float relativeCost =
-                (float) event.getManaCost() / Models.CharacterStats.getMana().current();
+        float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxItensityPercent.get() / 100);
         intensity = vignetteIntensity.get() * relativeCost;
         vignetteTimer = SHOW_VIGNETTE_TICKS;
     }

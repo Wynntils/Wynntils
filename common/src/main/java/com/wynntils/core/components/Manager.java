@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
 
+import com.wynntils.core.properties.Property;
 import java.util.List;
 
 /**
@@ -27,5 +28,11 @@ public abstract class Manager extends CoreComponent {
         return "Manager";
     }
 
-    public void reloadData() {}
+    public final <T> Property<T> createProperty(Class<T> clazz, String propertyPath) {
+        return createProperty(clazz, propertyPath, null);
+    }
+
+    public final <T> Property<T> createProperty(Class<T> clazz, String propertyPath, T defaultValue) {
+        return new Property<>(this, clazz, propertyPath, defaultValue);
+    }
 }

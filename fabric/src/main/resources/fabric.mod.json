@@ -1,42 +1,56 @@
 {
+  "schemaVersion": 1,
   "authors": [
     "Team Wynntils"
   ],
   "breaks": {
-    "exordium": "*",
-    "memoryleakfix": "<1.1.2"
+    "exordium": "*"
   },
   "conflicts": {
     "avomod": "*",
-    "chatpatches": "*",
-    "weirdchat": "*"
+    "chatpatches": "*"
   },
   "contact": {
     "homepage": "https://wynntils.com",
-    "sources": "https://github.com/Wynntils/Artemis"
+    "issues": "https://github.com/Wynntils/Wynntils/issues",
+    "sources": "https://github.com/Wynntils/Wynntils"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.crowdin": "https://crowdin.com/project/wynntils-mod",
+        "modmenu.discord": "https://discord.gg/SZuNem8",
+        "modmenu.github_releases": "https://github.com/Wynntils/Wynntils/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/wynntils",
+        "modmenu.patreon": "https://patreon.com/Wynntils"
+      },
+      "update_checker": true
+    }
   },
   "depends": {
-    "fabricloader": ">=0.15.0",
-    "minecraft": "1.20.2"
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "${minecraft_version}"
   },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
     "client": [
       "com.wynntils.fabric.WynntilsModFabric"
+    ],
+    "modmenu": [
+      "com.wynntils.fabric.config.ModMenuIntegration"
     ]
   },
   "environment": "*",
   "icon": "assets/wynntils/logo.png",
-  "id": "wynntils",
+  "id": "${mod_id}",
   "license": "LGPL-3.0-only",
   "mixins": [
     "wynntils.mixins.json",
     "wynntils.mixins.fabric.json"
   ],
   "name": "Wynntils",
-  "schemaVersion": 1,
   "suggests": {
     "flamingo": "*"
   },
-  "version": "${version}"
+  "version": "${mod_version}"
 }

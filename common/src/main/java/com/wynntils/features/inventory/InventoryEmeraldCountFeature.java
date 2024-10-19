@@ -5,6 +5,7 @@
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -14,7 +15,9 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.StringUtils;
@@ -31,7 +34,7 @@ import java.util.Arrays;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
@@ -78,10 +81,23 @@ public class InventoryEmeraldCountFeature extends Feature {
             }
         }
 
-        int textureX = containerScreen.leftPos;
+        int topTextureX = containerScreen.leftPos;
+        int bottomTextureX = containerScreen.leftPos;
         int textX = (textDisplaySide.get() == TextDisplaySide.LEFT)
                 ? containerScreen.leftPos + 2
                 : screen.width - containerScreen.leftPos - 2;
+
+        // region Container-specific Exceptions
+        if (Models.Container.getCurrentContainer() instanceof PersonalStorageContainer
+                && Managers.Feature.getFeatureInstance(PersonalStorageUtilitiesFeature.class)
+                        .isEnabled()) {
+            topTextureX -= Texture.BANK_PANEL.width() + 10;
+        }
+
+        if (event.getScreen().renderables.stream().anyMatch(w -> w instanceof BulkBuyWidget)) {
+            topTextureX -= Texture.BULK_BUY_PANEL.width() + 1;
+        }
+        // endregion
 
         int bottomEmeralds = Models.Emerald.getAmountInInventory();
         boolean displayBottom = !isInventory
@@ -89,7 +105,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                 && showInventoryEmeraldCount.get()
                 && bottomEmeralds != 0;
         if (topEmeralds != 0) {
-            int y = containerScreen.topPos;
+            int y = isInventory ? containerScreen.topPos - 9 : containerScreen.topPos;
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y, topEmeralds);
                 case TEXTURE -> {
@@ -101,7 +117,7 @@ public class InventoryEmeraldCountFeature extends Feature {
                         int bottomStartY = containerScreen.topPos + containerScreen.imageHeight - TEXTURE_SIZE * 3 - 2;
                         y = Math.min(bottomStartY - textureVerticalSize, y);
                     }
-                    renderTexturedCount(event.getGuiGraphics(), textureX, y, topEmeralds);
+                    renderTexturedCount(event.getGuiGraphics(), topTextureX, y, topEmeralds);
                 }
             }
         }
@@ -111,7 +127,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             switch (emeraldCountType.get()) {
                 case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
                 case TEXTURE -> renderTexturedCount(
-                        event.getGuiGraphics(), textureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
+                        event.getGuiGraphics(), bottomTextureX, y - TEXTURE_SIZE * 3 - 2, bottomEmeralds);
             }
         }
     }

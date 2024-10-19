@@ -1,32 +1,47 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
-public final class UnknownGearAnnotator implements ItemAnnotator {
-    private static final Pattern UNKNOWN_GEAR_PATTERN = Pattern.compile("^§[5abcdef](.*)$");
-
+public final class UnknownGearAnnotator implements GameItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(Models.Gear.GEAR_PATTERN);
+        if (!matcher.matches()) return null;
+
         GearType gearType = GearType.fromItemStack(itemStack);
         if (gearType == null) return null;
 
-        Matcher matcher = name.getMatcher(UNKNOWN_GEAR_PATTERN);
-        if (!matcher.matches()) return null;
+        String gearName = matcher.group("name");
 
-        String gearName = matcher.group(1);
-        GearTier gearTier = GearTier.fromStyledText(name);
+        String unidentifiedRarity = matcher.group("unidrarity");
+        String identifiedRarity = matcher.group("idrarity");
+
+        GearTier unidentifiedTier = unidentifiedRarity != null && unidentifiedRarity.length() == 2
+                ? GearTier.fromChatFormatting(ChatFormatting.getByCode(unidentifiedRarity.charAt(1)))
+                : null;
+        GearTier identifiedTier = identifiedRarity != null && identifiedRarity.length() == 2
+                ? GearTier.fromChatFormatting(ChatFormatting.getByCode(identifiedRarity.charAt(1)))
+                : null;
+
+        GearTier gearTier = unidentifiedTier != null ? unidentifiedTier : identifiedTier;
+
+        if (gearTier == null) {
+            WynntilsMod.warn("UnknownGearAnnotator: No rarity information found in item name: " + name);
+            return null;
+        }
 
         return Models.Gear.parseUnknownGearItem(gearName, gearType, gearTier, itemStack);
     }

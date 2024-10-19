@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat.event;
@@ -7,48 +7,31 @@ package com.wynntils.handlers.chat.event;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
-@Cancelable
-public class ChatMessageReceivedEvent extends Event {
+public class ChatMessageReceivedEvent extends Event implements ICancellableEvent {
     // These are used to keep the original message so different features don't have to fight over it.
-    private final Component originalMessage;
     private final StyledText originalStyledText;
 
-    private Component message;
     private StyledText styledText;
 
     private final MessageType messageType;
     private final RecipientType recipientType;
 
-    public ChatMessageReceivedEvent(
-            Component message, StyledText styledText, MessageType messageType, RecipientType recipientType) {
-        this.originalMessage = message;
+    public ChatMessageReceivedEvent(StyledText styledText, MessageType messageType, RecipientType recipientType) {
         this.originalStyledText = styledText;
-
-        this.message = message;
-        this.styledText = styledText; // message, but as a styled string
+        this.styledText = styledText;
         this.messageType = messageType;
         this.recipientType = recipientType;
     }
 
-    public void setMessage(Component message) {
-        this.message = message;
-        this.styledText = StyledText.fromComponent(message);
-    }
-
-    public Component getOriginalMessage() {
-        return originalMessage;
+    public void setMessage(StyledText styledText) {
+        this.styledText = styledText;
     }
 
     public StyledText getOriginalStyledText() {
         return originalStyledText;
-    }
-
-    public Component getMessage() {
-        return message;
     }
 
     public StyledText getStyledText() {

@@ -36,14 +36,14 @@ import java.util.stream.Stream;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
     private static final Gson PLAYER_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(WynnPlayerInfo.class, new WynnPlayerInfo.WynnPlayerInfoDeserializer())
             .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
-    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_(\\d+)$");
+    private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_WC(\\d+)$");
 
     // If there is a failure with the API, give it time to recover
     private static final int ERROR_TIMEOUT_MINUTE = 5;

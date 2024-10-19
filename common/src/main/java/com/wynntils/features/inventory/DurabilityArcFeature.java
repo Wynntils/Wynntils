@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -20,7 +21,7 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class DurabilityArcFeature extends Feature {
@@ -39,7 +40,9 @@ public class DurabilityArcFeature extends Feature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!renderDurabilityArcInventories.get()) return;
+        RenderSystem.enableDepthTest();
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        RenderSystem.disableDepthTest();
     }
 
     private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {

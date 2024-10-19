@@ -26,8 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
@@ -41,7 +41,7 @@ public class InputTranscriptionFeature extends Feature {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (!transcriptionButtons.get()) return;
 
         if (event.getScreen() instanceof ChatScreen chatScreen) {

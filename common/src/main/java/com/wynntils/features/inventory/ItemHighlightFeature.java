@@ -27,11 +27,14 @@ import com.wynntils.utils.render.Texture;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
+    @Persisted
+    public final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.CIRCLE_TRANSPARENT);
+
     @Persisted
     public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
 
@@ -160,6 +163,10 @@ public class ItemHighlightFeature extends Feature {
                 200,
                 18,
                 18,
+                highlightTexture.get().ordinal() * 18,
+                0,
+                18,
+                18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
         RenderSystem.disableDepthTest();
@@ -245,30 +252,33 @@ public class ItemHighlightFeature extends Feature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightEnabled.get();
-                case UNIQUE -> uniqueHighlightEnabled.get();
-                case RARE -> rareHighlightEnabled.get();
-                case SET -> setHighlightEnabled.get();
-                case LEGENDARY -> legendaryHighlightEnabled.get();
-                case FABLED -> fabledHighlightEnabled.get();
-                case MYTHIC -> mythicHighlightEnabled.get();
-                case CRAFTED -> craftedHighlightEnabled.get();
-            };
+            return item.getGearTier() != null
+                    && switch (item.getGearTier()) {
+                        case NORMAL -> normalHighlightEnabled.get();
+                        case UNIQUE -> uniqueHighlightEnabled.get();
+                        case RARE -> rareHighlightEnabled.get();
+                        case SET -> setHighlightEnabled.get();
+                        case LEGENDARY -> legendaryHighlightEnabled.get();
+                        case FABLED -> fabledHighlightEnabled.get();
+                        case MYTHIC -> mythicHighlightEnabled.get();
+                        case CRAFTED -> craftedHighlightEnabled.get();
+                    };
         }
 
         @Override
         public CustomColor getHighlightColor() {
-            return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightColor.get();
-                case UNIQUE -> uniqueHighlightColor.get();
-                case RARE -> rareHighlightColor.get();
-                case SET -> setHighlightColor.get();
-                case LEGENDARY -> legendaryHighlightColor.get();
-                case FABLED -> fabledHighlightColor.get();
-                case MYTHIC -> mythicHighlightColor.get();
-                case CRAFTED -> craftedHighlightColor.get();
-            };
+            return item.getGearTier() == null
+                    ? CustomColor.NONE
+                    : switch (item.getGearTier()) {
+                        case NORMAL -> normalHighlightColor.get();
+                        case UNIQUE -> uniqueHighlightColor.get();
+                        case RARE -> rareHighlightColor.get();
+                        case SET -> setHighlightColor.get();
+                        case LEGENDARY -> legendaryHighlightColor.get();
+                        case FABLED -> fabledHighlightColor.get();
+                        case MYTHIC -> mythicHighlightColor.get();
+                        case CRAFTED -> craftedHighlightColor.get();
+                    };
         }
     }
 
@@ -360,5 +370,14 @@ public class ItemHighlightFeature extends Feature {
         public CustomColor getHighlightColor() {
             return CustomColor.fromChatFormatting(ChatFormatting.GREEN);
         }
+    }
+
+    public enum HighlightTexture {
+        CIRCLE_TRANSPARENT,
+        CIRCLE_OPAQUE,
+        BOX_TRANSPARENT,
+        BOX_OPAQUE,
+        BOX_GRADIENT_1,
+        BOX_GRADIENT_2
     }
 }

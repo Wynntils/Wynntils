@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -15,12 +15,13 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
@@ -60,15 +61,9 @@ public class TooltipFittingFeature extends Feature {
         if (fitToScreen.get()) {
             List<Component> tooltips = e.getTooltips();
 
-            List<ClientTooltipComponent> clientTooltipComponents = tooltips.stream()
-                    .map(Component::getVisualOrderText)
-                    .map(ClientTooltipComponent::create)
-                    .toList();
+            List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(tooltips);
 
-            int tooltipHeight = clientTooltipComponents.size() == 1 ? -2 : 0;
-            tooltipHeight += clientTooltipComponents.stream()
-                    .mapToInt(ClientTooltipComponent::getHeight)
-                    .sum();
+            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents);
 
             tooltipHeight *= universalScale.get();
 

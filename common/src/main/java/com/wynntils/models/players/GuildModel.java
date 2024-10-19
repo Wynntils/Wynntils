@@ -7,20 +7,23 @@ package com.wynntils.models.players;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.players.event.GuildEvent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
@@ -44,10 +47,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class GuildModel extends Model {
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
@@ -141,8 +145,11 @@ public class GuildModel extends Model {
 
         Handlers.Label.registerParser(new GuildSeasonLeaderboardHeaderLabelParser());
         Handlers.Label.registerParser(new GuildSeasonLeaderboardLabelParser());
+    }
 
-        loadGuildList();
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_ATHENA_GUILD_LIST).handleJsonArray(this::handleGuildList);
     }
 
     // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
@@ -152,6 +159,7 @@ public class GuildModel extends Model {
         StyledText message = e.getOriginalStyledText();
 
         if (message.matches(MSG_LEFT_GUILD)) {
+            WynntilsMod.postEvent(new GuildEvent.Left(guildName));
             guildName = "";
             guildRank = null;
             guildLevel = -1;
@@ -167,6 +175,7 @@ public class GuildModel extends Model {
             guildName = joinedGuildMatcher.group(1);
             guildRank = GuildRank.RECRUIT;
             WynntilsMod.info("User joined guild " + guildName + " as a " + guildRank);
+            WynntilsMod.postEvent(new GuildEvent.Joined(guildName));
             return;
         }
 
@@ -201,7 +210,7 @@ public class GuildModel extends Model {
         }
 
         if (message.matches(MSG_NEW_OBJECTIVES)) {
-            objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.get(0));
+            objectivesCompletedProgress = new CappedValue(0, OBJECTIVE_GOALS.getFirst());
             return;
         }
 
@@ -251,6 +260,16 @@ public class GuildModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
+
+        StyledText title = StyledText.fromComponent(containerScreen.getTitle());
+        if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME))) return;
+
+        parseDiplomacyContent(event.getItems());
+    }
+
     public void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
         List<StyledText> lore = LoreUtils.getLore(guildInfoItem);
 
@@ -279,11 +298,12 @@ public class GuildModel extends Model {
                                 .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
                                 .processIncomingContainer(this::parseGuildContainer))
                 .conditionalThen(
-                        // Upon execution allied guilds have already been parsed
-                        container -> !guildDiplomacyMap.isEmpty(),
+                        container -> !guildName.isEmpty(),
+                        // We always check diplomacy in case its changed while we weren't looking (ex. in /class or
+                        // switching accounts)
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
                                 .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
-                                .processIncomingContainer(this::parseDiplomacyContainer));
+                                .processIncomingContainer(content -> this.parseDiplomacyContent(content.items())));
     }
 
     private void parseGuildContainer(ContainerContent container) {
@@ -336,9 +356,11 @@ public class GuildModel extends Model {
         WynntilsMod.info("Successfully parsed guild info for guild " + guildName);
     }
 
-    private void parseDiplomacyContainer(ContainerContent content) {
+    private void parseDiplomacyContent(List<ItemStack> items) {
+        guildDiplomacyMap.clear();
+
         for (int slot : DIPLOMACY_SLOTS) {
-            ItemStack diplomacyItem = content.items().get(slot);
+            ItemStack diplomacyItem = items.get(slot);
             if (diplomacyItem.getItem() == Items.AIR) {
                 continue;
             }
@@ -352,12 +374,7 @@ public class GuildModel extends Model {
             }
 
             String alliedGuildName = alliedGuildNameMatcher.group("name");
-            if (!guildDiplomacyMap.containsKey(alliedGuildName)) {
-                WynntilsMod.warn("Trying to parse tributes for unallied guild " + alliedGuildName);
-                continue;
-            }
-
-            DiplomacyInfo diplomacyInfo = guildDiplomacyMap.get(alliedGuildName);
+            DiplomacyInfo diplomacyInfo = guildDiplomacyMap.computeIfAbsent(alliedGuildName, DiplomacyInfo::new);
 
             for (StyledText line : LoreUtils.getLore(diplomacyItem)) {
                 Matcher tributeMatcher = line.getMatcher(TRIBUTE_PATTERN);
@@ -382,6 +399,10 @@ public class GuildModel extends Model {
 
     public GuildRank getGuildRank() {
         return guildRank;
+    }
+
+    public boolean isInGuild() {
+        return !guildName.isEmpty();
     }
 
     public int getGuildLevel() {
@@ -485,17 +506,14 @@ public class GuildModel extends Model {
         return getGuildProfile(guildName).map(GuildProfile::color).orElse(CustomColor.colorForStringHash(guildName));
     }
 
-    private void loadGuildList() {
-        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_GUILD_LIST);
-        dl.handleJsonArray(json -> {
-            Type type = new TypeToken<List<GuildProfile>>() {}.getType();
-            List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
+    private void handleGuildList(JsonArray json) {
+        Type type = new TypeToken<List<GuildProfile>>() {}.getType();
+        List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
 
-            Map<String, GuildProfile> profileMap = guildProfiles.stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
+        Map<String, GuildProfile> profileMap = guildProfiles.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
 
-            guildProfileMap = profileMap;
-        });
+        guildProfileMap = profileMap;
     }
 }

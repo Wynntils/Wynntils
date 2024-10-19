@@ -14,22 +14,20 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class RevealNicknamesFeature extends Feature {
-    private static final Pattern NICKNAME_PATTERN =
-            Pattern.compile("§f(?<nick>.+)§7's real username is §f(?<username>.+)");
     private static final String NICKNAME_HOVER_TEXT = "§f%s§7's nickname is §f%s";
 
     @Persisted
@@ -53,7 +51,7 @@ public class RevealNicknamesFeature extends Feature {
             String nickname = null;
             String username = null;
             for (StyledText partText : partTexts) {
-                Matcher nicknameMatcher = partText.getMatcher(NICKNAME_PATTERN);
+                Matcher nicknameMatcher = partText.getMatcher(StyledTextUtils.NICKNAME_PATTERN);
 
                 if (nicknameMatcher.matches()) {
                     nickname = nicknameMatcher.group("nick");
@@ -119,7 +117,7 @@ public class RevealNicknamesFeature extends Feature {
             return IterationDecision.CONTINUE;
         });
 
-        event.setMessage(styledText.getComponent());
+        event.setMessage(styledText);
     }
 
     public enum NicknameReplaceOption {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement;
@@ -14,6 +14,7 @@ import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
 import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -37,17 +38,17 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
-    private static final int PARTY_LIST_DIV_HEIGHT = 8;
+    private static final int START_HEIGHT = 8;
+    private static final int PARTY_LIST_DIV_HEIGHT = 14;
     private static final int SUGGESTION_LIST_DIV_HEIGHT = 22;
     private static final int MGMT_ROW_DIV_HEIGHT = 14;
     private int mgmtButtonWidth;
-
     private TextInputBoxWidget inviteInput;
     private Button inviteButton;
     private Button kickOfflineButton;
     private CreateLeaveButton createLeaveButton;
-    private List<AbstractWidget> suggestedPlayersWidgets = new ArrayList<>();
-    private List<AbstractWidget> partyMembersWidgets = new ArrayList<>();
+    private List<SuggestionPlayerWidget> suggestedPlayersWidgets = new ArrayList<>();
+    private List<PartyMemberWidget> partyMembersWidgets = new ArrayList<>();
 
     private PartyManagementScreen() {
         super(Component.literal("Party Management Screen"));
@@ -66,9 +67,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         // region Invite input and button
         inviteInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 36),
-                (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1,
+                (int) (dividedHeight * START_HEIGHT) + 1,
                 (int) ((dividedWidth * 57) - (dividedWidth * 36)) - 1,
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 null,
                 this,
                 inviteInput);
@@ -77,8 +78,8 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> inviteFromField())
-                .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * PARTY_LIST_DIV_HEIGHT) + 1)
-                .size((int) (dividedWidth * 3) - 1, BUTTON_HEIGHT)
+                .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * START_HEIGHT) + 1)
+                .size((int) (dividedWidth * 3) - 1, BUTTON_SIZE)
                 .build();
         this.addRenderableWidget(inviteButton);
         // endregion
@@ -89,7 +90,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                                 .withStyle(ChatFormatting.GREEN),
                         (button) -> refreshAll())
                 .pos((int) (dividedWidth * 36) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
-                .size(mgmtButtonWidth, BUTTON_HEIGHT)
+                .size(mgmtButtonWidth, BUTTON_SIZE)
                 .build());
 
         kickOfflineButton = new Button.Builder(
@@ -97,7 +98,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                                 .withStyle(ChatFormatting.RED),
                         (button) -> Models.Party.partyKickOffline())
                 .pos((int) (dividedWidth * 44) + 1, (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT))
-                .size(mgmtButtonWidth, BUTTON_HEIGHT)
+                .size(mgmtButtonWidth, BUTTON_SIZE)
                 .build();
         this.addRenderableWidget(kickOfflineButton);
         // endregion
@@ -141,84 +142,120 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
 
         // region Invite field header
+        String inviteFieldHeader = I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
+                + ChatFormatting.GRAY
+                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2");
+
         FontRenderer.getInstance()
-                .renderText(
+                .renderAlignedTextInBox(
                         poseStack,
-                        // Yes this is kind of abusive of the formatting system, and I should probably do
-                        // another .renderText call, but this makes aligning these two texts significantly easier
-                        // (especially with changing gui scales and resolutions)
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
-                                + ChatFormatting.GRAY
-                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2")),
+                        StyledText.fromString(inviteFieldHeader),
                         dividedWidth * 36,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
+                        dividedWidth * 60,
+                        dividedHeight * START_HEIGHT
+                                - FontRenderer.getInstance()
+                                        .calculateRenderHeight(
+                                                StyledText.fromString(inviteFieldHeader), dividedWidth * 24),
+                        dividedHeight * START_HEIGHT, // should be lined up with the party member count header
+                        dividedWidth * 24,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         // endregion
 
         // region Party list
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.WHITE,
-                dividedWidth * 4,
-                dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                0,
-                dividedWidth * 30 - dividedWidth * 4,
-                1);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.head")),
-                        dividedWidth * 5,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.name")),
-                        dividedWidth * 7,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.promote")),
-                        dividedWidth * 22,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.kick")),
-                        dividedWidth * 26,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.priority")),
-                        dividedWidth * 28,
-                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
+        if (inParty) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get(
+                                    "screens.wynntils.partyManagementGui.members",
+                                    Models.Party.getPartyMembers().size(),
+                                    Models.Party.MAX_PARTY_MEMBER_COUNT)),
+                            dividedWidth * 4,
+                            dividedHeight * START_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            2);
+            RenderUtils.drawRect(
+                    poseStack,
+                    CommonColors.WHITE,
+                    dividedWidth * 4,
+                    dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                    0,
+                    dividedWidth * 30 - dividedWidth * 2,
+                    1);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.head")),
+                            dividedWidth * 5,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.name")),
+                            dividedWidth * 7,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.promote")),
+                            dividedWidth * 22,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.kick")),
+                            dividedWidth * 26,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.priority")),
+                            dividedWidth * 30,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
 
-        partyMembersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+            partyMembersWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        } else {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.notInParty")),
+                            dividedWidth * 4,
+                            dividedWidth * 30,
+                            dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                            height - (dividedHeight * PARTY_LIST_DIV_HEIGHT),
+                            dividedWidth * 30 - dividedWidth * 4,
+                            CustomColor.NONE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            2);
+        }
         // endregion
 
         // region Suggestions
@@ -291,7 +328,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 52) + 1,
                 (int) (dividedHeight * MGMT_ROW_DIV_HEIGHT),
                 mgmtButtonWidth,
-                BUTTON_HEIGHT);
+                BUTTON_SIZE);
     }
 
     /**
@@ -308,9 +345,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
 
             partyMembersWidgets.add(new PartyMemberWidget(
                     dividedWidth * 4,
-                    dividedHeight * (9 + i * 3),
+                    dividedHeight * (PARTY_LIST_DIV_HEIGHT + 2) + i * BUTTON_SIZE,
                     (int) (dividedWidth * 28) - (int) (dividedWidth * 2),
-                    BUTTON_HEIGHT,
+                    BUTTON_SIZE,
                     playerName,
                     Models.Party.getOfflineMembers().contains(playerName),
                     28 - 2));
@@ -331,14 +368,16 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         suggestedPlayersWidgets = new ArrayList<>();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
             String playerName = suggestedPlayers.get(i);
+            boolean isOffline = !Models.Friends.getOnlineFriends().containsKey(playerName);
             if (playerName == null) continue;
 
             suggestedPlayersWidgets.add(new SuggestionPlayerWidget(
                     dividedWidth * 36,
                     dividedHeight * (23 + i * 3),
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
-                    BUTTON_HEIGHT,
+                    BUTTON_SIZE,
                     playerName,
+                    isOffline,
                     60 - 36));
         }
     }

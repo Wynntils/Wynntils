@@ -131,30 +131,34 @@ public final class RangedStatFilters {
         public Optional<T> create(String inputString) {
             Matcher matcher = SINGLE_VALUE_PATTERN.matcher(inputString);
 
-            if (matcher.matches()) {
-                int value = Integer.parseInt(inputString);
-                return Optional.of(getRangedStatFilter(value, value, true));
-            }
+            try {
+                if (matcher.matches()) {
+                    int value = Integer.parseInt(inputString);
+                    return Optional.of(getRangedStatFilter(value, value, true));
+                }
 
-            matcher = RANGE_PATTERN.matcher(inputString);
-            if (matcher.matches()) {
-                int min = Integer.parseInt(matcher.group(1));
-                int max = Integer.parseInt(matcher.group(2));
-                return Optional.of(getRangedStatFilter(min, max, true));
-            }
+                matcher = RANGE_PATTERN.matcher(inputString);
+                if (matcher.matches()) {
+                    int min = Integer.parseInt(matcher.group(1));
+                    int max = Integer.parseInt(matcher.group(2));
+                    return Optional.of(getRangedStatFilter(min, max, true));
+                }
 
-            matcher = GREATER_THAN_PATTERN.matcher(inputString);
-            if (matcher.matches()) {
-                boolean equal = inputString.charAt(1) == '=';
-                int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
-                return Optional.of(getRangedStatFilter(equal ? value : value + 1, Integer.MAX_VALUE, equal));
-            }
+                matcher = GREATER_THAN_PATTERN.matcher(inputString);
+                if (matcher.matches()) {
+                    boolean equal = inputString.charAt(1) == '=';
+                    int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
+                    return Optional.of(getRangedStatFilter(equal ? value : value + 1, Integer.MAX_VALUE, equal));
+                }
 
-            matcher = LESS_THAN_PATTERN.matcher(inputString);
-            if (matcher.matches()) {
-                boolean equal = inputString.charAt(1) == '=';
-                int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
-                return Optional.of(getRangedStatFilter(Integer.MIN_VALUE, equal ? value : value - 1, equal));
+                matcher = LESS_THAN_PATTERN.matcher(inputString);
+                if (matcher.matches()) {
+                    boolean equal = inputString.charAt(1) == '=';
+                    int value = Integer.parseInt(inputString.substring(equal ? 2 : 1));
+                    return Optional.of(getRangedStatFilter(Integer.MIN_VALUE, equal ? value : value - 1, equal));
+                }
+            } catch (NumberFormatException e) {
+                return Optional.empty();
             }
 
             return Optional.empty();

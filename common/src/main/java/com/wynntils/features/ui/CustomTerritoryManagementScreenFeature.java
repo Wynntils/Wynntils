@@ -29,7 +29,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
@@ -95,7 +95,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (StyledText.fromComponent(event.getScreen().getTitle()).matches(MANAGE_TITLE_PATTERN)) {
             // We might have opened a different screen,
             // but ScreenClosedEvent did not fire (as the screen was overridden).
