@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.territories.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /**
  * This event is fired when new territory data is received from the API or the advancements.
