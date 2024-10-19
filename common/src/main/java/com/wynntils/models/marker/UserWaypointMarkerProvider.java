@@ -17,6 +17,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.AbstractTexture;
 import com.wynntils.utils.type.Pair;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -26,7 +27,11 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
     private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new CopyOnWriteArraySet<>();
 
     public void addLocation(
-            Location location, Texture texture, CustomColor beaconColor, CustomColor textColor, String additonalText) {
+            Location location,
+            AbstractTexture texture,
+            CustomColor beaconColor,
+            CustomColor textColor,
+            String additonalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
@@ -42,7 +47,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                         : null));
     }
 
-    public void addLocation(Location location, Texture texture, CustomColor beaconColor, String additonalText) {
+    public void addLocation(Location location, AbstractTexture texture, CustomColor beaconColor, String additonalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
@@ -58,7 +63,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                         : null));
     }
 
-    public void addLocation(Location location, Texture texture, String additionalText) {
+    public void addLocation(Location location, AbstractTexture texture, String additionalText) {
         addLocation(new MarkerInfo(
                 "Waypoint",
                 new StaticLocationSupplier(location),
