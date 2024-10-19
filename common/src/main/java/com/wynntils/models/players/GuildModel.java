@@ -7,12 +7,13 @@ package com.wynntils.models.players;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -22,6 +23,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.players.event.GuildEvent;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardHeaderLabelParser;
 import com.wynntils.models.players.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.players.profile.GuildProfile;
@@ -143,8 +145,11 @@ public class GuildModel extends Model {
 
         Handlers.Label.registerParser(new GuildSeasonLeaderboardHeaderLabelParser());
         Handlers.Label.registerParser(new GuildSeasonLeaderboardLabelParser());
+    }
 
-        loadGuildList();
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_ATHENA_GUILD_LIST).handleJsonArray(this::handleGuildList);
     }
 
     // This needs to run before any chat modifications (eg. chat mentions, filter, etc)
@@ -154,6 +159,7 @@ public class GuildModel extends Model {
         StyledText message = e.getOriginalStyledText();
 
         if (message.matches(MSG_LEFT_GUILD)) {
+            WynntilsMod.postEvent(new GuildEvent.Left(guildName));
             guildName = "";
             guildRank = null;
             guildLevel = -1;
@@ -169,6 +175,7 @@ public class GuildModel extends Model {
             guildName = joinedGuildMatcher.group(1);
             guildRank = GuildRank.RECRUIT;
             WynntilsMod.info("User joined guild " + guildName + " as a " + guildRank);
+            WynntilsMod.postEvent(new GuildEvent.Joined(guildName));
             return;
         }
 
@@ -394,6 +401,10 @@ public class GuildModel extends Model {
         return guildRank;
     }
 
+    public boolean isInGuild() {
+        return !guildName.isEmpty();
+    }
+
     public int getGuildLevel() {
         return guildLevel;
     }
@@ -495,17 +506,14 @@ public class GuildModel extends Model {
         return getGuildProfile(guildName).map(GuildProfile::color).orElse(CustomColor.colorForStringHash(guildName));
     }
 
-    private void loadGuildList() {
-        Download dl = Managers.Net.download(UrlId.DATA_ATHENA_GUILD_LIST);
-        dl.handleJsonArray(json -> {
-            Type type = new TypeToken<List<GuildProfile>>() {}.getType();
-            List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
+    private void handleGuildList(JsonArray json) {
+        Type type = new TypeToken<List<GuildProfile>>() {}.getType();
+        List<GuildProfile> guildProfiles = GUILD_PROFILE_GSON.fromJson(json, type);
 
-            Map<String, GuildProfile> profileMap = guildProfiles.stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
+        Map<String, GuildProfile> profileMap = guildProfiles.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(GuildProfile::name, guildProfile -> guildProfile));
 
-            guildProfileMap = profileMap;
-        });
+        guildProfileMap = profileMap;
     }
 }
