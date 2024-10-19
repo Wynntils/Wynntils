@@ -85,7 +85,7 @@ public class PoiService extends Service {
     }
 
     @Override
-    public void onStorageLoad() {
+    public void onStorageLoad(Storage<?> storage) {
         loadCustomPoiProviders();
     }
 

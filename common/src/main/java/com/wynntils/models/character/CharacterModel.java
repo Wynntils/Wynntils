@@ -19,8 +19,10 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.bossbar.DeathScreenBar;
 import com.wynntils.models.character.event.CharacterDeathEvent;
+import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
@@ -37,6 +39,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -64,6 +67,10 @@ public final class CharacterModel extends Model {
     public static final int GUILD_MENU_SLOT = 26;
 
     private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
+
+    public static final int MOVE_CHECK_FREQUENCY = 10;
+    private int moveCheckTicks;
+    private Position currentPosition;
 
     private boolean inCharacterSelection;
     private boolean hasCharacter;
@@ -192,6 +199,18 @@ public final class CharacterModel extends Model {
             hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
+        }
+    }
+
+    @SubscribeEvent
+    public void checkPlayerMove(TickEvent e) {
+        if (McUtils.player() == null) return;
+        if (moveCheckTicks++ % MOVE_CHECK_FREQUENCY != 0) return;
+
+        Position newPosition = McUtils.player().position();
+        if (newPosition != currentPosition) {
+            currentPosition = newPosition;
+            WynntilsMod.postEvent(new CharacterMovedEvent(currentPosition));
         }
     }
 

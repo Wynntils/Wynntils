@@ -16,7 +16,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.event.MythicFoundEvent;
-import com.wynntils.models.containers.type.LootChestType;
+import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
@@ -133,8 +133,8 @@ public final class LootChestModel extends Model {
         }
     }
 
-    public LootChestType getChestType(Screen screen) {
-        return LootChestType.fromTitle(screen);
+    public LootChestTier getChestType(Screen screen) {
+        return LootChestTier.fromTitle(screen);
     }
 
     private void processItemFind(ItemStack itemStack) {

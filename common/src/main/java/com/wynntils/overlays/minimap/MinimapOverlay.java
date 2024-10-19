@@ -17,7 +17,9 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.MathUtils;
@@ -263,8 +265,7 @@ public class MinimapOverlay extends Overlay {
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
         poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
         poisToRender = Stream.concat(
-                poisToRender,
-                Services.Hades.getMiniPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
+                poisToRender, getMiniPlayerPois(renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get()));
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
@@ -421,6 +422,14 @@ public class MinimapOverlay extends Overlay {
 
             poseStack.popPose();
         }
+    }
+
+    private Stream<PlayerMiniMapPoi> getMiniPlayerPois(
+            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
+        return Services.Hades.getHadesUsers()
+                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
+                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers))
+                .map(PlayerMiniMapPoi::new);
     }
 
     private void renderCardinalDirections(

@@ -20,7 +20,7 @@ import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.services.hades.HadesUser;
-import com.wynntils.services.hades.event.HadesUserAddedEvent;
+import com.wynntils.services.hades.event.HadesUserEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.Texture;
@@ -79,7 +79,12 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
     }
 
     @SubscribeEvent
-    public void onHadesUserAdded(HadesUserAddedEvent event) {
+    public void onHadesUserAdded(HadesUserEvent.Added event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onHadesUserRemoved(HadesUserEvent.Removed event) {
         updateChildren();
     }
 

@@ -17,7 +17,7 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
-import com.wynntils.models.containers.type.LootChestType;
+import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -95,7 +95,7 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
     @Persisted
-    public final Config<LootChestType> minTierForAutoWaypoint = new Config<>(LootChestType.TIER_3);
+    public final Config<LootChestTier> minTierForAutoWaypoint = new Config<>(LootChestTier.TIER_3);
 
     @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
@@ -163,7 +163,7 @@ public class MainMapFeature extends Feature {
             return;
         }
 
-        LootChestType chestType = Models.LootChest.getChestType(event.getScreen());
+        LootChestTier chestType = Models.LootChest.getChestType(event.getScreen());
         if (chestType == null) return;
 
         if (chestType.ordinal() < minTierForAutoWaypoint.get().ordinal()) {
