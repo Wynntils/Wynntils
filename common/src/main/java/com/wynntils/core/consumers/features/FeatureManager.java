@@ -30,6 +30,7 @@ import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
+import com.wynntils.features.combat.AutoAttackFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
@@ -96,6 +97,7 @@ import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
+import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
@@ -227,6 +229,7 @@ public final class FeatureManager extends Manager {
 
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
+        registerFeature(new AutoAttackFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
@@ -300,6 +303,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HeldItemCooldownOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
+        registerFeature(new MantleShieldTrackerOverlayFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
         registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());

@@ -13,6 +13,7 @@ import com.wynntils.models.abilities.bossbars.CorruptedBar;
 import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
+import com.wynntils.models.abilities.bossbars.SacredSurgeBar;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,8 +30,10 @@ public final class AbilityModel extends Model {
 
     public static final OphanimBar ophanimBar = new OphanimBar();
 
+    public static final TrackedBar sacredSurgeBar = new SacredSurgeBar();
+
     private static final List<TrackedBar> ALL_BARS =
-            Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar);
+            Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar, sacredSurgeBar);
 
     public AbilityModel() {
         super(List.of());

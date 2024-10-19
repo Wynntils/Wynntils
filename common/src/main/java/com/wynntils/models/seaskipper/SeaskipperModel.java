@@ -53,12 +53,12 @@ public final class SeaskipperModel extends Model {
         if (!(Models.Container.getCurrentContainer() instanceof SeaskipperContainer seaskipperContainer)) return;
 
         containerId = seaskipperContainer.getContainerId();
-        availableDestinations = new ArrayList<>();
     }
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
         if (event.getContainerId() != containerId) return;
+        availableDestinations = new ArrayList<>();
 
         for (int i = 0; i < event.getItems().size(); i++) {
             ItemStack item = event.getItems().get(i);
