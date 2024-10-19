@@ -5,6 +5,7 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
@@ -189,6 +190,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // Fullscreen map is always oriented north
         Vector2f rotationVector = new Vector2f(1f, 0f);
 
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableBlend();
+
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
 
@@ -235,6 +239,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
 
         bufferSource.endBatch();
+
+        RenderSystem.disableBlend();
+        RenderSystem.disableDepthTest();
     }
 
     protected abstract Stream<MapFeature> getRenderedMapFeatures();
