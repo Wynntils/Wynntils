@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
-public class MapFeatureRenderer {
+public final class MapFeatureRenderer {
     private static final int SPACING = 2;
     private static final float TEXT_SCALE = 1f;
 

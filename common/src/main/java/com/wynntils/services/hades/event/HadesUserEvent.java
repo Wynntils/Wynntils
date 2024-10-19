@@ -5,7 +5,7 @@
 package com.wynntils.services.hades.event;
 
 import com.wynntils.services.hades.HadesUser;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 // Fired when a new user is added to the HadesModel in our current world
 public abstract class HadesUserEvent extends Event {
