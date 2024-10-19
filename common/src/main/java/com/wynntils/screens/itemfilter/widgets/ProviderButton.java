@@ -103,6 +103,12 @@ public class ProviderButton extends WynntilsButton {
                         TextShadow.NORMAL,
                         1.0f);
 
+        // Don't want to display tooltip when the tile is outside the mask from the screen
+        if (isHovered
+                && (mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+            isHovered = false;
+        }
+
         if (this.isHovered) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
         }
@@ -110,29 +116,32 @@ public class ProviderButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (McUtils.mc().screen instanceof ItemFilterScreen itemFilterScreen) {
-            if (itemFilterScreen.inSortMode()) {
-                if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                    itemFilterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
-                } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                    itemFilterScreen.removeSort(provider);
-                }
-            } else {
-                if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                    itemFilterScreen.setSelectedProvider(provider);
-                } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                    itemFilterScreen.setFiltersForProvider(provider, null);
-                } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                    AnyStatFilters.AbstractAnyStatFilter anyFilter = anyMap.getOrDefault(provider.getType(), null);
+        // Prevent interaction when the button is outside of the mask from the screen
+        if ((mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+            return false;
+        }
 
-                    if (anyFilter != null) {
-                        filterScreen.setFiltersForProvider(
-                                provider, List.of(new StatProviderAndFilterPair(provider, anyFilter)));
-                    }
-                }
-
-                filterScreen.updateFilterWidget();
+        if (filterScreen.inSortMode()) {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                filterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
+            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                filterScreen.removeSort(provider);
             }
+        } else {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                filterScreen.setSelectedProvider(provider);
+            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                filterScreen.setFiltersForProvider(provider, null);
+            } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                AnyStatFilters.AbstractAnyStatFilter anyFilter = anyMap.getOrDefault(provider.getType(), null);
+
+                if (anyFilter != null) {
+                    filterScreen.setFiltersForProvider(
+                            provider, List.of(new StatProviderAndFilterPair(provider, anyFilter)));
+                }
+            }
+
+            filterScreen.updateFilterWidget();
         }
 
         return true;

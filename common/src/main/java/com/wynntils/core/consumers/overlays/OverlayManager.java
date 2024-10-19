@@ -18,6 +18,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
@@ -194,6 +195,14 @@ public final class OverlayManager extends Manager {
         holder.getOverlays()
                 .forEach(overlay -> registerOverlay(
                         overlay, holder.getParent(), holder.getElementType(), holder.getRenderState(), true));
+    }
+
+    // endregion
+
+    // region Ticking
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        enabledOverlays.forEach(Overlay::tick);
     }
 
     // endregion

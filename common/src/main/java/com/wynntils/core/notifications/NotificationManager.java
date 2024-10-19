@@ -51,7 +51,7 @@ public final class NotificationManager extends Manager {
         for (MessageContainer cachedContainer : cachedMessageSet) {
             StyledText checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
-                Component oldMessage = msgContainer.getRenderTask().getText().getComponent();
+                Component oldMessage = cachedContainer.getRenderTask().getText().getComponent();
 
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 

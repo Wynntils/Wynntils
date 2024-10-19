@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
@@ -22,7 +21,6 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class BarOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.barOverlay.textShadow")
@@ -98,8 +96,8 @@ public abstract class BarOverlay extends DynamicOverlay {
         renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
+    @Override
+    public void tick() {
         if (!Models.WorldState.onWorld() || !isRendered()) return;
 
         BarOverlayTemplatePair template = getTemplate();

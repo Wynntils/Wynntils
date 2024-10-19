@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -58,7 +58,7 @@ public class GuildRankReplacementFeature extends Feature {
 
         if (originalStyledText.equals(modified)) return; // no changes
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     private StyledText modifyByRemovingRank(StyledText styledText) {

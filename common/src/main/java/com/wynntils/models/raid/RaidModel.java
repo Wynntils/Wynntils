@@ -146,8 +146,7 @@ public class RaidModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (currentRaid == null) return;
 
-        Component component = event.getMessage();
-        StyledText styledText = StyledText.fromComponent(component);
+        StyledText styledText = event.getOriginalStyledText();
 
         if (styledText.equals(RAID_FAILED)) {
             // Raid failed, post event with timers

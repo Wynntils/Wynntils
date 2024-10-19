@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector;
@@ -90,7 +90,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw logo
         int centerX = Texture.SCROLL_BACKGROUND.width() / 2 + 15;
-        String logoString = Services.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
+        String logoString = Services.ResourcePack.isPreloadedPackSelected() ? LOGO_STRING : TEXT_LOGO_STRING;
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,

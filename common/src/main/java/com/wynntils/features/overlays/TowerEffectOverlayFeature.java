@@ -74,14 +74,14 @@ public class TowerEffectOverlayFeature extends Feature {
     public void onTowerAura(GuildWarTowerEffectEvent.AuraSpawned event) {
         if (!soundEffectAura.get()) return;
 
-        McUtils.playSoundAmbient(AURA_SOUND, soundPitch.get(), soundVolume.get());
+        McUtils.playSoundAmbient(AURA_SOUND, soundVolume.get(), soundPitch.get());
     }
 
     @SubscribeEvent
     public void onTowerVolley(GuildWarTowerEffectEvent.VolleySpawned event) {
         if (!soundEffectVolley.get()) return;
 
-        McUtils.playSoundAmbient(VOLLEY_SOUND, soundPitch.get(), soundVolume.get());
+        McUtils.playSoundAmbient(VOLLEY_SOUND, soundVolume.get(), soundPitch.get());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

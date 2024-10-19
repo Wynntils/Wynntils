@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -136,7 +136,7 @@ public class ChatMentionFeature extends Feature {
         if (styledText.equals(modified)) return;
 
         if (markMention.get()) {
-            e.setMessage(modified.getComponent());
+            e.setMessage(modified);
         }
 
         if (dingMention.get()) {

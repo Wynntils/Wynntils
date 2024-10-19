@@ -17,6 +17,7 @@ import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -33,6 +34,9 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> displayWorld = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> disableInStream = new Config<>(true);
 
     private static final int TERRITORY_TICKS_DELAY = 10;
 
@@ -91,18 +95,43 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onStreamToggle(StreamModeEvent e) {
+        if (disableInStream.get() && e.isEnabled()) {
+            disableRichPresence();
+        } else if (!e.isEnabled()) {
+            enableRichPresence();
+        }
+    }
+
+    @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
-        Services.Discord.unload();
-        stopTerritoryCheck();
+        disableRichPresence();
     }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        tryUpdateDisplayedInfo();
+        if (config == disableInStream && Models.WorldState.isInStream()) {
+            if (disableInStream.get()) {
+                disableRichPresence();
+            } else {
+                enableRichPresence();
+            }
+        } else {
+            tryUpdateDisplayedInfo();
+        }
     }
 
     @Override
     public void onEnable() {
+        enableRichPresence();
+    }
+
+    @Override
+    public void onDisable() {
+        disableRichPresence();
+    }
+
+    private void enableRichPresence() {
         // This isReady() check is required for Linux to not crash on config change.
         if (!Services.Discord.isReady()) {
             // Load the Discord SDK
@@ -116,8 +145,7 @@ public class DiscordRichPresenceFeature extends Feature {
         tryUpdateDisplayedInfo();
     }
 
-    @Override
-    public void onDisable() {
+    private void disableRichPresence() {
         Services.Discord.unload();
         stopTerritoryCheck();
     }

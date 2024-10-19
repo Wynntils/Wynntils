@@ -36,7 +36,7 @@ public class SortWidget extends AbstractWidget {
 
     public SortWidget(
             int x, int y, ItemFilterScreen filterScreen, float translationX, float translationY, SortInfo sortInfo) {
-        super(x, y, 150, 20, Component.literal("Sort Widget"));
+        super(x, y, 170, 20, Component.literal("Sort Widget"));
 
         this.filterScreen = filterScreen;
         this.translationX = translationX;
@@ -47,8 +47,8 @@ public class SortWidget extends AbstractWidget {
         Button sortButton = new Button.Builder(
                         Component.literal(sortInfo.direction() == SortDirection.DESCENDING ? "v" : "ʌ"),
                         (button) -> toggleSortDirection())
-                .pos(x + width - 70, y)
-                .size(50, 20)
+                .pos(x + width - 50, y)
+                .size(30, 20)
                 .build();
 
         Button upButton = new Button.Builder(
@@ -92,7 +92,7 @@ public class SortWidget extends AbstractWidget {
                         StyledText.fromString(sortInfo.provider().getDisplayName()),
                         getX() + 2,
                         getY() + (height / 2f),
-                        width - 70,
+                        width - 54,
                         translationX,
                         translationY,
                         CommonColors.WHITE,
@@ -108,6 +108,11 @@ public class SortWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // Prevent interaction when the button is outside of the mask from the screen
+        if ((mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+            return false;
+        }
+
         for (GuiEventListener listener : buttons) {
             if (listener.isMouseOver(mouseX, mouseY)) {
                 return listener.mouseClicked(mouseX, mouseY, button);
@@ -115,6 +120,15 @@ public class SortWidget extends AbstractWidget {
         }
 
         return false;
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        for (Button button : buttons) {
+            button.setY(y);
+        }
     }
 
     private void toggleSortDirection() {

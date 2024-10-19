@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession;
@@ -16,6 +16,7 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.event.ProfessionNodeGatheredEvent;
+import com.wynntils.models.profession.event.ProfessionXpGainEvent;
 import com.wynntils.models.profession.label.GatheringNodeLabelParser;
 import com.wynntils.models.profession.label.GatheringStationLabelParser;
 import com.wynntils.models.profession.type.HarvestInfo;
@@ -25,6 +26,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
+import com.wynntils.utils.type.TimedValue;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,8 @@ import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
@@ -73,6 +77,9 @@ public class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
+    private final TimedValue<StyledText> lastProfessionLabel =
+            new TimedValue<>(MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS);
+
     public ProfessionModel() {
         super(List.of());
 
@@ -95,9 +102,10 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
+        StyledText label = event.getName();
 
-        if (matcher.matches()) {
+        Matcher professionNodeExperienceMatcher = label.getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
+        if (professionNodeExperienceMatcher.matches()) {
             Vec3 entityPosition = event.getEntity().position();
 
             if (gatheredNodes.stream()
@@ -107,12 +115,20 @@ public class ProfessionModel extends Model {
                 return;
             }
 
+            ProfessionType profession = ProfessionType.fromString(professionNodeExperienceMatcher.group("name"));
+
+            // Woodcutting labels can move during "display", so position based checks don't always work
+            if (profession == ProfessionType.WOODCUTTING && lastProfessionLabel.matches(label)) {
+                return;
+            }
+
+            lastProfessionLabel.set(label);
             gatheredNodes.put(entityPosition);
 
-            updatePercentage(
-                    ProfessionType.fromString(matcher.group("name")),
-                    Float.parseFloat(matcher.group("current")),
-                    Float.parseFloat(matcher.group("gain")));
+            WynntilsMod.postEvent(new ProfessionXpGainEvent(
+                    profession,
+                    Float.parseFloat(professionNodeExperienceMatcher.group("gain")),
+                    Float.parseFloat(professionNodeExperienceMatcher.group("current"))));
 
             ProfessionNodeGatheredEvent.LabelShown gatherEvent = new ProfessionNodeGatheredEvent.LabelShown();
             WynntilsMod.postEvent(gatherEvent);
@@ -120,8 +136,8 @@ public class ProfessionModel extends Model {
             return;
         }
 
-        matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
-        if (matcher.matches()) {
+        Matcher professionNodeHarvestMatcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
+        if (professionNodeHarvestMatcher.matches()) {
             if (lastHarvestItemGain.a() + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()
                     && lastHarvestItemGain.b() != null) {
                 MaterialItem materialItem = lastHarvestItemGain.b();
@@ -139,23 +155,44 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText codedMessage = event.getOriginalStyledText();
+        StyledText message = event.getOriginalStyledText();
 
-        Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
-
-        if (matcher.matches()) {
-            updatePercentage(
-                    ProfessionType.fromString(matcher.group("name")),
-                    Float.parseFloat(matcher.group("current")),
-                    Float.parseFloat(matcher.group("gain")));
+        Matcher craftMatcher = message.getMatcher(PROFESSION_CRAFT_PATTERN);
+        if (craftMatcher.matches()) {
+            Event xpGainEvent = new ProfessionXpGainEvent(
+                    ProfessionType.fromString(craftMatcher.group("name")),
+                    Float.parseFloat(craftMatcher.group("gain")),
+                    Float.parseFloat(craftMatcher.group("current")));
+            WynntilsMod.postEvent(xpGainEvent);
+            if (xpGainEvent.isCanceled()) {
+                event.setCanceled(true);
+            }
             return;
         }
 
-        matcher = codedMessage.getMatcher(PROFESSION_LEVELUP_PATTERN);
-
-        if (matcher.matches()) {
-            updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
+        Matcher levelUpMatcher = message.getMatcher(PROFESSION_LEVELUP_PATTERN);
+        if (levelUpMatcher.matches()) {
+            updateLevel(
+                    ProfessionType.fromString(levelUpMatcher.group("name")),
+                    Integer.parseInt(levelUpMatcher.group("level")));
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onXpGain(ProfessionXpGainEvent event) {
+        ProfessionType profession = event.getProfession();
+        ProfessionProgress oldValue = professionProgressMap.getOrDefault(profession, ProfessionProgress.NO_PROGRESS);
+
+        // We leveled up, but we don't know how many times.
+        // Set the progress, level will be parsed from other messages.
+        float newPercentage = event.getCurrentXpPercentage();
+        if (newPercentage == 100) {
+            newPercentage = 0;
+        }
+
+        professionProgressMap.put(profession, new ProfessionProgress(oldValue.level(), newPercentage));
+
+        rawXpGainInLastMinute.get(profession).put(event.getGainedXpRaw());
     }
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
@@ -178,20 +215,6 @@ public class ProfessionModel extends Model {
         }
 
         professionProgressMap = levels;
-    }
-
-    private void updatePercentage(ProfessionType type, float newPercentage, float xpGain) {
-        ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
-
-        // We leveled up, but we don't know how many times.
-        // Set the progress, level will be parsed from other messages.
-        if (newPercentage == 100) {
-            newPercentage = 0;
-        }
-
-        professionProgressMap.put(type, new ProfessionProgress(oldValue.level(), newPercentage));
-
-        rawXpGainInLastMinute.get(type).put(xpGain);
     }
 
     private void updateLevel(ProfessionType type, int newLevel) {

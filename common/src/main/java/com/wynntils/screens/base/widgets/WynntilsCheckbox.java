@@ -16,71 +16,41 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public class WynntilsCheckbox extends Checkbox {
+public class WynntilsCheckbox extends AbstractButton {
+    public static final ResourceLocation CHECKBOX_SELECTED_HIGHLIGHTED_SPRITE =
+            new ResourceLocation("minecraft:widget/checkbox_selected_highlighted");
+    public static final ResourceLocation CHECKBOX_SELECTED_SPRITE =
+            new ResourceLocation("minecraft:widget/checkbox_selected");
+    public static final ResourceLocation CHECKBOX_HIGHLIGHTED_SPRITE =
+            new ResourceLocation("minecraft:widget/checkbox_highlighted");
+    public static final ResourceLocation CHECKBOX_SPRITE = new ResourceLocation("minecraft:widget/checkbox");
+
+    public boolean selected;
     private final int maxTextWidth;
     private final CustomColor color;
-
-    private BiConsumer<WynntilsCheckbox, Integer> onClick;
-    private List<Component> tooltip;
-
-    public WynntilsCheckbox(
-            int x, int y, int width, int height, Component message, boolean selected, int maxTextWidth) {
-        super(x, y, width, height, message, selected);
-        this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE;
-    }
+    private final BiConsumer<WynntilsCheckbox, Boolean> onClick;
+    private final List<Component> tooltip;
 
     public WynntilsCheckbox(
             int x,
             int y,
-            int width,
-            int height,
+            int size,
             Component message,
             boolean selected,
             int maxTextWidth,
-            Consumer<Integer> onClick) {
-        super(x, y, width, height, message, selected);
-        this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE;
-        this.onClick = (checkbox, button) -> onClick.accept(button);
-    }
-
-    public WynntilsCheckbox(
-            int x,
-            int y,
-            int width,
-            int height,
-            Component message,
-            boolean selected,
-            int maxTextWidth,
-            Consumer<Integer> onClick,
+            CustomColor color,
+            BiConsumer<WynntilsCheckbox, Boolean> onClick,
             List<Component> tooltip) {
-        super(x, y, width, height, message, selected);
+        super(x, y, size, size, message);
+        this.selected = selected;
         this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE;
-        this.onClick = (checkbox, button) -> onClick.accept(button);
-        this.tooltip = tooltip;
-    }
-
-    public WynntilsCheckbox(
-            int x,
-            int y,
-            int width,
-            int height,
-            Component message,
-            boolean selected,
-            int maxTextWidth,
-            BiConsumer<WynntilsCheckbox, Integer> onClick,
-            List<Component> tooltip) {
-        super(x, y, width, height, message, selected);
-        this.maxTextWidth = maxTextWidth;
-        this.color = CommonColors.WHITE;
+        this.color = color;
         this.onClick = onClick;
         this.tooltip = tooltip;
     }
@@ -88,15 +58,39 @@ public class WynntilsCheckbox extends Checkbox {
     public WynntilsCheckbox(
             int x,
             int y,
-            int width,
-            int height,
+            int size,
             Component message,
             boolean selected,
             int maxTextWidth,
-            CustomColor color) {
-        super(x, y, width, height, message, selected);
-        this.maxTextWidth = maxTextWidth;
-        this.color = color;
+            BiConsumer<WynntilsCheckbox, Boolean> onClick,
+            List<Component> tooltip) {
+        this(x, y, size, message, selected, maxTextWidth, CommonColors.WHITE, onClick, tooltip);
+    }
+
+    public WynntilsCheckbox(int x, int y, int size, Component message, boolean selected, int maxTextWidth) {
+        this(x, y, size, message, selected, maxTextWidth, CommonColors.WHITE, (checkbox, bl) -> {}, List.of());
+    }
+
+    public WynntilsCheckbox(
+            int x,
+            int y,
+            int size,
+            Component message,
+            boolean selected,
+            int maxTextWidth,
+            BiConsumer<WynntilsCheckbox, Boolean> onClick) {
+        this(x, y, size, message, selected, maxTextWidth, CommonColors.WHITE, onClick, null);
+    }
+
+    public WynntilsCheckbox(
+            int x, int y, int size, Component message, boolean selected, int maxTextWidth, CustomColor color) {
+        this(x, y, size, message, selected, maxTextWidth, color, (checkbox, bl) -> {}, List.of());
+    }
+
+    @Override
+    public void onPress() {
+        this.selected = !this.selected;
+        this.onClick.accept(this, this.selected);
     }
 
     @Override
@@ -113,20 +107,18 @@ public class WynntilsCheckbox extends Checkbox {
 
         guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), this.width, this.height);
         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        if (this.showLabel) {
-            FontRenderer.getInstance()
-                    .renderScrollingText(
-                            guiGraphics.pose(),
-                            StyledText.fromComponent(this.getMessage()),
-                            this.getX() + this.width + 2,
-                            this.getY() + (this.height / 2f),
-                            maxTextWidth,
-                            color,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL,
-                            1f);
-        }
+        FontRenderer.getInstance()
+                .renderScrollingText(
+                        guiGraphics.pose(),
+                        StyledText.fromComponent(this.getMessage()),
+                        this.getX() + this.width + 2,
+                        this.getY() + (this.height / 2f),
+                        maxTextWidth,
+                        color,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL,
+                        1f);
 
         if (isHovered && tooltip != null) {
             McUtils.mc().screen.setTooltipForNextRenderPass(Lists.transform(tooltip, Component::getVisualOrderText));
@@ -134,17 +126,9 @@ public class WynntilsCheckbox extends Checkbox {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-        // Do the click before the onClick so that the checkbox is updated before the consumer is called.
-        boolean superClicked = super.mouseClicked(mouseX, mouseY, button);
-
-        // Only trigger the onClick if the super was actually clicked
-        if (onClick != null && superClicked) {
-            onClick.accept(this, button);
-        }
-
-        return superClicked;
+    public boolean isSelected() {
+        return selected;
     }
 }

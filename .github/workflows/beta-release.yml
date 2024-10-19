@@ -1,9 +1,9 @@
-name: Publish Alpha Release
+name: Publish Beta Release
 
 on:
   push:
     branches:
-      - alpha
+      - beta
 
 jobs:
   changelog:
@@ -44,7 +44,7 @@ jobs:
           skip-version-file: true
           skip-git-pull: true
           pre-release: true
-          pre-release-identifier: alpha
+          pre-release-identifier: beta
           release-count: 5
 
       - name: Create release
@@ -81,11 +81,11 @@ jobs:
         with:
           name: build
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: 21
           cache: "gradle"
 
       - name: Build with Gradle

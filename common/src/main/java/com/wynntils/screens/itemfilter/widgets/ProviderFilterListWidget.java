@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ProviderFilterListWidget extends AbstractWidget {
+    private static final float SCROLL_FACTOR = 10f;
     private static final int MAX_WIDGETS_PER_PAGE = 5;
     private static final int MAX_SELECTION_WIDGETS_PER_PAGE = 6;
     private static final int SCROLLBAR_HEIGHT = 20;
@@ -46,7 +47,6 @@ public class ProviderFilterListWidget extends AbstractWidget {
     private Button addNumericFilterButton;
     private Button addStringFilterButton;
     private Button numericChoiceButton;
-    private double currentUnusedScroll = 0;
     private int scrollOffset = 0;
     private int scrollRenderY;
     private List<GeneralFilterWidget> widgets = new ArrayList<>();
@@ -81,7 +81,9 @@ public class ProviderFilterListWidget extends AbstractWidget {
                                 widgets.add(
                                         new StringFilterWidget(getX() + 5, renderY, 175, 20, null, this, filterScreen));
 
-                                scroll(1);
+                                if (isScrollable()) {
+                                    scroll(scrollOffset + 24);
+                                }
 
                                 addStringFilterButton.active = false;
                             }))
@@ -111,7 +113,9 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
                                 widgets.add(filterWidget);
 
-                                scroll(1);
+                                if (isScrollable()) {
+                                    scroll(scrollOffset + 24);
+                                }
 
                                 addNumericFilterButton.active = false;
                             }))
@@ -150,9 +154,13 @@ public class ProviderFilterListWidget extends AbstractWidget {
             return;
         }
 
+        RenderUtils.createRectMask(guiGraphics.pose(), getX() + 4, getY() + 1, 177, getScrollbarHeight() + 1);
+
         for (GeneralFilterWidget widget : widgets) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
+
+        RenderUtils.clearMask();
 
         if (isScrollable()) {
             renderScrollBar(guiGraphics.pose());
@@ -177,9 +185,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
             return false;
         }
 
-        for (GeneralFilterWidget widget : widgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+        // Don't want to call mouse events for ones outside of the mask area
+        if (mouseY > getY() + 2 && mouseY < getY() + 2 + getScrollbarHeight()) {
+            for (GeneralFilterWidget widget : widgets) {
+                if (widget.isMouseOver(mouseX, mouseY)) {
+                    return widget.mouseClicked(mouseX, mouseY, button);
+                }
             }
         }
 
@@ -203,17 +214,18 @@ public class ProviderFilterListWidget extends AbstractWidget {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (draggingScroll) {
-            int renderY = getY() + 5;
-            int scrollAreaStartY = renderY + 10;
+            int scrollAreaStartY = getY();
 
-            int newValue = Math.round(MathUtils.map(
+            int newOffset = Math.round(MathUtils.map(
                     (float) mouseY,
                     scrollAreaStartY,
-                    scrollAreaStartY + getScrollableArea(),
+                    scrollAreaStartY + getScrollbarHeight(),
                     0,
-                    Math.max(0, getMaxScrollOffset())));
+                    getMaxScrollOffset()));
 
-            scroll(newValue - scrollOffset);
+            newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
+
+            scroll(newOffset);
 
             return true;
         }
@@ -225,9 +237,11 @@ public class ProviderFilterListWidget extends AbstractWidget {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
 
-        for (GeneralFilterWidget widget : widgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseReleased(mouseX, mouseY, button);
+        if (mouseY > getY() + 2 && mouseY < getY() + 2 + getScrollbarHeight()) {
+            for (GeneralFilterWidget widget : widgets) {
+                if (widget.isMouseOver(mouseX, mouseY)) {
+                    return widget.mouseReleased(mouseX, mouseY, button);
+                }
             }
         }
 
@@ -237,20 +251,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         if (isScrollable()) {
-            if (Math.abs(deltaY) == 1.0) {
-                scroll((int) -deltaY);
-                return true;
-            }
+            int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
 
-            // Account for scrollpad
-            currentUnusedScroll -= deltaY / 5d;
-
-            if (Math.abs(currentUnusedScroll) < 1) return true;
-
-            int scroll = (int) (currentUnusedScroll);
-            currentUnusedScroll = currentUnusedScroll % 1;
-
-            scroll(scroll);
+            int newOffset = Math.max(0, Math.min(scrollOffset + scrollAmount, getMaxScrollOffset()));
+            scroll(newOffset);
 
             return true;
         }
@@ -260,8 +264,6 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
     public void createWidgets() {
         widgets = new ArrayList<>();
-
-        scrollOffset = 0;
 
         if (!filterPairs.isEmpty()) {
             for (StatProviderAndFilterPair filterPair : filterPairs) {
@@ -289,7 +291,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
 
             return;
         } else if (!provider.getValidInputs().isEmpty()) {
-            int renderY = getY() + 2 - (24 * scrollOffset);
+            int renderY = getY() + 2;
 
             for (int i = 0; i < provider.getValidInputs().size(); i++) {
                 String valueName = provider.getValidInputs().get(i);
@@ -301,19 +303,17 @@ public class ProviderFilterListWidget extends AbstractWidget {
                 SelectionFilterWidget filterWidget =
                         new SelectionFilterWidget(getX() + 5, renderY, 150, 20, valueName, filterPair, this);
 
-                if (renderY < getY() || renderY > getY() + getScrollbarHeight()) {
-                    filterWidget.visible = false;
-                }
-
                 widgets.add(filterWidget);
 
                 renderY += 24;
             }
 
+            scroll(scrollOffset);
+
             return;
         }
 
-        int renderY = getY() + 2 - (24 * scrollOffset);
+        int renderY = getY() + 2;
         GeneralFilterWidget filterWidget;
 
         for (StatProviderAndFilterPair filterPair : filterPairs) {
@@ -325,10 +325,6 @@ public class ProviderFilterListWidget extends AbstractWidget {
             }
 
             if (filterWidget != null) {
-                if (renderY < getY() || renderY > getY() + getScrollbarHeight()) {
-                    filterWidget.visible = false;
-                }
-
                 widgets.add(filterWidget);
 
                 renderY += 24;
@@ -344,6 +340,8 @@ public class ProviderFilterListWidget extends AbstractWidget {
             numericChoiceButton.visible = true;
             numericChoiceButton.active = true;
         }
+
+        scroll(scrollOffset);
     }
 
     public final void onFiltersChanged(List<StatProviderAndFilterPair> filterPairs) {
@@ -375,6 +373,8 @@ public class ProviderFilterListWidget extends AbstractWidget {
     public void removeWidget(GeneralFilterWidget filterWidget) {
         widgets.remove(filterWidget);
 
+        scrollOffset = 0;
+
         updateQuery();
         createWidgets();
     }
@@ -395,7 +395,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         if (provider.getValidInputs().isEmpty()) {
             return widgets.size() > MAX_WIDGETS_PER_PAGE;
         } else {
-            return widgets.size() > MAX_SELECTION_WIDGETS_PER_PAGE;
+            return provider.getValidInputs().size() > MAX_SELECTION_WIDGETS_PER_PAGE;
         }
     }
 
@@ -407,11 +407,11 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
     }
 
-    private float getMaxScrollOffset() {
+    private int getMaxScrollOffset() {
         if (provider.getValidInputs().isEmpty()) {
-            return widgets.size() - MAX_WIDGETS_PER_PAGE;
+            return (widgets.size() - MAX_WIDGETS_PER_PAGE) * 24;
         } else {
-            return widgets.size() - MAX_SELECTION_WIDGETS_PER_PAGE;
+            return (provider.getValidInputs().size() - MAX_SELECTION_WIDGETS_PER_PAGE) * 24;
         }
     }
 
@@ -460,28 +460,14 @@ public class ProviderFilterListWidget extends AbstractWidget {
                 SCROLLBAR_HEIGHT);
     }
 
-    private void scroll(int delta) {
-        // Prevent scrolling too far
-        if (scrollOffset == (int) getMaxScrollOffset() && delta == 1) return;
-        if (scrollOffset == 0 && delta == -1) return;
-        if (getMaxScrollOffset() < 0) return;
-
-        scrollOffset = (int) MathUtils.clamp(scrollOffset + delta, 0, Math.max(0, getMaxScrollOffset()));
+    private void scroll(int newOffset) {
+        scrollOffset = newOffset;
 
         for (GeneralFilterWidget filterWidget : widgets) {
-            int newY;
-
-            if (delta == -1) {
-                newY = filterWidget.getY() + 24;
-            } else if (delta == 1) {
-                newY = filterWidget.getY() - 24;
-            } else {
-                return;
-            }
+            int newY = getY() + 2 + (widgets.indexOf(filterWidget) * 24) - scrollOffset;
 
             filterWidget.updateY(newY);
-
-            filterWidget.visible = newY >= getY() && !(newY > getY() + getScrollbarHeight());
+            filterWidget.visible = newY >= (getY() + 2 - 24) && newY <= (getY() + 2 + (getScrollbarHeight()));
         }
     }
 

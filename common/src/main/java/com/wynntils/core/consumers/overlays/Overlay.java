@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -73,6 +73,8 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         this.render(poseStack, bufferSource, partialTicks, window);
     }
+
+    public void tick() {}
 
     @Override
     public final void updateConfigOption(Config<?> config) {

@@ -14,6 +14,7 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.PosUtils;
@@ -77,6 +78,7 @@ public final class WorldStateModel extends Model {
 
         // Streamer mode is always disabled upon changing world state
         inStream = false;
+        WynntilsMod.postEvent(new StreamModeEvent(inStream));
 
         WorldState oldState = currentState;
         // Switch state before sending event
@@ -124,6 +126,7 @@ public final class WorldStateModel extends Model {
 
         if (matcher.matches()) {
             inStream = matcher.group(1).equals("was enabled");
+            WynntilsMod.postEvent(new StreamModeEvent(inStream));
         }
     }
 
