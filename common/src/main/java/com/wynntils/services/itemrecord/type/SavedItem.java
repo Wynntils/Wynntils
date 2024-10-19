@@ -50,7 +50,8 @@ public record SavedItem(String base64, Set<String> categories, ItemStack itemSta
      * Note that this can't be done during deserialization because the models might not have finished loading yet
      */
     public WynnItem wynnItem() {
-        ErrorOr<WynnItem> errorOrWynnItem = Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(base64));
+        ErrorOr<WynnItem> errorOrWynnItem =
+                Models.ItemEncoding.decodeItem(EncodedByteBuffer.fromBase64String(base64), null);
 
         if (errorOrWynnItem.hasError()) {
             throw new IllegalStateException(
