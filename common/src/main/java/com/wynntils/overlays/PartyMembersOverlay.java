@@ -35,10 +35,11 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.PartyMemberOverlay> {
     private static final HadesUser DUMMY_USER_1 =
@@ -93,7 +94,37 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
     }
 
     @SubscribeEvent
-    public void onPartyChange(PartyEvent event) {
+    public void onPartyChange(PartyEvent.Invited event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onPartyChange(PartyEvent.Listed event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onPartyChange(PartyEvent.PriorityChanged event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onPartyChange(PartyEvent.OtherDisconnected event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onPartyChange(PartyEvent.OtherJoined event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onPartyChange(PartyEvent.OtherLeft event) {
+        updateChildren();
+    }
+
+    @SubscribeEvent
+    public void onPartyChange(PartyEvent.OtherReconnected event) {
         updateChildren();
     }
 
@@ -149,7 +180,8 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         }
 
         @Override
-        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+        public void render(
+                PoseStack poseStack, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
             poseStack.pushPose();
 
             ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
@@ -224,8 +256,5 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
 
             poseStack.popPose();
         }
-
-        @Override
-        protected void onConfigUpdate(Config<?> config) {}
     }
 }

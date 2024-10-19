@@ -5,7 +5,7 @@
 package com.wynntils.models.character.event;
 
 import net.minecraft.core.Position;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public class CharacterMovedEvent extends Event {
     private final Position position;

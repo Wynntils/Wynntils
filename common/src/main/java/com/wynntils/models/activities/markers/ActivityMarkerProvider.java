@@ -1,17 +1,18 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.markers;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.combat.ContentTrackerFeature;
-import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.marker.type.StaticLocationSupplier;
 import com.wynntils.services.map.pois.MarkerPoi;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
@@ -35,7 +36,14 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 Texture.QUESTS_SCROLL_ICON,
                                 CommonColors.WHITE,
                                 CommonColors.WHITE,
-                                CommonColors.WHITE),
+                                CommonColors.WHITE,
+                                Managers.Feature.getFeatureInstance(ContentTrackerFeature.class)
+                                                .showAdditionalTextInWorld
+                                                .get()
+                                        // FIXME: Models.Activity.getTrackedName() returns incorrect tracked task so it
+                                        // is hidden for now
+                                        ? ""
+                                        : null),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(spawnLocation),
                                 ACTIVITY_LOCATION_NAME,
@@ -46,7 +54,7 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
         return spawnInfo == null ? Optional.empty() : Optional.ofNullable(spawnInfo.location());
     }
 
-    public void setTrackedActivityLocation(Location trackedActivityLocation, BeaconColor beaconColor) {
+    public void setTrackedActivityLocation(Location trackedActivityLocation, CustomColor activityColor) {
         this.trackedActivityInfo = trackedActivityLocation == null
                 ? null
                 : new ActivityMarkerInfo(
@@ -55,9 +63,15 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 ACTIVITY_LOCATION_NAME,
                                 new StaticLocationSupplier(trackedActivityLocation),
                                 Texture.QUESTS_SCROLL_ICON,
-                                beaconColor.getColor(),
+                                activityColor,
                                 CommonColors.WHITE,
-                                CommonColors.WHITE),
+                                CommonColors.WHITE,
+                                // FIXME: Feature-Model dependency
+                                Managers.Feature.getFeatureInstance(ContentTrackerFeature.class)
+                                                .showAdditionalTextInWorld
+                                                .get()
+                                        ? Models.Activity.getTrackedName()
+                                        : null),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(trackedActivityLocation),
                                 ACTIVITY_LOCATION_NAME,

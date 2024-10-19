@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree;
@@ -7,9 +7,8 @@ package com.wynntils.models.abilitytree;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
@@ -32,14 +31,11 @@ public class AbilityTreeModel extends Model {
 
     public AbilityTreeModel() {
         super(List.of());
-
-        reloadData();
     }
 
     @Override
-    public void reloadData() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ABILITIES);
-        dl.handleReader(reader -> {
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_ABILITIES).handleReader(reader -> {
             Type type = new TypeToken<HashMap<String, AbilityTreeInfo>>() {}.getType();
             Gson gson = new GsonBuilder().create();
 

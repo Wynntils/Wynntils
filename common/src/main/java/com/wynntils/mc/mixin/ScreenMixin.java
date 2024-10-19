@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -53,17 +53,34 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Inject(
             method = "rebuildWidgets()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
-    private void onScreenInit(CallbackInfo ci) {
+    private void onScreenInitPre(CallbackInfo ci) {
         // This is called whenever a screen is re-inited (e.g. when the window is resized)
-        MixinHelper.postAlways(new ScreenInitEvent((Screen) (Object) this, false));
+        MixinHelper.postAlways(new ScreenInitEvent.Pre((Screen) (Object) this, false));
+    }
+
+    @Inject(method = "rebuildWidgets()V", at = @At("RETURN"))
+    private void onScreenInitPost(CallbackInfo ci) {
+        MixinHelper.postAlways(new ScreenInitEvent.Post((Screen) (Object) this, false));
     }
 
     @Inject(
             method = "init(Lnet/minecraft/client/Minecraft;II)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
-    private void onFirstScreenInit(CallbackInfo ci) {
+    private void onFirstScreenInitPre(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
-        MixinHelper.post(new ScreenInitEvent((Screen) (Object) this, true));
+        MixinHelper.post(new ScreenInitEvent.Pre((Screen) (Object) this, true));
+    }
+
+    @Inject(
+            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/gui/screens/Screen;init()V",
+                            shift = At.Shift.AFTER))
+    private void onFirstScreenInitPost(CallbackInfo ci) {
+        // This is called only once, when the screen is first initialized
+        MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, true));
     }
 
     @Inject(method = "changeFocus(Lnet/minecraft/client/gui/ComponentPath;)V", at = @At("HEAD"), cancellable = true)

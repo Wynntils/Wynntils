@@ -1,0 +1,133 @@
+name: Publish Beta Release
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.changelog.outputs.tag }}
+      skipped: ${{ steps.changelog.outputs.skipped }}
+      clean_changelog: ${{ steps.changelog.outputs.clean_changelog }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      - run: |
+          npm install conventional-changelog-conventionalcommits@7.0.2
+          npm install conventional-recommended-bump@9.0.0
+
+      - name: Set up version.json
+        run: echo "{"version":$(git describe --tags --abbrev=0)}" > version.json
+
+      - name: Create changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5.2.1
+        with:
+          github-token: ${{ secrets.PRIVATE_TOKEN }}
+          git-user-name: 'WynntilsBot'
+          git-user-email: 'admin@wynntils.com'
+          pre-commit: ./.github/.pre-commit.js
+          config-file-path: ./.github/.config.js
+          version-file: ./version.json
+          skip-version-file: true
+          skip-git-pull: true
+          pre-release: true
+          pre-release-identifier: beta
+          release-count: 5
+
+      - name: Upload version information
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build.gradle
+          overwrite: true
+
+  build:
+    name: Build
+    needs: [ changelog ] # Build needs the new version number
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Gradle data
+        uses: actions/cache@v4
+        with:
+          path: .gradle
+          key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
+
+      - uses: actions/download-artifact@v4 # Download version information from changelog
+        with:
+          name: build
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: 21
+          cache: "gradle"
+
+      - name: Build with Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          arguments: buildDependents -x spotlessCheck -x test
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            **/build/libs/*-fabric+MC-*.jar
+            **/build/libs/*-neoforge+MC-*.jar
+          if-no-files-found: error
+          overwrite: true
+
+  release-github:
+    name: Release to Github
+    if: ${{ needs.changelog.outputs.skipped != 'true' }}
+    runs-on: ubuntu-latest
+    needs: [ build, changelog ]
+    steps:
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Create release and upload files
+        if: ${{ needs.changelog.outputs.skipped != 'true' }}
+        id: release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.changelog.outputs.tag }}
+          body: ${{ needs.changelog.outputs.changelog }}
+          draft: false
+          prerelease: true
+          files: |
+            **/build/libs/*-fabric+MC-*.jar
+            **/build/libs/*-neoforge+MC-*.jar
+
+      - name: Set current date
+        id: date
+        run: |
+          echo "::set-output name=short::$(date +'%Y-%m-%d')"
+          echo "::set-output name=long::$(date +'%Y-%m-%d %H:%M')"
+
+      - name: Post release on Discord
+        uses: tsickert/discord-webhook@v6.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
+          embed-color: "9498256"
+          embed-title: ${{format('Wynntils {0}', needs.changelog.outputs.tag)}}
+          embed-description: ${{ needs.changelog.outputs.changelog }}
+          embed-url: ${{ steps.release.outputs.url }}
+          embed-timestamp: ${{ steps.date.outputs.long }}

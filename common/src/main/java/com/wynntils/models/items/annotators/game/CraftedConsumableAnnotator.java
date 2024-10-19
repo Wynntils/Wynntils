@@ -12,33 +12,30 @@ import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.wynnitem.parsing.CraftedItemParseResults;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class CraftedConsumableAnnotator implements GameItemAnnotator {
-    private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]$");
-
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_PATTERN);
+        Matcher matcher = name.getMatcher(WynnItemParser.CRAFTED_ITEM_NAME_PATTERN);
         if (!matcher.matches()) return null;
-
-        String craftedName = matcher.group(1);
-        int uses = Integer.parseInt(matcher.group(2));
-        int maxUses = Integer.parseInt(matcher.group(3));
 
         WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
         CraftedItemParseResults craftedParseResults = WynnItemParser.parseCraftedItem(itemStack);
 
+        if (parseResult == null || craftedParseResults == null) return null;
+
+        // Consumable items must have a uses value, otherwise it's an other type of crafted item
+        if (craftedParseResults.uses() == null) return null;
+
         return new CraftedConsumableItem(
-                craftedName,
+                craftedParseResults.name(),
                 ConsumableType.fromString(parseResult.itemType()),
                 parseResult.level(),
                 parseResult.identifications(),
                 parseResult.namedEffects(),
                 parseResult.effects(),
-                new CappedValue(uses, maxUses));
+                craftedParseResults.uses());
     }
 }

@@ -11,17 +11,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.Dependency;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeRequirements;
-import com.wynntils.models.rewards.type.TomeVariant;
-import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
@@ -35,18 +33,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class TomeInfoRegistry {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(TomeInfo.class, new TomeInfoDeserizalier())
+            .create();
+
     private List<TomeInfo> tomeInfoRegistry = List.of();
     private Map<String, TomeInfo> tomeInfoLookup = Map.of();
 
-    public TomeInfoRegistry() {
-        reloadData();
-    }
-
-    public void reloadData() {
-        loadTomeInfoRegistry();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_TOMES,
+                        Dependency.multi(
+                                Models.WynnItem,
+                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                .handleJsonObject(this::loadTomeInfoRegistry);
     }
 
     public TomeInfo getFromDisplayName(String gearName) {
@@ -57,39 +61,29 @@ public class TomeInfoRegistry {
         return tomeInfoRegistry.stream();
     }
 
-    private void loadTomeInfoRegistry() {
-        if (!Models.WynnItem.hasObtainInfo()) return;
-        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+    private void loadTomeInfoRegistry(JsonObject json) {
+        List<TomeInfo> registry = new ArrayList<>();
 
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_TOMES);
-        dl.handleJsonObject(json -> {
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(TomeInfo.class, new TomeInfoDeserizalier())
-                    .create();
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonObject itemObject = entry.getValue().getAsJsonObject();
 
-            List<TomeInfo> registry = new ArrayList<>();
+            // Inject the name into the object
+            itemObject.addProperty("name", entry.getKey());
 
-            for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                JsonObject itemObject = entry.getValue().getAsJsonObject();
+            // Deserialize the item
+            TomeInfo tomeInfo = GSON.fromJson(itemObject, TomeInfo.class);
 
-                // Inject the name into the object
-                itemObject.addProperty("name", entry.getKey());
+            // Add the item to the registry
+            registry.add(tomeInfo);
+        }
 
-                // Deserialize the item
-                TomeInfo tomeInfo = gson.fromJson(itemObject, TomeInfo.class);
+        // Create fast lookup maps
+        Map<String, TomeInfo> lookupMap = registry.stream()
+                .collect(HashMap::new, (map, tomeInfo) -> map.put(tomeInfo.name(), tomeInfo), HashMap::putAll);
 
-                // Add the item to the registry
-                registry.add(tomeInfo);
-            }
-
-            // Create fast lookup maps
-            Map<String, TomeInfo> lookupMap = registry.stream()
-                    .collect(HashMap::new, (map, tomeInfo) -> map.put(tomeInfo.name(), tomeInfo), HashMap::putAll);
-
-            // Make the result visisble to the world
-            tomeInfoRegistry = registry;
-            tomeInfoLookup = lookupMap;
-        });
+        // Make the result visisble to the world
+        tomeInfoRegistry = registry;
+        tomeInfoLookup = lookupMap;
     }
 
     private static final class TomeInfoDeserizalier extends AbstractItemInfoDeserializer<TomeInfo> {
@@ -107,73 +101,24 @@ public class TomeInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tome type");
             }
 
-            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
+            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tier");
-            }
-
-            TomeVariant variant = TomeVariant.fromString(json.get("tomeVariant").getAsString());
-            if (variant == null) {
-                throw new RuntimeException("Invalid Wynncraft data: tome has no tome variant");
             }
 
             GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
             TomeRequirements requirements = parseTomeRequirements(json);
 
             JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
-            List<Pair<StatType, Integer>> staticBaseStats = parseStaticBaseStats(json);
 
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
-            return new TomeInfo(
-                    displayName, type, variant, tier, metaInfo, requirements, staticBaseStats, variableStats);
-        }
-
-        private List<Pair<StatType, Integer>> parseStaticBaseStats(JsonObject json) {
-            JsonObject baseJson = JsonUtils.getNullableJsonObject(json, "base");
-
-            List<Pair<StatType, Integer>> list = new ArrayList<>();
-            for (Map.Entry<String, JsonElement> entry : baseJson.entrySet()) {
-                StatType statType = Models.Stat.fromApiName(entry.getKey());
-
-                if (statType == null) {
-                    WynntilsMod.warn("Item DB contains invalid stat type " + entry.getKey());
-                    continue;
-                }
-
-                if (statType instanceof SkillStatType) {
-                    // Skill stats are not variable for gear
-                    continue;
-                }
-
-                int baseValue;
-
-                // Base ids are a pre-identified, so there is no range
-                if (baseJson.get(statType.getApiName()).isJsonPrimitive()) {
-                    baseValue = JsonUtils.getNullableJsonInt(baseJson, statType.getApiName());
-                } else {
-                    WynntilsMod.warn("Tome with a non-static base stat: " + statType.getApiName());
-                    continue;
-                }
-
-                // If the base value is 0, this stat is not present on the item
-                if (baseValue == 0) continue;
-
-                // "Inverted" stats (i.e. spell costs) will be stored as a positive value,
-                // and only converted to negative at display time.
-                if (statType.calculateAsInverted()) {
-                    baseValue = -baseValue;
-                }
-
-                list.add(Pair.of(statType, baseValue));
-            }
-
-            return list;
+            return new TomeInfo(displayName, type, tier, metaInfo, requirements, variableStats);
         }
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
             GearRestrictions restrictions = parseRestrictions(json);
-            ItemMaterial material = parseOtherMaterial(json);
+            ItemMaterial material = parseMaterial(json, apiName);
 
             List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
@@ -181,18 +126,15 @@ public class TomeInfoRegistry {
                     restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);
         }
 
-        private ItemMaterial parseOtherMaterial(JsonObject json) {
-            String material = JsonUtils.getNullableJsonString(json, "material");
+        private ItemMaterial parseMaterial(JsonObject json, String name) {
+            ItemMaterial material = parseOtherMaterial(json);
+
             if (material == null) {
-                // We're screwed.
-                // The best we can do is to give a generic default representation
+                WynntilsMod.warn("Tome DB is missing material for " + name);
                 return ItemMaterial.getDefaultTomeItemMaterial();
             }
 
-            String[] materialArray = material.split(":");
-            int itemTypeCode = Integer.parseInt(materialArray[0]);
-            int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-            return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+            return material;
         }
 
         private TomeRequirements parseTomeRequirements(JsonObject json) {

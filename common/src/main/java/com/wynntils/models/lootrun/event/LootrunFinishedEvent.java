@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 public abstract class LootrunFinishedEvent extends Event {
     protected final int challengesCompleted;
@@ -26,21 +26,27 @@ public abstract class LootrunFinishedEvent extends Event {
     public static class Completed extends LootrunFinishedEvent {
         protected final int rewardPulls;
         protected final int rewardRerolls;
+        protected final int rewardSacrifices;
         private final int experienceGained;
         private final int mobsKilled;
+        private final int chestsOpened;
 
         public Completed(
                 int challengesCompleted,
                 int timeElapsed,
                 int rewardPulls,
                 int rewardRerolls,
+                int rewardSacrifices,
                 int experienceGained,
-                int mobsKilled) {
+                int mobsKilled,
+                int chestsOpened) {
             super(challengesCompleted, timeElapsed);
             this.rewardPulls = rewardPulls;
             this.rewardRerolls = rewardRerolls;
+            this.rewardSacrifices = rewardSacrifices;
             this.experienceGained = experienceGained;
             this.mobsKilled = mobsKilled;
+            this.chestsOpened = chestsOpened;
         }
 
         public int getRewardPulls() {
@@ -51,12 +57,20 @@ public abstract class LootrunFinishedEvent extends Event {
             return rewardRerolls;
         }
 
+        public int getRewardSacrifices() {
+            return rewardSacrifices;
+        }
+
         public int getExperienceGained() {
             return experienceGained;
         }
 
         public int getMobsKilled() {
             return mobsKilled;
+        }
+
+        public int getChestsOpened() {
+            return chestsOpened;
         }
     }
 

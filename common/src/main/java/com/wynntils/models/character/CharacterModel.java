@@ -5,12 +5,13 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -18,13 +19,14 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
-import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.character.bossbar.DeathScreenBar;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -33,19 +35,17 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterModel extends Model {
-    private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §7Class: §f(.+)");
-    private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
+    private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
     // Test in CharacterModel_SILVERBULL_PATTERN
@@ -61,20 +61,16 @@ public final class CharacterModel extends Model {
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     public static final int CHARACTER_INFO_SLOT = 7;
-    private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
     private static final int COSMETICS_SLOT = 25;
     private static final int COSMETICS_BACK_SLOT = 9;
     public static final int GUILD_MENU_SLOT = 26;
 
-    // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
-    // something weird)
-    private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§4§lYou have died\\.\\.\\.");
+    private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
+
     public static final int MOVE_CHECK_FREQUENCY = 10;
     private int moveCheckTicks;
     private Position currentPosition;
-    private Position lastPositionBeforeTeleport;
-    private Location lastDeathLocation;
 
     private boolean inCharacterSelection;
     private boolean hasCharacter;
@@ -98,6 +94,8 @@ public final class CharacterModel extends Model {
 
     public CharacterModel() {
         super(List.of());
+
+        Handlers.BossBar.registerBar(deathScreenBar);
     }
 
     public boolean isSilverbullSubscriber() {
@@ -138,8 +136,9 @@ public final class CharacterModel extends Model {
         return isVeteran.get();
     }
 
+    // FIXME: Remove if this is not needed, or fix it for 2.1
     public boolean isHuntedMode() {
-        return McUtils.inventory().getItem(SOUL_POINT_SLOT).getItem() == Items.DIAMOND_AXE;
+        return false;
     }
 
     @SubscribeEvent
@@ -173,17 +172,6 @@ public final class CharacterModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         StyledText message = e.getOriginalStyledText();
 
-        if (message.matches(WYNN_DEATH_MESSAGE)) {
-            lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
-            CharacterDeathEvent deathEvent = new CharacterDeathEvent(lastDeathLocation);
-            WynntilsMod.postEvent(deathEvent);
-
-            if (deathEvent.isCanceled()) {
-                e.setCanceled(true);
-            }
-            return;
-        }
-
         StyledText trimmedMessage = message.trim();
         if (trimmedMessage.matches(SILVERBULL_JOIN_PATTERN)) {
             silverbullSubscriber.store(ConfirmedBoolean.TRUE);
@@ -197,16 +185,17 @@ public final class CharacterModel extends Model {
     }
 
     @SubscribeEvent
-    public void beforePlayerTeleport(PlayerTeleportEvent e) {
-        if (McUtils.player() == null) return;
-        lastPositionBeforeTeleport = McUtils.player().position();
+    public void onBossBarAdd(BossBarAddedEvent event) {
+        if (event.getTrackedBar() == deathScreenBar) {
+            WynntilsMod.postEvent(
+                    new CharacterDeathEvent(new Location(McUtils.player().blockPosition())));
+        }
     }
 
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
-            if (e.getItemStack().getItem() == Items.AIR) return;
-            parseCharacter(e.getItemStack());
+            if (!parseCharacter(e.getItemStack())) return;
             hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
@@ -314,21 +303,17 @@ public final class CharacterModel extends Model {
     }
 
     private void updateCharacterId() {
-        ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
+        ItemStack compassItem = McUtils.inventory().items.get(CHARACTER_INFO_SLOT);
+        List<StyledText> compassLore = LoreUtils.getLore(compassItem);
+        StyledText idLine = compassLore.getFirst();
 
-        List<StyledText> soulLore = LoreUtils.getLore(soulPointItem);
-
-        String id = "";
-        for (StyledText line : soulLore) {
-            if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
-                id = line.getString(PartStyle.StyleType.NONE);
-                break;
-            }
+        if (idLine == null || !idLine.matches(CHARACTER_ID_PATTERN)) {
+            WynntilsMod.warn("Compass item had unexpected character ID line: " + idLine);
+            return;
         }
 
+        id = idLine.getString();
         WynntilsMod.info("Selected character: " + id);
-
-        this.id = id;
     }
 
     private String getCharacterString() {
@@ -364,28 +349,14 @@ public final class CharacterModel extends Model {
         updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
     }
 
-    private void parseCharacter(ItemStack itemStack) {
-        List<StyledText> lore = LoreUtils.getLore(itemStack);
+    private boolean parseCharacter(ItemStack itemStack) {
+        Optional<CharacterItem> characterItemOpt = Models.Item.asWynnItem(itemStack, CharacterItem.class);
+        if (characterItemOpt.isEmpty()) return false;
 
-        int level = 0;
-        String className = "";
+        CharacterItem characterItem = characterItemOpt.get();
 
-        for (StyledText line : lore) {
-            Matcher levelMatcher = line.getMatcher(CLASS_MENU_LEVEL_PATTERN);
-            if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
-                continue;
-            }
-
-            Matcher classMatcher = line.getMatcher(CLASS_MENU_CLASS_PATTERN);
-
-            if (classMatcher.matches()) {
-                className = classMatcher.group(1);
-            }
-        }
-        ClassType classType = ClassType.fromName(className);
-
-        updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
+        updateCharacterInfo(characterItem.getClassType(), characterItem.isReskinned(), characterItem.getLevel());
+        return true;
     }
 
     private void updateCharacterInfo(ClassType classType, boolean reskinned, int level) {

@@ -25,8 +25,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class TranscribeMessagesFeature extends Feature {
@@ -51,7 +51,7 @@ public class TranscribeMessagesFeature extends Feature {
     @Persisted
     public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
-    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
@@ -70,7 +70,7 @@ public class TranscribeMessagesFeature extends Feature {
 
         if (styledText.equals(modified)) return;
 
-        event.setMessage(modified.getComponent());
+        event.setMessage(modified);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

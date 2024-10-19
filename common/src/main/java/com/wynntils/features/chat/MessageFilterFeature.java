@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -15,7 +15,8 @@ import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class MessageFilterFeature extends Feature {
@@ -63,7 +64,7 @@ public class MessageFilterFeature extends Feature {
     @Persisted
     public final Config<Boolean> hidePartyFinder = new Config<>(false);
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onMessage(ChatMessageReceivedEvent e) {
         StyledText msg = e.getOriginalStyledText();
         MessageType messageType = e.getMessageType();

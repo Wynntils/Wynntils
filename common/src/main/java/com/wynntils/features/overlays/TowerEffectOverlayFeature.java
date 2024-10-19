@@ -24,8 +24,8 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class TowerEffectOverlayFeature extends Feature {
@@ -74,14 +74,14 @@ public class TowerEffectOverlayFeature extends Feature {
     public void onTowerAura(GuildWarTowerEffectEvent.AuraSpawned event) {
         if (!soundEffectAura.get()) return;
 
-        McUtils.playSoundAmbient(AURA_SOUND, soundPitch.get(), soundVolume.get());
+        McUtils.playSoundAmbient(AURA_SOUND, soundVolume.get(), soundPitch.get());
     }
 
     @SubscribeEvent
     public void onTowerVolley(GuildWarTowerEffectEvent.VolleySpawned event) {
         if (!soundEffectVolley.get()) return;
 
-        McUtils.playSoundAmbient(VOLLEY_SOUND, soundPitch.get(), soundVolume.get());
+        McUtils.playSoundAmbient(VOLLEY_SOUND, soundVolume.get(), soundPitch.get());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

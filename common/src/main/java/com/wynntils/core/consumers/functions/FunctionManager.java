@@ -29,6 +29,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.StatisticFunctions;
 import com.wynntils.functions.WarFunctions;
+import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.WynnAlphabetFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
@@ -431,9 +432,16 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
+        registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
+        registerFunction(new CharacterFunctions.CappedCorruptedFunction());
+        registerFunction(new CharacterFunctions.CappedFocusFunction());
+        registerFunction(new CharacterFunctions.CappedFocusFunction());
         registerFunction(new CharacterFunctions.CappedHealthFunction());
+        registerFunction(new CharacterFunctions.CappedManaBankFunction());
         registerFunction(new CharacterFunctions.CappedManaFunction());
-        registerFunction(new CharacterFunctions.CappedSoulPointsFunction());
+        registerFunction(new CharacterFunctions.CappedOphanimFunction());
+        registerFunction(new CharacterFunctions.CappedSacredSurgeFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
@@ -442,11 +450,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
-        registerFunction(new CharacterFunctions.SoulpointFunction());
-        registerFunction(new CharacterFunctions.SoulpointMaxFunction());
-        registerFunction(new CharacterFunctions.SoulpointTimerFunction());
-        registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
-        registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
         registerFunction(new CharacterFunctions.StatusEffectActiveFunction());
         registerFunction(new CharacterFunctions.StatusEffectsFunction());
@@ -457,6 +460,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.TicksSinceLastSpellFunction());
+        registerFunction(new CombatFunctions.FocusedMobNameFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthFunction());
+        registerFunction(new CombatFunctions.FocusedMobHealthPercentFunction());
+        registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());
@@ -497,6 +504,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.HeldItemNameFunction());
         registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
         registerFunction(new InventoryFunctions.HeldItemTypeFunction());
+        registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
         registerFunction(new InventoryFunctions.InventoryFreeFunction());
@@ -530,8 +538,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunChallengesFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
+        registerFunction(new LootrunFunctions.LootrunMissionFunction());
         registerFunction(new LootrunFunctions.LootrunRedBeaconChallengeCountFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
@@ -556,16 +566,22 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.CurrentRaidFunction());
         registerFunction(new RaidFunctions.CurrentRaidRoomFunction());
         registerFunction(new RaidFunctions.CurrentRaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomDamageFunction());
         registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
+        registerFunction(new RaidFunctions.CurrentRaidDamageFunction());
+        registerFunction(new RaidFunctions.RaidChallengesFunction());
         registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
         registerFunction(new RaidFunctions.RaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.RaidRoomDamageFunction());
         registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
+        registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
 
         registerFunction(new RangedFunctions.RangeHighFunction());
         registerFunction(new RangedFunctions.RangeLowFunction());
         registerFunction(new RangedFunctions.RangedFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.MantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
@@ -604,6 +620,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new WarFunctions.TowerTerritoryFunction());
         registerFunction(new WarFunctions.VolleyTimerFunction());
         registerFunction(new WarFunctions.WarsSinceFunction());
+
+        registerFunction(new WorldEventFunctions.AnnihilationSunProgressFunction());
 
         registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
         registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());

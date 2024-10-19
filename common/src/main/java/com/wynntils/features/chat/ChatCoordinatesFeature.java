@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -19,12 +19,15 @@ import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends Feature {
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!Models.WorldState.onWorld()) return;
@@ -36,7 +39,7 @@ public class ChatCoordinatesFeature extends Feature {
         // No changes were made, there were no coordinates.
         if (styledText.equals(modified)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -50,11 +53,17 @@ public class ChatCoordinatesFeature extends Feature {
         // No changes were made, there were no coordinates.
         if (styledText.equals(modified)) return;
 
-        e.setMessage(modified.getComponent());
+        e.setMessage(modified);
     }
 
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
-        return styledText.iterate((part, changes) -> {
+        return styledText.iterateBackwards((part, changes) -> {
+            if (END_OF_HEADER_PATTERN
+                    .matcher(part.getString(null, PartStyle.StyleType.NONE))
+                    .matches()) {
+                return IterationDecision.BREAK;
+            }
+
             StyledTextPart partToReplace = part;
             Matcher matcher =
                     LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));

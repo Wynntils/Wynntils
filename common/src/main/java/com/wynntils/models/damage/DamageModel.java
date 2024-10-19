@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.damage;
@@ -8,40 +8,50 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
+import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.models.damage.label.DamageLabelInfo;
+import com.wynntils.models.damage.label.DamageLabelParser;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.damage.type.FocusedDamageEvent;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
-    // Test in DamageModel_DAMAGE_LABEL_PATTERN
-    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[245bcef](?:§l)?-(\\d+) ([❤✦✤❉❋✹☠]) )");
-
     // Test in DamageModel_DAMAGE_BAR_PATTERN
-    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*) - §c(\\d+)§4❤(?: - §7(.*)§7)?$");
+    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile(
+            "^\\s*§[0-9a-f](.*) - §c(\\d+(?:\\.\\d+)?[kKmM]?)§4❤(?:§r - ( ?(§.(.+))(Dam|Weak|Def))+)?\\s*$");
+
+    // Wynncraft updates the focused mob health bar by repeatedly destroying and recreating the boss bar. We don't want
+    // to lose the entire focused mob state every time the boss bar is recreated, so we delay invalidation by this many
+    // milliseconds and revalidate if a recreation/update event arrives during the delay
+    private static final long FOCUSED_MOB_INVALIDATION_DELAY = 1000L;
 
     private final DamageBar damageBar = new DamageBar();
 
-    private final TimedSet<Integer> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
+    private final TimedSet<Long> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
 
-    private String focusedMobName;
-    private String focusedMobElementals;
-    private int focusedMobHealth;
+    private String focusedMobName = "";
+    private String focusedMobElementals = "";
+    private long focusedMobHealth;
+    private CappedValue focusedMobHealthPercent = CappedValue.EMPTY;
+    private long focusedMobExpiryTime = -1L;
+
     private long lastDamageDealtTimestamp;
 
     public DamageModel() {
         super(List.of());
 
         Handlers.BossBar.registerBar(damageBar);
+        Handlers.Label.registerParser(new DamageLabelParser());
     }
 
     public long getLastDamageDealtTimestamp() {
@@ -49,34 +59,54 @@ public final class DamageModel extends Model {
     }
 
     @SubscribeEvent
-    public void onLabelChange(EntityLabelChangedEvent event) {
-        if (!(event.getEntity() instanceof ArmorStand)) return;
+    public void onLabelIdentified(LabelIdentifiedEvent event) {
+        if (!(event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo)) return;
 
-        Matcher matcher = event.getName().getMatcher(DAMAGE_LABEL_PATTERN);
-        if (!matcher.find()) return;
-
-        Map<DamageType, Integer> damages = new HashMap<>();
-        // Restart finding from the beginning
-        matcher.reset();
-        while (matcher.find()) {
-            int damage = Integer.parseInt(matcher.group(1));
-            DamageType damageType = DamageType.fromSymbol(matcher.group(2));
-
-            damages.put(damageType, damage);
-        }
-
+        Map<DamageType, Long> damages = damageLabelInfo.getDamages();
         WynntilsMod.postEvent(new DamageDealtEvent(damages));
 
-        int damageSum = damages.values().stream().mapToInt(Integer::intValue).sum();
+        long damageSum = damages.values().stream().mapToLong(d -> d).sum();
         areaDamageSet.put(damageSum);
 
         lastDamageDealtTimestamp = System.currentTimeMillis();
     }
 
-    public int getAreaDamagePerSecond() {
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        areaDamageSet.clear();
+        focusedMobName = "";
+        focusedMobElementals = "";
+        focusedMobHealth = 0;
+        focusedMobHealthPercent = CappedValue.EMPTY;
+        focusedMobExpiryTime = -1L;
+        lastDamageDealtTimestamp = 0L;
+    }
+
+    public String getFocusedMobName() {
+        checkFocusedMobValidity();
+        return focusedMobName;
+    }
+
+    public String getFocusedMobElementals() {
+        checkFocusedMobValidity();
+        // TODO: Parse this into specific elements and expose as functions
+        return focusedMobElementals;
+    }
+
+    public long getFocusedMobHealth() {
+        checkFocusedMobValidity();
+        return focusedMobHealth;
+    }
+
+    public CappedValue getFocusedMobHealthPercent() {
+        checkFocusedMobValidity();
+        return focusedMobHealthPercent;
+    }
+
+    public long getAreaDamagePerSecond() {
         return areaDamageSet.getEntries().stream()
                 .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getCreation()) <= 1000L)
-                .mapToInt(TimedSet.TimedEntry::getEntry)
+                .mapToLong(TimedSet.TimedEntry::getEntry)
                 .sum();
     }
 
@@ -84,12 +114,30 @@ public final class DamageModel extends Model {
         return areaDamageSet.getEntries().stream()
                         .filter(timedEntry ->
                                 (System.currentTimeMillis() - timedEntry.getCreation()) <= seconds * 1000L)
-                        .mapToInt(TimedSet.TimedEntry::getEntry)
+                        .mapToLong(TimedSet.TimedEntry::getEntry)
                         .sum()
                 / (double) seconds;
     }
 
-    private final class DamageBar extends TrackedBar {
+    private void checkFocusedMobValidity() {
+        if (focusedMobExpiryTime >= 0 && System.currentTimeMillis() >= focusedMobExpiryTime) {
+            focusedMobName = "";
+            focusedMobElementals = "";
+            focusedMobHealth = 0;
+            focusedMobHealthPercent = CappedValue.EMPTY;
+            focusedMobExpiryTime = -1L;
+        }
+    }
+
+    private void invalidateFocusedMob() {
+        focusedMobExpiryTime = System.currentTimeMillis() + FOCUSED_MOB_INVALIDATION_DELAY;
+    }
+
+    private void revalidateFocusedMob() {
+        focusedMobExpiryTime = -1L;
+    }
+
+    public final class DamageBar extends TrackedBar {
         private DamageBar() {
             super(DAMAGE_BAR_PATTERN);
         }
@@ -97,14 +145,15 @@ public final class DamageModel extends Model {
         @Override
         public void onUpdateName(Matcher match) {
             String mobName = match.group(1);
-            int health = Integer.parseInt(match.group(2));
+            long health = StringUtils.parseSuffixedInteger(match.group(2));
             String mobElementals = match.group(3);
             if (mobElementals == null) {
                 mobElementals = "";
             }
 
+            checkFocusedMobValidity();
             if (mobName.equals(focusedMobName) && mobElementals.equals(focusedMobElementals)) {
-                int oldHealth = focusedMobHealth;
+                long oldHealth = focusedMobHealth;
                 focusedMobHealth = health;
 
                 WynntilsMod.postEvent(new FocusedDamageEvent.MobDamaged(
@@ -117,12 +166,22 @@ public final class DamageModel extends Model {
                 WynntilsMod.postEvent(
                         new FocusedDamageEvent.MobFocused(focusedMobName, focusedMobElementals, focusedMobHealth));
             }
+            revalidateFocusedMob();
+
             lastDamageDealtTimestamp = System.currentTimeMillis();
         }
 
         @Override
         public void onUpdateProgress(float progress) {
+            focusedMobHealthPercent = new CappedValue(Math.round(progress * 100), 100);
+            revalidateFocusedMob();
+
             lastDamageDealtTimestamp = System.currentTimeMillis();
+        }
+
+        @Override
+        protected void reset() {
+            invalidateFocusedMob();
         }
     }
 }

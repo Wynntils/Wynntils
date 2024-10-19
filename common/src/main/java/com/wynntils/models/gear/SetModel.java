@@ -9,13 +9,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.SetItemProperty;
 import com.wynntils.models.stats.type.StatType;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,12 +31,11 @@ public class SetModel extends Model {
 
     public SetModel() {
         super(List.of());
-        loadSetData();
     }
 
     @Override
-    public void reloadData() {
-        loadSetData();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_ITEM_SETS).handleReader(this::handleSetData);
     }
 
     /**
@@ -97,29 +97,26 @@ public class SetModel extends Model {
         return !setData.isEmpty();
     }
 
-    private void loadSetData() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_ITEM_SETS);
-        dl.handleReader(reader -> {
-            TypeToken<Map<String, RawSetInfo>> type = new TypeToken<>() {};
-            Map<String, RawSetInfo> rawSets = Managers.Json.GSON.fromJson(reader, type.getType());
-            rawSets.forEach((setName, rawSetInfo) -> {
-                List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
-                        .map(bonusPair -> {
-                            Map<StatType, Integer> bonusMap = new HashMap<>();
-                            for (Map.Entry<String, Integer> entry : bonusPair.entrySet()) {
-                                StatType statType = Models.Stat.fromApiName(entry.getKey());
-                                if (statType == null) {
-                                    WynntilsMod.warn("Unknown stat type: " + entry.getKey());
-                                    continue;
-                                }
-                                bonusMap.put(statType, entry.getValue());
+    private void handleSetData(Reader reader) {
+        TypeToken<Map<String, RawSetInfo>> type = new TypeToken<>() {};
+        Map<String, RawSetInfo> rawSets = Managers.Json.GSON.fromJson(reader, type.getType());
+        rawSets.forEach((setName, rawSetInfo) -> {
+            List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
+                    .map(bonusPair -> {
+                        Map<StatType, Integer> bonusMap = new HashMap<>();
+                        for (Map.Entry<String, Integer> entry : bonusPair.entrySet()) {
+                            StatType statType = Models.Stat.fromApiName(entry.getKey());
+                            if (statType == null) {
+                                WynntilsMod.warn("Unknown stat type: " + entry.getKey());
+                                continue;
                             }
-                            return bonusMap;
-                        })
-                        .toList();
+                            bonusMap.put(statType, entry.getValue());
+                        }
+                        return bonusMap;
+                    })
+                    .toList();
 
-                setData.put(setName, new SetInfo(setName, bonuses, rawSetInfo.items));
-            });
+            setData.put(setName, new SetInfo(setName, bonuses, rawSetInfo.items));
         });
     }
 

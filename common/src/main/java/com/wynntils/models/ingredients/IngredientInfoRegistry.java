@@ -12,9 +12,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.Download;
+import com.wynntils.core.net.Dependency;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientInfo;
@@ -33,70 +33,69 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class IngredientInfoRegistry {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
+            .create();
+
     private List<IngredientInfo> ingredientInfoRegistry = List.of();
     private Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
     private Map<String, IngredientInfo> ingredientInfoLookupApiName = Map.of();
 
-    public IngredientInfoRegistry() {
-        loadData();
-    }
-
-    public void loadData() {
-        loadIngredients();
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_INGREDIENTS,
+                        Dependency.multi(
+                                Models.WynnItem,
+                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                .handleJsonObject(this::handleIngredients);
     }
 
     public IngredientInfo getFromDisplayName(String ingredientName) {
         return ingredientInfoLookup.get(ingredientName);
     }
 
+    public IngredientInfo getFromApiName(String ingredientName) {
+        return ingredientInfoLookupApiName.get(ingredientName);
+    }
+
     public Stream<IngredientInfo> getIngredientInfoStream() {
         return ingredientInfoRegistry.stream();
     }
 
-    private void loadIngredients() {
-        if (!Models.WynnItem.hasObtainInfo()) return;
-        if (!Models.WynnItem.hasMaterialConversionInfo()) return;
+    private void handleIngredients(JsonObject json) {
+        // Create fast lookup maps
+        List<IngredientInfo> registry = new ArrayList<>();
 
-        // Download and parse the ingredient DB
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_INGREDIENTS_ADVANCED);
-        dl.handleJsonObject(json -> {
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
-                    .create();
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            JsonObject ingredientObject = entry.getValue().getAsJsonObject();
 
-            // Create fast lookup maps
-            List<IngredientInfo> registry = new ArrayList<>();
+            // Inject the name into the object
+            ingredientObject.addProperty("name", entry.getKey());
 
-            for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-                JsonObject ingredientObject = entry.getValue().getAsJsonObject();
+            // Deserialize the item
+            IngredientInfo ingredientInfo = GSON.fromJson(ingredientObject, IngredientInfo.class);
 
-                // Inject the name into the object
-                ingredientObject.addProperty("name", entry.getKey());
+            // Add the item to the registry
+            registry.add(ingredientInfo);
+        }
 
-                // Deserialize the item
-                IngredientInfo ingredientInfo = gson.fromJson(ingredientObject, IngredientInfo.class);
-
-                // Add the item to the registry
-                registry.add(ingredientInfo);
+        Map<String, IngredientInfo> lookupMap = new HashMap<>();
+        Map<String, IngredientInfo> altLookupMap = new HashMap<>();
+        for (IngredientInfo ingredientInfo : registry) {
+            lookupMap.put(ingredientInfo.name(), ingredientInfo);
+            if (ingredientInfo.apiName().isPresent()) {
+                altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
             }
+        }
 
-            Map<String, IngredientInfo> lookupMap = new HashMap<>();
-            Map<String, IngredientInfo> altLookupMap = new HashMap<>();
-            for (IngredientInfo ingredientInfo : registry) {
-                lookupMap.put(ingredientInfo.name(), ingredientInfo);
-                if (ingredientInfo.apiName().isPresent()) {
-                    altLookupMap.put(ingredientInfo.apiName().get(), ingredientInfo);
-                }
-            }
-
-            // Make the result visisble to the world
-            ingredientInfoRegistry = registry;
-            ingredientInfoLookup = lookupMap;
-            ingredientInfoLookupApiName = altLookupMap;
-        });
+        // Make the result visisble to the world
+        ingredientInfoRegistry = registry;
+        ingredientInfoLookup = lookupMap;
+        ingredientInfoLookupApiName = altLookupMap;
     }
 
     private static final class IngredientInfoDeserializer extends AbstractItemInfoDeserializer<IngredientInfo> {
@@ -166,26 +165,14 @@ public class IngredientInfoRegistry {
         }
 
         private ItemMaterial parseMaterial(JsonObject json, String name) {
-            String material = JsonUtils.getNullableJsonString(json, "material");
-            if (material == null || material.isEmpty()) {
+            ItemMaterial material = parseOtherMaterial(json);
+
+            if (material == null) {
                 WynntilsMod.warn("Ingredient DB is missing material for " + name);
                 return ItemMaterial.fromItemId("minecraft:air", 0);
             }
 
-            String[] materialParts = material.split(":");
-
-            int id = Integer.parseInt(materialParts[0]);
-            int damage = Integer.parseInt(materialParts[1]);
-
-            if (id == 397) {
-                // This is a player head. Check if we got a skin for it instead!
-                String skinTexture = JsonUtils.getNullableJsonString(json, "skin");
-                if (skinTexture != null) {
-                    return ItemMaterial.fromPlayerHeadUUID(skinTexture);
-                }
-            }
-
-            return ItemMaterial.fromItemTypeCode(id, damage);
+            return material;
         }
 
         private List<Pair<Skill, Integer>> getSkillRequirements(JsonObject itemIdsJson) {

@@ -18,13 +18,16 @@ public class RaidProgressOverlay extends TextOverlay {
     private String previewTemplate;
 
     @Persisted
-    private final Config<Boolean> showIntermission = new Config<>(true);
+    public final Config<Boolean> showIntermission = new Config<>(false);
 
     @Persisted
-    private final Config<Boolean> showMilliseconds = new Config<>(true);
+    public final Config<Boolean> showMilliseconds = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> totalIntermission = new Config<>(true);
+    public final Config<Boolean> totalIntermission = new Config<>(false);
+
+    @Persisted
+    public final Config<Boolean> showDamage = new Config<>(true);
 
     public RaidProgressOverlay() {
         super(
@@ -88,42 +91,101 @@ public class RaidProgressOverlay extends TextOverlay {
     }
 
     private String getChallengeTemplate(int challengeNum) {
+        StringBuilder challengeBuilder = new StringBuilder("\"\n§dChallenge ")
+                .append(challengeNum)
+                .append(": \";if_str(eq(raid_room_time(\"challenge_")
+                .append(challengeNum)
+                .append("\");-1);\"§7");
+
         if (showMilliseconds.get()) {
-            return "\"\n§dChallenge " + challengeNum + ": \";if_str(eq(raid_room_time(\"challenge_" + challengeNum
-                    + "\");-1);\"§7--:--.---\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"challenge_"
-                    + challengeNum + "\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"challenge_"
-                    + challengeNum + "\");1000);60));2);\".\";leading_zeros(int(mod(raid_room_time(\"challenge_"
-                    + challengeNum + "\");1000));3)));";
+            challengeBuilder.append("--:--.---");
+        } else {
+            challengeBuilder.append("--:--");
         }
 
-        return "\"\n§dChallenge " + challengeNum + ": \";if_str(eq(raid_room_time(\"challenge_" + challengeNum
-                + "\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"challenge_"
-                + challengeNum + "\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"challenge_"
-                + challengeNum + "\");1000);60));2)));";
+        challengeBuilder
+                .append("\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"challenge_")
+                .append(challengeNum)
+                .append("\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"challenge_")
+                .append(challengeNum)
+                .append("\");1000);60));2)");
+
+        if (showMilliseconds.get()) {
+            challengeBuilder
+                    .append(";\".\";leading_zeros(int(mod(raid_room_time(\"challenge_")
+                    .append(challengeNum)
+                    .append("\");1000));3)));");
+        } else {
+            challengeBuilder.append("));");
+        }
+
+        if (showDamage.get()) {
+            challengeBuilder
+                    .append("if_str(eq(raid_room_damage(\"challenge_")
+                    .append(challengeNum)
+                    .append("\");-1);\"\";concat(\" §f(§e\";format(raid_room_damage(\"challenge_")
+                    .append(challengeNum)
+                    .append("\"));\"§f)\"));");
+        }
+
+        return challengeBuilder.toString();
     }
 
     private String getChallengePreview(int challengeNum) {
+        String challengePreview;
+
         if (showMilliseconds.get()) {
-            return "§dChallenge " + challengeNum + ": §b01:17.022\n";
+            challengePreview = "§dChallenge " + challengeNum + ": §b01:17.022";
+        } else {
+            challengePreview = "§dChallenge " + challengeNum + ": §b01:17";
         }
 
-        return "§dChallenge " + challengeNum + ": §b01:17\n";
+        if (showDamage.get()) {
+            challengePreview += " §f(§e343k§f)";
+        }
+
+        challengePreview += "\n";
+
+        return challengePreview;
     }
 
     private String getBossTemplate() {
+        String bossTemplate;
+
         if (showMilliseconds.get()) {
-            return "\"\n\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--.--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"boss_fight\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"boss_fight\");1000);60));2);\".\";leading_zeros(int(mod(raid_room_time(\"boss_fight\");1000));3)));\"\n\";";
+            bossTemplate =
+                    "\"\n\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--.--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"boss_fight\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"boss_fight\");1000);60));2);\".\";leading_zeros(int(mod(raid_room_time(\"boss_fight\");1000));3)));";
+        } else {
+            bossTemplate =
+                    "\"\n\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"boss_fight\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"boss_fight\");1000);60));2)));";
         }
 
-        return "\"\n\n§4Boss: \";if_str(eq(raid_room_time(\"boss_fight\");-1);\"§7--:--\";concat(\"§b\";leading_zeros(int(div(div(raid_room_time(\"boss_fight\");1000);60));2);\":\";leading_zeros(int(mod(div(raid_room_time(\"boss_fight\");1000);60));2)));\"\n\";";
+        if (showDamage.get()) {
+            bossTemplate +=
+                    "if_str(eq(raid_room_damage(\"boss_fight\");-1);\"\n\";concat(\" §f(§e\";format(raid_room_damage(\"boss_fight\"));\"§f)\n\"));";
+        } else {
+            bossTemplate += "\"\n\";";
+        }
+
+        return bossTemplate;
     }
 
     private String getBossPreview() {
+        String bossPreview;
+
         if (showMilliseconds.get()) {
-            return "\n§4Boss: §7--:--.---\n";
+            bossPreview = "\n§4Boss: §7--:--.---";
+        } else {
+            bossPreview = "\n§4Boss: §7--:--";
         }
 
-        return "\n§4Boss: §7--:--\n";
+        if (showDamage.get()) {
+            bossPreview += " §f(§e343k§f)";
+        }
+
+        bossPreview += "\n";
+
+        return bossPreview;
     }
 
     private String getIntermissionTemplate() {
@@ -144,30 +206,47 @@ public class RaidProgressOverlay extends TextOverlay {
 
     private String getTotalTemplate() {
         String timeToUse = totalIntermission.get() ? "raid_time" : "sub(raid_time;raid_intermission_time)";
+        String totalTemplate;
 
         if (showMilliseconds.get()) {
-            return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(" + timeToUse
+            totalTemplate = "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(" + timeToUse
                     + ";1000);60));2);\":\";leading_zeros(int(mod(div(" + timeToUse
-                    + ";1000);60));2);\".\";leading_zeros(int(mod(" + timeToUse + ";1000));3)))}";
+                    + ";1000);60));2);\".\";leading_zeros(int(mod(" + timeToUse + ";1000));3))";
+        } else {
+            totalTemplate = "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(" + timeToUse
+                    + ";1000);60));2);\":\";leading_zeros(int(mod(div(" + timeToUse + ";1000);60));2))";
         }
 
-        return "\"\n§5Total: \";concat(\"§b\";leading_zeros(int(div(div(" + timeToUse
-                + ";1000);60));2);\":\";leading_zeros(int(mod(div(" + timeToUse + ";1000);60));2)))}";
+        if (showDamage.get()) {
+            totalTemplate += ";if_str(eq(raid_damage;-1);\"\";concat(\" §f(§e\";format(raid_damage);\"§f)\")))}";
+        } else {
+            totalTemplate += ")}";
+        }
+
+        return totalTemplate;
     }
 
     private String getTotalPreview() {
+        String totalPreview;
+
         if (totalIntermission.get()) {
             if (showMilliseconds.get()) {
-                return "\n§5Total: §b03:36.279";
+                totalPreview = "\n§5Total: §b03:36.279";
+            } else {
+                totalPreview = "\n§5Total: §b03:36";
             }
-
-            return "\n§5Total: §b03:36";
         } else {
             if (showMilliseconds.get()) {
-                return "\n§5Total: §b03:21.207";
+                totalPreview = "\n§5Total: §b03:21.207";
+            } else {
+                totalPreview = "\n§5Total: §b03:21";
             }
-
-            return "\n§5Total: §b03:21";
         }
+
+        if (showDamage.get()) {
+            totalPreview += " §f(§e1.3M§f)";
+        }
+
+        return totalPreview;
     }
 }

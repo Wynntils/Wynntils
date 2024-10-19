@@ -49,7 +49,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
     public static final int LOOT_CHEST_ITEM_COUNT = 27;
@@ -107,7 +107,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent e) {
+    public void onScreenInit(ScreenInitEvent.Pre e) {
         if (Models.Container.getCurrentContainer() instanceof RewardContainer rewardContainer) {
             nextExpectedLootContainerId = rewardContainer.getContainerId();
 

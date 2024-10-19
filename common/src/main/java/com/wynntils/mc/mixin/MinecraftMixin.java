@@ -4,16 +4,22 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -56,5 +62,47 @@ public abstract class MinecraftMixin {
     @Inject(method = "resizeDisplay()V", at = @At("RETURN"))
     private void resizeDisplayPost(CallbackInfo ci) {
         MixinHelper.postAlways(new DisplayResizeEvent());
+    }
+
+    @Inject(
+            method = "<init>(Lnet/minecraft/client/main/GameConfig;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/Options;loadSelectedResourcePacks(Lnet/minecraft/server/packs/repository/PackRepository;)V",
+                            shift = At.Shift.AFTER))
+    private void onInitialResourcePackLoad(CallbackInfo ci) {
+        // Too early to post events here, but Service components are initialized (and their storages loaded)
+        // We add the resource pack to the selected list here
+        Services.ResourcePack.preloadResourcePack();
+        // Explicitly do not trigger a reload here, as it's too early, and the game will do it later
+    }
+
+    @Inject(
+            method = "clearDownloadedResourcePacks()V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/resources/server/DownloadedPackSource;cleanupAfterDisconnect()V",
+                            shift = At.Shift.AFTER))
+    private void handleResourcePackPopPre(CallbackInfo ci) {
+        ServerResourcePackEvent.Clear event = new ServerResourcePackEvent.Clear();
+        MixinHelper.postAlways(event);
+    }
+
+    @WrapWithCondition(
+            method = "startAttack()Z",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
+    private boolean onAttack(LocalPlayer localPlayer, InteractionHand hand) {
+        ArmSwingEvent event = new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK, hand);
+        MixinHelper.post(event);
+
+        return !event.isCanceled();
     }
 }
