@@ -212,8 +212,9 @@ public class ContentBookQueries {
 
     private int getFilterChangeDirection(ItemStack itemStack, String targetFilter) {
         StyledText itemName = ItemUtils.getItemName(itemStack);
-        if (!REVERSE_DIRECTION || !itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE)))
+        if (!REVERSE_DIRECTION || !itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) {
             return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+        }
 
         int activeFilterIndex = -1;
         int targetFilterIndex = -1;
