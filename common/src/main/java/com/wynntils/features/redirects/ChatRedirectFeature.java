@@ -15,7 +15,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -136,7 +135,7 @@ public class ChatRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        StyledText message = StyledTextUtils.unwrap(e.getOriginalStyledText()).stripAlignment();
+        StyledText message = e.getOriginalUnwrappedStyledText().stripAlignment();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
