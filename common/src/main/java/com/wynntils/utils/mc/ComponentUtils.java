@@ -15,15 +15,29 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 public final class ComponentUtils {
     private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
+    private static final ResourceLocation DEFAULT_FONT_LOCATION = ResourceLocation.withDefaultNamespace("default");
+    private static final ResourceLocation CHAT_BANNER_FONT_LOCATION = ResourceLocation.parse("wynntils:chat");
+    private static final Style CHAT_BANNER_STYLE =
+            Style.EMPTY.withFont(CHAT_BANNER_FONT_LOCATION).withColor(ChatFormatting.DARK_GREEN);
+    private static final Style RESET_STYLE =
+            Style.EMPTY.withFont(DEFAULT_FONT_LOCATION).withColor(ChatFormatting.WHITE);
+    private static final Component CHAT_BANNER_FIRST_LINE = Component.literal(
+                    "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ")
+            .withStyle(CHAT_BANNER_STYLE);
+    private static final Component CHAT_BANNER_LINE_PREFIX =
+            Component.literal("\uDAFF\uDFFC\uE001\uDB00\uDC06 ").withStyle(CHAT_BANNER_STYLE);
 
     public static List<Component> stripDuplicateBlank(List<Component> lore) {
         List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
@@ -167,5 +181,35 @@ public final class ComponentUtils {
             newName.append(Component.literal(current.toString()));
         }
         return newName;
+    }
+
+    /**
+     * Adds a Wynntils chat banner to the left side of the provided text in the style of Wynncraft 2.1 chat banners.
+     * The formatting of the provided text is preserved.
+     *
+     * @param formattedText the formatted text to add the Wynntils chat banner to
+     * @return a {@code Component} holding the formatted text with the Wynntils chat banner added
+     */
+    public static Component addWynntilsBanner(Component component) {
+        Minecraft mc = Minecraft.getInstance();
+
+        List<Component> lines = splitComponent(
+                component,
+                ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(CHAT_BANNER_LINE_PREFIX));
+
+        MutableComponent output = CHAT_BANNER_FIRST_LINE.copy();
+        output.append(Component.empty().withStyle(RESET_STYLE).append(lines.getFirst()))
+                .append("\n");
+
+        for (int i = 1; i < lines.size(); i++) {
+            output.append(CHAT_BANNER_LINE_PREFIX
+                    .copy()
+                    .append(Component.empty().withStyle(RESET_STYLE).append(lines.get(i))));
+            if (i != lines.size() - 1) {
+                output.append("\n");
+            }
+        }
+
+        return output;
     }
 }
