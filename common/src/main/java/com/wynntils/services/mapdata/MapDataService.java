@@ -7,6 +7,9 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.net.DownloadRegistry;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
@@ -24,7 +27,10 @@ import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapFeature;
+import com.wynntils.utils.type.Pair;
 import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -48,6 +54,12 @@ public class MapDataService extends Service {
     // FIXME: i18n
     private static final String NAMELESS_CATEGORY = "Category '%s'";
 
+    @Persisted
+    public final Storage<List<Pair<String, URI>>> onlineProviders = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    public final Storage<List<Pair<String, URI>>> localProviders = new Storage<>(new ArrayList<>());
+
     // Used for referencing the map data service before it is fully initialized in Services
     private final Deque<String> providerOrder = new LinkedList<>();
     private final Map<String, MapDataProvider> allProviders = new HashMap<>();
@@ -58,6 +70,22 @@ public class MapDataService extends Service {
         super(List.of());
 
         createBuiltInProviders();
+
+        // Create placeholders for online providers; these will be replaced once loading has finished
+        onlineProviders.get().forEach(pair -> {
+            String id = pair.a();
+            String completeId = "online:" + id;
+            registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+        });
+    }
+
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        onlineProviders.get().forEach(pair -> {
+            URI url = pair.b();
+            // FIXME: We need to support registering downloads without an urlId
+            // registry.registerDownload(url);
+        });
     }
 
     @Override
@@ -136,11 +164,22 @@ public class MapDataService extends Service {
         registerProvider(completeId, provider);
     }
 
-    public void createOnlineProvider(String id, String url) {
+    public void addOnlineProvider(String id, String url) {
+        onlineProviders.get().add(Pair.of(id, URI.create(url)));
+        onlineProviders.touched();
+
         String completeId = "online:" + id;
-        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+        JsonProvider.loadOnlineResource(completeId, URI.create(url), this::registerProvider);
         // Register a dummy provider; this will be replaced once loading has finished
         registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+    }
+
+    public void removeOnlineProvider(String id) {
+        onlineProviders.get().removeIf(pair -> pair.a().equals(id));
+        onlineProviders.touched();
+
+        String completeId = "online:" + id;
+        unregisterProvider(completeId);
     }
 
     public void prioritizeProvider(String providerId) {
@@ -183,6 +222,14 @@ public class MapDataService extends Service {
         // Add or update the provider
         allProviders.put(providerId, provider);
         provider.onChange(this::onProviderChange);
+
+        // Invalidate caches
+        invalidateAllCaches();
+    }
+
+    private void unregisterProvider(String providerId) {
+        allProviders.remove(providerId);
+        providerOrder.remove(providerId);
 
         // Invalidate caches
         invalidateAllCaches();
