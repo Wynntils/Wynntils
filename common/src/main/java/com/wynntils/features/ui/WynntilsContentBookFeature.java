@@ -26,9 +26,9 @@ import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -37,6 +37,7 @@ import org.lwjgl.glfw.GLFW;
 public class WynntilsContentBookFeature extends Feature {
     private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
     private static final int TUTORIAL_HIGHLIGHT_SLOT = 8;
+    private static final int TUTORIAL_CUSTOM_MODEL_DATA_VALUE = 307;
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
@@ -154,7 +155,17 @@ public class WynntilsContentBookFeature extends Feature {
 
     private void tryCancelQuestBookOpen(ICancellableEvent event) {
         // Tutorial safeguard, don't replace the content book if the player hasn't completed the tutorial
-        if (McUtils.inventory().getItem(TUTORIAL_HIGHLIGHT_SLOT).getItem() == Items.GOLDEN_AXE) return;
+        ItemStack contentBookItem = McUtils.inventory().getItem(TUTORIAL_HIGHLIGHT_SLOT);
+
+        if (contentBookItem != null && contentBookItem.getComponents().has(DataComponents.CUSTOM_MODEL_DATA)) {
+            if (contentBookItem
+                            .getComponents()
+                            .get(DataComponents.CUSTOM_MODEL_DATA)
+                            .value()
+                    == TUTORIAL_CUSTOM_MODEL_DATA_VALUE) {
+                return;
+            }
+        }
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 

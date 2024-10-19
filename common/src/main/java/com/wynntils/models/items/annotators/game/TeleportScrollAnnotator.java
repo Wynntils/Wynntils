@@ -25,7 +25,7 @@ public final class TeleportScrollAnnotator implements GameItemAnnotator {
         String scrollName = nameMatcher.group(1);
         int remainingCharges = Integer.parseInt(nameMatcher.group(2));
 
-        if (scrollName.equals("the Forgery")) {
+        if (scrollName.equals("The Forgery")) {
             return new TeleportScrollItem("For", true, remainingCharges);
         }
 

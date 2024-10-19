@@ -33,6 +33,9 @@ public class SpellCastVignetteFeature extends Feature {
     public final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
     @Persisted
+    public final Config<Float> maxItensityPercent = new Config<>(100f);
+
+    @Persisted
     public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int vignetteTimer;
@@ -48,9 +51,11 @@ public class SpellCastVignetteFeature extends Feature {
         // If the spell costs no mana, don't show the vignette
         if (event.getManaCost() == 0) return;
 
+        // Make sure the current mana is never 0 so the whole screen won't be covered in solid blue
+        int currentMana = Math.max(1, Models.CharacterStats.getMana().current());
+
         // An relativeCost of 1.0 means we just used all mana we have left
-        float relativeCost =
-                (float) event.getManaCost() / Models.CharacterStats.getMana().current();
+        float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxItensityPercent.get() / 100);
         intensity = vignetteIntensity.get() * relativeCost;
         vignetteTimer = SHOW_VIGNETTE_TICKS;
     }

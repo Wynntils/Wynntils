@@ -128,9 +128,6 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     protected abstract String getPreviewTemplate();
 
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
-
     public final boolean isRendered() {
         // If the enabled template is empty,
         // the overlay is rendered when the player is in the world.

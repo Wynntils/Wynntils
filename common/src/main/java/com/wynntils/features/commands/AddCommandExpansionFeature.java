@@ -377,6 +377,8 @@ public class AddCommandExpansionFeature extends Feature {
         addNode(root, renamepetNode);
 
         addAlias(root, renamepetNode, "renamepets", AliasCommandLevel.ALL);
+
+        addNode(root, literal("ironman").build());
     }
 
     private void addParticlesCommandNode(RootCommandNode<SharedSuggestionProvider> root) {
@@ -410,6 +412,7 @@ public class AddCommandExpansionFeature extends Feature {
                 .then(literal("kick")
                         .then(argument("player", EntityArgument.players()).suggests(PARTY_NAME_SUGGESTION_PROVIDER)))
                 .then(literal("leave"))
+                .then(literal("lobby"))
                 .then(literal("list"))
                 .then(literal("promote")
                         .then(argument("player", EntityArgument.players()).suggests(PARTY_NAME_SUGGESTION_PROVIDER)))
@@ -469,6 +472,7 @@ public class AddCommandExpansionFeature extends Feature {
                         .then(literal("popups"))
                         .then(literal("pouchmsg"))
                         .then(literal("pouchpickup"))
+                        .then(literal("publicProfile"))
                         .then(literal("queststartbeacon"))
                         .then(literal("rpwarning"))
                         .then(literal("sb"))

@@ -109,6 +109,8 @@ allprojects {
         }
         json {
             target "src/**/*.json"
+            // schemaVersion must be at the top or else Fabric will complain
+            targetExclude("src/main/resources/fabric.mod.json")
             gson()
                     .indentWithSpaces(2)
                     .sortByKeys()

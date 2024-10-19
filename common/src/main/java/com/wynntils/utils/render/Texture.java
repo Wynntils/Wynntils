@@ -13,11 +13,11 @@ public enum Texture implements AbstractTexture {
     // region Character Selection
     CHANGE_WORLD_BUTTON("character_selection/change_world_button.png", 26, 52),
     CHARACTER_BUTTON("character_selection/character_button.png", 104, 64),
-    CHARACTER_INFO("character_selection/character_info.png", 123, 38),
+    CHARACTER_INFO("character_selection/character_info.png", 123, 52),
     CHARACTER_LIST_BACKGROUND("character_selection/character_list_background.png", 118, 254),
-    DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 52),
-    PLAY_BUTTON("character_selection/play_button.png", 79, 76),
-    XP_BAR("character_selection/xp_bar.png", 100, 12),
+    DISCONNECT_BUTTON("character_selection/disconnect_button.png", 26, 54),
+    PLAY_BUTTON("character_selection/play_button.png", 79, 78),
+    XP_BAR("character_selection/xp_bar.png", 77, 6),
     // endregion
 
     // region Content Book
@@ -226,7 +226,7 @@ public enum Texture implements AbstractTexture {
     // endregion
 
     // region Overlays
-    PLAYER_LIST_OVERLAY("overlays/player_list_overlay.png", 385, 229),
+    PLAYER_LIST_OVERLAY("overlays/player_list_overlay.png", 531, 248),
 
     // Bars
     BUBBLE_BAR("overlays/bars/bars_bubbles.png", 182, 60),
@@ -239,7 +239,7 @@ public enum Texture implements AbstractTexture {
     // endregion
 
     // region Players
-    LEADERBOARD_BADGES("players/leaderboard_badges.png", 256, 256),
+    LEADERBOARD_BADGES("players/leaderboard_badges.png", 722, 54),
     // endregion
 
     // region Seaskipper
@@ -257,8 +257,13 @@ public enum Texture implements AbstractTexture {
     TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
 
     // region UI Components
-    BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
+    BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),
     BANK_PANEL("ui_components/bank_panel.png", 100, 117),
+    BUTTON_BOTTOM("ui_components/button_bottom.png", 64, 60),
+    BUTTON_LEFT("ui_components/button_left.png", 48, 56),
+    BUTTON_RIGHT("ui_components/button_right.png", 48, 56),
+    BUTTON_TOP("ui_components/button_top.png", 128, 60),
+    COLOR_PICKER_BACKGROUND("ui_components/color_picker_background.png", 442, 208),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
@@ -268,10 +273,6 @@ public enum Texture implements AbstractTexture {
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
-    PAPER_BUTTON_BOTTOM("ui_components/paper_button_bottom.png", 64, 60),
-    PAPER_BUTTON_LEFT("ui_components/paper_button_left.png", 48, 56),
-    PAPER_BUTTON_RIGHT("ui_components/paper_button_right.png", 48, 56),
-    PAPER_BUTTON_TOP("ui_components/paper_button_top.png", 128, 60),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),

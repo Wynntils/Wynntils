@@ -187,9 +187,6 @@ public abstract class BarOverlay extends DynamicOverlay {
         };
     }
 
-    @Override
-    protected void onConfigUpdate(Config<?> config) {}
-
     protected abstract boolean isRendered();
 
     protected abstract Texture getTexture();

@@ -97,7 +97,11 @@ public class TerritoryProfile {
     }
 
     private long getTimeHeldInMillis() {
-        return System.currentTimeMillis() - acquired.toEpochMilli();
+        if (acquired != null) {
+            return System.currentTimeMillis() - acquired.toEpochMilli();
+        } else {
+            return 0;
+        }
     }
 
     public boolean isOnCooldown() {
@@ -175,7 +179,13 @@ public class TerritoryProfile {
                 guild = context.deserialize(guildJson, GuildInfo.class);
             }
 
-            Instant acquired = Instant.parse(territory.get("acquired").getAsString());
+            Instant acquired;
+            JsonElement acquiredJson = territory.get("acquired");
+            if (acquiredJson.isJsonNull()) {
+                acquired = null;
+            } else {
+                acquired = Instant.parse(acquiredJson.getAsString());
+            }
 
             return new TerritoryProfile(territoryName, friendlyName, territoryLocation, guild, acquired);
         }

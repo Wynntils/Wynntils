@@ -14,6 +14,7 @@ import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
 import com.wynntils.overlays.gamebars.CorruptedBarOverlay;
 import com.wynntils.overlays.gamebars.FocusBarOverlay;
+import com.wynntils.overlays.gamebars.FocusedMobHealthBarOverlay;
 import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
@@ -44,4 +45,7 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();
+
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
+    private final FocusedMobHealthBarOverlay focusedMobHealthBarOverlay = new FocusedMobHealthBarOverlay();
 }

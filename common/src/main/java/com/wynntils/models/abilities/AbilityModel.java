@@ -16,7 +16,7 @@ import com.wynntils.models.abilities.bossbars.OphanimBar;
 import java.util.Arrays;
 import java.util.List;
 
-public final class BossBarModel extends Model {
+public final class AbilityModel extends Model {
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();
@@ -32,7 +32,7 @@ public final class BossBarModel extends Model {
     private static final List<TrackedBar> ALL_BARS =
             Arrays.asList(manaBankBar, bloodPoolBar, awakenedBar, focusBar, corruptedBar, ophanimBar);
 
-    public BossBarModel() {
+    public AbilityModel() {
         super(List.of());
 
         ALL_BARS.forEach(Handlers.BossBar::registerBar);

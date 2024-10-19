@@ -28,6 +28,7 @@ import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.TradeMarketContainer;
 import com.wynntils.models.containers.containers.TradeMarketFiltersContainer;
+import com.wynntils.models.containers.containers.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -36,6 +37,7 @@ import com.wynntils.models.containers.containers.personal.MiscBucketContainer;
 import com.wynntils.models.containers.containers.personal.PersonalBlockBankContainer;
 import com.wynntils.models.containers.containers.reward.ChallengeRewardContainer;
 import com.wynntils.models.containers.containers.reward.DailyRewardContainer;
+import com.wynntils.models.containers.containers.reward.EventContainer;
 import com.wynntils.models.containers.containers.reward.FlyingChestContainer;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.ObjectiveRewardContainer;
@@ -68,9 +70,9 @@ public final class ContainerModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenInit(ScreenInitEvent e) {
-        currentContainer = null;
-
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+
+        currentContainer = null;
 
         for (Container container : containerTypes) {
             if (container.isScreen(screen)) {
@@ -102,6 +104,7 @@ public final class ContainerModel extends Model {
         registerContainer(new CharacterInfoContainer());
         registerContainer(new ContentBookContainer());
         registerContainer(new DailyRewardContainer());
+        registerContainer(new EventContainer());
         registerContainer(new FlyingChestContainer());
         registerContainer(new GuildBankContainer());
         registerContainer(new GuildManagementContainer());
@@ -123,6 +126,7 @@ public final class ContainerModel extends Model {
         registerContainer(new SeaskipperContainer());
         registerContainer(new TradeMarketFiltersContainer());
         registerContainer(new TradeMarketContainer());
+        registerContainer(new TradeMarketSellContainer());
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
             registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));

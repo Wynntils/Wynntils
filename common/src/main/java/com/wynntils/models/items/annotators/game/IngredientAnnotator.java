@@ -30,10 +30,14 @@ public final class IngredientAnnotator implements GameItemAnnotator {
 
         int tier = Models.Ingredient.getTierFromColorCode(tierColor);
         IngredientInfo ingredientInfo = Models.Ingredient.getIngredientInfoFromName(ingredientName);
-        if (ingredientInfo == null) return null;
+        if (ingredientInfo == null) {
+            ingredientInfo = Models.Ingredient.getIngredientInfoFromApiName(ingredientName);
+            if (ingredientInfo == null) return null;
+        }
 
         if (ingredientInfo.tier() != tier) {
-            WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is " + tier);
+            WynntilsMod.warn("Incorrect tier in ingredient database: " + ingredientName + " is currently " + tier
+                    + " vs API " + ingredientInfo.tier());
         }
 
         return new IngredientItem(ingredientInfo);

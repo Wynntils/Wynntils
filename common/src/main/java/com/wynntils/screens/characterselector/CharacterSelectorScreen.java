@@ -36,6 +36,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Pose;
 import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
@@ -175,14 +176,17 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
 
+        float aspectRatio = (float) Texture.BACKGROUND_SPLASH.height() / Texture.BACKGROUND_SPLASH.width();
+        float textureHeight = this.width * aspectRatio;
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.BACKGROUND_SPLASH.resource(),
                 0,
-                0,
+                (this.height - textureHeight) / 2f,
                 0,
                 this.width,
-                this.height,
+                textureHeight,
                 Texture.BACKGROUND_SPLASH.width(),
                 Texture.BACKGROUND_SPLASH.height());
     }
@@ -255,7 +259,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void renderCharacterInfo(PoseStack poseStack) {
         float renderWidth = Texture.CHARACTER_INFO.width() * currentTextureScale;
         float renderHeight = Texture.CHARACTER_INFO.height() * currentTextureScale;
-        float renderX = (this.width * 0.6f) - renderWidth / 2f;
+        float renderX = (this.width * 0.565f) - renderWidth / 2f;
         float renderY = this.height / 8f;
 
         poseStack.pushPose();
@@ -271,6 +275,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 renderHeight,
                 Texture.CHARACTER_INFO.width(),
                 Texture.CHARACTER_INFO.height());
+
         float offsetX = renderWidth * 0.028f;
         float offsetY = renderHeight * 0.02f;
         float scale = this.height * 0.0035f;
@@ -291,9 +296,10 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 selected.getClassInfo().xp() / 100f);
 
         poseStack.pushPose();
-        poseStack.translate(renderWidth * 0.08f, renderHeight * 0.15f, 0);
+        poseStack.translate(renderWidth * 0.05f, renderHeight * 0.34f, 0);
 
-        poseStack.translate(renderWidth * 0.27f, 0, 0);
+        // region quests
+        poseStack.translate(0, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.QUESTS_SCROLL_ICON.resource(),
@@ -306,6 +312,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.QUESTS_SCROLL_ICON.height());
 
         poseStack.pushPose();
+
         poseStack.scale(scale, scale, 0f);
         poseStack.translate(renderWidth * 0.15f / scale, 0, 0);
         FontRenderer.getInstance()
@@ -314,13 +321,17 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         StyledText.fromString(
                                 String.valueOf(this.selected.getClassInfo().completedQuests())),
                         0,
-                        0,
+                        6f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
-                        TextShadow.NONE);
+                        TextShadow.NONE,
+                        0.8f);
         poseStack.popPose();
 
+        // endregion quests
+
+        // region challenges
         poseStack.translate(renderWidth * 0.32f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
@@ -336,6 +347,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
         poseStack.popPose();
         poseStack.popPose();
+        // endregion challenges
     }
 
     private void renderScrollButton(PoseStack poseStack) {
@@ -369,8 +381,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
-        McUtils.player().resetFallDistance();
-        McUtils.player().setSwimming(false);
+        McUtils.player().setPose(Pose.STANDING);
 
         int scale = (int) (this.height / 4.5f);
 

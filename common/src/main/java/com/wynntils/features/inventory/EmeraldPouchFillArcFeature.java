@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -39,7 +40,9 @@ public class EmeraldPouchFillArcFeature extends Feature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!renderFillArcInventory.get()) return;
+        RenderSystem.enableDepthTest();
         drawFilledArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        RenderSystem.disableDepthTest();
     }
 
     private void drawFilledArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {

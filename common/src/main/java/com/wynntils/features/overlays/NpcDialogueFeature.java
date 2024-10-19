@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
@@ -103,16 +104,6 @@ public class NpcDialogueFeature extends Feature {
 
         if (dialogueType == NpcDialogueType.CONFIRMATIONLESS) return;
 
-        if (scheduledAutoProgressKeyPress != null) {
-            scheduledAutoProgressKeyPress.cancel(true);
-
-            // Release sneak key if currently pressed
-            McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                    McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
-
-            scheduledAutoProgressKeyPress = null;
-        }
-
         if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
             // Schedule a new sneak key press if this is not the end of the dialogue
             if (!dialogue.isEmpty()) {
@@ -161,6 +152,24 @@ public class NpcDialogueFeature extends Feature {
 
             displayHelperMessage();
         }
+    }
+
+    @SubscribeEvent
+    public void onPacketSent(PacketEvent.PacketSentEvent<?> e) {
+        if (scheduledAutoProgressKeyPress == null) return;
+        if (!(e.getPacket() instanceof ServerboundPlayerCommandPacket packet)) return;
+        if (packet.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
+
+        scheduledAutoProgressKeyPress.cancel(true);
+
+        // Must be scheduled, can't be sent immediately
+        autoProgressExecutor.schedule(
+                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                        McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                100,
+                TimeUnit.MILLISECONDS);
+
+        scheduledAutoProgressKeyPress = null;
     }
 
     @SubscribeEvent

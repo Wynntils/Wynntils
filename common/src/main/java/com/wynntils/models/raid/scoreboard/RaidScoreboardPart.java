@@ -24,7 +24,8 @@ public class RaidScoreboardPart extends ScoreboardPart {
     private static final Pattern CHALLENGES_PATTERN = Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)$");
     private static final Pattern EXIT_PATTERN = Pattern.compile("^Go to the exit$");
     // Split onto two lines, 2nd says "died"
-    private static final Pattern FAILED_PATTERN = Pattern.compile("^Too many players have$");
+    private static final Pattern PLAYERS_DIED_PATTERN = Pattern.compile("^Too many players have$");
+    private static final Pattern OUT_OF_TIME_PATTERN = Pattern.compile("^You ran out of time!$");
     // Sometimes this will show between challenges so we don't want this change to trigger a new challenge
     private static final Pattern PREPARE_PATTERN = Pattern.compile("^Prepare for the next$");
     private static final Pattern TIMER_PATTERN = Pattern.compile(
@@ -52,7 +53,8 @@ public class RaidScoreboardPart extends ScoreboardPart {
             Models.Raid.completeChallenge();
         } else if (currentStateLine.matches(BUFF_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Raid.enterBuffRoom();
-        } else if (currentStateLine.matches(FAILED_PATTERN, PartStyle.StyleType.NONE)) {
+        } else if (currentStateLine.matches(PLAYERS_DIED_PATTERN, PartStyle.StyleType.NONE)
+                || (currentStateLine.matches(OUT_OF_TIME_PATTERN, PartStyle.StyleType.NONE))) {
             Models.Raid.failedRaid();
         } else if (Models.Raid.getCurrentRaid() != null
                 && currentStateLine.matches(
