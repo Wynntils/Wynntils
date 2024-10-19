@@ -19,7 +19,7 @@ public record NameData(String name) implements ItemData {
     public static NameData from(String name) {
         name = SANITIZE_PATTERN.matcher(name).replaceAll("");
         name = name.trim();
-        name = name.replaceAll("\\s\\s", " ");
+        name = name.replaceAll("\\s+", " ");
         name = name.substring(0, Math.min(name.length(), MAX_NAME_LENGTH));
 
         return new NameData(name);
