@@ -4,24 +4,24 @@
  */
 package com.wynntils.services.mapdata.providers.json;
 
-import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
-import com.wynntils.services.mapdata.type.MapLocation;
+import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
+import com.wynntils.services.mapdata.type.MapArea;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Optional;
 
-public class JsonMapLocation implements MapLocation {
+public final class JsonMapArea implements MapArea {
     private final String featureId;
     private final String categoryId;
-    private final JsonMapLocationAttributes attributes;
-    private final Location location;
+    private final JsonMapAreaAttributes attributes;
+    private final List<Location> polygonArea;
 
-    public JsonMapLocation(
-            String featureId, String categoryId, JsonMapLocationAttributes attributes, Location location) {
+    public JsonMapArea(
+            String featureId, String categoryId, JsonMapAreaAttributes attributes, List<Location> polygonArea) {
         this.featureId = featureId;
         this.categoryId = categoryId;
         this.attributes = attributes;
-        this.location = location;
+        this.polygonArea = polygonArea;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class JsonMapLocation implements MapLocation {
     }
 
     @Override
-    public Optional<MapLocationAttributes> getAttributes() {
+    public Optional<MapAreaAttributes> getAttributes() {
         return Optional.ofNullable(attributes);
     }
 
@@ -45,7 +45,7 @@ public class JsonMapLocation implements MapLocation {
     }
 
     @Override
-    public Location getLocation() {
-        return location;
+    public List<Location> getPolygonArea() {
+        return polygonArea;
     }
 }

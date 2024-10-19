@@ -63,8 +63,36 @@ public class JsonMapAttributesBuilder {
         return this;
     }
 
-    public JsonMapAttributes build() {
-        return new JsonMapAttributes(
-                label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+    public JsonMapLocationAttributesBuilder asLocationAttributes() {
+        return new JsonMapLocationAttributesBuilder();
+    }
+
+    public JsonMapPathAttributesBuilder asPathAttributes() {
+        return new JsonMapPathAttributesBuilder();
+    }
+
+    public JsonMapAreaAttributesBuilder asAreaAttributes() {
+        return new JsonMapAreaAttributesBuilder();
+    }
+
+    public final class JsonMapLocationAttributesBuilder extends JsonMapAttributesBuilder {
+        public JsonMapLocationAttributes build() {
+            return new JsonMapLocationAttributes(
+                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+        }
+    }
+
+    public final class JsonMapPathAttributesBuilder extends JsonMapAttributesBuilder {
+        public JsonMapPathAttributes build() {
+            return new JsonMapPathAttributes(
+                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+        }
+    }
+
+    public final class JsonMapAreaAttributesBuilder extends JsonMapAttributesBuilder {
+        public JsonMapAreaAttributes build() {
+            return new JsonMapAreaAttributes(
+                    label, icon, priority, level, labelColor, labelShadow, labelVisibility, iconColor, iconVisibility);
+        }
     }
 }
