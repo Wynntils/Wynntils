@@ -5,6 +5,7 @@
 package com.wynntils.models.raid.event;
 
 import com.wynntils.models.raid.type.RaidKind;
+import java.util.Collections;
 import java.util.List;
 import net.neoforged.bus.api.Event;
 
@@ -32,8 +33,23 @@ public abstract class RaidEndedEvent extends Event {
     }
 
     public static class Completed extends RaidEndedEvent {
-        public Completed(RaidKind raidKind, List<Long> roomTimes, long raidTime) {
+        private final List<Long> roomDamages;
+        private final Long raidDamage;
+
+        public Completed(
+                RaidKind raidKind, List<Long> roomTimes, long raidTime, List<Long> roomDamages, Long raidDamage) {
             super(raidKind, roomTimes, raidTime);
+
+            this.roomDamages = roomDamages;
+            this.raidDamage = raidDamage;
+        }
+
+        public List<Long> getRoomDamages() {
+            return Collections.unmodifiableList(roomDamages);
+        }
+
+        public Long getRaidDamage() {
+            return raidDamage;
         }
     }
 

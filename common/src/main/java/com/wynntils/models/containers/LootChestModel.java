@@ -107,7 +107,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent e) {
+    public void onScreenInit(ScreenInitEvent.Pre e) {
         if (Models.Container.getCurrentContainer() instanceof RewardContainer rewardContainer) {
             nextExpectedLootContainerId = rewardContainer.getContainerId();
 

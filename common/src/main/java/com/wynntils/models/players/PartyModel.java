@@ -96,6 +96,8 @@ public final class PartyModel extends Model {
 
     private static final Pattern PARTY_CREATE_SELF =
             Pattern.compile(PARTY_PREFIX_REGEX + "You have successfully created a party\\.");
+    private static final Pattern PARTY_RESTORED_SELF =
+            Pattern.compile(PARTY_PREFIX_REGEX + "Your previous party was restored");
 
     private static final Pattern PARTY_INVITED = Pattern.compile(
             "(?:" + PARTY_PREFIX_REGEX + "|\\s+§e)You have been invited to join (\\w{1,16})'s? party!\\s*");
@@ -278,6 +280,15 @@ public final class PartyModel extends Model {
                 nextKickHandled = false;
             }
 
+            return true;
+        }
+
+        matcher = styledText.getMatcher(PARTY_RESTORED_SELF);
+        if (matcher.matches()) {
+            // We have no idea what the previous party was, so we have to request the party list.
+            WynntilsMod.info("Player's previous party was restored, requesting party list.");
+
+            requestData();
             return true;
         }
 

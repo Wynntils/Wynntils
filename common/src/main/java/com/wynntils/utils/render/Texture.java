@@ -259,6 +259,7 @@ public enum Texture implements AbstractTexture {
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),
     BANK_PANEL("ui_components/bank_panel.png", 100, 117),
+    BULK_BUY_PANEL("ui_components/bulk_buy_panel.png", 160, 120),
     BUTTON_BOTTOM("ui_components/button_bottom.png", 64, 60),
     BUTTON_LEFT("ui_components/button_left.png", 48, 56),
     BUTTON_RIGHT("ui_components/button_right.png", 48, 56),

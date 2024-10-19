@@ -215,4 +215,13 @@ public class CharacterFunctions {
                     : CappedValue.EMPTY;
         }
     }
+
+    public static class CappedSacredSurgeFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.sacredSurgeBar.isActive()
+                    ? Models.Ability.sacredSurgeBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
 }
