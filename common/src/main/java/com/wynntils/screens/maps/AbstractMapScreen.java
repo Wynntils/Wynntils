@@ -5,22 +5,27 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.debug.MappingProgressFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.mapdata.MapFeatureRenderer;
+import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.type.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -30,9 +35,11 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.type.BoundingShape;
-import java.util.ArrayList;
+import com.wynntils.utils.type.Pair;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
@@ -41,9 +48,14 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractMapScreen extends WynntilsScreen {
+    protected static final MultiBufferSource.BufferSource BUFFER_SOURCE =
+            MultiBufferSource.immediate(new ByteBufferBuilder(256));
+
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
     private static final int MAP_CENTER_X = -400;
@@ -76,8 +88,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     // Zooming updates zoomLevel, but we also cache zoomRenderScale for rendering
     protected float zoomLevel = MapRenderer.DEFAULT_ZOOM_LEVEL;
     protected float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
+    protected BoundingBox mapBoundingBox = BoundingBox.EMPTY;
 
+    // TODO: This is not used anymore. It's only here to make the code compile.
     protected Poi hovered = null;
+    protected MapFeature hoveredFeature = null;
 
     protected AbstractMapScreen() {
         super(Component.literal("Map"));
@@ -155,83 +170,74 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    protected void renderPois(
-            List<Poi> pois,
-            PoseStack poseStack,
-            BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
-        hovered = null;
+    protected void renderMapFeatures(PoseStack poseStack, int mouseX, int mouseY) {
+        hoveredFeature = null;
 
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+        final float featureScale = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .mapFeatureScale
+                .get();
+
+        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = getRenderedMapFeatures()
+                .filter(feature -> feature.isVisible(mapBoundingBox))
+                .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
+                .sorted(Comparator.comparing(pair -> pair.b().priority()));
+
+        Vector2f mapCenter = new Vector2f(mapCenterX, mapCenterZ);
+        Vector2f screenCenter = new Vector2f(centerX, centerZ);
+        Vector2i mousePos = new Vector2i(mouseX, mouseY);
+
+        // Fullscreen map is always oriented north
+        Vector2f rotationVector = new Vector2f(1f, 0f);
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
 
-        // Reverse and Render
-        for (int i = filteredPois.size() - 1; i >= 0; i--) {
-            Poi poi = filteredPois.get(i);
+        List<Pair<MapFeature, ResolvedMapAttributes>> renderedFeatures = mapFeatures.toList();
 
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
+        // Find the hovered feature that is "on top" of all other features
+        for (int i = renderedFeatures.size() - 1; i >= 0; i--) {
+            Pair<MapFeature, ResolvedMapAttributes> renderedFeature = renderedFeatures.get(i);
+            MapFeature feature = renderedFeature.a();
+            ResolvedMapAttributes attributes = renderedFeature.b();
 
-            poi.renderAt(
-                    poseStack,
-                    bufferSource,
-                    poiRenderX,
-                    poiRenderZ,
-                    hovered == poi,
-                    poiScale,
+            if (MapFeatureRenderer.isHovered(
+                    feature,
+                    attributes,
+                    mapCenter,
+                    screenCenter,
+                    rotationVector,
+                    mousePos,
                     zoomRenderScale,
                     zoomLevel,
+                    featureScale)) {
+                hoveredFeature = feature;
+                break;
+            }
+        }
+
+        for (Pair<MapFeature, ResolvedMapAttributes> renderedFeature : renderedFeatures) {
+            MapFeature feature = renderedFeature.a();
+            ResolvedMapAttributes attributes = renderedFeature.b();
+
+            MapFeatureRenderer.renderMapFeature(
+                    poseStack,
+                    bufferSource,
+                    feature,
+                    attributes,
+                    mapCenter,
+                    screenCenter,
+                    rotationVector,
+                    zoomLevel,
+                    zoomRenderScale,
+                    featureScale,
+                    feature == hoveredFeature,
                     true);
         }
 
         bufferSource.endBatch();
     }
 
-    protected List<Poi> getRenderedPois(
-            List<Poi> pois, BoundingBox textureBoundingBox, float poiScale, int mouseX, int mouseY) {
-        List<Poi> filteredPois = new ArrayList<>();
-
-        // Filter and find hovered
-        for (int i = pois.size() - 1; i >= 0; i--) {
-            Poi poi = pois.get(i);
-            PoiLocation location = poi.getLocation();
-            // This is due to bad design of the compass dynamic waypoint provider,
-            // once that is fixed this can be removed
-            if (location == null) continue;
-
-            if (!poi.isVisible(zoomRenderScale, zoomLevel)) {
-                continue;
-            }
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-
-            float poiWidth = poi.getWidth(zoomRenderScale, poiScale);
-            float poiHeight = poi.getHeight(zoomRenderScale, poiScale);
-
-            BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
-            BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
-
-            if (BoundingShape.intersects(filterBox, textureBoundingBox)) {
-                filteredPois.add(poi);
-                if (hovered == null && mouseBox.contains(mouseX, mouseY)) {
-                    hovered = poi;
-                }
-            }
-        }
-
-        // Add hovered poi as first
-        if (hovered != null) {
-            filteredPois.remove(hovered);
-            filteredPois.add(0, hovered);
-        }
-
-        return filteredPois;
-    }
+    protected abstract Stream<MapFeature> getRenderedMapFeatures();
 
     protected void setCompassToMouseCoords(double mouseX, double mouseY, boolean removeAll) {
         if (removeAll) {
@@ -372,12 +378,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 mapWidth,
                 mapHeight);
 
-        BoundingBox textureBoundingBox =
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
-
-        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
-
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(mapBoundingBox);
 
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
@@ -386,7 +387,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
-                    bufferSource,
+                    BUFFER_SOURCE,
                     centerX,
                     centerZ,
                     textureX,
@@ -396,9 +397,40 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                     1f / zoomRenderScale);
         }
 
-        bufferSource.endBatch();
+        BUFFER_SOURCE.endBatch();
 
         RenderUtils.disableScissor();
+    }
+
+    protected void renderChunkBorders(PoseStack poseStack) {
+        BoundingBox textureBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
+
+        // If the user is holding shift, only render close-by pois
+        float pX = (float) McUtils.player().getX();
+        float pZ = (float) McUtils.player().getZ();
+
+        BoundingBox chunkBoundingBox = KeyboardUtils.isShiftDown()
+                ? textureBoundingBox
+                : BoundingBox.centered(
+                        pX,
+                        pZ,
+                        McUtils.options().renderDistance().get() * 16,
+                        McUtils.options().renderDistance().get() * 16);
+
+        Set<Long> mappedChunks = Managers.Feature.getFeatureInstance(MappingProgressFeature.class)
+                .getMappedChunks();
+
+        MapRenderer.renderChunks(
+                poseStack,
+                BUFFER_SOURCE,
+                chunkBoundingBox,
+                mappedChunks,
+                mapCenterX,
+                centerX,
+                mapCenterZ,
+                centerZ,
+                zoomRenderScale);
     }
 
     protected void centerMapAroundPlayer() {
@@ -420,6 +452,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         this.zoomLevel = MathUtils.clamp(zoomLevel, 1, MapRenderer.ZOOM_LEVELS);
         // Recalculate the cached zoom render scale
         this.zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(this.zoomLevel);
+        this.mapBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
     }
 
     protected void adjustZoomLevel(float delta) {
@@ -429,6 +463,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void updateMapCenter(float newX, float newZ) {
         this.mapCenterX = newX;
         this.mapCenterZ = newZ;
+
+        this.mapBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
     }
 
     public void setHoldingMapKey(boolean holdingMapKey) {

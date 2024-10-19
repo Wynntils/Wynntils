@@ -788,11 +788,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 this.width / 2 - BUTTON_WIDTH - 12 - 100,
                 yPos,
                 BUTTON_HEIGHT,
-                BUTTON_HEIGHT,
                 Component.translatable("screens.wynntils.overlayManagement.showPreview"),
                 showPreview,
                 80,
-                (b) -> showPreview = !showPreview,
+                (c, b) -> showPreview = !showPreview,
                 ComponentUtils.wrapTooltips(
                         List.of(Component.translatable("screens.wynntils.overlayManagement.showPreviewTooltip")),
                         150)));
@@ -836,11 +835,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     this.width / 2 + 12 + BUTTON_WIDTH + 10,
                     yPos,
                     BUTTON_HEIGHT,
-                    BUTTON_HEIGHT,
                     Component.translatable("screens.wynntils.overlayManagement.showOthers"),
                     renderAllOverlays,
                     120,
-                    (b) -> renderAllOverlays = !renderAllOverlays,
+                    (c, b) -> renderAllOverlays = b,
                     ComponentUtils.wrapTooltips(
                             List.of(Component.translatable("screens.wynntils.overlayManagement.showOthersTooltip")),
                             150)));

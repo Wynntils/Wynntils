@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class RangedStatValueFilterWidget extends RangedNumericFilterWidget<StatValue> {
     private final WynntilsCheckbox percentageCheckbox;
@@ -48,14 +47,11 @@ public class RangedStatValueFilterWidget extends RangedNumericFilterWidget<StatV
                 getX() + getWidth() - 52,
                 getY(),
                 20,
-                20,
                 Component.literal("%"),
                 percentage,
                 10,
                 (checkbox, button) -> {
-                    if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        parent.updateQuery();
-                    }
+                    parent.updateQuery();
                 },
                 List.of(Component.translatable("screens.wynntils.itemFilter.percentageTooltip")));
     }

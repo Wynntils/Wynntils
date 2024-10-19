@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ServerListModel extends Model {
     private static final int SERVER_UPDATE_MS = 15000;
@@ -49,14 +49,16 @@ public final class ServerListModel extends Model {
     }
 
     public String getNewestServer() {
-        return getServers().stream()
-                .max(Comparator.comparingLong(profile -> getServer(profile).getFirstSeen()))
+        return availableServers.entrySet().stream()
+                .max(Comparator.comparingLong(entry -> entry.getValue().getFirstSeen()))
+                .map(Map.Entry::getKey)
                 .orElse(null);
     }
 
     public List<String> getServersSortedOnUptime() {
-        return getServers().stream()
-                .sorted(Comparator.comparingLong(profile -> -getServer(profile).getFirstSeen()))
+        return availableServers.entrySet().stream()
+                .sorted(Comparator.comparingLong(entry -> -entry.getValue().getFirstSeen()))
+                .map(Map.Entry::getKey)
                 .toList();
     }
 

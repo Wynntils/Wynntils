@@ -7,18 +7,17 @@ package com.wynntils.services.mapdata;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.providers.MapDataProvider;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
-import com.wynntils.services.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
 import com.wynntils.services.mapdata.providers.builtin.LootChestsProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
+import com.wynntils.services.mapdata.providers.builtin.PlayerProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
@@ -26,6 +25,7 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapFeature;
 import java.io.File;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,12 +35,12 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
-    public static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
-    public static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
-    public static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
-    public static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
-    public static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
-    public static final CharacterProvider CHARACTER_PROVIDER = new CharacterProvider();
+    private static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
+    private static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
+    private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
+    private static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
+    private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
+    private static final PlayerProvider PLAYER_PROVIDER = new PlayerProvider();
     public static final WaypointsProvider WAYPOINTS_PROVIDER = new WaypointsProvider();
     public static final LootChestsProvider LOOT_CHESTS_PROVIDER = new LootChestsProvider();
 
@@ -49,7 +49,7 @@ public class MapDataService extends Service {
     private static final String NAMELESS_CATEGORY = "Category '%s'";
 
     // Used for referencing the map data service before it is fully initialized in Services
-    private final LinkedList<String> providerOrder = new LinkedList<>();
+    private final Deque<String> providerOrder = new LinkedList<>();
     private final Map<String, MapDataProvider> allProviders = new HashMap<>();
     private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
     private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
@@ -60,12 +60,17 @@ public class MapDataService extends Service {
         createBuiltInProviders();
     }
 
+    @Override
+    public void reloadData() {
+        getProviders().forEach(MapDataProvider::reloadData);
+    }
+
     public Stream<MapFeature> getFeatures() {
         return getProviders().flatMap(MapDataProvider::getFeatures);
     }
 
-    public Stream<Poi> getFeaturesAsPois() {
-        return getFeatures().map(feature -> new MapFeaturePoiWrapper(feature, resolveMapAttributes(feature)));
+    public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
+        return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
     }
 
     // region Lookup features and resolve attributes
@@ -156,7 +161,7 @@ public class MapDataService extends Service {
         registerBuiltInProvider(SERVICE_LIST_PROVIDER);
         registerBuiltInProvider(COMBAT_LIST_PROVIDER);
         registerBuiltInProvider(PLACE_LIST_PROVIDER);
-        registerBuiltInProvider(CHARACTER_PROVIDER);
+        registerBuiltInProvider(PLAYER_PROVIDER);
         registerBuiltInProvider(WAYPOINTS_PROVIDER);
         registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
     }
@@ -272,5 +277,8 @@ public class MapDataService extends Service {
 
         @Override
         public void onChange(Consumer<MapDataProvidedType> callback) {}
+
+        @Override
+        public void reloadData() {}
     }
 }

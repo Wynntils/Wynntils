@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Crypt;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
 
 public final class WynntilsAccountService extends Service {
@@ -54,14 +54,17 @@ public final class WynntilsAccountService extends Service {
         if (!event.isFirstJoinWorld()) return;
 
         if (!loggedIn) {
-            MutableComponent failed = Component.literal(
-                            "Welps! Trying to connect and set up the Wynntils Account with your data has failed. "
-                                    + "Most notably, cloud config syncing will not work. To try this action again, run ")
+            MutableComponent failed = Component.translatable("service.wynntils.wynntilsAccount.failedToConnect")
                     .withStyle(ChatFormatting.GREEN);
-            failed.append(Component.literal("/wynntils reauth")
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect1")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect2")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
+                            .withUnderlined(true)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+            failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect3")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
             McUtils.sendMessageToClient(failed);
         }

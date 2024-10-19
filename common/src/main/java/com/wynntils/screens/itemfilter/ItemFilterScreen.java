@@ -57,9 +57,12 @@ import org.lwjgl.glfw.GLFW;
 
 public final class ItemFilterScreen extends WynntilsScreen {
     // Constants
+    private static final float SCROLL_FACTOR = 10f;
     private static final int MAX_PRESETS = 4;
     private static final int MAX_PROVIDERS_PER_PAGE = 8;
     private static final int MAX_SORTS_PER_PAGE = 7;
+    private static final int PROVIDER_MASK_TOP_Y = 25;
+    private static final int PROVIDER_MASK_BOTTOM_Y = 197;
 
     // Collections
     private final List<ItemProviderType> supportedProviderTypes;
@@ -92,8 +95,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     // UI size, positions, etc
     private boolean draggingProviderScroll = false;
     private boolean draggingSortScroll = false;
-    private double currentUnusedProviderScroll = 0;
-    private double currentUnusedSortScroll = 0;
     private float providerScrollY;
     private float sortScrollY;
     private float translationX;
@@ -152,7 +153,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 this);
 
         this.itemSearchWidget.setTextBoxInput(previousSearchWidget.getTextBoxInput());
-        updateStateFromItemSearchWidget();
         // endregion
 
         setFocusedTextInput(providerSearchWidget);
@@ -210,6 +210,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         boolean activeApply = applyButton != null && applyButton.active;
 
         applyButton = new Button.Builder(Component.literal("✔").withStyle(ChatFormatting.GREEN), (button -> {
+                    providersScrollOffset = 0;
+                    sortScrollOffset = 0;
                     updateStateFromItemSearchWidget();
                     this.applyButton.active = false;
                 }))
@@ -306,6 +308,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         updateProviderWidgets();
         updatePresetWidgets();
+
+        updateStateFromItemSearchWidget();
     }
 
     @Override
@@ -402,14 +406,22 @@ public final class ItemFilterScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         } else {
+            RenderUtils.createRectMask(guiGraphics.pose(), 6, 30, 122, MAX_PROVIDERS_PER_PAGE * 21);
+
             for (Renderable renderable : providerButtons) {
                 renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
             }
+
+            RenderUtils.clearMask();
         }
+
+        RenderUtils.createRectMask(guiGraphics.pose(), 149, 30, 172, MAX_SORTS_PER_PAGE * 21);
 
         for (Renderable renderable : sortButtons) {
             renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
         }
+
+        RenderUtils.clearMask();
 
         for (Renderable renderable : presetButtons) {
             renderable.render(guiGraphics, adjustedMouseX, adjustedMouseY, partialTick);
@@ -509,31 +521,35 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         if (draggingProviderScroll) {
-            int renderY = 24;
-            int scrollAreaStartY = renderY + 9;
+            int scrollAreaStartY = 24 + 10;
+            int scrollAreaHeight = MAX_PROVIDERS_PER_PAGE * 21 - Texture.SCROLL_BUTTON.height();
 
-            int newValue = Math.round(MathUtils.map(
+            int newOffset = Math.round(MathUtils.map(
                     (float) adjustedMouseY,
                     scrollAreaStartY,
-                    scrollAreaStartY + 160,
+                    scrollAreaStartY + scrollAreaHeight,
                     0,
-                    Math.max(0, itemStatProviders.size() - MAX_PROVIDERS_PER_PAGE)));
+                    getMaxProviderScrollOffset()));
 
-            scrollProviders(newValue - providersScrollOffset);
+            newOffset = Math.max(0, Math.min(newOffset, getMaxProviderScrollOffset()));
+
+            scrollProviders(newOffset);
 
             return super.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
         } else if (draggingSortScroll) {
-            int renderY = 30;
-            int scrollAreaStartY = renderY + 10;
+            int scrollAreaStartY = 30 + 10;
+            int scrollAreaHeight = MAX_SORTS_PER_PAGE * 21 - 20;
 
-            int newValue = Math.round(MathUtils.map(
+            int newOffset = Math.round(MathUtils.map(
                     (float) adjustedMouseY,
                     scrollAreaStartY,
-                    scrollAreaStartY + MAX_SORTS_PER_PAGE * 21 - 20,
+                    scrollAreaStartY + scrollAreaHeight,
                     0,
-                    Math.max(0, sorts.size() - MAX_SORTS_PER_PAGE)));
+                    getMaxSortsScrollOffset()));
 
-            scrollSorts(newValue - sortScrollOffset);
+            newOffset = Math.max(0, Math.min(newOffset, getMaxSortsScrollOffset()));
+
+            scrollSorts(newOffset);
 
             return true;
         }
@@ -583,36 +599,14 @@ public final class ItemFilterScreen extends WynntilsScreen {
             return true;
         }
 
+        int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
+
         if (sortMode && adjustedMouseX >= 150) {
-            if (Math.abs(deltaY) == 1.0) {
-                scrollSorts((int) -deltaY);
-                return true;
-            }
-
-            // Account for scrollpad
-            currentUnusedSortScroll -= deltaY / 5d;
-
-            if (Math.abs(currentUnusedSortScroll) < 1) return true;
-
-            int scroll = (int) (currentUnusedSortScroll);
-            currentUnusedSortScroll = currentUnusedSortScroll % 1;
-
-            scrollSorts(scroll);
+            int newOffset = Math.max(0, Math.min(sortScrollOffset + scrollAmount, getMaxSortsScrollOffset()));
+            scrollSorts(newOffset);
         } else {
-            if (Math.abs(deltaY) == 1.0) {
-                scrollProviders((int) -deltaY);
-                return true;
-            }
-
-            // Account for scrollpad
-            currentUnusedProviderScroll -= deltaY / 5d;
-
-            if (Math.abs(currentUnusedProviderScroll) < 1) return true;
-
-            int scroll = (int) (currentUnusedProviderScroll);
-            currentUnusedProviderScroll = currentUnusedProviderScroll % 1;
-
-            scrollProviders(scroll);
+            int newOffset = Math.max(0, Math.min(providersScrollOffset + scrollAmount, getMaxProviderScrollOffset()));
+            scrollProviders(newOffset);
         }
 
         return true;
@@ -736,6 +730,14 @@ public final class ItemFilterScreen extends WynntilsScreen {
         return filterMap.containsKey(provider) || sorts.stream().anyMatch(sort -> sort.provider() == provider);
     }
 
+    public int getProviderMaskTopY() {
+        return PROVIDER_MASK_TOP_Y;
+    }
+
+    public int getProviderMaskBottomY() {
+        return PROVIDER_MASK_BOTTOM_Y;
+    }
+
     private void updateProviderWidgets() {
         for (AbstractWidget widget : providerButtons) {
             this.removeWidget(widget);
@@ -759,16 +761,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
                     .toList();
         }
 
-        int currentProviderIndex;
         int yPos = 31;
 
-        for (int i = 0; i < MAX_PROVIDERS_PER_PAGE; i++) {
-            currentProviderIndex = i + providersScrollOffset;
-
-            if (itemStatProviders.size() - 1 < currentProviderIndex) break;
-
-            providerButtons.add(new ProviderButton(
-                    7, yPos, 120, 18, this, itemStatProviders.get(currentProviderIndex), translationX, translationY));
+        for (ItemStatProvider<?> provider : itemStatProviders) {
+            providerButtons.add(new ProviderButton(7, yPos, 120, 18, this, provider, translationX, translationY));
 
             yPos += 21;
         }
@@ -783,6 +779,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             setSelectedProvider(newSelected);
         }
+
+        scrollProviders(providersScrollOffset);
     }
 
     private void updateStateFromItemSearchWidget() {
@@ -850,18 +848,15 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         sortButtons = new ArrayList<>();
 
-        int currentSortIndex;
         int yPos = 29;
 
-        for (int i = 0; i < MAX_SORTS_PER_PAGE; i++) {
-            currentSortIndex = i + sortScrollOffset;
-
-            if (sorts.size() - 1 < currentSortIndex) break;
-
-            sortButtons.add(new SortWidget(150, yPos, this, translationX, translationY, sorts.get(i)));
+        for (SortInfo sort : sorts) {
+            sortButtons.add(new SortWidget(150, yPos, this, translationX, translationY, sort));
 
             yPos += 21;
         }
+
+        scrollSorts(sortScrollOffset);
     }
 
     private void createValueWidget() {
@@ -878,17 +873,26 @@ public final class ItemFilterScreen extends WynntilsScreen {
         this.addRenderableWidget(filterWidget);
     }
 
-    private void scrollProviders(int delta) {
-        providersScrollOffset = MathUtils.clamp(
-                providersScrollOffset + delta, 0, Math.max(0, itemStatProviders.size() - MAX_PROVIDERS_PER_PAGE));
+    private void scrollProviders(int newOffset) {
+        providersScrollOffset = newOffset;
 
-        updateProviderWidgets();
+        for (WynntilsButton provider : providerButtons) {
+            int newY = 31 + (providerButtons.indexOf(provider) * 21) - providersScrollOffset;
+
+            provider.setY(newY);
+            provider.visible = newY >= (31 - 21) && newY <= (31 + (MAX_PROVIDERS_PER_PAGE + 1) * 21);
+        }
     }
 
-    private void scrollSorts(int delta) {
-        sortScrollOffset = MathUtils.clamp(sortScrollOffset + delta, 0, Math.max(0, sorts.size() - MAX_SORTS_PER_PAGE));
+    private void scrollSorts(int newOffset) {
+        sortScrollOffset = newOffset;
 
-        updateSortWidgets();
+        for (SortWidget sort : sortButtons) {
+            int newY = 31 + (sortButtons.indexOf(sort) * 21) - sortScrollOffset;
+
+            sort.setY(newY);
+            sort.visible = newY >= (31 - 21) && newY <= (31 + (MAX_SORTS_PER_PAGE + 1) * 21);
+        }
     }
 
     private void scrollPresets(int direction) {
@@ -900,6 +904,14 @@ public final class ItemFilterScreen extends WynntilsScreen {
         }
 
         updatePresetWidgets();
+    }
+
+    private int getMaxProviderScrollOffset() {
+        return (itemStatProviders.size() - MAX_PROVIDERS_PER_PAGE) * 21;
+    }
+
+    private int getMaxSortsScrollOffset() {
+        return (sorts.size() - MAX_SORTS_PER_PAGE) * 21;
     }
 
     private void clickPreset(int button, int presetIndex) {
@@ -1065,8 +1077,13 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     private void renderProvidersScroll(PoseStack poseStack) {
-        providerScrollY =
-                24 + MathUtils.map(providersScrollOffset, 0, itemStatProviders.size() - MAX_PROVIDERS_PER_PAGE, 0, 160);
+        providerScrollY = 24
+                + MathUtils.map(
+                        providersScrollOffset,
+                        0,
+                        getMaxProviderScrollOffset(),
+                        0,
+                        177 - Texture.CONFIG_BOOK_SCROLL_BUTTON.height());
 
         RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, 132, providerScrollY);
     }
@@ -1074,9 +1091,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private void renderSortScroll(PoseStack poseStack) {
         RenderUtils.drawRect(poseStack, CommonColors.LIGHT_GRAY, 330, 30, 0, 6, MAX_SORTS_PER_PAGE * 21);
 
-        sortScrollY = 30
-                + MathUtils.map(
-                        sortScrollOffset, 0, sorts.size() - MAX_SORTS_PER_PAGE, 0, MAX_SORTS_PER_PAGE * 21 - 20);
+        sortScrollY =
+                30 + MathUtils.map(sortScrollOffset, 0, getMaxSortsScrollOffset(), 0, MAX_SORTS_PER_PAGE * 21 - 20);
 
         RenderUtils.drawRect(
                 poseStack, draggingSortScroll ? CommonColors.BLACK : CommonColors.GRAY, 330, sortScrollY, 0, 6, 20);

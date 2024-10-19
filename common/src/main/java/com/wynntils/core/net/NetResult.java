@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2024.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -56,7 +56,8 @@ public abstract class NetResult {
                     try {
                         handler.accept(JsonParser.parseReader(reader).getAsJsonObject());
                     } catch (Throwable t) {
-                        WynntilsMod.warn("Failure in net manager [handleJsonObject], processing " + desc, t);
+                        WynntilsMod.warn("Failure in net manager [handleJsonObject], processing " + desc + ": "
+                                + t.getMessage());
                         onError.accept(t);
                     }
                 },
