@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
@@ -60,8 +60,8 @@ public class ItemEncodingModel extends Model {
         // Gear items are named, but their names are encoded in the data
         if (shareItemName.get()
                 && !(wynnItem instanceof GearItem)
-                && wynnItem instanceof NamedItemProperty namedItemProperty) {
-            itemName = " \"" + namedItemProperty.getName() + "\"";
+                && wynnItem instanceof CraftedItemProperty craftedItemProperty) {
+            itemName = " \"" + craftedItemProperty.getName() + "\"";
         }
 
         return encodedItem.toUtf16String() + itemName;
