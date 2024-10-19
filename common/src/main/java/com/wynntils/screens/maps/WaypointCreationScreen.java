@@ -281,11 +281,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 (int) dividedWidth,
                 (int) (dividedHeight * 25),
                 20,
-                20,
                 Component.translatable("screens.wynntils.poiCreation.icon"),
                 useIcon,
                 (int) (dividedWidth * 6),
-                (b -> toggleIcon()));
+                ((checkbox, bl) -> toggleIcon()));
         this.addRenderableWidget(iconCheckbox);
 
         previousIconButton = new Button.Builder(Component.literal("<"), (button) -> {

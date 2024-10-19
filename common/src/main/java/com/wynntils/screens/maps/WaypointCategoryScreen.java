@@ -93,7 +93,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 49),
                 (int) (dividedHeight * 27),
                 (int) (dividedWidth * 14),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 (s) -> useNewCategoryButton.active =
                         CATEGORY_PATTERN.matcher(s).matches() && !s.equals(categoryPath) && !s.endsWith(":"),
                 this,
@@ -108,7 +108,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                             onClose();
                         })
                         .pos((int) (dividedWidth * 35), (int) (dividedHeight * 33))
-                        .size((int) (dividedWidth * 12), BUTTON_HEIGHT)
+                        .size((int) (dividedWidth * 12), BUTTON_SIZE)
                         .build());
 
         useNewCategoryButton = new Button.Builder(
@@ -117,7 +117,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
                             onClose();
                         })
                 .pos((int) (dividedWidth * 50), (int) (dividedHeight * 33))
-                .size((int) (dividedWidth * 12), BUTTON_HEIGHT)
+                .size((int) (dividedWidth * 12), BUTTON_SIZE)
                 .build();
         useNewCategoryButton.active =
                 CATEGORY_PATTERN.matcher(newCategoryInput.getTextBoxInput()).matches();
@@ -126,7 +126,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCategory.back"), (button) -> onClose())
                 .pos((int) (dividedWidth * 45), (int) (dividedHeight * 39))
-                .size((int) (dividedWidth * 7), BUTTON_HEIGHT)
+                .size((int) (dividedWidth * 7), BUTTON_SIZE)
                 .build());
 
         if (!categoryPath.isEmpty()) {

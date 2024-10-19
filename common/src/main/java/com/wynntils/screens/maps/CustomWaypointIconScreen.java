@@ -69,7 +69,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 49),
                 (int) (dividedHeight * 24),
                 (int) (dividedWidth * 14),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 (s) -> tryParseIcon(),
                 this,
                 iconNameInput);
@@ -81,7 +81,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedWidth * 49),
                 (int) (dividedHeight * 32),
                 (int) (dividedWidth * 14),
-                BUTTON_HEIGHT,
+                BUTTON_SIZE,
                 (s) -> tryParseIcon(),
                 this,
                 iconBase64Input);
@@ -92,7 +92,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
         saveIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.customWaypointIcon.saveIcon"), (button) -> saveIcon())
                 .pos((int) (dividedWidth * 42), (int) (dividedHeight * 37))
-                .size((int) (dividedWidth * 8), BUTTON_HEIGHT)
+                .size((int) (dividedWidth * 8), BUTTON_SIZE)
                 .build();
         saveIconButton.active = newIcon != null;
         this.addRenderableWidget(saveIconButton);
@@ -100,7 +100,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.customWaypointIcon.back"), (button) -> onClose())
                 .pos((int) (dividedWidth * 55), (int) (dividedHeight * 37))
-                .size((int) (dividedWidth * 8), BUTTON_HEIGHT)
+                .size((int) (dividedWidth * 8), BUTTON_SIZE)
                 .build());
 
         populateIcons();
