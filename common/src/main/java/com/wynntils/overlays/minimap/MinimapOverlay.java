@@ -15,7 +15,11 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.PlayerMiniMapPoi;
+import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.type.ResolvedMapAttributes;
@@ -407,6 +411,14 @@ public class MinimapOverlay extends Overlay {
 
             poseStack.popPose();
         }
+    }
+
+    private Stream<PlayerMiniMapPoi> getMiniPlayerPois(
+            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers) {
+        return Services.Hades.getHadesUsers()
+                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
+                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers))
+                .map(PlayerMiniMapPoi::new);
     }
 
     private void renderCardinalDirections(
