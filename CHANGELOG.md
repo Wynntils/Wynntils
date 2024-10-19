@@ -1,9 +1,30 @@
+## [2.3.13](https://github.com/Wynntils/Wynntils/compare/v2.3.12...v2.3.13) (2024-10-19)
+
+
+### New Features
+
+* Add auto attacking ([#2833](https://github.com/Wynntils/Wynntils/issues/2833)) ([5968bb9](https://github.com/Wynntils/Wynntils/commit/5968bb9e6b084db6937ebe129d550e7bc236b5e1))
+* Add sacred surge bar overlay and function [skip ci] ([#2923](https://github.com/Wynntils/Wynntils/issues/2923)) ([9dd6af6](https://github.com/Wynntils/Wynntils/commit/9dd6af60c7d7f1a8420fc83dd17872c69dfe58aa))
+* Mantle shield tracking [skip ci] ([#2921](https://github.com/Wynntils/Wynntils/issues/2921)) ([e293420](https://github.com/Wynntils/Wynntils/commit/e293420290cc76fb486c6b2bdb452d5acad5b1d6))
+
+
+### Bug Fixes
+
+* Arrow shield tracker not tracking [skip ci] ([#2919](https://github.com/Wynntils/Wynntils/issues/2919)) ([dffef76](https://github.com/Wynntils/Wynntils/commit/dffef76712eada9df0ab74f1238b2ae15eacfb13))
+* Fix seaskipper screen doubling destinations [skip ci] ([#2922](https://github.com/Wynntils/Wynntils/issues/2922)) ([df7c7ff](https://github.com/Wynntils/Wynntils/commit/df7c7ffcd1c9dfbeff201e3dff32743cf16db1d9))
+* Party model not updating after raids [skip ci] ([#2924](https://github.com/Wynntils/Wynntils/issues/2924)) ([37a8fc8](https://github.com/Wynntils/Wynntils/commit/37a8fc8980386d350ea9b4a5558932e016156620))
+
 ## [2.3.12](https://github.com/Wynntils/Wynntils/compare/v2.3.11...v2.3.12) (2024-10-14)
 
 
 ### New Features
 
 * Quick Search TM feature ([#2908](https://github.com/Wynntils/Wynntils/issues/2908)) ([d4fb891](https://github.com/Wynntils/Wynntils/commit/d4fb8918827fcab1a7eb5b1e31e202cf127750f5))
+
+
+### Miscellaneous Chores
+
+* **release:** v2.3.12 [skip ci] ([db289c4](https://github.com/Wynntils/Wynntils/commit/db289c43b0648510bfe88ae46dbcc48fc82a87cd))
 
 
 ### Build System
@@ -55,23 +76,4 @@
 ### Miscellaneous Chores
 
 * **release:** v2.3.9 [skip ci] ([bd74439](https://github.com/Wynntils/Wynntils/commit/bd74439c610ce11bca1af127b5153334bebb0aaa))
-
-## [2.3.8](https://github.com/Wynntils/Wynntils/compare/v2.3.7...v2.3.8) (2024-10-01)
-
-
-### New Features
-
-* Add texture options for item highlights [skip ci] ([#2901](https://github.com/Wynntils/Wynntils/issues/2901)) ([a266bf7](https://github.com/Wynntils/Wynntils/commit/a266bf79e48a534a7cb626afe34add7a27a2e3ca))
-* Hide raid intermission by default and don't include in raid best time [skip ci] ([#2903](https://github.com/Wynntils/Wynntils/issues/2903)) ([e12b253](https://github.com/Wynntils/Wynntils/commit/e12b25371aab4db3984afd2dc3c8236d06d5cfaa))
-
-
-### Bug Fixes
-
-* Fix Territorry defense not being recognized for long territorry names [skip ci] ([#2899](https://github.com/Wynntils/Wynntils/issues/2899)) ([05fefd4](https://github.com/Wynntils/Wynntils/commit/05fefd4a93ba03334e8c2605c9ef721c823d0b21))
-* Fix trade market auto open chat and price conversion ([#2902](https://github.com/Wynntils/Wynntils/issues/2902)) ([48b964a](https://github.com/Wynntils/Wynntils/commit/48b964a562e5c4758e7298753bd51ed1d6b31226))
-
-
-### Miscellaneous Chores
-
-* **release:** v2.3.8 [skip ci] ([245ffac](https://github.com/Wynntils/Wynntils/commit/245fface0d92b4b0d9e964706c35faa4b515e119))
 
