@@ -33,6 +33,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
     @Persisted
+    public final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.CIRCLE_TRANSPARENT);
+
+    @Persisted
     public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
 
     @Persisted
@@ -158,6 +161,10 @@ public class ItemHighlightFeature extends Feature {
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 200,
+                18,
+                18,
+                highlightTexture.get().ordinal() * 18,
+                0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
@@ -363,5 +370,14 @@ public class ItemHighlightFeature extends Feature {
         public CustomColor getHighlightColor() {
             return CustomColor.fromChatFormatting(ChatFormatting.GREEN);
         }
+    }
+
+    public enum HighlightTexture {
+        CIRCLE_TRANSPARENT,
+        CIRCLE_OPAQUE,
+        BOX_TRANSPARENT,
+        BOX_OPAQUE,
+        BOX_GRADIENT_1,
+        BOX_GRADIENT_2
     }
 }

@@ -58,7 +58,6 @@ import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
-import com.wynntils.features.embellishments.ItemInteractionSoundsFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -71,7 +70,6 @@ import com.wynntils.features.inventory.ExtendedItemCountFeature;
 import com.wynntils.features.inventory.FixStackSizeFeature;
 import com.wynntils.features.inventory.GuildBankHotkeyFeature;
 import com.wynntils.features.inventory.HightlightDuplicateCosmeticsFeature;
-import com.wynntils.features.inventory.ImprovedInventorySyncFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -99,6 +97,7 @@ import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
+import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
@@ -131,10 +130,10 @@ import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.tooltips.TooltipFittingFeature;
 import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
-import com.wynntils.features.trademarket.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.trademarket.TradeMarketBulkSellFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceConversionFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
+import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
@@ -256,7 +255,6 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
-        registerFeature(new ItemInteractionSoundsFeature());
         registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
@@ -272,7 +270,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new FixStackSizeFeature());
         registerFeature(new GuildBankHotkeyFeature());
         registerFeature(new HightlightDuplicateCosmeticsFeature());
-        registerFeature(new ImprovedInventorySyncFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
@@ -306,6 +303,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HeldItemCooldownOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
+        registerFeature(new MantleShieldTrackerOverlayFeature());
         registerFeature(new MobTotemTimerOverlayFeature());
         registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());
@@ -350,10 +348,10 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region trademarket
-        registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketBulkSellFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TradeMarketPriceMatchFeature());
+        registerFeature(new TradeMarketQuickSearchFeature());
         // endregion
 
         // region ui

@@ -44,7 +44,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
     private PersonalStorageUtilitiesWidget widget;
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (Models.Bank.getStorageContainerType() == null) return;
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof PersonalStorageContainer container)) return;
