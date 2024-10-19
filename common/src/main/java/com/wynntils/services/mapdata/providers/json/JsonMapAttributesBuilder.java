@@ -107,8 +107,7 @@ public class JsonMapAttributesBuilder {
         public JsonMapPathAttributes build() {
             MapPathAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
-            return new JsonMapPathAttributes(
-                    label, priority, level, labelColor, labelShadow, labelVisibility);
+            return new JsonMapPathAttributes(label, priority, level, labelColor, labelShadow, labelVisibility);
         }
     }
 
