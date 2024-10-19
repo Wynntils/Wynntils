@@ -25,7 +25,6 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.type.AbstractTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -143,7 +142,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             float displayPositionY;
 
             Vec2 intersectPoint = getBoundingIntersectPoint(renderedMarker.screenCoordinates, event.getWindow());
-            AbstractTexture icon = renderedMarker.markerInfo.texture();
+            Texture icon = renderedMarker.markerInfo.texture();
             float[] color = renderedMarker.markerInfo.textureColor().asFloatArray();
             RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 

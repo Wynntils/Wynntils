@@ -6,20 +6,20 @@ package com.wynntils.services.map.pois;
 
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.mc.type.PoiLocation;
-import com.wynntils.utils.render.type.AbstractTexture;
+import com.wynntils.utils.render.Texture;
 
 public class MarkerPoi extends StaticIconPoi {
     private final String name;
-    private final AbstractTexture texture;
+    private final Texture texture;
 
-    public MarkerPoi(PoiLocation location, String name, AbstractTexture texture) {
+    public MarkerPoi(PoiLocation location, String name, Texture texture) {
         super(location);
         this.name = name;
         this.texture = texture;
     }
 
     @Override
-    public AbstractTexture getIcon() {
+    public Texture getIcon() {
         return texture;
     }
 

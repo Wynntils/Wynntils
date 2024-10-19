@@ -6,12 +6,12 @@ package com.wynntils.models.marker.type;
 
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.render.type.AbstractTexture;
+import com.wynntils.utils.render.Texture;
 
 public record MarkerInfo(
         String name,
         LocationSupplier locationSupplier,
-        AbstractTexture texture,
+        Texture texture,
         CustomColor beaconColor,
         CustomColor textureColor,
         CustomColor textColor,
