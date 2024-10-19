@@ -95,7 +95,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (StyledText.fromComponent(event.getScreen().getTitle()).matches(MANAGE_TITLE_PATTERN)) {
             // We might have opened a different screen,
             // but ScreenClosedEvent did not fire (as the screen was overridden).

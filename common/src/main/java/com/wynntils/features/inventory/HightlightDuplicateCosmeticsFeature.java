@@ -54,7 +54,7 @@ public class HightlightDuplicateCosmeticsFeature extends Feature {
     private SearchableContainerProperty scrapMenu = null;
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(screen.getMenu() instanceof ChestMenu)) return;
 

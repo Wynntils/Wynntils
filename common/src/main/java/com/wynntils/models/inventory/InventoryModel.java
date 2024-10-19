@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -16,6 +17,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,9 +29,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class InventoryModel extends Model {
-    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
     private static final int MAX_INVENTORY_SLOTS = 28;
     private static final int MAX_INGREDIENT_POUCH_SLOTS = 27;
+    private static final List<String> AUTO_CASTER_MAJOR_IDS = List.of("Sorcery", "Madness");
 
     private final InventoryWatcher emptySlotWatcher = new InventoryWatcher(ItemStack::isEmpty);
     private final List<InventoryWatcher> watchers = new ArrayList<>(List.of(emptySlotWatcher));
@@ -70,7 +72,7 @@ public final class InventoryModel extends Model {
                 baseSize = McUtils.player().containerMenu.getItems().size();
             }
             ItemStack accessory = McUtils.inventory().getItem(i + baseSize);
-            if (accessory.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT)) continue;
+            if (ItemUtils.isEmptyAccessorySlot(accessory)) continue;
             returnable.add(McUtils.inventory().getItem(i + baseSize));
         }
 
@@ -81,6 +83,25 @@ public final class InventoryModel extends Model {
         }
 
         return returnable.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
+    }
+
+    /**
+     * @return True if the player has any item with AUTO_CASTER_MAJOR_IDS major id(s)
+     */
+    public boolean hasAutoCasterItem() {
+        for (ItemStack item : getEquippedItems()) {
+            Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(item, GearItem.class);
+            if (gearItemOpt.isEmpty()) continue;
+
+            GearItem gearItem = gearItemOpt.get();
+            if (gearItem.getItemInfo().fixedStats().majorIds().stream()
+                    .anyMatch(majorId -> AUTO_CASTER_MAJOR_IDS.contains(majorId.name()))) {
+                return true;
+            }
+        }
+
+        return Models.Raid.getRaidMajorIds(McUtils.mc().getUser().getName()).stream()
+                .anyMatch(AUTO_CASTER_MAJOR_IDS::contains);
     }
 
     @SubscribeEvent

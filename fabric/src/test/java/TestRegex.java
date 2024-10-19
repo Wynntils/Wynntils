@@ -6,8 +6,8 @@ import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
-import com.wynntils.features.trademarket.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
+import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.ChatHandler;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -937,13 +937,14 @@ public class TestRegex {
     }
 
     @Test
-    public void TradeMarketAutoOpenChatFeature_TYPE_TO_CHAT_PATTERN() {
-        PatternTester p = new PatternTester(TradeMarketAutoOpenChatFeature.class, "TYPE_TO_CHAT_PATTERN");
+    public void TradeMarketQuickSearchFeature_TYPE_TO_CHAT_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketQuickSearchFeature.class, "TYPE_TO_CHAT_PATTERN");
 
         p.shouldMatch(
-                "§5\uE00A\uE002 \n\uE001 Type the amount you wish to buy or type \n\uE001 'cancel' to cancel:\n\uE001 ");
-        p.shouldMatch("§5\uE001 \n\uE001 Type the price in emeralds or type \n\uE001 'cancel' to cancel:\n\uE001 ");
-        p.shouldMatch("§5\uE00A\uE002 \n\uE001 Type the item name or type 'cancel' to \n\uE001 cancel:\n\uE001 ");
+                "§5\uE00A\uE002 Type the price in emeralds or formatted (e.g '10eb', '10stx 5eb') or type 'cancel' to cancel:");
+        p.shouldMatch("§5\uE001 Type the amount you wish to sell or type 'cancel' to cancel:");
+        p.shouldMatch("§5\uE001 Type the item name or type 'cancel' to cancel:");
+        p.shouldMatch("§5\uE00A\uE002 Type the amount you wish to buy or type 'cancel' to cancel:");
     }
 
     @Test

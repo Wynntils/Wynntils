@@ -441,6 +441,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CappedManaBankFunction());
         registerFunction(new CharacterFunctions.CappedManaFunction());
         registerFunction(new CharacterFunctions.CappedOphanimFunction());
+        registerFunction(new CharacterFunctions.CappedSacredSurgeFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
@@ -565,10 +566,13 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.CurrentRaidFunction());
         registerFunction(new RaidFunctions.CurrentRaidRoomFunction());
         registerFunction(new RaidFunctions.CurrentRaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.CurrentRaidRoomDamageFunction());
         registerFunction(new RaidFunctions.CurrentRaidTimeFunction());
+        registerFunction(new RaidFunctions.CurrentRaidDamageFunction());
         registerFunction(new RaidFunctions.RaidChallengesFunction());
         registerFunction(new RaidFunctions.RaidIntermissionTimeFunction());
         registerFunction(new RaidFunctions.RaidRoomTimeFunction());
+        registerFunction(new RaidFunctions.RaidRoomDamageFunction());
         registerFunction(new RaidFunctions.RaidPersonalBestTimeFunction());
         registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
 
@@ -577,6 +581,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new RangedFunctions.RangedFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.MantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());

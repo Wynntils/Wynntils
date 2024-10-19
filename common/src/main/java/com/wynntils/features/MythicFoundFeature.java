@@ -25,23 +25,26 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class MythicFoundFeature extends Feature {
-    private static final ResourceLocation MYTHIC_FOUND_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found");
-    private static final SoundEvent MYTHIC_FOUND_SOUND = SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_ID);
+    private static final ResourceLocation MYTHIC_FOUND_CLASSIC_ID =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
+    private static final ResourceLocation MYTHIC_FOUND_MODERN_ID =
+            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
 
     @Persisted
     public final Config<Boolean> playSound = new Config<>(true);
+
+    @Persisted
+    private final Config<MythicSound> chestSound = new Config<>(MythicSound.MODERN);
+
+    @Persisted
+    private final Config<MythicSound> lootrunSound = new Config<>(MythicSound.MODERN);
 
     @Persisted
     public final Config<Boolean> showDryStreakMessage = new Config<>(true);
 
     @SubscribeEvent
     public void onMythicFound(MythicFoundEvent event) {
-        if (playSound.get()) {
-            McUtils.playSoundAmbient(MYTHIC_FOUND_SOUND);
-        }
-
-        if (!showDryStreakMessage.get()) return;
+        if (!playSound.get() && !showDryStreakMessage.get()) return;
 
         ItemStack itemStack = event.getMythicBoxItem();
 
@@ -49,6 +52,11 @@ public class MythicFoundFeature extends Feature {
         Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItem.isPresent()) {
             if (gearBoxItem.get().getGearType() != GearType.MASTERY_TOME) {
+                if (playSound.get()) {
+                    McUtils.playSoundAmbient(chestSound.get().getSoundEvent());
+                }
+
+                if (!showDryStreakMessage.get()) return;
                 sendNormalDryStreakMessage(
                         StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
             }
@@ -73,6 +81,11 @@ public class MythicFoundFeature extends Feature {
         }
 
         if (validLootrunMythic) {
+            if (playSound.get()) {
+                McUtils.playSoundAmbient(lootrunSound.get().getSoundEvent());
+            }
+
+            if (!showDryStreakMessage.get()) return;
             sendLootrunDryStreakMessage(
                     StyledText.fromComponent(event.getMythicBoxItem().getHoverName()));
         }
@@ -105,5 +118,20 @@ public class MythicFoundFeature extends Feature {
                 .append(Component.literal(String.valueOf(Models.LootChest.getDryBoxes()))
                         .withStyle(ChatFormatting.DARK_PURPLE))
                 .append(Component.literal(" dry boxes.")));
+    }
+
+    private enum MythicSound {
+        MODERN(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_MODERN_ID)),
+        CLASSIC(SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_CLASSIC_ID));
+
+        private final SoundEvent soundEvent;
+
+        MythicSound(SoundEvent soundEvent) {
+            this.soundEvent = soundEvent;
+        }
+
+        public SoundEvent getSoundEvent() {
+            return soundEvent;
+        }
     }
 }

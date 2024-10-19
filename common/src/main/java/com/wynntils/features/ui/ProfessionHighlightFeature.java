@@ -52,7 +52,7 @@ public class ProfessionHighlightFeature extends Feature {
     private final Storage<Map<String, ProfessionType>> selectionPerContainer = new Storage<>(new TreeMap<>());
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent event) {
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         Screen screen = event.getScreen();
 
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
