@@ -13,7 +13,6 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityType;
@@ -38,6 +37,10 @@ import org.lwjgl.glfw.GLFW;
 public class ContentBookQueries {
     // A config in the future, turned off for performance for now
     private static final boolean RESET_FILTERS = false;
+
+    // A config in the future, turned off for compatibility for now
+    // (fixes filters not being able to be right clicked as of a new Wynn shadow patch)
+    private static final boolean REVERSE_DIRECTION = false;
 
     private static final int CHANGE_VIEW_SLOT = 66;
     private static final int PROGRESS_SLOT = 68;
@@ -147,10 +150,12 @@ public class ContentBookQueries {
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
                 .execute(() -> {
-                    // Inverse the filter change direction
-                    filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                            ? GLFW.GLFW_MOUSE_BUTTON_LEFT
-                            : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                    if (REVERSE_DIRECTION) {
+                        // Inverse the filter change direction, if we are allowed to go in a reverse direction
+                        filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                                ? GLFW.GLFW_MOUSE_BUTTON_LEFT
+                                : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                    }
                 })
                 .repeat(
                         c -> {
@@ -207,7 +212,9 @@ public class ContentBookQueries {
 
     private int getFilterChangeDirection(ItemStack itemStack, String targetFilter) {
         StyledText itemName = ItemUtils.getItemName(itemStack);
-        if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+        if (!REVERSE_DIRECTION || !itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) {
+            return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+        }
 
         int activeFilterIndex = -1;
         int targetFilterIndex = -1;
@@ -249,9 +256,6 @@ public class ContentBookQueries {
 
     private ContainerContentVerification getContentBookFilterChangeVerification() {
         return (container, changes, changeType) -> {
-            // Only set slot changes can be valid
-            if (changeType == ContainerContentChangeType.SET_CONTENT) return false;
-
             // Check if the progress item changed, this is the last item to change
             if (!changes.containsKey(PROGRESS_SLOT)) return false;
 

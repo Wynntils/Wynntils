@@ -18,6 +18,7 @@ import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -150,7 +151,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
         encodedItem = errorOrEncodedByteBuffer.getValue();
 
         // Decode the item to be displayed
-        ErrorOr<WynnItem> errorOrDecodedByteBuffer = Models.ItemEncoding.decodeItem(encodedItem);
+        String itemName = wynnItem instanceof NamedItemProperty namedItem ? namedItem.getName() : null;
+        ErrorOr<WynnItem> errorOrDecodedByteBuffer = Models.ItemEncoding.decodeItem(encodedItem, itemName);
         if (errorOrDecodedByteBuffer.hasError()) {
             WynntilsMod.error("Failed to decode item: " + errorOrDecodedByteBuffer.getError());
             previewItemStack = null;
@@ -191,8 +193,10 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     private void shareItem(String target) {
         switch (target) {
-            case "guild" -> Handlers.Command.sendCommandImmediately("g " + encodedItem.toUtf16String());
-            case "party" -> Handlers.Command.sendCommandImmediately("p " + encodedItem.toUtf16String());
+            case "guild" -> Handlers.Command.sendCommandImmediately(
+                    "g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+            case "party" -> Handlers.Command.sendCommandImmediately(
+                    "p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 
@@ -211,7 +215,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 }
             }
             default -> {
-                McUtils.mc().keyboardHandler.setClipboard(encodedItem.toUtf16String());
+                McUtils.mc().keyboardHandler.setClipboard(Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
 
                 McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
                         .withStyle(ChatFormatting.GREEN));
@@ -230,10 +234,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     Models.ItemEncoding.extendedIdentificationEncoding.get(),
                     Texture.ITEM_SHARING_BACKGROUND.width() - 30,
                     (c, b) -> {
-                        if (b) {
-                            Models.ItemEncoding.extendedIdentificationEncoding.store(b);
-                            refreshPreview();
-                        }
+                        Models.ItemEncoding.extendedIdentificationEncoding.store(b);
+                        refreshPreview();
                     },
                     ComponentUtils.wrapTooltips(
                             List.of(
@@ -249,10 +251,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
                     Models.ItemEncoding.shareItemName.get(),
                     Texture.ITEM_SHARING_BACKGROUND.width() - 30,
                     (c, b) -> {
-                        if (b) {
-                            Models.ItemEncoding.shareItemName.store(b);
-                            refreshPreview();
-                        }
+                        Models.ItemEncoding.shareItemName.store(b);
+                        refreshPreview();
                     },
                     ComponentUtils.wrapTooltips(
                             List.of(Component.translatable("screens.wynntils.itemSharing.itemName.description")),

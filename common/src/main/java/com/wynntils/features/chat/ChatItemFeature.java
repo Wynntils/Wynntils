@@ -101,8 +101,9 @@ public class ChatItemFeature extends Feature {
         // check for new chat item encoding
         Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(chatInput.getValue());
         while (matcher.find()) {
-            EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group());
-            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer);
+            String itemName = matcher.group("name");
+            EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
+            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
 
             String name;
             if (errorOrDecodedItem.hasError()) {
@@ -192,8 +193,9 @@ public class ChatItemFeature extends Feature {
                 .matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
         while (matcher.find()) {
-            EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group());
-            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer);
+            String itemName = matcher.group("name");
+            EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
+            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
 
             String unformattedString = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
@@ -278,8 +280,9 @@ public class ChatItemFeature extends Feature {
     }
 
     private void makeChatPrompt(WynnItem wynnItem) {
-        EncodingSettings encodingSettings = new EncodingSettings(
-                Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
+        // Do NOT share the name of the item encoded, as we share the item name in the chat message
+        EncodingSettings encodingSettings =
+                new EncodingSettings(Models.ItemEncoding.extendedIdentificationEncoding.get(), false);
         ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
                 Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
         if (errorOrEncodedByteBuffer.hasError()) {
@@ -300,7 +303,7 @@ public class ChatItemFeature extends Feature {
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(s -> s.withClickEvent(new ClickEvent(
                         ClickEvent.Action.COPY_TO_CLIPBOARD,
-                        errorOrEncodedByteBuffer.getValue().toUtf16String())))
+                        Models.ItemEncoding.makeItemString(wynnItem, errorOrEncodedByteBuffer.getValue()))))
                 .withStyle(s -> s.withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
